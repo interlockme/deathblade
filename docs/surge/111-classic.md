@@ -49,6 +49,7 @@
 !!! note "Adjustments"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
         - Keen Sense 2 + Master is usually best unless you have 2x crit rate synergy or 2x crit rate bracelet.
+    - Release Potential 4 / Instant Spell 2 may be needed with +CD bracelet line (needs testing).
 
 ## Skill Setup
 
@@ -65,7 +66,7 @@
     - You can use the Quick Prep tripod on Blade Dance as a safety net.
     - Dark Axel (1-1-2 tripods) can be used instead of Spincutter if you prefer it.
 
-!!! danger "Don't remove synergy from Turning Slash, it's an act of terrorism."
+!!! danger "Don't remove synergy from Turning Slash"
     Don't even think about it, the data is not in your favor.
 
 ## Gems
@@ -95,8 +96,7 @@
 <span class="gem-chip"><span class="gem-num">5</span> ![](../assets/surge/icon-turningslash.png) Turning Slash</span>
 <span class="gem-chip"><span class="gem-num">6</span> ![](../assets/surge/icon-surpriseattack.png) Surprise Attack</span>
 </div>
-
-Earth Cleaver CD must be used instead of Blade Dance CD pre-ark grid. Use Quick Prep tripod on Blade Dance.
+Earth Cleaver CD must be used instead of Blade Dance CD pre-Ark Grid. Use Quick Prep tripod on Blade Dance.
 
 </div>
 
@@ -144,7 +144,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the Main cycle 
     </div>
 
     - This cycle aims to cover both Wind Cuts and Surge with the Maelstrom buff.
-    - You can also use your own judgment and cast Maelstrom as needed.
+    - You can also use your judgment and cast Maelstrom as needed.
 
 *From zero orbs:*
 

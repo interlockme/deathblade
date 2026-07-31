@@ -12,7 +12,7 @@
 
     ![](../assets/re/icon-skewers.png){ width="24" } Chewy Grilled Skewers &nbsp;&nbsp; ![](../assets/re/icon-steak.png){ width="24" } Herb Steak Meal &nbsp;&nbsp; ![](../assets/re/icon-azena.png){ width="24" } Azena's Blessing (P2W)
 
-??? danger "Here are some options to lower mana use at a DPS loss if you wish to save gold and avoid food!"
+??? danger "You can lower mana use at a DPS loss to save gold and skip food"
 
     - Raise Illicit Spell Evolution node in your Ark Passive for unimportant content.
     - Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 Leap setting.
@@ -72,11 +72,11 @@
 
 **Playstyle Goals**
 
-Since the main focus is 'Cooldown Reduction', it's crucial to quickly fill 3 orbs to cycle through your rotation as many times as possible until the encounter ends.
+Since Cooldown Reduction is the core focus, quickly fill 3 orbs to cycle through your rotation as many times as possible until the encounter ends.
 
 **Combat Performance Metric: CPM (Casts Per Minute)**
 
-If you want to gauge your skill level, the best metric to look at is your Surge CPM. Make sure to only compare performances across the exact same encounter and build.
+To gauge your skill level, the best metric to look at is your Surge CPM. Only compare performance across the exact same encounter and build.
 
 ## FPS/Latency
 

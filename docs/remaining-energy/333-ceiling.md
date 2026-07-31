@@ -12,8 +12,8 @@
 
 **Tradeoff:** Lower orb generation and a less forgiving rotation.
 
-- Uses Fatal Wave as two fast casts (FTF combo) via a skill reset
-- Head Hunt is always free for counters, recovery, purify or Adrenaline upkeep.
+- Uses Fatal Wave as two fast casts (FTF combo) via a skill reset.
+- Head Hunt is always free for counters, recovery, purify, or Adrenaline upkeep.
 - High gem efficiency, Fatal Wave and Deathly Slash are most of your DPS.
 - Susceptible to high ping or low FPS, but you can compensate with a few changes.
 
@@ -61,7 +61,7 @@
 !!! tip "Rune Adjustments"
     - Use Legendary Galewind, Focus or Purify on Head Hunt if you prefer.
     - Legendary Galewind on Blitz Rush is *viable* if you're very skilled.
-        - Uptime and skill requirement is increased, this is NOT recommended.
+        - Uptime and skill requirement are both increased; this is NOT recommended.
         - Give Head Hunt a blue Wealth and change Blitz Rush CD gem to Twin Shadows.
 
 ??? note "Skill Adjustments"
@@ -79,7 +79,7 @@
     - See [Essentials](essentials.md) for class-wide changes.
 
 ??? danger "Alternative rune setup *(for lazy alts, high latency, slow hands, etc)*"
-    Wealth on Fatal Wave can make this build more forgiving at a ~4% DPS loss. It won't cycle as smoothly, but it may reduce stress and urgency in the gameplay loop which may be useful to some.
+    Wealth on Fatal Wave can make this build more forgiving at a ~4% DPS loss. It won't cycle as smoothly, but the reduced stress and urgency may suit some playstyles.
 
     Fatal Wave: Epic Wealth, Void Strike: Epic Wealth, Soul Absorber: Legendary Wealth, Twin Shadows: Blue Wealth, Maelstrom: Green Wealth.
 
@@ -140,15 +140,15 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 
     Aim to fit up to Cycle 2's Twin Shadows under Cycle 1's Maelstrom to reach 3 orbs without recasting or using recovery options. If you only landed up to Soul Absorber, an extra Head Hunt cast is usually enough.
 
-    The Maelstrom in Cycle 2 is only cast if you'd otherwise miss 3 orbs. Use your judgment. If cast, it will last at least until Cycle 1's Void Strike, and recasting as it expires fixes all. If it wasn't needed or it didn't last, nothing changes.
+    The Maelstrom in Cycle 2 is only cast if you'd otherwise miss 3 orbs. Use your judgment. If cast, it lasts at least until Cycle 1's Void Strike; recasting it as it expires aligns cooldowns. If it wasn't needed or it didn't last, nothing changes.
 
-    !!! warning "Warning"
+    !!! warning ""
         Void Strike and Maelstrom only give full orb generation up close. Avoid walking by using mobility skills to get closer to the target — e.g. Maelstrom → Twin Shadows → Void Strike and adapt to changes in your rotation.
 
 === "Recovery"
 
     !!! example ""
-        Watch this 2 minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
+        Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
 
     - Use Head Hunt when a little short on orbs, just cast if unsure.
     - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
@@ -164,7 +164,7 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
     <span class="skill">![](../assets/re/icon-headhunt.png)Head Hunt</span><span class="arrow"> ⇄ </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-bladeassault.png)Blade Assault</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge </span>
     </div>
 
-    - Blade Assault is interchangeable with Cycle 2 if not available.
+    - Blade Assault is interchangeable with Cycle 2 if it's on cooldown.
     - Fatal Wave is cast after Deathly Slash to prevent downtime on a future cycle.
     - It's very efficient to use Atropine after Deathly Slash, with Blade Assault available.
 

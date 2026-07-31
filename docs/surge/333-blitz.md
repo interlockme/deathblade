@@ -49,12 +49,12 @@ TODO_SKILL_CODE_HERE
 
 ??? note "Skill Adjustments"
     - Earth Explosion tripod on Earth Cleaver is up to personal preference.
-        - Increased cast speed and extra stack, lowered mobility/damage.
-    - Thick Sword Energy increases Wind Cut range but builds less stacks.
+        - Increased cast speed and extra stack, lowered mobility and damage.
+    - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
     - You can use the Quick Prep tripod on Blade Dance as a safety net.
     - Dark Axel (1-1-2 tripods) can be used instead of Spincutter if you prefer it.
 
-!!! danger "Don't remove synergy from Turning Slash, it's an act of terrorism."
+!!! danger "Don't remove synergy from Turning Slash"
     Don't even think about it, the data is not in your favor.
 
 ## Gems

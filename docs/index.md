@@ -31,8 +31,8 @@
 
 ## Additional Resources
 
-*(Shared by both playstyles — see the [Additional Resources page](resources.md) for links, gearing tables, and bonus content.)*
+*(Shared by both playstyles — see [Additional Resources](resources.md) for links, gearing tables, and bonus content.)*
 
 ## About
 
-This site is a breakdown of KR Deathblade research brought over to NA. You're just gonna copy powdersnow regardless, but it's a difficult class with a lot of quirks and it helps to have the full context behind every build.
+This site adapts KR Deathblade research for NA. You're just gonna copy powdersnow anyway, but the class has enough quirks that the context behind each build is worth knowing.

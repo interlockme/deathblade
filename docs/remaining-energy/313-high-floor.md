@@ -8,13 +8,13 @@
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Fast & Comfy</span></div>
 </div>
 
-**Best For:** Players who want a simpler, faster and more forgiving Fatal Wave build.
+**Best For:** Players who want a simpler, faster, and more forgiving Fatal Wave build.
 
 **Tradeoff:** Lower damage ceiling, but easier to recover from mistakes.
 
-- Head Hunt is always free for counters, recovery, purify or Adrenaline upkeep.
+- Head Hunt is always free for counters, recovery, purify, or Adrenaline upkeep.
 - Accessible from a 14p Star core as 113 (Arts), a transitional core-limited option.
-- Move on to [333 (Ceiling)](333-ceiling.md) when you're ready, or stay here if you prefer it!
+- Move on to [333 (Ceiling)](333-ceiling.md) when you're ready, or stay here if you prefer!
 
 [KR Video Guide](https://www.youtube.com/watch?v=6ez2lS4AI6Q){ .video-chip }
 
@@ -77,7 +77,7 @@
         - ~2% DPS loss but CPM and playability increases may make up for it.
         - Void Strike is raised to Lv 13 and Blitz Rush is lowered to Lv 12.
         - Gem priority of Void Strike and Blitz Rush is swapped.
-    - Needs live testing, 313 is so fast already that it might not benefit fully.
+    - Needs live testing, 313 is so fast that it might not benefit fully.
     - See [Essentials](essentials.md) for class-wide changes.
 
 ## Gems
@@ -143,15 +143,15 @@
 
     Aim to fit up to Cycle 2's Twin Shadows under Cycle 1's Maelstrom to reach 3 orbs without recasting or using recovery options. If you only landed up to Soul Absorber, an extra Head Hunt cast is usually enough.
 
-    The Maelstrom in Cycle 2 is only cast if you'd otherwise miss 3 orbs. Use your judgment. If cast, it will last at least until Cycle 1's Void Strike, and recasting as it expires fixes all. If it wasn't needed or it didn't last, nothing changes.
+    The Maelstrom in Cycle 2 is only cast if you'd otherwise miss 3 orbs. Use your judgment. If cast, it lasts at least until Cycle 1's Void Strike; recasting it as it expires aligns cooldowns. If it wasn't needed or it didn't last, nothing changes.
 
-    !!! warning "Warning"
+    !!! warning ""
         Void Strike and Maelstrom only give full orb generation up close. Avoid walking by using mobility skills to get closer to the target — e.g. Maelstrom → Twin Shadows → Void Strike and adapt to changes in your rotation.
 
 === "Recovery"
 
     !!! example ""
-        Watch this 2 minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
+        Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
 
     - 313 plays similarly, just Turning Slash → Fatal Wave instead of FTF.
     - Use Head Hunt when a little short on orbs, just cast if unsure.
@@ -168,7 +168,7 @@
     <span class="skill">![](../assets/re/icon-headhunt.png)Head Hunt</span><span class="arrow"> ⇄ </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-bladeassault.png)Blade Assault</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
     </div>
 
-    - Blade Assault is interchangeable with Cycle 2 if not available.
+    - Blade Assault is interchangeable with Cycle 2 if it's on cooldown.
     - It's very efficient to use Atropine after Deathly Slash, with Blade Assault available.
     - Low Specialization, Release Potential Lv 3, or +CD% bracelet will cause downtime on the next Deathly Slash.
 

@@ -29,7 +29,7 @@
 FB388C4F19F70DE5311D21E59D93BE5D1B9935691AB3B6F2457D466875600C7A581AE3DFA172017D17440BEC09FB7A05BEE420C68F6788139A428497A91B802E
 ```
 
-## Deathblade CPM Calculator
+## CPM Calculator
 
 *Compares Trixion damage to real raid damage across builds.*
 
@@ -72,4 +72,3 @@ FB388C4F19F70DE5311D21E59D93BE5D1B9935691AB3B6F2457D466875600C7A581AE3DFA172017D
 | [Fatal Wave Dump](https://docs.google.com/document/d/1vs1YC_7adaYwtfN9cHO3x2KuMPq6GcKRlGo5vnsN4Lk/edit) | *333 Standard (spincutter) or 333 (Ceiling) NA builds* |
 | [Inven RE Guide](https://www.inven.co.kr/board/lostark/5497/140080) | *Korean guide for RE 333, 111 HH and Void Skip* |
 | [Inven 313 Guide](https://www.inven.co.kr/board/lostark/5497/171285) | *Korean guide for RE 313* |
-| [Inven KR](https://lostark.inven.co.kr/) | *Source for much of this guide's information and art* |

@@ -12,7 +12,6 @@
 !!! tip "Quick Tips"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
     - Trixion practice requires equipping Spirit Absorption and Max MP engravings.
-    - Make good use of mobility skills and prioritize hitting Surge as a back attack.
     - Always press the next skill during your current skill's animation (skill queuing).
     - Vernese Wine and Ealyn's Blessing can be bought at the Bartender in Peyto Island.
     - Optimized Training 1 may help smooth things out at lower gem levels.

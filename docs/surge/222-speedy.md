@@ -40,11 +40,12 @@
 ![222 Order cores](../assets/surge/ordercores-222.png)
 
 !!! danger ""
-    Deadly Feast and Dual Blade Dance cores do not exist in NA yet, Sword Reset and Destiny core are used as placeholders. Playable with fewer chaos points, but it would be better to play [111 (Classic)](111-classic.md) instead.
+    Deadly Feast and Dual Blade Dance cores don't exist in NA yet, so Sword Reset and Destiny core are used as placeholders. Playable with fewer chaos points, but it would be better to play [111 (Classic)](111-classic.md) instead.
 
 !!! note "Adjustments"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
         - Keen Sense 2 + Master is usually best unless you have 2x crit rate synergy or 2x crit rate bracelet.
+    - Release Potential 4 / Instant Spell 2 may be needed with +CD bracelet line (needs testing).
 
 ## Skill Setup
 
@@ -58,9 +59,8 @@
     - Earth Explosion tripod on Earth Cleaver is up to personal preference.
         - Increased cast speed and extra stack, lowered mobility and damage.
     - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
-    - Spincutter may be replaced for Upper Slash, a different setup is needed.
 
-!!! danger "Don't remove synergy from Turning Slash, it's an act of terrorism."
+!!! danger "Don't remove synergy from Turning Slash"
     Don't even think about it, the data is not in your favor.
 
 ## Gems
@@ -77,6 +77,9 @@
 <span class="gem-chip"><span class="gem-num">4</span> ![](../assets/surge/icon-turningslash.png) Turning Slash</span>
 <span class="gem-chip"><span class="gem-num">5</span> ![](../assets/surge/icon-windcut.png) Wind Cut</span>
 </div>
+
+You can replace Wind Cut damage for Dark Axel CD.
+
 </div>
 
 <div class="gem-col gem-col-cd" markdown>
@@ -90,7 +93,6 @@
 <span class="gem-chip"><span class="gem-num">5</span> ![](../assets/surge/icon-earthcleaver.png) Earth Cleaver</span>
 <span class="gem-chip"><span class="gem-num">6</span> ![](../assets/surge/icon-maelstrom.png) Maelstrom</span>
 </div>
-
 </div>
 
 </div>
@@ -116,7 +118,7 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
     </div>
 
     - If you have to hold Earth Cleaver for counter, cast <span class="gem-chip">![](../assets/surge/icon-spincutter.png)Spincutter</span> instead.
-    - Cast Upper Slash before Turning Slash and skip Earth Cleaver if using the alternate build.
+    - Cast Upper Slash before Turning Slash and skip Earth Cleaver if using it.
 
 === "Opener/Awakening Cycle"
 
@@ -125,13 +127,13 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
     </div>
 
     - Blade Dance is lightly tapped for a 'Destiny: Sharp Senses' stack.
-    - Needs testing. Could probably not care about 'Sharp Senses' and skip a skill.
+    - If Blade Assault is on cooldown, finish up with a regular Main cycle.
 
 === "Advanced Rotations"
 
     *Optional. Ceiling. Trixion. IGNORE IF YOU ARE NOT A CHAD ANIME MAIN CHARACTER.*
 
-    *All these advanced rotation shenanigans need to be fact checked when we get the update.*
+    *All these advanced rotation shenanigans need to be fact-checked when we get the update.*
 
     **Cycle 1**
 
@@ -161,7 +163,7 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
 
     Loop order: Cycle 1 → Cycle 1 → Cycle 2 → Cycle 3 → repeat.
 
-    Cycle 2 into Cycle 3 takes roughly 9 seconds, so timing Atropine usage as Surge lands through that stretch can fit up to 3 Surges in a 10 second window.
+    Cycle 2 into Cycle 3 takes roughly 9 seconds, so timing Atropine usage as Surge lands through that stretch can fit up to 3 Surges in a 10-second window.
 
 *From zero orbs:*
 
