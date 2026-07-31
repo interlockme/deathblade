@@ -33,6 +33,13 @@
     0F5512B16D6B98BF848E17761E6E268E0C697EFF64D0DFBC464CB1EEA1C0EED282E9768BD1CBD8925E7EF1A397F319F846CCAF9C823948DD188BCC67E0E6D0BE
     ```
 
+=== "Upper Slash"
+
+    *Alternative skill setup that may be more comfortable for some.*
+
+    ```
+    TODO
+    ```
 
 ## Ark Setup
 
@@ -56,9 +63,17 @@
     - Use Epic Rage on Turning Slash if you prefer higher Rage uptime.
 
 ??? note "Skill Adjustments"
+    - Upper Slash (2-3-2 tripods) can be used instead of Spincutter or Dark Axel.
     - Earth Explosion tripod on Earth Cleaver is up to personal preference.
         - Increased cast speed and extra stack, lowered mobility and damage.
     - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
+
+??? example "Alternative Skill setup: Upper Slash"
+    - You can gain more comfort at a minor DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
+    - Upper Slash is a push immune skill that generates 5 stacks and allows you to skip Earth Cleaver casts.
+        - Set Upper Slash to use 2-3-2 tripods and give it an Epic Galewind rune.
+        - Lower Earth Cleaver's skill level to 10 and raise Upper Slash to level 14.
+        - Replace both Earth Cleaver gems for Upper Slash CD and another gem of your liking.
 
 !!! danger "Don't remove synergy from Turning Slash"
     Don't even think about it, the data is not in your favor.
@@ -97,8 +112,6 @@ You can replace Wind Cut damage for Dark Axel CD.
 
 </div>
 
-
-
 ## Rotation
 
 There's an optimal skill order, but you have flexibility when facing downtime or weaving in mobility skills.
@@ -118,7 +131,6 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
     </div>
 
     - If you have to hold Earth Cleaver for counter, cast <span class="gem-chip">![](../assets/surge/icon-spincutter.png)Spincutter</span> instead.
-    - Cast Upper Slash before Turning Slash and skip Earth Cleaver if using it.
 
 === "Opener/Awakening Cycle"
 
@@ -129,41 +141,11 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
     - Blade Dance is lightly tapped for a 'Destiny: Sharp Senses' stack.
     - If Blade Assault is on cooldown, finish up with a regular Main cycle.
 
-=== "Advanced Rotations"
-
-    *Optional. Ceiling. Trixion. IGNORE IF YOU ARE NOT A CHAD ANIME MAIN CHARACTER.*
-
-    *All these advanced rotation shenanigans need to be fact-checked when we get the update.*
-
-    **Cycle 1**
+=== "Upper Slash"
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-upperslash.png)Upper Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
     </div>
-
-    **Cycle 2**
-
-    <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
-    </div>
-
-    **Cycle 3**
-
-    <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
-    </div>
-
-    **Cycle Logic**
-
-    | Cycle | Notes |
-    |---|---|
-    | Cycle 1 | Run twice in a row — *Builds excess stacks without overcapping and aligns Wind Cut's cooldown.* |
-    | Cycle 2 | Run once — *This cycle skips the Surprise Attack filler.* |
-    | Cycle 3 | Run once, then loop back to Cycle 1 — *Opens with Surprise Attack instead of Wind Cut, then changes the order of both skills later on to circumvent cooldown restrictions* |
-
-    Loop order: Cycle 1 → Cycle 1 → Cycle 2 → Cycle 3 → repeat.
-
-    Cycle 2 into Cycle 3 takes roughly 9 seconds, so timing Atropine usage as Surge lands through that stretch can fit up to 3 Surges in a 10-second window.
 
 *From zero orbs:*
 
