@@ -68,7 +68,7 @@
         - Increased cast speed and extra stack, lowered mobility and damage.
     - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
 
-??? example "Alternative Skill setup: Upper Slash"
+??? example "Alternative skill setup: Upper Slash"
     - You can gain more comfort at a minor DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
     - Upper Slash is a push immune skill that generates 5 stacks and allows you to skip Earth Cleaver casts.
         - Set Upper Slash to use 2-3-2 tripods and give it an Epic Galewind rune.
