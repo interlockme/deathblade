@@ -1,4 +1,4 @@
-# 222 (Speedy) NOT IN NA SERVERS YET
+# 222 (Speedy) 🐆 NOT IN NA SERVERS YET
 
 <div class="build-card" markdown>
 
