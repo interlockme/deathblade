@@ -1,0 +1,58 @@
+site_name: Deathblade
+site_description: Remaining Energy & Surge Deathblade guides
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: black
+    accent: pink
+  font:
+    text: Poppins
+    code: Roboto Mono
+  icon:
+    logo: material/sword-cross
+  favicon: assets/favicon.svg
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - navigation.tracking
+    - toc.integrate
+    - toc.follow
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  generator: false
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Home: index.md
+  - Remaining Energy:
+      - Essentials: remaining-energy/essentials.md
+      - Pre-Ark Grid: remaining-energy/pre-ark-grid.md
+      - 313 High Floor: remaining-energy/313-high-floor.md
+      - 333 Ceiling ⭐: remaining-energy/333-ceiling.md
+  - Surge:
+      - Essentials: surge/essentials.md
+      - Pre-Ark Grid: surge/pre-ark-grid.md
+      - 111 Classic ⭐: surge/111-classic.md
+      - 222 Speedy: surge/222-speedy.md
+      - 333 Blitz: surge/333-blitz.md
+  - Additional Resources: resources.md
