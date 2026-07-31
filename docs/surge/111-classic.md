@@ -148,7 +148,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the Main cycle 
 
 *From zero orbs:*
 
-1. Use a Stimulant (recommended) or proceed to #2.
+1. Use a ![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant (recommended) or proceed to #2.
 2. Generate one orb, build at least 40 stacks, then Surge to refill all 3 orbs.
 
 ??? example "Trixion DPS distribution"

@@ -38,7 +38,7 @@
     *Alternative skill setup that may be more comfortable for some.*
 
     ```
-    TODO
+    DCDFB3E872FB4DD3E910EFA0CAE35A3D30CDFB850D8280939B84BD32CBC8AA21D5F83501E60BDC9F1689AD68BA7FF12C867FFD1A6ED480726DE7CA09B38FEEA9
     ```
 
 ## Ark Setup
@@ -60,6 +60,7 @@
 
 !!! tip "Rune Adjustments"
     - Use Legendary Purify on Spincutter if needed.
+    - Use Legendary Bleed on Surprise Attack if you don't need Rage.
     - Use Epic Rage on Turning Slash if you prefer higher Rage uptime.
 
 ??? note "Skill Adjustments"
@@ -151,7 +152,7 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
 
 *From zero orbs:*
 
-1. Use a Stimulant (recommended) or proceed to #2.
+1. Use a ![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant (recommended) or proceed to #2.
 2. Generate one orb, build at least 40 stacks, then Surge to refill all 3 orbs.
 
 ??? example "Trixion DPS distribution"

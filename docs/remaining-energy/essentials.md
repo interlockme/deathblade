@@ -10,7 +10,7 @@
 !!! tip ""
     Mana food or Azena's Blessing are **required** to play Remaining Energy optimally.
 
-    ![](../assets/re/icon-skewers.png){ width="24" } Chewy Grilled Skewers &nbsp;&nbsp; ![](../assets/re/icon-steak.png){ width="24" } Herb Steak Meal &nbsp;&nbsp; ![](../assets/re/icon-azena.png){ width="24" } Azena's Blessing (P2W)
+    ![](../assets/re/icon-skewers.png){: .skill-icon } Chewy Grilled Skewers &nbsp;&nbsp; ![](../assets/re/icon-steak.png){: .skill-icon } Herb Steak Meal &nbsp;&nbsp; ![](../assets/re/icon-azena.png){: .skill-icon } Azena's Blessing (P2W)
 
 ??? danger "You can lower mana use at a DPS loss to save gold and skip food"
 
@@ -29,7 +29,7 @@
 
 | Build | Difficulty | Playstyle | Best For |
 |:---|:---:|:---|:---|
-| [333 (Ceiling)](333-ceiling.md) | 8.5 / 10 | Skill Reset | Well-rounded damage ceiling |
+| [333 (Ceiling)](333-ceiling.md) ⭐ | 8.5 / 10 | Skill Reset | Well-rounded damage ceiling |
 | [313 (High Floor)](313-high-floor.md) | 8 / 10 | Fast & Comfy | Comfort and recovery |
 | [111 (Head Hunt)](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | 9 / 10 | Fast & Punishing | Skill expression and stagger |
 | [Standard](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | 7 / 10 | AFK Simulator | Pre-Ark Grid beginner build |
@@ -41,7 +41,8 @@
 | Engravings | Grudge · Adrenaline · Ambush Master · Raid Captain |
 | Choose One | KBW ⭐ · Cursed Doll |
 
-- Raid Captain **requires** Atk/Move Speed feast for all content.
+!!! tip ""
+    - Raid Captain **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast for all content.
 
 ## Specialization
 

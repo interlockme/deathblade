@@ -13,14 +13,14 @@
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
     - Trixion practice requires equipping Spirit Absorption and Max MP engravings.
     - Always press the next skill during your current skill's animation (skill queuing).
-    - Vernese Wine and Ealyn's Blessing can be bought at the Bartender in Peyto Island.
+    - The Bartender on Peyto Island sells ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine and ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing.
     - Optimized Training 1 may help smooth things out at lower gem levels.
 
 ## Build Comparison
 
 | Build | Difficulty | Playstyle | Best For |
 |:---|:---:|:---|:---|
-| [111 (Classic)](111-classic.md) | 7.5 / 10 | Burst Combo | Classic Surge gameplay |
+| [111 (Classic)](111-classic.md) ⭐ | 7.5 / 10 | Burst Combo | Classic Surge gameplay |
 | [222 (Speedy)](222-speedy.md) | 7 / 10 | Max Mobility | Simple uptime focus |
 | [333 (Blitz)](333-blitz.md) | 🐯 | Skill Reset | 🐯 |
 
@@ -31,10 +31,12 @@
 | Engravings | Grudge · Adrenaline · Ambush Master |
 | Choose Two | Raid Captain ⭐ · KBW ⭐ · Mass Increase · Cursed Doll |
 
-- Raid Captain **requires** Atk/Move Speed feast and Vernese Wine for all content.
-- Mass Increase **requires** Atk/Move Speed feast and Ealyn's Blessing for all content.
-- Raid Captain + Mass Increase is the ceiling combination, but it has the most tradeoffs.
-    - Vernese Wine with Bard and Paladin, Ealyn's Blessing with Artist and Valkyrie.
+!!! tip ""
+    - Raid Captain **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast and ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine for all content.
+    - Mass Increase **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast and ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing for all content.
+    - Raid Captain + Mass Increase is the ceiling option, but it requires more skilled play.
+        - Use ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine with Bard and Paladin, ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing with Artist and Valkyrie.
+    - With the KBW + CD option, swap Rage/Focus runes for Bleed/Poison and use ![](../assets/re/icon-steak.png){: .skill-icon } Herb Steak Meal.
 
 ## Gameplay
 

@@ -158,7 +158,7 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 
 === "Openers"
 
-    *From 3 orbs (Stimulant):*
+    *From 3 orbs (![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant):*
 
     <div class="rotation-line" markdown>
     <span class="skill">![](../assets/re/icon-headhunt.png)Head Hunt</span><span class="arrow"> ⇄ </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-bladeassault.png)Blade Assault</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge </span>
@@ -166,7 +166,7 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 
     - Blade Assault is interchangeable with Cycle 2 if it's on cooldown.
     - Fatal Wave is cast after Deathly Slash to prevent downtime on a future cycle.
-    - It's very efficient to use Atropine after Deathly Slash, with Blade Assault available.
+    - It's very efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs or extended raid downtime:*
 
