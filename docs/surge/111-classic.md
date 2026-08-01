@@ -1,4 +1,4 @@
-# 111 (Classic) 💥 NOT IN NA SERVERS YET
+# 111 (Classic) 🦁 NOT IN NA SERVERS YET
 
 <div class="build-card" markdown>
 
