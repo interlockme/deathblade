@@ -30,12 +30,12 @@
 | Category | Options |
 |---|---|
 | Engravings | Grudge · Adrenaline · Ambush Master |
-| Choose Two | Raid Captain ⭐ · KBW ⭐ · Mass Increase · Cursed Doll |
+| Choose Two | Raid Captain ⭐ · KBW ⭐ · Mass Increase 🐆 · Cursed Doll |
 
 !!! tip ""
     - Raid Captain **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast and ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine for all content.
     - Mass Increase **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast and ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing for all content.
-    - Raid Captain + Mass Increase is the ceiling option, but it requires more skilled play.
+    - Raid Captain + Mass Increase is the ceiling option that requires more skilled play. Less downside for 222.
         - Use ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine with Bard and Paladin, ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing with Artist and Valkyrie.
     - With the KBW + CD option, swap Rage runes for Bleed/Poison and use ![](../assets/re/icon-steak.png){: .skill-icon } Herb Steak Meal.
 
