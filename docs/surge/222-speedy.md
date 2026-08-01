@@ -47,7 +47,7 @@
 ![222 Order cores](../assets/surge/ordercores-222.png)
 
 !!! tip ""
-    The only strict Ark Grid requirement for this build is a 10p Star core, but damage will be lacking.
+    The minimum requirement to play this build is a 10p Star core, but damage will be lacking.
 
 !!! note "Adjustments"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.

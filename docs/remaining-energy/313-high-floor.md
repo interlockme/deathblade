@@ -44,6 +44,9 @@
 ![313 Ark Passive/Grid tree](../assets/re/argrid-tree.png)
 ![313 Order cores](../assets/re/ordercores-313.png)
 
+!!! tip ""
+    The minimum requirement is shown above. Raise Moon to 17p for increased QoL and damage when you can.
+
 !!! note "Adjustments"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
         - Keen Sense 2 + Master is usually best unless you have 2x crit rate synergy or 2x crit rate bracelet.
@@ -54,7 +57,7 @@
     ![113 Arts cores](../assets/re/ordercores-113arts.png)
 
     - Same as 313 but **without** the Fatal Wave reset.
-    - Best core-limited temporary option, only needs a 14p Star.
+    - Temporary core-limited option, it only requires a 14p Star.
     - Requires Lv 9+ Fatal Wave CD gem or Optimized Training Lv 1.
         - Avoid +CD% bracelet line for this core-limited variant.
 

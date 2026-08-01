@@ -45,6 +45,9 @@
 ![Ark Passive/Grid tree](../assets/re/argrid-tree.png)
 ![333 Order cores](../assets/re/ordercores-333.png)
 
+!!! tip ""
+    The minimum requirement is shown above. Finish up Star to 17p when you can.
+
 !!! note "Adjustments"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
         - Keen Sense 2 + Master is usually best unless you have 2x crit rate synergy or 2x crit rate bracelet.
