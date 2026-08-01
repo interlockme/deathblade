@@ -19,11 +19,6 @@
 5BC069F349F703CA2B9B9B732BB3629E493826BE8BEA2FF11FF1575D1258D07FAA57A9FADBF188946EF1E2DB1CD6779759FF6F7EA4138A86EB19F6505242CC98
 ```
 
-**111 (Head Hunt) Strongest Non-Fatal Wave RE** — *video guide available in useful links*
-```
-322CCCB826A723B92B2D09B72428FBE14E43D2962810215B5334D20BD37132990D212D95B603517D13D98691F4F14B7E2977B96DB566EDAF6626B895D3CCDC36
-```
-
 **111 (Void Skip) Alternative to Standard RE** — *KR guide available in useful links*
 ```
 FB388C4F19F70DE5311D21E59D93BE5D1B9935691AB3B6F2457D466875600C7A581AE3DFA172017D17440BEC09FB7A05BEE420C68F6788139A428497A91B802E
@@ -68,7 +63,6 @@ FB388C4F19F70DE5311D21E59D93BE5D1B9935691AB3B6F2457D466875600C7A581AE3DFA172017D
 | [Astrogem Optimizer](https://airplaner.github.io/lostark-arkgrid-gem-locator-v2/) | *Screencapture auto-minmax for Ark Grid* |
 | [Lost Ark Bible](https://lostark.bible/) | *DPS meter, logs, and raid statistics* |
 | [Lost Ark Nexus](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | *Better for newbies, standard build + 111 HH guide* |
-| [Mattshew's HH Guide](https://youtu.be/z8KE3HG_ggg) | *How Ark Grid RE builds recover (111 HH mainly)* |
 | [Fatal Wave Dump](https://docs.google.com/document/d/1vs1YC_7adaYwtfN9cHO3x2KuMPq6GcKRlGo5vnsN4Lk/edit) | *333 Standard (spincutter) or 333 (Ceiling) NA builds* |
 | [Inven RE Guide](https://www.inven.co.kr/board/lostark/5497/140080) | *Korean guide for RE 333, 111 HH and Void Skip* |
 | [Inven 313 Guide](https://www.inven.co.kr/board/lostark/5497/171285) | *Korean guide for RE 313* |

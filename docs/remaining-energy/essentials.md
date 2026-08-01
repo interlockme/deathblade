@@ -32,7 +32,7 @@
 |:---|:---:|:---|:---|
 | [333 (Ceiling)](333-ceiling.md) ⭐ | 8.5 / 10 | Skill Reset | Well-rounded damage ceiling |
 | [313 (High Floor)](313-high-floor.md) | 8 / 10 | Fast & Comfy | Comfort and recovery |
-| [111 (Head Hunt)](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | 9 / 10 | Fast & Punishing | Skill expression and stagger |
+| [111 (Head Hunt)](111-head-hunt.md) | 9 / 10 | Fast & Punishing | Skill expression and stagger |
 | [Standard](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | 7 / 10 | AFK Simulator | Pre-Ark Grid beginner build |
 
 ## Engravings

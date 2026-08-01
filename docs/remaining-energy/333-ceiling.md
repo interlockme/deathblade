@@ -17,7 +17,7 @@
 - High gem efficiency, Fatal Wave and Deathly Slash are most of your DPS.
 - Susceptible to high ping or low FPS, but you can compensate with a few changes.
 
-[KR Video Guide](https://youtu.be/Wwm7apTwg84?si=dmO_fvNxoXuoQuf5&t=345){ .video-chip } [KR Video Gameplay](https://www.youtube.com/watch?v=MP--TuRX3xI){ .video-chip }
+[KR Video Guide](https://youtu.be/Wwm7apTwg84?si=dmO_fvNxoXuoQuf5){ .video-chip } [KR Video Gameplay](https://www.youtube.com/watch?v=MP--TuRX3xI){ .video-chip }
 
 </div>
 
@@ -156,7 +156,7 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
     <span class="skill">![](../assets/re/icon-headhunt.png)Head Hunt</span><span class="arrow"> ⇄ </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-bladeassault.png)Blade Assault</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge </span>
     </div>
 
-    - Blade Assault is interchangeable with Cycle 2 if it's on cooldown.
+    - Blade Assault is interchangeable with a regular Cycle 2 if it's on cooldown.
     - Fatal Wave is cast after Deathly Slash to prevent downtime on a future cycle.
     - It's very efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
@@ -181,5 +181,3 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 
 ??? example "Trixion DPS distribution (*Ancient cores, full Lv 10 gems*)"
     ![333 DPS distribution](../assets/re/dpsdist-333.png)
-
-

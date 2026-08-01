@@ -14,13 +14,13 @@
 
     [Standard build guide →](https://lostark-nexus-archive.pages.dev/guides/deathblade/)
 
--   ⚠ **111 HH, with some Ark Grid**
+-   ⚠ **111 (Head Hunt), with some Ark Grid**
 
     ---
 
     A faster, more punishing option once you have some Ark Grid.
 
-    [111 HH guide →](https://lostark-nexus-archive.pages.dev/guides/deathblade/)
+    [111 (Head Hunt) guide →](111-head-hunt.md)
 
 -   ❤ **113 (Limited 313), with some Ark Grid**
 
