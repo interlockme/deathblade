@@ -1,4 +1,5 @@
 site_name: Deathblade
+site_url: https://interlockme.github.io/deathblade/
 site_description: Remaining Energy & Surge Deathblade guides
 theme:
   name: material
@@ -29,6 +30,13 @@ extra_css:
 
 extra:
   generator: false
+
+plugins:
+  - search
+  - social:
+      cards_layout_options:
+        background_color: "#161718"
+        color: "#f4e9fb"
 
 markdown_extensions:
   - admonition
