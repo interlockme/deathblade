@@ -31,13 +31,13 @@ FB388C4F19F70DE5311D21E59D93BE5D1B9935691AB3B6F2457D466875600C7A581AE3DFA172017D
 
 ## CPM Calculator
 
-*Compares Trixion damage to real raid damage across builds.*
+*Compares Trixion damage to real raid damage across builds. Check the [KR Spreadsheet](https://docs.google.com/spreadsheets/d/1j_ybtg30aBolDBYUxb7gtjUhI5AZ4M4bvwchBErJV50/edit?usp=sharing).*
 
-**333 (RE)** — Trixion CPM 15.122, ×1.21 multiplier, 75% B.A. → ×1.13 *(123 sec, 31 surges)*
+**333 (RE)** — Trixion CPM 15.122, ×1.20 multiplier, 75% B.A. → ×1.1206 *(123 sec, 31 surges)*
 
 | Raid CPM | 9 | 9.5 | 10 | 10.5 | 11 | 11.5 | 12 | 12.5 |
 |---|---|---|---|---|---|---|---|---|
-| Multiplier | 0.672 | 0.71 | 0.747 | 0.784 | 0.822 | 0.859 | 0.897 | 0.934 |
+| Multiplier | 0.667 | 0.704 | 0.741 | 0.778 | 0.815 | 0.852 | 0.889 | 0.926 |
 
 **111 (Surge)** — Trixion CPM 10.952, ×1.23 multiplier, 90% B.A. → ×1.1975 *(126 sec, 23 surges)*
 
@@ -45,11 +45,11 @@ FB388C4F19F70DE5311D21E59D93BE5D1B9935691AB3B6F2457D466875600C7A581AE3DFA172017D
 |---|---|---|---|---|---|---|---|---|
 | Multiplier | 0.601 | 0.656 | 0.711 | 0.765 | 0.82 | 0.875 | 0.929 | 0.984 |
 
-**222 (Surge)** — Trixion CPM 9.756, ×1.24 multiplier, 85% B.A. → ×1.1908 *(123 sec, 20 surges)*
+**222 (Surge)** — Trixion CPM 9.756, ×1.22 multiplier, 80% B.A. → ×1.1554 *(123 sec, 20 surges)*
 
 | Raid CPM | 6 | 6.2 | 6.5 | 6.8 | 7.1 | 7.4 | 7.7 | 8 |
 |---|---|---|---|---|---|---|---|---|
-| Multiplier | 0.732 | 0.757 | 0.793 | 0.829 | 0.866 | 0.903 | 0.94 | 0.976 |
+| Multiplier | 0.71 | 0.734 | 0.77 | 0.805 | 0.841 | 0.876 | 0.912 | 0.947 |
 
 ## Gearing Values
 
