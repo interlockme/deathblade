@@ -124,7 +124,7 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 
 === "Cycles"
 
-    Alternate these two cycles. One Maelstrom cast covers both, but recasting it is fine if there's downtime.
+    Use an Opener, then alternate between these two cycles as needed:
 
     **Cycle 1**
 
@@ -135,7 +135,7 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
     **Cycle 2**
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">*(![](../assets/re/icon-maelstrom.png) Maelstrom — situational)*</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">*( ![](../assets/re/icon-maelstrom.png) Maelstrom — situational )*</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
     </div>
 
     Aim to fit up to Cycle 2's Twin Shadows under Cycle 1's Maelstrom to reach 3 orbs without recasting or using recovery options. If you only landed up to Soul Absorber, an extra Head Hunt cast is usually enough.
@@ -144,17 +144,6 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 
     !!! warning ""
         Void Strike and Maelstrom only give full orb generation up close. Avoid walking by using mobility skills to get closer to the target — e.g. Maelstrom → Twin Shadows → Void Strike and adapt to changes in your rotation.
-
-=== "Recovery"
-
-    !!! example ""
-        Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
-
-    - Use Head Hunt when a little short on orbs, just cast if unsure.
-    - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
-    - Use Head Hunt instead of Twin Shadows for a cycle to recover stacks if they run out.
-    - Use Maelstrom + FTF combo earlier if waiting on main orb generation skills.
-    - Hold Deathly Slash until next Cycle 1 if it's out of sync. Not optimal, but simpler.
 
 === "Openers"
 
@@ -172,6 +161,17 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 
     - Cycle 1 if Deathly Slash is off cooldown, otherwise start from Maelstrom + Cycle 2. Use Head Hunt if needed.
     - Prioritize the FTF combo earlier for better party synergy uptime.
+
+=== "Recovery"
+
+    !!! example ""
+        Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
+
+    - Use Head Hunt when a little short on orbs, just cast if unsure.
+    - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
+    - Use Head Hunt instead of Twin Shadows for a cycle to recover stacks if they run out.
+    - Use Maelstrom + FTF combo earlier if waiting on main orb generation skills.
+    - Hold Deathly Slash until next Cycle 1 if it's out of sync. Not optimal, but simpler.
 
 === "TL;DR:"
     ![333 TL;DR flowchart](../assets/re/tldr-333.png)

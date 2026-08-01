@@ -127,7 +127,7 @@
 
 === "Cycles"
 
-    Alternate these two cycles. One Maelstrom cast covers both, but recasting it is fine if there's downtime.
+    Use an Opener, then alternate between these two cycles as needed:
 
     **Cycle 1**
 
@@ -138,7 +138,7 @@
     **Cycle 2**
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">*(![](../assets/re/icon-maelstrom.png) Maelstrom — situational)*</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">*( ![](../assets/re/icon-maelstrom.png) Maelstrom — situational )*</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
     </div>
 
     Aim to fit up to Cycle 2's Twin Shadows under Cycle 1's Maelstrom to reach 3 orbs without recasting or using recovery options. If you only landed up to Soul Absorber, an extra Head Hunt cast is usually enough.
@@ -147,18 +147,6 @@
 
     !!! warning ""
         Void Strike and Maelstrom only give full orb generation up close. Avoid walking by using mobility skills to get closer to the target — e.g. Maelstrom → Twin Shadows → Void Strike and adapt to changes in your rotation.
-
-=== "Recovery"
-
-    !!! example ""
-        Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
-
-    - 313 plays similarly, just Turning Slash → Fatal Wave instead of FTF.
-    - Use Head Hunt when a little short on orbs, just cast if unsure.
-    - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
-    - Use Head Hunt instead of Twin Shadows for a cycle to recover stacks if they run out.
-    - Use Maelstrom + Fatal Wave earlier if waiting on main orb generation skills.
-    - Be creative with Fatal Wave's reset after any accidental 2.9 orb Surge.
 
 === "Openers"
 
@@ -176,6 +164,18 @@
 
     - Cycle 1 if Deathly Slash is off cooldown, otherwise start from Maelstrom + Cycle 2. Use Head Hunt if needed.
     - Prioritize Turning Slash earlier for synergy and Deathly Slash last for Adrenaline/RE buff.
+
+=== "Recovery"
+
+    !!! example ""
+        Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
+
+    - 313 plays similarly, just Turning Slash → Fatal Wave instead of FTF.
+    - Use Head Hunt when a little short on orbs, just cast if unsure.
+    - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
+    - Use Head Hunt instead of Twin Shadows for a cycle to recover stacks if they run out.
+    - Use Maelstrom + Fatal Wave earlier if waiting on main orb generation skills.
+    - Be creative with Fatal Wave's reset after any accidental 2.9 orb Surge.
 
 === "TL;DR:"
     ![313 TL;DR flowchart](../assets/re/tldr-313.png)
