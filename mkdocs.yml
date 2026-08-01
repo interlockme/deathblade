@@ -34,9 +34,11 @@ extra:
 plugins:
   - search
   - social:
+      cards_layout: sticker-inline
       cards_layout_options:
         background_color: "#161718"
         color: "#f4e9fb"
+        sticker_image: docs/assets/shared/sticker-dbcry.png
 
 markdown_extensions:
   - admonition
