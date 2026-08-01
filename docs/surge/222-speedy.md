@@ -46,8 +46,8 @@
 ![222 Ark Passive/Grid tree](../assets/surge/argrid-tree-222.png)
 ![222 Order cores](../assets/surge/ordercores-222.png)
 
-!!! danger ""
-    Deadly Feast and Dual Blade Dance cores don't exist in NA yet, so Sword Reset and Destiny core are used as placeholders. Playable with fewer chaos points, but it would be better to play [111 (Classic)](111-classic.md) instead.
+!!! tip ""
+    The only strict Ark Grid requirement for this build is a 10p Star core, but damage may be lacking.
 
 !!! note "Adjustments"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
@@ -60,8 +60,7 @@
 
 !!! tip "Rune Adjustments"
     - Use Legendary Purify on Spincutter if needed.
-    - Use Legendary Bleed on Surprise Attack if you don't need Rage.
-    - Use Epic Rage on Turning Slash if you prefer higher Rage uptime.
+    - Use Legendary Bleed on Surprise Attack if you prefer it.
 
 ??? note "Skill Adjustments"
     - Upper Slash (2-3-2 tripods) can be used instead of Spincutter or Dark Axel.
@@ -131,7 +130,8 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
     <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
     </div>
 
-    - If you have to hold Earth Cleaver for counter, cast <span class="gem-chip">![](../assets/surge/icon-spincutter.png)Spincutter</span> instead.
+    - Cast <span class="gem-chip">![](../assets/surge/icon-spincutter.png)Spincutter</span> instead of Earth Cleaver as needed.
+    - You don't necessarily have to cast Wind Cut before Death trance for this build.
 
 === "Opener/Awakening Cycle"
 
@@ -149,6 +149,7 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
     </div>
 
     - This is the Main cycle for the Upper Slash skill setup.
+    - You don't necessarily have to cast Wind Cut before Death trance for this build.
 
 *From zero orbs:*
 

@@ -46,6 +46,9 @@
 ![111 Ark Passive/Grid tree](../assets/surge/argrid-tree-111.png)
 ![111 Order cores](../assets/surge/ordercores-111.png)
 
+!!! tip ""
+    You can level Ark Grid cores to your preference, but keep in mind that 17p Moon grants a second Earth Cleaver stack. This lets you slot a cooldown gem into Blade Dance and unlocks its Weak Point Detection tripod.
+
 !!! note "Adjustments"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
         - Keen Sense 2 + Master is usually best unless you have 2x crit rate synergy or 2x crit rate bracelet.
