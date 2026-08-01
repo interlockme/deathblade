@@ -20,7 +20,6 @@
     - Focus rune on Maelstrom (on easier builds with excess orb generation).
 
 !!! tip "Quick Tips"
-    - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
     - Trixion practice requires equipping Spirit Absorption and Max MP engravings with full nodes.
     - Prioritize hits under Maelstrom buff over back attacks; just Surge to the back.
     - Always press the next skill during your current skill's animation (skill queuing).
