@@ -114,6 +114,7 @@ Use the Main cycle and repeat it as best you can.
     </div>
 
     - You can skip the second Surprise Attack when you have excess stacks.
+    - You can be flexible with Maelstrom and cast it 1 to 3 skills later when uptime is poor.  
 
 === "Opener/Awakening Cycle"
 
