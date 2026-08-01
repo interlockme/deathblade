@@ -4,7 +4,7 @@
 
 <div class="build-stats">
 <div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">7 / 10</span></div>
-<div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.24 Multiplier</span></div>
+<div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.22 Multiplier</span></div>
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Max Mobility</span></div>
 </div>
 
