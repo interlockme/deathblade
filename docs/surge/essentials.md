@@ -20,9 +20,9 @@
 
 | Build | Difficulty | Playstyle | Best For |
 |:---|:---:|:---|:---|
-| [111 (Classic)](111-classic.md) ⭐ | 7.5 / 10 | Burst Combo | Classic Surge gameplay |
-| [222 (Speedy)](222-speedy.md) | 7 / 10 | Max Mobility | Simple uptime focus |
-| [333 (Blitz)](333-blitz.md) | 8 / 10 | Skill Reset | 🐯 |
+| [111 (Classic)](111-classic.md) ⭐ | 7.5 / 10 | Burst Combo | 🦁 Classic Surge gameplay |
+| [222 (Speedy)](222-speedy.md) | 7 / 10 | Max Mobility | 🐆 Simple uptime focus |
+| [333 (Blitz)](333-blitz.md) | 8 / 10 | Skill Reset | 🐯 Waiting for buffs |
 
 ## Engravings
 
