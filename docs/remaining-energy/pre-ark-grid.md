@@ -2,6 +2,8 @@
 
 *Options for playing Remaining Energy before you have an Ark Grid set up.*
 
+*New to Deathblade entirely? [Surge](../surge/essentials.md) is generally more beginner-friendly.*
+
 <div class="grid cards prearc-cards" markdown>
 
 -   ✿ **Standard**
