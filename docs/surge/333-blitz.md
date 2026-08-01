@@ -1,8 +1,5 @@
 # 333 (Blitz) 🐯 NOT IN NA SERVERS YET
 
-??? danger "🐯"
-    ![333 Blitz meme](../assets/surge/blitz-meme.png)
-
 <div class="build-card" markdown>
 
 <div class="build-stats">
@@ -22,6 +19,9 @@
 [KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip }
 
 </div>
+
+??? danger "🐯"
+    ![333 Blitz meme](../assets/surge/blitz-meme.png)
 
 ## Skill Codes
 
