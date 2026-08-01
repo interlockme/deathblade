@@ -47,7 +47,7 @@
 ![222 Order cores](../assets/surge/ordercores-222.png)
 
 !!! tip ""
-    The only strict Ark Grid requirement for this build is a 10p Star core, but damage may be lacking.
+    The only strict Ark Grid requirement for this build is a 10p Star core, but damage will be lacking.
 
 !!! note "Adjustments"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
@@ -63,7 +63,6 @@
     - Use Legendary Bleed on Surprise Attack if you prefer it.
 
 ??? note "Skill Adjustments"
-    - Upper Slash (2-3-2 tripods) can be used instead of Spincutter or Dark Axel.
     - Earth Explosion tripod on Earth Cleaver is up to personal preference.
         - Increased cast speed and extra stack, lowered mobility and damage.
     - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
