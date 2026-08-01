@@ -8,7 +8,7 @@
     - Blitz Rush gains a 27% cast speed tripod and 20% more attack range.
     - Turning Slash and Surprise Attack's after-effects now also apply Synergy.
     - Overall damage increases, Surge is now competitive with RE.
-    - Post cast delay of Surge is removed, no longer need to animation cancel.
+    - Surge post-cast delay was removed, animation cancelling is no longer needed.
 
 !!! tip "Quick Tips"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
@@ -23,7 +23,7 @@
 |:---|:---:|:---|:---|
 | [111 (Classic)](111-classic.md) ⭐ | 7.5 / 10 | Burst Combo | Classic Surge gameplay |
 | [222 (Speedy)](222-speedy.md) | 7 / 10 | Max Mobility | Simple uptime focus |
-| [333 (Blitz)](333-blitz.md) | 🐯 | Skill Reset | 🐯 |
+| [333 (Blitz)](333-blitz.md) | 7.5 / 10 | Skill Reset | 🐯 |
 
 ## Engravings
 

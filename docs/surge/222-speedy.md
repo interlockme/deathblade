@@ -16,7 +16,7 @@
 - Highest mobility of all Deathblade builds by far.
 - Counter is used in rotation, you must hold it when necessary.
 - Very high gem efficiency, Surge and Deathly Slash are nearly all of your DPS.
-- Must constantly balance Surge and Deathly Slash Back Attack rates with Surge CPM.
+- Must constantly balance Surge and Deathly Slash back attack rate with Surge CPM.
 
 [KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [KR Video Gameplay](https://www.youtube.com/watch?v=lbBLRwdEvgk){ .video-chip }
 
@@ -141,6 +141,7 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
 
     - Blade Dance is lightly tapped for a 'Destiny: Sharp Senses' stack.
     - If Blade Assault is on cooldown, finish up with a regular Main cycle.
+    - Needs testing when the update arrives to NA.
 
 === "Upper Slash"
 

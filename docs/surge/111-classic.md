@@ -16,7 +16,7 @@
 - No need to hold Counter, it charges up to two stacks.
 - Very high gem efficiency, Surge is nearly all of your DPS.
 - Accessible from zero Ark Grid cores with minor adjustments.
-- Must constantly balance Surge Back Attack rate with Surge CPM.
+- Must constantly balance Surge back attack rate with Surge CPM.
 
 [KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [KR Video Gameplay](https://www.youtube.com/watch?v=j-2dGp7PGws){ .video-chip }
 
@@ -99,6 +99,7 @@
 <span class="gem-chip"><span class="gem-num">5</span> ![](../assets/surge/icon-turningslash.png) Turning Slash</span>
 <span class="gem-chip"><span class="gem-num">6</span> ![](../assets/surge/icon-surpriseattack.png) Surprise Attack</span>
 </div>
+
 Earth Cleaver CD must be used instead of Blade Dance CD pre-Ark Grid. Use Quick Prep tripod on Blade Dance.
 
 </div>
