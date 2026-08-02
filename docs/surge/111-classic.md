@@ -52,7 +52,6 @@
 !!! note "Adjustments"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
         - Keen Sense 2 + Master is usually best unless you have 2x crit rate synergy or 2x crit rate bracelet.
-    - Release Potential 4 / Instant Spell 2 may be needed with +CD bracelet line (needs testing).
 
 ## Skill Setup
 

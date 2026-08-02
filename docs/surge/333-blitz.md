@@ -46,7 +46,6 @@
 !!! note "Adjustments"
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
         - Keen Sense 2 + Master is usually best unless you have 2x crit rate synergy or 2x crit rate bracelet.
-    - Release Potential 4 / Instant Spell 2 may be needed with +CD bracelet line (needs testing).
 
 ## Skill Setup
 
@@ -61,7 +60,7 @@
         - Increased cast speed and extra stack, lowered mobility and damage.
     - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
     - You can use the Quick Prep tripod on Blade Dance as a safety net.
-    - Dark Axel (1-1-2 tripods) can be used instead of Spincutter if you prefer it.
+    - Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer it.
 
 !!! danger "Don't remove synergy from Turning Slash"
     Don't even think about it, the data is not in your favor.
