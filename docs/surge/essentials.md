@@ -59,19 +59,19 @@
     ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing is **required**
     { .food-req }
 
-    May require additional Maelstrom management and player skill. Fewer drawbacks for [222 (Speedy)](222-speedy.md) 🐆.
+    May require additional Maelstrom management and player skill. Fewer drawbacks for [222 (Speedy)](222-speedy.md) 🐆
 
 -   **Raid Captain + Mass Increase**
 
     ---
 
-    ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine with Bard or Paladin.
+    ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine with Bard or Paladin
     { .food-req }
     
-    ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing with Artist or Valkyrie.
+    ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing with Artist or Valkyrie
     { .food-req }
 
-    If you can handle the drawbacks, this is it.
+    If you can handle the drawbacks, this is ceiling.
 
 </div>
 
