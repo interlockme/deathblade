@@ -25,7 +25,7 @@
 !!! danger "Before importing"
     Apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
 
-=== "313 High Floor ⭐"
+=== "313 High Floor ★"
 
     ```
     3C737E487FD0FDB67FEB883196135CED1CE05F2123097ECB878B14A177BFE26890DDBB5C6AE3B18CB34871BBE1E17D0CC47A0DAFAE4272BEA4FD33FCF57AF2FC

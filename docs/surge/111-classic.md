@@ -27,7 +27,7 @@
 !!! danger "Before importing"
     Apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
 
-=== "111 Classic ⭐"
+=== "111 Classic ★"
 
     ```
     9AFBA682E2AF248EC0357C6139AB39F73603D1F3583597559FDEB47ED7A071ABD2AE255CB2FF481D09EA6BDF6F653639ADCFB1F1EF01FB11A79379A36DE56B4A

@@ -20,7 +20,7 @@
 
 | Build | Difficulty | Playstyle | Best For |
 |:---|:---:|:---|:---|
-| [111 (Classic)](111-classic.md) ⭐ | 7.5 / 10 | Burst Combo | 🦁 Classic Surge gameplay |
+| [111 (Classic)](111-classic.md) ★ | 7.5 / 10 | Burst Combo | 🦁 Classic Surge gameplay |
 | [222 (Speedy)](222-speedy.md) | 7 / 10 | Max Mobility | 🐆 Simple uptime focus |
 | [333 (Blitz)](333-blitz.md) | 8 / 10 | Skill Reset | 🐯 Waiting for buffs |
 
@@ -29,12 +29,12 @@
 | Category | Options |
 |---|---|
 | Engravings | Grudge · Adrenaline · Ambush Master |
-| Choose Two | Raid Captain ⭐ · KBW ⭐ · Mass Increase 🐆 · Cursed Doll |
+| Choose Two | Raid Captain ★ · KBW ★ · Mass Increase · Cursed Doll |
 
 !!! tip ""
     - Raid Captain **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast and ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine for all content.
     - Mass Increase **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast and ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing for all content.
-    - Raid Captain + Mass Increase is the ceiling option that requires more skilled play. Less tradeoffs for 222.
+    - Raid Captain + Mass Increase is the high-skill ceiling option. Note: Fewer drawbacks for 🐆.
         - Use ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine with Bard and Paladin, ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing with Artist and Valkyrie.
     - With the KBW + CD option, swap Rage runes for Bleed/Poison and use ![](../assets/re/icon-steak.png){: .skill-icon } Herb Steak Meal.
 

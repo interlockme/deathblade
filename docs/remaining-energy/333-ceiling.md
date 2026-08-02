@@ -26,7 +26,7 @@
 !!! danger "Before importing"
     Apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
 
-=== "333 Ceiling ⭐"
+=== "333 Ceiling ★"
 
     ```
     8996BED713426C25CB993BCA48EB9CBA2BF93921A91CAA15F463DED8BF367B2AF73535AAC800498B7340CA45735567DFFAA91A4914C7B288362130D9E34634CC

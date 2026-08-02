@@ -27,7 +27,7 @@
 !!! danger "Before importing"
     Apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
 
-=== "222 Speedy ⭐"
+=== "222 Speedy ★"
 
     ```
     0F5512B16D6B98BF848E17761E6E268E0C697EFF64D0DFBC464CB1EEA1C0EED282E9768BD1CBD8925E7EF1A397F319F846CCAF9C823948DD188BCC67E0E6D0BE
