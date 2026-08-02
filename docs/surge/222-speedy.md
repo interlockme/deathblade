@@ -121,7 +121,7 @@ Use Spincutter and Dark Axel to guarantee back attacks on Deathly Slash and Surg
 
 'Destiny: Sharp Senses' can be stacked up to 5 times by using [Normal] skills to empower Deathly Slash.
 
-Use the Main cycle and repeat it relentlessly until the encounter ends.
+Apply damage synergy if needed, then use the main cycle and repeat it relentlessly.
 
 *From 3 orbs:*
 
@@ -137,7 +137,7 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
 
 === "Upper Slash"
 
-    This is the Main cycle for the Upper Slash skill setup.
+    This is the main cycle for the Upper Slash skill setup.
 
     <div class="rotation-line" markdown>
     <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-upperslash.png)Upper Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>

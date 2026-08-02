@@ -127,15 +127,15 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 
 === "Cycles"
 
-    Use an Opener, then alternate between these two cycles as needed:
+    Use an **Opener**, then alternate between these two cycles as needed:
 
-    **Cycle 1**
+    **Cycle 1 — Void Strike + Deathly Slash**
 
     <div class="rotation-line" markdown>
     <span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
     </div>
 
-    **Cycle 2**
+    **Cycle 2 — Soul Absorber + Blitz Rush**
 
     <div class="rotation-line" markdown>
     <span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">*( ![](../assets/re/icon-maelstrom.png) Maelstrom — situational )*</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
@@ -150,6 +150,8 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 
 === "Openers"
 
+    Openers are meant to stack Adrenaline and apply synergies while dealing damage efficiently. If it all feels like too much to remember, just apply synergy and Surge, as that's the *minimum requirement* to start cycling.
+
     *From 3 orbs (![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant):*
 
     <div class="rotation-line" markdown>
@@ -158,7 +160,7 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 
     - Blade Assault is interchangeable with a regular Cycle 2 if it's on cooldown.
     - Fatal Wave is cast after Deathly Slash to prevent downtime on a future cycle.
-    - It's very efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
+    - It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs or extended raid downtime:*
 

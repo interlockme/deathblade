@@ -85,15 +85,15 @@
 
 === "Cycles"
 
-    Use an Opener, then alternate between these two cycles as needed:
+    Use an **Opener**, then alternate between these two cycles as needed:
 
-    **Cycle 1**
+    **Cycle 1 — Void Strike + Deathly Slash**
 
     <div class="rotation-line" markdown>
     <span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-headhunt.png)Head Hunt</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
     </div>
 
-    **Cycle 2**
+    **Cycle 2 — Soul Absorber + Blitz Rush**
 
     <div class="rotation-line" markdown>
     <span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">*( ![](../assets/re/icon-headhunt.png) Head Hunt — situational )*</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
@@ -112,6 +112,8 @@
 
 === "Openers"
 
+    Openers are meant to stack Adrenaline and apply synergies while dealing damage efficiently. If it all feels like too much to remember, just apply synergy and Surge, as that's the *minimum requirement* to start cycling.
+
     *From 3 orbs (![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant):*
 
     <div class="rotation-line" markdown>
@@ -119,7 +121,7 @@
     </div>
 
     - Blade Assault is interchangeable with a regular Cycle 2 if it's on cooldown.
-    - It's very efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
+    - It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs or extended raid downtime:*
 

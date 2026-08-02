@@ -112,19 +112,20 @@ There's an optimal skill order, but you have flexibility when facing downtime or
 
 Spincutter is your main mobility skill and backup stack builder. Use it to guarantee a back attack on Surge.
 
-Use the Breaking Moon cycle whenever it's available, then repeat the Main cycle whenever it's not.
+Breaking Moon grants 60 stacks on hit and empowers your next Surge.
+
+Use the Breaking Moon cycle whenever it's available, then repeat the main cycle whenever it's not.
 
 *From 3 orbs:*
 
 === "Opener/Breaking Moon Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill">*( ![](../assets/surge/icon-turningslash.png) Turning Slash or ![](../assets/surge/icon-surpriseattack.png) Surprise Attack — synergy )*</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-breakingmoon.png)Breaking Moon</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
+    <span class="skill">*( ![](../assets/surge/icon-turningslash.png) or ![](../assets/surge/icon-surpriseattack.png) — synergy )*</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-breakingmoon.png)Breaking Moon</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
     </div>
 
-    - Skip the first action if Adrenaline is stacked and synergy is still applied.
     - If you already have a Maelstrom buff of 3 seconds or more, do not cast it.
-    - Breaking Moon grants 60 stacks on hit and empowers your next Surge.
+    - Skip the first action if Adrenaline has 1+ stacks and synergy is already applied.
 
 === "Main Cycle"
 

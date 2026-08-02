@@ -103,7 +103,7 @@ There's an optimal skill order, but you have flexibility when facing downtime or
 
 Spincutter is your main mobility skill and backup stack builder. Use it to guarantee back attacks on your major skills.
 
-Use the Main cycle and repeat it as best you can.
+Apply damage synergy if needed, then use the main cycle and repeat it as best you can.
 
 *From 3 orbs:*
 
