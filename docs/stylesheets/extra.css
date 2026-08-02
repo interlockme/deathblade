@@ -23,11 +23,21 @@
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
 }
 
-/* Empty footer bar (no prev/next links configured, generator credit removed)
-   was still rendering as a colored strip using the default blue-indigo hue -
-   just remove it entirely since it has no content. */
+/* Footer now shows real Previous/Next page links (navigation.footer),
+   so style it to match the site instead of hiding it - it previously had
+   no content and rendered as an empty strip in Material's default
+   blue-indigo hue, which is why it was hidden outright before. */
 .md-footer {
-  display: none;
+  background-color: #1b1c1d; /* same neutral shade as the header/tabs bar */
+}
+.md-footer-nav__link {
+  color: #e8e6ee;
+}
+.md-footer-nav__link:hover {
+  color: #ee83ab; /* matches --md-accent-fg-color */
+}
+.md-footer-meta {
+  background-color: #161718; /* page bg, so the generator-credit row (empty, generator: false) doesn't add a visible second stripe */
 }
 
 h1, h2, h3 {
@@ -457,6 +467,35 @@ h3 { color: #4db6ac; }
 .md-typeset .grid.cards > ul > li:nth-child(2) {
   background-color: #16221f;
   border-color: #4db6ac;
+}
+
+/* ---------- Engraving choice cards (Essentials page) ---------- */
+/* Children 1 & 2 (Raid Captain / Mass Increase) already get the generic
+   pink/teal treatment from the bare .grid.cards rule above. Only the 3rd
+   card (the combo recommendation) needs its own color here, in lavender
+   to signal "this one's advice, not a hard requirement" - matching the
+   same muted lavender already used for h2 and the gem-priority numerals. */
+.md-typeset .grid.cards.engraving-cards > ul > li:nth-child(3) {
+  background-color: #1d1a26;
+  border-color: #b39ddb;
+}
+
+/* Small muted requirement line under a card title, before the descriptive
+   sentence below it. Usage: a line of icon(s) + text wrapped in
+   `{ .food-req }`, e.g.:
+   ![](icon){: .skill-icon } Vernese Wine + ![](icon){: .skill-icon } Feast
+   { .food-req } */
+.md-typeset .food-req {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3em;
+  font-size: 0.85em;
+  color: #a79bc4;
+  margin: 0.3em 0 0.6em;
+}
+.md-typeset .food-req img.skill-icon {
+  margin: 0;
 }
 
 /* ---------- Pre-Ark Grid page option cards ---------- */

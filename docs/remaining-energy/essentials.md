@@ -13,11 +13,12 @@
     ![](../assets/re/icon-skewers.png){: .skill-icon } Chewy Grilled Skewers &nbsp;&nbsp; ![](../assets/re/icon-steak.png){: .skill-icon } Herb Steak Meal &nbsp;&nbsp; ![](../assets/re/icon-azena.png){: .skill-icon } Azena's Blessing (P2W)
 
 ??? danger "You can lower mana use at a DPS loss to save gold and skip food"
-
-    - Raise Illicit Spell Evolution node in your Ark Passive for unimportant content.
-    - Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 Leap setting.
-    - Head Hunt with Magick Control tripod, Focus rune or simply using it at Lv 1.
-    - Focus rune on Maelstrom (on easier builds with excess orb generation).
+    | Where | Change |
+    |---|---|
+    | Evolution Ark | Raise Illicit Spell instead of Limit Break (unimportant content only) |
+    | Leap Ark | Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 |
+    | Head Hunt | Magick Control tripod, Focus rune, or simply use it at Lv 1 |
+    | Maelstrom | Focus rune (on easier builds with excess orb generation) |
 
 !!! tip "Quick Tips"
     - Trixion practice requires equipping Spirit Absorption and Max MP engravings with full nodes.
@@ -42,8 +43,27 @@
 | Engravings | Grudge · Adrenaline · Ambush Master · Raid Captain |
 | Choose One | Keen Blunt Weapon ★ · Cursed Doll |
 
-!!! tip ""
-    - Raid Captain **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast for all content.
+<div class="grid cards engraving-cards" markdown>
+
+-   **Raid Captain**
+
+    ---
+
+    ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast is required for all content
+    { .food-req }
+
+    Feast also helps rotations cycle smoothly. 
+
+-   **Keen Blunt Weapon**
+
+    ---
+
+    Keen Sense 2 Evolution setting is often ideal
+    { .food-req }
+
+    Stronger than Cursed Doll by ~0.7% to 1% late game.
+
+</div>
 
 ## Specialization
 

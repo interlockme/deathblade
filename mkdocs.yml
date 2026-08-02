@@ -14,6 +14,10 @@ theme:
     logo: material/sword-cross
   favicon: assets/favicon.svg
   features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.instant.prefetch
+    - navigation.footer
     - navigation.tabs
     - navigation.sections
     - navigation.top

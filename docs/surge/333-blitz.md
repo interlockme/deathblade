@@ -54,7 +54,7 @@
 
 !!! tip "Rune Adjustments"
     - Use Legendary Purify on Spincutter if needed.
-    - Use Legendary Bleed or Poison on Turning Slash if you don't use RC or MI engravings.
+    - Use Legendary Bleed or Poison instead of Rage if you don't use RC or MI engravings.
 
 ??? note "Skill Adjustments"
     - Earth Explosion tripod on Earth Cleaver is up to personal preference.

@@ -82,13 +82,16 @@
     - See [Essentials](essentials.md) for class-wide changes.
 
 ??? danger "Alternative rune setup *(for lazy alts, high latency, slow hands, etc)*"
-    Wealth on Fatal Wave can make this build more forgiving at a ~4% DPS loss. It won't cycle as smoothly, but the reduced stress and urgency may suit some playstyles.
+    Wealth on Fatal Wave can make this build more forgiving at a ~4% DPS loss. It won't cycle as smoothly, but the reduced stress and urgency may suit some playstyles. Consider playing Surge instead of this.
 
-    Fatal Wave: Epic Wealth, Void Strike: Epic Wealth, Soul Absorber: Legendary Wealth, Twin Shadows: Blue Wealth, Maelstrom: Green Wealth.
-
-    - Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 Leap setting is more viable with this setup.
-
-    - Consider playing Surge instead of 333 builds that use Wealth or Orb Control on Fatal Wave.
+    | Skill | Rune |
+    |---|---|
+    | Fatal Wave | Epic Wealth |
+    | Void Strike | Epic Wealth |
+    | Soul Absorber | Legendary Wealth |
+    | Twin Shadows | Blue Wealth |
+    | Maelstrom | Green Wealth |
+    | Leap Ark | Release Potential 3 / Instant Spell 3 |
 
 ## Gems
 

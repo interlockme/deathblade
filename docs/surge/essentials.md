@@ -31,12 +31,49 @@
 | Engravings | Grudge · Adrenaline · Ambush Master |
 | Choose Two | Raid Captain ★ · Keen Blunt Weapon ★ · Mass Increase · Cursed Doll |
 
-!!! tip ""
-    - Raid Captain **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast and ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine for all content.
-    - Mass Increase **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast and ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing for all content.
-    - Raid Captain + Mass Increase is the high-skill ceiling option. Note: Fewer drawbacks for 🐆.
-        - Use ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine with Bard and Paladin, ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing with Artist and Valkyrie.
-    - With the KBW + CD option, swap Rage runes for Bleed/Poison and use ![](../assets/re/icon-steak.png){: .skill-icon } Herb Steak Meal.
+<div class="grid cards engraving-cards" markdown>
+
+-   **Raid Captain** ★
+
+    ---
+
+    ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine is **required**
+    { .food-req }
+
+    May require additional Maelstrom management.
+
+-   **Keen Blunt Weapon** ★
+
+    ---
+
+    Keen Sense 2 Evolution setting is often ideal
+    { .food-req }
+
+    A safe, default choice.
+
+
+-   **Mass Increase**
+
+    ---
+
+    ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing is **required**
+    { .food-req }
+
+    May require additional Maelstrom management and player skill. Fewer drawbacks for [222 (Speedy)](222-speedy.md) 🐆.
+
+-   **Raid Captain + Mass Increase**
+
+    ---
+
+    ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine with Bard or Paladin.
+    { .food-req }
+    
+    ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing with Artist or Valkyrie.
+    { .food-req }
+
+    If you can handle the drawbacks, this is it.
+
+</div>
 
 ## Gameplay
 
