@@ -16,7 +16,7 @@
 - High gem efficiency, Surge and Blitz Rush are most of your DPS.
 - Must balance Surge, Blitz Rush, and Deathly Slash back attack rate with Surge CPM.
 
-[KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip }
+[KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [Exclusive NA Video Gameplay](../assets/surge/tiger.mp4){ .video-chip }
 
 </div>
 
