@@ -69,7 +69,7 @@
 
 ??? note "Skill Adjustments"
     - You can bring Head Hunt down to Lv 1 and Void Strike up to Lv 14 for +0.4% DPS and lower mana use.
-        - However, Lv 7 is more practical and makes recovery much easier and faster. ⭐
+        - However, Lv 7 is more practical and makes recovery much easier and faster. ★
         - At Lv 7, Magick Control tripod can help solve mana issues if you don't need the CDR.
         - Lv 4 Head Hunt (Quick Prep) with Void Strike Lv 13 is a decent overall compromise.
 
