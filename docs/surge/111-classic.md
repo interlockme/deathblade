@@ -132,8 +132,8 @@ Use the Breaking Moon cycle whenever it's available, then repeat the Main cycle 
     <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">*( ![](../assets/surge/icon-surpriseattack.png) Surprise Attack — situational )*</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
     </div>
 
-    - This is the ideal rotation on a stationary boss.
     - You can skip the final Surprise Attack when you have excess stacks.
+    - Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge.
     - Use 'Main Cycle (RC+MI)' instead if you wish to try-hard engraving efficiency in a raid scenario. 
 
 === "Main Cycle (RC+MI)"

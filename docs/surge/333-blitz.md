@@ -114,7 +114,7 @@ Use the Main cycle and repeat it as best you can.
     </div>
 
     - You can skip the final Surprise Attack when you have excess stacks.
-    - You can be flexible with Maelstrom and cast it 1 to 3 skills later when uptime is poor.
+    - Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge.
 
 === "Awakening Cycle"
 
