@@ -53,6 +53,7 @@
     - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
         - Keen Sense 2 + Master is usually best unless you have 2x crit rate synergy or 2x crit rate bracelet.
         - If you don't use Keen Blunt Weapon, the above might not hold true so please learn to use the calculator!
+    - This build is capable of using Mass Increase with the least drawbacks out of all Surge builds.  
 
 ## Skill Setup
 
@@ -69,7 +70,7 @@
     - Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer it.
 
 ??? example "Alternative skill setup: Upper Slash"
-    - You can gain more comfort at a minor DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
+    - You can gain more comfort at a DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
     - Upper Slash is a push immune skill that generates 5 stacks and allows you to skip Earth Cleaver casts.
         - Set Upper Slash to use 2-3-2 tripods and give it an Epic Galewind rune.
         - Lower Earth Cleaver's skill level to 10 and raise Upper Slash to level 14.
@@ -132,7 +133,7 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
 
     - Cast <span class="gem-chip">![](../assets/surge/icon-spincutter.png)Spincutter</span> instead of Earth Cleaver as needed.
     - Cast Blade Assault whenever you want, I'm not your mom.
-    - You don't necessarily have to cast Wind Cut before Death Trance for this build.
+    - You don't strictly have to cast Wind Cut before Death Trance for this build.
 
 === "Upper Slash"
 
@@ -143,7 +144,7 @@ Use the Main cycle and repeat it relentlessly until the encounter ends.
     </div>
 
     - Cast Blade Assault whenever you want, I'm not your mom.
-    - You don't necessarily have to cast Wind Cut before Death Trance for this build.
+    - You don't strictly have to cast Wind Cut before Death Trance for this build.
 
 *From zero orbs:*
 
