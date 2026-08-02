@@ -29,7 +29,7 @@
 | Category | Options |
 |---|---|
 | Engravings | Grudge · Adrenaline · Ambush Master |
-| Choose Two | Raid Captain ★ · KBW ★ · Mass Increase · Cursed Doll |
+| Choose Two | Raid Captain ★ · Keen Blunt Weapon ★ · Mass Increase · Cursed Doll |
 
 !!! tip ""
     - Raid Captain **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast and ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine for all content.

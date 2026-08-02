@@ -40,7 +40,7 @@
 | Category | Options |
 |---|---|
 | Engravings | Grudge · Adrenaline · Ambush Master · Raid Captain |
-| Choose One | KBW ★ · Cursed Doll |
+| Choose One | Keen Blunt Weapon ★ · Cursed Doll |
 
 !!! tip ""
     - Raid Captain **requires** the use of ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast for all content.
