@@ -66,7 +66,8 @@
 
 | Link | What it's for |
 |---|---|
-| [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) | *Tune KS/LB, bracelet, gearing questions* |
+| [Arsonistic's Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) | *Tune KS/LB, bracelet, answers ALL gearing questions* |
+| [KR's Calculator (Translated)](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) | *Simpler, only for Ark Passive settings* |
 | [Astrogem Optimizer](https://airplaner.github.io/lostark-arkgrid-gem-locator-v2/) | *Screencapture auto-minmax for Ark Grid* |
 | [Lost Ark Bible](https://lostark.bible/) | *DPS meter, logs, and raid statistics* |
 | [Lost Ark Nexus](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | *Better for newbies, standard build + 111 HH guide* |

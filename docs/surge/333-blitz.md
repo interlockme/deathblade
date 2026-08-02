@@ -44,8 +44,8 @@
     The minimum requirement to play this build is 14p Sun and 17p Moon, but damage will be lacking. 
 
 !!! note "Adjustments"
-    - Use the [DPS Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/copy) to optimize Keen Sense/Limit Break and Master/Critical.
-        - Keen Sense 2 + Master is usually best unless you have 2x crit rate synergy or 2x crit rate bracelet.
+    - Use the calculator you find easiest: [Arsonistic's](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) or [KR's (Translated)](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) to optimize Ark Passive.
+        - Keen Sense 2 + Master is usually the best when using Keen Blunt Weapon.
         - If you don't use Keen Blunt Weapon, the above might not hold true so please learn to use the calculator!
 
 ## Skill Setup
