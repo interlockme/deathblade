@@ -10,9 +10,9 @@
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Burst Combo</span></div>
 </div>
 
-**Best For:** Players who enjoy building up to one massive, satisfying Surge hit.
+**Best For:**{: .best-for } Players who enjoy building up to one massive, satisfying Surge hit.
 
-**Tradeoff:** All your eggs are in one basket (Surge).
+**Tradeoff:**{: .tradeoff } All your eggs are in one basket (Surge).
 
 - Satisfying burst windows with the Breaking Moon → Surge combo.
 - No need to hold Counter, it charges up to two stacks.

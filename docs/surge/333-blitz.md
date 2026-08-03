@@ -9,13 +9,13 @@
 
 <div class="build-stats">
 <div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">8 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 80%"></div></div></div>
-<div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.20? Multiplier</span><div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill-unconfirmed" style="width: 67%"></div></div></div>
+<div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.20 Multiplier</span><div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill stat-bar-fill-unconfirmed" style="width: 67%"></div></div></div>
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Skill Reset</span></div>
 </div>
 
-**Best For:** Erm.
+**Best For:**{: .best-for } Erm.
 
-**Tradeoff:** The juice is not worth the squeeze.
+**Tradeoff:**{: .tradeoff } The juice is not worth the squeeze.
 
 - Uses Blitz Rush as two fast casts (BTB combo) via a skill reset.
 - High gem efficiency, Surge and Blitz Rush are most of your DPS.

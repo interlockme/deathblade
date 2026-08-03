@@ -10,9 +10,9 @@
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Fast & Punishing</span></div>
 </div>
 
-**Best For:** Players who want maximum skill expression and speed.
+**Best For:**{: .best-for } Players who want maximum skill expression and speed.
 
-**Tradeoff:** Unforgiving rotation with very little room for error.
+**Tradeoff:**{: .tradeoff } Unforgiving rotation with very little room for error.
 
 - This is the final form of the old-school Remaining Energy gameplay.
 - Head Hunt is used in the rotation, so it may not be available for recovery or counter.

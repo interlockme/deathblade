@@ -8,9 +8,9 @@
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Fast & Comfy</span></div>
 </div>
 
-**Best For:** Players who want a simpler, faster, and more forgiving Fatal Wave build.
+**Best For:**{: .best-for } Players who want a simpler, faster, and more forgiving Fatal Wave build.
 
-**Tradeoff:** Lower damage ceiling, but easier to recover from mistakes.
+**Tradeoff:**{: .tradeoff } Lower damage ceiling, but easier to recover from mistakes.
 
 - Head Hunt is always free for counters, recovery, purify, or Adrenaline upkeep.
 - Accessible from a 14p Star core as 113 (Arts), a transitional core-limited option.

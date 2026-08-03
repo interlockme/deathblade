@@ -8,9 +8,9 @@
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Skill Reset</span></div>
 </div>
 
-**Best For:** Players who want the highest damage Fatal Wave build.
+**Best For:**{: .best-for } Players who want the highest damage Fatal Wave build.
 
-**Tradeoff:** Lower orb generation and a less forgiving rotation.
+**Tradeoff:**{: .tradeoff } Lower orb generation and a less forgiving rotation.
 
 - Uses Fatal Wave as two fast casts (FTF combo) via a skill reset.
 - Head Hunt is always free for counters, recovery, purify, or Adrenaline upkeep.

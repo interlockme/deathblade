@@ -10,9 +10,9 @@
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Max Mobility</span></div>
 </div>
 
-**Best For:** Players who want something easy to pick up but difficult to master.
+**Best For:**{: .best-for } Players who want something easy to pick up but difficult to master.
 
-**Tradeoff:** Increased back attack stress and uptime requirements.
+**Tradeoff:**{: .tradeoff } Increased back attack stress and uptime requirements.
 
 - Simple uptime-focused gameplay with no gimmicks.
 - Highest mobility of all Deathblade builds by far.

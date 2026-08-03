@@ -238,6 +238,31 @@ h3 { color: #4db6ac; }
   margin: 0.6em 0;
 }
 
+/* ---------- Skill-code blocks (Ark Passive/Skill import strings) ---------- */
+/* These sit in a plain pymdownx.superfences code block, which otherwise
+   renders as a flat, unbordered box - the only major component on the site
+   without a border + matching corner radius. Same treatment as
+   .rotation-line/.cycle-card so it reads as part of the same visual
+   language instead of a stock Material leftover. */
+.md-typeset .highlight {
+  border: 1px solid rgba(179, 157, 219, 0.32);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 0.6em 0;
+}
+.md-typeset .highlight pre {
+  margin: 0;
+}
+/* The copy-to-clipboard button (content.code.copy) inherits Material's
+   default gray icon color - recolor to the site's lavender accent so it
+   doesn't stand out as the one untouched default element. */
+.md-typeset .highlight button.md-code__button {
+  color: #a79bc4;
+}
+.md-typeset .highlight button.md-code__button:hover {
+  color: #ee83ab;
+}
+
 /* ---------- Tables ---------- */
 .md-typeset table:not([class]) {
   border-radius: 8px;
@@ -682,6 +707,23 @@ h3 { color: #4db6ac; }
     transparent 6px
   );
   opacity: 0.75;
+}
+
+/* "Best For:" / "Tradeoff:" lead-in labels - arguably the two most
+   important sentences on the page (what this build is for, what it costs
+   you), previously just bold text at the same weight/color as everything
+   else. Usage: wrap just the lead-in word, e.g.
+   [Best For:]{ .best-for } Players who want ...
+   [Tradeoff:]{ .tradeoff } Lower orb generation ... */
+.md-typeset .best-for,
+.md-typeset .tradeoff {
+  font-weight: 700;
+}
+.md-typeset .best-for {
+  color: #4db6ac;
+}
+.md-typeset .tradeoff {
+  color: #ee83ab;
 }
 
 .md-typeset .build-card ul {
