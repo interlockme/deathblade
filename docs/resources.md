@@ -55,7 +55,7 @@
 
 ## Gearing Values
 
-*Late game. Fill your own calculator for accuracy.*
+*Late game examples including support buffs. Fill [Arsonistic's calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) with your own stats for accuracy.*
 
 !!! note ""
     ![Gearing values table 1](assets/shared/gearing-1.png)
