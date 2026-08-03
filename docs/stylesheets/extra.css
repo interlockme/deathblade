@@ -869,31 +869,31 @@ h3 { color: #4db6ac; }
 }
 
 /* ---------- Tabbed content ---------- */
-/* Every previous attempt here (pills, tinted surface) added a new visual
-   element, which is exactly what stacks up badly once tabs are nested
-   (tabs inside tabs). Going the other way instead: strip weight out
-   rather than add it. Bold active-label text + a stark solid indicator
-   bar is what reads as "busy" when two of those are sitting close
-   together (outer tab row, inner tab row right below it). Drop the bold,
-   dim the indicator, and match the static line to the same soft gradient
-   fade already used for hr/h2 so tabs stop being the one component with
-   a flat gray Material-default line. No backgrounds, no borders around
-   the block, nothing that compounds when nested - just a quieter line
-   and a color-only (not weight-only) active state. */
+/* Previous version reused the same lavender fade gradient as the h2/hr
+   section-break border, so a dense page (H2 -> tabs -> nested tabs) showed
+   the identical line motif three times in a row. Rather than tone that
+   line down further, drop lines entirely for tabs: no border-image, no
+   sliding underline. The active tab is marked purely by dimming the
+   *inactive* labels (opacity) and giving the active one full opacity plus
+   the accent color. Nothing here is a geometric element (no bar, no border,
+   no background), so nothing compounds or stacks when tabs nest. */
 .md-typeset .tabbed-set > .tabbed-labels {
   box-shadow: none;
-  border-bottom: 1px solid transparent;
-  border-image: linear-gradient(90deg, transparent, rgba(179, 157, 219, 0.45) 50%, transparent) 1;
+  border-bottom: none;
 }
 .md-typeset .tabbed-set > .tabbed-labels > label {
   font-weight: 400;
   color: var(--md-default-fg-color--light);
+  opacity: 0.55;
+  transition: opacity 0.15s ease, color 0.15s ease;
 }
-/* The sliding indicator under the active label - keep it, just make it
-   thinner and softer instead of a stark solid bar. */
+.md-typeset .tabbed-set > .tabbed-labels > label:hover {
+  opacity: 0.8;
+}
+/* Material's own sliding indicator element - remove entirely, we're not
+   using a line of any kind for the active state. */
 .md-typeset .tabbed-labels::before {
-  height: 2px;
-  background-color: rgba(179, 157, 219, 0.15);
+  display: none;
 }
 /* Material lists every tab's <input> first, then one .tabbed-labels div
    with all the <label>s after - an input and its label are siblings by
@@ -911,4 +911,5 @@ h3 { color: #4db6ac; }
 .md-typeset .tabbed-set > input:nth-of-type(8):checked ~ .tabbed-labels > label:nth-of-type(8) {
   color: #b39ddb;
   font-weight: 400;
+  opacity: 1;
 }
