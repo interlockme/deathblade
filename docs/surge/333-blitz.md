@@ -2,6 +2,9 @@
 
 <p class="page-banner page-banner-warning">Not available in NA servers yet</p>
 
+??? danger "But why male models? 🐯 "
+    ![333 Blitz meme](../assets/surge/blitz-meme.png)
+
 <div class="build-card" markdown>
 
 <div class="build-stats">
@@ -21,9 +24,6 @@
 [KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [Exclusive NA Video Gameplay](../assets/surge/tiger.mp4){ .video-chip }
 
 </div>
-
-??? danger "🐯"
-    ![333 Blitz meme](../assets/surge/blitz-meme.png)
 
 ## Skill Codes
 
