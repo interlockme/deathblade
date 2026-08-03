@@ -107,15 +107,6 @@ h3 { color: #4db6ac; }
   margin-top: 1.2em;
 }
 
-/* ---------- Tabbed content underline ---------- */
-/* Material's tab bar uses a flat gray box-shadow line under the labels -
-   swap it for the same lavender fade as hr/h2 so tabs don't look separator-mismatched. */
-.md-typeset .tabbed-set > .tabbed-labels {
-  box-shadow: none;
-  border-bottom: 1px solid transparent;
-  border-image: linear-gradient(90deg, transparent, rgba(179, 157, 219, 0.45) 50%, transparent) 1;
-}
-
 /* ---------- Nested bullet hierarchy ---------- */
 /* A sub-bullet like "However, Lv 7 is more practical..." previously read at
    the exact same size/weight/color as its parent point, so a caveat and a
@@ -875,4 +866,49 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .skills-table tr:hover {
   background-color: rgba(255, 255, 255, 0.035);
+}
+
+/* ---------- Tabbed content ---------- */
+/* Every previous attempt here (pills, tinted surface) added a new visual
+   element, which is exactly what stacks up badly once tabs are nested
+   (tabs inside tabs). Going the other way instead: strip weight out
+   rather than add it. Bold active-label text + a stark solid indicator
+   bar is what reads as "busy" when two of those are sitting close
+   together (outer tab row, inner tab row right below it). Drop the bold,
+   dim the indicator, and match the static line to the same soft gradient
+   fade already used for hr/h2 so tabs stop being the one component with
+   a flat gray Material-default line. No backgrounds, no borders around
+   the block, nothing that compounds when nested - just a quieter line
+   and a color-only (not weight-only) active state. */
+.md-typeset .tabbed-set > .tabbed-labels {
+  box-shadow: none;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, rgba(179, 157, 219, 0.45) 50%, transparent) 1;
+}
+.md-typeset .tabbed-set > .tabbed-labels > label {
+  font-weight: 400;
+  color: var(--md-default-fg-color--light);
+}
+/* The sliding indicator under the active label - keep it, just make it
+   thinner and softer instead of a stark solid bar. */
+.md-typeset .tabbed-labels::before {
+  height: 2px;
+  background-color: rgba(179, 157, 219, 0.15);
+}
+/* Material lists every tab's <input> first, then one .tabbed-labels div
+   with all the <label>s after - an input and its label are siblings by
+   position, not adjacent, so pairing them up needs nth-of-type matching
+   rather than a plain + selector. Covers up to 8 tabs per group; unused
+   pairs are harmless, and this naturally scopes to each nesting level
+   since every .tabbed-set only matches its own inputs/labels. */
+.md-typeset .tabbed-set > input:nth-of-type(1):checked ~ .tabbed-labels > label:nth-of-type(1),
+.md-typeset .tabbed-set > input:nth-of-type(2):checked ~ .tabbed-labels > label:nth-of-type(2),
+.md-typeset .tabbed-set > input:nth-of-type(3):checked ~ .tabbed-labels > label:nth-of-type(3),
+.md-typeset .tabbed-set > input:nth-of-type(4):checked ~ .tabbed-labels > label:nth-of-type(4),
+.md-typeset .tabbed-set > input:nth-of-type(5):checked ~ .tabbed-labels > label:nth-of-type(5),
+.md-typeset .tabbed-set > input:nth-of-type(6):checked ~ .tabbed-labels > label:nth-of-type(6),
+.md-typeset .tabbed-set > input:nth-of-type(7):checked ~ .tabbed-labels > label:nth-of-type(7),
+.md-typeset .tabbed-set > input:nth-of-type(8):checked ~ .tabbed-labels > label:nth-of-type(8) {
+  color: #b39ddb;
+  font-weight: 400;
 }
