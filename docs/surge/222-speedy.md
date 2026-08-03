@@ -69,6 +69,7 @@
         - Increased cast speed and extra stack, lowered mobility and damage.
     - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
     - Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer it.
+    - You can literally replace Spincutter or Dark Axel for any skill you prefer.
 
 ??? example "Alternative skill setup: Upper Slash"
     - You can gain more comfort at a DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
