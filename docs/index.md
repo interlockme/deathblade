@@ -33,6 +33,6 @@
 
 *(Shared by both playstyles — see [Additional Resources](resources.md) for links, gearing tables, and bonus content.)*
 
-## About
+---
 
-This site adapts KR Deathblade research for NA. You're just gonna copy powdersnow anyway, but the class has enough quirks that the context behind each build is worth knowing.
+**About:** This site adapts KR Deathblade research for NA. The class has enough quirks that the context behind it is worth knowing. It's easy to clone this repo and get a working site if you want your own spin.
