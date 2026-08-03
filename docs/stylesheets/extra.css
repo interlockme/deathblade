@@ -107,6 +107,15 @@ h3 { color: #4db6ac; }
   margin-top: 1.2em;
 }
 
+/* ---------- Tabbed content underline ---------- */
+/* Material's tab bar uses a flat gray box-shadow line under the labels -
+   swap it for the same lavender fade as hr/h2 so tabs don't look separator-mismatched. */
+.md-typeset .tabbed-set > .tabbed-labels {
+  box-shadow: none;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, rgba(179, 157, 219, 0.45) 50%, transparent) 1;
+}
+
 /* ---------- Nested bullet hierarchy ---------- */
 /* A sub-bullet like "However, Lv 7 is more practical..." previously read at
    the exact same size/weight/color as its parent point, so a caveat and a
