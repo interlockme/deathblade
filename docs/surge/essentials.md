@@ -18,6 +18,8 @@
 
 ## Build Comparison
 
+*Note: Trixion DPS is just a dummy test. Real raid performance is what actually matters!*
+
 | Build | Difficulty | Trixion DPS | Playstyle | Best For |
 |:---|:---:|:---:|:---|:---|
 | [111 (Classic)](111-classic.md) ★ | <div class="table-bar-cell">7.5 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 75%"></div></div></div> | <div class="table-bar-cell">1.23x<div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill stat-bar-fill-teal" style="width: 77%"></div></div></div> | Burst Combo | 🦁 Classic Surge gameplay |

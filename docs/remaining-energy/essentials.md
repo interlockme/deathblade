@@ -29,6 +29,8 @@
 
 *New to Deathblade entirely? [Surge](../surge/essentials.md) is generally more beginner-friendly.*
 
+*Note: Trixion DPS is just a dummy test. Real raid performance is what actually matters!*
+
 | Build | Difficulty | Trixion DPS | Playstyle | Best For |
 |:---|:---:|:---:|:---|:---|
 | [333 (Ceiling)](333-ceiling.md) ★ | <div class="table-bar-cell">8.5 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 85%"></div></div></div> | <div class="table-bar-cell">1.20x<div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill stat-bar-fill-teal" style="width: 67%"></div></div></div> | Skill Reset | ✨ Well-rounded damage ceiling |
