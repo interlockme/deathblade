@@ -386,17 +386,18 @@ h3 { color: #4db6ac; }
 }
 
 /* ---------- External link indicator ---------- */
-/* Small ↗ so it's visually obvious before clicking that a link leaves the
-   site (YouTube guides, Google Sheets, Nexus archive, etc). Targets
-   href^="http" only, so relative internal links (e.g. "333-ceiling.md",
-   "../surge/essentials.md") are automatically excluded - no markdown
-   changes needed anywhere. video-chip links are excluded too since their
-   ▶ prefix already signals "external video"; a second icon would be
-   redundant clutter on the same short label. */
-.md-typeset a[href^="http"]:not(.video-chip)::after {
+.md-typeset a[href^="http://"]:not(.video-chip)::after,
+.md-typeset a[href^="https://"]:not(.video-chip)::after {
   content: " ↗";
   font-size: 0.75em;
   opacity: 0.65;
+}
+
+/* Exclude any link hosted on github.io and local dev servers */
+.md-typeset a[href*="github.io"]::after,
+.md-typeset a[href^="http://localhost"]::after,
+.md-typeset a[href^="http://127.0.0.1"]::after {
+  content: none !important;
 }
 
 /* ---------- Gem priority: horizontal chip layout ---------- */
