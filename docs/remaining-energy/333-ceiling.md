@@ -3,7 +3,7 @@
 <div class="build-card" markdown>
 
 <div class="build-stats">
-<div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">8.5 / 10</span></div>
+<div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">8.5 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 85%"></div></div></div>
 <div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.20 Multiplier</span></div>
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Skill Reset</span></div>
 </div>

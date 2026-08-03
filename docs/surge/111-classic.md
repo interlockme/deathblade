@@ -1,9 +1,11 @@
-# 111 (Classic) 🦁 NOT IN NA SERVERS YET
+# 111 (Classic) 🦁
+
+<p class="page-banner page-banner-warning">Not available in NA servers yet</p>
 
 <div class="build-card" markdown>
 
 <div class="build-stats">
-<div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">7.5 / 10</span></div>
+<div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">7.5 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 75%"></div></div></div>
 <div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.23 Multiplier</span></div>
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Burst Combo</span></div>
 </div>

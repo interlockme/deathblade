@@ -1,9 +1,11 @@
-# 333 (Blitz) 🐯 NOT IN NA SERVERS YET
+# 333 (Blitz) 🐯
+
+<p class="page-banner page-banner-warning">Not available in NA servers yet</p>
 
 <div class="build-card" markdown>
 
 <div class="build-stats">
-<div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">8 / 10</span></div>
+<div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">8 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 80%"></div></div></div>
 <div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.20? Multiplier</span></div>
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Skill Reset</span></div>
 </div>
