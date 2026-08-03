@@ -34,4 +34,4 @@
 
 ---
 
-Once you have a fuller Ark Grid, move on to [313 (High Floor)](313-high-floor.md) or [333 (Ceiling)](333-ceiling.md) — see [Essentials](essentials.md) if you haven't already.
+If you haven't already, check [Essentials](essentials.md).

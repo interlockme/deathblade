@@ -6,7 +6,7 @@
 
 <div class="build-stats">
 <div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">7.5 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 75%"></div></div></div>
-<div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.23 Multiplier</span></div>
+<div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.23 Multiplier</span><div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill stat-bar-fill-teal" style="width: 77%"></div></div></div>
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Burst Combo</span></div>
 </div>
 
@@ -119,6 +119,7 @@ Breaking Moon grants 60 stacks on hit and empowers your next Surge.
 Use the Breaking Moon cycle whenever it's available, then repeat the main cycle whenever it's not.
 
 *From 3 orbs:*
+{ .lead }
 
 === "Opener/Breaking Moon Cycle"
 
@@ -140,7 +141,8 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 
 === "Main Cycle (RC+MI)"
 
-    This is an alternate version of the main cycle meant to try-hard Raid Captain and Mass Increase efficiency.
+    *This is an alternate version of the main cycle meant to try-hard Raid Captain and Mass Increase efficiency.*
+    { .lead }
 
     <div class="rotation-line" markdown>
     <span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
@@ -158,6 +160,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
     </div>
 
 *From zero orbs:*
+{ .lead }
 
 1. Use a ![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant (recommended) or proceed to #2.
 2. Generate one orb, build at least 40 stacks, then Surge to refill all 3 orbs.

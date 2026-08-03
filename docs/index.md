@@ -27,8 +27,6 @@
 
 **What do the build names mean?** Names like 333, 313, 111, and 222 are shorthand for each build's Ark Grid Core assignment — not a difficulty rating. Choose a build for more information.
 
----
-
 ## Additional Resources
 
 *(Shared by both playstyles — see [Additional Resources](resources.md) for links, gearing tables, and bonus content.)*

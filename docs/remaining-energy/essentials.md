@@ -31,10 +31,10 @@
 
 | Build | Difficulty | Playstyle | Best For |
 |:---|:---:|:---|:---|
-| [333 (Ceiling)](333-ceiling.md) ★ | 8.5 / 10 | Skill Reset | ✨ Well-rounded damage ceiling |
-| [313 (High Floor)](313-high-floor.md) | 8 / 10 | Fast & Comfy | 💜 Comfort and recovery |
-| [111 (Head Hunt)](111-head-hunt.md) | 9 / 10 | Fast & Punishing | ⚠️ Skill expression and stagger |
-| [Standard](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | 7 / 10 | AFK Simulator | 🌱 Pre-Ark Grid beginner build |
+| [333 (Ceiling)](333-ceiling.md) ★ | <div class="table-bar-cell">8.5 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 85%"></div></div></div> | Skill Reset | ✨ Well-rounded damage ceiling |
+| [313 (High Floor)](313-high-floor.md) | <div class="table-bar-cell">8 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 80%"></div></div></div> | Fast & Comfy | 💜 Comfort and recovery |
+| [111 (Head Hunt)](111-head-hunt.md) | <div class="table-bar-cell">9 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 90%"></div></div></div> | Fast & Punishing | ⚠️ Skill expression and stagger |
+| [Standard](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | <div class="table-bar-cell">7 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 70%"></div></div></div> | AFK Simulator | 🌱 Pre-Ark Grid beginner build |
 
 ## Engravings
 
@@ -130,4 +130,11 @@ To gauge your skill level, the best metric to look at is your Surge CPM. Only co
 | ![](../assets/re/icon-spincutter.png) | **Spincutter**<br>*592 meter*<br>*per cast* | <span class="tag tag-util">MOBILITY</span> | Can be cast up to 2-3 times. |
 | ![](../assets/re/icon-deathsentence.png) | **Death Sentence**<br>*1760 meter* | <span class="tag tag-dmg">DAMAGE</span><span class="tag tag-util">STAGGER</span><span class="tag tag-util">MOBILITY</span> | — |
 
+</div>
+
+<div class="tag-legend" markdown>
+<span class="tag-legend-item"><span class="tag-legend-dot tag-legend-dmg"></span>Damage</span>
+<span class="tag-legend-item"><span class="tag-legend-dot tag-legend-util"></span>Utility</span>
+<span class="tag-legend-item"><span class="tag-legend-dot tag-legend-immune"></span>Immune</span>
+<span class="tag-legend-item"><span class="tag-legend-dot tag-legend-warn"></span>Warning</span>
 </div>

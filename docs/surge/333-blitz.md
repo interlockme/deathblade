@@ -6,7 +6,7 @@
 
 <div class="build-stats">
 <div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">8 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 80%"></div></div></div>
-<div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.20? Multiplier</span></div>
+<div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.20? Multiplier</span><div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill-unconfirmed" style="width: 67%"></div></div></div>
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Skill Reset</span></div>
 </div>
 
@@ -108,6 +108,7 @@ Spincutter is your main mobility skill and backup stack builder. Use it to guara
 Apply damage synergy if needed, then use the main cycle and repeat it as best you can.
 
 *From 3 orbs:*
+{ .lead }
 
 === "Main Cycle"
 
@@ -127,6 +128,7 @@ Apply damage synergy if needed, then use the main cycle and repeat it as best yo
     - Needs testing when the update arrives to NA.
 
 *From zero orbs:*
+{ .lead }
 
 1. Use a ![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant (recommended) or proceed to #2.
 2. Generate one orb, build at least 40 stacks, then Surge to refill all 3 orbs.

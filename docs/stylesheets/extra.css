@@ -23,6 +23,35 @@
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
 }
 
+/* ---------- Selection & scrollbar theming ---------- */
+/* Default browser selection (blue) and scrollbar (gray) clash with the
+   pastel palette used everywhere else on the site - small detail, but it's
+   the kind of thing that makes a themed site feel finished rather than
+   half-skinned. */
+[data-md-color-scheme="slate"] ::selection {
+  background-color: rgba(238, 131, 171, 0.35);
+  color: #fff;
+}
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(179, 157, 219, 0.45) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(179, 157, 219, 0.35);
+  border-radius: 999px;
+  border: 2px solid #161718;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(179, 157, 219, 0.55);
+}
+
 /* Footer now shows real Previous/Next page links (navigation.footer),
    so style it to match the site instead of hiding it - it previously had
    no content and rendered as an empty strip in Material's default
@@ -48,6 +77,58 @@ h1 { color: #e64a89; }
 h2 { color: #b39ddb; } /* muted lavender, used sparingly as an accent, not a fill color */
 h3 { color: #4db6ac; }
 
+/* ---------- Lead paragraph (opt-in) ---------- */
+/* A slightly larger, lighter-colored treatment for the first sentence
+   introducing a dense section - a softer entry point before a wall of
+   tabs/bullets/rotation-lines hits. Opt-in only, not automatic: add
+   `{ .lead }` on the line right after the paragraph you want it on. */
+.md-typeset p.lead {
+  font-size: 1.08em;
+  color: var(--md-default-fg-color--light);
+  margin-bottom: 0.8em;
+}
+
+/* ---------- Section breathing room (H2s read as chapter breaks) ---------- */
+/* Dense guide pages (Skill Codes -> Ark Setup -> Skill Setup -> Gems ->
+   Rotation) previously gave every H2 the same spacing as any other heading,
+   so a long page read as one continuous scroll of colored boxes. A little
+   extra top margin plus a faint top border makes each H2 read as the start
+   of a new chapter instead. */
+.md-typeset h2 {
+  margin-top: 1.9em;
+  padding-top: 0.7em;
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, rgba(179, 157, 219, 0.45) 50%, transparent) 1;
+}
+.md-typeset h1 + h2,
+.md-typeset .build-card + h2 {
+  /* First H2 right after the title/build-card - the build-card's own
+     margin already separates it, so don't double up on top spacing. */
+  margin-top: 1.2em;
+}
+
+/* ---------- Nested bullet hierarchy ---------- */
+/* A sub-bullet like "However, Lv 7 is more practical..." previously read at
+   the exact same size/weight/color as its parent point, so a caveat and a
+   main point looked equally important until you actually read both. Dimming
+   and slightly shrinking second-level (and deeper) bullets lets "main point
+   -> caveat" register at a glance, without touching vertical spacing. */
+.md-typeset li li {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.92em;
+}
+
+/* ---------- Horizontal rule ---------- */
+/* Material's default hr is a flat 1px gray line - restyled as a soft fade
+   in the site's own lavender accent so section breaks (index.md) feel
+   designed rather than left at the framework default. */
+.md-typeset hr {
+  border: none;
+  height: 1px;
+  margin: 2em 0;
+  background: linear-gradient(90deg, transparent, rgba(179, 157, 219, 0.45) 50%, transparent);
+}
+
 /* ---------- Admonitions ---------- */
 .md-typeset .admonition,
 .md-typeset details {
@@ -55,6 +136,22 @@ h3 { color: #4db6ac; }
   font-size: 1em;             /* match surrounding body text instead of Material's smaller default or a larger override */
   overflow: hidden;           /* fixes title-bar corners poking out past the rounded box */
   margin: 0.6em 0;            /* tighter than default so a stacked sequence reads as one flow */
+}
+
+/* Closed (???) collapsibles vs always-open (!!!) tips previously looked
+   the same weight, so "core info" and "optional depth" were indistinguishable
+   before you opened anything. Quieten the closed state only - a details
+   element without [open] is exactly the pymdownx.details ??? case, so this
+   never touches !!! admonitions (which render as plain divs, not <details>). */
+.md-typeset details:not([open]) {
+  opacity: 0.8;
+}
+.md-typeset details:not([open]) > summary {
+  padding-top: 0.28rem;
+  padding-bottom: 0.28rem;
+}
+.md-typeset details[open] {
+  opacity: 1;
 }
 
 /* Material gives the title bar its own top/bottom padding, then the first
@@ -158,6 +255,56 @@ h3 { color: #4db6ac; }
   border-radius: 6px;
 }
 
+/* ---------- Difficulty bar inside Build Comparison tables ---------- */
+/* Reuses the same stat-bar-track/fill pieces from the build-card, laid out
+   horizontally to fit a table cell instead of stacked under a stat-value.
+   Usage in a pipe-table cell:
+   <div class="table-bar-cell">8.5 / 10<div class="stat-bar-track"><div
+   class="stat-bar-fill" style="width: 85%"></div></div></div> */
+.md-typeset .table-bar-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.md-typeset .table-bar-cell .stat-bar-track {
+  width: 46px;
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+/* ---------- Tag color-key legend (above skill tables) ---------- */
+/* The tag pills (pink/teal/blue/amber) were consistent but nothing on the
+   page explained what the colors meant. One quiet line above each
+   skills-table fixes that permanently.
+   Usage: <div class="tag-legend" markdown>
+   <span class="tag-legend-item"><span class="tag-legend-dot tag-legend-dmg"></span>Damage</span>
+   ...
+   </div> */
+.md-typeset .tag-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9em;
+  font-size: 0.72rem;
+  color: #a79bc4;
+  margin: 0.3em 0 0.8em;
+}
+.md-typeset .tag-legend-item {
+  display: inline-flex;
+  align-items: center;
+}
+.md-typeset .tag-legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-right: 5px;
+}
+.md-typeset .tag-legend-dmg { background-color: #f48fb1; }
+.md-typeset .tag-legend-util { background-color: #4db6ac; }
+.md-typeset .tag-legend-immune { background-color: #64b5f6; }
+.md-typeset .tag-legend-warn { background-color: #e6b422; }
+
 /* ---------- Skill legend tables (Essentials pages) ---------- */
 /* Fixed 48x48 icons regardless of the source asset's resolution.
    Wrap the table in <div class="skills-table" markdown>...</div>. */
@@ -236,6 +383,20 @@ h3 { color: #4db6ac; }
 .md-typeset a:not(.md-button):not(.playstyle-card):hover {
   color: #ffb3cf;
   text-decoration-color: #ffb3cf;
+}
+
+/* ---------- External link indicator ---------- */
+/* Small ↗ so it's visually obvious before clicking that a link leaves the
+   site (YouTube guides, Google Sheets, Nexus archive, etc). Targets
+   href^="http" only, so relative internal links (e.g. "333-ceiling.md",
+   "../surge/essentials.md") are automatically excluded - no markdown
+   changes needed anywhere. video-chip links are excluded too since their
+   ▶ prefix already signals "external video"; a second icon would be
+   redundant clutter on the same short label. */
+.md-typeset a[href^="http"]:not(.video-chip)::after {
+  content: " ↗";
+  font-size: 0.75em;
+  opacity: 0.65;
 }
 
 /* ---------- Gem priority: horizontal chip layout ---------- */
@@ -383,6 +544,56 @@ h3 { color: #4db6ac; }
   margin: 0;
 }
 
+/* ---------- Cycle cards (group a Cycle's label + rotation-line into one step) ---------- */
+/* Structure:
+   <div class="cycle-card" markdown>
+   <div class="cycle-card-header"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash</span></div>
+   <div class="rotation-line" markdown>
+   ...skills as normal...
+   </div>
+   </div>
+   The nested .rotation-line has its own border/bg/margin stripped below so
+   it reads as this card's body, not a second nested box. Any strategy text
+   for the cycle stays outside the card as a normal paragraph, same as before. */
+.md-typeset .cycle-card {
+  border: 1px solid rgba(179, 157, 219, 0.32);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0.8em 0 0.6em;
+}
+.md-typeset .cycle-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  background-color: rgba(179, 157, 219, 0.08);
+  padding: 0.5em 0.9em;
+  border-bottom: 1px solid rgba(179, 157, 219, 0.2);
+}
+.md-typeset .cycle-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #b39ddb;
+  color: #161718;
+  font-weight: 700;
+  font-size: 0.72rem;
+  flex-shrink: 0;
+}
+.md-typeset .cycle-title {
+  color: #e8e6ee;
+  font-weight: 700;
+  font-size: 0.95em;
+}
+.md-typeset .cycle-card .rotation-line {
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  margin: 0;
+}
+
 /* ---------- Build quick-reference card (top of each build page) ---------- */
 /* Structure:
    <div class="build-card" markdown>
@@ -444,6 +655,34 @@ h3 { color: #4db6ac; }
   border-radius: 999px;
   background-color: #ee83ab;
 }
+/* Trixion multiplier bar: same stat-bar-track/fill shape as Difficulty,
+   but on a FIXED 1.0-1.3 scale rather than the data's own min/max. Values
+   only span 1.17-1.23 (a 5% spread) - stretching that to fill 0-100% would
+   visually exaggerate a small real difference into a huge-looking gap.
+   width% = (value - 1.0) / 0.3 * 100, teal to match the Trixion DPS icon set.
+   Usage: <div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill
+   stat-bar-fill-teal" style="width: 60%"></div></div> after the stat-value. */
+.md-typeset .stat-bar-track-teal {
+  background-color: rgba(77, 182, 172, 0.15);
+}
+.md-typeset .stat-bar-fill-teal {
+  background-color: #4db6ac;
+}
+/* Muted/striped variant for a value that isn't confirmed yet (333-blitz.md's
+   "1.20?" is unverified) - visually distinct from a normal solid fill so it
+   doesn't read as equally certain. Use in place of .stat-bar-fill-teal. */
+.md-typeset .stat-bar-fill-unconfirmed {
+  background-color: transparent;
+  background-image: repeating-linear-gradient(
+    135deg,
+    #4db6ac 0,
+    #4db6ac 3px,
+    transparent 3px,
+    transparent 6px
+  );
+  opacity: 0.75;
+}
+
 .md-typeset .build-card ul {
   margin: 0.4em 0 0.7em;
 }
@@ -579,6 +818,9 @@ h3 { color: #4db6ac; }
 /* ---------- Skills table row hover ---------- */
 /* Long skill reference tables (14+ rows) had no way to track a row across
    to its Tags/Notes columns without losing your place. */
+.md-typeset .skills-table tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
 .md-typeset .skills-table tr:hover {
   background-color: rgba(255, 255, 255, 0.035);
 }

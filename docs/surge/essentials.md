@@ -20,9 +20,9 @@
 
 | Build | Difficulty | Playstyle | Best For |
 |:---|:---:|:---|:---|
-| [111 (Classic)](111-classic.md) ★ | 7.5 / 10 | Burst Combo | 🦁 Classic Surge gameplay |
-| [222 (Speedy)](222-speedy.md) | 7 / 10 | Max Mobility | 🐆 Simple uptime focus |
-| [333 (Blitz)](333-blitz.md) | 8 / 10 | Skill Reset | 🐯 Waiting for buffs |
+| [111 (Classic)](111-classic.md) ★ | <div class="table-bar-cell">7.5 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 75%"></div></div></div> | Burst Combo | 🦁 Classic Surge gameplay |
+| [222 (Speedy)](222-speedy.md) | <div class="table-bar-cell">7 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 70%"></div></div></div> | Max Mobility | 🐆 Simple uptime focus |
+| [333 (Blitz)](333-blitz.md) | <div class="table-bar-cell">8 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 80%"></div></div></div> | Skill Reset | 🐯 Waiting for buffs |
 
 ## Engravings
 
@@ -129,4 +129,11 @@ If you want to gauge your skill level, the best metric to look at is your Surge 
 | ![](../assets/surge/icon-upperslash.png) | **Upper Slash**<br>*up to 5 stacks* | <span class="tag tag-immune">PUSH IMMUNE</span> | Alternative skill for [222 (Speedy)](222-speedy.md). |
 | ![](../assets/surge/icon-fallstar.png) | **Fallstar**<br>*up to 8 stacks* | <span class="tag tag-immune">PUSH IMMUNE</span> | *Surely one day this is meta...* |
 
+</div>
+
+<div class="tag-legend" markdown>
+<span class="tag-legend-item"><span class="tag-legend-dot tag-legend-dmg"></span>Damage</span>
+<span class="tag-legend-item"><span class="tag-legend-dot tag-legend-util"></span>Utility</span>
+<span class="tag-legend-item"><span class="tag-legend-dot tag-legend-immune"></span>Immune</span>
+<span class="tag-legend-item"><span class="tag-legend-dot tag-legend-warn"></span>Warning</span>
 </div>
