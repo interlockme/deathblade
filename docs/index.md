@@ -33,4 +33,4 @@
 
 ---
 
-**About:** This site adapts KR Deathblade research for NA. The class has enough quirks that the context behind it is worth knowing. It's easy to clone this repo and get a working site if you want your own spin.
+**About:** This site adapts KR Deathblade research for NA. The class has enough quirks that the context behind it is worth knowing. It's easy to fork [this repo](https://github.com/interlockme/deathblade) and get a working site if you want your own spin.

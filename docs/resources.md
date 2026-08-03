@@ -69,7 +69,8 @@
 | [Arsonistic's Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) | *Tune KS/LB, bracelet, answers ALL gearing questions* |
 | [KR's Calculator (Translated)](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) | *Simpler, only for Ark Passive settings* |
 | [Astrogem Optimizer](https://airplaner.github.io/lostark-arkgrid-gem-locator-v2/) | *Screencapture auto-minmax for Ark Grid* |
-| [Lost Ark Bible](https://lostark.bible/) | *DPS meter, logs, and raid statistics* |
+| [Lost Ark Bible](https://lostark.bible/) | *Logs and raid statistics* |
+| [LOA Logs](https://github.com/snoww/loa-logs) | *DPS meter download* |
 | [Lost Ark Nexus](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | *Better for newbies, standard build + 111 HH guide* |
 | [Fatal Wave Dump](https://docs.google.com/document/d/1vs1YC_7adaYwtfN9cHO3x2KuMPq6GcKRlGo5vnsN4Lk/edit) | *333 Standard (spincutter) or 333 (Ceiling) NA builds* |
 | [Maxroll](https://maxroll.gg/lost-ark) | *Resources for beginners* |
