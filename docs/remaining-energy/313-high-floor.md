@@ -23,7 +23,7 @@
 ## Skill Codes
 
 !!! danger "Before importing"
-    Apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+    Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
 
 === "313 High Floor ★"
 
