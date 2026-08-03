@@ -16,7 +16,7 @@
     | Where | Change |
     |---|---|
     | Evolution Ark | Raise Illicit Spell instead of Limit Break (unimportant content only) |
-    | Leap Ark | Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 |
+    | Leap Ark | Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 ★ |
     | Head Hunt | Magick Control tripod, Focus rune, or simply use it at Lv 1 |
     | Maelstrom | Focus rune (on easier builds with excess orb generation) |
 
