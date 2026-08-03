@@ -33,7 +33,7 @@
 
 ## CPM Calculator
 
-*Compares Trixion damage to real raid damage across builds. Check the [Spreadsheet](https://docs.google.com/spreadsheets/d/1l5C427BmEY4P6VJDql2aKyFYJSgIGeRBCJF2FXv_9w4/edit?usp=sharing).*
+*Compares Trixion damage to real raid damage across builds. Check the [Spreadsheet](https://docs.google.com/spreadsheets/d/1l5C427BmEY4P6VJDql2aKyFYJSgIGeRBCJF2FXv_9w4/edit?usp=sharing) and watch this [video](https://www.youtube.com/watch?v=dlUS8vUaNLA) for an explanation of Trixion multipliers. The values shown in this site align with the September update.*
 
 **333 (RE)** — Trixion CPM 15.122, ×1.20 multiplier, 75% B.A. → ×1.1206 *(123 sec, 31 surges)*
 
