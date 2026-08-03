@@ -11,8 +11,8 @@
     - Surge post-cast delay was removed, animation cancelling is no longer needed.
 
 !!! tip "Quick Tips"
-    - Trixion practice requires equipping Spirit Absorption and Max MP engravings.
     - Always press the next skill during your current skill's animation (skill queuing).
+    - Trixion practice requires equipping maxed Spirit Absorption and Max MP engravings.
     - The Bartender on Peyto Island sells ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine and ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing.
     - Optimized Training 1 may help smooth things out at lower gem levels.
 

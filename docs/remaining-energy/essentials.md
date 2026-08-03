@@ -21,9 +21,9 @@
     | Maelstrom | Focus rune (on easier builds with excess orb generation) |
 
 !!! tip "Quick Tips"
-    - Trixion practice requires equipping Spirit Absorption and Max MP engravings with full nodes.
     - Prioritize hits under Maelstrom buff over back attacks; just Surge to the back.
     - Always press the next skill during your current skill's animation (skill queuing).
+    - Trixion practice requires equipping maxed Spirit Absorption and Max MP engravings.
 
 ## Build Comparison
 
