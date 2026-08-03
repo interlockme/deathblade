@@ -52,6 +52,11 @@
 !!! tip "Rune Adjustments"
     - Use Purify on Head Hunt if you must.
 
+??? note "Skill Adjustments"
+    - You can swap Head Hunt's tripod to Quick Prep and gain an extra gem slot.
+        - Change your Head Hunt CD gem to Twin Shadows CD. Enjoy the much easier recovery!
+        - This setup may run into mana issues, use a Focus rune on Head Hunt if necessary.
+
 ## Gems
 
 <div class="gem-priority" markdown>
