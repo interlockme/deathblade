@@ -107,6 +107,22 @@ h3 { color: #4db6ac; }
   margin-top: 1.2em;
 }
 
+/* Material's default already hides this at opacity: 0 until hover - the
+   only thing actually missing was a transition so it doesn't just pop in.
+   (Previous version set a baseline 0.35 here, which made it visible at
+   rest everywhere - that was a regression, not an improvement. Reverted
+   to invisible-by-default, just smoother now.) */
+.md-typeset .headerlink {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.md-typeset h1:hover .headerlink,
+.md-typeset h2:hover .headerlink,
+.md-typeset h3:hover .headerlink,
+.md-typeset .headerlink:focus-visible {
+  opacity: 1;
+}
+
 /* ---------- Nested bullet hierarchy ---------- */
 /* A sub-bullet like "However, Lv 7 is more practical..." previously read at
    the exact same size/weight/color as its parent point, so a caveat and a
@@ -264,13 +280,26 @@ h3 { color: #4db6ac; }
 }
 
 /* ---------- Tables ---------- */
+/* Every other boxed component on the site (.build-card, .highlight,
+   .rotation-line, .cycle-card) has a lavender border - tables were the one
+   exception, just a rounded header color with an invisible edge against
+   the page background. Same border tone as .highlight, and the same
+   zebra/hover treatment .skills-table already had, generalized to every
+   table so a plain Build Comparison table gets the same "track your row"
+   help the skill-reference tables did. */
 .md-typeset table:not([class]) {
+  border: 1px solid rgba(179, 157, 219, 0.2);
   border-radius: 8px;
   overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.02);
 }
 .md-typeset table:not([class]) th {
   background-color: #201d29;
   color: #a79bc4;
+}
+.md-typeset table:not([class]) tr:hover {
+  background-color: rgba(255, 255, 255, 0.035);
+  transition: background-color 0.12s ease;
 }
 .md-typeset table img {
   height: 1.4em;
@@ -408,6 +437,21 @@ h3 { color: #4db6ac; }
 .md-typeset a:not(.md-button):not(.playstyle-card):hover {
   color: #ffb3cf;
   text-decoration-color: #ffb3cf;
+}
+
+/* Material's JS quietly wraps each tab label's text in a real
+   <a href="#tab-id"> at runtime (for deep-linking / syncing identically-
+   named tabs across pages) - invisible in a static render, only appears
+   once the page's JS actually runs. The rule above was catching that
+   injected <a> and giving it the site-wide "visibly clickable" pink
+   underline treatment, which is what actually produced the underline
+   under every tab label - nothing to do with Material's own tab-active
+   indicator this whole time. !important because the rule above has 3
+   classes in its selector (.md-typeset + two :not()s) against 2 here, so
+   it would otherwise win on specificity despite coming first. */
+.md-typeset .tabbed-labels label a {
+  color: inherit !important;
+  text-decoration: none !important;
 }
 
 /* ---------- External link indicator ---------- */
@@ -640,17 +684,30 @@ h3 { color: #4db6ac; }
 .md-typeset .build-stats {
   display: flex;
   flex-wrap: wrap;
+  align-items: stretch;
   gap: 0.6em;
   margin-bottom: 0.9em;
 }
+/* Previously a fixed min-width, so 3 stats left a chunk of dead space on
+   anything wider than a phone, and a stat with a bar (taller) didn't match
+   the height of one without (e.g. Playstyle next to Difficulty). flex-grow
+   lets them share the row evenly, align-items: stretch above evens out the
+   height. Hover just confirms these are meant to be scanned individually,
+   nothing functional changes on click. */
 .md-typeset .stat {
   display: flex;
   flex-direction: column;
+  flex: 1 1 130px;
   background-color: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(244, 143, 177, 0.22);
   border-radius: 8px;
   padding: 0.45em 0.9em;
   min-width: 108px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .stat:hover {
+  border-color: rgba(244, 143, 177, 0.42);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 .md-typeset .stat-label {
   font-size: 0.6rem;
@@ -858,14 +915,12 @@ h3 { color: #4db6ac; }
   border-radius: 2px;
 }
 
-/* ---------- Skills table row hover ---------- */
-/* Long skill reference tables (14+ rows) had no way to track a row across
-   to its Tags/Notes columns without losing your place. */
+/* The long skills-table reference tables (14+ rows) benefit from actual
+   row striping on top of the flat table background every table gets -
+   easier to track a row across to Tags/Notes at that length. Regular
+   tables (shorter, usually a build comparison) stay flat/uncomplicated. */
 .md-typeset .skills-table tr:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.02);
-}
-.md-typeset .skills-table tr:hover {
-  background-color: rgba(255, 255, 255, 0.035);
+  background-color: rgba(255, 255, 255, 0.018);
 }
 
 /* ---------- Tabbed content ---------- */
@@ -885,15 +940,23 @@ h3 { color: #4db6ac; }
   font-weight: 400;
   color: var(--md-default-fg-color--light);
   opacity: 0.55;
+  text-decoration: none;
   transition: opacity 0.15s ease, color 0.15s ease;
 }
 .md-typeset .tabbed-set > .tabbed-labels > label:hover {
-  opacity: 0.8;
+  opacity: 0.9;
+  color: #ffb3cf;
 }
-/* Material's own sliding indicator element - remove entirely, we're not
-   using a line of any kind for the active state. */
-.md-typeset .tabbed-labels::before {
-  display: none;
+/* Material's sliding accent bar (.tabbed-labels::before) - the shared
+   element that animates between tabs - stays, that's "the tab underline"
+   that's fine as-is. What actually needed killing is a totally separate
+   thing: Material also puts a border-bottom directly on each label
+   (border-color: transparent normally, switched to solid on the active
+   tab via a long :checked selector) - that's the underline sitting right
+   against the text. !important because Material's own selector chain
+   for that rule is long/specific enough to otherwise win. */
+.md-typeset .tabbed-set > .tabbed-labels > label {
+  border-bottom-color: transparent !important;
 }
 /* Material lists every tab's <input> first, then one .tabbed-labels div
    with all the <label>s after - an input and its label are siblings by
@@ -912,4 +975,18 @@ h3 { color: #4db6ac; }
   color: #b39ddb;
   font-weight: 400;
   opacity: 1;
+}
+
+/* ---------- Reduced motion ---------- */
+/* Every transition on the site so far is small/cosmetic (hover states,
+   opacity fades) rather than load-bearing animation, so this costs
+   nothing for most visitors and just respects the OS-level accessibility
+   setting for anyone who's turned it on. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }
