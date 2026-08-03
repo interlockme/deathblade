@@ -393,8 +393,8 @@ h3 { color: #4db6ac; }
   opacity: 0.65;
 }
 
-/* Exclude any link hosted on github.io and local dev servers */
-.md-typeset a[href*="github.io"]::after,
+/* Exclude any link hosted on interlockme.github.io and local dev servers */
+.md-typeset a[href*="interlockme.github.io"]::after,
 .md-typeset a[href^="http://localhost"]::after,
 .md-typeset a[href^="http://127.0.0.1"]::after {
   content: none !important;
