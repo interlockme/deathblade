@@ -1,4 +1,5 @@
 # Additional Resources
+
 ![313 sticker](assets/shared/sticker-313.png)
 
 ## Bonus Skill Codes

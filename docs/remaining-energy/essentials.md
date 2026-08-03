@@ -54,7 +54,7 @@
     ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast is required for all content
     { .food-req }
 
-    Feast also helps rotations cycle smoothly. 
+    Feast also helps rotations cycle smoothly.
 
 -   **Keen Blunt Weapon**
 

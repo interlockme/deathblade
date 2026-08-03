@@ -428,13 +428,13 @@ h3 { color: #4db6ac; }
 }
 
 /* ---------- Links: more visibly clickable ---------- */
-.md-typeset a:not(.md-button):not(.playstyle-card) {
+.md-typeset a:not(.md-button) {
   color: #f48fb1;
   text-decoration: underline;
   text-decoration-color: rgba(244, 143, 177, 0.4);
   text-underline-offset: 2px;
 }
-.md-typeset a:not(.md-button):not(.playstyle-card):hover {
+.md-typeset a:not(.md-button):hover {
   color: #ffb3cf;
   text-decoration-color: #ffb3cf;
 }

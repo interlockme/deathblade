@@ -190,6 +190,5 @@
 === "TL;DR:"
     ![313 TL;DR flowchart](../assets/re/tldr-313.png)
 
-
 ??? example "Trixion DPS distribution (*Ancient cores, full Lv 10 gems*)"
     ![313 DPS distribution](../assets/re/dpsdist-313.png)

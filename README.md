@@ -1,6 +1,6 @@
 # Deathblade Class Guide
 
-MkDocs Material site, deploys to GitHub Pages on push to `main`. Just markdown + images, no real build step. Not real code, just what works for me and it prettier than google docs.
+MkDocs Material site, deploys to GitHub Pages on push to `main`. Just markdown + images, no real build step. Not real code, just what works for me and it's prettier than google docs.
 
 ## Forking this for your own spin
 

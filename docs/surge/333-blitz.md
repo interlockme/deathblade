@@ -30,7 +30,6 @@
 !!! danger "Before importing"
     Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
 
-
 === "333 Blitz"
 
     ```
@@ -43,7 +42,7 @@
 ![333 Order cores](../assets/surge/ordercores-333.png)
 
 !!! tip ""
-    The minimum requirement to play this build is 14p Sun and 17p Moon, but damage will be lacking. 
+    The minimum requirement to play this build is 14p Sun and 17p Moon, but damage will be lacking.
 
 !!! note "Adjustments"
     - Use the calculator you find easiest: [Arsonistic's](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) or [KR's (Translated)](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) to optimize Ark Passive.

@@ -53,7 +53,6 @@
 
     A safe, default choice.
 
-
 -   **Mass Increase**
 
     ---
@@ -69,7 +68,7 @@
 
     ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine with Bard or Paladin
     { .food-req }
-    
+
     ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing with Artist or Valkyrie
     { .food-req }
 
