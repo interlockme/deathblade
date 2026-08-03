@@ -72,5 +72,6 @@
 | [Lost Ark Bible](https://lostark.bible/) | *DPS meter, logs, and raid statistics* |
 | [Lost Ark Nexus](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | *Better for newbies, standard build + 111 HH guide* |
 | [Fatal Wave Dump](https://docs.google.com/document/d/1vs1YC_7adaYwtfN9cHO3x2KuMPq6GcKRlGo5vnsN4Lk/edit) | *333 Standard (spincutter) or 333 (Ceiling) NA builds* |
+| [Maxroll](https://maxroll.gg/lost-ark) | *Resources for beginners* |
 | [Inven RE Guide](https://www.inven.co.kr/board/lostark/5497/140080) | *Korean guide for RE 333, 111 HH and Void Skip* |
 | [Inven 313 Guide](https://www.inven.co.kr/board/lostark/5497/171285) | *Korean guide for RE 313* |
