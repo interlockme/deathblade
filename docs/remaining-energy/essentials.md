@@ -74,6 +74,10 @@
 | +CD% bracelet | ⚠ Raises gem/leap reqs | Release Potential 4 minimum |
 
 - Lower values are fine, but may experience some downtime.
+- In Trixion, aim for your build's Surge CPM goal to check for downtime or orb issues:
+    - For [111 (Head Hunt)](111-head-hunt.md) and [313 (High Floor)](313-high-floor.md), try to approach 16 Surge CPM.
+    - For [333 (Ceiling)](333-ceiling.md), try to approach 14.5 Surge CPM (15 after the September update).
+    - Use the [DPS Meter](https://lostark.bible/) and remember to equip maxed Spirit Absorption and Max MP engravings!
 
 ## Gameplay
 
