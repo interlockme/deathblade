@@ -291,7 +291,15 @@ h3 { color: #4db6ac; }
   border: 1px solid rgba(179, 157, 219, 0.2);
   border-radius: 8px;
   overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.02);
+  /* Opaque instead of a translucent white overlay - a translucent bg lets
+     whatever's behind it show through, which looked fine against the
+     plain page but meant a table inside a colored admonition (warning,
+     danger, tip, etc.) got its body tinted by that admonition's color
+     while the th header above it (opaque #201d29) stayed neutral -
+     an inconsistent half-tinted look. This is the same color the old
+     translucent overlay produced against the page background, just
+     hardcoded so it no longer depends on what's underneath. */
+  background-color: #1b1c1e;
 }
 .md-typeset table:not([class]) th {
   background-color: #201d29;
@@ -380,6 +388,31 @@ h3 { color: #4db6ac; }
   vertical-align: text-bottom;
   border-radius: 4px;
   margin: 0 2px 0 4px;
+}
+
+/* ---------- Compact inline cycle number badge for prose ---------- */
+/* A smaller standalone version of the cycle-card-header's numeral badge,
+   sized to sit inline in a sentence. Deliberately NOT a bordered chip
+   like .skill-chip — a lone circle is already a self-contained visual
+   unit, and wrapping it in a second box just to hold one digit looked
+   cramped (20px .cycle-num doesn't fit a compact chip's padding) and
+   repeating "Cycle 2" as text next to a "2" badge was redundant. Instead,
+   write "Cycle" as normal prose and drop the numeral in after it:
+   e.g. "...interchangeable with Cycle <span class="cycle-badge">2</span> if..." */
+.md-typeset .cycle-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #b39ddb;
+  color: #161718;
+  font-weight: 700;
+  font-size: 0.65rem;
+  line-height: 1;
+  vertical-align: middle;
+  flex-shrink: 0;
 }
 
 /* ---------- Reusable skill chip for prose (outside rotation-lines) ---------- */
