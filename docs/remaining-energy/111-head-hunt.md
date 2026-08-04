@@ -1,4 +1,4 @@
-# 111 (Head Hunt)
+# 111 (Head Hunt) ⚠️
 
 <p class="page-banner page-banner-danger">High difficulty — very little room for error</p>
 
