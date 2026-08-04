@@ -108,9 +108,9 @@
     </div>
     </div>
 
-    Aim to fit up to **Cycle** <span class="cycle-badge">2</span>'s Twin Shadows under **Cycle** <span class="cycle-badge">1</span>'s Maelstrom to reach 3 orbs without recasting or using recovery options. If you don't, an extra Head Hunt cast is required at the end of **Cycle** <span class="cycle-badge">2</span>.
+    Aim to fit up to Cycle <span class="cycle-badge">2</span>'s Twin Shadows under Cycle <span class="cycle-badge">1</span>'s Maelstrom to reach 3 orbs without recasting or using recovery options. If you don't, an extra Head Hunt cast is required at the end of Cycle <span class="cycle-badge">2</span>.
 
-    Using Head Hunt in **Cycle** <span class="cycle-badge">2</span> may force you to cast it at the end of the next **Cycle** <span class="cycle-badge">1</span>, which creates downtime.
+    Using Head Hunt in Cycle <span class="cycle-badge">2</span> may force you to cast it at the end of the next Cycle <span class="cycle-badge">1</span>, which creates downtime.
 
     Maelstrom management is extremely important when the rotation fails, you should cast it as it expires if needed.
 
@@ -130,13 +130,13 @@
     <span class="skill">![](../assets/re/icon-headhunt.png)Head Hunt</span><span class="arrow"> ⇄ </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">2</span><span class="cycle-title">Soul Absorber + Blitz Rush Cycle</span></span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash Cycle</span></span><span class="arrow"> → etc. </span>
     </div>
 
-    - <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> is interchangeable with **Cycle** <span class="cycle-badge">2</span> if it's available.
+    - <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle <span class="cycle-badge">2</span> if it's available.
     - It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs:*
     { .lead }
 
-    - **Cycle** <span class="cycle-badge">1</span> if <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is available, otherwise start from <span class="skill-chip">![](../assets/re/icon-maelstrom.png)Maelstrom</span> + **Cycle** <span class="cycle-badge">2</span>.
+    - Cycle <span class="cycle-badge">1</span> if <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is available, otherwise start from <span class="skill-chip">![](../assets/re/icon-maelstrom.png)Maelstrom</span> + Cycle <span class="cycle-badge">2</span>.
 
 === "Recovery"
 
