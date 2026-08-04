@@ -43,7 +43,7 @@
 
 !!! note "Adjustments"
     - Use the calculator you find easiest: [Arsonistic's](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) or [KR's (Translated)](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) to optimize Ark Passive.
-        - Keen Sense 2 + Master is usually the best when using Keen Blunt Weapon.
+        - Keen Sense 2 + Master is usually best when using Keen Blunt Weapon.
 
 ## Skill Setup
 
@@ -133,7 +133,7 @@
     - <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle 2 if it's available.
     - It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
-    *From zero/partial orbs or extended raid downtime:*
+    *From zero/partial orbs:*
     { .lead }
 
     - Cycle 1 if Deathly Slash is off cooldown, otherwise start from Maelstrom + Cycle 2.

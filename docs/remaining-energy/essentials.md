@@ -71,9 +71,9 @@
 
 | Spec | Status | Notes |
 |---|---|---|
-| 1830+ | ✓ Magic number | Ideal, but not required |
-| 1818+ | ✓ Breakpoint | No downtime on [333 (Ceiling)](333-ceiling.md) |
-| +CD% bracelet | ⚠ Raises gem/leap reqs | Release Potential 4 minimum |
+| 1830+ | ✓ Magic number | Ideal and future-proof, but not required |
+| 1818+ | ✓ Breakpoint | No Deathly Slash downtime on [333 (Ceiling)](333-ceiling.md) |
+| +CD% bracelet | ⚠ Raises gem/leap reqs | Release Potential 4 needed for Fatal Wave builds |
 
 - Lower values are fine, but may experience some downtime.
 - In Trixion, aim for your build's Surge CPM goal to check for downtime or orb issues:
