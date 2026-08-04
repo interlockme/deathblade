@@ -1077,3 +1077,94 @@ h3 { color: #4db6ac; }
 .md-content__inner:has(.build-card) > :last-child {
   margin-bottom: 9rem;
 }
+
+/* ---------- Reading progress bar ---------- */
+/* Injected into .md-header by javascripts/extra.js (no template override
+   needed) - a thin accent-gradient sliver that fills left-to-right as you
+   scroll through the page. Sits on the header's own bottom edge (not the
+   very top of the viewport) so it doesn't collide with Material's own
+   navigation.instant.progress loading indicator, which briefly lives
+   there during page transitions. */
+.reading-progress {
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #ee83ab, #b39ddb);
+  transition: width 0.1s linear;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ---------- Soft page fade-in ---------- */
+/* Plays on every full page load. With navigation.instant enabled, Material
+   swaps in a fresh .md-content__inner element on every transition too, so
+   this naturally replays on instant navigations as well - no JS retrigger
+   needed. Already covered by the prefers-reduced-motion block above for
+   anyone who's turned that off. */
+.md-content__inner {
+  animation: page-fade-in 0.35s ease both;
+}
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Tiger hover wiggle (333 Blitz page) ---------- */
+/* Wrap the emoji: <span class="tiger-emoji" title="rawr">🐯</span> */
+.md-typeset .tiger-emoji {
+  display: inline-block;
+  cursor: default;
+}
+.md-typeset .tiger-emoji:hover {
+  animation: tiger-wiggle 0.4s ease;
+}
+@keyframes tiger-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-12deg); }
+  40% { transform: rotate(10deg); }
+  60% { transform: rotate(-6deg); }
+  80% { transform: rotate(4deg); }
+}
+
+/* ---------- Mobile quick-jump pills (build pages) ---------- */
+/* Built by javascripts/extra.js from each build page's own H2s, inserted
+   right after .build-card. Desktop already gets this for free via the
+   left nav's integrated TOC (toc.integrate), so this only shows below
+   Material's mobile breakpoint, where that nav collapses behind the
+   hamburger toggle - exactly when someone's reading on a phone mid-raid
+   and doesn't want to dig through a drawer to jump to Gems. */
+.quick-jump-pills {
+  display: none;
+}
+@media screen and (max-width: 768px) {
+  .quick-jump-pills {
+    display: flex;
+    gap: 0.5em;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 0 1.2em;
+    padding-bottom: 0.2em;
+    scrollbar-width: none;
+  }
+  .quick-jump-pills::-webkit-scrollbar {
+    display: none;
+  }
+}
+.md-typeset .quick-jump-pills a {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-size: 0.78em;
+  font-weight: 600;
+  padding: 0.4em 0.95em;
+  border-radius: 999px;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  background-color: rgba(179, 157, 219, 0.08);
+  color: var(--md-default-fg-color--light);
+  text-decoration: none !important;
+}
+.md-typeset .quick-jump-pills a:hover {
+  border-color: #ee83ab;
+  color: #ee83ab !important;
+}

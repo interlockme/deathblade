@@ -1,4 +1,4 @@
-# 333 (Blitz) 🐯
+# 333 (Blitz) <span class="tiger-emoji" title="rawr">🐯</span>
 
 <p class="page-banner page-banner-warning">Not available in NA servers yet</p>
 
