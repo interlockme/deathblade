@@ -403,13 +403,13 @@ h3 { color: #4db6ac; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background-color: #b39ddb;
   color: #161718;
   font-weight: 700;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   line-height: 1;
   vertical-align: middle;
   flex-shrink: 0;
