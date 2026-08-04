@@ -155,7 +155,7 @@
 
 === "Openers"
 
-    Openers stack Adrenaline and apply synergies efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start cycling.
+    Openers stack Adrenaline and apply synergies efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
 
     *From 3 orbs (![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant):*
     { .lead }
