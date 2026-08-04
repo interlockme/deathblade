@@ -141,9 +141,11 @@
 === "Recovery"
 
     !!! example ""
-        Watch this 54-minute [111 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) or consider an easier build.
+        Watch this 54-minute [111 recovery video](https://www.youtube.com/watch?v=z8KE3HG_ggg) or consider an easier build.
 
     - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
+
+---
 
 ??? example "Trixion DPS distribution (*Ancient cores, full Lv 10 gems*)"
     ![111 DPS distribution](../assets/re/dpsdist-111.png)

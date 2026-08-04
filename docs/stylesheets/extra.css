@@ -888,14 +888,20 @@ h3 { color: #4db6ac; }
 }
 
 /* ---------- Engraving choice cards (Essentials page) ---------- */
-/* Children 1 & 2 (Raid Captain / Mass Increase) already get the generic
-   pink/teal treatment from the bare .grid.cards rule above. Only the 3rd
-   card (the combo recommendation) needs its own color here, in lavender
-   to signal "this one's advice, not a hard requirement" - matching the
-   same muted lavender already used for h2 and the gem-priority numerals. */
+/* Four cards, each colored to match the engraving it represents: Raid
+   Captain (1) and Keen Blunt Weapon (2) already get the generic pink-red/
+   teal-green treatment from the bare .grid.cards rule above. Mass Increase
+   (3) gets its own lavender-purple here. The 4th card - Raid Captain +
+   Mass Increase combined - gets a color blended from the other two
+   (avg of #f48fb1 and #b39ddb, background likewise), so it visually reads
+   as "both of these at once" rather than introducing an unrelated hue. */
 .md-typeset .grid.cards.engraving-cards > ul > li:nth-child(3) {
   background-color: #1d1a26;
   border-color: #b39ddb;
+}
+.md-typeset .grid.cards.engraving-cards > ul > li:nth-child(4) {
+  background-color: #211a23;
+  border-color: #d396c6;
 }
 
 /* Small muted requirement line under a card title, before the descriptive
@@ -1053,4 +1059,21 @@ h3 { color: #4db6ac; }
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
+}
+
+/* ---------- Space before the footer ---------- */
+/* Overrides Material's own `.md-content__inner > :last-child { margin-bottom: 0; }`
+   reset (same selector/specificity, wins on source order) so the content area
+   doesn't butt straight up against the footer bar. Build guide pages (the ones
+   with a .build-card near the top - 333-ceiling, 313-high-floor, 111-head-hunt,
+   111-classic, 222-speedy, 333-blitz) end on a dense DPS-distribution image or
+   tab set and read better with more breathing room than shorter pages like
+   index/resources/essentials/pre-ark-grid, so they get more. Selects on
+   .build-card's presence rather than duplicating a page list here, so a future
+   build page picks up 5rem automatically just by using the component. */
+.md-content__inner > :last-child {
+  margin-bottom: 3rem;
+}
+.md-content__inner:has(.build-card) > :last-child {
+  margin-bottom: 9rem;
 }

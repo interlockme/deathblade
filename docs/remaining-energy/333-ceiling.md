@@ -187,5 +187,7 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 === "TL;DR:"
     ![333 TL;DR flowchart](../assets/re/tldr-333.png)
 
+---
+
 ??? example "Trixion DPS distribution (*Ancient cores, full Lv 10 gems*)"
     ![333 DPS distribution](../assets/re/dpsdist-333.png)

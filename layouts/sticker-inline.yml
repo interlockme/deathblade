@@ -30,12 +30,12 @@ definitions:
     {%- if layout.title -%}
       {{ layout.title }}
     {%- else -%}
-      {{ page.meta.get("title", page.title) | replace("⭐", "") | trim }}
+      {{ page.meta.get("title", page.title) | replace("★", "") | trim }}
     {%- endif -%}
 
   - &page_title_with_site_name >-
     {%- if not page.is_homepage -%}
-      {{ page.meta.get("title", page.title) | replace("⭐", "") | trim }} - {{ config.site_name }}
+      {{ page.meta.get("title", page.title) | replace("★", "") | trim }} - {{ config.site_name }}
     {%- else -%}
       {{ config.site_name }}
     {%- endif -%}
