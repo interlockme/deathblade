@@ -418,16 +418,21 @@ h3 { color: #4db6ac; }
 /* ---------- Reusable skill chip for prose (outside rotation-lines) ---------- */
 /* Same look as the chips inside .rotation-line/.cycle-card, but sized to
    sit inline in a normal paragraph without stretching the line height.
-   Usage: <span class="skill-chip">![](../assets/re/icon-headhunt.png)Head Hunt</span> */
+   Usage: <span class="skill-chip">![](../assets/re/icon-headhunt.png)Head Hunt</span>
+   The gradient/shadow/glow/lift below match the .rotation-line redesign,
+   safe to reuse here since none of them add layout height - box-shadow
+   and transform are paint-only, they don't participate in line-height
+   the way the height-budget comment two lines down is actually about. */
 .md-typeset .skill-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
   white-space: nowrap;
-  border: 1px solid #2a2b2d;
-  background-color: #1a1a1c;
+  background: linear-gradient(180deg, #232327 0%, #19191b 100%);
   border-radius: 4px;
-  padding: 0.1em 0.5em 0.1em 0.3em;
+  padding: 0.1em 0.3em 0.1em 0.3em;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.15s ease, transform 0.15s ease;
   /* Without this, the chip's text inherits the surrounding paragraph's
      line-height (e.g. 25.6px at 1.6x/16px), which is taller than the
      icon and becomes the flex row's height — stretching the whole
@@ -437,6 +442,10 @@ h3 { color: #4db6ac; }
   line-height: 1.2;
   vertical-align: middle;
 }
+.md-typeset .skill-chip:hover {
+  border-color: rgba(179, 157, 219, 0.55);
+  transform: translateY(-1px);
+}
 .md-typeset .skill-chip img {
   height: 1.1em;
   width: 1.1em;
@@ -444,6 +453,7 @@ h3 { color: #4db6ac; }
   vertical-align: text-bottom;
   border-radius: 4px;
   margin: 0;
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.3), 0 0 4px rgba(179, 157, 219, 0.2);
 }
 
 /* ---------- Skill role tags (Essentials skill tables) ---------- */
@@ -700,7 +710,14 @@ h3 { color: #4db6ac; }
 /* Styled chevron instead of a bare "→" glyph - a plain Unicode arrow
    renders inconsistently across fonts and carries no visual weight.
    Built from borders (no image/SVG needed), colored as a soft pink-to-
-   lavender blend tying the two accent colors used elsewhere together. */
+   lavender blend tying the two accent colors used elsewhere together.
+   font-size: 0 hides the real "→" character completely (not just via
+   color) - a color-only hide was tried and reverted: the real text was
+   still selectable/drag-highlightable, and shared flex space with the
+   ::before chevron in a way that clipped it. font-size: 0 avoids both,
+   at the cost of needing fixed px below instead of em (a ::before
+   pseudo-element inherits its trigger's computed font-size, so em
+   sizing here would collapse to zero right along with it). */
 .md-typeset .rotation-line .arrow {
   display: inline-flex;
   align-items: center;
@@ -710,16 +727,43 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .rotation-line .arrow::before {
   content: "";
-  /* Fixed px, not em - the parent's font-size is zeroed above to hide
-     the original "→" character, and a pseudo-element inherits that
-     same computed font-size, so em-based sizing here would collapse
-     right along with it. */
   width: 7px;
   height: 7px;
   border-top: 2px solid #cf99c7;
   border-right: 2px solid #cf99c7;
   transform: rotate(45deg);
   opacity: 0.75;
+}
+
+/* ---------- Situational/skippable rotation step ---------- */
+/* A visually de-emphasized variant of .skill, for steps that are
+   optional/conditional rather than a fixed part of the sequence -
+   dashed border + reduced opacity + desaturated icon read as "lower
+   priority" at a glance, same visual language a disabled/optional form
+   control uses elsewhere. Was previously written inline as plain
+   italicized text: *( icon Name — situational )*, which didn't stand
+   out from a real step in the sequence until you actually read it.
+   Usage:
+   <span class="skill skill-situational">![](path)Name<span class="skill-situational-tag">situational</span></span> */
+.md-typeset .rotation-line .skill-situational {
+  border-style: dashed;
+  border-color: #3a3a3f;
+  background: linear-gradient(180deg, #1c1c1f 0%, #171719 100%);
+  opacity: 0.75;
+}
+.md-typeset .rotation-line .skill-situational:hover {
+  opacity: 1;
+  border-color: rgba(179, 157, 219, 0.5);
+}
+.md-typeset .rotation-line .skill-situational img {
+  box-shadow: none;
+  filter: grayscale(45%);
+}
+.md-typeset .skill-situational-tag {
+  font-size: 0.76em;
+  font-style: italic;
+  color: #7a7488;
+  margin-left: 0.05em;
 }
 
 /* ---------- Cycle cards (group a Cycle's label + rotation-line into one step) ---------- */

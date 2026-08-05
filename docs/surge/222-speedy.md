@@ -140,7 +140,7 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
 
 === "Upper Slash"
 
-    *This is the main cycle for the Upper Slash skill setup.*
+    *Main cycle for the Upper Slash skill setup.*
     { .lead }
 
     <div class="rotation-line" markdown>
