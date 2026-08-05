@@ -1,6 +1,6 @@
 # Deathblade Class Guide
 
-![Deathblade path flowchart](assets/shared/flowchart-deathblade-paths.png)
+![Deathblade path flowchart](assets/shared/flowchart-deathblade-paths.svg)
 
 <div class="grid cards" markdown>
 
