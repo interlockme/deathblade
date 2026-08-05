@@ -34,25 +34,129 @@
 
 ## CPM Calculator
 
-*Compares Trixion damage to real raid damage across builds. Check the [Spreadsheet](https://docs.google.com/spreadsheets/d/1l5C427BmEY4P6VJDql2aKyFYJSgIGeRBCJF2FXv_9w4/edit?usp=sharing) and watch this [video](https://www.youtube.com/watch?v=dlUS8vUaNLA) for an explanation of Trixion multipliers. The values shown in this site align with the September update.*
+*Compares Trixion damage to raid damage. Watch this [video](https://www.youtube.com/watch?v=dlUS8vUaNLA) for an explanation of Trixion multipliers.*
 
-**333 (RE)** — Trixion CPM 15.122, ×1.20 multiplier, 75% B.A. → ×1.1206 *(123 sec, 31 surges)*
+### Personal Comparison
 
-| Raid CPM | 9 | 9.5 | 10 | 10.5 | 11 | 11.5 | 12 | 12.5 |
-|---|---|---|---|---|---|---|---|---|
-| Multiplier | 0.667 | 0.704 | 0.741 | 0.778 | 0.815 | 0.852 | 0.889 | 0.926 |
+*Plug in your own Raid CPM and back-attack rate per build to compare which one you're actually performing best on right now — higher Final Multiplier below means better relative performance on that build.*
 
-**111 (Surge)** — Trixion CPM 10.952, ×1.23 multiplier, 90% B.A. → ×1.1975 *(126 sec, 23 surges)*
+<div class="cpm-calc">
 
-| Raid CPM | 5.5 | 6 | 6.5 | 7 | 7.5 | 8 | 8.5 | 9 |
-|---|---|---|---|---|---|---|---|---|
-| Multiplier | 0.601 | 0.656 | 0.711 | 0.765 | 0.82 | 0.875 | 0.929 | 0.984 |
+<div class="cpm-calc-row" data-build="333-re">
+<div class="cpm-calc-row-header">
+<span class="cpm-calc-row-title">333 (Ceiling)</span>
+<span class="cpm-calc-row-meta">Trixion CPM 15.122</span>
+</div>
+<div class="cpm-calc-inputs">
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Raid CPM</span>
+<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 9.5">
+</label>
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Back-Attack %</span>
+<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 75">
+</label>
+<div class="cpm-calc-toggle">
+<label><input type="radio" name="cpm-calc-ba-mode-333-re" value="rate" checked> Rate</label>
+<label><input type="radio" name="cpm-calc-ba-mode-333-re" value="ratio"> Ratio</label>
+</div>
+<label class="cpm-calc-field cpm-calc-field-muted">
+<span class="cpm-calc-field-label">Base Multiplier</span>
+<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
+</label>
+</div>
+<div class="cpm-calc-output">
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Adjusted Multiplier</span>
+<span class="cpm-calc-adj-value">—</span>
+</div>
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Final Multiplier</span>
+<span class="cpm-calc-result-value">—</span>
+</div>
+</div>
+<div class="stat-bar-track stat-bar-track-teal">
+<div class="stat-bar-fill stat-bar-fill-teal cpm-calc-bar-fill" style="width: 0%"></div>
+</div>
+</div>
 
-**222 (Surge)** — Trixion CPM 9.756, ×1.22 multiplier, 80% B.A. → ×1.1554 *(123 sec, 20 surges)*
+<div class="cpm-calc-row" data-build="111-surge">
+<div class="cpm-calc-row-header">
+<span class="cpm-calc-row-title">111 (Classic)</span>
+<span class="cpm-calc-row-meta">Trixion CPM 10.952</span>
+</div>
+<div class="cpm-calc-inputs">
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Raid CPM</span>
+<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 6.5">
+</label>
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Back-Attack %</span>
+<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 90">
+</label>
+<div class="cpm-calc-toggle">
+<label><input type="radio" name="cpm-calc-ba-mode-111-surge" value="rate" checked> Rate</label>
+<label><input type="radio" name="cpm-calc-ba-mode-111-surge" value="ratio"> Ratio</label>
+</div>
+<label class="cpm-calc-field cpm-calc-field-muted">
+<span class="cpm-calc-field-label">Base Multiplier</span>
+<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
+</label>
+</div>
+<div class="cpm-calc-output">
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Adjusted Multiplier</span>
+<span class="cpm-calc-adj-value">—</span>
+</div>
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Final Multiplier</span>
+<span class="cpm-calc-result-value">—</span>
+</div>
+</div>
+<div class="stat-bar-track stat-bar-track-teal">
+<div class="stat-bar-fill stat-bar-fill-teal cpm-calc-bar-fill" style="width: 0%"></div>
+</div>
+</div>
 
-| Raid CPM | 6 | 6.2 | 6.5 | 6.8 | 7.1 | 7.4 | 7.7 | 8 |
-|---|---|---|---|---|---|---|---|---|
-| Multiplier | 0.71 | 0.734 | 0.77 | 0.805 | 0.841 | 0.876 | 0.912 | 0.947 |
+<div class="cpm-calc-row" data-build="222-surge">
+<div class="cpm-calc-row-header">
+<span class="cpm-calc-row-title">222 (Speedy)</span>
+<span class="cpm-calc-row-meta">Trixion CPM 9.756</span>
+</div>
+<div class="cpm-calc-inputs">
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Raid CPM</span>
+<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 6">
+</label>
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Back-Attack %</span>
+<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 80">
+</label>
+<div class="cpm-calc-toggle">
+<label><input type="radio" name="cpm-calc-ba-mode-222-surge" value="rate" checked> Rate</label>
+<label><input type="radio" name="cpm-calc-ba-mode-222-surge" value="ratio"> Ratio</label>
+</div>
+<label class="cpm-calc-field cpm-calc-field-muted">
+<span class="cpm-calc-field-label">Base Multiplier</span>
+<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
+</label>
+</div>
+<div class="cpm-calc-output">
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Adjusted Multiplier</span>
+<span class="cpm-calc-adj-value">—</span>
+</div>
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Final Multiplier</span>
+<span class="cpm-calc-result-value">—</span>
+</div>
+</div>
+<div class="stat-bar-track stat-bar-track-teal">
+<div class="stat-bar-fill stat-bar-fill-teal cpm-calc-bar-fill" style="width: 0%"></div>
+</div>
+</div>
+
+</div>
 
 ## Gearing Values
 

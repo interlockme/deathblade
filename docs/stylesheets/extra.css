@@ -972,6 +972,147 @@ h3 { color: #4db6ac; }
   content: "⚠";
 }
 
+/* ---------- Personal CPM/back-attack multiplier calculator ---------- */
+/* Reuses .stat-bar-track-teal/.stat-bar-fill-teal's visual style (same
+   teal color, same track/fill shape) so it reads as the same family of
+   component as the Trixion multiplier bars elsewhere - but the JS drives
+   it on its own 0.4-1.0 scale, since this bar tracks Final Multiplier
+   (RaidCPM/TrixionCPM * AdjustedMultiplier) which lands in a different,
+   lower range than the 1.0-1.3-scaled Adjusted Multiplier bars use. */
+.md-typeset .cpm-calc {
+  border: 1px solid rgba(179, 157, 219, 0.28);
+  background-color: rgba(179, 157, 219, 0.045);
+  border-radius: 10px;
+  padding: 1em 1.2em 1.2em;
+  margin: 1em 0 1.5em;
+}
+.md-typeset .cpm-calc-row {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 0.8em 1em;
+  margin-top: 0.8em;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .cpm-calc-row:first-of-type {
+  margin-top: 0;
+}
+/* Marked by JS on whichever row currently has the highest Final
+   Multiplier, once at least two rows have valid input - "which build
+   should I actually play" is the whole point of comparing side by side. */
+.md-typeset .cpm-calc-row-best {
+  border-color: rgba(77, 182, 172, 0.5);
+  background-color: rgba(77, 182, 172, 0.06);
+}
+.md-typeset .cpm-calc-row-header {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-bottom: 0.6em;
+}
+.md-typeset .cpm-calc-row-title {
+  font-weight: 700;
+  color: #e8e6ee;
+}
+.md-typeset .cpm-calc-row-meta {
+  font-size: 0.78em;
+  color: #a79bc4;
+}
+.md-typeset .cpm-calc-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.9em;
+  margin-bottom: 0.7em;
+}
+.md-typeset .cpm-calc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+.md-typeset .cpm-calc-field-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+}
+.md-typeset .cpm-calc-field input[type="number"] {
+  width: 6.5em;
+  background-color: #161718;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  border-radius: 6px;
+  color: #e8e6ee;
+  padding: 0.35em 0.5em;
+  font-size: 0.95em;
+  font-family: inherit;
+}
+.md-typeset .cpm-calc-field input[type="number"]:focus {
+  outline: none;
+  border-color: #b39ddb;
+}
+/* Base Multiplier is a per-build constant from the Trixion parse - almost
+   never something the reader should change, but patches do shift it, so
+   it's editable rather than hardcoded. Muted so it visually reads as
+   "leave this alone unless you know why you're touching it," distinct
+   from Raid CPM/Back-Attack which the reader is expected to fill in. */
+.md-typeset .cpm-calc-field-muted .cpm-calc-field-label {
+  color: #6f6a80;
+}
+.md-typeset .cpm-calc-field-muted input[type="number"] {
+  width: 5em;
+  background-color: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: #8a849a;
+}
+.md-typeset .cpm-calc-field-muted input[type="number"]:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #cfc9dd;
+}
+.md-typeset .cpm-calc-field-muted input[type="number"]:focus {
+  border-color: #b39ddb;
+  border-style: solid;
+  color: #e8e6ee;
+}
+.md-typeset .cpm-calc-toggle {
+  display: flex;
+  gap: 0.9em;
+  font-size: 0.85em;
+  color: #cfc9dd;
+  padding-bottom: 0.4em;
+}
+.md-typeset .cpm-calc-toggle label {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  cursor: pointer;
+}
+.md-typeset .cpm-calc-output {
+  display: flex;
+  gap: 1.5em;
+  margin-bottom: 0.5em;
+}
+.md-typeset .cpm-calc-output-item {
+  display: flex;
+  flex-direction: column;
+}
+.md-typeset .cpm-calc-output-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+}
+.md-typeset .cpm-calc-adj-value {
+  font-size: 0.95em;
+  color: #cfc9dd;
+}
+.md-typeset .cpm-calc-result-value {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #4db6ac;
+}
+
 /* ---------- Keyboard focus visibility ---------- */
 /* The custom link rule above overrides color and underline but not focus
    styling, which risks losing the visible indicator entirely for keyboard
@@ -1089,9 +1230,9 @@ h3 { color: #4db6ac; }
   position: absolute;
   left: 0;
   bottom: -3px;
-  height: 3px;
+  height: 2px;
   width: 0%;
-  background: linear-gradient(90deg, #ee83ab, #d481ae);
+  background: #ee83ab;
   transition: width 0.1s linear;
   pointer-events: none;
   z-index: 5;

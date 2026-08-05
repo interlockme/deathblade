@@ -34,6 +34,7 @@ extra_css:
 
 extra_javascript:
   - javascripts/extra.js
+  - javascripts/cpm-calculator.js
 
 extra:
   generator: false
