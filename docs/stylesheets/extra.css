@@ -633,9 +633,15 @@ h3 { color: #4db6ac; }
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  background-color: rgba(255, 255, 255, 0.03);
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.025);
+  /* A faint corner glow instead of a flat fill - same near-invisible
+     opacity as before at a glance, but gives the box some depth rather
+     than reading as a solid grey rectangle. */
+  background-image: radial-gradient(ellipse 420px 180px at 0% 0%, rgba(179, 157, 219, 0.16), transparent 70%);
   border: 1px solid rgba(179, 157, 219, 0.32);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 0.7em 0.9em 0.1em;   /* bottom trimmed - the skill/arrow margin-bottom below supplies it, see note */
   margin: 0.35em 0;
   font-size: 0.95em;
@@ -663,19 +669,57 @@ h3 { color: #4db6ac; }
 .md-typeset .rotation-line .skill {
   display: inline-flex;
   align-items: center;
-  gap: 0.35em;
+  gap: 0.4em;
   white-space: nowrap;
-  border: 1px solid #2a2b2d; /* a shade lighter than the fill, for a soft frame rather than a bright outline */
-  background-color: #1a1a1c; /* between the page bg (#161718) and the rotation-line box's own bg, so the chip is only a touch darker than its surroundings */
-  border-radius: 4px;
-  padding: 0.15em 0.55em 0.15em 0.35em;
+  border: 1px solid #313236; /* a shade lighter than the fill, for a soft frame rather than a bright outline */
+  /* A soft top-lit gradient instead of a flat fill, so the chip reads as
+     a slightly raised surface rather than blending into the box behind
+     it - subtle, not a shiny-button look. */
+  background: linear-gradient(180deg, #232327 0%, #19191b 100%);
+  border-radius: 6px;
+  padding: 0.2em 0.6em 0.2em 0.35em;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.md-typeset .rotation-line .skill:hover {
+  border-color: rgba(179, 157, 219, 0.55);
+  transform: translateY(-1px);
 }
 .md-typeset .rotation-line img {
-  height: 1.3em;
-  width: 1.3em;
+  height: 1.35em;
+  width: 1.35em;
   vertical-align: text-bottom;
-  border-radius: 4px;
+  border-radius: 5px;
   margin: 0;
+  /* A soft ring + glow around each icon - echoes the bordered-icon look
+     Lost Ark's own skill UI uses, and gives the most colorful part of
+     the chip (the icon) a bit more presence than a flush, borderless
+     thumbnail sitting flat against the chip background. */
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.3), 0 0 5px rgba(179, 157, 219, 0.2);
+}
+/* Styled chevron instead of a bare "→" glyph - a plain Unicode arrow
+   renders inconsistently across fonts and carries no visual weight.
+   Built from borders (no image/SVG needed), colored as a soft pink-to-
+   lavender blend tying the two accent colors used elsewhere together. */
+.md-typeset .rotation-line .arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  font-size: 0;
+}
+.md-typeset .rotation-line .arrow::before {
+  content: "";
+  /* Fixed px, not em - the parent's font-size is zeroed above to hide
+     the original "→" character, and a pseudo-element inherits that
+     same computed font-size, so em-based sizing here would collapse
+     right along with it. */
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid #cf99c7;
+  border-right: 2px solid #cf99c7;
+  transform: rotate(45deg);
+  opacity: 0.75;
 }
 
 /* ---------- Cycle cards (group a Cycle's label + rotation-line into one step) ---------- */
@@ -1319,4 +1363,25 @@ h3 { color: #4db6ac; }
 .md-typeset .quick-jump-pills a:hover {
   border-color: #ee83ab;
   color: #ee83ab !important;
+}
+/* ---------- 333 Blitz signature: paw-print cursor ---------- */
+/* Scoped via the .page-333-blitz body class, toggled by
+   javascripts/extra.js based on the current page path. Inline SVG data
+   URI, so no separate asset file is needed. Only the default cursor
+   changes - links/inputs/etc. keep their normal cursor via the :not()
+   exceptions below, so it doesn't get in the way of actually using
+   the page, just flavors idle hovering over regular content. */
+body.page-333-blitz {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"><g fill="%23f0a868" stroke="%23161718" stroke-width="1"><ellipse cx="12" cy="16.5" rx="6" ry="5"/><ellipse cx="5" cy="8" rx="2.2" ry="2.8"/><ellipse cx="9.3" cy="4" rx="2" ry="2.6"/><ellipse cx="14.7" cy="4" rx="2" ry="2.6"/><ellipse cx="19" cy="8" rx="2.2" ry="2.8"/></g></svg>') 12 14, auto;
+}
+body.page-333-blitz a:not(.md-nav__link),
+body.page-333-blitz button,
+body.page-333-blitz label,
+body.page-333-blitz input,
+body.page-333-blitz summary {
+  cursor: pointer;
+}
+body.page-333-blitz input[type="number"],
+body.page-333-blitz input[type="text"] {
+  cursor: text;
 }

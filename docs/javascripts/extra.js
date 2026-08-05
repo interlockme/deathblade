@@ -120,6 +120,13 @@
     });
   }
 
+  function togglePageBodyClasses() {
+    // 333 Blitz gets its own tiny signature touch - a paw-print cursor,
+    // scoped via this body class rather than a sitewide cursor change.
+    var isBlitzPage = /\/surge\/333-blitz\/?(?:$|[?#])/.test(window.location.pathname);
+    document.body.classList.toggle("page-333-blitz", isBlitzPage);
+  }
+
   if (window.document$) {
     document$.subscribe(function () {
       externalLinksNewTab();
@@ -127,6 +134,7 @@
       updateProgress();
       buildQuickJumpPills();
       wrapEmojisForWiggle();
+      togglePageBodyClasses();
 
       // Scroll/resize listeners only need binding once ever - the header
       // (and thus the progress bar) persists across instant-loading swaps.
