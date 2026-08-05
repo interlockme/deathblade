@@ -34,6 +34,8 @@
 
 ## CPM Calculator
 
+<p class="page-banner page-banner-warning">Not available in NA servers yet</p>
+
 *Compares Trixion damage to raid damage. Watch this [video](https://www.youtube.com/watch?v=dlUS8vUaNLA) for an explanation of Trixion multipliers.*
 
 ### Personal Comparison
