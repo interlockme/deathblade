@@ -1252,16 +1252,27 @@ h3 { color: #4db6ac; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ---------- Tiger hover wiggle (333 Blitz page) ---------- */
-/* Wrap the emoji: <span class="tiger-emoji" title="rawr">🐯</span> */
+/* ---------- Site-wide emoji hover wiggle ---------- */
+/* Was tiger-emoji-only (333 Blitz page), manually wrapped per instance.
+   Generalized so every emoji site-wide gets this automatically - the
+   wrapping is done by javascripts/extra.js (walks text nodes, wraps each
+   emoji character/sequence in a .emoji-wiggle span), not by hand-editing
+   markdown. .tiger-emoji is kept working too (in case a manual
+   title="rawr" tooltip span like this is still used somewhere:
+   <span class="tiger-emoji" title="rawr">🐯</span>) - the JS walker skips
+   anything already inside a .tiger-emoji/.emoji-wiggle ancestor, so a
+   manually-tagged emoji doesn't get double-wrapped, and both classes
+   share the same underlying animation rather than duplicating it. */
+.md-typeset .emoji-wiggle,
 .md-typeset .tiger-emoji {
   display: inline-block;
   cursor: default;
 }
+.md-typeset .emoji-wiggle:hover,
 .md-typeset .tiger-emoji:hover {
-  animation: tiger-wiggle 0.4s ease;
+  animation: emoji-wiggle 0.4s ease;
 }
-@keyframes tiger-wiggle {
+@keyframes emoji-wiggle {
   0%, 100% { transform: rotate(0deg); }
   20% { transform: rotate(-12deg); }
   40% { transform: rotate(10deg); }

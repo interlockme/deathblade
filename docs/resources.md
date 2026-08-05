@@ -40,7 +40,7 @@
 
 ### Personal Comparison
 
-*Plug in your own Raid CPM and back-attack rate per build to compare which one you're actually performing best on right now — higher Final Multiplier below means better relative performance on that build.*
+*Enter your Raid CPM and back-attack rate to compare builds. Highest Final Multiplier wins.*
 
 <div class="cpm-calc">
 
