@@ -104,7 +104,7 @@
     <div class="cycle-card" markdown>
     <div class="cycle-card-header"><span class="cycle-num">2</span><span class="cycle-title">Soul Absorber + Blitz Rush</span></div>
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">*( ![](../assets/re/icon-headhunt.png) Head Hunt — situational )*</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-headhunt.png)*Head Hunt — situational*</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
     </div>
     </div>
 

@@ -38,8 +38,6 @@
 
 *Compares Trixion damage to raid damage. Watch this [video](https://www.youtube.com/watch?v=dlUS8vUaNLA) for an explanation of Trixion multipliers.*
 
-### Personal Comparison
-
 *Enter your Raid CPM and back-attack rate to compare builds. Highest Final Multiplier wins.*
 
 <div class="cpm-calc">
