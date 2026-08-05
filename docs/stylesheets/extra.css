@@ -1229,7 +1229,7 @@ h3 { color: #4db6ac; }
 .reading-progress {
   position: absolute;
   left: 0;
-  bottom: -3px;
+  bottom: -2px;
   height: 2px;
   width: 0%;
   background: #ee83ab;
