@@ -4,7 +4,7 @@
 
 <div class="grid cards prearc-cards" markdown>
 
--   ⚡ **Pre-Ark Grid Surge**
+-   ☘ **Pre-Ark Grid Surge**
 
     ---
 

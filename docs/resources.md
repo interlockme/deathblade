@@ -36,7 +36,7 @@
 
 <p class="page-banner page-banner-warning">Not available in NA servers yet</p>
 
-*Compares Trixion damage to raid damage. Watch this [video](https://www.youtube.com/watch?v=dlUS8vUaNLA) for an explanation of Trixion multipliers.*
+*Compares Trixion damage to raid damage. Watch [this](https://www.youtube.com/watch?v=dlUS8vUaNLA) to learn about Trixion multipliers.*
 
 *Enter your Raid CPM and back-attack rate to compare builds. Highest Final Multiplier wins.*
 
@@ -158,11 +158,9 @@
 
 </div>
 
-## Ark Passive Node Calculator
+## Ark Passive Calculator
 
-<p class="page-banner page-banner-warning">Compares your Evolution split (Limit Break/Keen Sense) and Keystone pair — everything else is your fixed gear, entered once below.</p>
-
-*Ported from the site's Ark Passive Calculator spreadsheet. Strike and Standing Striker are assumed maxed and Blunt Thorn unused, matching a standard Deathblade Evolution build.*
+*Finds the optimal Evolution nodes for your deathblade and team setup.*
 
 <div class="ap-calc">
 
@@ -175,75 +173,51 @@
      unrelated groups (Rings/Bracelet/Ark Grid/Engravings). -->
 <div class="ap-calc-gear">
 
-  <!-- Leap Rank is the only field feeding Evolution Damage directly (Yearning,
-       the other Evo Dmg source, lives in Party & Positioning instead) - a full
-       bordered group for one dropdown was mostly empty box, so it's a slim
-       tagged strip spanning the gear column instead of its own card. -->
-  <div class="ap-calc-mini-field ap-calc-mini-field--evo-dmg">
-    <span class="ap-calc-mini-field-tag">Evo Dmg</span>
-    <label class="ap-calc-field-label" for="ap-evo-karma">Karmic Leap Rank</label>
-    <span class="ap-value-display"></span>
-    <select id="ap-evo-karma" class="ap-evo-karma">
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6" selected>6</option>
-    </select>
-  </div>
-
   <!-- Crit Rate -->
   <div class="ap-calc-group ap-calc-group--crit-rate">
     <div class="ap-calc-group-title">Crit Rate</div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-crit-stat">Crit Stat</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-crit-stat"></span>
       <input type="number" id="ap-crit-stat" class="ap-crit-stat" min="0" step="1" value="658">
     </div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-ring1-rate">Ring 1</label>
-      <span class="ap-value-display"></span>
-      <select id="ap-ring1-rate" class="ap-ring1-rate">
-        <option value="None">None</option>
-        <option value="Low">Low</option>
-        <option value="Mid" selected>Mid</option>
-        <option value="High">High</option>
-      </select>
+    <div class="ap-calc-field-row ap-calc-field-row-pair">
+      <label class="ap-calc-field-label">Rings</label>
+      <div class="ap-calc-pair">
+        <select id="ap-ring1-rate" class="ap-ring1-rate">
+          <option value="None">None</option>
+          <option value="Low">0.40%</option>
+          <option value="Mid" selected>0.95%</option>
+          <option value="High">1.55%</option>
+        </select>
+        <select id="ap-ring2-rate" class="ap-ring2-rate">
+          <option value="None">None</option>
+          <option value="Low">0.40%</option>
+          <option value="Mid" selected>0.95%</option>
+          <option value="High">1.55%</option>
+        </select>
+      </div>
     </div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-ring2-rate">Ring 2</label>
-      <span class="ap-value-display"></span>
-      <select id="ap-ring2-rate" class="ap-ring2-rate">
-        <option value="None">None</option>
-        <option value="Low">Low</option>
-        <option value="Mid" selected>Mid</option>
-        <option value="High">High</option>
-      </select>
-    </div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-bracelet-rate">Bracelet 1</label>
-      <span class="ap-value-display"></span>
-      <select id="ap-bracelet-rate" class="ap-bracelet-rate">
-        <option value="None">None</option>
-        <option value="Low">Low</option>
-        <option value="Mid" selected>Mid</option>
-        <option value="High">High</option>
-      </select>
-    </div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-bracelet-rate-2">Bracelet 2</label>
-      <span class="ap-value-display"></span>
-      <select id="ap-bracelet-rate-2" class="ap-bracelet-rate-2">
-        <option value="None" selected>None</option>
-        <option value="Low">Low</option>
-        <option value="Mid">Mid</option>
-        <option value="High">High</option>
-      </select>
+    <div class="ap-calc-field-row ap-calc-field-row-pair">
+      <label class="ap-calc-field-label">Bracelet</label>
+      <div class="ap-calc-pair">
+        <select id="ap-bracelet-rate" class="ap-bracelet-rate">
+          <option value="None">None</option>
+          <option value="Low">3.40%</option>
+          <option value="Mid" selected>4.20%</option>
+          <option value="High">5.00%</option>
+        </select>
+        <select id="ap-bracelet-rate-2" class="ap-bracelet-rate-2">
+          <option value="None" selected>None</option>
+          <option value="Low">3.40%</option>
+          <option value="Mid">4.20%</option>
+          <option value="High">5.00%</option>
+        </select>
+      </div>
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-adrenaline">Adrenaline</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-adrenaline"></span>
       <select id="ap-adrenaline" class="ap-adrenaline">
         <option value="Not Used">Not Used</option>
         <option value="0 Nodes">0 Nodes</option>
@@ -258,49 +232,43 @@
   <!-- Crit Damage -->
   <div class="ap-calc-group ap-calc-group--crit-dmg">
     <div class="ap-calc-group-title">Crit Damage</div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-ring1-dmg">Ring 1</label>
-      <span class="ap-value-display"></span>
-      <select id="ap-ring1-dmg" class="ap-ring1-dmg">
-        <option value="None">None</option>
-        <option value="Low">Low</option>
-        <option value="Mid">Mid</option>
-        <option value="High" selected>High</option>
-      </select>
+    <div class="ap-calc-field-row ap-calc-field-row-pair">
+      <label class="ap-calc-field-label">Rings</label>
+      <div class="ap-calc-pair">
+        <select id="ap-ring1-dmg" class="ap-ring1-dmg">
+          <option value="None">None</option>
+          <option value="Low">1.20%</option>
+          <option value="Mid">2.40%</option>
+          <option value="High" selected>4.00%</option>
+        </select>
+        <select id="ap-ring2-dmg" class="ap-ring2-dmg">
+          <option value="None">None</option>
+          <option value="Low">1.20%</option>
+          <option value="Mid">2.40%</option>
+          <option value="High" selected>4.00%</option>
+        </select>
+      </div>
     </div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-ring2-dmg">Ring 2</label>
-      <span class="ap-value-display"></span>
-      <select id="ap-ring2-dmg" class="ap-ring2-dmg">
-        <option value="None">None</option>
-        <option value="Low">Low</option>
-        <option value="Mid">Mid</option>
-        <option value="High" selected>High</option>
-      </select>
-    </div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-bracelet-dmg">Bracelet 1</label>
-      <span class="ap-value-display"></span>
-      <select id="ap-bracelet-dmg" class="ap-bracelet-dmg">
-        <option value="None">None</option>
-        <option value="Low" selected>Low</option>
-        <option value="Mid">Mid</option>
-        <option value="High">High</option>
-      </select>
-    </div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-bracelet-dmg-2">Bracelet 2</label>
-      <span class="ap-value-display"></span>
-      <select id="ap-bracelet-dmg-2" class="ap-bracelet-dmg-2">
-        <option value="None" selected>None</option>
-        <option value="Low">Low</option>
-        <option value="Mid">Mid</option>
-        <option value="High">High</option>
-      </select>
+    <div class="ap-calc-field-row ap-calc-field-row-pair">
+      <label class="ap-calc-field-label">Bracelet</label>
+      <div class="ap-calc-pair">
+        <select id="ap-bracelet-dmg" class="ap-bracelet-dmg">
+          <option value="None">None</option>
+          <option value="Low" selected>6.80%</option>
+          <option value="Mid">8.40%</option>
+          <option value="High">10.00%</option>
+        </select>
+        <select id="ap-bracelet-dmg-2" class="ap-bracelet-dmg-2">
+          <option value="None" selected>None</option>
+          <option value="Low">6.80%</option>
+          <option value="Mid">8.40%</option>
+          <option value="High">10.00%</option>
+        </select>
+      </div>
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-kbw">Keen Blunt Weapon</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-kbw"></span>
       <select id="ap-kbw" class="ap-kbw">
         <option value="Not Used">Not Used</option>
         <option value="0 Nodes">0 Nodes</option>
@@ -312,7 +280,7 @@
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-kbw-stone">Ability Stone: Keen Blunt Weapon</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-kbw-stone"></span>
       <select id="ap-kbw-stone" class="ap-kbw-stone">
         <option value="0 Lv." selected>Lv. 0</option>
         <option value="1 Lv.">Lv. 1</option>
@@ -326,19 +294,24 @@
   <!-- Crit Hit Damage -->
   <div class="ap-calc-group ap-calc-group--oncrit-dmg">
     <div class="ap-calc-group-title">Crit Hit Damage</div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-crit-rate-dual">Bracelet 1</label>
-      <span class="ap-value-display"></span>
-      <input type="checkbox" id="ap-crit-rate-dual" class="ap-crit-rate-dual" checked>
-    </div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-crit-dmg-dual">Bracelet 2</label>
-      <span class="ap-value-display"></span>
-      <input type="checkbox" id="ap-crit-dmg-dual" class="ap-crit-dmg-dual" checked>
+    <div class="ap-calc-field-row ap-calc-field-row-pair">
+      <label class="ap-calc-field-label">Bracelet</label>
+      <div class="ap-calc-pair ap-calc-pair-checks">
+        <label class="ap-calc-pair-check">
+          <input type="checkbox" id="ap-crit-rate-dual" class="ap-crit-rate-dual" checked>
+          <span class="ap-calc-pair-check-label">1</span>
+          <span class="ap-value-display ap-calc-pair-check-value">(1.50%)</span>
+        </label>
+        <label class="ap-calc-pair-check">
+          <input type="checkbox" id="ap-crit-dmg-dual" class="ap-crit-dmg-dual" checked>
+          <span class="ap-calc-pair-check-label">2</span>
+          <span class="ap-value-display ap-calc-pair-check-value">(1.50%)</span>
+        </label>
+      </div>
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-flashy-atk">Chaos Core: Flashy Attack</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-flashy-atk"></span>
       <select id="ap-flashy-atk" class="ap-flashy-atk">
         <option value="None">None</option>
         <option value="Epic-Leg 10P">Epic-Leg 10P</option>
@@ -353,12 +326,12 @@
     <div class="ap-calc-group-title">Additional Damage</div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-weapon-quality">Weapon Quality</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-weapon-quality"></span>
       <input type="number" id="ap-weapon-quality" class="ap-weapon-quality" min="0" max="100" step="1" value="100">
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-necklace">Necklace</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-necklace"></span>
       <select id="ap-necklace" class="ap-necklace">
         <option value="None">None</option>
         <option value="Low">Low</option>
@@ -366,34 +339,31 @@
         <option value="High">High</option>
       </select>
     </div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-bracelet-addA">Bracelet 1</label>
-      <span class="ap-value-display"></span>
-      <select id="ap-bracelet-addA" class="ap-bracelet-addA">
-        <option value="None" selected>None</option>
-        <option value="Low">Low</option>
-        <option value="Mid">Mid</option>
-        <option value="High">High</option>
-      </select>
-    </div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-bracelet-addB">Bracelet 2 (vs Demons)</label>
-      <span class="ap-value-display"></span>
-      <select id="ap-bracelet-addB" class="ap-bracelet-addB">
-        <option value="None" selected>None</option>
-        <option value="Low">Low</option>
-        <option value="Mid">Mid</option>
-        <option value="High">High</option>
-      </select>
+    <div class="ap-calc-field-row ap-calc-field-row-pair">
+      <label class="ap-calc-field-label">Bracelet</label>
+      <div class="ap-calc-pair">
+        <select id="ap-bracelet-addA" class="ap-bracelet-addA">
+          <option value="None" selected>None</option>
+          <option value="Low">3.00%</option>
+          <option value="Mid">3.50%</option>
+          <option value="High">4.00%</option>
+        </select>
+        <select id="ap-bracelet-addB" class="ap-bracelet-addB" title="vs Demons">
+          <option value="None" selected>None</option>
+          <option value="Low">2.50%</option>
+          <option value="Mid">3.00%</option>
+          <option value="High">3.50%</option>
+        </select>
+      </div>
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-astrogem-lv">Astrogem Level</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-astrogem-lv"></span>
       <input type="number" id="ap-astrogem-lv" class="ap-astrogem-lv" min="0" step="1" value="56">
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-sh-pet">Stronghold Pet</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-sh-pet"></span>
       <select id="ap-sh-pet" class="ap-sh-pet">
         <option value="None">None</option>
         <option value="Low">Rare</option>
@@ -403,7 +373,7 @@
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-stable-atk">Chaos Core: Stable Attack</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-stable-atk"></span>
       <select id="ap-stable-atk" class="ap-stable-atk">
         <option value="None|0P" selected>None</option>
         <option value="Legend|14P">Legend 14P</option>
@@ -421,6 +391,23 @@
     </div>
   </div>
 
+    <!-- Leap Rank is the only field feeding Evolution Damage directly (Yearning,
+       the other Evo Dmg source, lives in Party & Positioning instead) - a full
+       bordered group for one dropdown was mostly empty box, so it's a slim
+       tagged strip spanning the gear column instead of its own card. -->
+  <div class="ap-calc-mini-field ap-calc-mini-field--evo-dmg">
+    <span class="ap-calc-mini-field-tag">Evo Dmg</span>
+    <label class="ap-calc-field-label" for="ap-evo-karma">Karmic Leap Rank</label>
+    <span class="ap-value-display" data-for="ap-evo-karma"></span>
+    <select id="ap-evo-karma" class="ap-evo-karma">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6" selected>6</option>
+    </select>
+  </div>
 
 </div> <!-- end ap-calc-gear -->
 
@@ -433,27 +420,27 @@
     <div class="ap-calc-group-title">Party &amp; Positioning</div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-crit-syn1">Crit Rate Synergy 1</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-crit-syn1"></span>
       <input type="checkbox" id="ap-crit-syn1" class="ap-crit-syn1">
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-crit-syn2">Crit Rate Synergy 2</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-crit-syn2"></span>
       <input type="checkbox" id="ap-crit-syn2" class="ap-crit-syn2">
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-crit-hit-syn-1">Crit Hit Damage Synergy 1</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-crit-hit-syn-1"></span>
       <input type="checkbox" id="ap-crit-hit-syn-1" class="ap-crit-hit-syn-1">
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-crit-hit-syn-2">Crit Hit Damage Synergy 2</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-crit-hit-syn-2"></span>
       <input type="checkbox" id="ap-crit-hit-syn-2" class="ap-crit-hit-syn-2">
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-yearning">Support: Passionate Dance (Evo Dmg)</label>
-      <span class="ap-value-display"></span>
+      <span class="ap-value-display" data-for="ap-yearning"></span>
       <input type="checkbox" id="ap-yearning" class="ap-yearning" checked>
     </div>
     <div class="ap-calc-field-row ap-calc-field-row-range">
@@ -461,7 +448,6 @@
       <div class="ap-calc-range-line">
         <input type="range" id="ap-back-attack-rate" class="ap-back-attack-rate" min="0" max="100" step="1" value="90">
         <span class="ap-calc-range-value">90%</span>
-        <span class="ap-value-display"></span>
       </div>
     </div>
   </div>

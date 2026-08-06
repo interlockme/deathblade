@@ -1240,7 +1240,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .ap-calc-gear {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 0.9em;
   align-content: start;
   /* align-items defaults to stretch, which was forcing every group in a row
@@ -1272,6 +1272,27 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .ap-calc-mini-field .ap-calc-field-label {
   flex: 1;
+  /* This label/select pair sits outside .ap-calc-field-row, so none of that
+     class's font-size/color/select styling reaches them by default - which
+     was leaving Leap Rank's label at the browser's base font size (visibly
+     larger than every other label) and its select completely unstyled
+     (no dark background/border, default browser chrome). Mirrored here to
+     match .ap-calc-field-row's label + select rules exactly. */
+  font-size: 0.82em;
+  color: #cfc9dd;
+}
+.md-typeset .ap-calc-mini-field select {
+  background-color: #161718;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  border-radius: 6px;
+  color: #e8e6ee;
+  padding: 0.3em 0.5em;
+  font-size: 0.85em;
+  font-family: inherit;
+}
+.md-typeset .ap-calc-mini-field select:focus {
+  outline: none;
+  border-color: #b39ddb;
 }
 .md-typeset .ap-calc-mini-field--evo-dmg { --ap-cat: #b39ddb; }
 .md-typeset .ap-calc-live {
@@ -1382,6 +1403,54 @@ h3 { color: #4db6ac; }
   color: #ee83ab;
   min-width: 3em;
   text-align: right;
+}
+
+/* ---- Paired rows: two controls that are the same slot on two different
+   items (Ring 1/2, Bracelet line 1/2, the Crit Hit Dmg checkboxes)
+   sharing one row instead of one row each. These options now show their
+   actual percentage as the option text ("1.55%" instead of "High"), so
+   there's no separate live-value readout to fit alongside each control
+   anymore - that's what used to force a squeeze between the value text
+   and the select. Just two plain controls side by side now. ---- */
+.md-typeset .ap-calc-field-row-pair .ap-calc-field-label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.md-typeset .ap-calc-pair {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.6em;
+}
+.md-typeset .ap-calc-pair select {
+  width: auto;
+  min-width: 5em;
+  flex: 0 1 auto;
+  padding: 0.3em 0.5em;
+}
+/* Checkbox variant (Crit Hit Damage's Bracelet 1/2 toggles) - each is a
+   <label> so clicking the "1 (1.50%)" text also toggles its checkbox. */
+.md-typeset .ap-calc-pair-checks {
+  flex: 0 0 auto;
+  gap: 1.1em;
+}
+.md-typeset .ap-calc-pair-check {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  cursor: pointer;
+}
+.md-typeset .ap-calc-pair-check-label {
+  font-size: 0.82em;
+  color: #cfc9dd;
+  white-space: nowrap;
+}
+.md-typeset .ap-calc-pair-check-value {
+  min-width: 0;
+  text-align: left;
+  font-size: 0.75em;
 }
 
 /* ---- Party & Positioning: the "changes every pull" card - visually

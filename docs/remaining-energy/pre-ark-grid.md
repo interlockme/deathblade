@@ -14,7 +14,7 @@
 
     [Standard build guide](https://lostark-nexus-archive.pages.dev/guides/deathblade/)
 
--   ⚠ **111 (Head Hunt), with some Ark Grid**
+-   🗡 **111 (Head Hunt), with some Ark Grid**
 
     ---
 

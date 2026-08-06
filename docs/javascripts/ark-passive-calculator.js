@@ -102,6 +102,19 @@
     "master+pulv": "Master + Pulverize",
   };
 
+  // Party & Positioning's synergy/support toggles (Crit Rate Synergy 1/2,
+  // Crit Hit Damage Synergy 1/2, and the Passionate Dance support toggle) -
+  // realistically only 3 of these 5 are ever active on the same pull, so at
+  // most 3 may be checked at once (see enforcePartyCheckboxLimit below).
+  const PARTY_CHECKBOX_LIMIT_SELECTORS = [
+    ".ap-crit-syn1",
+    ".ap-crit-syn2",
+    ".ap-crit-hit-syn-1",
+    ".ap-crit-hit-syn-2",
+    ".ap-yearning",
+  ];
+  const PARTY_CHECKBOX_LIMIT = 3;
+
   // ----- Safe DOM helpers -----
   function getNumber(root, selector, fallback) {
     const el = root.querySelector(selector);
@@ -413,11 +426,24 @@
   }
 
   // ----- Render value displays -----
+  // Each control's live value is shown by a `.ap-value-display[data-for]`
+  // span whose data-for matches that control's id - NOT "the first
+  // .ap-value-display in this row", so multiple controls can safely share
+  // one field-row (see the Rings/Bracelet paired rows in the HTML) without
+  // one's display overwriting another's.
+  //
+  // Paired controls (Rings, Bracelet lines, the Crit Hit Dmg checkboxes)
+  // stack their value-display BELOW the select/checkbox instead of beside
+  // it (see .ap-calc-pair-control in the CSS) - the two used to sit side
+  // by side sharing one row's width, which let the select itself shrink
+  // below its own option text ("High" -> "Hig") and made the Demon tag's
+  // control wrap/overlap under tight widths. Stacking vertically gives
+  // each control its own full column width with nothing to compete for it,
+  // while keeping the value visible rather than hidden in a tooltip.
   function updateInputDisplays(root, inputs) {
     const setDisplay = (selector, value, format = "pct") => {
-      const row = root.querySelector(selector)?.closest?.(".ap-calc-field-row");
-      if (!row) return;
-      const span = row.querySelector(".ap-value-display");
+      const id = selector.replace(/^[#.]/, "");
+      const span = root.querySelector('.ap-value-display[data-for="' + id + '"]');
       if (!span) return;
       if (value === 0 || value === undefined || value === null) {
         span.textContent = "";
@@ -430,34 +456,25 @@
 
     // Crit Stat
     const critRateFromStat = roundDown((inputs.critStat * 0.03579099) / 100, 4);
-    const rowCrit = root.querySelector("#ap-crit-stat")?.closest?.(".ap-calc-field-row");
-    if (rowCrit) {
-      const spanCrit = rowCrit.querySelector(".ap-value-display");
-      if (spanCrit) {
-        const pct = critRateFromStat * 100;
-        spanCrit.textContent = "(" + pct.toFixed(2) + "%)";
-      }
+    const spanCrit = root.querySelector('.ap-value-display[data-for="ap-crit-stat"]');
+    if (spanCrit) {
+      const pct = critRateFromStat * 100;
+      spanCrit.textContent = "(" + pct.toFixed(2) + "%)";
     }
 
     // Weapon Quality
     const weaponDmg = 0.1 + 0.00002 * inputs.weaponQuality * inputs.weaponQuality;
-    const rowWep = root.querySelector("#ap-weapon-quality")?.closest?.(".ap-calc-field-row");
-    if (rowWep) {
-      const spanWep = rowWep.querySelector(".ap-value-display");
-      if (spanWep) {
-        const pct = weaponDmg * 100;
-        spanWep.textContent = "(" + pct.toFixed(2) + "%)";
-      }
+    const spanWep = root.querySelector('.ap-value-display[data-for="ap-weapon-quality"]');
+    if (spanWep) {
+      const pct = weaponDmg * 100;
+      spanWep.textContent = "(" + pct.toFixed(2) + "%)";
     }
 
     // Astrogem
     const astrogemDmg = roundDown(inputs.astrogemLv * 8.0834, 0) / 10000;
-    const rowAstro = root.querySelector("#ap-astrogem-lv")?.closest?.(".ap-calc-field-row");
-    if (rowAstro) {
-      const spanAstro = rowAstro.querySelector(".ap-value-display");
-      if (spanAstro) {
-        spanAstro.textContent = formatPct(astrogemDmg);
-      }
+    const spanAstro = root.querySelector('.ap-value-display[data-for="ap-astrogem-lv"]');
+    if (spanAstro) {
+      spanAstro.textContent = formatPct(astrogemDmg);
     }
 
     // Other displays
@@ -467,19 +484,11 @@
 
     setDisplay("#ap-yearning", inputs.yearning ? 0.14 : 0);
 
-    setDisplay("#ap-ring1-rate", RING_RATE_TABLE[inputs.ring1Rate] || 0);
-    setDisplay("#ap-ring1-dmg", RING_DMG_TABLE[inputs.ring1Dmg] || 0);
-    setDisplay("#ap-ring2-rate", RING_RATE_TABLE[inputs.ring2Rate] || 0);
-    setDisplay("#ap-ring2-dmg", RING_DMG_TABLE[inputs.ring2Dmg] || 0);
-
-    setDisplay("#ap-bracelet-rate", BRACELET_RATE_TABLE[inputs.braceletRate] || 0);
-    setDisplay("#ap-bracelet-dmg", BRACELET_DMG_TABLE[inputs.braceletDmg] || 0);
-    setDisplay("#ap-bracelet-rate-2", BRACELET_RATE_TABLE[inputs.braceletRate2] || 0);
-    setDisplay("#ap-bracelet-dmg-2", BRACELET_DMG_TABLE[inputs.braceletDmg2] || 0);
-    setDisplay("#ap-bracelet-addA", BRACELET_ADD_A_TABLE[inputs.braceletAddA] || 0);
-    setDisplay("#ap-bracelet-addB", BRACELET_ADD_B_TABLE[inputs.braceletAddB] || 0);
-    setDisplay("#ap-crit-rate-dual", inputs.critRateDual ? 0.015 : 0);
-    setDisplay("#ap-crit-dmg-dual", inputs.critDmgDual ? 0.015 : 0);
+    // Rings/Bracelet pairs (Crit Rate, Crit Dmg, Additional Dmg) and the
+    // Crit Hit Dmg checkboxes have no live value-display: their option
+    // text/label already shows the exact percentage each choice is worth
+    // (see the option labels in the HTML), so there's nothing separate to
+    // keep in sync here.
 
     setDisplay("#ap-flashy-atk", FLASHY_ATK_TABLE[inputs.flashyAtk] || 0);
     setDisplay("#ap-stable-atk", stableAtkValue(inputs.stableAtk));
@@ -536,7 +545,7 @@
         rateEl.textContent = rate.toFixed(1) + "%";
         rateEl.classList.toggle("ap-summary-value-warn", rate > 100);
       }
-      if (dmgEl) dmgEl.textContent = base.critDmg.toFixed(3);
+      if (dmgEl) dmgEl.textContent = (base.critDmg * 100).toFixed(1) + "%";
       if (onCritEl) onCritEl.textContent = base.onCritDmg.toFixed(2) + "%";
       if (evoEl) evoEl.textContent = base.evoDmg.toFixed(2) + "%";
       if (addEl) addEl.textContent = base.addDmg.toFixed(2) + "%";
@@ -596,6 +605,14 @@
         // authored HTML default rather than guessing.
         if (el.type === "checkbox") {
           el.checked = !!data[el.id];
+        } else if (el.tagName === "SELECT") {
+          // Only restore if the stored value still matches a real option -
+          // if a future edit ever renames/removes an option's value, a
+          // stale stored value would otherwise leave the select showing no
+          // selection at all (selectedIndex -1) instead of falling back to
+          // the authored default.
+          const stillValid = Array.from(el.options).some((opt) => opt.value === data[el.id]);
+          if (stillValid) el.value = data[el.id];
         } else {
           el.value = data[el.id];
         }
@@ -628,7 +645,20 @@
     update(root);
   }
 
+  // Once 3 of the 5 Party & Positioning toggles are checked, the rest are
+  // disabled (not force-unchecked) so it's obvious at a glance why they
+  // can't be clicked, rather than a checkbox that mysteriously won't stay
+  // checked. Re-enabled the moment the count drops back under the limit.
+  function enforcePartyCheckboxLimit(root) {
+    const boxes = PARTY_CHECKBOX_LIMIT_SELECTORS.map((sel) => root.querySelector(sel)).filter(Boolean);
+    const checkedCount = boxes.filter((b) => b.checked).length;
+    boxes.forEach((b) => {
+      b.disabled = !b.checked && checkedCount >= PARTY_CHECKBOX_LIMIT;
+    });
+  }
+
   function update(root) {
+    enforcePartyCheckboxLimit(root);
     const inputs = readInputs(root);
     const result = computeGridAndSummary(inputs);
     renderGrid(root, result);
