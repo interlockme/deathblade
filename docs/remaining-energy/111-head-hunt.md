@@ -42,7 +42,7 @@
     Technically playable with zero Ark Grid investment, but not recommended.
 
 !!! note "Adjustments"
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) optimize Evolution nodes if needed.
+    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
 
 ## Skill Setup
 

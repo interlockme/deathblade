@@ -45,7 +45,7 @@
     The minimum requirement to play this build is 14p Sun and 17p Moon, but damage will be lacking.
 
 !!! note "Adjustments"
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) optimize Evolution nodes if needed.
+    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
 
 ## Skill Setup
 

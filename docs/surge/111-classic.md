@@ -52,7 +52,7 @@
     You can level Ark Grid cores to your preference, but keep in mind that 17p Moon grants a second Earth Cleaver stack. This lets you slot a cooldown gem into Blade Dance and unlocks its Weak Point Detection tripod.
 
 !!! note "Adjustments"
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) optimize Evolution nodes if needed.
+    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
 
 ## Skill Setup
 

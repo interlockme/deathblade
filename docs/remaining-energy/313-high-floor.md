@@ -48,7 +48,7 @@
     The minimum requirement is shown above. Raise Moon to 17p for increased QoL and damage when you can.
 
 !!! note "Adjustments"
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) optimize Evolution nodes if needed.
+    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
     - Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a minor DPS loss.
         - Not as comfortable with +CD% bracelet line and/or low Specialization.
 

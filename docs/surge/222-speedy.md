@@ -51,7 +51,7 @@
 !!! tip ""
     The minimum requirement to play this build is a 10p Star core, but damage will be lacking.
 
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) optimize Evolution nodes if needed.
+    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
     - This build is capable of using Raid Captain + Mass Increase with the least drawbacks.  
 
 ## Skill Setup
