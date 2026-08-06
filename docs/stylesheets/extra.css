@@ -1447,7 +1447,7 @@ h3 { color: #4db6ac; }
   color: #cfc9dd;
   white-space: nowrap;
 }
-.md-typeset .ap-calc-pair-check-value {
+.md-typeset .ap-calc-pair-check .ap-value-display {
   min-width: 0;
   text-align: left;
   font-size: 0.75em;
@@ -1465,6 +1465,19 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .ap-calc-party-card .ap-calc-group-title {
   color: #4db6ac;
+}
+/* A field gets `disabled` (not silently reset) when something else makes
+   it inapplicable - the Party & Positioning checkboxes past the 3-of-5
+   limit (enforcePartyCheckboxLimit) and the KBW Ability Stone while Keen
+   Blunt Weapon itself is "Not Used" (enforceKbwStoneDependency), both in
+   the JS. Dim the whole row so it's visually obvious why it won't
+   respond, and swap the cursor so hovering doesn't imply it's clickable. */
+.md-typeset .ap-calc-field-row:has(input:disabled, select:disabled) {
+  opacity: 0.45;
+}
+.md-typeset .ap-calc-field-row input:disabled,
+.md-typeset .ap-calc-field-row select:disabled {
+  cursor: not-allowed;
 }
 
 /* ---- Top 3 combinations: ranked list, not a 3x3 grid. Evolution split x

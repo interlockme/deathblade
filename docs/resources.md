@@ -32,132 +32,6 @@
     FB388C4F19F70DE5311D21E59D93BE5D1B9935691AB3B6F2457D466875600C7A581AE3DFA172017D17440BEC09FB7A05BEE420C68F6788139A428497A91B802E
     ```
 
-## CPM Calculator
-
-<p class="page-banner page-banner-warning">Not available in NA servers yet</p>
-
-*Compares Trixion damage to raid damage. Watch [this](https://www.youtube.com/watch?v=dlUS8vUaNLA) to learn about Trixion multipliers.*
-
-*Enter your Raid CPM and back-attack rate to compare builds. Highest Final Multiplier wins.*
-
-<div class="cpm-calc">
-
-<div class="cpm-calc-row" data-build="333-re">
-<div class="cpm-calc-row-header">
-<span class="cpm-calc-row-title">333 (Ceiling)</span>
-<span class="cpm-calc-row-meta">Trixion CPM 15.122 — Remaining Energy</span>
-</div>
-<div class="cpm-calc-inputs">
-<label class="cpm-calc-field">
-<span class="cpm-calc-field-label">Raid CPM</span>
-<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 9.5">
-</label>
-<label class="cpm-calc-field">
-<span class="cpm-calc-field-label">Back-Attack %</span>
-<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 75">
-</label>
-<div class="cpm-calc-toggle">
-<label><input type="radio" name="cpm-calc-ba-mode-333-re" value="rate" checked> Rate</label>
-<label><input type="radio" name="cpm-calc-ba-mode-333-re" value="ratio"> Ratio</label>
-</div>
-<label class="cpm-calc-field cpm-calc-field-muted">
-<span class="cpm-calc-field-label">Base Multiplier</span>
-<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
-</label>
-</div>
-<div class="cpm-calc-output">
-<div class="cpm-calc-output-item">
-<span class="cpm-calc-output-label">Adjusted Multiplier</span>
-<span class="cpm-calc-adj-value">—</span>
-</div>
-<div class="cpm-calc-output-item">
-<span class="cpm-calc-output-label">Final Multiplier</span>
-<span class="cpm-calc-result-value">—</span>
-</div>
-</div>
-<div class="stat-bar-track stat-bar-track-teal">
-<div class="stat-bar-fill stat-bar-fill-teal cpm-calc-bar-fill" style="width: 0%"></div>
-</div>
-</div>
-
-<div class="cpm-calc-row" data-build="111-surge">
-<div class="cpm-calc-row-header">
-<span class="cpm-calc-row-title">111 (Classic)</span>
-<span class="cpm-calc-row-meta">Trixion CPM 10.952 — Surge</span>
-</div>
-<div class="cpm-calc-inputs">
-<label class="cpm-calc-field">
-<span class="cpm-calc-field-label">Raid CPM</span>
-<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 6.5">
-</label>
-<label class="cpm-calc-field">
-<span class="cpm-calc-field-label">Back-Attack %</span>
-<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 90">
-</label>
-<div class="cpm-calc-toggle">
-<label><input type="radio" name="cpm-calc-ba-mode-111-surge" value="rate" checked> Rate</label>
-<label><input type="radio" name="cpm-calc-ba-mode-111-surge" value="ratio"> Ratio</label>
-</div>
-<label class="cpm-calc-field cpm-calc-field-muted">
-<span class="cpm-calc-field-label">Base Multiplier</span>
-<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
-</label>
-</div>
-<div class="cpm-calc-output">
-<div class="cpm-calc-output-item">
-<span class="cpm-calc-output-label">Adjusted Multiplier</span>
-<span class="cpm-calc-adj-value">—</span>
-</div>
-<div class="cpm-calc-output-item">
-<span class="cpm-calc-output-label">Final Multiplier</span>
-<span class="cpm-calc-result-value">—</span>
-</div>
-</div>
-<div class="stat-bar-track stat-bar-track-teal">
-<div class="stat-bar-fill stat-bar-fill-teal cpm-calc-bar-fill" style="width: 0%"></div>
-</div>
-</div>
-
-<div class="cpm-calc-row" data-build="222-surge">
-<div class="cpm-calc-row-header">
-<span class="cpm-calc-row-title">222 (Speedy)</span>
-<span class="cpm-calc-row-meta">Trixion CPM 9.756 — Surge</span>
-</div>
-<div class="cpm-calc-inputs">
-<label class="cpm-calc-field">
-<span class="cpm-calc-field-label">Raid CPM</span>
-<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 6">
-</label>
-<label class="cpm-calc-field">
-<span class="cpm-calc-field-label">Back-Attack %</span>
-<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 80">
-</label>
-<div class="cpm-calc-toggle">
-<label><input type="radio" name="cpm-calc-ba-mode-222-surge" value="rate" checked> Rate</label>
-<label><input type="radio" name="cpm-calc-ba-mode-222-surge" value="ratio"> Ratio</label>
-</div>
-<label class="cpm-calc-field cpm-calc-field-muted">
-<span class="cpm-calc-field-label">Base Multiplier</span>
-<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
-</label>
-</div>
-<div class="cpm-calc-output">
-<div class="cpm-calc-output-item">
-<span class="cpm-calc-output-label">Adjusted Multiplier</span>
-<span class="cpm-calc-adj-value">—</span>
-</div>
-<div class="cpm-calc-output-item">
-<span class="cpm-calc-output-label">Final Multiplier</span>
-<span class="cpm-calc-result-value">—</span>
-</div>
-</div>
-<div class="stat-bar-track stat-bar-track-teal">
-<div class="stat-bar-fill stat-bar-fill-teal cpm-calc-bar-fill" style="width: 0%"></div>
-</div>
-</div>
-
-</div>
-
 ## Ark Passive Calculator
 
 *Finds the optimal Evolution nodes for your deathblade and team setup.*
@@ -300,12 +174,12 @@
         <label class="ap-calc-pair-check">
           <input type="checkbox" id="ap-crit-rate-dual" class="ap-crit-rate-dual" checked>
           <span class="ap-calc-pair-check-label">1</span>
-          <span class="ap-value-display ap-calc-pair-check-value">(1.50%)</span>
+          <span class="ap-value-display">(1.50%)</span>
         </label>
         <label class="ap-calc-pair-check">
           <input type="checkbox" id="ap-crit-dmg-dual" class="ap-crit-dmg-dual" checked>
           <span class="ap-calc-pair-check-label">2</span>
-          <span class="ap-value-display ap-calc-pair-check-value">(1.50%)</span>
+          <span class="ap-value-display">(1.50%)</span>
         </label>
       </div>
     </div>
@@ -510,6 +384,132 @@
 </div> <!-- end ap-calc-layout -->
 
 </div> <!-- end ap-calc -->
+
+## CPM Calculator
+
+<p class="page-banner page-banner-warning">Not available in NA servers yet</p>
+
+*Compares Trixion damage to raid damage. Watch [this](https://www.youtube.com/watch?v=dlUS8vUaNLA) to learn about Trixion multipliers.*
+
+*Enter your Raid CPM and back-attack rate to compare builds. Highest Final Multiplier wins.*
+
+<div class="cpm-calc">
+
+<div class="cpm-calc-row" data-build="333-re">
+<div class="cpm-calc-row-header">
+<span class="cpm-calc-row-title">333 (Ceiling)</span>
+<span class="cpm-calc-row-meta">Trixion CPM 15.122 — Remaining Energy</span>
+</div>
+<div class="cpm-calc-inputs">
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Raid CPM</span>
+<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 9.5">
+</label>
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Back-Attack %</span>
+<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 75">
+</label>
+<div class="cpm-calc-toggle">
+<label><input type="radio" name="cpm-calc-ba-mode-333-re" value="rate" checked> Rate</label>
+<label><input type="radio" name="cpm-calc-ba-mode-333-re" value="ratio"> Ratio</label>
+</div>
+<label class="cpm-calc-field cpm-calc-field-muted">
+<span class="cpm-calc-field-label">Base Multiplier</span>
+<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
+</label>
+</div>
+<div class="cpm-calc-output">
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Adjusted Multiplier</span>
+<span class="cpm-calc-adj-value">—</span>
+</div>
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Final Multiplier</span>
+<span class="cpm-calc-result-value">—</span>
+</div>
+</div>
+<div class="stat-bar-track stat-bar-track-teal">
+<div class="stat-bar-fill stat-bar-fill-teal cpm-calc-bar-fill" style="width: 0%"></div>
+</div>
+</div>
+
+<div class="cpm-calc-row" data-build="111-surge">
+<div class="cpm-calc-row-header">
+<span class="cpm-calc-row-title">111 (Classic)</span>
+<span class="cpm-calc-row-meta">Trixion CPM 10.952 — Surge</span>
+</div>
+<div class="cpm-calc-inputs">
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Raid CPM</span>
+<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 6.5">
+</label>
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Back-Attack %</span>
+<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 90">
+</label>
+<div class="cpm-calc-toggle">
+<label><input type="radio" name="cpm-calc-ba-mode-111-surge" value="rate" checked> Rate</label>
+<label><input type="radio" name="cpm-calc-ba-mode-111-surge" value="ratio"> Ratio</label>
+</div>
+<label class="cpm-calc-field cpm-calc-field-muted">
+<span class="cpm-calc-field-label">Base Multiplier</span>
+<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
+</label>
+</div>
+<div class="cpm-calc-output">
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Adjusted Multiplier</span>
+<span class="cpm-calc-adj-value">—</span>
+</div>
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Final Multiplier</span>
+<span class="cpm-calc-result-value">—</span>
+</div>
+</div>
+<div class="stat-bar-track stat-bar-track-teal">
+<div class="stat-bar-fill stat-bar-fill-teal cpm-calc-bar-fill" style="width: 0%"></div>
+</div>
+</div>
+
+<div class="cpm-calc-row" data-build="222-surge">
+<div class="cpm-calc-row-header">
+<span class="cpm-calc-row-title">222 (Speedy)</span>
+<span class="cpm-calc-row-meta">Trixion CPM 9.756 — Surge</span>
+</div>
+<div class="cpm-calc-inputs">
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Raid CPM</span>
+<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 6">
+</label>
+<label class="cpm-calc-field">
+<span class="cpm-calc-field-label">Back-Attack %</span>
+<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 80">
+</label>
+<div class="cpm-calc-toggle">
+<label><input type="radio" name="cpm-calc-ba-mode-222-surge" value="rate" checked> Rate</label>
+<label><input type="radio" name="cpm-calc-ba-mode-222-surge" value="ratio"> Ratio</label>
+</div>
+<label class="cpm-calc-field cpm-calc-field-muted">
+<span class="cpm-calc-field-label">Base Multiplier</span>
+<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
+</label>
+</div>
+<div class="cpm-calc-output">
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Adjusted Multiplier</span>
+<span class="cpm-calc-adj-value">—</span>
+</div>
+<div class="cpm-calc-output-item">
+<span class="cpm-calc-output-label">Final Multiplier</span>
+<span class="cpm-calc-result-value">—</span>
+</div>
+</div>
+<div class="stat-bar-track stat-bar-track-teal">
+<div class="stat-bar-fill stat-bar-fill-teal cpm-calc-bar-fill" style="width: 0%"></div>
+</div>
+</div>
+
+</div>
 
 ## Gearing Values
 

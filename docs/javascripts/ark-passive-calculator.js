@@ -4,7 +4,7 @@
 // / Master+Pulverize) across the three Limit Break/Keen Sense splits Deathblade
 // can run (3 evolution points total). Each cell shows its Final Multiplier as
 // a % of the grid's best cell (best = 100.00%) rather than a raw multiplier -
-// see the CSS comment above .ap-value-display for why.
+// see the CSS comment above .ap-calc for why.
 //
 // Formulas verified cell-for-cell against Ark_Passive_Calculator.xlsx's own
 // computed output - see the reference block at the bottom of this file.
@@ -137,9 +137,9 @@
 
   function readInputs(root) {
     return {
-      critStat: getNumber(root, ".ap-crit-stat", 658),
+      critStat: Math.max(0, getNumber(root, ".ap-crit-stat", 658)),
       weaponQuality: Math.max(0, Math.min(100, getNumber(root, ".ap-weapon-quality", 100))),
-      astrogemLv: getNumber(root, ".ap-astrogem-lv", 56),
+      astrogemLv: Math.max(0, getNumber(root, ".ap-astrogem-lv", 56)),
 
       ring1Rate: getSelect(root, ".ap-ring1-rate", "Mid"),
       ring1Dmg: getSelect(root, ".ap-ring1-dmg", "High"),
@@ -429,17 +429,13 @@
   // Each control's live value is shown by a `.ap-value-display[data-for]`
   // span whose data-for matches that control's id - NOT "the first
   // .ap-value-display in this row", so multiple controls can safely share
-  // one field-row (see the Rings/Bracelet paired rows in the HTML) without
-  // one's display overwriting another's.
+  // one field-row without one's display overwriting another's.
   //
-  // Paired controls (Rings, Bracelet lines, the Crit Hit Dmg checkboxes)
-  // stack their value-display BELOW the select/checkbox instead of beside
-  // it (see .ap-calc-pair-control in the CSS) - the two used to sit side
-  // by side sharing one row's width, which let the select itself shrink
-  // below its own option text ("High" -> "Hig") and made the Demon tag's
-  // control wrap/overlap under tight widths. Stacking vertically gives
-  // each control its own full column width with nothing to compete for it,
-  // while keeping the value visible rather than hidden in a tooltip.
+  // The Rings/Bracelet paired selects (Crit Rate, Crit Dmg, Additional Dmg)
+  // and the Crit Hit Dmg checkboxes don't use this mechanism at all - their
+  // option text/checkbox label already shows the exact percentage each
+  // choice is worth (see the HTML), so there's no separate value-display
+  // for those fields to keep in sync here.
   function updateInputDisplays(root, inputs) {
     const setDisplay = (selector, value, format = "pct") => {
       const id = selector.replace(/^[#.]/, "");
@@ -659,6 +655,7 @@
 
   function update(root) {
     enforcePartyCheckboxLimit(root);
+    enforceKbwStoneDependency(root);
     const inputs = readInputs(root);
     const result = computeGridAndSummary(inputs);
     renderGrid(root, result);
@@ -669,10 +666,53 @@
     if (rangeEl && rangeValueEl) rangeValueEl.textContent = rangeEl.value + "%";
   }
 
+  // Chaos Core: Flashy Attack and Chaos Core: Stable Attack are both the
+  // same Chaos Core equipment slot, so only one can ever actually be
+  // equipped - picking a real option in one resets the other back to
+  // "None" rather than letting both count as active at once.
+  function normalizeChaosCoreExclusivity(root) {
+    const flashyEl = root.querySelector(".ap-flashy-atk");
+    const stableEl = root.querySelector(".ap-stable-atk");
+    if (!flashyEl || !stableEl) return;
+    if (flashyEl.value !== "None" && stableEl.value !== "None|0P") {
+      flashyEl.value = "None";
+    }
+  }
+
+  // The Keen Blunt Weapon Ability Stone only does anything while Keen
+  // Blunt Weapon itself is actually equipped - if KBW is "Not Used", its
+  // stone is locked to "0 Lv." and disabled (dimmed via the CSS rule
+  // alongside the Party & Positioning one) so it's obvious why, rather
+  // than letting a stale stone level look active but silently do nothing.
+  function enforceKbwStoneDependency(root) {
+    const kbwEl = root.querySelector(".ap-kbw");
+    const stoneEl = root.querySelector(".ap-kbw-stone");
+    if (!kbwEl || !stoneEl) return;
+    const kbwUnused = kbwEl.value === "Not Used";
+    if (kbwUnused) stoneEl.value = "0 Lv.";
+    stoneEl.disabled = kbwUnused;
+  }
+
   // ----- Initialisation -----
   function init() {
     document.querySelectorAll(".ap-calc").forEach((root) => {
       loadInputs(root);
+      normalizeChaosCoreExclusivity(root);
+
+      const flashyEl = root.querySelector(".ap-flashy-atk");
+      const stableEl = root.querySelector(".ap-stable-atk");
+      if (flashyEl && stableEl) {
+        // Attached before the generic input/select loop below, so the
+        // opposing select is already reset by the time that loop's own
+        // "change" listener runs update()/saveInputs() for this element.
+        flashyEl.addEventListener("change", () => {
+          if (flashyEl.value !== "None") stableEl.value = "None|0P";
+        });
+        stableEl.addEventListener("change", () => {
+          if (stableEl.value !== "None|0P") flashyEl.value = "None";
+        });
+      }
+
       root.querySelectorAll("input, select").forEach((el) => {
         el.addEventListener("input", () => {
           update(root);
