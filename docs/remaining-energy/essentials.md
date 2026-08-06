@@ -54,13 +54,13 @@
     ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast is required for all content
     { .food-req }
 
-    Feast also helps rotations cycle smoothly.
+    Feast also makes your rotations smoother.
 
 -   **Keen Blunt Weapon**
 
     ---
 
-    Keen Sense 2 Evolution setting is often ideal
+    A safe and efficient choice
     { .food-req }
 
     Stronger than Cursed Doll by ~0.7% to 1% late game.

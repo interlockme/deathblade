@@ -48,10 +48,10 @@
 
     ---
 
-    Keen Sense 2 Evolution setting is often ideal
+    A safe and efficient choice
     { .food-req }
 
-    A safe, default choice.
+    Pair this with Cursed Doll if you're a newer player.
 
 -   **Mass Increase**
 

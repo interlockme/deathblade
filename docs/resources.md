@@ -34,7 +34,7 @@
 
 ## Ark Passive Calculator
 
-*Finds the optimal Evolution nodes for your deathblade and team setup.*
+*Finds the optimal Evolution nodes for your deathblade and team setup. See [this](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) if you want verification.*
 
 <div class="ap-calc">
 
@@ -394,7 +394,7 @@
 
 ## CPM Calculator
 
-<p class="page-banner page-banner-warning">Not available in NA servers yet</p>
+<p class="page-banner page-banner-warning">Not applicable to NA servers yet</p>
 
 *Compares Trixion damage to raid damage. Watch [this](https://www.youtube.com/watch?v=dlUS8vUaNLA) to learn about Trixion multipliers.*
 
