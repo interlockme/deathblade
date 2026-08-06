@@ -35,6 +35,7 @@ extra_css:
 extra_javascript:
   - javascripts/extra.js
   - javascripts/cpm-calculator.js
+  - javascripts/ark-passive-calculator.js
 
 extra:
   generator: false

@@ -1201,6 +1201,419 @@ h3 { color: #4db6ac; }
   color: #4db6ac;
 }
 
+/* ---------- Ark Passive node comparison calculator ---------- */
+/* Same card shell as .cpm-calc (lavender border, dark panel) so the two
+   calculators read as one family. Inputs are grouped by which final stat
+   they actually feed (Crit Rate / Crit Dmg / On-Crit Dmg / Additional Dmg /
+   Evolution Dmg) rather than by item slot, since that's what a reader is
+   usually trying to reason about ("what's pushing my Crit Dmg") rather than
+   "what's on my bracelet". Each group gets a small accent color, reused on
+   the Your Setup / Best Setup labels further down so a field and its
+   contribution to the final numbers read as the same color everywhere on
+   the card. Party & Positioning is deliberately pulled out of that stat
+   grouping and placed next to the result grid instead - unlike gear, it's
+   the section people re-toggle every pull, so it lives with the payoff
+   rather than sitting buried among fill-once fields. Deliberately no raw
+   multiplier numbers shown next to the inputs themselves - only the grid's
+   Final Multiplier column and the %-vs-best figure are surfaced, so the
+   takeaway stays "pick the highlighted cell" rather than inviting the
+   reader to hand-compute multiplier math. */
+.md-typeset .ap-calc {
+  border: 1px solid rgba(179, 157, 219, 0.28);
+  background-color: rgba(179, 157, 219, 0.045);
+  border-radius: 10px;
+  padding: 1em 1.2em 1.2em;
+  margin: 1em 0 1.5em;
+}
+
+/* ---- Layout: fixed gear (fill once) on the left, the stuff you re-check
+   every pull (party toggles + result grid + verification numbers) on the
+   right. Right column sticks while scrolling the gear list, so the answer
+   never scrolls out of view while you're still filling out setup - if the
+   sticky offset ends up misjudging your header height, drop the
+   `position`/`top` pair below and it just scrolls normally instead. ---- */
+.md-typeset .ap-calc-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(300px, 1.15fr);
+  gap: 1.1em;
+  align-items: start;
+}
+.md-typeset .ap-calc-gear {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.9em;
+  align-content: start;
+  /* align-items defaults to stretch, which was forcing every group in a row
+     to match its tallest sibling's height - e.g. a short group padded out
+     to match a taller one beside it. start = each group only takes its own
+     content height. */
+  align-items: start;
+}
+/* Leap Rank is the lone field feeding Evolution Damage directly (see the
+   HTML comment above it) - full-width slim strip instead of its own boxed
+   group, so one dropdown doesn't cost a whole card's worth of border/title/
+   padding for little payoff. */
+.md-typeset .ap-calc-mini-field {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.3em 0.1em 0.6em;
+  border-bottom: 2px solid var(--ap-cat, rgba(255, 255, 255, 0.15));
+  margin-bottom: 0.1em;
+}
+.md-typeset .ap-calc-mini-field-tag {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--ap-cat, #a79bc4);
+  flex-shrink: 0;
+}
+.md-typeset .ap-calc-mini-field .ap-calc-field-label {
+  flex: 1;
+}
+.md-typeset .ap-calc-mini-field--evo-dmg { --ap-cat: #b39ddb; }
+.md-typeset .ap-calc-live {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  position: sticky;
+  top: 4.4rem;
+}
+@media screen and (max-width: 900px) {
+  .md-typeset .ap-calc-layout {
+    display: flex;
+    flex-direction: column;
+  }
+  /* Party toggles + grid + summary read before the fill-once gear list on
+     small screens, since that's the part worth seeing without scrolling
+     past everything else first. */
+  .md-typeset .ap-calc-live {
+    position: static;
+    order: -1;
+  }
+}
+
+.md-typeset .ap-calc-group {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-left: 3px solid var(--ap-cat, rgba(255, 255, 255, 0.15));
+  border-radius: 8px;
+  padding: 0.7em 0.85em;
+}
+.md-typeset .ap-calc-group-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ap-cat, #a79bc4);
+  font-weight: 700;
+  margin-bottom: 0.55em;
+}
+.md-typeset .ap-calc-group--crit-rate  { --ap-cat: #ee83ab; }
+.md-typeset .ap-calc-group--crit-dmg   { --ap-cat: #4db6ac; }
+.md-typeset .ap-calc-group--oncrit-dmg { --ap-cat: #f0a868; }
+.md-typeset .ap-calc-group--add-dmg    { --ap-cat: #7ec4e8; }
+/* Evolution Damage has no full group anymore - its one field (Leap Rank)
+   lives in the .ap-calc-mini-field strip above instead, which carries its
+   own --ap-cat: #b39ddb. */
+
+.md-typeset .ap-calc-field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6em;
+  margin-bottom: 0.5em;
+}
+.md-typeset .ap-calc-field-row:last-child {
+  margin-bottom: 0;
+}
+.md-typeset .ap-calc-field-row label.ap-calc-field-label {
+  font-size: 0.82em;
+  color: #cfc9dd;
+  flex: 1;
+}
+.md-typeset .ap-calc-field-row select,
+.md-typeset .ap-calc-field-row input[type="number"] {
+  background-color: #161718;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  border-radius: 6px;
+  color: #e8e6ee;
+  padding: 0.3em 0.5em;
+  font-size: 0.85em;
+  font-family: inherit;
+  min-width: 5.5em;
+}
+.md-typeset .ap-calc-field-row input[type="number"] {
+  width: 5.5em;
+  min-width: 0;
+}
+.md-typeset .ap-calc-field-row select:focus,
+.md-typeset .ap-calc-field-row input[type="number"]:focus {
+  outline: none;
+  border-color: #b39ddb;
+}
+.md-typeset .ap-calc-field-row input[type="checkbox"] {
+  width: 1.1em;
+  height: 1.1em;
+  accent-color: #ee83ab;
+  cursor: pointer;
+}
+/* Back-Attack Rate's range input spans the group width with the live
+   percentage readout pinned to the right - the one field in the card the
+   reader is expected to actually drag, so it gets more room than the
+   dropdowns beside it. */
+.md-typeset .ap-calc-field-row.ap-calc-field-row-range {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.3em;
+}
+.md-typeset .ap-calc-range-line {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+}
+.md-typeset .ap-calc-range-line input[type="range"] {
+  flex: 1;
+  accent-color: #ee83ab;
+}
+.md-typeset .ap-calc-range-value {
+  font-size: 0.85em;
+  font-weight: 700;
+  color: #ee83ab;
+  min-width: 3em;
+  text-align: right;
+}
+
+/* ---- Party & Positioning: the "changes every pull" card - visually
+   distinct from the fill-once gear groups (teal accent matching the grid's
+   "best cell" highlight below) and sitting directly above the grid it
+   feeds. ---- */
+.md-typeset .ap-calc-party-card {
+  border: 1px solid rgba(77, 182, 172, 0.35);
+  background-color: rgba(77, 182, 172, 0.05);
+  border-radius: 8px;
+  padding: 0.7em 0.85em;
+}
+.md-typeset .ap-calc-party-card .ap-calc-group-title {
+  color: #4db6ac;
+}
+
+/* ---- Top 3 combinations: ranked list, not a 3x3 grid. Evolution split x
+   Keystone pair is 9 cells, but a reader only ever wants "what's my best
+   combo, and what am I giving up if I run something else" - a ranked list
+   of the top 3 answers that directly, with the #1 row visually promoted,
+   instead of asking the reader to scan a matrix for the highlighted cell.
+   Rows are fixed in the markup (data-rank 1/2/3) and JS re-sorts &
+   re-labels them in place each update, since which combo ranks where
+   changes with the inputs. */
+.md-typeset .ap-calc-results {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.7em 0.85em;
+}
+.md-typeset .ap-calc-results-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+  margin-bottom: 0.6em;
+}
+.md-typeset .ap-calc-result-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.5em 0.6em;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+.md-typeset .ap-calc-result-row + .ap-calc-result-row {
+  margin-top: 0.4em;
+}
+.md-typeset .ap-calc-result-row-best {
+  border-color: rgba(77, 182, 172, 0.5);
+  background-color: rgba(77, 182, 172, 0.09);
+}
+.md-typeset .ap-result-rank {
+  flex-shrink: 0;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72em;
+  font-weight: 700;
+  color: #cfc9dd;
+  background-color: rgba(255, 255, 255, 0.07);
+}
+.md-typeset .ap-calc-result-row-best .ap-result-rank {
+  color: #0f1210;
+  background-color: #4db6ac;
+}
+.md-typeset .ap-result-combo {
+  flex: 1;
+  font-size: 0.88em;
+  font-weight: 600;
+  color: #e8e6ee;
+  min-width: 0;
+}
+.md-typeset .ap-calc-result-row-best .ap-result-combo {
+  color: #4db6ac;
+}
+.md-typeset .ap-result-pct {
+  font-size: 1em;
+  font-weight: 700;
+  color: #e8e6ee;
+  text-align: right;
+}
+.md-typeset .ap-calc-result-row-best .ap-result-pct {
+  color: #4db6ac;
+}
+.md-typeset .ap-result-delta {
+  flex-shrink: 0;
+  font-size: 0.72em;
+  color: #a79bc4;
+  min-width: 5.5em;
+  text-align: right;
+}
+.md-typeset .ap-calc-result-row-best .ap-result-delta {
+  color: #4db6ac;
+  font-weight: 600;
+}
+@media screen and (max-width: 480px) {
+  .md-typeset .ap-result-delta {
+    display: none;
+  }
+}
+
+/* ---- Live "what this field is contributing" tags ---- */
+/* Sits to the right of each control, showing the field's current numeric
+   effect (e.g. "+0.95% Crit Rate") so a reader can sanity-check their own
+   inputs without knowing the underlying formula. */
+.md-typeset .ap-value-display {
+  color: #a79bc4;
+  font-size: 0.75em;
+  min-width: 4.5em;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ---- Fixed-setup / best-combo verification panel ---- */
+/* Two cards side by side: what your gear gives you unconditionally (Base),
+   and what the top-ranked combo above adds on top of it (Best). Same
+   label:value row shape in both so they read as directly comparable, with
+   the Best card visually promoted (teal border, same treatment as the #1
+   row in the results list above) so the eye lands on it first. */
+.md-typeset .ap-calc-summary {
+  border-top: 1px solid rgba(179, 157, 219, 0.2);
+  padding-top: 0.9em;
+}
+.md-typeset .ap-calc-stat-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8em;
+}
+@media screen and (max-width: 480px) {
+  .md-typeset .ap-calc-stat-cards {
+    grid-template-columns: 1fr;
+  }
+}
+.md-typeset .ap-stat-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.7em 0.85em;
+}
+.md-typeset .ap-stat-card-best {
+  border-color: rgba(77, 182, 172, 0.5);
+  background-color: rgba(77, 182, 172, 0.06);
+}
+.md-typeset .ap-stat-card-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+  margin-bottom: 0.65em;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+}
+.md-typeset .ap-stat-card-best .ap-stat-card-title {
+  color: #4db6ac;
+}
+/* Names the actual winning combo (e.g. "LB1/KS2 + Critical + Master") right
+   in the Best card's header - filled by JS from result.bestStats.label,
+   which previously had nowhere to render. */
+.md-typeset .ap-stat-card-subtitle {
+  font-size: 0.9em;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 600;
+  color: #cfc9dd;
+}
+.md-typeset .ap-stat-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6em;
+  font-size: 0.85em;
+  padding: 0.28em 0;
+}
+.md-typeset .ap-stat-card-row + .ap-stat-card-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.md-typeset .ap-summary-label {
+  color: #a79bc4;
+}
+/* Same five category colors as the gear groups above, so a label down here
+   visually traces back to the group that feeds it. */
+.md-typeset .ap-summary-label--critrate { color: #ee83ab; }
+.md-typeset .ap-summary-label--critdmg  { color: #4db6ac; }
+.md-typeset .ap-summary-label--oncrit   { color: #f0a868; }
+.md-typeset .ap-summary-label--adddmg   { color: #7ec4e8; }
+.md-typeset .ap-summary-label--evodmg   { color: #b39ddb; }
+.md-typeset .ap-summary-value {
+  font-weight: 700;
+  color: #e8e6ee;
+}
+/* Toggled by JS instead of an inline color when a raw (uncapped) Crit Rate
+   total exceeds 100% - a clear warning that points are being wasted past
+   the cap, matching the same red used for other danger states on the site. */
+.md-typeset .ap-summary-value.ap-summary-value-warn {
+  color: #e57373;
+}
+
+/* Small persistence notice + reset link under the summary panel - inputs
+   are saved to this browser's localStorage on every change (see the JS
+   header comment), so a reader coming back later sees their own last
+   setup instead of a blank form. The reset link is the escape hatch back
+   to the authored HTML defaults. */
+.md-typeset .ap-calc-footnote {
+  margin: 0.7em 0 0;
+  font-size: 0.72em;
+  color: #6f6a80;
+  text-align: right;
+}
+.md-typeset .ap-calc-footnote .ap-calc-reset {
+  color: #a79bc4;
+  text-decoration: underline;
+  text-decoration-color: rgba(179, 157, 219, 0.4);
+  /* Reset the <button> defaults so this reads as the same inline text
+     link as everywhere else on the card, not a boxed control. */
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-size: 1em;
+  cursor: pointer;
+}
+.md-typeset .ap-calc-footnote .ap-calc-reset:hover {
+  color: #ee83ab;
+  text-decoration-color: currentColor;
+}
+
 /* ---------- Keyboard focus visibility ---------- */
 /* The custom link rule above overrides color and underline but not focus
    styling, which risks losing the visible indicator entirely for keyboard
