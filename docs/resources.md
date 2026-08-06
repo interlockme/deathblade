@@ -315,10 +315,10 @@
       <span class="ap-value-display"></span>
       <select id="ap-kbw-stone" class="ap-kbw-stone">
         <option value="0 Lv." selected>Lv. 0</option>
-        <option value="1 Lv.">Lv. 1 </option>
-        <option value="2 Lv.">Lv. 2 </option>
-        <option value="3 Lv.">Lv. 3 </option>
-        <option value="4 Lv.">Lv. 4 </option>
+        <option value="1 Lv.">Lv. 1</option>
+        <option value="2 Lv.">Lv. 2</option>
+        <option value="3 Lv.">Lv. 3</option>
+        <option value="4 Lv.">Lv. 4</option>
       </select>
     </div>
   </div>
@@ -402,7 +402,7 @@
       </select>
     </div>
     <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-stable-atk">Stable Atk</label>
+      <label class="ap-calc-field-label" for="ap-stable-atk">Chaos Core: Stable Attack</label>
       <span class="ap-value-display"></span>
       <select id="ap-stable-atk" class="ap-stable-atk">
         <option value="None|0P" selected>None</option>
