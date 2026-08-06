@@ -594,6 +594,40 @@ h3 { color: #4db6ac; }
   font-size: 0.85em;
   white-space: nowrap;
   margin: 0 0.5em 0.65em 0;
+  /* Sparkle sweep lives on ::after, clipped to the pill by this
+     overflow/position pair - see the sparkle rules further down. */
+  position: relative;
+  overflow: hidden;
+}
+/* ---------- Gem chip hover sparkle ---------- */
+/* CSS-only shimmer sweep - they're called "gems" for a reason. A soft
+   diagonal highlight slides left-to-right across the chip on hover, then
+   resets; overflow:hidden on .gem-chip (above) clips it to the pill shape
+   instead of spilling past the rounded corners. Respects the sitewide
+   prefers-reduced-motion block near the bottom of this file, same as every
+   other animation here. */
+.md-typeset .gem-chip::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent,
+    rgba(255, 255, 255, 0.5) 45%,
+    transparent 90%
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+.md-typeset .gem-chip:hover::after {
+  animation: gem-sparkle 0.85s ease;
+}
+@keyframes gem-sparkle {
+  from { left: -60%; }
+  to { left: 130%; }
 }
 .md-typeset .gem-col-dmg .gem-chip {
   border-color: rgba(244, 143, 177, 0.4);
@@ -1199,6 +1233,61 @@ h3 { color: #4db6ac; }
   font-size: 1.1em;
   font-weight: 700;
   color: #4db6ac;
+}
+
+/* ---------- CPM calculator: recent-inputs chips ---------- */
+/* Injected by cpm-calculator.js (localStorage-backed), right after
+   .cpm-calc-inputs in each row. Deliberately quieter than the gem-priority
+   chips (smaller, single muted tone) since these are a shortcut, not a
+   primary piece of content on the page. */
+.md-typeset .cpm-calc-recent {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  margin: -0.15em 0 0.7em;
+}
+.md-typeset .cpm-calc-recent-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6f6a80;
+  font-weight: 700;
+  margin-right: 0.1em;
+}
+.md-typeset .cpm-calc-recent-chip {
+  font-family: inherit;
+  font-size: 0.76em;
+  color: #cfc9dd;
+  background-color: rgba(179, 157, 219, 0.08);
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  border-radius: 999px;
+  padding: 0.28em 0.75em;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .cpm-calc-recent-chip:hover,
+.md-typeset .cpm-calc-recent-chip:focus-visible {
+  border-color: #ee83ab;
+  color: #ffb3cf;
+  background-color: rgba(238, 131, 171, 0.08);
+  outline: none;
+}
+.md-typeset .cpm-calc-recent-clear {
+  font-family: inherit;
+  font-size: 0.72em;
+  color: #6f6a80;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.28em 0.3em;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.md-typeset .cpm-calc-recent-clear:hover,
+.md-typeset .cpm-calc-recent-clear:focus-visible {
+  color: #cfc9dd;
+  outline: none;
 }
 
 /* ---------- Ark Passive node comparison calculator ---------- */
@@ -1926,6 +2015,129 @@ h3 { color: #4db6ac; }
   border-color: #ee83ab;
   color: #ee83ab !important;
 }
+/* ---------- Desktop section tracker (scrollspy nav) ---------- */
+/* Built by javascripts/extra.js from a build page's own H2s, same source
+   as the mobile quick-jump pills but shown only on wide viewports where
+   there's real room beside the (centered, fixed-max-width) content column.
+   Kept deliberately minimal - no panel, no blur, no shadow - just small
+   rounded-square marks threaded by a faint line directly on the page, so
+   it reads as a quiet margin note rather than a UI chrome element.
+   The current section's mark AND label stay visible (not hover-only), so
+   you always know where you are - not just at the moment you cross a
+   heading, but anywhere in between, since the JS tracks the last-passed
+   heading rather than a narrow crossing band. */
+.section-tracker {
+  display: none;
+}
+@media screen and (min-width: 1400px) {
+  .section-tracker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 4;
+  }
+}
+/* The connecting line - faint, faded at both ends, just enough to read
+   the marks as one sequence rather than disconnected shapes. */
+.section-tracker::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(179, 157, 219, 0.28) 12%,
+    rgba(179, 157, 219, 0.28) 88%,
+    transparent
+  );
+}
+.section-tracker-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5em 0.4em;
+  text-decoration: none !important;
+}
+.section-tracker-mark {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: 7px;
+  height: 10px;
+  border-radius: 2.5px;
+  background-color: var(--md-default-bg-color);
+  border: 1.5px solid rgba(179, 157, 219, 0.4);
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+/* Label sits to the left, no pill/background - just text with a soft
+   shadow for legibility over whatever content is behind it. Visible on
+   hover/focus for any item, and permanently for whichever one is active. */
+.section-tracker-label {
+  position: absolute;
+  right: calc(100% + 0.6em);
+  top: 50%;
+  transform: translate(4px, -50%);
+  font-size: 0.7em;
+  font-weight: 600;
+  color: var(--md-default-fg-color--light);
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7), 0 1px 10px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease, color 0.15s ease;
+}
+.section-tracker-item:hover .section-tracker-label,
+.section-tracker-item:focus-visible .section-tracker-label,
+.section-tracker-item.is-active .section-tracker-label {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+.section-tracker-item:hover .section-tracker-mark,
+.section-tracker-item:focus-visible .section-tracker-mark {
+  border-color: #ee83ab;
+}
+.section-tracker-item.is-active .section-tracker-mark {
+  background-color: #ee83ab;
+  border-color: #ee83ab;
+  transform: scaleY(1.3);
+}
+.section-tracker-item.is-active .section-tracker-label {
+  color: #ffb3cf;
+}
+
+/* ---------- 333 Blitz title tiger: click-to-rain easter egg ---------- */
+/* Triggered by javascripts/extra.js on click of the tiger emoji in the
+   page's H1 (the existing .tiger-emoji span, title="rawr") - a nod to the
+   "why male models" Blitz meme already on the page. Emoji rain container is
+   appended to <body> and removed after it finishes falling; fixed/
+   pointer-events:none so it never blocks clicks on the page underneath. */
+.tiger-rain {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 9999;
+}
+.tiger-rain-emoji {
+  position: absolute;
+  top: -2em;
+  animation: tiger-rain-fall linear forwards;
+}
+@keyframes tiger-rain-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  8% { opacity: 1; }
+  100% { transform: translateY(105vh) rotate(360deg); opacity: 0.9; }
+}
+
 /* ---------- 333 Blitz signature: paw-print cursor ---------- */
 /* Scoped via the .page-333-blitz body class, toggled by
    javascripts/extra.js based on the current page path. Inline SVG data

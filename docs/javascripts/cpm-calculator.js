@@ -55,6 +55,119 @@
     return Math.max(0, Math.min(100, pct));
   }
 
+  // ----- Recent-inputs history (per build, localStorage) -----
+  // Iterating on your numbers between pulls means retyping the same Raid
+  // CPM/back-attack rate every visit - this remembers the last few distinct
+  // combos per build and offers them back as clickable chips. Best-effort:
+  // wrapped in try/catch since some browsers/private sessions block storage
+  // entirely, and the calculator works fine without it either way.
+  var HISTORY_KEY = "cpm-calc-history-deathblade-v1";
+  var HISTORY_MAX = 4;
+
+  function loadHistory() {
+    try {
+      var raw = localStorage.getItem(HISTORY_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveHistory(all) {
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(all));
+    } catch (e) {
+      /* storage unavailable - nothing to do */
+    }
+  }
+
+  function recordHistory(buildKey, entry) {
+    var all = loadHistory();
+    var list = all[buildKey] || [];
+    // Drop any existing entry that's essentially the same combo (rounded)
+    // so re-saving the same numbers just bumps it to the front instead of
+    // piling up near-duplicates.
+    list = list.filter(function (e) {
+      return !(
+        e.cpm.toFixed(2) === entry.cpm.toFixed(2) &&
+        e.ba.toFixed(1) === entry.ba.toFixed(1) &&
+        e.mode === entry.mode
+      );
+    });
+    list.unshift(entry);
+    list = list.slice(0, HISTORY_MAX);
+    all[buildKey] = list;
+    saveHistory(all);
+    return list;
+  }
+
+  function renderRecentChips(row, buildKey) {
+    var wrap = row.querySelector(".cpm-calc-recent");
+    if (!wrap) return;
+    var list = loadHistory()[buildKey] || [];
+    wrap.innerHTML = "";
+    if (!list.length) {
+      wrap.hidden = true;
+      return;
+    }
+    wrap.hidden = false;
+
+    var label = document.createElement("span");
+    label.className = "cpm-calc-recent-label";
+    label.textContent = "Recent";
+    wrap.appendChild(label);
+
+    list.forEach(function (entry) {
+      var chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "cpm-calc-recent-chip";
+      var suffix = entry.mode === "ratio" ? " ratio" : "%";
+      chip.textContent = entry.cpm.toFixed(2) + " cpm · " + entry.ba.toFixed(1) + suffix;
+      chip.addEventListener("click", function () {
+        var raidCPMInput = row.querySelector(".cpm-calc-raidcpm");
+        var baInput = row.querySelector(".cpm-calc-ba-input");
+        var modeInputs = row.querySelectorAll(
+          'input[name="cpm-calc-ba-mode-' + buildKey + '"]'
+        );
+        raidCPMInput.value = entry.cpm;
+        baInput.value = entry.ba;
+        modeInputs.forEach(function (input) {
+          input.checked = input.value === entry.mode;
+        });
+        updateRow(row);
+      });
+      wrap.appendChild(chip);
+    });
+
+    var clear = document.createElement("button");
+    clear.type = "button";
+    clear.className = "cpm-calc-recent-clear";
+    clear.textContent = "Clear";
+    clear.setAttribute("aria-label", "Clear recent inputs for this build");
+    clear.addEventListener("click", function () {
+      var all = loadHistory();
+      delete all[buildKey];
+      saveHistory(all);
+      renderRecentChips(row, buildKey);
+    });
+    wrap.appendChild(clear);
+  }
+
+  function ensureRecentChipsContainer(row) {
+    var existing = row.querySelector(".cpm-calc-recent");
+    if (existing) return existing;
+    var wrap = document.createElement("div");
+    wrap.className = "cpm-calc-recent";
+    wrap.hidden = true;
+    var inputs = row.querySelector(".cpm-calc-inputs");
+    if (inputs) {
+      inputs.insertAdjacentElement("afterend", wrap);
+    } else {
+      row.appendChild(wrap);
+    }
+    return wrap;
+  }
+
   function getBaMode(row, buildKey) {
     const inputs = row.querySelectorAll(
       'input[name="cpm-calc-ba-mode-' + buildKey + '"]'
@@ -97,6 +210,9 @@
       adjEl.textContent = "—";
       barFill.style.width = "0%";
       delete row.dataset.finalMult;
+      delete row.dataset.pendingCpm;
+      delete row.dataset.pendingBa;
+      delete row.dataset.pendingMode;
       highlightBest();
       return;
     }
@@ -112,6 +228,13 @@
     row.dataset.finalMult = String(finalMult);
 
     highlightBest();
+
+    // Stash the values that produced this valid result - actually recorded
+    // to history on blur (see init()), not here, since this fires on every
+    // keystroke and would otherwise spam a new entry per digit typed.
+    row.dataset.pendingCpm = String(raidCPM);
+    row.dataset.pendingBa = String(baValue);
+    row.dataset.pendingMode = mode;
   }
 
   function highlightBest() {
@@ -152,6 +275,26 @@
         input.addEventListener("input", () => updateRow(row));
       });
       updateRow(row);
+
+      ensureRecentChipsContainer(row);
+      renderRecentChips(row, buildKey);
+
+      // Record to history on blur rather than every keystroke - once the
+      // reader has settled on a value and moved on, not mid-typing.
+      const raidCPMInput = row.querySelector(".cpm-calc-raidcpm");
+      const baInput = row.querySelector(".cpm-calc-ba-input");
+      [raidCPMInput, baInput].forEach((el) => {
+        if (!el) return;
+        el.addEventListener("blur", () => {
+          if (row.dataset.pendingCpm === undefined) return; // no valid result yet
+          recordHistory(buildKey, {
+            cpm: parseFloat(row.dataset.pendingCpm),
+            ba: parseFloat(row.dataset.pendingBa),
+            mode: row.dataset.pendingMode,
+          });
+          renderRecentChips(row, buildKey);
+        });
+      });
     });
   }
 
