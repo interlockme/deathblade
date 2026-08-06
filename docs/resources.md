@@ -34,7 +34,7 @@
 
 ## Ark Passive Calculator
 
-*Finds the optimal Evolution nodes for your deathblade and team setup. See [this](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) if you want verification.*
+*Finds the optimal Evolution nodes for your deathblade and team setup. See [this](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) if you need verification.*
 
 <div class="ap-calc">
 
