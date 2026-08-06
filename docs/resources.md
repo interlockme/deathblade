@@ -101,6 +101,13 @@
         <option value="4 Nodes" selected>4 Nodes</option>
       </select>
     </div>
+    <div class="ap-calc-field-row ap-calc-field-row-range ap-calc-field-row-range--inline">
+      <label class="ap-calc-field-label" for="ap-adrenaline-uptime">Adrenaline Uptime</label>
+      <div class="ap-calc-range-line">
+        <input type="range" id="ap-adrenaline-uptime" class="ap-adrenaline-uptime" min="0" max="100" step="1" value="100">
+        <span class="ap-calc-range-value">100%</span>
+      </div>
+    </div>
   </div>
 
   <!-- Crit Damage -->
@@ -317,8 +324,8 @@
       <span class="ap-value-display" data-for="ap-yearning"></span>
       <input type="checkbox" id="ap-yearning" class="ap-yearning" checked>
     </div>
-    <div class="ap-calc-field-row ap-calc-field-row-range">
-      <label class="ap-calc-field-label" for="ap-back-attack-rate">Back-Attack Rate (+10% Crit Rate)</label>
+    <div class="ap-calc-field-row ap-calc-field-row-range ap-calc-field-row-range--inline">
+      <label class="ap-calc-field-label" for="ap-back-attack-rate">Back-Attack Rate</label>
       <div class="ap-calc-range-line">
         <input type="range" id="ap-back-attack-rate" class="ap-back-attack-rate" min="0" max="100" step="1" value="90">
         <span class="ap-calc-range-value">90%</span>

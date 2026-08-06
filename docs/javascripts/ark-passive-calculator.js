@@ -157,6 +157,7 @@
       shPet: getSelect(root, ".ap-sh-pet", "High"),
 
       adrenaline: getSelect(root, ".ap-adrenaline", "4 Nodes"),
+      adrenalineUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-adrenaline-uptime", 100))),
       kbw: getSelect(root, ".ap-kbw", "4 Nodes"),
       kbwStone: getSelect(root, ".ap-kbw-stone", "0 Lv."),
 
@@ -242,7 +243,7 @@
     const e = RING_RATE_TABLE[inputs.ring2Rate] || 0;
     const f = BRACELET_RATE_TABLE[inputs.braceletRate] || 0;
     const g = BRACELET_RATE_TABLE[inputs.braceletRate2] || 0;
-    const h = ADRENALINE_TABLE[inputs.adrenaline] || 0;
+    const h = (ADRENALINE_TABLE[inputs.adrenaline] || 0) * (inputs.adrenalineUptime / 100);
     const i = KEEN_SENSE_CRIT_RATE[keenSenseLv] || 0;
     const k = STRIKE_CRIT_RATE;
     const n = inputs.critSyn1 ? 0.1 : 0;
@@ -489,7 +490,7 @@
     setDisplay("#ap-flashy-atk", FLASHY_ATK_TABLE[inputs.flashyAtk] || 0);
     setDisplay("#ap-stable-atk", stableAtkValue(inputs.stableAtk));
 
-    setDisplay("#ap-adrenaline", ADRENALINE_TABLE[inputs.adrenaline] || 0);
+    setDisplay("#ap-adrenaline", (ADRENALINE_TABLE[inputs.adrenaline] || 0) * (inputs.adrenalineUptime / 100));
     setDisplay("#ap-kbw", KBW_TABLE[inputs.kbw] || 0);
     setDisplay("#ap-kbw-stone", KBW_STONE_TABLE[inputs.kbwStone] || 0);
 
@@ -661,9 +662,14 @@
     renderGrid(root, result);
     updateInputDisplays(root, inputs);
 
-    const rangeEl = root.querySelector(".ap-back-attack-rate");
-    const rangeValueEl = root.querySelector(".ap-calc-range-value");
-    if (rangeEl && rangeValueEl) rangeValueEl.textContent = rangeEl.value + "%";
+    // Every range slider (Back-Attack Rate, Adrenaline Uptime, ...) shows
+    // its live value as "N%" next to it - handled generically here so
+    // adding another slider later doesn't need a new hardcoded lookup.
+    root.querySelectorAll(".ap-calc-range-line").forEach((line) => {
+      const rangeEl = line.querySelector('input[type="range"]');
+      const valueEl = line.querySelector(".ap-calc-range-value");
+      if (rangeEl && valueEl) valueEl.textContent = rangeEl.value + "%";
+    });
   }
 
   // Chaos Core: Flashy Attack and Chaos Core: Stable Attack are both the

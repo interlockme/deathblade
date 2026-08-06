@@ -1379,14 +1379,31 @@ h3 { color: #4db6ac; }
   accent-color: #ee83ab;
   cursor: pointer;
 }
-/* Back-Attack Rate's range input spans the group width with the live
-   percentage readout pinned to the right - the one field in the card the
-   reader is expected to actually drag, so it gets more room than the
+/* Range sliders (Back-Attack Rate, Adrenaline Uptime) show a live "N%"
+   readout pinned to the right of the track - the fields in the card the
+   reader is expected to actually drag, so each gets more room than the
    dropdowns beside it. */
 .md-typeset .ap-calc-field-row.ap-calc-field-row-range {
   flex-direction: column;
   align-items: stretch;
   gap: 0.3em;
+}
+/* Stacking (the default above) is there for a label too long to share a
+   line with the slider - neither current slider needs that, so both use
+   this modifier to keep label and slider on one row instead and save the
+   vertical space. Selector has to repeat all three classes to
+   out-specificity the stacked rule above regardless of source order. */
+.md-typeset .ap-calc-field-row.ap-calc-field-row-range.ap-calc-field-row-range--inline {
+  flex-direction: row;
+  align-items: center;
+}
+.md-typeset .ap-calc-field-row-range--inline .ap-calc-field-label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.md-typeset .ap-calc-field-row-range--inline .ap-calc-range-line {
+  flex: 1;
+  min-width: 0;
 }
 .md-typeset .ap-calc-range-line {
   display: flex;
@@ -1395,6 +1412,12 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .ap-calc-range-line input[type="range"] {
   flex: 1;
+  /* Without this, Firefox refuses to shrink the slider below its native
+     intrinsic width (bigger than Chromium's) even with flex:1 - fine in
+     the wider Party & Positioning card, but in the narrower Crit Rate
+     card it was pushing the "100%" value past the card edge in Firefox
+     specifically, while looking correct in Chromium. */
+  min-width: 0;
   accent-color: #ee83ab;
 }
 .md-typeset .ap-calc-range-value {
