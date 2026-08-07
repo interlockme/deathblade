@@ -79,7 +79,7 @@
           id: "111-head-hunt",
           name: "111 (Head Hunt)",
           accent: "#4db6ac",
-          pentagon: [9, 8.5, 5, 6, 10],
+          pentagon: [9, 8.5, 5, 7, 10],
           difficulty: 9,
           trixion: 1.18,
           trixionConfirmed: true,
