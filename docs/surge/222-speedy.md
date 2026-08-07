@@ -2,6 +2,7 @@
 
 <p class="page-banner page-banner-warning">Not available in NA servers yet</p>
 
+<div class="build-card-row" markdown>
 <div class="build-card" markdown>
 
 <div class="build-stats">
@@ -20,8 +21,22 @@
 - Very high gem efficiency, Surge and Deathly Slash are nearly all of your DPS.
 - Must constantly balance Surge and Deathly Slash back attack rate with Surge CPM.
 
-[KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [KR Video Gameplay](https://www.youtube.com/watch?v=lbBLRwdEvgk){ .video-chip }
-
+</div>
+<!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Exposure, Speed (0-10).
+     - DPS 8.5 = second-highest in the Surge family (111 Classic = 9 is
+       the family's reference, standardized against 333 Ceiling in RE -
+       see javascripts/pentagon-badge.js top comment).
+     - Exposure (not Recovery) for Surge builds: back-attack/positional
+       risk, HIGHER IS WORSE here unlike every other axis - keep the
+       data-caption below in sync if you tweak this value.
+     - Mobility/Speed are this build's own read - edit freely. -->
+<div class="pentagon-badge" data-values="7,8.5,10,7.5,8" data-labels="Difficulty,DPS,Mobility,Exposure,Speed" data-caption="Exposure: back-attack &amp; positional risk." markdown>
+<div class="pentagon-badge-title">Build Profile</div>
+<div class="pentagon-svg-mount"></div>
+<div class="pentagon-badge-extra" markdown>
+[KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [Video Gameplay](https://www.youtube.com/watch?v=lbBLRwdEvgk){ .video-chip }
+</div>
+</div>
 </div>
 
 ## Skill Codes

@@ -2,6 +2,7 @@
 
 <p class="page-banner page-banner-danger">High difficulty — very little room for error</p>
 
+<div class="build-card-row" markdown>
 <div class="build-card" markdown>
 
 <div class="build-stats">
@@ -18,8 +19,19 @@
 - Head Hunt is used in the rotation, so it may not be available for recovery or counter.
 - Similar rotation to Fatal Wave builds, but lower orb generation and fewer recovery options.
 
-[NA Video Guide](https://www.youtube.com/watch?v=z8KE3HG_ggg){ .video-chip } [NA Video Gameplay](https://www.youtube.com/watch?v=4O9THIPhVuY){ .video-chip }
-
+</div>
+<!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Recovery, Speed (0-10).
+     - DPS 8.5 follows the strict -0.5-per-rank pattern below 333 Ceiling
+       (9), consistent with the rest of the RE family.
+     - Mobility 5 is standard across all RE builds.
+     - Recovery/Speed are this build's own read - edit freely. -->
+<div class="pentagon-badge" data-values="9,8.5,5,6,10" data-labels="Difficulty,DPS,Mobility,Recovery,Speed" markdown>
+<div class="pentagon-badge-title">Build Profile</div>
+<div class="pentagon-svg-mount"></div>
+<div class="pentagon-badge-extra" markdown>
+[Video Guide](https://www.youtube.com/watch?v=z8KE3HG_ggg){ .video-chip } [Video Gameplay](https://www.youtube.com/watch?v=4O9THIPhVuY){ .video-chip }
+</div>
+</div>
 </div>
 
 ## Skill Codes

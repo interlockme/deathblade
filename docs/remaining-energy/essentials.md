@@ -36,7 +36,7 @@
 | [333 (Ceiling)](333-ceiling.md) ★ | <div class="table-bar-cell">8.5 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 85%"></div></div></div> | <div class="table-bar-cell">1.20x<div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill stat-bar-fill-teal" style="width: 67%"></div></div></div> | Skill Reset | ✨ Well-rounded damage ceiling |
 | [313 (High Floor)](313-high-floor.md) | <div class="table-bar-cell">8 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 80%"></div></div></div> | <div class="table-bar-cell">1.17x<div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill stat-bar-fill-teal" style="width: 57%"></div></div></div> | Fast & Comfy | 💜 Comfort and recovery |
 | [111 (Head Hunt)](111-head-hunt.md) | <div class="table-bar-cell">9 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 90%"></div></div></div> | <div class="table-bar-cell">1.18x<div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill stat-bar-fill-teal" style="width: 60%"></div></div></div> | Fast & Punishing | 🔪 Skill expression and stagger |
-| [Standard](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | <div class="table-bar-cell">7 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 70%"></div></div></div> | — | AFK Simulator | 🌱 Pre-Ark Grid beginner build |
+| [Standard](standard.md) | <div class="table-bar-cell">7 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 70%"></div></div></div> | — | AFK Simulator | 🌱 Pre-Ark Grid beginner build |
 
 ## Engravings
 

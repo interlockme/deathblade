@@ -5,6 +5,7 @@
 ??? danger "But why male models? 🐯 "
     ![333 Blitz meme](../assets/surge/blitz-meme.png)
 
+<div class="build-card-row" markdown>
 <div class="build-card" markdown>
 
 <div class="build-stats">
@@ -21,8 +22,24 @@
 - High gem efficiency, Surge and Blitz Rush are most of your DPS.
 - Must balance Surge, Blitz Rush, and Deathly Slash back attack rate with Surge CPM.
 
-[KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [Exclusive NA Video Gameplay](../assets/surge/tiger.mp4){ .video-chip }
-
+</div>
+<!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Exposure, Speed (0-10).
+     - DPS 8 = third/lowest in the Surge family (111 Classic = 9 is the
+       reference); unconfirmed same as the underlying Trixion multiplier
+       above - bump this once that's confirmed.
+     - Mobility 8.5 (nudged down 0.5 from the other Surge builds' usual
+       step - was 9, nerfed per a manual call, not a formula).
+     - Exposure (not Recovery) for Surge builds: back-attack/positional
+       risk, HIGHER IS WORSE here unlike every other axis - keep the
+       data-caption below in sync if you tweak this value.
+     - Speed is this build's own read - edit freely. -->
+<div class="pentagon-badge" data-values="8,8,8.5,9,6" data-labels="Difficulty,DPS,Mobility,Exposure,Speed" data-caption="Exposure: back-attack &amp; positional risk." markdown>
+<div class="pentagon-badge-title">Build Profile</div>
+<div class="pentagon-svg-mount"></div>
+<div class="pentagon-badge-extra" markdown>
+[KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [Video Gameplay](../assets/surge/tiger.mp4){ .video-chip }
+</div>
+</div>
 </div>
 
 ## Skill Codes

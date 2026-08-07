@@ -1,5 +1,6 @@
 # 313 (High Floor) 💜
 
+<div class="build-card-row" markdown>
 <div class="build-card" markdown>
 
 <div class="build-stats">
@@ -16,8 +17,19 @@
 - Accessible from a 14p Star core as 113 (Arts), a transitional core-limited option.
 - Move on to [333 (Ceiling)](333-ceiling.md) when you're ready, or stay here if you prefer!
 
+</div>
+<!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Recovery, Speed (0-10).
+     - DPS 8 = second-highest in the RE family (333 Ceiling = 9 is the reference).
+     - Mobility 5 is standard across all RE builds.
+     - Recovery/Speed are this build's own read - edit freely.
+     See javascripts/pentagon-badge.js top comment for the full scale writeup. -->
+<div class="pentagon-badge" data-values="8,8,5,9,10" data-labels="Difficulty,DPS,Mobility,Recovery,Speed" markdown>
+<div class="pentagon-badge-title">Build Profile</div>
+<div class="pentagon-svg-mount"></div>
+<div class="pentagon-badge-extra" markdown>
 [KR Video Guide](https://www.youtube.com/watch?v=6ez2lS4AI6Q){ .video-chip }
-
+</div>
+</div>
 </div>
 
 ## Skill Codes

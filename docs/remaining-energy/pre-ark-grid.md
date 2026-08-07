@@ -12,7 +12,7 @@
 
     The default pre-Ark Grid RE build. Start here if you're new to Remaining Energy.
 
-    [Standard build guide](https://lostark-nexus-archive.pages.dev/guides/deathblade/)
+    [Standard build guide →](standard.md)
 
 -   🗡 **111 (Head Hunt), with some Ark Grid**
 

@@ -2,6 +2,7 @@
 
 <p class="page-banner page-banner-warning">Not available in NA servers yet</p>
 
+<div class="build-card-row" markdown>
 <div class="build-card" markdown>
 
 <div class="build-stats">
@@ -20,8 +21,23 @@
 - Accessible from zero Ark Grid cores with minor adjustments.
 - Must constantly balance Surge back attack rate with Surge CPM.
 
-[KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [KR Video Gameplay](https://www.youtube.com/watch?v=j-2dGp7PGws){ .video-chip }
-
+</div>
+<!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Exposure, Speed (0-10).
+     - DPS 9 = highest in the Surge family, deliberately standardized to
+       match 333 Ceiling's 9 in the RE family (Surge/RE DPS isn't
+       comparable 1:1 even though both report a Trixion multiplier -
+       see javascripts/pentagon-badge.js top comment).
+     - Exposure (not Recovery) for Surge builds: back-attack/positional
+       risk, HIGHER IS WORSE here unlike every other axis - keep the
+       data-caption below in sync if you tweak this value.
+     - Mobility/Speed are this build's own read - edit freely. -->
+<div class="pentagon-badge" data-values="7.5,9,8,6.5,7" data-labels="Difficulty,DPS,Mobility,Exposure,Speed" data-caption="Exposure: back-attack &amp; positional risk." markdown>
+<div class="pentagon-badge-title">Build Profile</div>
+<div class="pentagon-svg-mount"></div>
+<div class="pentagon-badge-extra" markdown>
+[KR Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [Video Gameplay](https://www.youtube.com/watch?v=j-2dGp7PGws){ .video-chip }
+</div>
+</div>
 </div>
 
 ## Skill Codes

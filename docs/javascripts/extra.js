@@ -55,8 +55,13 @@
     var old = document.querySelector(".quick-jump-pills");
     if (old) old.remove();
 
-    var buildCard = document.querySelector(".md-content__inner .build-card");
-    if (!buildCard) return;
+    // Prefer the .build-card-row wrapper (build-card + pentagon badge)
+    // when present, so pills land after the whole row instead of
+    // wedging between the card and the badge; falls back to the card
+    // itself on pages without a badge.
+    var anchor = document.querySelector(".md-content__inner .build-card-row") ||
+      document.querySelector(".md-content__inner .build-card");
+    if (!anchor) return;
 
     var headings = document.querySelectorAll(".md-content__inner > h2");
     if (!headings.length) return;
@@ -71,7 +76,7 @@
       a.textContent = h.textContent.replace(/\s*¶\s*$/, ""); // strip the toc permalink mark
       nav.appendChild(a);
     });
-    buildCard.insertAdjacentElement("afterend", nav);
+    anchor.insertAdjacentElement("afterend", nav);
   }
 
   // Desktop counterpart to the mobile quick-jump pills. toc.integrate

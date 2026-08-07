@@ -101,9 +101,13 @@ h3 { color: #4db6ac; }
   border-image: linear-gradient(90deg, transparent, rgba(179, 157, 219, 0.45) 50%, transparent) 1;
 }
 .md-typeset h1 + h2,
-.md-typeset .build-card + h2 {
+.md-typeset .build-card + h2,
+.md-typeset .build-card-row + h2 {
   /* First H2 right after the title/build-card - the build-card's own
-     margin already separates it, so don't double up on top spacing. */
+     margin already separates it, so don't double up on top spacing.
+     .build-card-row covers pages where the pentagon badge wraps the
+     card (the card no longer sits directly next to the H2 in that
+     case - the row does). */
   margin-top: 1.2em;
 }
 
@@ -850,6 +854,80 @@ h3 { color: #4db6ac; }
   margin: 0;
 }
 
+/* ---------- Rotation practice mode ---------- */
+/* Click-to-advance drill mode for .rotation-line (including the nested
+   ones inside .cycle-card). Purely a JS/CSS layer on top of the existing
+   markup - see javascripts/rotation-practice.js. No content changes
+   needed on any page.
+
+   Two attachment modes, both zero-footprint (neither ever reserves
+   layout space, so entering/exiting practice mode never shifts anything
+   around it):
+     - Standalone rotation-line: the toggle is absolutely positioned,
+       floating half-over the box's own top-right corner like a tab/
+       badge, inside a plain zero-margin wrapper (.rotation-practice-
+       float) so it isn't clipped by the box's own overflow:hidden.
+     - Rotation-line nested in a .cycle-card: the toggle instead joins
+       the existing .cycle-card-header row via margin-left:auto - that
+       row already has its own padding, so this adds no new space at
+       all rather than floating a second corner badge on top of the
+       header. */
+.md-typeset .rotation-practice-float {
+  position: relative;
+}
+.md-typeset .rotation-practice-toggle {
+  position: absolute;
+  top: -0.7em;
+  right: 0.5em;
+  z-index: 3;
+  border: 1px solid rgba(179, 157, 219, 0.4);
+  background-color: #1c1c1f;
+  color: #cbb9e8;
+  border-radius: 999px;
+  font-size: 0.68em;
+  font-family: inherit;
+  padding: 0.2em 0.65em;
+  line-height: 1.5;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .rotation-practice-toggle:hover {
+  border-color: rgba(179, 157, 219, 0.75);
+  background-color: #232327;
+}
+/* Inside a cycle-card header, the toggle is an ordinary flex item (not
+   absolutely positioned) pinned to the row's far right - the header's
+   own padding is all the room it needs. */
+.md-typeset .cycle-card-header .rotation-practice-toggle {
+  position: static;
+  margin-left: auto;
+  box-shadow: none;
+}
+.md-typeset .rotation-line.practice-mode {
+  cursor: pointer;
+  border-color: rgba(179, 157, 219, 0.55);
+}
+/* Dim every step except the current one; the current step borrows the
+   pentagon badge's lavender glow language so it reads as "active" the
+   same way the rest of the site marks emphasis. */
+.md-typeset .rotation-line.practice-mode .skill {
+  opacity: 0.32;
+  transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.md-typeset .rotation-line.practice-mode .skill.practice-current {
+  opacity: 1;
+  border-color: #b39ddb;
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.55), 0 0 10px rgba(179, 157, 219, 0.35);
+  transform: translateY(-1px) scale(1.04);
+}
+/* Arrows dim along with their neighboring skills so the sequence still
+   reads as a faded chain rather than a broken one. */
+.md-typeset .rotation-line.practice-mode .arrow {
+  opacity: 0.32;
+}
+
+
 /* ---------- Build quick-reference card (top of each build page) ---------- */
 /* Structure:
    <div class="build-card" markdown>
@@ -993,6 +1071,141 @@ h3 { color: #4db6ac; }
   content: "▶";
   font-size: 0.75em;
 }
+
+/* ---------- Build profile pentagon badge (sits beside .build-card) ---------- */
+/* Structure (see javascripts/pentagon-badge.js for the piece that reads
+   this and draws the SVG):
+
+   <div class="build-card-row">
+   <div class="build-card" markdown>...(same as before, minus video chips)...</div>
+   <div class="pentagon-badge"
+        data-values="8.5,9,5,8.5,9"
+        data-labels="Difficulty,DPS,Mobility,Recovery,Speed">
+   <!-- 5 numbers, 0-10 scale, same order as data-labels. To change a
+        stat just edit the number here - the shape redraws itself, no
+        SVG/coordinate math needed. See EASY EDIT GUIDE comment in
+        pentagon-badge.js for what each axis means and how DPS is scaled. -->
+   <div class="pentagon-badge-title">Build Profile</div>
+   <div class="pentagon-svg-mount"></div>
+   <div class="pentagon-badge-extra">
+   <a href="..." class="video-chip">...</a>
+   </div>
+   </div>
+   </div>
+
+   Optional attributes on .pentagon-badge:
+   - data-accent="#ee83ab"   (defaults to the site pink if omitted)
+   - data-caption="..."      (small italic note under the badge, e.g.
+                               used on Surge pages to flag that Exposure
+                               is inverted - lower is safer, not higher) */
+.build-card-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.8em;
+}
+.build-card-row .build-card {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* .build-card already has its own margin; the row wrapper takes over
+     that spacing so card + badge don't end up with mismatched margins. */
+  margin: 0;
+}
+.md-typeset .pentagon-badge {
+  flex: 0 0 168px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgba(244, 143, 177, 0.3);
+  background-color: rgba(244, 143, 177, 0.045);
+  border-radius: 10px;
+  padding: 0.8em 0.6em 0.6em;
+}
+.md-typeset .pentagon-badge-title {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+  margin-bottom: 0.3em;
+  text-align: center;
+}
+.pentagon-svg-mount {
+  width: 100%;
+}
+.pentagon-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  display: block;
+}
+.pentagon-ring {
+  fill: none;
+  stroke: rgba(179, 157, 219, 0.16);
+  stroke-width: 1;
+}
+.pentagon-ring-outer {
+  stroke: rgba(179, 157, 219, 0.28);
+}
+.pentagon-spoke {
+  stroke: rgba(179, 157, 219, 0.16);
+  stroke-width: 1;
+}
+.pentagon-dot {
+  fill: #161718;
+  stroke-width: 1.5;
+}
+.pentagon-label {
+  font-family: "Poppins", sans-serif;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  fill: #a79bc4;
+  text-transform: uppercase;
+}
+/* Video chips (moved out of the build-card body into the badge) sit in
+   the leftover space below the pentagon, pushed to the bottom via
+   margin-top: auto so short/tall card content doesn't leave a gap. */
+.pentagon-badge-extra {
+  margin-top: auto;
+  padding-top: 0.6em;
+  width: 100%;
+}
+.pentagon-badge-extra .video-chip {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  margin-bottom: 0.4em;
+}
+.pentagon-badge-extra .video-chip:last-child {
+  margin-bottom: 0;
+}
+/* Clarifying note under a badge - currently only used on Surge pages,
+   since Exposure is the one axis where higher reads as worse rather
+   than better like the other four. */
+.pentagon-badge-caption {
+  font-size: 0.62rem;
+  color: #a79bc4;
+  text-align: center;
+  margin-top: 0.5em;
+  line-height: 1.35;
+  font-style: italic;
+}
+@media screen and (max-width: 720px) {
+  .build-card-row {
+    flex-direction: column;
+  }
+  .build-card-row .build-card {
+    margin: 1em 0 1.5em;
+  }
+  .md-typeset .pentagon-badge {
+    flex: 1 1 auto;
+    max-width: 220px;
+    align-self: center;
+    margin-bottom: 1.5em;
+  }
+}
+
 .md-typeset .grid.cards > ul > li {
   border-radius: 12px;
   transition: transform 0.15s ease, border-color 0.15s ease;

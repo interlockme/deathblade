@@ -1,5 +1,6 @@
 # 333 (Ceiling) ✨
 
+<div class="build-card-row" markdown>
 <div class="build-card" markdown>
 
 <div class="build-stats">
@@ -17,8 +18,20 @@
 - High gem efficiency, Fatal Wave and Deathly Slash are most of your DPS.
 - Susceptible to high ping or low FPS, but you can compensate with a few changes.
 
-[KR Video Guide](https://youtu.be/Wwm7apTwg84?si=dmO_fvNxoXuoQuf5){ .video-chip } [KR Video Gameplay](https://www.youtube.com/watch?v=MP--TuRX3xI){ .video-chip }
-
+</div>
+<!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Recovery, Speed (0-10).
+     - Difficulty/DPS match the stat boxes above (DPS here is RE's highest
+       -> 9, this is the family's reference build for that scale).
+     - Mobility 5 is standard across all RE builds.
+     - Recovery/Speed are this build's own read - edit freely.
+     See javascripts/pentagon-badge.js top comment for the full scale writeup. -->
+<div class="pentagon-badge" data-values="8.5,9,5,8.5,8.5" data-labels="Difficulty,DPS,Mobility,Recovery,Speed" markdown>
+<div class="pentagon-badge-title">Build Profile</div>
+<div class="pentagon-svg-mount"></div>
+<div class="pentagon-badge-extra" markdown>
+[KR Video Guide](https://youtu.be/Wwm7apTwg84?si=dmO_fvNxoXuoQuf5){ .video-chip } [Video Gameplay](https://www.youtube.com/watch?v=MP--TuRX3xI){ .video-chip }
+</div>
+</div>
 </div>
 
 ## Skill Codes
