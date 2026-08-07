@@ -25,7 +25,7 @@
        (9), consistent with the rest of the RE family.
      - Mobility 5 is standard across all RE builds.
      - Recovery/Speed are this build's own read - edit freely. -->
-<div class="pentagon-badge" data-values="9,8.5,5,6,10" data-labels="Difficulty,DPS,Mobility,Recovery,Speed" markdown>
+<div class="pentagon-badge" data-values="9,8.5,5,7,10" data-labels="Difficulty,DPS,Mobility,Recovery,Speed" markdown>
 <div class="pentagon-badge-title">Build Profile</div>
 <div class="pentagon-svg-mount"></div>
 <div class="pentagon-badge-extra" markdown>
