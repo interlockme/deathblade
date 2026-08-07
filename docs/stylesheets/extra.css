@@ -907,6 +907,8 @@ h3 { color: #4db6ac; }
 .md-typeset .rotation-line.practice-mode {
   cursor: pointer;
   border-color: rgba(179, 157, 219, 0.55);
+  user-select: none;
+  -webkit-user-select: none;
 }
 /* Dim every step except the current one; the current step borrows the
    pentagon badge's lavender glow language so it reads as "active" the
