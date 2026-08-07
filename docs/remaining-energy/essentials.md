@@ -21,6 +21,7 @@
     | Maelstrom | Focus rune (on easier builds with excess orb generation) |
 
 !!! tip "Quick Tips"
+    - All Deathblade builds run a pet with the Specialization stat bonus.
     - Prioritize hits under Maelstrom buff over back attacks; just Surge to the back.
     - Always press the next skill during your current skill's animation (skill queuing).
     - Trixion practice requires equipping maxed Spirit Absorption and Max MP engravings.
@@ -78,28 +79,40 @@
 
 ## Gameplay
 
-**Identity**
+### Identity
+- Orb Generation: Skills generate Death Orbs when they hit.
+- Surge: Press [Z] with 1+ orbs to consume them and activate the skill.
+- 3 Orbs: Aim to always Surge with 3 orbs for the strongest buffs and cooldown reduction.
 
-- Orb Generation: Orbs can be accumulated when skills hit targets.
-- Surge Activation: Press [Z] when you have 1 or more orbs to activate Surge.
+### Identity Buffs
 
-**Surge Activation Buffs**
+- +12% Attack Speed.
+- +12% Move Speed.
+- Attack Power based on orbs consumed.
+- Cooldown Reduction and Mana Restoration based on orbs consumed.
 
-- Increases Attack/Movement Speed by 12%.
-- Grants Attack Power Increase, Mana Restoration, and Cooldown Reduction based on the number of orbs.
+The cooldown reduction is the core of the class: the cycle resets so you can start generating your next set of orbs.
 
-**Party Synergies**
+### Party Synergies
 
-- Turning Slash grants +4% outgoing and +5% directional dmg for 12 seconds on hit.
-- Maelstrom grants +12.8% Attack/Move Speed for 6 seconds on skill use.
+- Turning Slash: +4% outgoing and +5% directional damage for 12s.
+- Maelstrom: +12.8% Attack/Move Speed for 6s and improves orb generation.
 
-**Playstyle Goals**
+### Playstyle
 
-Since Cooldown Reduction is the core focus, quickly fill 3 orbs to cycle through your rotation as many times as possible until the encounter ends.
+Remaining Energy is a continuous cycle:
 
-**Combat Performance Metric: CPM (Casts Per Minute)**
+Generate Orbs → 3 Orbs → Surge → Repeat.
 
-To gauge your skill level, the best metric to look at is your Surge CPM. Only compare performance across the exact same encounter and build.
+Prioritize consistent uptime and good use of Maelstrom's buffs over back attacks. Use Surge to reposition.
+
+
+
+### Combat Performance: CPM (Casts Per Minute)
+
+**Surge Casts Per Minute (CPM)** is a useful measure of how efficiently you are playing and generating orbs.
+
+Only compare CPM between the **same encounter and build**, as boss uptime and mechanics heavily affect it.
 
 ## FPS/Latency
 

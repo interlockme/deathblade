@@ -11,6 +11,7 @@
     - Surge post-cast delay was removed, animation cancelling is no longer needed.
 
 !!! tip "Quick Tips"
+    - All Deathblade builds run a pet with the Specialization stat bonus.
     - Always press the next skill during your current skill's animation (skill queuing).
     - Trixion practice requires equipping maxed Spirit Absorption and Max MP engravings.
     - The Bartender on Peyto Island sells ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine and ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing.
@@ -74,34 +75,48 @@
 
 ## Gameplay
 
-**Identity**
+### Identity
 
-- Orb Generation: Death Trance orbs fill as normal skills land.
-- Death Trance Activation: Press [Z] with 1 or more orbs to enter Death Trance.
-- You can gain up to 80 stacks while in Death Trance mode.
-- After using Surge, 60 stacks are consumed and the rest will roll over.
-- You must use Surge with at least 40 stacks to refund all 3 orbs.
+- Orb Generation: Normal skills generate Death Orbs when they hit.
+- Death Trance: Press [Z] with 1+ orbs to enter Death Trance.
+- Stack Generation: Skills generate Surge stacks while in Death Trance.
+- Stack Cap: You can hold up to 80 stacks.
+- Surge: Press [Z] to consume 60 stacks. Extra stacks roll over to the next cycle.
+- Stack Requirement: Surge must be cast with 40+ stacks to refund all 3 Death Orbs.
 
-**Death Trance Buffs (scale with orb count)**
+### Death Trance Buffs
 
 - 10/15/20% Attack Speed.
 - 10% Move Speed.
 - 8/16/24% Attack Power.
 - 15/25/45% Mana Restoration.
-- 10/30/50% Cooldown Reduction on activation.
+- 10/30/50% Cooldown Reduction.
 
-**Party Synergies**
+Aim to enter Death Trance with 3 orbs whenever possible.
 
-- Turning Slash and Surprise Attack grant +4% outgoing and +5% directional dmg for 12 and 6 seconds on hit.
-- Maelstrom grants +12.8% Attack/Move Speed for 6 seconds on skill use.
+### Party Synergies
 
-**Playstyle Goals**
+- Turning Slash: +4% outgoing and +5% directional damage for 12s.
+- Surprise Attack: +4% outgoing and +5% directional damage for 6s.
+- Maelstrom: +12.8% Attack/Move Speed for 6s.
 
-Build Surge stacks to 60 using multi-hit skills while in Death Trance, then cast Surge as a back attack and repeat as many times as possible until the encounter ends.
+### Playstyle
 
-**Combat Performance Metric: CPM (Casts Per Minute)**
+Surge is a repeating cycle:
 
-If you want to gauge your skill level, the best metric to look at is your Surge CPM. Make sure to only compare performances across the exact same encounter and build.
+3 Orbs → Death Trance → Build Stacks → Surge → Repeat.
+
+Build toward 60 stacks using your multi-hit skills, then land Surge as a Back Attack.
+
+The 80-stack cap and rollover give you flexibility. You don't need to stop or force a skill just to hit exactly 60.
+
+Knowing roughly how many stacks each skill generates is important for adapting your rotation.
+
+### Combat Performance: CPM (Casts Per Minute)
+
+**Surge Casts Per Minute (CPM)** and back attack rate are useful measures of how efficiently you cycle Surge.
+
+Only compare CPM between the **same encounter and build**, as boss uptime and mechanics heavily affect it.
 
 ## Surge Skills
 
