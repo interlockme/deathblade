@@ -2098,6 +2098,87 @@ h3 { color: #4db6ac; }
   opacity: 1;
 }
 
+/* ---------- Trixion DPS showcase ---------- */
+/* Was a single image buried in a collapsible `??? example` admonition at
+   the bottom of Rotation - easy to miss, and read as an afterthought
+   rather than an actual part of the guide. Promoted to its own H2
+   ("## Trixion DPS") so it's a real chapter (picks up the standard H2
+   chapter-break treatment above, and shows up in the mobile quick-jump
+   pills / desktop section tracker like every other section), with the
+   image itself given a real presentation instead of a plain inline
+   markdown image.
+   Teal throughout (#4db6ac) rather than the site's usual pink, matching
+   the existing Trixion DPS stat bar on the build card up top - the two
+   reference the same number, so they share a color.
+   Structure - built to hold more than one frame later without changes
+   (a second/third chart, a table, whatever "grows"): each is just
+   another .dps-showcase-frame in the row, the container already wraps
+   and centers them as a group.
+   <div class="dps-showcase" markdown>
+   <div class="dps-showcase-frame" markdown>
+   ![alt](path.png)
+   </div>
+   <p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
+   </div> */
+.md-typeset .dps-showcase {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.5em;
+  margin: 1.4em 0 0.6em;
+}
+.md-typeset .dps-showcase-frame {
+  position: relative;
+  padding: 1.6em;
+  border-radius: 14px;
+  border: 1px solid rgba(77, 182, 172, 0.3);
+  background-color: rgba(77, 182, 172, 0.045);
+  isolation: isolate;
+  overflow: hidden;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+/* Soft glow anchored behind the image, not on the frame border itself -
+   a blurred radial smudge sitting a layer behind the content (z-index
+   -1, clipped by the frame's own overflow: hidden) so it reads as light
+   the chart is casting rather than a decorative ring drawn on top. */
+.md-typeset .dps-showcase-frame::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 40%, rgba(77, 182, 172, 0.28), transparent 65%);
+  opacity: 0.6;
+  transition: opacity 0.25s ease;
+}
+.md-typeset .dps-showcase-frame:hover {
+  border-color: rgba(77, 182, 172, 0.55);
+  transform: translateY(-3px);
+}
+.md-typeset .dps-showcase-frame:hover::before {
+  opacity: 1;
+}
+.md-typeset .dps-showcase-frame img {
+  display: block;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.md-typeset .dps-showcase-frame p {
+  margin: 0;
+}
+/* Caption sits below the whole row (not per-frame) since it's describing
+   the shared conditions the numbers were pulled under, not one specific
+   image - stays put even once a second frame joins it. */
+.md-typeset .dps-showcase-caption {
+  flex-basis: 100%;
+  text-align: center;
+  font-size: 0.82em;
+  font-style: italic;
+  color: #80cbc4;
+  margin: 0.2em 0 0;
+}
+
 /* ---------- Reduced motion ---------- */
 /* Every transition on the site so far is small/cosmetic (hover states,
    opacity fades) rather than load-bearing animation, so this costs
@@ -2127,25 +2208,6 @@ h3 { color: #4db6ac; }
 }
 .md-content__inner:has(.build-card) > :last-child {
   margin-bottom: 9rem;
-}
-
-/* ---------- Reading progress bar ---------- */
-/* Injected into .md-header by javascripts/extra.js (no template override
-   needed) - a thin accent-gradient sliver that fills left-to-right as you
-   scroll through the page. Sits on the header's own bottom edge (not the
-   very top of the viewport) so it doesn't collide with Material's own
-   navigation.instant.progress loading indicator, which briefly lives
-   there during page transitions. */
-.reading-progress {
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  height: 2px;
-  width: 0%;
-  background: #ee83ab;
-  transition: width 0.1s linear;
-  pointer-events: none;
-  z-index: 5;
 }
 
 /* ---------- Soft page fade-in ---------- */
@@ -2231,16 +2293,23 @@ h3 { color: #4db6ac; }
   color: #ee83ab !important;
 }
 /* ---------- Desktop section tracker (scrollspy nav) ---------- */
-/* Built by javascripts/extra.js from a build page's own H2s, same source
-   as the mobile quick-jump pills but shown only on wide viewports where
-   there's real room beside the (centered, fixed-max-width) content column.
+/* Built by javascripts/extra.js from a page's own H2s (any page with
+   enough of them - see SECTION_TRACKER_MIN_HEADINGS in extra.js - not
+   just build guides), same source as the mobile quick-jump pills but
+   shown only on wide viewports where there's real room beside the
+   (centered, fixed-max-width) content column.
    Kept deliberately minimal - no panel, no blur, no shadow - just small
    rounded-square marks threaded by a faint line directly on the page, so
    it reads as a quiet margin note rather than a UI chrome element.
-   The current section's mark AND label stay visible (not hover-only), so
-   you always know where you are - not just at the moment you cross a
-   heading, but anywhere in between, since the JS tracks the last-passed
-   heading rather than a narrow crossing band. */
+   The current section's MARK stays visible at all times (bigger, filled,
+   a soft glow) so you always know roughly where you are on the page at a
+   glance. The LABEL is hover/focus-only for every mark, active section
+   included - it used to also stay parked on screen for the active
+   section, but on pages with real diagrams/images near the tracker (not
+   just prose) that meant a solid label sitting over actual page content
+   the whole time you were reading that section, not just when you
+   glanced over at the tracker. Hover-only means it only ever appears
+   while your cursor is already over there on purpose. */
 .section-tracker {
   display: none;
 }
@@ -2293,26 +2362,45 @@ h3 { color: #4db6ac; }
   border: 1.5px solid rgba(179, 157, 219, 0.4);
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
-/* Label sits to the left, no pill/background - just text with a soft
-   shadow for legibility over whatever content is behind it. Visible on
-   hover/focus for any item, and permanently for whichever one is active. */
+/* Label sits to the left. Originally just text with a soft shadow for
+   legibility over whatever content was behind it - fine for the short
+   build-guide headings this started with (Gems, Rotation), but once the
+   tracker started appearing on longer-titled pages too (Essentials'
+   "Remaining Energy Skills", Resources' "Ark Passive Calculator"), a
+   shadow alone wasn't enough: the *active* label stays visible
+   permanently, not just on hover, so a long one sitting over a table or
+   a colored admonition box just read as noise. Solid pill backdrop
+   (blurred, so it holds up over anything) fixes that outright rather
+   than trying to out-shadow busier backgrounds - matches the pill shape
+   already used for gem-chip/video-chip/quick-jump-pills elsewhere.
+   max-width + ellipsis is a hard backstop for anything longer than
+   that could still crowd the content column on the narrow end of the
+   1400px+ range this shows at; the JS also sets a title attribute so
+   the full text is still one hover away if it ever truncates. */
 .section-tracker-label {
   position: absolute;
   right: calc(100% + 0.6em);
   top: 50%;
+  max-width: 13em;
+  padding: 0.32em 0.75em;
+  border-radius: 999px;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  background-color: rgba(20, 20, 24, 0.82);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
   transform: translate(4px, -50%);
   font-size: 0.7em;
   font-weight: 600;
   color: var(--md-default-fg-color--light);
   white-space: nowrap;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7), 0 1px 10px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  text-overflow: ellipsis;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease, color 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 .section-tracker-item:hover .section-tracker-label,
-.section-tracker-item:focus-visible .section-tracker-label,
-.section-tracker-item.is-active .section-tracker-label {
+.section-tracker-item:focus-visible .section-tracker-label {
   opacity: 1;
   transform: translate(0, -50%);
 }
@@ -2324,9 +2412,15 @@ h3 { color: #4db6ac; }
   background-color: #ee83ab;
   border-color: #ee83ab;
   transform: scaleY(1.3);
+  box-shadow: 0 0 7px 1px rgba(238, 131, 171, 0.65);
+}
+.section-tracker-item:hover .section-tracker-label,
+.section-tracker-item:focus-visible .section-tracker-label {
+  border-color: rgba(238, 131, 171, 0.4);
 }
 .section-tracker-item.is-active .section-tracker-label {
   color: #ffb3cf;
+  border-color: rgba(238, 131, 171, 0.55);
 }
 
 /* ---------- 333 Blitz title tiger: click-to-rain easter egg ---------- */

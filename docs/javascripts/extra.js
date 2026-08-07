@@ -1,11 +1,12 @@
 /* Deathblade guide enhancements:
    - external links open in a new tab (so clicking a calculator/YouTube
      link doesn't navigate you away from the guide)
-   - a thin reading-progress sliver on the header's bottom edge
    - mobile-only quick-jump pills on build pages, generated from that
      page's own H2s
    - a slim fixed scrollspy nav on wide desktop viewports, same idea
-     as the quick-jump pills but for screens with room to spare
+     as the quick-jump pills but for screens with room to spare - now
+     the primary "where am I" indicator on any long page, since it
+     replaced the old top-of-header reading progress bar
    - every emoji site-wide gets a small hover wiggle (walks text nodes
      and wraps each emoji in a .emoji-wiggle span; the animation itself
      lives in extra.css)
@@ -24,6 +25,11 @@
   var delegatedClickListenersBound = false;
   var sectionTrackerItems = [];
   var blurTitleOriginal = null;
+  // Minimum own-page H2 count for a page to count as "lengthy" enough to
+  // earn the desktop section tracker. 3 covers the build guides (5 each)
+  // and pages like Essentials/Resources, while excluding short ones like
+  // Home or Pre-Ark Grid.
+  var SECTION_TRACKER_MIN_HEADINGS = 3;
 
   function externalLinksNewTab() {
     document.querySelectorAll(".md-content a[href]").forEach(function (a) {
@@ -32,23 +38,6 @@
       a.target = "_blank";
       a.rel = "noopener noreferrer";
     });
-  }
-
-  function ensureProgressBar() {
-    var header = document.querySelector(".md-header");
-    if (header && !header.querySelector(".reading-progress")) {
-      var bar = document.createElement("div");
-      bar.className = "reading-progress";
-      header.appendChild(bar);
-    }
-  }
-
-  function updateProgress() {
-    var bar = document.querySelector(".reading-progress");
-    if (!bar) return;
-    var doc = document.documentElement;
-    var scrollable = doc.scrollHeight - doc.clientHeight;
-    bar.style.width = (scrollable > 0 ? (doc.scrollTop / scrollable) * 100 : 0) + "%";
   }
 
   function buildQuickJumpPills() {
@@ -81,22 +70,24 @@
 
   // Desktop counterpart to the mobile quick-jump pills. toc.integrate
   // folds the page's own TOC into the collapsible left nav, which is fine
-  // but not glanceable on the longer build pages (333 Ceiling, 111 Head
-  // Hunt) - this is a slim always-visible mark-nav, fixed to the right
-  // edge, that also tracks scroll position so you can see which section
-  // you're in without hunting through the sidebar. Only appears on wide
-  // viewports (see the min-width gate in extra.css) so it never competes
-  // with actual content for space.
+  // but not glanceable on longer pages - this is a slim always-visible
+  // mark-nav, fixed to the right edge, that also tracks scroll position
+  // so you can see which section you're in without hunting through the
+  // sidebar. Only appears on wide viewports (see the min-width gate in
+  // extra.css) so it never competes with actual content for space.
+  //
+  // Not build-page-specific: any page with enough of its own H2s counts
+  // as "lengthy" and gets the tracker (build guides, but also pages like
+  // Essentials or Additional Resources). SECTION_TRACKER_MIN_HEADINGS is
+  // the threshold - short pages (Home, Pre-Ark Grid) fall under it and
+  // don't get a tracker for two or fewer sections.
   function buildSectionTracker() {
     var old = document.getElementById("section-tracker");
     if (old) old.remove();
     sectionTrackerItems = [];
 
-    var buildCard = document.querySelector(".md-content__inner .build-card");
-    if (!buildCard) return;
-
     var headings = document.querySelectorAll(".md-content__inner > h2");
-    if (headings.length < 2) return;
+    if (headings.length < SECTION_TRACKER_MIN_HEADINGS) return;
 
     var nav = document.createElement("nav");
     nav.id = "section-tracker";
@@ -108,11 +99,13 @@
       var a = document.createElement("a");
       a.className = "section-tracker-item";
       a.href = "#" + h.id;
+      var headingText = h.textContent.replace(/\s*¶\s*$/, "");
+      a.title = headingText;
       var mark = document.createElement("span");
       mark.className = "section-tracker-mark";
       var label = document.createElement("span");
       label.className = "section-tracker-label";
-      label.textContent = h.textContent.replace(/\s*¶\s*$/, "");
+      label.textContent = headingText;
       a.appendChild(label);
       a.appendChild(mark);
       nav.appendChild(a);
@@ -270,8 +263,6 @@
   if (window.document$) {
     document$.subscribe(function () {
       externalLinksNewTab();
-      ensureProgressBar();
-      updateProgress();
       buildQuickJumpPills();
       buildSectionTracker();
       wrapEmojisForWiggle();
@@ -282,23 +273,13 @@
       if (isBlitzPage) spawnTigerRain();
 
       // Scroll/resize/click/visibility listeners only need binding once
-      // ever - the header (and thus the progress bar) and <body> persist
-      // across instant-loading swaps, so a delegated listener bound to
-      // either keeps working on every subsequent page without rebinding.
+      // ever - the header and <body> persist across instant-loading swaps,
+      // so a delegated listener bound to either keeps working on every
+      // subsequent page without rebinding.
       if (!scrollListenerBound) {
         scrollListenerBound = true;
-        window.addEventListener(
-          "scroll",
-          function () {
-            updateProgress();
-            updateSectionTrackerActive();
-          },
-          { passive: true }
-        );
-        window.addEventListener("resize", function () {
-          updateProgress();
-          updateSectionTrackerActive();
-        });
+        window.addEventListener("scroll", updateSectionTrackerActive, { passive: true });
+        window.addEventListener("resize", updateSectionTrackerActive);
         document.addEventListener("visibilitychange", handleVisibilityChange);
       }
       if (!delegatedClickListenersBound) {

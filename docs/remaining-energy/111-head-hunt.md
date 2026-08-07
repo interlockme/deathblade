@@ -156,7 +156,11 @@
 
     - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
 
----
+## Trixion DPS
 
-??? example "Trixion DPS distribution (*Ancient cores, full Lv 10 gems*)"
-    ![111 DPS distribution](../assets/re/dpsdist-111.png)
+<div class="dps-showcase" markdown>
+<div class="dps-showcase-frame" markdown>
+![111 DPS distribution](../assets/re/dpsdist-111.png)
+</div>
+<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
+</div>
