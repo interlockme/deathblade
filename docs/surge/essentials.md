@@ -112,7 +112,7 @@ The 80-stack cap and rollover give you flexibility. You don't need to stop or fo
 
 Knowing roughly how many stacks each skill generates is important for adapting your rotation.
 
-### Combat Performance: CPM (Casts Per Minute)
+### Combat Performance
 
 **Surge Casts Per Minute (CPM)** and back attack rate are useful measures of how efficiently you cycle Surge.
 

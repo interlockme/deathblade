@@ -108,7 +108,7 @@ Prioritize consistent uptime and good use of Maelstrom's buffs over back attacks
 
 
 
-### Combat Performance: CPM (Casts Per Minute)
+### Combat Performance
 
 **Surge Casts Per Minute (CPM)** is a useful measure of how efficiently you are playing and generating orbs.
 
