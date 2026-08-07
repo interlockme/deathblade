@@ -198,11 +198,12 @@
 === "TL;DR:"
     ![313 TL;DR flowchart](../assets/re/tldr-313.png)
 
-## Trixion DPS
+## DPS Spread
+
+<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-![313 DPS distribution](../assets/re/dpsdist-313.png)
+<div class="dps-chart" data-icon-base="re" data-labels="Deathly Slash,Fatal Wave,Surge,Twin Shadows,Soul Absorber,Turning Slash,Blitz Rush,Void Strike,Bleed,Maelstrom" data-values="20.9,20.7,19.1,9.5,8.5,8,6.9,5.5,0.6,0.3"></div>
 </div>
-<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
 </div>

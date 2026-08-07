@@ -1206,6 +1206,284 @@ h3 { color: #4db6ac; }
     align-self: center;
     margin-bottom: 1.5em;
   }
+  /* Stack the pentagon over the diff card on narrow screens - the
+     vertical divider becomes a horizontal one so the "two halves of one
+     panel" feel carries over instead of the divider just vanishing. */
+  .md-typeset .build-compare-body {
+    flex-direction: column;
+  }
+  .md-typeset .build-compare-svg-mount {
+    border-right: none;
+    border-bottom: 1px solid rgba(179, 157, 219, 0.16);
+  }
+}
+
+/* ---------- Build compare widget (essentials.md, replaces the old
+   "## Build Comparison" markdown table) ---------- */
+/* Structure: <div class="build-compare" data-family="re"></div> - the JS
+   (javascripts/build-compare.js) fills in everything else: a real
+   <table> up top (this IS the old markdown table, just generated from
+   the same data array the picker below reads from instead of hand-typed
+   twice), a "Compare Two Directly" picker with two <select> dropdowns,
+   and an overlaid pentagon reusing the .pentagon-svg/.pentagon-ring/
+   .pentagon-spoke/.pentagon-label pieces from the single-build badge
+   above. See that file's top comment for the build data and why RE/Surge
+   are never compared against each other.
+
+   The table is intentionally left with NO class attribute, so it falls
+   through to the sitewide `table:not([class])` rule and renders exactly
+   like every other table on the site (same header/hover/img sizing)
+   rather than a hand-rolled approximation - that's what the plain
+   markdown table had for free and a bespoke flex layout here didn't. It
+   keeps its own rounded panel (border-radius + overflow:hidden) sitting
+   inside the outer card's padding, rather than being stripped flush the
+   way .cycle-card's nested .rotation-line is - flush read as "text just
+   floating in the card" with no visual boundary telling you where the
+   table starts, this reads as a distinct sub-panel instead. */
+.md-typeset .build-compare {
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  background-color: rgba(179, 157, 219, 0.045);
+  border-radius: 10px;
+  padding: 1.1em 1.2em 1.1em;
+  margin: 1em 0 1.5em;
+}
+.md-typeset .build-compare table {
+  width: 100%;
+  /* table-layout:auto (the default) puts 100% of the leftover width onto
+     whichever column has the least content pinned to it - in practice
+     that dumped almost the entire remaining width onto "Best For" alone,
+     leaving its text stranded on the left of a mostly-empty column.
+     Fixed + explicit per-column percentages spreads that width out on
+     purpose instead of leaving it to the browser's guess. */
+  table-layout: fixed;
+  border: 1px solid rgba(179, 157, 219, 0.16);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.025);
+  margin: 0 0 0.6em;
+}
+.md-typeset .build-compare table th {
+  background-color: rgba(179, 157, 219, 0.1);
+  font-size: 0.68rem;
+}
+.md-typeset .build-compare table th:nth-child(1),
+.md-typeset .build-compare table td:nth-child(1) {
+  width: 20%;
+}
+.md-typeset .build-compare table th:nth-child(2),
+.md-typeset .build-compare table td:nth-child(2) {
+  width: 13%;
+}
+.md-typeset .build-compare table th:nth-child(3),
+.md-typeset .build-compare table td:nth-child(3) {
+  width: 13%;
+}
+/* Widened from 15% - "Fast & Punishing" (the longest playstyle value)
+   was wrapping to two lines at the old width. */
+.md-typeset .build-compare table th:nth-child(4),
+.md-typeset .build-compare table td:nth-child(4) {
+  width: 20%;
+  white-space: nowrap;
+}
+.md-typeset .build-compare table th:nth-child(5),
+.md-typeset .build-compare table td:nth-child(5) {
+  width: 34%;
+}
+.md-typeset .build-compare-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.md-typeset .build-compare-dot {
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+/* Small uppercase divider between the table and the two-build picker,
+   same visual language as .pentagon-badge-title. Kept close to the table
+   above it (0.6em margin + 0.6em padding here = ~1.1em total, matching
+   the card's own top/left padding) rather than the two stacking up to a
+   much bigger gap than the rest of the card's spacing. */
+.md-typeset .build-compare-section-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #a79bc4;
+  font-weight: 700;
+  text-align: center;
+  padding-top: 0.6em;
+  margin-bottom: 0.8em;
+  border-top: 1px solid rgba(179, 157, 219, 0.18);
+}
+.md-typeset .build-compare-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  margin-bottom: 0.2em;
+}
+/* Small colored dot on each dropdown, kept in sync with its current
+   selection (JS) - a quiet visual link to the matching polygon color
+   below without repeating the table's own links a second time. */
+.md-typeset .build-compare-select-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  max-width: 46%;
+}
+.md-typeset .build-compare-select-dot {
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.md-typeset .build-compare-select {
+  background-color: #161718;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  border-radius: 6px;
+  color: #e8e6ee;
+  padding: 0.35em 0.6em;
+  font-size: 0.85em;
+  font-family: inherit;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.md-typeset .build-compare-select:focus {
+  outline: none;
+  border-color: #b39ddb;
+}
+.md-typeset .build-compare-vs {
+  font-size: 0.75em;
+  color: #a79bc4;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+/* Body is now a single two-panel "sub-card" (matches the table's own
+   rounded sub-panel above it) instead of two free-floating pieces with a
+   gap between them - a shared border + a vertical divider down the
+   middle gives the pentagon and the diff card each an explicit, equal
+   half rather than leaving their relative size to flex-basis alone. */
+.md-typeset .build-compare-body {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  margin-top: 0.9em;
+  border: 1px solid rgba(179, 157, 219, 0.16);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+.md-typeset .build-compare-svg-mount {
+  flex: 1 1 50%;
+  display: flex;
+  /* Top-aligned (not centered) so the "Difficulty" axis label at the top
+     of the pentagon lines up with "Key Differences" on the other side,
+     rather than the whole SVG - empty space below the shape included -
+     being centered as one block. */
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1.3em 1em;
+  border-right: 1px solid rgba(179, 157, 219, 0.16);
+}
+.md-typeset .build-compare-svg-mount svg {
+  width: min(230px, 100%);
+}
+/* Two overlapping translucent polygons - fill-opacity is set inline per
+   build (JS) rather than here since it's paired with each build's own
+   accent color, but the stroke needs to stay crisp on top of the fill,
+   which .pentagon-data's site-wide rule already handles for the single-
+   build badge; this reuses the same visual weight. */
+.md-typeset .build-compare-poly {
+  transition: opacity 0.15s ease;
+}
+
+/* ---------- Key Differences panel (sits beside the pentagon overlay) --------- */
+/* For each axis that isn't essentially tied, a small pill goes under
+   whichever build wins it - see the comment above buildKeyDifferences()
+   in build-compare.js for why this replaced a bar chart. Reuses the same
+   pill shape as .tag (padding/radius/border) but colored per-build via
+   inline style instead of a fixed palette of classes. */
+.md-typeset .build-compare-diffcard {
+  flex: 1 1 50%;
+  min-width: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 1.3em 1.2em;
+  display: flex;
+  flex-direction: column;
+  /* Top-aligned to match .build-compare-svg-mount above, plus the title's
+     own margin-top below to land roughly level with the pentagon's
+     "Difficulty" label (which sits a bit below the SVG's own top edge,
+     not flush with it). */
+  justify-content: flex-start;
+}
+.md-typeset .build-compare-diffcard-title {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+  margin-top: 0.85em;
+  margin-bottom: 0.9em;
+  text-align: center;
+}
+/* Side-by-side columns (one per build) instead of a top-to-bottom stack -
+   centered as a pair within the card, matching the "A vs B" framing the
+   dropdowns above already set up, and using the half-width horizontally
+   instead of stretching the card tall. */
+.md-typeset .build-compare-diffcard-body {
+  display: flex;
+  justify-content: center;
+  gap: 1.6em;
+  text-align: center;
+}
+.md-typeset .build-compare-diffcard-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.md-typeset .build-compare-diffcard-name {
+  font-weight: 700;
+  font-size: 0.88em;
+  margin-bottom: 0.55em;
+}
+.md-typeset .build-compare-diffcard-chips {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4em;
+}
+/* Softer than a typical .tag pill on purpose - these sit two-per-column
+   in a fairly quiet card and don't need to compete visually with the
+   pentagon; the accent color alone (text + a faint border) is enough to
+   read as "this build's advantage" without a heavy filled chip. */
+.md-typeset .build-compare-diffchip {
+  display: inline-block;
+  font-size: 0.72em;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 0.22em 0.6em;
+  border-radius: 999px;
+  border: 1px solid;
+  background-color: rgba(255, 255, 255, 0.02);
+  white-space: nowrap;
+}
+.md-typeset .build-compare-diffcard-none {
+  font-size: 0.78em;
+  color: #7a7580;
+  font-style: italic;
+}
+.md-typeset .build-compare-diffcard-empty {
+  font-size: 0.85em;
+  color: #a79bc4;
+  font-style: italic;
+  text-align: center;
 }
 
 .md-typeset .grid.cards > ul > li {
@@ -2098,28 +2376,25 @@ h3 { color: #4db6ac; }
   opacity: 1;
 }
 
-/* ---------- Trixion DPS showcase ---------- */
-/* Was a single image buried in a collapsible `??? example` admonition at
-   the bottom of Rotation - easy to miss, and read as an afterthought
-   rather than an actual part of the guide. Promoted to its own H2
-   ("## Trixion DPS") so it's a real chapter (picks up the standard H2
-   chapter-break treatment above, and shows up in the mobile quick-jump
-   pills / desktop section tracker like every other section), with the
-   image itself given a real presentation instead of a plain inline
-   markdown image.
-   Teal throughout (#4db6ac) rather than the site's usual pink, matching
-   the existing Trixion DPS stat bar on the build card up top - the two
-   reference the same number, so they share a color.
-   Structure - built to hold more than one frame later without changes
-   (a second/third chart, a table, whatever "grows"): each is just
-   another .dps-showcase-frame in the row, the container already wraps
-   and centers them as a group.
-   <div class="dps-showcase" markdown>
-   <div class="dps-showcase-frame" markdown>
-   ![alt](path.png)
-   </div>
-   <p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
-   </div> */
+/* ---------- Trixion DPS distribution chart ---------- */
+/* Was a single screenshot buried in a collapsible `??? example`
+   admonition at the bottom of Rotation - easy to miss, and read as an
+   afterthought rather than an actual part of the guide. Promoted to its
+   own H2 ("## Trixion DPS") so it's a real chapter (picks up the
+   standard H2 chapter-break treatment above, and shows up in the mobile
+   quick-jump pills / desktop section tracker like every other section),
+   then later swapped for a live-drawn chart so there's no screenshot to
+   retake after a balance pass.
+
+   Shell matches the site's standard flat card family (.cpm-calc,
+   .build-compare) - a hairline lavender border + a faint lavender tint,
+   nothing else - rather than a bespoke glow/hover-lift/gradient
+   treatment. This used to be built to frame a static screenshot (glow,
+   lift-on-hover, box-shadowed image) and later had its rows redone to
+   match glossy in-game skill-chip icons; both read as much more
+   decorated than every other panel on the page once the screenshot was
+   gone and this became a plain data readout - so it's flattened back
+   down to the same plain-card language as the rest of the site instead. */
 .md-typeset .dps-showcase {
   display: flex;
   flex-wrap: wrap;
@@ -2129,53 +2404,93 @@ h3 { color: #4db6ac; }
   margin: 1.4em 0 0.6em;
 }
 .md-typeset .dps-showcase-frame {
-  position: relative;
-  padding: 1.6em;
-  border-radius: 14px;
-  border: 1px solid rgba(77, 182, 172, 0.3);
-  background-color: rgba(77, 182, 172, 0.045);
-  isolation: isolate;
-  overflow: hidden;
-  transition: border-color 0.25s ease, transform 0.25s ease;
-}
-/* Soft glow anchored behind the image, not on the frame border itself -
-   a blurred radial smudge sitting a layer behind the content (z-index
-   -1, clipped by the frame's own overflow: hidden) so it reads as light
-   the chart is casting rather than a decorative ring drawn on top. */
-.md-typeset .dps-showcase-frame::before {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  z-index: -1;
-  background: radial-gradient(circle at 50% 40%, rgba(77, 182, 172, 0.28), transparent 65%);
-  opacity: 0.6;
-  transition: opacity 0.25s ease;
-}
-.md-typeset .dps-showcase-frame:hover {
-  border-color: rgba(77, 182, 172, 0.55);
-  transform: translateY(-3px);
-}
-.md-typeset .dps-showcase-frame:hover::before {
-  opacity: 1;
-}
-.md-typeset .dps-showcase-frame img {
-  display: block;
-  max-width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(179, 157, 219, 0.28);
+  background-color: rgba(179, 157, 219, 0.045);
+  border-radius: 10px;
+  padding: 1.4em 1.6em 1.5em;
 }
 .md-typeset .dps-showcase-frame p {
   margin: 0;
 }
+
+.md-typeset .dps-chart {
+  width: min(540px, 92vw);
+}
+.md-typeset .dps-chart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+.md-typeset .dps-chart-row {
+  --dps-target: 0%;
+  --dps-delay: 0ms;
+  display: grid;
+  grid-template-columns: 13.5em 1fr 3.6em;
+  align-items: center;
+  gap: 0.85em;
+}
+/* Plain icon + text, no chip card around it - the icon alone (small,
+   flush with the label) carries the identification, matching how
+   .table-bar-cell and every other stat row on the page pairs a label
+   with a bar rather than boxing the label first. */
+.md-typeset .dps-chart-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  min-width: 0;
+}
+.md-typeset .dps-chart-icon {
+  flex: 0 0 auto;
+  width: 1.75em;
+  height: 1.75em;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.md-typeset .dps-chart-label-text {
+  font-size: 1.02em;
+  font-weight: 500;
+  color: #cfc9dd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Same thin track/fill shape as .stat-bar-track-teal elsewhere on the
+   page (Trixion multiplier bars) instead of a taller, more prominent
+   bar of its own - one visual language for "teal bar = Trixion number"
+   across the whole page. */
+.md-typeset .dps-chart-track {
+  height: 7px;
+  border-radius: 999px;
+  background-color: rgba(77, 182, 172, 0.15);
+  overflow: hidden;
+}
+.md-typeset .dps-chart-fill {
+  --dps-accent: #4db6ac;
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background-color: var(--dps-accent);
+  transition: width 0.7s ease;
+  transition-delay: var(--dps-delay);
+}
+.md-typeset .dps-chart-in-view .dps-chart-fill {
+  width: var(--dps-target);
+}
+.md-typeset .dps-chart-value {
+  font-size: 1em;
+  font-weight: 600;
+  color: #e8e6ee;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
 /* Caption sits below the whole row (not per-frame) since it's describing
    the shared conditions the numbers were pulled under, not one specific
-   image - stays put even once a second frame joins it. */
+   chart - stays put even once a second frame joins it. */
 .md-typeset .dps-showcase-caption {
   flex-basis: 100%;
   text-align: center;
-  font-size: 0.82em;
-  font-style: italic;
-  color: #80cbc4;
+  font-size: 0.92em;
+  color: #a79bc4;
   margin: 0.2em 0 0;
 }
 

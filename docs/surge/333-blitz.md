@@ -144,10 +144,10 @@ Apply damage synergy if needed, then use the main cycle and repeat it as best yo
 1. Use a ![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant (recommended) or proceed to #2.
 2. Generate one orb, build at least 40 stacks, then Surge to refill all 3 orbs.
 
-## Trixion DPS
+## DPS Spread
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-![333 DPS distribution](../assets/surge/dpsdist-333.png)
+<div class="dps-chart" data-icon-base="surge" data-labels="Surge,Blitz Rush,Deathly Slash,Blade Dance,Earth Cleaver" data-values="43.89,26.99,12.85,4.21,4.04"></div>
 </div>
 </div>

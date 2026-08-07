@@ -38,6 +38,8 @@ extra_javascript:
   - javascripts/ark-passive-calculator.js
   - javascripts/pentagon-badge.js
   - javascripts/rotation-practice.js
+  - javascripts/dps-chart.js
+  - javascripts/build-compare.js
 
 extra:
   generator: false

@@ -199,11 +199,12 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
 === "TL;DR:"
     ![333 TL;DR flowchart](../assets/re/tldr-333.png)
 
-## Trixion DPS
+## DPS Spread
+
+<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-![333 DPS distribution](../assets/re/dpsdist-333.png)
+<div class="dps-chart" data-icon-base="re" data-labels="Fatal Wave,Deathly Slash,Surge,Twin Shadows,Soul Absorber,Turning Slash,Blitz Rush,Void Strike,Bleed,Maelstrom" data-values="34.6,17.8,15.5,7.7,6.7,6.5,5.6,4.7,0.5,0.3"></div>
 </div>
-<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
 </div>

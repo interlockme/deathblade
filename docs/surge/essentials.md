@@ -20,11 +20,7 @@
 
 *Note: Trixion DPS is just a dummy test. Real raid performance is what actually matters!*
 
-| Build | Difficulty | Trixion DPS | Playstyle | Best For |
-|:---|:---:|:---:|:---|:---|
-| [111 (Classic)](111-classic.md) ★ | <div class="table-bar-cell">7.5 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 75%"></div></div></div> | <div class="table-bar-cell">1.23x<div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill stat-bar-fill-teal" style="width: 77%"></div></div></div> | Burst Combo | 🦁 Classic Surge gameplay |
-| [222 (Speedy)](222-speedy.md) | <div class="table-bar-cell">7 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 70%"></div></div></div> | <div class="table-bar-cell">1.22x<div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill stat-bar-fill-teal" style="width: 73%"></div></div></div> | Max Mobility | 🐆 Simple uptime focus |
-| [333 (Blitz)](333-blitz.md) | <div class="table-bar-cell">8 / 10<div class="stat-bar-track"><div class="stat-bar-fill" style="width: 80%"></div></div></div> | <div class="table-bar-cell">1.20x<div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill stat-bar-fill-unconfirmed" style="width: 67%"></div></div></div> | Skill Reset | 🐯 Waiting for buffs |
+<div class="build-compare" data-family="surge"></div>
 
 ## Engravings
 

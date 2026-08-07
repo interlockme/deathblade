@@ -156,11 +156,12 @@
 
     - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
 
-## Trixion DPS
+## DPS Spread
+
+<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-![111 DPS distribution](../assets/re/dpsdist-111.png)
+<div class="dps-chart" data-icon-base="re" data-labels="Deathly Slash,Surge,Death Sentence,Turning Slash,Twin Shadows,Soul Absorber,Blitz Rush,Void Strike,Bleed,Head Hunt,Maelstrom" data-values="21,18.8,16.6,11.6,10.6,8,6.6,5.5,0.6,0.3,0.3"></div>
 </div>
-<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
 </div>
