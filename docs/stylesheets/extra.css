@@ -2375,6 +2375,320 @@ h3 { color: #4db6ac; }
   color: #e57373;
 }
 
+/* ---- Bracelet Line Comparison: collapsible <details> block, native
+   toggle affordance rather than a custom JS-driven show/hide. Lives
+   OUTSIDE .ap-calc-live (see resources.md) as a plain full-width block, not
+   the sticky right column, so it doesn't grow that column's height - and
+   renders as a compact table (one <tr> per line) rather than stacked cards,
+   since full width means Low/Mid/High can sit in their own columns instead
+   of needing a bar to convey relative size.
+
+   Styled as a neutral utility panel - same plain border + no fill as
+   .ap-calc-results (the Top Combinations box) - rather than one of the
+   category accent colors (pink/teal/orange/blue), since this section isn't
+   tied to any one of those categories the way the gear cards above are. */
+.md-typeset .ap-brace-compare {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  margin: 1em 0 0;
+}
+/* Material gives every bare <details> (no .note/.tip/etc type class) its
+   own default admonition icon on the summary, drawn via a masked ::before
+   pseudo-element tinted with currentColor - left as a stray icon that read
+   as an unintended "warning" box rather than a deliberate accent. Fully
+   redefining ::before below (not just hiding it) removes Material's icon/
+   mask and swaps in a disclosure triangle as the indicator.
+
+   That triangle is a pure CSS border-triangle (no glyph) laid out as a
+   normal flex item next to the title text, not a Unicode "▸" character
+   absolutely positioned over it. Two earlier attempts both left something
+   floating above the box, clipped by the card's overflow:hidden: first a
+   glyph whose own font metrics didn't match a fixed em offset, then (after
+   switching to a border-triangle) Material's own masked admonition icon
+   still showing through underneath it - our ::before rule set width/
+   height/border but never explicitly cleared Material's background-color/
+   mask-image/position on that same pseudo-element, and CSS cascades those
+   per-property, not per-rule, so whichever properties we didn't touch kept
+   using Material's values. The block below now resets every property
+   Material's default icon rule sets, not just the ones the triangle needs,
+   so there's nothing left for it to leak through. */
+.md-typeset .ap-brace-compare summary::after {
+  display: none !important;
+}
+.md-typeset .ap-brace-compare summary::-webkit-details-marker {
+  display: none;
+}
+.md-typeset .ap-brace-compare summary::marker {
+  content: "";
+}
+.md-typeset .ap-brace-compare summary {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: 0.92em;
+  font-weight: 700;
+  color: #a79bc4;
+  padding: 0.6em 0.85em;
+  cursor: pointer;
+  list-style: none;
+}
+.md-typeset .ap-brace-compare summary::before {
+  content: "";
+  display: inline-block;
+  position: static;
+  flex-shrink: 0;
+  width: 0;
+  height: 0;
+  background: none;
+  background-color: transparent;
+  mask-image: none;
+  -webkit-mask-image: none;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 5px solid #a79bc4;
+  border-right: none;
+  transition: transform 0.15s ease;
+}
+.md-typeset .ap-brace-compare[open] summary::before {
+  transform: rotate(90deg);
+}
+.md-typeset .ap-brace-compare[open] summary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.md-typeset .ap-brace-compare-body {
+  padding: 0.7em 0.85em 0.85em;
+}
+.md-typeset .ap-brace-compare-intro {
+  font-size: 0.9em;
+  color: #a79bc4;
+  margin: 0 0 0.7em;
+}
+/* RE/Surge Deathblade picker for the Spec +80/100/120 line - real radio
+   inputs (not JS-enforced checkboxes) so mutual exclusivity is native
+   rather than something this code has to police. Lives inside
+   .ap-brace-compare-inputs as a third flex item alongside the Demon Dmg %
+   and Crit Stat fields (rather than its own stacked row above them) to
+   keep the section from eating extra vertical space. */
+.md-typeset .ap-brace-spec-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  flex: 0 0 auto;
+  margin: 0;
+}
+.md-typeset .ap-brace-spec-toggle .ap-calc-field-label {
+  margin: 0;
+  font-size: 0.82em;
+  color: #cfc9dd;
+}
+.md-typeset .ap-brace-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.82em;
+  color: #cfc9dd;
+  cursor: pointer;
+}
+.md-typeset .ap-brace-radio-label input[type="radio"] {
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  accent-color: #a79bc4;
+  cursor: pointer;
+}
+.md-typeset .ap-brace-compare-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9em 1.6em;
+  margin-bottom: 0.8em;
+  padding-bottom: 0.7em;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.md-typeset .ap-brace-compare-inputs .ap-calc-field-row {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+.md-typeset .ap-brace-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.96em;
+}
+.md-typeset .ap-brace-compare-table th {
+  text-align: right;
+  font-size: 0.82em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6f6a80;
+  padding: 0.3em 0.6em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.md-typeset .ap-brace-compare-table th.ap-brace-th-label {
+  text-align: left;
+}
+/* Low/Mid/High column headers carry the tier colors instead of every
+   value cell in the body - a light touch at the top of the table rather
+   than recoloring all 30-odd numbers on the right. The actual per-tier
+   coloring readers asked for lives on the bracelet-line labels instead
+   (see .ap-brace-label-low/mid/high/downside below). */
+.md-typeset .ap-brace-compare-table th.ap-brace-th-low {
+  color: #4db6ac;
+}
+.md-typeset .ap-brace-compare-table th.ap-brace-th-mid {
+  color: #7ec4e8;
+}
+.md-typeset .ap-brace-compare-table th.ap-brace-th-high {
+  color: #f0a868;
+}
+.md-typeset .ap-brace-compare-table td {
+  padding: 0.45em 0.6em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  vertical-align: top;
+}
+.md-typeset .ap-brace-compare-table tr:last-child td {
+  border-bottom: none;
+}
+.md-typeset .ap-brace-row-label {
+  font-weight: 400;
+  color: #e8e6ee;
+  text-align: left;
+}
+/* The Low/Mid/High figures embedded in each bracelet line's own label
+   (e.g. the "3.4/4.2/5" in "Crit Rate +3.4/4.2/5%") carry the tier
+   colors - matching the reference tooltip's per-line coloring - rather
+   than the flat percentages in the Low/Mid/High columns on the right,
+   which stay plain. The Skill Cooldown line's "+2%" downside figure gets
+   its own red instead, since it's not a Low/Mid/High tier at all - it's
+   the fixed downside baked into that line regardless of tier. */
+.md-typeset .ap-brace-label-low {
+  color: #4db6ac;
+}
+.md-typeset .ap-brace-label-mid {
+  color: #7ec4e8;
+}
+.md-typeset .ap-brace-label-high {
+  color: #f0a868;
+}
+.md-typeset .ap-brace-label-downside {
+  color: #ee83ab;
+}
+/* Hover tooltip badge for rows with a caveat - replaces the old always-
+   visible note line under the label so a caveat doesn't cost vertical
+   space for every reader, while still being obvious enough to notice:
+   a small circled "i" right after the label, native `title` attribute
+   for the actual hover tooltip (no JS-driven tooltip needed). */
+.md-typeset .ap-brace-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  height: 1.2em;
+  margin-left: 0.4em;
+  border-radius: 50%;
+  border: 1px solid rgba(167, 155, 196, 0.6);
+  color: #a79bc4;
+  font-size: 0.8em;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+  vertical-align: middle;
+}
+.md-typeset .ap-brace-info-icon:hover {
+  border-color: #a79bc4;
+  color: #cfc9dd;
+}
+/* Small always-visible tag flagging that a row's number is damage-share
+   only (currently the Spec row, for both RE and Surge - neither model has
+   a CDR term anymore). Sized to sit inline with the label text without
+   growing the row's height: line-height 1 plus tight padding keeps its
+   box shorter than the row's own text line, unlike a badge sized off the
+   1.2em info-icon circle. The full explanation lives in this tag's own
+   hover tooltip (native `title`) rather than a permanent note under the
+   table. */
+.md-typeset .ap-brace-label-caveat {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.5em;
+  padding: 0.02em 0.35em;
+  border-radius: 3px;
+  background: rgba(224, 169, 64, 0.15);
+  border: 1px solid rgba(224, 169, 64, 0.55);
+  color: #e0a940;
+  font-size: 0.62em;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+  white-space: nowrap;
+  cursor: help;
+}
+/* Per-build hover tags (111/313 for RE, 222/333 for Surge) sitting next to
+   the Spec row's label - same compact sizing as .ap-brace-label-caveat so
+   a row with both the dmg-only tag and two build tags still doesn't grow
+   taller than any other row. Neutral color instead of the caveat's amber
+   since these aren't warnings, just alternate figures on hover. */
+.md-typeset .ap-brace-build-tag {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.35em;
+  padding: 0.02em 0.35em;
+  border-radius: 3px;
+  background: rgba(167, 155, 196, 0.12);
+  border: 1px solid rgba(167, 155, 196, 0.5);
+  color: #a79bc4;
+  font-size: 0.62em;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+  white-space: nowrap;
+  cursor: help;
+}
+.md-typeset .ap-brace-build-tag:hover {
+  border-color: #a79bc4;
+  color: #cfc9dd;
+}
+.md-typeset .ap-brace-tier-val {
+  font-weight: 400;
+  color: #cfc9dd;
+  text-align: right;
+  white-space: nowrap;
+}
+/* Archdemon line's Low/Mid/High values only pay off vs a Demon/Archdemon
+   target - dimmed so they read as situational at a glance, rather than a
+   plain always-on gain like every other row's numbers. */
+.md-typeset .ap-brace-row-situational .ap-brace-tier-val {
+  color: #6f6a80;
+}
+.md-typeset .ap-brace-compare-flip-note {
+  font-size: 0.78em;
+  color: #6f6a80;
+  font-style: italic;
+  margin: 0.6em 0 0;
+}
+/* Freeform explanatory note - e.g. why Weapon Power / Attack Power /
+   Specialization lines aren't in this table - kept visually secondary
+   (small, muted, separated by extra top margin) so it reads as an aside
+   under the table rather than another row of it. */
+.md-typeset .ap-brace-compare-footer-note {
+  font-size: 0.8em;
+  color: #6f6a80;
+  margin: 1.1em 0 0;
+  padding-top: 0.7em;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+@media screen and (max-width: 600px) {
+  .md-typeset .ap-brace-compare-table {
+    font-size: 0.86em;
+  }
+  .md-typeset .ap-brace-compare-table th,
+  .md-typeset .ap-brace-compare-table td {
+    padding: 0.35em 0.4em;
+  }
+}
+
 /* Small persistence notice + reset link under the summary panel - inputs
    are saved to this browser's localStorage on every change (see the JS
    header comment), so a reader coming back later sees their own last

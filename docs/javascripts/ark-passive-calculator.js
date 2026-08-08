@@ -81,6 +81,124 @@
 
   const EVO_KARMA_MAP = { 1: 0.01, 2: 0.02, 3: 0.03, 4: 0.04, 5: 0.05, 6: 0.06 };
 
+  // ----- Bracelet Line Comparison lookup tables -----
+  // Low/Mid/High values sourced from Arsonistic's "Brace" sheet - see the
+  // comment above computeBraceletComparison() for methodology. Reuses
+  // BRACELET_RATE_TABLE / BRACELET_DMG_TABLE / BRACELET_ADD_A_TABLE /
+  // BRACELET_ADD_B_TABLE above where the sheet's own Low/Mid/High figures
+  // for a line happen to be identical to a table already defined for the
+  // main gear inputs (Crit Rate, Crit Dmg, and both Additional Dmg lines) -
+  // no need to duplicate those four.
+  // The +2% Skill Cooldown tag has a real downside: less time spent waiting
+  // on cooldown means a lower effective cast rate than the flat +4.5/5/5.5%
+  // alone implies. Modeled as a flat CPM penalty - going from an uncapped
+  // CPM to one that's 2% shorter cooldown but otherwise the same uptime
+  // costs about 1.35% of your cast rate (e.g. a 15 CPM skill lands at ~14.8,
+  // and 15/14.8 - 1 ≈ 1.35%) - then folded into the flat Damage % via
+  // (1 + rawDamage) / (1 + 0.0135) - 1, rather than the flat 4.5/5/5.5%
+  // taken at face value.
+  const SKILL_CD_PENALTY = 0.0135;
+  const DAMAGE_CD_RAW_TABLE = { Low: 0.045, Mid: 0.05, High: 0.055 };
+  const DAMAGE_CD_TABLE = {
+    Low: (1 + DAMAGE_CD_RAW_TABLE.Low) / (1 + SKILL_CD_PENALTY) - 1,
+    Mid: (1 + DAMAGE_CD_RAW_TABLE.Mid) / (1 + SKILL_CD_PENALTY) - 1,
+    High: (1 + DAMAGE_CD_RAW_TABLE.High) / (1 + SKILL_CD_PENALTY) - 1,
+  };
+  // Crit stat delta candidates for the raw "Crit +80/100/120" bracelet line
+  // (a base-stat roll, distinct from the Crit Rate % Line below) - added
+  // straight onto critStat the same way the sheet adds it onto UCrit.
+  const CRIT_STAT_TABLE = { Low: 80, Mid: 100, High: 120 };
+  const OUTGOING_DMG_TABLE = { Low: 0.02, Mid: 0.025, High: 0.03 };
+  const STAGGER_DMG_TABLE = { Low: 0.04, Mid: 0.045, High: 0.05 };
+  const STAGGER_DPS_SHARE = 0.05; // assumed % of a fight's DPS that happens during Stagger - matches the sheet's own default
+  const BACK_DMG_TABLE = { Low: 0.025, Mid: 0.03, High: 0.035 };
+  const BACK_ATTACK_DPS_SHARE = 0.97; // assumed % of DPS that lands as a Back Attack
+  const DEMON_DMG_ADD = 0.025; // the "& Dmg vs Demon/Archdemon +2.5%" tag's fixed Additional Dmg component
+
+  // ----- Spec +80/100/120 (Deathblade only) -----
+  // Ported from the sheet's per-class Spec DPS-multiplier model
+  // (Calc!AY:BJ, rows for "RE Deathblade" and "Surge Deathblade"), with
+  // the RE-only CDR term (the sheet's separate Trance-reset-via-Spec
+  // mechanic) dropped - RE and Surge now use one shared formula,
+  // parameterized on:
+  //   - share: the % of your total DPS that comes from the skill Spec
+  //     scales (RE's Trance-triggering skill / Surge's namesake skill)
+  //   - awakeningShare: your Awakening skill's share of total DPS - the
+  //     sheet's own row comment on RE (Calc!BJ2) confirms the secondary
+  //     term is "AwkScaling", i.e. the Awakening skill also scales off
+  //     Spec a little. The sheet uses 1% for both classes; RE is set to
+  //     1.5% here per build feedback (Surge stays at 1%).
+  //   - coefficient: that skill's own Spec-scaling coefficient
+  // AWAKENING_COEFFICIENT (0.1528) is the Awakening skill's own
+  // Spec-scaling coefficient - fixed the same across every class in the
+  // sheet (Reaper, Gunslinger, Artillerist rows all use 0.1528 too), so
+  // it isn't something a Deathblade build changes.
+  // Then the DPS multiplier at a given Spec stat is:
+  //   1 + (coefficient*shareRatio + AWAKENING_COEFFICIENT*awakeningRatio)/699*Spec
+  // where shareRatio/awakeningRatio normalize share/awakeningShare against
+  // SPEC_REF (1855) - a reference Spec value the share percentages are
+  // considered accurate at, kept deliberately separate from SPEC_BASE
+  // (1735, the Spec value the +80/100/120 tiers are actually calculated
+  // against) so the two can be tuned independently. 699 is the sheet's
+  // universal Spec-stat-to-%DPS divisor, used identically across every
+  // class's row in that table - not a crit-rate constant, and not
+  // something specific to this line.
+  //
+  // Every other tiered bracelet line in this table is linear in its tier
+  // value (Mid = Low * 1.25, High = Low * 1.5) because the sheet's own
+  // simplified (non-"Advanced Skill Setup") formula for Spec is too: the
+  // DPS gain from adding N Spec is (multiplier(SPEC_BASE) - 1)
+  // / (SPEC_BASE * multiplier(SPEC_BASE)) * N - a single constant times
+  // the tier value. SPEC_BASE is fixed at 1735 rather than tied to any
+  // input - the sheet's own Spec cell is "your current profile's Spec,"
+  // which this crit-focused calculator doesn't track or want to expose as
+  // a live input.
+  const SPEC_BASE = 1735;
+  const SPEC_REF = 1855; // reference Spec the share percentages are anchored to
+  const SPEC_SKILL_COEFFICIENT = 0.86;
+  const AWAKENING_COEFFICIENT = 0.1528;
+  // `builds` replaces the old single altShare/altLabel pair with one entry
+  // per named build variant, each rendered as its own small hover tag on
+  // the Spec row (see renderBraceletComparison) instead of one shared "i"
+  // icon - so 111 and 313 (RE) / 222 and 333 (Surge) are each independently
+  // hoverable rather than lumped into one combined note.
+  const RE_DEATHBLADE_SPEC = {
+    share: 0.17,
+    awakeningShare: 0.015,
+    builds: [
+      { tag: "111", share: 0.20 },
+      { tag: "313", share: 0.20 },
+    ],
+  };
+  const SURGE_DEATHBLADE_SPEC = {
+    share: 0.75,
+    awakeningShare: 0.01,
+    builds: [
+      { tag: "222", share: 0.50 },
+      { tag: "333", share: 0.45 },
+    ],
+  };
+
+  // RE and Surge use the identical formula now that the CDR-driven term
+  // (Trance getting reset more often as Spec goes up) has been dropped -
+  // only the damage share and Awakening share differ between the two
+  // builds.
+  function deathbladeSpecMultiplier(spec, share, awakeningShare) {
+    const denom = 1 - share - awakeningShare
+      + share / (1 + SPEC_SKILL_COEFFICIENT / 699 * SPEC_REF)
+      + awakeningShare / (1 + AWAKENING_COEFFICIENT / 699 * SPEC_REF);
+    const shareRatio = (share / (1 + SPEC_SKILL_COEFFICIENT / 699 * SPEC_REF)) / denom;
+    const awakeningRatio = (awakeningShare / (1 + AWAKENING_COEFFICIENT / 699 * SPEC_REF)) / denom;
+    return 1 + (SPEC_SKILL_COEFFICIENT * shareRatio + AWAKENING_COEFFICIENT * awakeningRatio) / 699 * spec;
+  }
+
+  // Collapses a DPS multiplier at SPEC_BASE into the single "gain per point
+  // of Spec" constant that every tier value below is just multiplied by.
+  function specGainPerPoint(multiplierFn, share, awakeningShare) {
+    const az = multiplierFn(SPEC_BASE, share, awakeningShare);
+    return (az - 1) / (SPEC_BASE * az);
+  }
+
   const STRIKE_CRIT_RATE = 0.2;
   const STRIKE_CRIT_DMG = 0.32;
   const STANDING_STRIKER_EVO_DMG = 0.21;
@@ -137,9 +255,9 @@
 
   function readInputs(root) {
     return {
-      critStat: Math.max(0, getNumber(root, ".ap-crit-stat", 658)),
+      critStat: Math.max(0, Math.min(750, getNumber(root, ".ap-crit-stat", 658))),
       weaponQuality: Math.max(0, Math.min(100, getNumber(root, ".ap-weapon-quality", 100))),
-      astrogemLv: Math.max(0, getNumber(root, ".ap-astrogem-lv", 56)),
+      astrogemLv: Math.max(0, Math.min(100, getNumber(root, ".ap-astrogem-lv", 56))),
 
       ring1Rate: getSelect(root, ".ap-ring1-rate", "Mid"),
       ring1Dmg: getSelect(root, ".ap-ring1-dmg", "High"),
@@ -175,6 +293,10 @@
 
       yearning: getCheckbox(root, ".ap-yearning", true),
       evoKarmaRank: parseInt(getSelect(root, ".ap-evo-karma", "6"), 10) || 6,
+
+      demonDmgPct: Math.max(0, Math.min(15, getNumber(root, ".ap-brace-demon-dmg", 7))),
+      braceCritStatEquipped: Math.max(60, Math.min(120, getNumber(root, ".ap-brace-crit-stat-equipped", 60))),
+      braceSurgeSpec: getCheckbox(root, ".ap-brace-spec-surge", false),
     };
   }
 
@@ -418,12 +540,310 @@
     return { cells, best, baseStats, bestStats };
   }
 
+  // ----- Bracelet Line Comparison -----
+  //
+  // Answers a different question than the grid above: not "what's my best
+  // Ark Passive setup", but "of the bracelet lines I have data for, which
+  // is worth the most DPS". Each candidate line's % is computed against
+  // your current Best Setup (whichever split+keystone pair the grid above
+  // picked) but with your OWN bracelet's Crit Rate/Crit Dmg/Additional Dmg
+  // contributions temporarily zeroed out first - so a candidate line's %
+  // reflects that line's value in isolation, as if it were the only line
+  // on your bracelet, not stacked on top of whatever you already have.
+  // That's the only way to compare candidates against each other on equal
+  // footing (you can't actually run two bracelets at once).
+  //
+  // Formulas verified against Arsonistic's "Brace" sheet (Brace!C2:E22),
+  // cross-checked against the sheet's own cached values where available,
+  // with the following deliberate simplifications - each is a real gap
+  // from the sheet's more complete model, not just an approximation of
+  // implementation detail:
+  //   - Damage +4.5/5/5.5% & Cooldown +2%: the flat Damage % discounted by
+  //     a flat 1.35% assumed cast-rate cost of the +2% Cooldown downside
+  //     (see SKILL_CD_PENALTY above) - a fixed estimate, not a live
+  //     Swiftness/CDR calculation, so it'll drift if your own cast rate
+  //     loss from the downside is far from that assumption.
+  //   - Outgoing Dmg + Damage to Staggered: sheet takes a live "% of DPS
+  //     during Stagger" input; fixed at 5% here (the sheet's own default).
+  //   - Back Attack Damage: sheet derives this from a per-skill Front/Back DPS
+  //     breakdown specific to your class's skill build; fixed at 97% of
+  //     DPS coming from a Back Attack skil instead. Front Damage and
+  //     Non-positional Dmg need that same per-skill breakdown with no
+  //     comparable fixed-% stand-in, so they're left out entirely rather
+  //     than guessed at.
+  //   - Additional Damage vs Demon/Archdemon: the sheet's own Demon Dmg %
+  //     value is exposed as a direct input here (.ap-brace-demon-dmg)
+  //     instead of being derived.
+  //   - Spec +80/100/120: the sheet ties this to your own profile's live
+  //     Spec stat; fixed at SPEC_BASE (1735) here instead, since this
+  //     calculator doesn't otherwise track Spec as a build stat. RE vs
+  //     Surge Deathblade use structurally different formulas (see
+  //     SPEC_BASE and friends above) picked by the radio pair living
+  //     alongside Demon Dmg % / Crit Stat in .ap-brace-compare-inputs.
+  function computeBraceletComparison(inputs) {
+    const gridResult = computeGridAndSummary(inputs);
+    const best = gridResult.best;
+    if (!best) return [];
+    const { keenSense, limitBreak } = best.split;
+    const pair = best.keystone;
+
+    // Baseline: your actual Best Setup, but with every bracelet-sourced
+    // Crit Rate/Crit Dmg/Additional Dmg field reset to None first -
+    // including critRateDual/critDmgDual, since those two checkboxes ARE
+    // the bracelet Crit Rate/Crit Dmg lines' own +1.5% Crit Hit Dmg
+    // synergy (see the "Crit Hit Damage -> Bracelet" checkboxes in the
+    // HTML) - leaving them at the user's real state here would silently
+    // keep crediting a bonus this baseline is supposed to be excluding.
+    // Also strips the crit stat your CURRENT bracelet's own substat roll
+    // contributes to the 658-style Crit Stat total (see .ap-brace-crit-stat-
+    // equipped) - without this, the Crit Stat +80/100/120 candidate below
+    // would silently double-count whatever your equipped bracelet already
+    // grants, the same double-counting bug the dual checkboxes had before.
+    const inputsNB = Object.assign({}, inputs, {
+      braceletRate: "None",
+      braceletDmg: "None",
+      braceletRate2: "None",
+      braceletDmg2: "None",
+      braceletAddA: "None",
+      braceletAddB: "None",
+      critRateDual: false,
+      critDmgDual: false,
+      critStat: Math.max(0, inputs.critStat - inputs.braceCritStatEquipped),
+    });
+    const sharedNB = computeShared(inputsNB);
+    const baselineMult = combinedMultiplier(inputsNB, sharedNB, keenSense, limitBreak, pair);
+    // The Additional Damage candidates' denominator has to match whatever
+    // "add" combinedMultiplier actually used for the winning pair - Master
+    // keystones add a flat +8.5% Add Dmg on top of addDmgBase (addDmgMaster),
+    // non-Master pairs (crit+pulv) don't. Using addDmgBase unconditionally
+    // here was the bug that made these two rows disagree with the sheet
+    // whenever Master won the grid - confirmed against the sheet's cached
+    // Brace!C19:E19 (2.06/2.40/2.75%) vs the old 2.19/2.55/2.92%.
+    const addDmgBaseline = pair.indexOf("master") !== -1 ? sharedNB.addDmgMaster : sharedNB.addDmgBase;
+
+    // Best-combo "flip" check: a candidate can only ever change which of the
+    // 9 split+keystone cells wins if it feeds into effCrit/onCrit/evo/add -
+    // i.e. Crit Rate, Crit Dmg, Crit Stat, and Additional Damage. The flat
+    // standalone lines (Damage+CD, Outgoing, Stagger, Back Dmg) are applied
+    // as a uniform multiplier outside the 9-cell grid entirely, so they
+    // structurally can't change the argmax - no flip check needed for those.
+    const currentBestKey = pair + "|" + best.split.key;
+    function bestPairFor(candidateInputs) {
+      const candShared = computeShared(candidateInputs);
+      let bestKey = null;
+      let bestM = -Infinity;
+      EVOLUTION_SPLITS.forEach((split) => {
+        COMBINED_KEYSTONES.forEach((kp) => {
+          const m = combinedMultiplier(candidateInputs, candShared, split.keenSense, split.limitBreak, kp);
+          if (m > bestM) {
+            bestM = m;
+            bestKey = kp + "|" + split.key;
+          }
+        });
+      });
+      return bestKey;
+    }
+    // Checked at Mid tier only - this is meant as a light heads-up, not a
+    // precise per-tier verdict, and moot anyway once you're running more
+    // than one line at a time.
+    function checkFlip(mutateFn) {
+      const cloned = Object.assign({}, inputsNB);
+      mutateFn(cloned);
+      return bestPairFor(cloned) !== currentBestKey;
+    }
+
+    // Crit Rate/Crit Dmg candidates reuse the exact same computeShared +
+    // critRateTotal + combinedMultiplier machinery as the grid above -
+    // just with one bracelet field swapped from "None" to the candidate
+    // tier, and (for the two lines that carry it) the matching dual
+    // checkbox flipped on - the same computeShared formula the checkboxes
+    // themselves drive, rather than a second hand-rolled copy of it.
+    function critLikeGain(field, tier, dualFlag) {
+      const cloned = Object.assign({}, inputsNB);
+      cloned[field] = tier;
+      if (dualFlag) cloned[dualFlag] = true;
+      const shared = computeShared(cloned);
+      const mult = combinedMultiplier(cloned, shared, keenSense, limitBreak, pair);
+      return mult / baselineMult - 1;
+    }
+
+    function tiers(fn) {
+      return { low: fn("Low"), mid: fn("Mid"), high: fn("High") };
+    }
+
+    // Raw Crit Stat delta candidate (the sheet's "Crit +80/100/120" row) -
+    // mechanically identical to the Crit Rate % Line above once converted,
+    // just fed in as a stat delta rather than a direct rate %, and using
+    // the exact tier values (no Low/Mid/High table lookup needed).
+    function critStatGain(statDelta) {
+      const cloned = Object.assign({}, inputsNB);
+      cloned.critStat = inputsNB.critStat + statDelta;
+      const mult = combinedMultiplier(cloned, sharedNB, keenSense, limitBreak, pair);
+      return mult / baselineMult - 1;
+    }
+
+    const demonDmgPct = inputs.demonDmgPct / 100;
+
+    // Builds the Low/Mid/High portion of a label as plain strings mixed
+    // with colored-token objects, so renderBraceletComparison can color
+    // just the numbers that vary by tier (matching the reference
+    // tooltip's per-line coloring) without regex-parsing label text back
+    // apart to find them.
+    function trip(low, mid, high) {
+      return [
+        { tier: "low", text: low },
+        "/",
+        { tier: "mid", text: mid },
+        "/",
+        { tier: "high", text: high },
+      ];
+    }
+
+    const rows = [
+      {
+        label: ["Crit Rate +", ...trip("3.4", "4.2", "5"), "% & Crit Hit Damage +1.5%"],
+        ...tiers((t) => critLikeGain("braceletRate", t, "critRateDual")),
+        flipsBest: checkFlip((c) => { c.braceletRate = "Mid"; c.critRateDual = true; }),
+      },
+      {
+        label: ["Crit Damage +", ...trip("6.8", "8.4", "10"), "% & Crit Hit Damage +1.5%"],
+        ...tiers((t) => critLikeGain("braceletDmg", t, "critDmgDual")),
+        flipsBest: checkFlip((c) => { c.braceletDmg = "Mid"; c.critDmgDual = true; }),
+      },
+      {
+        label: ["Crit Rate +", ...trip("3.4", "4.2", "5"), "%"],
+        ...tiers((t) => critLikeGain("braceletRate", t, null)),
+        flipsBest: checkFlip((c) => { c.braceletRate = "Mid"; }),
+      },
+      {
+        label: ["Crit Damage +", ...trip("6.8", "8.4", "10"), "%"],
+        ...tiers((t) => critLikeGain("braceletDmg", t, null)),
+        flipsBest: checkFlip((c) => { c.braceletDmg = "Mid"; }),
+      },
+      {
+        label: ["Crit Stat +", ...trip("80", "100", "120")],
+        note: "Set your current bracelet so this isn't double-counted.",
+        low: critStatGain(CRIT_STAT_TABLE.Low),
+        mid: critStatGain(CRIT_STAT_TABLE.Mid),
+        high: critStatGain(CRIT_STAT_TABLE.High),
+        flipsBest: checkFlip((c) => { c.critStat = inputsNB.critStat + CRIT_STAT_TABLE.Mid; }),
+      },
+      {
+        label: ["Outgoing Damage +", ...trip("4.5", "5", "5.5"), "% & Skill Cooldown +", { downside: true, text: "2" }, "%"],
+        note: "Estimated damage accounts for +CDR% penalty.",
+        low: DAMAGE_CD_TABLE.Low,
+        mid: DAMAGE_CD_TABLE.Mid,
+        high: DAMAGE_CD_TABLE.High,
+      },
+      {
+        label: ["Outgoing Damage +", ...trip("2", "2.5", "3"), "% & Damage to Staggered +", ...trip("4", "4.5", "5"), "%"],
+        note: "Assumes " + (STAGGER_DPS_SHARE * 100).toFixed(0) + "% of DPS happens during stagger.",
+        low: OUTGOING_DMG_TABLE.Low + STAGGER_DMG_TABLE.Low * STAGGER_DPS_SHARE,
+        mid: OUTGOING_DMG_TABLE.Mid + STAGGER_DMG_TABLE.Mid * STAGGER_DPS_SHARE,
+        high: OUTGOING_DMG_TABLE.High + STAGGER_DMG_TABLE.High * STAGGER_DPS_SHARE,
+      },
+      {
+        label: ["Outgoing Damage +", ...trip("2", "2.5", "3"), "%"],
+        low: OUTGOING_DMG_TABLE.Low,
+        mid: OUTGOING_DMG_TABLE.Mid,
+        high: OUTGOING_DMG_TABLE.High,
+      },
+      {
+        id: "addB",
+        label: ["Additional Damage +", ...trip("2.5", "3", "3.5"), "% & Dmg vs Demon/Archdemon +2.5%"],
+        note: "Compare to Additional Damage line for value vs regular foes.",
+        low: (BRACELET_ADD_B_TABLE.Low / (1 + addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + demonDmgPct) + 1) - 1,
+        mid: (BRACELET_ADD_B_TABLE.Mid / (1 + addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + demonDmgPct) + 1) - 1,
+        high: (BRACELET_ADD_B_TABLE.High / (1 + addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + demonDmgPct) + 1) - 1,
+        flipsBest: checkFlip((c) => { c.braceletAddB = "Mid"; }),
+      },
+      {
+        id: "addA",
+        label: ["Additional Damage +", ...trip("3", "3.5", "4"), "%"],
+        low: BRACELET_ADD_A_TABLE.Low / (1 + addDmgBaseline),
+        mid: BRACELET_ADD_A_TABLE.Mid / (1 + addDmgBaseline),
+        high: BRACELET_ADD_A_TABLE.High / (1 + addDmgBaseline),
+        flipsBest: checkFlip((c) => { c.braceletAddA = "Mid"; }),
+      },
+      {
+        label: ["Back Attack Damage +", ...trip("2.5", "3", "3.5"), "%"],
+        note: "Assumes " + (BACK_ATTACK_DPS_SHARE * 100).toFixed(0) + "% of DPS comes from back attack skills.",
+        low: BACK_DMG_TABLE.Low * BACK_ATTACK_DPS_SHARE,
+        mid: BACK_DMG_TABLE.Mid * BACK_ATTACK_DPS_SHARE,
+        high: BACK_DMG_TABLE.High * BACK_ATTACK_DPS_SHARE,
+      },
+    ];
+
+    // Spec +80/100/120: RE and Surge Deathblade share the same formula
+    // (see the constants/helper above), differing by damage share and
+    // Awakening share - picked by the little radio pair sharing the
+    // Demon Dmg % / Crit Stat inputs row rather than mixed into the rest
+    // of the crit-focused inputs.
+    {
+      const isSurge = !!inputs.braceSurgeSpec;
+      const cfg = isSurge ? SURGE_DEATHBLADE_SPEC : RE_DEATHBLADE_SPEC;
+      const k = specGainPerPoint(deathbladeSpecMultiplier, cfg.share, cfg.awakeningShare);
+      // One small hover tag per named build variant (111/313 for RE,
+      // 222/333 for Surge), each independently showing that build's own
+      // tier values on hover rather than one shared note/icon for all of
+      // them.
+      const buildTags = cfg.builds.map((b) => {
+        const bk = specGainPerPoint(deathbladeSpecMultiplier, b.share, cfg.awakeningShare);
+        const tiers = [80, 100, 120].map((v) => formatPctBare(bk * v)).join("/");
+        return { tag: b.tag, tooltip: b.tag + " build (" + (b.share * 100).toFixed(0) + "% share): " + tiers };
+      });
+      rows.push({
+        id: "spec",
+        label: ["Spec +", ...trip("80", "100", "120")],
+        low: k * 80,
+        mid: k * 100,
+        high: k * 120,
+        buildTags,
+        // Both RE and Surge are now pure damage-share models (the CDR
+        // term is gone entirely, not just for RE) - so this line only
+        // reflects each build's direct damage share and misses whatever
+        // Spec does outside raw DPS (e.g. cooldown/meter effects) for
+        // either class. Shown as a small always-visible tag with the
+        // explanation in its hover tooltip rather than a permanent note
+        // block under the table.
+        specDmgOnly: true,
+        specDmgOnlyNote: "This line only reflects direct damage share from Spec - it doesn't capture any non-damage effects Spec offers.",
+      });
+    }
+
+    rows.sort((a, b) => b.mid - a.mid);
+
+    // The Archdemon line's displayed Mid value already assumes you're
+    // fighting a Demon/Archdemon target, which most boss fights aren't -
+    // so a pure numeric sort tends to rank it above the plain Additional
+    // Damage line it's really just a variant of, plus a demon-only bonus
+    // that often doesn't apply. Force it to always sort directly below
+    // that line instead, every time, so it doesn't read as a strictly
+    // better pick by default.
+    const addBIdx = rows.findIndex((r) => r.id === "addB");
+    const addAIdx = rows.findIndex((r) => r.id === "addA");
+    if (addBIdx !== -1 && addAIdx !== -1) {
+      const [addBRow] = rows.splice(addBIdx, 1);
+      const insertAt = rows.findIndex((r) => r.id === "addA") + 1;
+      rows.splice(insertAt, 0, addBRow);
+    }
+
+    return rows;
+  }
+
   // ----- Format helper -----
   // Always 2 decimals - consistent across every field tag rather than
   // switching precision based on magnitude.
   function formatPct(val) {
     if (!val) return "(0%)";
     return "(" + (val * 100).toFixed(2) + "%)";
+  }
+
+  // Same rounding as formatPct but bare (no parens) - used for the
+  // Bracelet Line Comparison's tier values, which stand alone rather than
+  // trailing an input control.
+  function formatPctBare(val) {
+    return ((val || 0) * 100).toFixed(2) + "%";
   }
 
   // ----- Render value displays -----
@@ -570,6 +990,107 @@
     }
   }
 
+  // ----- Bracelet Line Comparison rendering -----
+  // Renders into a <tbody> as a compact table (Line | Low | Mid | High)
+  // instead of the old stacked-card layout - one <tr> per line instead of a
+  // bordered card each, and full-width now that the section lives outside
+  // the sticky .ap-calc-live column (see resources.md), so this reads as a
+  // glance-able table rather than a scroll of cards.
+  function renderBraceletComparison(root, rows) {
+    const container = root.querySelector(".ap-brace-compare-rows");
+    const footnote = root.querySelector(".ap-brace-compare-flip-note");
+    if (!container) return;
+
+    container.innerHTML = "";
+    let anyFlip = false;
+
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+      if (row.flipsBest) anyFlip = true;
+
+      const labelTd = document.createElement("td");
+      labelTd.className = "ap-brace-row-label";
+      // row.label is an array of plain strings and colored-token objects
+      // (see trip() above) rather than one flat string, so the Low/Mid/
+      // High figures embedded in the label itself can be colored - the
+      // reference tooltip colors its own per-line numbers this way,
+      // rather than the flat percentages in the table columns.
+      row.label.forEach((part) => {
+        if (typeof part === "string") {
+          labelTd.appendChild(document.createTextNode(part));
+          return;
+        }
+        const span = document.createElement("span");
+        span.className = part.downside ? "ap-brace-label-downside" : "ap-brace-label-" + part.tier;
+        span.textContent = part.text;
+        labelTd.appendChild(span);
+      });
+      if (row.flipsBest) {
+        labelTd.appendChild(document.createTextNode(" \u2020"));
+      }
+      if (row.specDmgOnly) {
+        // Small always-visible tag (not a permanent note block) so the
+        // row stays one line tall - the explanation lives in this badge's
+        // own hover tooltip instead of a paragraph under the table.
+        const badge = document.createElement("span");
+        badge.className = "ap-brace-label-caveat";
+        badge.textContent = "dmg only";
+        badge.title = row.specDmgOnlyNote;
+        badge.setAttribute("role", "img");
+        badge.setAttribute("aria-label", row.specDmgOnlyNote);
+        labelTd.appendChild(badge);
+      }
+      if (row.buildTags) {
+        // One compact hover tag per named build variant (111/313 for RE,
+        // 222/333 for Surge) - each shows that specific build's own
+        // tier values in its tooltip.
+        row.buildTags.forEach((b) => {
+          const tag = document.createElement("span");
+          tag.className = "ap-brace-build-tag";
+          tag.textContent = b.tag;
+          tag.title = b.tooltip;
+          tag.setAttribute("role", "img");
+          tag.setAttribute("aria-label", b.tooltip);
+          labelTd.appendChild(tag);
+        });
+      }
+      if (row.note) {
+        // Caveat text moves into a hover tooltip (native `title`) instead
+        // of a permanent line under the label - keeps every row to one
+        // line instead of the label wrapping vertically for a caveat most
+        // readers only need once. The little "i" badge is what tells a
+        // reader there's something to hover in the first place.
+        const infoEl = document.createElement("span");
+        infoEl.className = "ap-brace-info-icon";
+        infoEl.textContent = "i";
+        infoEl.title = row.note;
+        infoEl.setAttribute("role", "img");
+        infoEl.setAttribute("aria-label", row.note);
+        labelTd.appendChild(infoEl);
+      }
+      tr.appendChild(labelTd);
+
+      ["low", "mid", "high"].forEach((tier) => {
+        const td = document.createElement("td");
+        td.className = "ap-brace-tier-val";
+        td.textContent = formatPctBare(row[tier]);
+        tr.appendChild(td);
+      });
+
+      // The Archdemon line's displayed values only pay off against a
+      // Demon/Archdemon target - greyed out here so they read as
+      // situational rather than a plain, always-on gain like every other
+      // row's numbers.
+      if (row.id === "addB") tr.classList.add("ap-brace-row-situational");
+
+      container.appendChild(tr);
+    });
+
+    if (footnote) {
+      footnote.style.display = anyFlip ? "" : "none";
+    }
+  }
+
   // ----- Local storage persistence -----
   // Saves every field's current value under one key so a reader filling
   // this out doesn't have to redo it on every reload. Best-effort: some
@@ -583,7 +1104,7 @@
       const data = {};
       root.querySelectorAll("input, select").forEach((el) => {
         if (!el.id) return;
-        data[el.id] = el.type === "checkbox" ? el.checked : el.value;
+        data[el.id] = (el.type === "checkbox" || el.type === "radio") ? el.checked : el.value;
       });
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (e) {
@@ -600,7 +1121,7 @@
         if (!el.id || !(el.id in data)) return; // no stored value, or a
         // field that didn't exist when this was saved - leave it at its
         // authored HTML default rather than guessing.
-        if (el.type === "checkbox") {
+        if (el.type === "checkbox" || el.type === "radio") {
           el.checked = !!data[el.id];
         } else if (el.tagName === "SELECT") {
           // Only restore if the stored value still matches a real option -
@@ -628,7 +1149,7 @@
 
     // Restore every input and select in this container to its HTML default
     root.querySelectorAll("input, select").forEach((el) => {
-      if (el.type === "checkbox") {
+      if (el.type === "checkbox" || el.type === "radio") {
         el.checked = el.defaultChecked;
       } else if (el.tagName === "SELECT") {
         const defaultOpt = Array.from(el.options).find((opt) => opt.defaultSelected) || el.options[0];
@@ -661,6 +1182,7 @@
     const result = computeGridAndSummary(inputs);
     renderGrid(root, result);
     updateInputDisplays(root, inputs);
+    renderBraceletComparison(root, computeBraceletComparison(inputs));
 
     // Every range slider (Back-Attack Rate, Adrenaline Uptime, ...) shows
     // its live value as "N%" next to it - handled generically here so
@@ -746,7 +1268,7 @@
     document.addEventListener("DOMContentLoaded", init);
   }
 
-  window.__arkPassiveCalc = { computeGridAndSummary, EVOLUTION_SPLITS, COMBINED_KEYSTONES };
+  window.__arkPassiveCalc = { computeGridAndSummary, computeBraceletComparison, EVOLUTION_SPLITS, COMBINED_KEYSTONES };
 })();
 
 // ---------------------------------------------------------------------

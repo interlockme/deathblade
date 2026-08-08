@@ -53,7 +53,7 @@
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-crit-stat">Crit Stat</label>
       <span class="ap-value-display" data-for="ap-crit-stat"></span>
-      <input type="number" id="ap-crit-stat" class="ap-crit-stat" min="0" step="1" value="658">
+      <input type="number" id="ap-crit-stat" class="ap-crit-stat" min="0" max="750" step="1" value="658">
     </div>
     <div class="ap-calc-field-row ap-calc-field-row-pair">
       <label class="ap-calc-field-label">Rings</label>
@@ -240,7 +240,7 @@
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-astrogem-lv">Astrogem Level</label>
       <span class="ap-value-display" data-for="ap-astrogem-lv"></span>
-      <input type="number" id="ap-astrogem-lv" class="ap-astrogem-lv" min="0" step="1" value="56">
+      <input type="number" id="ap-astrogem-lv" class="ap-astrogem-lv" min="0" max="100" step="1" value="56">
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-sh-pet">Stronghold Pet</label>
@@ -389,6 +389,63 @@
 </div> <!-- end ap-calc-live -->
 
 </div> <!-- end ap-calc-layout -->
+
+<!-- Bracelet Line Comparison: a different question than the grid above -
+     "of the bracelet lines I have data for, which is worth the most DPS"
+     rather than "what's my best Ark Passive setup". Values are computed
+     against your Best Setup above with your currently-selected bracelet
+     lines zeroed out first, so each % is that line's value on its own -
+     see the JS comment above computeBraceletComparison() for the full
+     methodology and the deliberate simplifications (Damage+CD is the
+     sheet's own averaged flat+CDR estimate for its reference build,
+     Stagger/Back-Attack DPS-share are fixed assumptions, Front Dmg/
+     Non-positional Dmg are left out entirely). Deliberately full-width and
+     OUTSIDE .ap-calc-live (which is position: sticky) - a stacked list of
+     11 lines in that narrow sticky column was expanding a fixed-height
+     column that's supposed to stay glance-able while you scroll the gear
+     list; living here as a plain, non-sticky, full-width table gives it
+     room to breathe horizontally instead of pushing that column's height
+     around. -->
+<details class="ap-brace-compare">
+  <summary>Bracelet Line Comparison</summary>
+  <div class="ap-brace-compare-body">
+    <p class="ap-brace-compare-intro">Candidate bracelet lines, valued as if each were the only line on your bracelet, against your Best Setup above.</p>
+    <div class="ap-brace-compare-inputs">
+      <div class="ap-calc-field-row">
+        <label class="ap-calc-field-label" for="ap-brace-demon-dmg">Demon Dmg %</label>
+        <input type="number" id="ap-brace-demon-dmg" class="ap-brace-demon-dmg" min="0" max="15" step="0.1" value="7">
+      </div>
+      <div class="ap-calc-field-row">
+        <label class="ap-calc-field-label" for="ap-brace-crit-stat-equipped">Crit Stat from Current Bracelet</label>
+        <input type="number" id="ap-brace-crit-stat-equipped" class="ap-brace-crit-stat-equipped" min="60" max="120" step="1" value="82">
+      </div>
+      <div class="ap-brace-spec-toggle">
+        <span class="ap-calc-field-label">Spec Scaling</span>
+        <label class="ap-brace-radio-label">
+          <input type="radio" name="ap-brace-deathblade-spec" id="ap-brace-spec-re" class="ap-brace-spec-re" checked>
+          RE
+        </label>
+        <label class="ap-brace-radio-label">
+          <input type="radio" name="ap-brace-deathblade-spec" id="ap-brace-spec-surge" class="ap-brace-spec-surge">
+          Surge
+        </label>
+      </div>
+    </div>
+    <table class="ap-brace-compare-table">
+      <thead>
+        <tr>
+          <th class="ap-brace-th-label">Line</th>
+          <th class="ap-brace-th-low">Low</th>
+          <th class="ap-brace-th-mid">Mid</th>
+          <th class="ap-brace-th-high">High</th>
+        </tr>
+      </thead>
+      <tbody class="ap-brace-compare-rows"></tbody>
+    </table>
+    <p class="ap-brace-compare-flip-note">&dagger; Equipping this line's Mid tier may change which split/keystone combo is your actual best - worth a re-check.</p>
+    <p class="ap-brace-compare-footer-note">High item levels and support buffs cause flat bonuses (WP/Dex) to scale poorly, adding at best 2% and 1% respectively.</p>
+  </div>
+</details>
 
 </div> <!-- end ap-calc -->
 
