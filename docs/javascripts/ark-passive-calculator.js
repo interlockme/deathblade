@@ -104,6 +104,18 @@
     Mid: (1 + DAMAGE_CD_RAW_TABLE.Mid) / (1 + SKILL_CD_PENALTY) - 1,
     High: (1 + DAMAGE_CD_RAW_TABLE.High) / (1 + SKILL_CD_PENALTY) - 1,
   };
+  // Surge-only temporary override for the above: Surge Deathblade's actual
+  // in-game cast-rate loss from the +2% Cooldown downside doesn't match the
+  // SKILL_CD_PENALTY model RE was tuned against, so until a game balance
+  // patch reconciles the two classes, Surge instead takes a flat -1 off the
+  // raw 4.5/5/5.5% (i.e. 3.5/4/4.5%) rather than the divided-by-penalty
+  // figure above. RE is untouched. Remove this table (and the branch in the
+  // Damage+CD row below that picks it) once that patch lands.
+  const DAMAGE_CD_SURGE_TABLE = {
+    Low: DAMAGE_CD_RAW_TABLE.Low - 0.01,
+    Mid: DAMAGE_CD_RAW_TABLE.Mid - 0.01,
+    High: DAMAGE_CD_RAW_TABLE.High - 0.01,
+  };
   // Crit stat delta candidates for the raw "Crit +80/100/120" bracelet line
   // (a base-stat roll, distinct from the Crit Rate % Line below) - added
   // straight onto critStat the same way the sheet adds it onto UCrit.
@@ -701,12 +713,12 @@
 
     const rows = [
       {
-        label: ["Crit Rate +", ...trip("3.4", "4.2", "5"), "% & Crit Hit Damage +1.5%"],
+        label: ["Crit Rate +", ...trip("3.4", "4.2", "5"), "% & Crit Hit Damage +", { tier: "fixed", text: "1.5" }, "%"],
         ...tiers((t) => critLikeGain("braceletRate", t, "critRateDual")),
         flipsBest: checkFlip((c) => { c.braceletRate = "Mid"; c.critRateDual = true; }),
       },
       {
-        label: ["Crit Damage +", ...trip("6.8", "8.4", "10"), "% & Crit Hit Damage +1.5%"],
+        label: ["Crit Damage +", ...trip("6.8", "8.4", "10"), "% & Crit Hit Damage +", { tier: "fixed", text: "1.5" }, "%"],
         ...tiers((t) => critLikeGain("braceletDmg", t, "critDmgDual")),
         flipsBest: checkFlip((c) => { c.braceletDmg = "Mid"; c.critDmgDual = true; }),
       },
@@ -731,9 +743,12 @@
       {
         label: ["Outgoing Damage +", ...trip("4.5", "5", "5.5"), "% & Skill Cooldown +", { downside: true, text: "2" }, "%"],
         note: "Estimated damage accounts for +CDR% penalty.",
-        low: DAMAGE_CD_TABLE.Low,
-        mid: DAMAGE_CD_TABLE.Mid,
-        high: DAMAGE_CD_TABLE.High,
+        // Surge uses the temporary flat -1 override (see
+        // DAMAGE_CD_SURGE_TABLE above) instead of the divided-by-penalty
+        // figures RE still uses.
+        low: inputs.braceSurgeSpec ? DAMAGE_CD_SURGE_TABLE.Low : DAMAGE_CD_TABLE.Low,
+        mid: inputs.braceSurgeSpec ? DAMAGE_CD_SURGE_TABLE.Mid : DAMAGE_CD_TABLE.Mid,
+        high: inputs.braceSurgeSpec ? DAMAGE_CD_SURGE_TABLE.High : DAMAGE_CD_TABLE.High,
       },
       {
         label: ["Outgoing Damage +", ...trip("2", "2.5", "3"), "% & Damage to Staggered +", ...trip("4", "4.5", "5"), "%"],
@@ -750,7 +765,7 @@
       },
       {
         id: "addB",
-        label: ["Additional Damage +", ...trip("2.5", "3", "3.5"), "% & Dmg vs Demon/Archdemon +2.5%"],
+        label: ["Additional Damage +", ...trip("2.5", "3", "3.5"), "% & Dmg vs Demon/Archdemon +", { tier: "fixed", text: "2.5" }, "%"],
         note: "Compare to Additional Damage line for value vs regular foes.",
         low: (BRACELET_ADD_B_TABLE.Low / (1 + addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + demonDmgPct) + 1) - 1,
         mid: (BRACELET_ADD_B_TABLE.Mid / (1 + addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + demonDmgPct) + 1) - 1,

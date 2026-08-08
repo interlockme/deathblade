@@ -2532,10 +2532,10 @@ h3 { color: #4db6ac; }
    coloring readers asked for lives on the bracelet-line labels instead
    (see .ap-brace-label-low/mid/high/downside below). */
 .md-typeset .ap-brace-compare-table th.ap-brace-th-low {
-  color: #4db6ac;
+  color: #7ec4e8;
 }
 .md-typeset .ap-brace-compare-table th.ap-brace-th-mid {
-  color: #7ec4e8;
+  color: #b39ddb;
 }
 .md-typeset .ap-brace-compare-table th.ap-brace-th-high {
   color: #f0a868;
@@ -2557,20 +2557,33 @@ h3 { color: #4db6ac; }
    (e.g. the "3.4/4.2/5" in "Crit Rate +3.4/4.2/5%") carry the tier
    colors - matching the reference tooltip's per-line coloring - rather
    than the flat percentages in the Low/Mid/High columns on the right,
-   which stay plain. The Skill Cooldown line's "+2%" downside figure gets
-   its own red instead, since it's not a Low/Mid/High tier at all - it's
-   the fixed downside baked into that line regardless of tier. */
+   which stay plain. Mid uses the calculator's own purple (matches
+   .ap-calc-mini-field--evo-dmg's --ap-cat elsewhere in the calculator)
+   and Low uses the blue Mid used to use, so this reads consistently with
+   the rest of the calculator's color language. The Skill Cooldown line's
+   "+2%" downside figure gets its own red instead, since it's not a
+   Low/Mid/High tier at all - it's the fixed downside baked into that
+   line regardless of tier. */
 .md-typeset .ap-brace-label-low {
-  color: #4db6ac;
+  color: #7ec4e8;
 }
 .md-typeset .ap-brace-label-mid {
-  color: #7ec4e8;
+  color: #b39ddb;
 }
 .md-typeset .ap-brace-label-high {
   color: #f0a868;
 }
 .md-typeset .ap-brace-label-downside {
   color: #ee83ab;
+}
+/* The fixed "+1.5%" Crit Hit Damage tag on the two Crit Rate/Crit Dmg
+   dual lines, and the fixed "+2.5%" Dmg vs Demon/Archdemon tag on the
+   Additional Damage B line, aren't Low/Mid/High tier figures either -
+   they're flat bonuses that don't change with tier. Colored with the
+   teal/green Low used to use (now freed up by Low's move to blue above)
+   so they still read as a distinct, called-out number. */
+.md-typeset .ap-brace-label-fixed {
+  color: #4db6ac;
 }
 /* Hover tooltip badge for rows with a caveat - replaces the old always-
    visible note line under the label so a caveat doesn't cost vertical
