@@ -36,10 +36,12 @@ extra_javascript:
   - javascripts/extra.js
   - javascripts/cpm-calculator.js
   - javascripts/ark-passive-calculator.js
+  - javascripts/build-data.js
   - javascripts/pentagon-badge.js
   - javascripts/rotation-practice.js
   - javascripts/dps-chart.js
   - javascripts/build-compare.js
+  - javascripts/last-updated.js
 
 extra:
   generator: false

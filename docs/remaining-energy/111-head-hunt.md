@@ -3,7 +3,7 @@
 <p class="page-banner page-banner-danger">High difficulty — very little room for error</p>
 
 <div class="build-card-row" markdown>
-<div class="build-card" markdown>
+<div class="build-card" data-updated="2026-08-07" markdown>
 
 <div class="build-stats">
 <div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">9 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 90%"></div></div></div>
@@ -25,7 +25,7 @@
        (9), consistent with the rest of the RE family.
      - Mobility 5 is standard across all RE builds.
      - Recovery/Speed are this build's own read - edit freely. -->
-<div class="pentagon-badge" data-values="9,8.5,5,7,10" data-labels="Difficulty,DPS,Mobility,Recovery,Speed" markdown>
+<div class="pentagon-badge" data-build="111-head-hunt" data-family="re" markdown>
 <div class="pentagon-badge-title">Build Profile</div>
 <div class="pentagon-svg-mount"></div>
 <div class="pentagon-badge-extra" markdown>

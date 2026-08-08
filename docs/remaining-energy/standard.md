@@ -3,7 +3,7 @@
 <p class="page-banner page-banner-warning">Placeholder — full writeup coming soon</p>
 
 <div class="build-card-row" markdown>
-<div class="build-card" markdown>
+<div class="build-card" data-updated="2026-08-07" markdown>
 
 <div class="build-stats">
 <div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">7 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 70%"></div></div></div>

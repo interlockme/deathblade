@@ -6,7 +6,7 @@
     ![333 Blitz meme](../assets/surge/blitz-meme.png)
 
 <div class="build-card-row" markdown>
-<div class="build-card" markdown>
+<div class="build-card" data-updated="2026-08-07" markdown>
 
 <div class="build-stats">
 <div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">8 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 80%"></div></div></div>
@@ -33,7 +33,7 @@
        risk, HIGHER IS WORSE here unlike every other axis - keep the
        data-caption below in sync if you tweak this value.
      - Speed is this build's own read - edit freely. -->
-<div class="pentagon-badge" data-values="8,8,8.5,9,6" data-labels="Difficulty,DPS,Mobility,Exposure,Speed" data-caption="Exposure: back-attack &amp; positional risk." markdown>
+<div class="pentagon-badge" data-build="333-blitz" data-family="surge" markdown>
 <div class="pentagon-badge-title">Build Profile</div>
 <div class="pentagon-svg-mount"></div>
 <div class="pentagon-badge-extra" markdown>

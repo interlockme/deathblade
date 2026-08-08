@@ -3,7 +3,7 @@
 <p class="page-banner page-banner-warning">Not available in NA servers yet</p>
 
 <div class="build-card-row" markdown>
-<div class="build-card" markdown>
+<div class="build-card" data-updated="2026-08-07" markdown>
 
 <div class="build-stats">
 <div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">7 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 70%"></div></div></div>
@@ -30,7 +30,7 @@
        risk, HIGHER IS WORSE here unlike every other axis - keep the
        data-caption below in sync if you tweak this value.
      - Mobility/Speed are this build's own read - edit freely. -->
-<div class="pentagon-badge" data-values="7,8.5,10,7.5,8" data-labels="Difficulty,DPS,Mobility,Exposure,Speed" data-caption="Exposure: back-attack &amp; positional risk." markdown>
+<div class="pentagon-badge" data-build="222-speedy" data-family="surge" markdown>
 <div class="pentagon-badge-title">Build Profile</div>
 <div class="pentagon-svg-mount"></div>
 <div class="pentagon-badge-extra" markdown>

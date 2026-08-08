@@ -7,23 +7,12 @@
 // numbers and duplicate the same links.
 //
 // EASY EDIT GUIDE:
-//   All build data lives in BUILD_FAMILIES below, one entry per build:
-//   the same 5 pentagon values/labels used on that build's own page (see
-//   pentagon-badge.js's top comment for the axis scale writeup), plus the
-//   difficulty/trixion/playstyle/bestFor fields the old markdown table
-//   used to carry. Keep this in sync by hand when a build page's own
-//   pentagon-badge or build-card stats change - there's no single source
-//   of truth shared between the two.
-//
-//   - recommended: true adds the small star next to the name (matches the
-//     old table's "star" suffix).
-//   - trixion: null (not a number) renders as "-" with no bar, for builds
-//     that don't have a Trixion parse yet (e.g. Standard).
-//   - trixionConfirmed: false switches the Trixion bar to the same
-//     diagonal-stripe "unconfirmed" fill used on 333 (Blitz)'s own page.
-//   - compareEnabled: false keeps a build in the table (it still gets a
-//     row + a link out) but out of the two-build picker below, for
-//     builds without full pentagon data (Standard has no pentagon).
+//   All build data lives in build-data.js (window.DB_BUILD_DATA), NOT in
+//   this file - that's the single source of truth shared with
+//   pentagon-badge.js, so editing a build's numbers there updates both
+//   the build's own pentagon badge and this comparison card. See
+//   build-data.js's own top comment for the field-by-field writeup
+//   (recommended/trixion/trixionConfirmed/compareEnabled, etc).
 //
 //   To add the widget to a page: <div class="build-compare"
 //   data-family="re"></div> (or data-family="surge"). Nothing else
@@ -41,118 +30,6 @@
   // be built as real site URLs instead of markdown-relative paths - see
   // detectSiteRoot()'s comment below for why that distinction matters.
   var FAMILY_FOLDER = { re: "remaining-energy", surge: "surge" };
-
-  var BUILD_FAMILIES = {
-    re: {
-      axisLabels: ["Difficulty", "DPS", "Mobility", "Recovery", "Speed"],
-      // true = lower is better on this axis. All RE axes are higher-is-better.
-      invert: [false, false, false, false, false],
-      defaultPair: [0, 1], // 333 (Ceiling) vs 313 (High Floor)
-      builds: [
-        {
-          id: "333-ceiling",
-          name: "333 (Ceiling)",
-          accent: "#ee83ab",
-          pentagon: [8.5, 9, 5, 8.5, 8.5],
-          difficulty: 8.5,
-          trixion: 1.2,
-          trixionConfirmed: true,
-          playstyle: "Skill Reset",
-          bestFor: "\u2728 Well-rounded damage ceiling",
-          recommended: true,
-          compareEnabled: true,
-        },
-        {
-          id: "313-high-floor",
-          name: "313 (High Floor)",
-          accent: "#b39ddb",
-          pentagon: [8, 8, 5, 9, 10],
-          difficulty: 8,
-          trixion: 1.17,
-          trixionConfirmed: true,
-          playstyle: "Fast & Comfy",
-          bestFor: "\uD83D\uDC9C Comfort and recovery",
-          recommended: false,
-          compareEnabled: true,
-        },
-        {
-          id: "111-head-hunt",
-          name: "111 (Head Hunt)",
-          accent: "#4db6ac",
-          pentagon: [9, 8.5, 5, 7, 10],
-          difficulty: 9,
-          trixion: 1.18,
-          trixionConfirmed: true,
-          playstyle: "Fast & Punishing",
-          bestFor: "\uD83D\uDD2A Skill expression and stagger",
-          recommended: false,
-          compareEnabled: true,
-        },
-        {
-          id: "standard",
-          name: "Standard",
-          accent: "#8d8b93",
-          pentagon: null,
-          difficulty: 7,
-          trixion: null,
-          trixionConfirmed: true,
-          playstyle: "AFK Simulator",
-          bestFor: "\uD83C\uDF31 Pre-Ark Grid beginner build",
-          recommended: false,
-          compareEnabled: false,
-        },
-      ],
-    },
-    surge: {
-      axisLabels: ["Difficulty", "DPS", "Mobility", "Exposure", "Speed"],
-      // Exposure is back-attack/positional risk - lower is better, unlike
-      // every other axis (matches the data-caption on each build's own
-      // pentagon-badge).
-      invert: [false, false, false, true, false],
-      defaultPair: [0, 1], // 111 (Classic) vs 222 (Speedy)
-      builds: [
-        {
-          id: "111-classic",
-          name: "111 (Classic)",
-          accent: "#ee83ab",
-          pentagon: [7.5, 9, 8, 6.5, 7],
-          difficulty: 7.5,
-          trixion: 1.23,
-          trixionConfirmed: true,
-          playstyle: "Burst Combo",
-          bestFor: "\uD83E\uDD81 Classic Surge gameplay",
-          recommended: true,
-          compareEnabled: true,
-        },
-        {
-          id: "222-speedy",
-          name: "222 (Speedy)",
-          accent: "#4db6ac",
-          pentagon: [7, 8.5, 10, 7.5, 8],
-          difficulty: 7,
-          trixion: 1.22,
-          trixionConfirmed: true,
-          playstyle: "Max Mobility",
-          bestFor: "\uD83D\uDC06 Simple uptime focus",
-          recommended: false,
-          compareEnabled: true,
-        },
-        {
-          id: "333-blitz",
-          name: "333 (Blitz)",
-          accent: "#b39ddb",
-          pentagon: [8, 8, 8.5, 9, 6],
-          difficulty: 8,
-          trixion: 1.2,
-          trixionConfirmed: false,
-          playstyle: "Skill Reset",
-          bestFor: "\uD83D\uDC2F Waiting for buffs",
-          recommended: false,
-          compareEnabled: true,
-        },
-      ],
-    },
-  };
 
   function detectSiteRoot() {
     // Same trick dps-chart.js uses: read this script's own fully-resolved
@@ -456,7 +333,7 @@
   }
 
   function renderWidget(container, family) {
-    var data = BUILD_FAMILIES[family];
+    var data = window.DB_BUILD_DATA && window.DB_BUILD_DATA[family];
     if (!data) return;
 
     var compareBuilds = data.builds.filter(function (b) { return b.compareEnabled !== false; });

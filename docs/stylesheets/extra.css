@@ -946,6 +946,30 @@ h3 { color: #4db6ac; }
   border-radius: 10px;
   padding: 1em 1.2em 1.1em;
   margin: 1em 0 1.5em;
+  position: relative; /* anchors .last-updated-badge to this card's own corner */
+}
+/* Subtle "last updated" corner tag - sits inside the padding this card
+   already has (padding-bottom: 1.1em above), so it takes zero extra
+   layout space and never pushes the stat boxes or bullet list above it.
+   Low opacity by default so it reads as a faint watermark, not a UI
+   element competing for attention - full opacity + real date on hover
+   for anyone who's actually looking for it. Populated by
+   javascripts/last-updated.js from the card's data-updated attribute;
+   renders nothing if that attribute is missing. */
+.last-updated-badge {
+  position: absolute;
+  right: 1.1em;
+  bottom: 0.3em;
+  font-size: 0.62rem;
+  letter-spacing: 0.01em;
+  color: var(--md-default-fg-color--light);
+  opacity: 0.38;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.md-typeset .build-card:hover .last-updated-badge {
+  opacity: 0.85;
 }
 .md-typeset .build-stats {
   display: flex;

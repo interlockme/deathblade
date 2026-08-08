@@ -1,7 +1,7 @@
 # 333 (Ceiling) ✨
 
 <div class="build-card-row" markdown>
-<div class="build-card" markdown>
+<div class="build-card" data-updated="2026-08-07" markdown>
 
 <div class="build-stats">
 <div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">8.5 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 85%"></div></div></div>
@@ -25,7 +25,7 @@
      - Mobility 5 is standard across all RE builds.
      - Recovery/Speed are this build's own read - edit freely.
      See javascripts/pentagon-badge.js top comment for the full scale writeup. -->
-<div class="pentagon-badge" data-values="8.5,9,5,8.5,8.5" data-labels="Difficulty,DPS,Mobility,Recovery,Speed" markdown>
+<div class="pentagon-badge" data-build="333-ceiling" data-family="re" markdown>
 <div class="pentagon-badge-title">Build Profile</div>
 <div class="pentagon-svg-mount"></div>
 <div class="pentagon-badge-extra" markdown>

@@ -1,14 +1,20 @@
 // Build-profile pentagon badge, drawn next to .build-card on build pages.
 //
 // EASY EDIT GUIDE (read this before touching a build's numbers):
-//   Each badge is just a <div class="pentagon-badge" data-values="...">
-//   in the build's markdown page - see stylesheets/extra.css's comment
-//   above ".build-card-row" for the exact markup shape. To change a
-//   build's stats, edit the data-values list there; nothing here needs
-//   to change. This file only turns those 5 numbers into the SVG shape.
+//   Each badge is just a <div class="pentagon-badge" data-build="..."
+//   data-family="...">, e.g. data-build="333-ceiling" data-family="re" -
+//   see stylesheets/extra.css's comment above ".build-card-row" for the
+//   exact markup shape. The actual numbers - pentagon values, axis
+//   labels, accent color - all live in build-data.js
+//   (window.DB_BUILD_DATA), the SAME file build-compare.js reads for the
+//   essentials.md comparison card. Edit a build's numbers there ONCE and
+//   both this badge and that card update. This file only turns whatever
+//   it looks up into the SVG shape - nothing to change here for a normal
+//   stat tweak.
 //
 //   Axis order is always: Difficulty, DPS, Mobility, Recovery/Exposure,
-//   Speed - all on a 0-10 scale, matched 1:1 with data-labels.
+//   Speed - all on a 0-10 scale, matched 1:1 with each family's
+//   axisLabels in build-data.js.
 //
 //   DPS is NOT the raw Trixion multiplier from the stat-bar above the
 //   badge. Trixion multipliers are comparable across every class in the
@@ -27,14 +33,17 @@
 //   Recovery vs Exposure: Remaining Energy builds use "Recovery" (higher
 //   is better - more self-sustain). Surge builds don't really have a
 //   Recovery stat, so that axis is repurposed as "Exposure" (back-attack
-//   / positional risk) where HIGHER IS WORSE. If you add a data-caption
-//   on a Surge badge, make sure it still says lower-is-safer so the
-//   inverted axis doesn't read as "bigger = stronger" like the other
-//   four do.
+//   / positional risk) where HIGHER IS WORSE. The family-level axisNote
+//   in build-data.js (Surge only) supplies the hover tooltip + caption
+//   line reminding readers that axis is inverted, so it doesn't read as
+//   "bigger = stronger" like the other four do.
 //
-//   To add a badge to a new build page: copy an existing page's
-//   .pentagon-badge block, swap the data-values/data-labels, and (for a
-//   Surge build) keep the data-caption attribute; drop it for RE builds.
+//   To add a badge to a new build page: add the build's entry to
+//   build-data.js first, then drop <div class="pentagon-badge"
+//   data-build="new-build-id" data-family="re"> (or "surge") wherever
+//   the badge belongs. Backward compat: a badge can still be given raw
+//   data-values/data-labels/data-accent/data-caption directly instead,
+//   for a one-off pentagon that isn't part of a build family.
 
 (function () {
   var TAU = Math.PI * 2;
@@ -152,32 +161,66 @@
     return svg;
   }
 
+  // Resolves a badge's values/labels/accent/caption either from
+  // build-data.js (the normal case: data-build + data-family) or from
+  // raw data-values/data-labels/etc on the badge itself (backward-compat
+  // path for a one-off pentagon not tied to a build family). Returns
+  // null if neither resolves to valid data.
+  function resolveBadgeData(badge) {
+    var buildId = badge.getAttribute("data-build");
+    var familyId = badge.getAttribute("data-family");
+    if (buildId && familyId) {
+      var family = window.DB_BUILD_DATA && window.DB_BUILD_DATA[familyId];
+      var build = family && family.builds.filter(function (b) { return b.id === buildId; })[0];
+      if (!family || !build || !build.pentagon) {
+        return null; // unknown id, or a build with no pentagon (e.g. Standard)
+      }
+      var caption = null;
+      if (family.axisNote && typeof family.axisNoteIndex === "number") {
+        caption = family.axisNote;
+      }
+      return {
+        values: build.pentagon,
+        labels: family.axisLabels,
+        accent: build.accent || "#ee83ab",
+        caption: caption,
+      };
+    }
+
+    // Fallback: raw attributes directly on the badge.
+    if (!badge.hasAttribute("data-values")) return null;
+    var rawValues = (badge.getAttribute("data-values") || "").split(",").map(function (s) {
+      return parseFloat(s.trim());
+    });
+    var rawLabels = (badge.getAttribute("data-labels") || "Difficulty,DPS,Mobility,Recovery,Speed")
+      .split(",")
+      .map(function (s) { return s.trim(); });
+    if (rawValues.length !== 5 || rawLabels.length !== 5 || rawValues.some(isNaN)) {
+      return null; // malformed data - fail quietly rather than draw a broken shape
+    }
+    return {
+      values: rawValues,
+      labels: rawLabels,
+      accent: badge.getAttribute("data-accent") || "#ee83ab",
+      caption: badge.getAttribute("data-caption") || null,
+    };
+  }
+
   function renderPentagonBadges() {
-    document.querySelectorAll(".pentagon-badge[data-values]").forEach(function (badge) {
+    document.querySelectorAll(".pentagon-badge[data-build], .pentagon-badge[data-values]").forEach(function (badge) {
       var mount = badge.querySelector(".pentagon-svg-mount");
       if (!mount) return;
 
-      var rawValues = (badge.getAttribute("data-values") || "").split(",").map(function (s) {
-        return parseFloat(s.trim());
-      });
-      var rawLabels = (badge.getAttribute("data-labels") || "Difficulty,DPS,Mobility,Recovery,Speed")
-        .split(",")
-        .map(function (s) { return s.trim(); });
-      if (rawValues.length !== 5 || rawLabels.length !== 5 || rawValues.some(isNaN)) {
-        return; // malformed data - fail quietly rather than draw a broken shape
-      }
-
-      var accent = badge.getAttribute("data-accent") || "#ee83ab";
-      var tooltipNote = badge.getAttribute("data-caption") || null;
+      var resolved = resolveBadgeData(badge);
+      if (!resolved) return;
 
       mount.innerHTML = "";
-      mount.appendChild(buildPentagonSvg(rawValues, rawLabels, accent, tooltipNote));
+      mount.appendChild(buildPentagonSvg(resolved.values, resolved.labels, resolved.accent, resolved.caption));
 
-      var caption = badge.getAttribute("data-caption");
-      if (caption && !badge.querySelector(".pentagon-badge-caption")) {
+      if (resolved.caption && !badge.querySelector(".pentagon-badge-caption")) {
         var captionEl = document.createElement("div");
         captionEl.className = "pentagon-badge-caption";
-        captionEl.textContent = caption;
+        captionEl.textContent = resolved.caption;
         badge.appendChild(captionEl);
       }
     });
