@@ -1041,10 +1041,10 @@
 
       if (rateEl) {
         const rate = base.critRate;
-        rateEl.textContent = rate.toFixed(1) + "%";
+        rateEl.textContent = rate.toFixed(2) + "%";
         rateEl.classList.toggle("ap-summary-value-warn", rate > 100);
       }
-      if (dmgEl) dmgEl.textContent = (base.critDmg * 100).toFixed(1) + "%";
+      if (dmgEl) dmgEl.textContent = (base.critDmg * 100).toFixed(2) + "%";
       if (onCritEl) onCritEl.textContent = base.onCritDmg.toFixed(2) + "%";
       if (evoEl) evoEl.textContent = base.evoDmg.toFixed(2) + "%";
       if (addEl) addEl.textContent = base.addDmg.toFixed(2) + "%";
@@ -1073,7 +1073,7 @@
 
       if (critEl) {
         const raw = best.rawCrit;
-        critEl.textContent = raw.toFixed(1) + "%";
+        critEl.textContent = raw.toFixed(2) + "%";
         critEl.classList.toggle("ap-summary-value-warn", raw > 100);
       }
       if (onCritEl) onCritEl.textContent = best.onCritDmg.toFixed(2) + "%";
