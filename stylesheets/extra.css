@@ -1,0 +1,3243 @@
+/* Dark-mode pastel theme, background matched to the class-selection flowchart art */
+
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #161718;
+  --md-default-fg-color: #e8e6ee;
+  --md-default-fg-color--light: #c9c6d4;
+  --md-accent-fg-color: #ee83ab; /* softer than Material's default vibrant #f50056 hover pink */
+  --md-accent-fg-color--transparent: #ee83ab1a;
+}
+
+/* Material's "black" primary preset hardcodes header/tabs background via
+   hsla(var(--md-hue),15%,9%) at higher specificity than a plain .md-header
+   rule, so it must be matched/beaten directly rather than relying on the
+   --md-primary-fg-color variable (which this rule ignores). Scoped to just
+   this rule (not a global --md-hue override) so it doesn't also recolor
+   code blocks, footer, tables, etc. that use --md-hue for other purposes. */
+[data-md-color-primary="black"] .md-header,
+[data-md-color-primary="black"] .md-tabs {
+  background-color: #1b1c1d !important; /* subtly lighter than the page bg, same neutral hue */
+}
+
+.md-header {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- Selection & scrollbar theming ---------- */
+/* Default browser selection (blue) and scrollbar (gray) clash with the
+   pastel palette used everywhere else on the site - small detail, but it's
+   the kind of thing that makes a themed site feel finished rather than
+   half-skinned. */
+[data-md-color-scheme="slate"] ::selection {
+  background-color: rgba(238, 131, 171, 0.35);
+  color: #fff;
+}
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(179, 157, 219, 0.45) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(179, 157, 219, 0.35);
+  border-radius: 999px;
+  border: 2px solid #161718;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(179, 157, 219, 0.55);
+}
+
+/* Footer now shows real Previous/Next page links (navigation.footer),
+   so style it to match the site instead of hiding it - it previously had
+   no content and rendered as an empty strip in Material's default
+   blue-indigo hue, which is why it was hidden outright before. */
+.md-footer {
+  background-color: #1b1c1d; /* same neutral shade as the header/tabs bar */
+}
+.md-footer-nav__link {
+  color: #e8e6ee;
+}
+.md-footer-nav__link:hover {
+  color: #ee83ab; /* matches --md-accent-fg-color */
+}
+.md-footer-meta {
+  background-color: #161718; /* page bg, so the generator-credit row (empty, generator: false) doesn't add a visible second stripe */
+}
+
+h1, h2, h3 {
+  font-family: "Poppins", sans-serif;
+}
+
+h1 { color: #e64a89; }
+h2 { color: #b39ddb; } /* muted lavender, used sparingly as an accent, not a fill color */
+h3 { color: #4db6ac; }
+
+/* ---------- Lead paragraph (opt-in) ---------- */
+/* A slightly larger, lighter-colored treatment for the first sentence
+   introducing a dense section - a softer entry point before a wall of
+   tabs/bullets/rotation-lines hits. Opt-in only, not automatic: add
+   `{ .lead }` on the line right after the paragraph you want it on. */
+.md-typeset p.lead {
+  font-size: 1.08em;
+  color: var(--md-default-fg-color--light);
+  margin-bottom: 0.8em;
+}
+
+/* ---------- Section breathing room (H2s read as chapter breaks) ---------- */
+/* Dense guide pages (Skill Codes -> Ark Setup -> Skill Setup -> Gems ->
+   Rotation) previously gave every H2 the same spacing as any other heading,
+   so a long page read as one continuous scroll of colored boxes. A little
+   extra top margin plus a faint top border makes each H2 read as the start
+   of a new chapter instead. */
+.md-typeset h2 {
+  margin-top: 1.9em;
+  padding-top: 0.7em;
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, rgba(179, 157, 219, 0.45) 50%, transparent) 1;
+}
+.md-typeset h1 + h2,
+.md-typeset .build-card + h2,
+.md-typeset .build-card-row + h2 {
+  /* First H2 right after the title/build-card - the build-card's own
+     margin already separates it, so don't double up on top spacing.
+     .build-card-row covers pages where the pentagon badge wraps the
+     card (the card no longer sits directly next to the H2 in that
+     case - the row does). */
+  margin-top: 1.2em;
+}
+
+/* Material's default already hides this at opacity: 0 until hover - the
+   only thing actually missing was a transition so it doesn't just pop in.
+   (Previous version set a baseline 0.35 here, which made it visible at
+   rest everywhere - that was a regression, not an improvement. Reverted
+   to invisible-by-default, just smoother now.) */
+.md-typeset .headerlink {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.md-typeset h1:hover .headerlink,
+.md-typeset h2:hover .headerlink,
+.md-typeset h3:hover .headerlink,
+.md-typeset .headerlink:focus-visible {
+  opacity: 1;
+}
+
+/* ---------- Nested bullet hierarchy ---------- */
+/* A sub-bullet like "However, Lv 7 is more practical..." previously read at
+   the exact same size/weight/color as its parent point, so a caveat and a
+   main point looked equally important until you actually read both. Dimming
+   and slightly shrinking second-level (and deeper) bullets lets "main point
+   -> caveat" register at a glance, without touching vertical spacing. */
+.md-typeset li li {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.92em;
+}
+
+/* ---------- Horizontal rule ---------- */
+/* Material's default hr is a flat 1px gray line - restyled as a soft fade
+   in the site's own lavender accent so section breaks (index.md) feel
+   designed rather than left at the framework default. */
+.md-typeset hr {
+  border: none;
+  height: 1px;
+  margin: 2em 0;
+  background: linear-gradient(90deg, transparent, rgba(179, 157, 219, 0.45) 50%, transparent);
+}
+
+/* ---------- Admonitions ---------- */
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 8px;
+  font-size: 1em;             /* match surrounding body text instead of Material's smaller default or a larger override */
+  overflow: hidden;           /* fixes title-bar corners poking out past the rounded box */
+  margin: 0.6em 0;            /* tighter than default so a stacked sequence reads as one flow */
+}
+
+/* Closed (???) collapsibles vs always-open (!!!) tips previously looked
+   the same weight, so "core info" and "optional depth" were indistinguishable
+   before you opened anything. Quieten the closed state only - a details
+   element without [open] is exactly the pymdownx.details ??? case, so this
+   never touches !!! admonitions (which render as plain divs, not <details>). */
+.md-typeset details:not([open]) {
+  opacity: 0.8;
+}
+.md-typeset details:not([open]) > summary {
+  padding-top: 0.28rem;
+  padding-bottom: 0.28rem;
+}
+.md-typeset details[open] {
+  opacity: 1;
+}
+
+/* Material gives the title bar its own top/bottom padding, then the first
+   piece of content below it (a <p>, <ul>, etc.) adds its own browser/
+   Material default top margin on top of that — the two stack up into a
+   noticeably wasted gap. Tighten the title padding a bit and zero out
+   whatever margin the first content block would otherwise contribute
+   (same idea at the bottom, so a trailing block doesn't pad out the box). */
+.md-typeset .admonition-title,
+.md-typeset summary {
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+}
+.md-typeset .admonition-title + * {
+  margin-top: 0;
+}
+.md-typeset .admonition > :last-child,
+.md-typeset details > :last-child {
+  margin-bottom: 0;
+}
+
+.md-typeset .note {
+  border-color: #8b80a8;
+  background-color: #201d29;
+}
+.md-typeset .note > .admonition-title {
+  background-color: #201d29;
+  color: #a79bc4;
+}
+.md-typeset .note > .admonition-title::before {
+  background-color: #a79bc4;
+}
+
+.md-typeset .tip {
+  border-color: #4db6ac;
+  background-color: #182422;
+}
+.md-typeset .tip > .admonition-title {
+  background-color: #182422;
+  color: #4db6ac;
+}
+.md-typeset .tip > .admonition-title::before {
+  background-color: #4db6ac;
+}
+
+.md-typeset .warning {
+  border-color: #e6b422;
+  background-color: #26210f;
+}
+.md-typeset .warning > .admonition-title {
+  background-color: #26210f;
+  color: #e6b422;
+}
+.md-typeset .warning > .admonition-title::before {
+  background-color: #e6b422;
+}
+
+.md-typeset .danger {
+  border-color: #e57373;
+  background-color: #271717;
+}
+.md-typeset .danger > .admonition-title {
+  background-color: #271717;
+  color: #e57373;
+}
+.md-typeset .danger > .admonition-title::before {
+  background-color: #e57373;
+}
+
+.md-typeset .example {
+  border-color: #64b5f6;
+  background-color: #161f28;
+}
+.md-typeset .example > .admonition-title {
+  background-color: #161f28;
+  color: #64b5f6;
+}
+.md-typeset .example > .admonition-title::before {
+  background-color: #64b5f6;
+}
+
+/* A table or list immediately followed by related notes: group visually */
+.md-typeset .admonition table:not([class]) {
+  margin: 0.6em 0;
+}
+
+/* ---------- Skill-code blocks (Ark Passive/Skill import strings) ---------- */
+/* These sit in a plain pymdownx.superfences code block, which otherwise
+   renders as a flat, unbordered box - the only major component on the site
+   without a border + matching corner radius. Same treatment as
+   .rotation-line/.cycle-card so it reads as part of the same visual
+   language instead of a stock Material leftover. */
+.md-typeset .highlight {
+  border: 1px solid rgba(179, 157, 219, 0.32);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 0.6em 0;
+}
+.md-typeset .highlight pre {
+  margin: 0;
+}
+/* The copy-to-clipboard button (content.code.copy) inherits Material's
+   default gray icon color - recolor to the site's lavender accent so it
+   doesn't stand out as the one untouched default element. */
+.md-typeset .highlight button.md-code__button {
+  color: #a79bc4;
+}
+.md-typeset .highlight button.md-code__button:hover {
+  color: #ee83ab;
+}
+
+/* ---------- Tables ---------- */
+/* Every other boxed component on the site (.build-card, .highlight,
+   .rotation-line, .cycle-card) has a lavender border - tables were the one
+   exception, just a rounded header color with an invisible edge against
+   the page background. Same border tone as .highlight, and the same
+   zebra/hover treatment .skills-table already had, generalized to every
+   table so a plain Build Comparison table gets the same "track your row"
+   help the skill-reference tables did. */
+.md-typeset table:not([class]) {
+  border: 1px solid rgba(179, 157, 219, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  /* Opaque instead of a translucent white overlay - a translucent bg lets
+     whatever's behind it show through, which looked fine against the
+     plain page but meant a table inside a colored admonition (warning,
+     danger, tip, etc.) got its body tinted by that admonition's color
+     while the th header above it (opaque #201d29) stayed neutral -
+     an inconsistent half-tinted look. This is the same color the old
+     translucent overlay produced against the page background, just
+     hardcoded so it no longer depends on what's underneath. */
+  background-color: #1b1c1e;
+}
+.md-typeset table:not([class]) th {
+  background-color: #201d29;
+  color: #a79bc4;
+}
+.md-typeset table:not([class]) tr:hover {
+  background-color: rgba(255, 255, 255, 0.035);
+  transition: background-color 0.12s ease;
+}
+.md-typeset table img {
+  height: 1.4em;
+  width: 1.4em;
+  object-fit: contain;
+  vertical-align: middle;
+  border-radius: 6px;
+}
+
+/* ---------- Difficulty bar inside Build Comparison tables ---------- */
+/* Reuses the same stat-bar-track/fill pieces from the build-card, laid out
+   horizontally to fit a table cell instead of stacked under a stat-value.
+   Usage in a pipe-table cell:
+   <div class="table-bar-cell">8.5 / 10<div class="stat-bar-track"><div
+   class="stat-bar-fill" style="width: 85%"></div></div></div> */
+.md-typeset .table-bar-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.md-typeset .table-bar-cell .stat-bar-track {
+  width: 46px;
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+/* ---------- Tag color-key legend (above skill tables) ---------- */
+/* The tag pills (pink/teal/blue/amber) were consistent but nothing on the
+   page explained what the colors meant. One quiet line above each
+   skills-table fixes that permanently.
+   Usage: <div class="tag-legend" markdown>
+   <span class="tag-legend-item"><span class="tag-legend-dot tag-legend-dmg"></span>Damage</span>
+   ...
+   </div> */
+.md-typeset .tag-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9em;
+  font-size: 0.72rem;
+  color: #a79bc4;
+  margin: 0.3em 0 0.8em;
+}
+.md-typeset .tag-legend-item {
+  display: inline-flex;
+  align-items: center;
+}
+.md-typeset .tag-legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-right: 5px;
+}
+.md-typeset .tag-legend-dmg { background-color: #f48fb1; }
+.md-typeset .tag-legend-util { background-color: #4db6ac; }
+.md-typeset .tag-legend-immune { background-color: #64b5f6; }
+.md-typeset .tag-legend-warn { background-color: #e6b422; }
+
+/* ---------- Skill legend tables (Essentials pages) ---------- */
+/* Fixed 48x48 icons regardless of the source asset's resolution.
+   Wrap the table in <div class="skills-table" markdown>...</div>. */
+.md-typeset .skills-table img {
+  height: 48px;
+  width: 48px;
+  object-fit: contain;
+  vertical-align: middle;
+  border-radius: 8px;
+}
+
+/* ---------- Inline skill icons outside tables/rotation-lines ---------- */
+/* Add `{: .skill-icon }` after an image to size it consistently no matter
+   the source asset's resolution, e.g. ![](../assets/re/icon-surge.png){: .skill-icon } */
+.md-typeset img.skill-icon {
+  height: 1.1em;
+  width: 1.1em;
+  object-fit: contain;
+  vertical-align: text-bottom;
+  border-radius: 4px;
+  margin: 0 2px 0 4px;
+}
+
+/* ---------- Compact inline cycle number badge for prose ---------- */
+/* A smaller standalone version of the cycle-card-header's numeral badge,
+   sized to sit inline in a sentence. Deliberately NOT a bordered chip
+   like .skill-chip — a lone circle is already a self-contained visual
+   unit, and wrapping it in a second box just to hold one digit looked
+   cramped (20px .cycle-num doesn't fit a compact chip's padding) and
+   repeating "Cycle 2" as text next to a "2" badge was redundant. Instead,
+   write "Cycle" as normal prose and drop the numeral in after it:
+   e.g. "...interchangeable with Cycle <span class="cycle-badge">2</span> if..." */
+.md-typeset .cycle-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #b39ddb;
+  color: #161718;
+  font-weight: 700;
+  font-size: 0.7rem;
+  line-height: 1;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* ---------- Reusable skill chip for prose (outside rotation-lines) ---------- */
+/* Same look as the chips inside .rotation-line/.cycle-card, but sized to
+   sit inline in a normal paragraph without stretching the line height.
+   Usage: <span class="skill-chip">![](../assets/re/icon-headhunt.png)Head Hunt</span>
+   The gradient/shadow/glow/lift below match the .rotation-line redesign,
+   safe to reuse here since none of them add layout height - box-shadow
+   and transform are paint-only, they don't participate in line-height
+   the way the height-budget comment two lines down is actually about. */
+.md-typeset .skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  white-space: nowrap;
+  background: linear-gradient(180deg, #232327 0%, #19191b 100%);
+  border-radius: 4px;
+  padding: 0.1em 0.3em 0.1em 0.3em;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+  /* Without this, the chip's text inherits the surrounding paragraph's
+     line-height (e.g. 25.6px at 1.6x/16px), which is taller than the
+     icon and becomes the flex row's height — stretching the whole
+     chip well past what the icon alone needs and inflating the line
+     it sits on. Collapsing to the font's natural line height keeps
+     the chip's height driven by the icon instead. */
+  line-height: 1.2;
+  vertical-align: middle;
+}
+.md-typeset .skill-chip:hover {
+  border-color: rgba(179, 157, 219, 0.55);
+  transform: translateY(-1px);
+}
+.md-typeset .skill-chip img {
+  height: 1.1em;
+  width: 1.1em;
+  object-fit: contain;
+  vertical-align: text-bottom;
+  border-radius: 4px;
+  margin: 0;
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.3), 0 0 4px rgba(179, 157, 219, 0.2);
+}
+
+/* ---------- Skill role tags (Essentials skill tables) ---------- */
+/* Small badges classifying what a skill does at a glance.
+   Usage: <span class="tag tag-util">SYNERGY</span>
+   Categories: tag-dmg (damage), tag-util (synergy/mobility/recovery/
+   generation/counter/weak point/stagger/awakening/destiny/buff),
+   tag-immune (push/status immune), tag-warn (not paralysis immune). */
+.md-typeset .tag {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 999px;
+  margin: 2px 3px 2px 0;
+  white-space: nowrap;
+  line-height: 1.7;
+  border: 1px solid transparent;
+}
+.md-typeset .tag-dmg {
+  background-color: rgba(244, 143, 177, 0.14);
+  color: #f48fb1;
+  border-color: rgba(244, 143, 177, 0.35);
+}
+.md-typeset .tag-util {
+  background-color: rgba(77, 182, 172, 0.14);
+  color: #4db6ac;
+  border-color: rgba(77, 182, 172, 0.35);
+}
+.md-typeset .tag-immune {
+  background-color: rgba(100, 181, 246, 0.14);
+  color: #64b5f6;
+  border-color: rgba(100, 181, 246, 0.35);
+}
+.md-typeset .tag-warn {
+  background-color: rgba(230, 180, 34, 0.14);
+  color: #e6b422;
+  border-color: rgba(230, 180, 34, 0.35);
+}
+.md-typeset .skills-table td:nth-child(3) {
+  /* Tags column - allow badges to wrap onto multiple lines */
+  white-space: normal;
+  min-width: 140px;
+}
+
+/* ---------- Links: more visibly clickable ---------- */
+.md-typeset a:not(.md-button) {
+  color: #f48fb1;
+  text-decoration: underline;
+  text-decoration-color: rgba(244, 143, 177, 0.4);
+  text-underline-offset: 2px;
+}
+.md-typeset a:not(.md-button):hover {
+  color: #ffb3cf;
+  text-decoration-color: #ffb3cf;
+}
+
+/* Material's JS quietly wraps each tab label's text in a real
+   <a href="#tab-id"> at runtime (for deep-linking / syncing identically-
+   named tabs across pages) - invisible in a static render, only appears
+   once the page's JS actually runs. The rule above was catching that
+   injected <a> and giving it the site-wide "visibly clickable" pink
+   underline treatment, which is what actually produced the underline
+   under every tab label - nothing to do with Material's own tab-active
+   indicator this whole time. !important because the rule above has 3
+   classes in its selector (.md-typeset + two :not()s) against 2 here, so
+   it would otherwise win on specificity despite coming first. */
+.md-typeset .tabbed-labels label a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+/* ---------- External link indicator ---------- */
+.md-typeset a[href^="http://"]:not(.video-chip)::after,
+.md-typeset a[href^="https://"]:not(.video-chip)::after {
+  content: " ↗";
+  font-size: 0.75em;
+  opacity: 0.65;
+}
+
+/* Exclude any link hosted on interlockme.github.io and local dev servers */
+.md-typeset a[href*="interlockme.github.io"]::after,
+.md-typeset a[href^="http://localhost"]::after,
+.md-typeset a[href^="http://127.0.0.1"]::after {
+  content: none !important;
+}
+
+/* ---------- Gem priority: horizontal chip layout ---------- */
+/* Structure:
+   <div class="gem-priority" markdown>
+   <div class="gem-col gem-col-dmg" markdown>
+   **Damage** — ...
+   <div class="gem-row" markdown>
+   <span class="gem-chip"><span class="gem-num">1</span> ![](icon) Name</span>
+   ...
+   </div>
+   </div>
+   <div class="gem-col gem-col-cd" markdown> ... Cooldown ... </div>
+   </div>
+   Damage/Cooldown columns are tinted via the gem-col-dmg / gem-col-cd
+   modifier class (rose for Damage, teal for Cooldown) so the two
+   priority lists read apart from each other at a glance.
+   For a flexible/optional pick (e.g. "pick two of these"), use the
+   gem-row-optional + gem-chip-optional variant instead — see the
+   "Optional gems" block further down. */
+.md-typeset .gem-priority {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4em 3em;
+  margin: 0.9em 0 1.3em;
+}
+.md-typeset .gem-col {
+  flex: 1 1 300px;
+  min-width: 240px;
+}
+.md-typeset .gem-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0.7em 0 -0.65em 0; /* -0.65em cancels the last row's own bottom margin so it doesn't push into the next paragraph */
+}
+.md-typeset .gem-row p {
+  margin: 0;
+  display: contents;
+}
+/* Margin (not flex `gap`) drives the spacing here — some in-app/embedded
+   renderers don't support gap on flex containers, which left wrapped
+   chip rows touching. Margins on the chip itself work everywhere. */
+.md-typeset .gem-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(167, 155, 196, 0.3);
+  border-radius: 999px;
+  padding: 0.28em 0.75em 0.28em 0.55em;
+  font-size: 0.85em;
+  white-space: nowrap;
+  margin: 0 0.5em 0.65em 0;
+  /* Sparkle sweep lives on ::after, clipped to the pill by this
+     overflow/position pair - see the sparkle rules further down. */
+  position: relative;
+  overflow: hidden;
+}
+/* ---------- Gem chip hover sparkle ---------- */
+/* CSS-only shimmer sweep - they're called "gems" for a reason. A soft
+   diagonal highlight slides left-to-right across the chip on hover, then
+   resets; overflow:hidden on .gem-chip (above) clips it to the pill shape
+   instead of spilling past the rounded corners. Respects the sitewide
+   prefers-reduced-motion block near the bottom of this file, same as every
+   other animation here. */
+.md-typeset .gem-chip::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent,
+    rgba(255, 255, 255, 0.5) 45%,
+    transparent 90%
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+.md-typeset .gem-chip:hover::after {
+  animation: gem-sparkle 0.85s ease;
+}
+@keyframes gem-sparkle {
+  from { left: -60%; }
+  to { left: 130%; }
+}
+.md-typeset .gem-col-dmg .gem-chip {
+  border-color: rgba(244, 143, 177, 0.4);
+  background-color: rgba(244, 143, 177, 0.05);
+}
+.md-typeset .gem-col-cd .gem-chip {
+  border-color: rgba(77, 182, 172, 0.4);
+  background-color: rgba(77, 182, 172, 0.05);
+}
+.md-typeset .gem-chip .gem-num {
+  color: #a79bc4;
+  font-weight: 700;
+  font-size: 0.85em;
+  margin-right: 0.05em;
+}
+.md-typeset .gem-col-dmg .gem-chip .gem-num { color: #f48fb1; }
+.md-typeset .gem-col-cd .gem-chip .gem-num { color: #4db6ac; }
+.md-typeset .gem-chip img {
+  height: 1.1em;
+  width: 1.1em;
+  vertical-align: middle;
+  border-radius: 3px;
+  margin: 0;
+}
+
+/* Optional/flexible gem picks (e.g. 313's "pick two") — dashed border
+   marks these as discretionary rather than a strict priority order.
+   Colored teal like Cooldown chips since these are still cooldown gems,
+   just a flexible subset of them.
+   Structure:
+   <div class="gem-row gem-row-optional" markdown>
+   <span class="gem-chip gem-chip-optional">![](icon) Name</span>
+   ...
+   </div> */
+.md-typeset .gem-row-optional {
+  margin-top: 0.5em;
+}
+.md-typeset .gem-chip-optional {
+  border-style: dashed;
+  border-color: rgba(77, 182, 172, 0.4);
+  background-color: rgba(77, 182, 172, 0.05);
+}
+.md-typeset .gem-chip-optional .gem-num { color: #4db6ac; }
+
+/* ---------- Rotation/opener sequences, styled as cards ---------- */
+.md-typeset .rotation-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.025);
+  /* A faint corner glow instead of a flat fill - same near-invisible
+     opacity as before at a glance, but gives the box some depth rather
+     than reading as a solid grey rectangle. */
+  background-image: radial-gradient(ellipse 420px 180px at 0% 0%, rgba(179, 157, 219, 0.16), transparent 70%);
+  border: 1px solid rgba(179, 157, 219, 0.32);
+  border-radius: 10px;
+  padding: 0.7em 0.9em 0.1em;   /* bottom trimmed - the skill/arrow margin-bottom below supplies it, see note */
+  margin: 0.35em 0;
+  font-size: 0.95em;
+  line-height: 1.7;
+}
+/* Depending on context (inside a tabbed block or not), pymdownx/md_in_html
+   sometimes wraps the rotation-line's content in an inner <p>, which adds
+   the browser's default paragraph margin inside the flex box and made the
+   two contexts render inconsistently (more padding around the content,
+   tighter wrapped-line spacing). Neutralizing that possible wrapper makes
+   the box render identically either way. */
+.md-typeset .rotation-line p {
+  margin: 0;
+  display: contents;
+}
+/* Each icon + skill name is grouped into one flex item so a wrap never
+   separates an icon from its name; the arrow in between is its own item
+   too, so both kinds of item carry the same margin (rather than relying
+   on flex `gap`, which some in-app/embedded renderers don't support on
+   flex containers) - keeping wrapped rows from touching everywhere. */
+.md-typeset .rotation-line .skill,
+.md-typeset .rotation-line .arrow {
+  margin: 0 2px 0.6em;
+}
+.md-typeset .rotation-line .skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  white-space: nowrap;
+  border: 1px solid #313236; /* a shade lighter than the fill, for a soft frame rather than a bright outline */
+  /* A soft top-lit gradient instead of a flat fill, so the chip reads as
+     a slightly raised surface rather than blending into the box behind
+     it - subtle, not a shiny-button look. */
+  background: linear-gradient(180deg, #232327 0%, #19191b 100%);
+  border-radius: 6px;
+  padding: 0.2em 0.6em 0.2em 0.35em;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.md-typeset .rotation-line .skill:hover {
+  border-color: rgba(179, 157, 219, 0.55);
+  transform: translateY(-1px);
+}
+.md-typeset .rotation-line img {
+  height: 1.35em;
+  width: 1.35em;
+  vertical-align: text-bottom;
+  border-radius: 5px;
+  margin: 0;
+  /* A soft ring + glow around each icon - echoes the bordered-icon look
+     Lost Ark's own skill UI uses, and gives the most colorful part of
+     the chip (the icon) a bit more presence than a flush, borderless
+     thumbnail sitting flat against the chip background. */
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.3), 0 0 5px rgba(179, 157, 219, 0.2);
+}
+/* Styled chevron instead of a bare "→" glyph - a plain Unicode arrow
+   renders inconsistently across fonts and carries no visual weight.
+   Built from borders (no image/SVG needed), colored as a soft pink-to-
+   lavender blend tying the two accent colors used elsewhere together.
+   font-size: 0 hides the real "→" character completely (not just via
+   color) - a color-only hide was tried and reverted: the real text was
+   still selectable/drag-highlightable, and shared flex space with the
+   ::before chevron in a way that clipped it. font-size: 0 avoids both,
+   at the cost of needing fixed px below instead of em (a ::before
+   pseudo-element inherits its trigger's computed font-size, so em
+   sizing here would collapse to zero right along with it). */
+.md-typeset .rotation-line .arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  font-size: 0;
+}
+.md-typeset .rotation-line .arrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid #cf99c7;
+  border-right: 2px solid #cf99c7;
+  transform: rotate(45deg);
+  opacity: 0.75;
+}
+
+/* ---------- Situational/skippable rotation step ---------- */
+/* A visually de-emphasized variant of .skill, for steps that are
+   optional/conditional rather than a fixed part of the sequence -
+   dashed border + reduced opacity + desaturated icon read as "lower
+   priority" at a glance, same visual language a disabled/optional form
+   control uses elsewhere. Was previously written inline as plain
+   italicized text: *( icon Name — situational )*, which didn't stand
+   out from a real step in the sequence until you actually read it.
+   Usage:
+   <span class="skill skill-situational">![](path)Name<span class="skill-situational-tag">situational</span></span> */
+.md-typeset .rotation-line .skill-situational {
+  border-style: dashed;
+  border-color: #3a3a3f;
+  background: linear-gradient(180deg, #1c1c1f 0%, #171719 100%);
+  opacity: 0.75;
+}
+.md-typeset .rotation-line .skill-situational:hover {
+  opacity: 1;
+  border-color: rgba(179, 157, 219, 0.5);
+}
+.md-typeset .rotation-line .skill-situational img {
+  box-shadow: none;
+  filter: grayscale(45%);
+}
+.md-typeset .skill-situational-tag {
+  font-size: 0.76em;
+  font-style: italic;
+  color: #7a7488;
+  margin-left: 0.05em;
+}
+
+/* ---------- Cycle cards (group a Cycle's label + rotation-line into one step) ---------- */
+/* Structure:
+   <div class="cycle-card" markdown>
+   <div class="cycle-card-header"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash</span></div>
+   <div class="rotation-line" markdown>
+   ...skills as normal...
+   </div>
+   </div>
+   The nested .rotation-line has its own border/bg/margin stripped below so
+   it reads as this card's body, not a second nested box. Any strategy text
+   for the cycle stays outside the card as a normal paragraph, same as before. */
+.md-typeset .cycle-card {
+  border: 1px solid rgba(179, 157, 219, 0.32);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0.8em 0 0.6em;
+}
+.md-typeset .cycle-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  background-color: rgba(179, 157, 219, 0.08);
+  padding: 0.5em 0.9em;
+  border-bottom: 1px solid rgba(179, 157, 219, 0.2);
+}
+.md-typeset .cycle-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #b39ddb;
+  color: #161718;
+  font-weight: 700;
+  font-size: 0.72rem;
+  flex-shrink: 0;
+}
+.md-typeset .cycle-title {
+  color: #e8e6ee;
+  font-weight: 700;
+  font-size: 0.95em;
+}
+.md-typeset .cycle-card .rotation-line {
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  margin: 0;
+}
+
+/* ---------- Rotation practice mode ---------- */
+/* Click-to-advance drill mode for .rotation-line (including the nested
+   ones inside .cycle-card). Purely a JS/CSS layer on top of the existing
+   markup - see javascripts/rotation-practice.js. No content changes
+   needed on any page.
+
+   Two attachment modes, both zero-footprint (neither ever reserves
+   layout space, so entering/exiting practice mode never shifts anything
+   around it):
+     - Standalone rotation-line: the toggle is absolutely positioned,
+       floating half-over the box's own top-right corner like a tab/
+       badge, inside a plain zero-margin wrapper (.rotation-practice-
+       float) so it isn't clipped by the box's own overflow:hidden.
+     - Rotation-line nested in a .cycle-card: the toggle instead joins
+       the existing .cycle-card-header row via margin-left:auto - that
+       row already has its own padding, so this adds no new space at
+       all rather than floating a second corner badge on top of the
+       header. */
+.md-typeset .rotation-practice-float {
+  position: relative;
+}
+.md-typeset .rotation-practice-toggle {
+  position: absolute;
+  top: -0.7em;
+  right: 0.5em;
+  z-index: 3;
+  border: 1px solid rgba(179, 157, 219, 0.4);
+  background-color: #1c1c1f;
+  color: #cbb9e8;
+  border-radius: 999px;
+  font-size: 0.68em;
+  font-family: inherit;
+  padding: 0.2em 0.65em;
+  line-height: 1.5;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .rotation-practice-toggle:hover {
+  border-color: rgba(179, 157, 219, 0.75);
+  background-color: #232327;
+}
+/* Inside a cycle-card header, the toggle is an ordinary flex item (not
+   absolutely positioned) pinned to the row's far right - the header's
+   own padding is all the room it needs. */
+.md-typeset .cycle-card-header .rotation-practice-toggle {
+  position: static;
+  margin-left: auto;
+  box-shadow: none;
+}
+.md-typeset .rotation-line.practice-mode {
+  cursor: pointer;
+  border-color: rgba(179, 157, 219, 0.55);
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* Dim every step except the current one; the current step borrows the
+   pentagon badge's lavender glow language so it reads as "active" the
+   same way the rest of the site marks emphasis. */
+.md-typeset .rotation-line.practice-mode .skill {
+  opacity: 0.32;
+  transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.md-typeset .rotation-line.practice-mode .skill.practice-current {
+  opacity: 1;
+  border-color: #b39ddb;
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.55), 0 0 10px rgba(179, 157, 219, 0.35);
+  transform: translateY(-1px) scale(1.04);
+}
+/* Arrows dim along with their neighboring skills so the sequence still
+   reads as a faded chain rather than a broken one. */
+.md-typeset .rotation-line.practice-mode .arrow {
+  opacity: 0.32;
+}
+
+
+/* ---------- Build quick-reference card (top of each build page) ---------- */
+/* Structure:
+   <div class="build-card" markdown>
+   <div class="build-stats">
+   <div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">Medium</span></div>
+   ...
+   </div>
+   - caveat bullets as normal markdown
+   [▶ Video Guide](url){ .video-chip }
+   </div> */
+.md-typeset .build-card {
+  border: 1px solid rgba(244, 143, 177, 0.3);
+  background-color: rgba(244, 143, 177, 0.045);
+  border-radius: 10px;
+  padding: 1em 1.2em 1.1em;
+  margin: 1em 0 1.5em;
+  position: relative; /* anchors .last-updated-badge to this card's own corner */
+}
+/* Subtle "last updated" corner tag - sits inside the padding this card
+   already has (padding-bottom: 1.1em above), so it takes zero extra
+   layout space and never pushes the stat boxes or bullet list above it.
+   Low opacity by default so it reads as a faint watermark, not a UI
+   element competing for attention - full opacity + real date on hover
+   for anyone who's actually looking for it. Populated by
+   javascripts/last-updated.js from the card's data-updated attribute;
+   renders nothing if that attribute is missing. */
+.last-updated-badge {
+  position: absolute;
+  right: 1.1em;
+  bottom: 0.3em;
+  font-size: 0.62rem;
+  letter-spacing: 0.01em;
+  color: var(--md-default-fg-color--light);
+  opacity: 0.38;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.md-typeset .build-card:hover .last-updated-badge {
+  opacity: 0.85;
+}
+.md-typeset .build-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.6em;
+  margin-bottom: 0.9em;
+}
+/* Previously a fixed min-width, so 3 stats left a chunk of dead space on
+   anything wider than a phone, and a stat with a bar (taller) didn't match
+   the height of one without (e.g. Playstyle next to Difficulty). flex-grow
+   lets them share the row evenly, align-items: stretch above evens out the
+   height. Hover just confirms these are meant to be scanned individually,
+   nothing functional changes on click. */
+.md-typeset .stat {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 130px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(244, 143, 177, 0.22);
+  border-radius: 8px;
+  padding: 0.45em 0.9em;
+  min-width: 108px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .stat:hover {
+  border-color: rgba(244, 143, 177, 0.42);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+.md-typeset .stat-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.md-typeset .stat-value {
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #e8e6ee;
+  line-height: 1.3;
+}
+
+/* Difficulty bar: add <div class="stat-bar-track"><div class="stat-bar-fill"
+   style="width: 85%"></div></div> after the stat-value, width = value/10*100% */
+.md-typeset .stat-bar-track {
+  height: 4px;
+  border-radius: 999px;
+  background-color: rgba(244, 143, 177, 0.15);
+  margin-top: 0.4em;
+  overflow: hidden;
+}
+.md-typeset .stat-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background-color: #ee83ab;
+}
+/* Trixion multiplier bar: same stat-bar-track/fill shape as Difficulty,
+   but on a FIXED 1.0-1.3 scale rather than the data's own min/max. Values
+   only span 1.17-1.23 (a 5% spread) - stretching that to fill 0-100% would
+   visually exaggerate a small real difference into a huge-looking gap.
+   width% = (value - 1.0) / 0.3 * 100, teal to match the Trixion DPS icon set.
+   Usage: <div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill
+   stat-bar-fill-teal" style="width: 60%"></div></div> after the stat-value. */
+.md-typeset .stat-bar-track-teal {
+  background-color: rgba(77, 182, 172, 0.15);
+}
+.md-typeset .stat-bar-fill-teal {
+  background-color: #4db6ac;
+}
+/* Muted/striped variant for a value that isn't confirmed yet (333-blitz.md's
+   "1.20?" is unverified) - visually distinct from a normal solid fill so it
+   doesn't read as equally certain. Use in place of .stat-bar-fill-teal. */
+.md-typeset .stat-bar-fill-unconfirmed {
+  background-color: transparent;
+  background-image: repeating-linear-gradient(
+    135deg,
+    #4db6ac 0,
+    #4db6ac 3px,
+    transparent 3px,
+    transparent 6px
+  );
+  opacity: 0.75;
+}
+
+/* "Best For:" / "Tradeoff:" lead-in labels - arguably the two most
+   important sentences on the page (what this build is for, what it costs
+   you), previously just bold text at the same weight/color as everything
+   else. Usage: wrap just the lead-in word, e.g.
+   [Best For:]{ .best-for } Players who want ...
+   [Tradeoff:]{ .tradeoff } Lower orb generation ... */
+.md-typeset .best-for,
+.md-typeset .tradeoff {
+  font-weight: 700;
+}
+.md-typeset .best-for {
+  color: #4db6ac;
+}
+.md-typeset .tradeoff {
+  color: #ee83ab;
+}
+
+.md-typeset .build-card ul {
+  margin: 0.4em 0 0.7em;
+}
+.md-typeset a.video-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-size: 0.8em;
+  font-weight: 600;
+  padding: 0.25em 0.8em;
+  border-radius: 999px;
+  background-color: rgba(100, 181, 246, 0.12);
+  color: #64b5f6 !important;
+  border: 1px solid rgba(100, 181, 246, 0.32);
+  text-decoration: none !important;
+}
+.md-typeset a.video-chip:hover {
+  background-color: rgba(100, 181, 246, 0.22);
+  color: #90caf9 !important;
+}
+.md-typeset a.video-chip::before {
+  content: "▶";
+  font-size: 0.75em;
+}
+
+/* ---------- Build profile pentagon badge (sits beside .build-card) ---------- */
+/* Structure (see javascripts/pentagon-badge.js for the piece that reads
+   this and draws the SVG):
+
+   <div class="build-card-row">
+   <div class="build-card" markdown>...(same as before, minus video chips)...</div>
+   <div class="pentagon-badge"
+        data-values="8.5,9,5,8.5,9"
+        data-labels="Difficulty,DPS,Mobility,Recovery,Speed">
+   <!-- 5 numbers, 0-10 scale, same order as data-labels. To change a
+        stat just edit the number here - the shape redraws itself, no
+        SVG/coordinate math needed. See EASY EDIT GUIDE comment in
+        pentagon-badge.js for what each axis means and how DPS is scaled. -->
+   <div class="pentagon-badge-title">Build Profile</div>
+   <div class="pentagon-svg-mount"></div>
+   <div class="pentagon-badge-extra">
+   <a href="..." class="video-chip">...</a>
+   </div>
+   </div>
+   </div>
+
+   Optional attributes on .pentagon-badge:
+   - data-accent="#ee83ab"   (defaults to the site pink if omitted)
+   - data-caption="..."      (small italic note under the badge, e.g.
+                               used on Surge pages to flag that Exposure
+                               is inverted - lower is safer, not higher) */
+.build-card-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.8em;
+}
+.build-card-row .build-card {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* .build-card already has its own margin; the row wrapper takes over
+     that spacing so card + badge don't end up with mismatched margins. */
+  margin: 0;
+}
+.md-typeset .pentagon-badge {
+  flex: 0 0 168px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgba(244, 143, 177, 0.3);
+  background-color: rgba(244, 143, 177, 0.045);
+  border-radius: 10px;
+  padding: 0.8em 0.6em 0.6em;
+}
+.md-typeset .pentagon-badge-title {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+  margin-bottom: 0.3em;
+  text-align: center;
+}
+.pentagon-svg-mount {
+  width: 100%;
+}
+.pentagon-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  display: block;
+}
+.pentagon-ring {
+  fill: none;
+  stroke: rgba(179, 157, 219, 0.16);
+  stroke-width: 1;
+}
+.pentagon-ring-outer {
+  stroke: rgba(179, 157, 219, 0.28);
+}
+.pentagon-spoke {
+  stroke: rgba(179, 157, 219, 0.16);
+  stroke-width: 1;
+}
+.pentagon-dot {
+  fill: #161718;
+  stroke-width: 1.5;
+}
+.pentagon-label {
+  font-family: "Poppins", sans-serif;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  fill: #a79bc4;
+  text-transform: uppercase;
+}
+/* Video chips (moved out of the build-card body into the badge) sit in
+   the leftover space below the pentagon, pushed to the bottom via
+   margin-top: auto so short/tall card content doesn't leave a gap. */
+.pentagon-badge-extra {
+  margin-top: auto;
+  padding-top: 0.6em;
+  width: 100%;
+}
+.pentagon-badge-extra .video-chip {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  margin-bottom: 0.4em;
+}
+.pentagon-badge-extra .video-chip:last-child {
+  margin-bottom: 0;
+}
+/* Clarifying note under a badge - currently only used on Surge pages,
+   since Exposure is the one axis where higher reads as worse rather
+   than better like the other four. */
+.pentagon-badge-caption {
+  font-size: 0.62rem;
+  color: #a79bc4;
+  text-align: center;
+  margin-top: 0.5em;
+  line-height: 1.35;
+  font-style: italic;
+}
+@media screen and (max-width: 720px) {
+  .build-card-row {
+    flex-direction: column;
+  }
+  .build-card-row .build-card {
+    margin: 1em 0 1.5em;
+  }
+  .md-typeset .pentagon-badge {
+    flex: 1 1 auto;
+    max-width: 220px;
+    align-self: center;
+    margin-bottom: 1.5em;
+  }
+  /* Stack the pentagon over the diff card on narrow screens - the
+     vertical divider becomes a horizontal one so the "two halves of one
+     panel" feel carries over instead of the divider just vanishing. */
+  .md-typeset .build-compare-body {
+    flex-direction: column;
+  }
+  .md-typeset .build-compare-svg-mount {
+    border-right: none;
+    border-bottom: 1px solid rgba(179, 157, 219, 0.16);
+  }
+  /* The overview table's fixed-width columns (see .build-compare table's
+     table-layout:fixed comment) plus the nowrap Playstyle column squeeze
+     down to unreadable widths once the table is forced to fit a phone-
+     width container - and since the table itself clips overflow (its
+     border-radius rounding depends on overflow:hidden), any text that
+     didn't fit was just silently cut off with no way to reach it, rather
+     than causing a page-level horizontal scrollbar. Giving the table a
+     floor width and letting only this wrapper scroll horizontally means
+     every column keeps its desktop proportions and nothing gets clipped
+     - you just pan across it - while the table's own layout/overflow
+     rules (and desktop, where this wrapper is a no-op) stay untouched. */
+  .md-typeset .build-compare-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .md-typeset .build-compare-table-scroll table {
+    width: auto;
+    min-width: 600px;
+  }
+}
+
+/* ---------- Build compare widget (essentials.md, replaces the old
+   "## Build Comparison" markdown table) ---------- */
+/* Structure: <div class="build-compare" data-family="re"></div> - the JS
+   (javascripts/build-compare.js) fills in everything else: a real
+   <table> up top (this IS the old markdown table, just generated from
+   the same data array the picker below reads from instead of hand-typed
+   twice), a "Compare Two Directly" picker with two <select> dropdowns,
+   and an overlaid pentagon reusing the .pentagon-svg/.pentagon-ring/
+   .pentagon-spoke/.pentagon-label pieces from the single-build badge
+   above. See that file's top comment for the build data and why RE/Surge
+   are never compared against each other.
+
+   The table is intentionally left with NO class attribute, so it falls
+   through to the sitewide `table:not([class])` rule and renders exactly
+   like every other table on the site (same header/hover/img sizing)
+   rather than a hand-rolled approximation - that's what the plain
+   markdown table had for free and a bespoke flex layout here didn't. It
+   keeps its own rounded panel (border-radius + overflow:hidden) sitting
+   inside the outer card's padding, rather than being stripped flush the
+   way .cycle-card's nested .rotation-line is - flush read as "text just
+   floating in the card" with no visual boundary telling you where the
+   table starts, this reads as a distinct sub-panel instead. */
+.md-typeset .build-compare {
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  background-color: rgba(179, 157, 219, 0.045);
+  border-radius: 10px;
+  padding: 1.1em 1.2em 1.1em;
+  margin: 1em 0 1.5em;
+}
+.md-typeset .build-compare-table-scroll {
+  /* Plain block wrapper on desktop - no width/overflow rules here at all,
+     so nothing about the table's own layout or sizing changes. Mobile
+     gets its own override below (see the @media screen and
+     (max-width: 720px) block) that turns this into the horizontal-scroll
+     container; this bare rule only exists so the class always resolves
+     to something (keeps the two rules easy to find/diff together). */
+}
+.md-typeset .build-compare table {
+  width: 100%;
+  /* table-layout:auto (the default) puts 100% of the leftover width onto
+     whichever column has the least content pinned to it - in practice
+     that dumped almost the entire remaining width onto "Best For" alone,
+     leaving its text stranded on the left of a mostly-empty column.
+     Fixed + explicit per-column percentages spreads that width out on
+     purpose instead of leaving it to the browser's guess. */
+  table-layout: fixed;
+  border: 1px solid rgba(179, 157, 219, 0.16);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.025);
+  margin: 0 0 0.6em;
+}
+.md-typeset .build-compare table th {
+  background-color: rgba(179, 157, 219, 0.1);
+  font-size: 0.68rem;
+}
+.md-typeset .build-compare table th:nth-child(1),
+.md-typeset .build-compare table td:nth-child(1) {
+  width: 20%;
+}
+.md-typeset .build-compare table th:nth-child(2),
+.md-typeset .build-compare table td:nth-child(2) {
+  width: 13%;
+}
+.md-typeset .build-compare table th:nth-child(3),
+.md-typeset .build-compare table td:nth-child(3) {
+  width: 13%;
+}
+/* Widened from 15% - "Fast & Punishing" (the longest playstyle value)
+   was wrapping to two lines at the old width. */
+.md-typeset .build-compare table th:nth-child(4),
+.md-typeset .build-compare table td:nth-child(4) {
+  width: 20%;
+  white-space: nowrap;
+}
+.md-typeset .build-compare table th:nth-child(5),
+.md-typeset .build-compare table td:nth-child(5) {
+  width: 34%;
+}
+.md-typeset .build-compare-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.md-typeset .build-compare-dot {
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+/* Dropdown picker and copy-link icon share a single row - no text label
+   above them anymore. The icon is pulled out of normal flow (absolute,
+   pinned to the row's right edge) instead of living in its own grid
+   track, so the dropdowns get the row's full width to center in rather
+   than losing a chunk of it to an empty column reserved just to balance
+   the icon - that reserved column was squeezing the selects enough to
+   clip long build names. */
+.md-typeset .build-compare-header-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Top and bottom padding match on purpose so the icon centers itself
+     on the dropdowns' true vertical middle (top:50% against a symmetric
+     box). No margin-bottom here - padding doesn't collapse with a
+     neighbor's margin the way two margins collapse into each other, so
+     stacking padding-bottom on top of the old margin-bottom was adding
+     real extra space below the row that the original design never had.
+     .build-compare-body below supplies the actual gap via its own
+     margin-top, sized to already account for this padding. */
+  padding: 0.6em 2.1em 0.6em;
+  border-top: 1px solid rgba(179, 157, 219, 0.18);
+}
+.md-typeset .build-compare-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-width: 0;
+  max-width: 100%;
+}
+/* Small colored dot on each dropdown, kept in sync with its current
+   selection (JS) - a quiet visual link to the matching polygon color
+   below without repeating the table's own links a second time. */
+.md-typeset .build-compare-select-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-width: 0;
+}
+.md-typeset .build-compare-select-dot {
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.md-typeset .build-compare-select {
+  background-color: #161718;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  border-radius: 6px;
+  color: #e8e6ee;
+  padding: 0.35em 0.6em;
+  font-size: 0.85em;
+  font-family: inherit;
+  min-width: 0;
+  flex: 1 1 auto;
+  /* If the row ever gets too tight to fit the full name (very narrow
+     screens), fade it to an ellipsis rather than hard-clipping mid
+     character the way native <select> rendering does by default. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.md-typeset .build-compare-select:focus {
+  outline: none;
+  border-color: #b39ddb;
+}
+.md-typeset .build-compare-vs {
+  font-size: 0.75em;
+  color: #a79bc4;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+/* Icon-only copy button, sharing the header row with the picker instead
+   of a spelled-out label on its own line - sharing a comparison is a
+   nice-to-have, not the main action, so it stays quiet until hovered. */
+.md-typeset .build-compare-share-btn {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.8em;
+  height: 1.8em;
+  background: none;
+  border: 1px solid rgba(179, 157, 219, 0.25);
+  border-radius: 6px;
+  color: #a79bc4;
+  opacity: 0.7;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.md-typeset .build-compare-share-btn:hover {
+  opacity: 1;
+  color: #b39ddb;
+  border-color: rgba(179, 157, 219, 0.5);
+}
+.md-typeset .build-compare-share-btn svg {
+  display: block;
+}
+/* Custom tooltip (rather than relying on the native title attribute,
+   which is slow to appear and invisible to some touch/screen-reader
+   flows) so the icon's function is clear on hover or keyboard focus. */
+.md-typeset .build-compare-share-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 7px);
+  right: 0;
+  transform: translateY(2px);
+  background-color: #161718;
+  color: #e8e6ee;
+  font-size: 0.68rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: nowrap;
+  padding: 0.35em 0.6em;
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  border-radius: 5px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 5;
+}
+.md-typeset .build-compare-share-btn:hover::after,
+.md-typeset .build-compare-share-btn:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Body is now a single two-panel "sub-card" (matches the table's own
+   rounded sub-panel above it) instead of two free-floating pieces with a
+   gap between them - a shared border + a vertical divider down the
+   middle gives the pentagon and the diff card each an explicit, equal
+   half rather than leaving their relative size to flex-basis alone.
+   margin-top trimmed from 0.9em to 0.3em: the header row above now
+   contributes its own 0.6em of padding-bottom (added for icon
+   centering, see .build-compare-header-row) which sits in addition to
+   this margin rather than collapsing into it, so the two together
+   still land on the original ~0.9em gap instead of stacking to 1.5em. */
+.md-typeset .build-compare-body {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  margin-top: 0.3em;
+  border: 1px solid rgba(179, 157, 219, 0.16);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+.md-typeset .build-compare-svg-mount {
+  flex: 1 1 50%;
+  display: flex;
+  /* Top-aligned (not centered) so the "Difficulty" axis label at the top
+     of the pentagon lines up with "Key Differences" on the other side,
+     rather than the whole SVG - empty space below the shape included -
+     being centered as one block. */
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1.3em 1em;
+  border-right: 1px solid rgba(179, 157, 219, 0.16);
+}
+.md-typeset .build-compare-svg-mount svg {
+  width: min(230px, 100%);
+}
+/* Two overlapping translucent polygons - fill-opacity is set inline per
+   build (JS) rather than here since it's paired with each build's own
+   accent color, but the stroke needs to stay crisp on top of the fill,
+   which .pentagon-data's site-wide rule already handles for the single-
+   build badge; this reuses the same visual weight. */
+.md-typeset .build-compare-poly {
+  transition: opacity 0.15s ease;
+}
+
+/* ---------- Key Differences panel (sits beside the pentagon overlay) --------- */
+/* For each axis that isn't essentially tied, a small pill goes under
+   whichever build wins it - see the comment above buildKeyDifferences()
+   in build-compare.js for why this replaced a bar chart. Reuses the same
+   pill shape as .tag (padding/radius/border) but colored per-build via
+   inline style instead of a fixed palette of classes. */
+.md-typeset .build-compare-diffcard {
+  flex: 1 1 50%;
+  min-width: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 1.3em 1.2em;
+  display: flex;
+  flex-direction: column;
+  /* Top-aligned to match .build-compare-svg-mount above, plus the title's
+     own margin-top below to land roughly level with the pentagon's
+     "Difficulty" label (which sits a bit below the SVG's own top edge,
+     not flush with it). */
+  justify-content: flex-start;
+}
+.md-typeset .build-compare-diffcard-title {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+  margin-top: 0.85em;
+  margin-bottom: 0.9em;
+  text-align: center;
+}
+/* Side-by-side columns (one per build) instead of a top-to-bottom stack -
+   centered as a pair within the card, matching the "A vs B" framing the
+   dropdowns above already set up, and using the half-width horizontally
+   instead of stretching the card tall. */
+.md-typeset .build-compare-diffcard-body {
+  display: flex;
+  justify-content: center;
+  gap: 1.6em;
+  text-align: center;
+}
+.md-typeset .build-compare-diffcard-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.md-typeset .build-compare-diffcard-name {
+  font-weight: 700;
+  font-size: 0.88em;
+  margin-bottom: 0.55em;
+}
+.md-typeset .build-compare-diffcard-chips {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4em;
+}
+/* Softer than a typical .tag pill on purpose - these sit two-per-column
+   in a fairly quiet card and don't need to compete visually with the
+   pentagon; the accent color alone (text + a faint border) is enough to
+   read as "this build's advantage" without a heavy filled chip. */
+.md-typeset .build-compare-diffchip {
+  display: inline-block;
+  font-size: 0.72em;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 0.22em 0.6em;
+  border-radius: 999px;
+  border: 1px solid;
+  background-color: rgba(255, 255, 255, 0.02);
+  white-space: nowrap;
+}
+.md-typeset .build-compare-diffcard-none {
+  font-size: 0.78em;
+  color: #7a7580;
+  font-style: italic;
+}
+.md-typeset .build-compare-diffcard-empty {
+  font-size: 0.85em;
+  color: #a79bc4;
+  font-style: italic;
+  text-align: center;
+}
+
+.md-typeset .grid.cards > ul > li {
+  border-radius: 12px;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.md-typeset .grid.cards > ul > li:hover {
+  transform: translateY(-2px);
+}
+.md-typeset .grid.cards > ul > li:nth-child(1) {
+  background-color: #241a20;
+  border-color: #f48fb1;
+}
+.md-typeset .grid.cards > ul > li:nth-child(2) {
+  background-color: #16221f;
+  border-color: #4db6ac;
+}
+
+/* ---------- Engraving choice cards (Essentials page) ---------- */
+/* Four cards, each colored to match the engraving it represents: Raid
+   Captain (1) and Keen Blunt Weapon (2) already get the generic pink-red/
+   teal-green treatment from the bare .grid.cards rule above. Mass Increase
+   (3) gets its own lavender-purple here. The 4th card - Raid Captain +
+   Mass Increase combined - gets a color blended from the other two
+   (avg of #f48fb1 and #b39ddb, background likewise), so it visually reads
+   as "both of these at once" rather than introducing an unrelated hue. */
+.md-typeset .grid.cards.engraving-cards > ul > li:nth-child(3) {
+  background-color: #1d1a26;
+  border-color: #b39ddb;
+}
+.md-typeset .grid.cards.engraving-cards > ul > li:nth-child(4) {
+  background-color: #211a23;
+  border-color: #d396c6;
+}
+
+/* Small muted requirement line under a card title, before the descriptive
+   sentence below it. Usage: a line of icon(s) + text wrapped in
+   `{ .food-req }`, e.g.:
+   ![](icon){: .skill-icon } Vernese Wine + ![](icon){: .skill-icon } Feast
+   { .food-req } */
+.md-typeset .food-req {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3em;
+  font-size: 0.85em;
+  color: #a79bc4;
+  margin: 0.3em 0 0.6em;
+}
+.md-typeset .food-req img.skill-icon {
+  margin: 0;
+}
+
+/* ---------- Pre-Ark Grid page option cards ---------- */
+.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(1) {
+  background-color: #241a20;
+  border-color: #f48fb1;
+}
+.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(2) {
+  background-color: #26210f;
+  border-color: #e6b422;
+}
+.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(3) {
+  background-color: #16221f;
+  border-color: #4db6ac;
+}
+
+/* ---------- Page-level availability banner ---------- */
+/* Replaces cramming "NOT IN NA SERVERS YET" or an emoji into the H1 itself.
+   Usage, right under the H1:
+   <p class="page-banner page-banner-warning">Not available in NA servers yet</p>
+   Swap the modifier class for page-banner-danger if the severity calls for it. */
+.md-typeset .page-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.85em;
+  font-weight: 600;
+  padding: 0.5em 0.9em;
+  border-radius: 8px;
+  margin: -0.4em 0 1.1em;
+}
+.md-typeset .page-banner::before {
+  font-size: 1em;
+  line-height: 1;
+}
+.md-typeset .page-banner-warning {
+  border: 1px solid rgba(230, 180, 34, 0.35);
+  background-color: #26210f;
+  color: #e6b422;
+}
+.md-typeset .page-banner-warning::before {
+  content: "▲";
+}
+.md-typeset .page-banner-danger {
+  border: 1px solid rgba(229, 115, 115, 0.35);
+  background-color: #271717;
+  color: #e57373;
+}
+.md-typeset .page-banner-danger::before {
+  content: "⚠";
+}
+
+/* ---------- Personal CPM/back-attack multiplier calculator ---------- */
+/* Reuses .stat-bar-track-teal/.stat-bar-fill-teal's visual style (same
+   teal color, same track/fill shape) so it reads as the same family of
+   component as the Trixion multiplier bars elsewhere - but the JS drives
+   it on its own 0.4-1.0 scale, since this bar tracks Final Multiplier
+   (RaidCPM/TrixionCPM * AdjustedMultiplier) which lands in a different,
+   lower range than the 1.0-1.3-scaled Adjusted Multiplier bars use. */
+.md-typeset .cpm-calc {
+  border: 1px solid rgba(179, 157, 219, 0.28);
+  background-color: rgba(179, 157, 219, 0.045);
+  border-radius: 10px;
+  padding: 1em 1.2em 1.2em;
+  margin: 1em 0 1.5em;
+}
+.md-typeset .cpm-calc-row {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 0.8em 1em;
+  margin-top: 0.8em;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .cpm-calc-row:first-of-type {
+  margin-top: 0;
+}
+/* Marked by JS on whichever row currently has the highest Final
+   Multiplier, once at least two rows have valid input - "which build
+   should I actually play" is the whole point of comparing side by side. */
+.md-typeset .cpm-calc-row-best {
+  border-color: rgba(77, 182, 172, 0.5);
+  background-color: rgba(77, 182, 172, 0.06);
+}
+.md-typeset .cpm-calc-row-header {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-bottom: 0.6em;
+}
+.md-typeset .cpm-calc-row-title {
+  font-weight: 700;
+  color: #e8e6ee;
+}
+.md-typeset .cpm-calc-row-meta {
+  font-size: 0.78em;
+  color: #a79bc4;
+}
+.md-typeset .cpm-calc-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.9em;
+  margin-bottom: 0.7em;
+}
+.md-typeset .cpm-calc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+.md-typeset .cpm-calc-field-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+}
+.md-typeset .cpm-calc-field input[type="number"] {
+  width: 6.5em;
+  background-color: #161718;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  border-radius: 6px;
+  color: #e8e6ee;
+  padding: 0.35em 0.5em;
+  font-size: 0.95em;
+  font-family: inherit;
+}
+.md-typeset .cpm-calc-field input[type="number"]:focus {
+  outline: none;
+  border-color: #b39ddb;
+}
+/* Base Multiplier is a per-build constant from the Trixion parse - almost
+   never something the reader should change, but patches do shift it, so
+   it's editable rather than hardcoded. Muted so it visually reads as
+   "leave this alone unless you know why you're touching it," distinct
+   from Raid CPM/Back-Attack which the reader is expected to fill in. */
+.md-typeset .cpm-calc-field-muted .cpm-calc-field-label {
+  color: #6f6a80;
+}
+.md-typeset .cpm-calc-field-muted input[type="number"] {
+  width: 5em;
+  background-color: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: #8a849a;
+}
+.md-typeset .cpm-calc-field-muted input[type="number"]:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #cfc9dd;
+}
+.md-typeset .cpm-calc-field-muted input[type="number"]:focus {
+  border-color: #b39ddb;
+  border-style: solid;
+  color: #e8e6ee;
+}
+.md-typeset .cpm-calc-toggle {
+  display: flex;
+  gap: 0.9em;
+  font-size: 0.85em;
+  color: #cfc9dd;
+  padding-bottom: 0.4em;
+}
+.md-typeset .cpm-calc-toggle label {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  cursor: pointer;
+}
+.md-typeset .cpm-calc-output {
+  display: flex;
+  gap: 1.5em;
+  margin-bottom: 0.5em;
+}
+.md-typeset .cpm-calc-output-item {
+  display: flex;
+  flex-direction: column;
+}
+.md-typeset .cpm-calc-output-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+}
+.md-typeset .cpm-calc-adj-value {
+  font-size: 0.95em;
+  color: #cfc9dd;
+}
+.md-typeset .cpm-calc-result-value {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #4db6ac;
+}
+
+/* ---------- CPM calculator: recent-inputs chips ---------- */
+/* Injected by cpm-calculator.js (localStorage-backed), right after
+   .cpm-calc-inputs in each row. Deliberately quieter than the gem-priority
+   chips (smaller, single muted tone) since these are a shortcut, not a
+   primary piece of content on the page. */
+.md-typeset .cpm-calc-recent {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  margin: -0.15em 0 0.7em;
+}
+.md-typeset .cpm-calc-recent-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6f6a80;
+  font-weight: 700;
+  margin-right: 0.1em;
+}
+.md-typeset .cpm-calc-recent-chip {
+  font-family: inherit;
+  font-size: 0.76em;
+  color: #cfc9dd;
+  background-color: rgba(179, 157, 219, 0.08);
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  border-radius: 999px;
+  padding: 0.28em 0.75em;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .cpm-calc-recent-chip:hover,
+.md-typeset .cpm-calc-recent-chip:focus-visible {
+  border-color: #ee83ab;
+  color: #ffb3cf;
+  background-color: rgba(238, 131, 171, 0.08);
+  outline: none;
+}
+.md-typeset .cpm-calc-recent-clear {
+  font-family: inherit;
+  font-size: 0.72em;
+  color: #6f6a80;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.28em 0.3em;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.md-typeset .cpm-calc-recent-clear:hover,
+.md-typeset .cpm-calc-recent-clear:focus-visible {
+  color: #cfc9dd;
+  outline: none;
+}
+
+/* ---------- Ark Passive node comparison calculator ---------- */
+/* Same card shell as .cpm-calc (lavender border, dark panel) so the two
+   calculators read as one family. Inputs are grouped by which final stat
+   they actually feed (Crit Rate / Crit Dmg / On-Crit Dmg / Additional Dmg /
+   Evolution Dmg) rather than by item slot, since that's what a reader is
+   usually trying to reason about ("what's pushing my Crit Dmg") rather than
+   "what's on my bracelet". Each group gets a small accent color, reused on
+   the Your Setup / Best Setup labels further down so a field and its
+   contribution to the final numbers read as the same color everywhere on
+   the card. Party & Positioning is deliberately pulled out of that stat
+   grouping and placed next to the result grid instead - unlike gear, it's
+   the section people re-toggle every pull, so it lives with the payoff
+   rather than sitting buried among fill-once fields. Deliberately no raw
+   multiplier numbers shown next to the inputs themselves - only the grid's
+   Final Multiplier column and the %-vs-best figure are surfaced, so the
+   takeaway stays "pick the highlighted cell" rather than inviting the
+   reader to hand-compute multiplier math. */
+.md-typeset .ap-calc {
+  border: 1px solid rgba(179, 157, 219, 0.28);
+  background-color: rgba(179, 157, 219, 0.045);
+  border-radius: 10px;
+  padding: 1em 1.2em 1.2em;
+  margin: 1em 0 1.5em;
+}
+
+/* ---- Layout: fixed gear (fill once) on the left, the stuff you re-check
+   every pull (party toggles + result grid + verification numbers) on the
+   right. Right column sticks while scrolling the gear list, so the answer
+   never scrolls out of view while you're still filling out setup - if the
+   sticky offset ends up misjudging your header height, drop the
+   `position`/`top` pair below and it just scrolls normally instead. ---- */
+.md-typeset .ap-calc-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(300px, 1.15fr);
+  gap: 1.1em;
+  align-items: start;
+}
+.md-typeset .ap-calc-gear {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.9em;
+  align-content: start;
+  /* align-items defaults to stretch, which was forcing every group in a row
+     to match its tallest sibling's height - e.g. a short group padded out
+     to match a taller one beside it. start = each group only takes its own
+     content height. */
+  align-items: start;
+}
+/* Leap Rank is the lone field feeding Evolution Damage directly (see the
+   HTML comment above it) - full-width slim strip instead of its own boxed
+   group, so one dropdown doesn't cost a whole card's worth of border/title/
+   padding for little payoff. */
+.md-typeset .ap-calc-mini-field {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.3em 0.1em 0.6em;
+  border-bottom: 2px solid var(--ap-cat, rgba(255, 255, 255, 0.15));
+  margin-bottom: 0.1em;
+}
+.md-typeset .ap-calc-mini-field-tag {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--ap-cat, #a79bc4);
+  flex-shrink: 0;
+}
+.md-typeset .ap-calc-mini-field .ap-calc-field-label {
+  flex: 1;
+  /* This label/select pair sits outside .ap-calc-field-row, so none of that
+     class's font-size/color/select styling reaches them by default - which
+     was leaving Leap Rank's label at the browser's base font size (visibly
+     larger than every other label) and its select completely unstyled
+     (no dark background/border, default browser chrome). Mirrored here to
+     match .ap-calc-field-row's label + select rules exactly. */
+  font-size: 0.82em;
+  color: #cfc9dd;
+}
+.md-typeset .ap-calc-mini-field select {
+  background-color: #161718;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  border-radius: 6px;
+  color: #e8e6ee;
+  padding: 0.3em 0.5em;
+  font-size: 0.85em;
+  font-family: inherit;
+}
+.md-typeset .ap-calc-mini-field select:focus {
+  outline: none;
+  border-color: #b39ddb;
+}
+.md-typeset .ap-calc-mini-field--evo-dmg { --ap-cat: #b39ddb; }
+.md-typeset .ap-calc-live {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  position: sticky;
+  top: 4.4rem;
+}
+@media screen and (max-width: 900px) {
+  .md-typeset .ap-calc-layout {
+    display: flex;
+    flex-direction: column;
+  }
+  /* Party toggles + grid + summary read before the fill-once gear list on
+     small screens, since that's the part worth seeing without scrolling
+     past everything else first. */
+  .md-typeset .ap-calc-live {
+    position: static;
+    order: -1;
+  }
+}
+
+.md-typeset .ap-calc-group {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-left: 3px solid var(--ap-cat, rgba(255, 255, 255, 0.15));
+  border-radius: 8px;
+  padding: 0.7em 0.85em;
+}
+.md-typeset .ap-calc-group-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ap-cat, #a79bc4);
+  font-weight: 700;
+  margin-bottom: 0.55em;
+}
+.md-typeset .ap-calc-group--crit-rate  { --ap-cat: #ee83ab; }
+.md-typeset .ap-calc-group--crit-dmg   { --ap-cat: #4db6ac; }
+.md-typeset .ap-calc-group--oncrit-dmg { --ap-cat: #f0a868; }
+.md-typeset .ap-calc-group--add-dmg    { --ap-cat: #7ec4e8; }
+/* Evolution Damage has no full group anymore - its one field (Leap Rank)
+   lives in the .ap-calc-mini-field strip above instead, which carries its
+   own --ap-cat: #b39ddb. */
+
+.md-typeset .ap-calc-field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6em;
+  margin-bottom: 0.5em;
+}
+.md-typeset .ap-calc-field-row:last-child {
+  margin-bottom: 0;
+}
+.md-typeset .ap-calc-field-row label.ap-calc-field-label {
+  font-size: 0.82em;
+  color: #cfc9dd;
+  flex: 1;
+}
+.md-typeset .ap-calc-field-row select,
+.md-typeset .ap-calc-field-row input[type="number"] {
+  background-color: #161718;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  border-radius: 6px;
+  color: #e8e6ee;
+  padding: 0.3em 0.5em;
+  font-size: 0.85em;
+  font-family: inherit;
+  min-width: 5.5em;
+}
+.md-typeset .ap-calc-field-row input[type="number"] {
+  width: 5.5em;
+  min-width: 0;
+}
+.md-typeset .ap-calc-field-row select:focus,
+.md-typeset .ap-calc-field-row input[type="number"]:focus {
+  outline: none;
+  border-color: #b39ddb;
+}
+.md-typeset .ap-calc-field-row input[type="checkbox"] {
+  width: 1.1em;
+  height: 1.1em;
+  accent-color: #ee83ab;
+  cursor: pointer;
+}
+/* Range sliders (Back-Attack Rate, Adrenaline Uptime) show a live "N%"
+   readout pinned to the right of the track - the fields in the card the
+   reader is expected to actually drag, so each gets more room than the
+   dropdowns beside it. */
+.md-typeset .ap-calc-field-row.ap-calc-field-row-range {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.3em;
+}
+/* Stacking (the default above) is there for a label too long to share a
+   line with the slider - neither current slider needs that, so both use
+   this modifier to keep label and slider on one row instead and save the
+   vertical space. Selector has to repeat all three classes to
+   out-specificity the stacked rule above regardless of source order. */
+.md-typeset .ap-calc-field-row.ap-calc-field-row-range.ap-calc-field-row-range--inline {
+  flex-direction: row;
+  align-items: center;
+}
+.md-typeset .ap-calc-field-row-range--inline .ap-calc-field-label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.md-typeset .ap-calc-field-row-range--inline .ap-calc-range-line {
+  flex: 1;
+  min-width: 0;
+}
+.md-typeset .ap-calc-range-line {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+}
+.md-typeset .ap-calc-range-line input[type="range"] {
+  flex: 1;
+  /* Without this, Firefox refuses to shrink the slider below its native
+     intrinsic width (bigger than Chromium's) even with flex:1 - fine in
+     the wider Party & Positioning card, but in the narrower Crit Rate
+     card it was pushing the "100%" value past the card edge in Firefox
+     specifically, while looking correct in Chromium. */
+  min-width: 0;
+  accent-color: #ee83ab;
+}
+.md-typeset .ap-calc-range-value {
+  font-size: 0.85em;
+  font-weight: 700;
+  color: #ee83ab;
+  min-width: 3em;
+  text-align: right;
+}
+
+/* ---- Paired rows: two controls that are the same slot on two different
+   items (Ring 1/2, Bracelet line 1/2, the Crit Hit Dmg checkboxes)
+   sharing one row instead of one row each. These options now show their
+   actual percentage as the option text ("1.55%" instead of "High"), so
+   there's no separate live-value readout to fit alongside each control
+   anymore - that's what used to force a squeeze between the value text
+   and the select. Just two plain controls side by side now. ---- */
+.md-typeset .ap-calc-field-row-pair .ap-calc-field-label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.md-typeset .ap-calc-pair {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.6em;
+}
+.md-typeset .ap-calc-pair select {
+  width: auto;
+  min-width: 5em;
+  flex: 0 1 auto;
+  padding: 0.3em 0.5em;
+}
+/* Checkbox variant (Crit Hit Damage's Bracelet 1/2 toggles) - each is a
+   <label> so clicking the "1 (1.50%)" text also toggles its checkbox. */
+.md-typeset .ap-calc-pair-checks {
+  flex: 0 0 auto;
+  gap: 1.1em;
+}
+.md-typeset .ap-calc-pair-check {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  cursor: pointer;
+}
+.md-typeset .ap-calc-pair-check-label {
+  font-size: 0.82em;
+  color: #cfc9dd;
+  white-space: nowrap;
+}
+.md-typeset .ap-calc-pair-check .ap-value-display {
+  min-width: 0;
+  text-align: left;
+  font-size: 0.75em;
+}
+
+/* ---- Party & Positioning: the "changes every pull" card - visually
+   distinct from the fill-once gear groups (teal accent matching the grid's
+   "best cell" highlight below) and sitting directly above the grid it
+   feeds. ---- */
+.md-typeset .ap-calc-party-card {
+  border: 1px solid rgba(77, 182, 172, 0.35);
+  background-color: rgba(77, 182, 172, 0.05);
+  border-radius: 8px;
+  padding: 0.7em 0.85em;
+}
+.md-typeset .ap-calc-party-card .ap-calc-group-title {
+  color: #4db6ac;
+}
+/* A field gets `disabled` (not silently reset) when something else makes
+   it inapplicable - the Party & Positioning checkboxes past the 3-of-5
+   limit (enforcePartyCheckboxLimit) and the KBW Ability Stone while Keen
+   Blunt Weapon itself is "Not Used" (enforceKbwStoneDependency), both in
+   the JS. Dim the whole row so it's visually obvious why it won't
+   respond, and swap the cursor so hovering doesn't imply it's clickable. */
+.md-typeset .ap-calc-field-row:has(input:disabled, select:disabled) {
+  opacity: 0.45;
+}
+.md-typeset .ap-calc-field-row input:disabled,
+.md-typeset .ap-calc-field-row select:disabled {
+  cursor: not-allowed;
+}
+
+/* ---- Top 3 combinations: ranked list, not a 3x3 grid. Evolution split x
+   Keystone pair is 9 cells, but a reader only ever wants "what's my best
+   combo, and what am I giving up if I run something else" - a ranked list
+   of the top 3 answers that directly, with the #1 row visually promoted,
+   instead of asking the reader to scan a matrix for the highlighted cell.
+   Rows are fixed in the markup (data-rank 1/2/3) and JS re-sorts &
+   re-labels them in place each update, since which combo ranks where
+   changes with the inputs. */
+.md-typeset .ap-calc-results {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.7em 0.85em;
+}
+.md-typeset .ap-calc-results-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+  margin-bottom: 0.6em;
+}
+.md-typeset .ap-calc-result-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.5em 0.6em;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+.md-typeset .ap-calc-result-row + .ap-calc-result-row {
+  margin-top: 0.4em;
+}
+.md-typeset .ap-calc-result-row-best {
+  border-color: rgba(77, 182, 172, 0.5);
+  background-color: rgba(77, 182, 172, 0.09);
+}
+.md-typeset .ap-result-rank {
+  flex-shrink: 0;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72em;
+  font-weight: 700;
+  color: #cfc9dd;
+  background-color: rgba(255, 255, 255, 0.07);
+}
+.md-typeset .ap-calc-result-row-best .ap-result-rank {
+  color: #0f1210;
+  background-color: #4db6ac;
+}
+.md-typeset .ap-result-combo {
+  flex: 1;
+  font-size: 0.88em;
+  font-weight: 600;
+  color: #e8e6ee;
+  min-width: 0;
+}
+.md-typeset .ap-calc-result-row-best .ap-result-combo {
+  color: #4db6ac;
+}
+.md-typeset .ap-result-pct {
+  font-size: 1em;
+  font-weight: 700;
+  color: #e8e6ee;
+  text-align: right;
+}
+.md-typeset .ap-calc-result-row-best .ap-result-pct {
+  color: #4db6ac;
+}
+.md-typeset .ap-result-delta {
+  flex-shrink: 0;
+  font-size: 0.72em;
+  color: #a79bc4;
+  min-width: 5.5em;
+  text-align: right;
+}
+.md-typeset .ap-calc-result-row-best .ap-result-delta {
+  color: #4db6ac;
+  font-weight: 600;
+}
+@media screen and (max-width: 480px) {
+  .md-typeset .ap-result-delta {
+    display: none;
+  }
+}
+
+/* ---- Live "what this field is contributing" tags ---- */
+/* Sits to the right of each control, showing the field's current numeric
+   effect (e.g. "+0.95% Crit Rate") so a reader can sanity-check their own
+   inputs without knowing the underlying formula. */
+.md-typeset .ap-value-display {
+  color: #a79bc4;
+  font-size: 0.75em;
+  min-width: 4.5em;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ---- Fixed-setup / best-combo verification panel ---- */
+/* Two cards side by side: what your gear gives you unconditionally (Base),
+   and what the top-ranked combo above adds on top of it (Best). Same
+   label:value row shape in both so they read as directly comparable, with
+   the Best card visually promoted (teal border, same treatment as the #1
+   row in the results list above) so the eye lands on it first. */
+.md-typeset .ap-calc-summary {
+  border-top: 1px solid rgba(179, 157, 219, 0.2);
+  padding-top: 0.9em;
+}
+.md-typeset .ap-calc-stat-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8em;
+}
+@media screen and (max-width: 480px) {
+  .md-typeset .ap-calc-stat-cards {
+    grid-template-columns: 1fr;
+  }
+}
+.md-typeset .ap-stat-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.7em 0.85em;
+}
+.md-typeset .ap-stat-card-best {
+  border-color: rgba(77, 182, 172, 0.5);
+  background-color: rgba(77, 182, 172, 0.06);
+}
+.md-typeset .ap-stat-card-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+  margin-bottom: 0.65em;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+}
+.md-typeset .ap-stat-card-best .ap-stat-card-title {
+  color: #4db6ac;
+}
+/* Names the actual winning combo (e.g. "LB1/KS2 + Critical + Master") right
+   in the Best card's header - filled by JS from result.bestStats.label,
+   which previously had nowhere to render. */
+.md-typeset .ap-stat-card-subtitle {
+  font-size: 0.9em;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 600;
+  color: #cfc9dd;
+}
+.md-typeset .ap-stat-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6em;
+  font-size: 0.85em;
+  padding: 0.28em 0;
+}
+.md-typeset .ap-stat-card-row + .ap-stat-card-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.md-typeset .ap-summary-label {
+  color: #a79bc4;
+}
+/* Same five category colors as the gear groups above, so a label down here
+   visually traces back to the group that feeds it. */
+.md-typeset .ap-summary-label--critrate { color: #ee83ab; }
+.md-typeset .ap-summary-label--critdmg  { color: #4db6ac; }
+.md-typeset .ap-summary-label--oncrit   { color: #f0a868; }
+.md-typeset .ap-summary-label--adddmg   { color: #7ec4e8; }
+.md-typeset .ap-summary-label--evodmg   { color: #b39ddb; }
+.md-typeset .ap-summary-value {
+  font-weight: 700;
+  color: #e8e6ee;
+}
+/* Toggled by JS instead of an inline color when a raw (uncapped) Crit Rate
+   total exceeds 100% - a clear warning that points are being wasted past
+   the cap, matching the same red used for other danger states on the site. */
+.md-typeset .ap-summary-value.ap-summary-value-warn {
+  color: #e57373;
+}
+
+/* ---- Bracelet Line Comparison: collapsible <details> block, native
+   toggle affordance rather than a custom JS-driven show/hide. Lives
+   OUTSIDE .ap-calc-live (see resources.md) as a plain full-width block, not
+   the sticky right column, so it doesn't grow that column's height - and
+   renders as a compact table (one <tr> per line) rather than stacked cards,
+   since full width means Low/Mid/High can sit in their own columns instead
+   of needing a bar to convey relative size.
+
+   Styled as a neutral utility panel - same plain border + no fill as
+   .ap-calc-results (the Top Combinations box) - rather than one of the
+   category accent colors (pink/teal/orange/blue), since this section isn't
+   tied to any one of those categories the way the gear cards above are. */
+.md-typeset .ap-brace-compare {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  margin: 1em 0 0;
+}
+/* Material gives every bare <details> (no .note/.tip/etc type class) its
+   own default admonition icon on the summary, drawn via a masked ::before
+   pseudo-element tinted with currentColor - left as a stray icon that read
+   as an unintended "warning" box rather than a deliberate accent. Fully
+   redefining ::before below (not just hiding it) removes Material's icon/
+   mask and swaps in a disclosure triangle as the indicator.
+
+   That triangle is a pure CSS border-triangle (no glyph) laid out as a
+   normal flex item next to the title text, not a Unicode "▸" character
+   absolutely positioned over it. Two earlier attempts both left something
+   floating above the box, clipped by the card's overflow:hidden: first a
+   glyph whose own font metrics didn't match a fixed em offset, then (after
+   switching to a border-triangle) Material's own masked admonition icon
+   still showing through underneath it - our ::before rule set width/
+   height/border but never explicitly cleared Material's background-color/
+   mask-image/position on that same pseudo-element, and CSS cascades those
+   per-property, not per-rule, so whichever properties we didn't touch kept
+   using Material's values. The block below now resets every property
+   Material's default icon rule sets, not just the ones the triangle needs,
+   so there's nothing left for it to leak through. */
+.md-typeset .ap-brace-compare summary::after {
+  display: none !important;
+}
+.md-typeset .ap-brace-compare summary::-webkit-details-marker {
+  display: none;
+}
+.md-typeset .ap-brace-compare summary::marker {
+  content: "";
+}
+.md-typeset .ap-brace-compare summary {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: 0.92em;
+  font-weight: 700;
+  color: #a79bc4;
+  padding: 0.6em 0.85em;
+  cursor: pointer;
+  list-style: none;
+}
+.md-typeset .ap-brace-compare summary::before {
+  content: "";
+  display: inline-block;
+  position: static;
+  flex-shrink: 0;
+  width: 0;
+  height: 0;
+  background: none;
+  background-color: transparent;
+  mask-image: none;
+  -webkit-mask-image: none;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 5px solid #a79bc4;
+  border-right: none;
+  transition: transform 0.15s ease;
+}
+.md-typeset .ap-brace-compare[open] summary::before {
+  transform: rotate(90deg);
+}
+.md-typeset .ap-brace-compare[open] summary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.md-typeset .ap-brace-compare-body {
+  padding: 0.7em 0.85em 0.85em;
+}
+.md-typeset .ap-brace-compare-intro {
+  font-size: 0.9em;
+  color: #a79bc4;
+  margin: 0 0 0.7em;
+}
+/* RE/Surge Deathblade picker for the Spec +80/100/120 line - real radio
+   inputs (not JS-enforced checkboxes) so mutual exclusivity is native
+   rather than something this code has to police. Lives inside
+   .ap-brace-compare-inputs as a third flex item alongside the Demon Dmg %
+   and Crit Stat fields (rather than its own stacked row above them) to
+   keep the section from eating extra vertical space. */
+.md-typeset .ap-brace-spec-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  flex: 0 0 auto;
+  margin: 0;
+}
+.md-typeset .ap-brace-spec-toggle .ap-calc-field-label {
+  margin: 0;
+  font-size: 0.82em;
+  color: #cfc9dd;
+}
+.md-typeset .ap-brace-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.82em;
+  color: #cfc9dd;
+  cursor: pointer;
+}
+.md-typeset .ap-brace-radio-label input[type="radio"] {
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  accent-color: #a79bc4;
+  cursor: pointer;
+}
+.md-typeset .ap-brace-compare-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9em 1.6em;
+  margin-bottom: 0.8em;
+  padding-bottom: 0.7em;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.md-typeset .ap-brace-compare-inputs .ap-calc-field-row {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+.md-typeset .ap-brace-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.96em;
+}
+.md-typeset .ap-brace-compare-table th {
+  text-align: right;
+  font-size: 0.82em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6f6a80;
+  padding: 0.3em 0.6em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.md-typeset .ap-brace-compare-table th.ap-brace-th-label {
+  text-align: left;
+}
+/* Low/Mid/High column headers carry the tier colors instead of every
+   value cell in the body - a light touch at the top of the table rather
+   than recoloring all 30-odd numbers on the right. The actual per-tier
+   coloring readers asked for lives on the bracelet-line labels instead
+   (see .ap-brace-label-low/mid/high/downside below). */
+.md-typeset .ap-brace-compare-table th.ap-brace-th-low {
+  color: #7ec4e8;
+}
+.md-typeset .ap-brace-compare-table th.ap-brace-th-mid {
+  color: #b39ddb;
+}
+.md-typeset .ap-brace-compare-table th.ap-brace-th-high {
+  color: #f0a868;
+}
+.md-typeset .ap-brace-compare-table td {
+  padding: 0.45em 0.6em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  vertical-align: top;
+}
+.md-typeset .ap-brace-compare-table tr:last-child td {
+  border-bottom: none;
+}
+.md-typeset .ap-brace-row-label {
+  font-weight: 400;
+  color: #e8e6ee;
+  text-align: left;
+}
+/* The Low/Mid/High figures embedded in each bracelet line's own label
+   (e.g. the "3.4/4.2/5" in "Crit Rate +3.4/4.2/5%") carry the tier
+   colors - matching the reference tooltip's per-line coloring - rather
+   than the flat percentages in the Low/Mid/High columns on the right,
+   which stay plain. Mid uses the calculator's own purple (matches
+   .ap-calc-mini-field--evo-dmg's --ap-cat elsewhere in the calculator)
+   and Low uses the blue Mid used to use, so this reads consistently with
+   the rest of the calculator's color language. The Skill Cooldown line's
+   "+2%" downside figure gets its own red instead, since it's not a
+   Low/Mid/High tier at all - it's the fixed downside baked into that
+   line regardless of tier. */
+.md-typeset .ap-brace-label-low {
+  color: #7ec4e8;
+}
+.md-typeset .ap-brace-label-mid {
+  color: #b39ddb;
+}
+.md-typeset .ap-brace-label-high {
+  color: #f0a868;
+}
+.md-typeset .ap-brace-label-downside {
+  color: #ee83ab;
+}
+/* The fixed "+1.5%" Crit Hit Damage tag on the two Crit Rate/Crit Dmg
+   dual lines, and the fixed "+2.5%" Dmg vs Demon/Archdemon tag on the
+   Additional Damage B line, aren't Low/Mid/High tier figures either -
+   they're flat bonuses that don't change with tier. Colored with the
+   teal/green Low used to use (now freed up by Low's move to blue above)
+   so they still read as a distinct, called-out number. */
+.md-typeset .ap-brace-label-fixed {
+  color: #4db6ac;
+}
+/* Hover tooltip badge for rows with a caveat - replaces the old always-
+   visible note line under the label so a caveat doesn't cost vertical
+   space for every reader, while still being obvious enough to notice:
+   a small circled "i" right after the label, native `title` attribute
+   for the actual hover tooltip (no JS-driven tooltip needed). */
+.md-typeset .ap-brace-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  height: 1.2em;
+  margin-left: 0.4em;
+  border-radius: 50%;
+  border: 1px solid rgba(167, 155, 196, 0.6);
+  color: #a79bc4;
+  font-size: 0.8em;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+  vertical-align: middle;
+}
+.md-typeset .ap-brace-info-icon:hover {
+  border-color: #a79bc4;
+  color: #cfc9dd;
+}
+/* Small always-visible tag flagging that a row's number is damage-share
+   only (currently the Spec row, for both RE and Surge - neither model has
+   a CDR term anymore). Sized to sit inline with the label text without
+   growing the row's height: line-height 1 plus tight padding keeps its
+   box shorter than the row's own text line, unlike a badge sized off the
+   1.2em info-icon circle. The full explanation lives in this tag's own
+   hover tooltip (native `title`) rather than a permanent note under the
+   table. */
+.md-typeset .ap-brace-label-caveat {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.5em;
+  padding: 0.02em 0.35em;
+  border-radius: 3px;
+  background: rgba(224, 169, 64, 0.15);
+  border: 1px solid rgba(224, 169, 64, 0.55);
+  color: #e0a940;
+  font-size: 0.62em;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+  white-space: nowrap;
+  cursor: help;
+}
+/* Per-build hover tags (111/313 for RE, 222/333 for Surge) sitting next to
+   the Spec row's label - same compact sizing as .ap-brace-label-caveat so
+   a row with both the dmg-only tag and two build tags still doesn't grow
+   taller than any other row. Neutral color instead of the caveat's amber
+   since these aren't warnings, just alternate figures on hover. */
+.md-typeset .ap-brace-build-tag {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.35em;
+  padding: 0.02em 0.35em;
+  border-radius: 3px;
+  background: rgba(167, 155, 196, 0.12);
+  border: 1px solid rgba(167, 155, 196, 0.5);
+  color: #a79bc4;
+  font-size: 0.62em;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+  white-space: nowrap;
+  cursor: help;
+}
+.md-typeset .ap-brace-build-tag:hover {
+  border-color: #a79bc4;
+  color: #cfc9dd;
+}
+.md-typeset .ap-brace-tier-val {
+  font-weight: 400;
+  color: #cfc9dd;
+  text-align: right;
+  white-space: nowrap;
+}
+/* Archdemon line's Low/Mid/High values only pay off vs a Demon/Archdemon
+   target - dimmed so they read as situational at a glance, rather than a
+   plain always-on gain like every other row's numbers. */
+.md-typeset .ap-brace-row-situational .ap-brace-tier-val {
+  color: #6f6a80;
+}
+.md-typeset .ap-brace-compare-flip-note {
+  font-size: 0.78em;
+  color: #6f6a80;
+  font-style: italic;
+  margin: 0.6em 0 0;
+}
+/* Freeform explanatory note - e.g. why Weapon Power / Attack Power /
+   Specialization lines aren't in this table - kept visually secondary
+   (small, muted, separated by extra top margin) so it reads as an aside
+   under the table rather than another row of it. */
+.md-typeset .ap-brace-compare-footer-note {
+  font-size: 0.8em;
+  color: #6f6a80;
+  margin: 1.1em 0 0;
+  padding-top: 0.7em;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+@media screen and (max-width: 600px) {
+  .md-typeset .ap-brace-compare-table {
+    font-size: 0.86em;
+  }
+  .md-typeset .ap-brace-compare-table th,
+  .md-typeset .ap-brace-compare-table td {
+    padding: 0.35em 0.4em;
+  }
+}
+
+/* Small persistence notice + reset link under the summary panel - inputs
+   are saved to this browser's localStorage on every change (see the JS
+   header comment), so a reader coming back later sees their own last
+   setup instead of a blank form. The reset link is the escape hatch back
+   to the authored HTML defaults. */
+.md-typeset .ap-calc-footnote {
+  margin: 0.7em 0 0;
+  font-size: 0.72em;
+  color: #6f6a80;
+  text-align: right;
+}
+.md-typeset .ap-calc-footnote .ap-calc-reset {
+  color: #a79bc4;
+  text-decoration: underline;
+  text-decoration-color: rgba(179, 157, 219, 0.4);
+  /* Reset the <button> defaults so this reads as the same inline text
+     link as everywhere else on the card, not a boxed control. */
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-size: 1em;
+  cursor: pointer;
+}
+.md-typeset .ap-calc-footnote .ap-calc-reset:hover {
+  color: #ee83ab;
+  text-decoration-color: currentColor;
+}
+
+/* ---------- Keyboard focus visibility ---------- */
+/* The custom link rule above overrides color and underline but not focus
+   styling, which risks losing the visible indicator entirely for keyboard
+   navigation depending on the browser's default. Links are the only
+   elements here that are natively focusable — tab labels and gem-chips
+   are a <label>/<span>, not form controls, so they don't receive
+   keyboard focus at all in their current markup. */
+.md-typeset a:focus-visible {
+  outline: 2px solid #ee83ab;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* The long skills-table reference tables (14+ rows) benefit from actual
+   row striping on top of the flat table background every table gets -
+   easier to track a row across to Tags/Notes at that length. Regular
+   tables (shorter, usually a build comparison) stay flat/uncomplicated. */
+.md-typeset .skills-table tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.018);
+}
+
+/* ---------- Tabbed content ---------- */
+/* Previous version reused the same lavender fade gradient as the h2/hr
+   section-break border, so a dense page (H2 -> tabs -> nested tabs) showed
+   the identical line motif three times in a row. Rather than tone that
+   line down further, drop lines entirely for tabs: no border-image, no
+   sliding underline. The active tab is marked purely by dimming the
+   *inactive* labels (opacity) and giving the active one full opacity plus
+   the accent color. Nothing here is a geometric element (no bar, no border,
+   no background), so nothing compounds or stacks when tabs nest. */
+.md-typeset .tabbed-set > .tabbed-labels {
+  box-shadow: none;
+  border-bottom: none;
+}
+.md-typeset .tabbed-set > .tabbed-labels > label {
+  font-weight: 400;
+  color: var(--md-default-fg-color--light);
+  opacity: 0.55;
+  text-decoration: none;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+.md-typeset .tabbed-set > .tabbed-labels > label:hover {
+  opacity: 0.9;
+  color: #ffb3cf;
+}
+/* Material's sliding accent bar (.tabbed-labels::before) - the shared
+   element that animates between tabs - stays, that's "the tab underline"
+   that's fine as-is. What actually needed killing is a totally separate
+   thing: Material also puts a border-bottom directly on each label
+   (border-color: transparent normally, switched to solid on the active
+   tab via a long :checked selector) - that's the underline sitting right
+   against the text. !important because Material's own selector chain
+   for that rule is long/specific enough to otherwise win. */
+.md-typeset .tabbed-set > .tabbed-labels > label {
+  border-bottom-color: transparent !important;
+}
+/* Material lists every tab's <input> first, then one .tabbed-labels div
+   with all the <label>s after - an input and its label are siblings by
+   position, not adjacent, so pairing them up needs nth-of-type matching
+   rather than a plain + selector. Covers up to 8 tabs per group; unused
+   pairs are harmless, and this naturally scopes to each nesting level
+   since every .tabbed-set only matches its own inputs/labels. */
+.md-typeset .tabbed-set > input:nth-of-type(1):checked ~ .tabbed-labels > label:nth-of-type(1),
+.md-typeset .tabbed-set > input:nth-of-type(2):checked ~ .tabbed-labels > label:nth-of-type(2),
+.md-typeset .tabbed-set > input:nth-of-type(3):checked ~ .tabbed-labels > label:nth-of-type(3),
+.md-typeset .tabbed-set > input:nth-of-type(4):checked ~ .tabbed-labels > label:nth-of-type(4),
+.md-typeset .tabbed-set > input:nth-of-type(5):checked ~ .tabbed-labels > label:nth-of-type(5),
+.md-typeset .tabbed-set > input:nth-of-type(6):checked ~ .tabbed-labels > label:nth-of-type(6),
+.md-typeset .tabbed-set > input:nth-of-type(7):checked ~ .tabbed-labels > label:nth-of-type(7),
+.md-typeset .tabbed-set > input:nth-of-type(8):checked ~ .tabbed-labels > label:nth-of-type(8) {
+  color: #b39ddb;
+  font-weight: 400;
+  opacity: 1;
+}
+
+/* ---------- Trixion DPS distribution chart ---------- */
+/* Was a single screenshot buried in a collapsible `??? example`
+   admonition at the bottom of Rotation - easy to miss, and read as an
+   afterthought rather than an actual part of the guide. Promoted to its
+   own H2 ("## Trixion DPS") so it's a real chapter (picks up the
+   standard H2 chapter-break treatment above, and shows up in the mobile
+   quick-jump pills / desktop section tracker like every other section),
+   then later swapped for a live-drawn chart so there's no screenshot to
+   retake after a balance pass.
+
+   Shell matches the site's standard flat card family (.cpm-calc,
+   .build-compare) - a hairline lavender border + a faint lavender tint,
+   nothing else - rather than a bespoke glow/hover-lift/gradient
+   treatment. This used to be built to frame a static screenshot (glow,
+   lift-on-hover, box-shadowed image) and later had its rows redone to
+   match glossy in-game skill-chip icons; both read as much more
+   decorated than every other panel on the page once the screenshot was
+   gone and this became a plain data readout - so it's flattened back
+   down to the same plain-card language as the rest of the site instead. */
+.md-typeset .dps-showcase {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.5em;
+  margin: 1.4em 0 0.6em;
+}
+.md-typeset .dps-showcase-frame {
+  border: 1px solid rgba(179, 157, 219, 0.28);
+  background-color: rgba(179, 157, 219, 0.045);
+  border-radius: 10px;
+  padding: 1.4em 1.6em 1.5em;
+}
+.md-typeset .dps-showcase-frame p {
+  margin: 0;
+}
+
+.md-typeset .dps-chart {
+  width: min(540px, 92vw);
+}
+.md-typeset .dps-chart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+.md-typeset .dps-chart-row {
+  --dps-target: 0%;
+  --dps-delay: 0ms;
+  display: grid;
+  grid-template-columns: 13.5em 1fr 3.6em;
+  align-items: center;
+  gap: 0.85em;
+}
+/* Plain icon + text, no chip card around it - the icon alone (small,
+   flush with the label) carries the identification, matching how
+   .table-bar-cell and every other stat row on the page pairs a label
+   with a bar rather than boxing the label first. */
+.md-typeset .dps-chart-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  min-width: 0;
+}
+.md-typeset .dps-chart-icon {
+  flex: 0 0 auto;
+  width: 1.75em;
+  height: 1.75em;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.md-typeset .dps-chart-label-text {
+  font-size: 1.02em;
+  font-weight: 500;
+  color: #cfc9dd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Same thin track/fill shape as .stat-bar-track-teal elsewhere on the
+   page (Trixion multiplier bars) instead of a taller, more prominent
+   bar of its own - one visual language for "teal bar = Trixion number"
+   across the whole page. */
+.md-typeset .dps-chart-track {
+  height: 7px;
+  border-radius: 999px;
+  background-color: rgba(77, 182, 172, 0.15);
+  overflow: hidden;
+}
+.md-typeset .dps-chart-fill {
+  --dps-accent: #4db6ac;
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background-color: var(--dps-accent);
+  transition: width 0.7s ease;
+  transition-delay: var(--dps-delay);
+}
+.md-typeset .dps-chart-in-view .dps-chart-fill {
+  width: var(--dps-target);
+}
+.md-typeset .dps-chart-value {
+  font-size: 1em;
+  font-weight: 600;
+  color: #e8e6ee;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+/* Caption sits below the whole row (not per-frame) since it's describing
+   the shared conditions the numbers were pulled under, not one specific
+   chart - stays put even once a second frame joins it. */
+.md-typeset .dps-showcase-caption {
+  flex-basis: 100%;
+  text-align: center;
+  font-size: 0.92em;
+  color: #a79bc4;
+  margin: 0.2em 0 0;
+}
+
+/* ---------- Reduced motion ---------- */
+/* Every transition on the site so far is small/cosmetic (hover states,
+   opacity fades) rather than load-bearing animation, so this costs
+   nothing for most visitors and just respects the OS-level accessibility
+   setting for anyone who's turned it on. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Space before the footer ---------- */
+/* Overrides Material's own `.md-content__inner > :last-child { margin-bottom: 0; }`
+   reset (same selector/specificity, wins on source order) so the content area
+   doesn't butt straight up against the footer bar. Build guide pages (the ones
+   with a .build-card near the top - 333-ceiling, 313-high-floor, 111-head-hunt,
+   111-classic, 222-speedy, 333-blitz) end on a dense DPS-distribution image or
+   tab set and read better with more breathing room than shorter pages like
+   index/resources/essentials/pre-ark-grid, so they get more. Selects on
+   .build-card's presence rather than duplicating a page list here, so a future
+   build page picks up 5rem automatically just by using the component. */
+.md-content__inner > :last-child {
+  margin-bottom: 3rem;
+}
+.md-content__inner:has(.build-card) > :last-child {
+  margin-bottom: 9rem;
+}
+
+/* ---------- Soft page fade-in ---------- */
+/* Plays on every full page load. With navigation.instant enabled, Material
+   swaps in a fresh .md-content__inner element on every transition too, so
+   this naturally replays on instant navigations as well - no JS retrigger
+   needed. Already covered by the prefers-reduced-motion block above for
+   anyone who's turned that off. */
+.md-content__inner {
+  animation: page-fade-in 0.35s ease both;
+}
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Site-wide emoji hover wiggle ---------- */
+/* Was tiger-emoji-only (333 Blitz page), manually wrapped per instance.
+   Generalized so every emoji site-wide gets this automatically - the
+   wrapping is done by javascripts/extra.js (walks text nodes, wraps each
+   emoji character/sequence in a .emoji-wiggle span), not by hand-editing
+   markdown. .tiger-emoji is kept working too (in case a manual
+   title="rawr" tooltip span like this is still used somewhere:
+   <span class="tiger-emoji" title="rawr">🐯</span>) - the JS walker skips
+   anything already inside a .tiger-emoji/.emoji-wiggle ancestor, so a
+   manually-tagged emoji doesn't get double-wrapped, and both classes
+   share the same underlying animation rather than duplicating it. */
+.md-typeset .emoji-wiggle,
+.md-typeset .tiger-emoji {
+  display: inline-block;
+  cursor: default;
+}
+.md-typeset .emoji-wiggle:hover,
+.md-typeset .tiger-emoji:hover {
+  animation: emoji-wiggle 0.4s ease;
+}
+@keyframes emoji-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-12deg); }
+  40% { transform: rotate(10deg); }
+  60% { transform: rotate(-6deg); }
+  80% { transform: rotate(4deg); }
+}
+
+/* ---------- Mobile quick-jump pills (build pages) ---------- */
+/* Built by javascripts/extra.js from each build page's own H2s, inserted
+   right after .build-card. Desktop already gets this for free via the
+   left nav's integrated TOC (toc.integrate), so this only shows below
+   Material's mobile breakpoint, where that nav collapses behind the
+   hamburger toggle - exactly when someone's reading on a phone mid-raid
+   and doesn't want to dig through a drawer to jump to Gems. */
+.quick-jump-pills {
+  display: none;
+}
+@media screen and (max-width: 768px) {
+  .quick-jump-pills {
+    display: flex;
+    gap: 0.5em;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 0 1.2em;
+    padding-bottom: 0.2em;
+    scrollbar-width: none;
+  }
+  .quick-jump-pills::-webkit-scrollbar {
+    display: none;
+  }
+}
+.md-typeset .quick-jump-pills a {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-size: 0.78em;
+  font-weight: 600;
+  padding: 0.4em 0.95em;
+  border-radius: 999px;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  background-color: rgba(179, 157, 219, 0.08);
+  color: var(--md-default-fg-color--light);
+  text-decoration: none !important;
+}
+.md-typeset .quick-jump-pills a:hover {
+  border-color: #ee83ab;
+  color: #ee83ab !important;
+}
+/* ---------- Desktop section tracker (scrollspy nav) ---------- */
+/* Built by javascripts/extra.js from a page's own H2s (any page with
+   enough of them - see SECTION_TRACKER_MIN_HEADINGS in extra.js - not
+   just build guides), same source as the mobile quick-jump pills but
+   shown only on wide viewports where there's real room beside the
+   (centered, fixed-max-width) content column.
+   Kept deliberately minimal - no panel, no blur, no shadow - just small
+   rounded-square marks threaded by a faint line directly on the page, so
+   it reads as a quiet margin note rather than a UI chrome element.
+   The current section's MARK stays visible at all times (bigger, filled,
+   a soft glow) so you always know roughly where you are on the page at a
+   glance. The LABEL is hover/focus-only for every mark, active section
+   included - it used to also stay parked on screen for the active
+   section, but on pages with real diagrams/images near the tracker (not
+   just prose) that meant a solid label sitting over actual page content
+   the whole time you were reading that section, not just when you
+   glanced over at the tracker. Hover-only means it only ever appears
+   while your cursor is already over there on purpose. */
+.section-tracker {
+  display: none;
+}
+@media screen and (min-width: 1400px) {
+  .section-tracker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 4;
+  }
+}
+/* The connecting line - faint, faded at both ends, just enough to read
+   the marks as one sequence rather than disconnected shapes. */
+.section-tracker::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(179, 157, 219, 0.28) 12%,
+    rgba(179, 157, 219, 0.28) 88%,
+    transparent
+  );
+}
+.section-tracker-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5em 0.4em;
+  text-decoration: none !important;
+}
+.section-tracker-mark {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: 7px;
+  height: 10px;
+  border-radius: 2.5px;
+  background-color: var(--md-default-bg-color);
+  border: 1.5px solid rgba(179, 157, 219, 0.4);
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+/* Label sits to the left. Originally just text with a soft shadow for
+   legibility over whatever content was behind it - fine for the short
+   build-guide headings this started with (Gems, Rotation), but once the
+   tracker started appearing on longer-titled pages too (Essentials'
+   "Remaining Energy Skills", Resources' "Ark Passive Calculator"), a
+   shadow alone wasn't enough: the *active* label stays visible
+   permanently, not just on hover, so a long one sitting over a table or
+   a colored admonition box just read as noise. Solid pill backdrop
+   (blurred, so it holds up over anything) fixes that outright rather
+   than trying to out-shadow busier backgrounds - matches the pill shape
+   already used for gem-chip/video-chip/quick-jump-pills elsewhere.
+   max-width + ellipsis is a hard backstop for anything longer than
+   that could still crowd the content column on the narrow end of the
+   1400px+ range this shows at; the JS also sets a title attribute so
+   the full text is still one hover away if it ever truncates. */
+.section-tracker-label {
+  position: absolute;
+  right: calc(100% + 0.6em);
+  top: 50%;
+  max-width: 13em;
+  padding: 0.32em 0.75em;
+  border-radius: 999px;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  background-color: rgba(20, 20, 24, 0.82);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  transform: translate(4px, -50%);
+  font-size: 0.7em;
+  font-weight: 600;
+  color: var(--md-default-fg-color--light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.section-tracker-item:hover .section-tracker-label,
+.section-tracker-item:focus-visible .section-tracker-label {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+.section-tracker-item:hover .section-tracker-mark,
+.section-tracker-item:focus-visible .section-tracker-mark {
+  border-color: #ee83ab;
+}
+.section-tracker-item.is-active .section-tracker-mark {
+  background-color: #ee83ab;
+  border-color: #ee83ab;
+  transform: scaleY(1.3);
+  box-shadow: 0 0 7px 1px rgba(238, 131, 171, 0.65);
+}
+.section-tracker-item:hover .section-tracker-label,
+.section-tracker-item:focus-visible .section-tracker-label {
+  border-color: rgba(238, 131, 171, 0.4);
+}
+.section-tracker-item.is-active .section-tracker-label {
+  color: #ffb3cf;
+  border-color: rgba(238, 131, 171, 0.55);
+}
+
+/* ---------- 333 Blitz title tiger: click-to-rain easter egg ---------- */
+/* Triggered by javascripts/extra.js on click of the tiger emoji in the
+   page's H1 (the existing .tiger-emoji span, title="rawr") - a nod to the
+   "why male models" Blitz meme already on the page. Emoji rain container is
+   appended to <body> and removed after it finishes falling; fixed/
+   pointer-events:none so it never blocks clicks on the page underneath. */
+.tiger-rain {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 9999;
+}
+.tiger-rain-emoji {
+  position: absolute;
+  top: -2em;
+  animation: tiger-rain-fall linear forwards;
+}
+@keyframes tiger-rain-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  8% { opacity: 1; }
+  100% { transform: translateY(105vh) rotate(360deg); opacity: 0.9; }
+}
+
+/* ---------- 333 Blitz signature: paw-print cursor ---------- */
+/* Scoped via the .page-333-blitz body class, toggled by
+   javascripts/extra.js based on the current page path. Inline SVG data
+   URI, so no separate asset file is needed. Only the default cursor
+   changes - links/inputs/etc. keep their normal cursor via the :not()
+   exceptions below, so it doesn't get in the way of actually using
+   the page, just flavors idle hovering over regular content. */
+body.page-333-blitz {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"><g fill="%23f0a868" stroke="%23161718" stroke-width="1"><ellipse cx="12" cy="16.5" rx="6" ry="5"/><ellipse cx="5" cy="8" rx="2.2" ry="2.8"/><ellipse cx="9.3" cy="4" rx="2" ry="2.6"/><ellipse cx="14.7" cy="4" rx="2" ry="2.6"/><ellipse cx="19" cy="8" rx="2.2" ry="2.8"/></g></svg>') 12 14, auto;
+}
+body.page-333-blitz a:not(.md-nav__link),
+body.page-333-blitz button,
+body.page-333-blitz label,
+body.page-333-blitz input,
+body.page-333-blitz summary {
+  cursor: pointer;
+}
+body.page-333-blitz input[type="number"],
+body.page-333-blitz input[type="text"] {
+  cursor: text;
+}
