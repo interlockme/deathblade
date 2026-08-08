@@ -411,7 +411,14 @@
     var buildB = compareBuilds.filter(function (b) { return b.id === idB; })[0] || compareBuilds[1];
 
     container.innerHTML = "";
-    container.appendChild(buildOverviewTable(family, data));
+    // Wrapper exists purely so mobile can get horizontal scroll on just
+    // this table without touching its own layout - see the CSS comment
+    // on .build-compare-table-scroll for why the table itself couldn't
+    // just handle this alone. No-op on desktop (plain block wrapper).
+    var tableScroll = document.createElement("div");
+    tableScroll.className = "build-compare-table-scroll";
+    tableScroll.appendChild(buildOverviewTable(family, data));
+    container.appendChild(tableScroll);
 
     // Dropdowns and the share action share one row - no text label above
     // them anymore, the picker + "vs" already reads as compare controls
