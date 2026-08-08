@@ -371,6 +371,8 @@
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--oncrit">Crit Hit Dmg</span><span class="ap-summary-base-oncrit ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--evodmg">Evo Dmg</span><span class="ap-summary-base-evodmg ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--adddmg">Add Dmg</span><span class="ap-summary-base-adddmg ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-stat-card-row--kbw-base ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg">KBW Dmg</span><span class="ap-summary-base-kbw ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-stat-card-row--kbwstone-base ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg">KBW Stone Dmg</span><span class="ap-summary-base-kbwstone ap-summary-value">—</span></div>
       </div>
 
       <div class="ap-stat-card ap-stat-card-best">
@@ -379,6 +381,8 @@
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--oncrit">Crit Hit Dmg</span><span class="ap-summary-best-oncrit ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--evodmg">Evo Dmg</span><span class="ap-summary-best-evodmg ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--adddmg">Add Dmg</span><span class="ap-summary-best-adddmg ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-stat-card-row--kbw-best ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg">KBW Dmg</span><span class="ap-summary-best-kbw ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-stat-card-row--kbwstone-best ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg">KBW Stone Dmg</span><span class="ap-summary-best-kbwstone ap-summary-value">—</span></div>
       </div>
 
     </div>

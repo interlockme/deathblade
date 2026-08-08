@@ -371,6 +371,46 @@
     };
   }
 
+  // Isolated DPS gain from one flat Crit Dmg contributor (e.g. Keen Blunt
+  // Weapon's engraving bonus or its Ability Stone), expressed as "% damage
+  // you'd lose if this one line were removed and everything else (Crit
+  // Rate, on-crit multipliers, Evo Dmg, Add Dmg) stayed exactly as-is".
+  //
+  // This works as a clean closed-form instead of a full counterfactual
+  // recompute because the final multiplier is *linear* in critDmgTotal -
+  // effCrit/onCrit/evo/add never depend on kbw or kbwStone, so:
+  //   mult = [(1 - effCrit) + effCrit * (1 + onCrit) * critDmgTotal] * (1 + evo) * (1 + add)
+  // is an affine function of critDmgTotal alone. The (1+evo)*(1+add) factor
+  // is common to "with" and "without" and cancels out of the ratio, so it's
+  // dropped entirely below - only the crit-dmg-bearing term matters.
+  function marginalCritDmgGainPct(effCrit, onCrit, critDmgTotal, value) {
+    if (!value) return 0;
+    const withTerm = (1 - effCrit) + effCrit * (1 + onCrit) * critDmgTotal;
+    const contribution = effCrit * (1 + onCrit) * value;
+    const withoutTerm = withTerm - contribution;
+    if (withoutTerm <= 0) return 0;
+    return (contribution / withoutTerm) * 100;
+  }
+
+  // Keen Blunt Weapon's actual in-game downside: attacks have a 10% chance
+  // to deal -20% damage, i.e. an expected-value multiplier of
+  // 1 - 0.10*0.20 = 0.98 on every hit, independent of the Crit Dmg bonus
+  // it grants. That EV hit applies to the WHOLE post-KBW damage total, not
+  // just KBW's own slice of it, so it can't be folded into
+  // marginalCritDmgGainPct's generic contribution/withoutTerm shape - the
+  // malus has to land on withTerm before taking the ratio. The KBW Ability
+  // Stone carries no such downside of its own, so it keeps using the plain
+  // marginalCritDmgGainPct above.
+  const KBW_EV_MALUS = 0.98;
+  function kbwEngravingGainPct(effCrit, onCrit, critDmgTotal, kbwValue) {
+    if (!kbwValue) return 0;
+    const contribution = effCrit * (1 + onCrit) * kbwValue;
+    const withoutTerm = (1 - effCrit) + effCrit * (1 + onCrit) * (critDmgTotal - kbwValue);
+    const withTermAdjusted = (withoutTerm + contribution) * KBW_EV_MALUS;
+    if (withoutTerm <= 0) return 0;
+    return (withTermAdjusted / withoutTerm - 1) * 100;
+  }
+
   function critRateTotal(inputs, keenSenseLv) {
     const c = roundDown((inputs.critStat * 0.03579099) / 100, 4);
     const d = RING_RATE_TABLE[inputs.ring1Rate] || 0;
@@ -494,13 +534,31 @@
     const maxMult = best ? best.mult : 1;
     cells.forEach(c => c.pctOfBest = (c.mult / maxMult) * 100);
 
-    // Base stats for verification
+    // Keen Blunt Weapon's engraving bonus and its Ability Stone are both
+    // flat adds into critDmgTotal (see computeShared) - pull their two
+    // values back out here so each can be shown as its own isolated %
+    // damage gain rather than only ever appearing baked into the combined
+    // Crit Dmg stat.
+    const kbwValue = KBW_TABLE[inputs.kbw] || 0;
+    const kbwStoneValue = KBW_STONE_TABLE[inputs.kbwStone] || 0;
+    const kbwUsed = inputs.kbw !== "Not Used" && kbwValue > 0;
+    const kbwStoneUsed = kbwStoneValue > 0;
+
+    // Base stats for verification - effCrit/onCrit here match the "no
+    // keystone selected" values baseStats already reports above (S5, the
+    // capped raw Crit Rate; onCritDmgBase, the pre-Critical-keystone on-crit
+    // multiplier), so the gain % is consistent with the rest of the card.
+    const baseEffCrit = Math.min(critRateTotal(inputs, 0), 1);
     const baseStats = {
       critRate: critRateTotal(inputs, 0) * 100,
       critDmg: shared.critDmgTotal,
       onCritDmg: shared.onCritDmgBase * 100,
       evoDmg: (shared.yearningEvo + shared.evoKarmaEvo + STANDING_STRIKER_EVO_DMG) * 100,
       addDmg: shared.addDmgBase * 100,
+      kbwUsed,
+      kbwStoneUsed,
+      kbwGain: kbwEngravingGainPct(baseEffCrit, shared.onCritDmgBase, shared.critDmgTotal, kbwValue),
+      kbwStoneGain: marginalCritDmgGainPct(baseEffCrit, shared.onCritDmgBase, shared.critDmgTotal, kbwStoneValue),
     };
 
     // Best Setup stats (only things affected by nodes)
@@ -547,6 +605,15 @@
           addDmg: comps.master.add * 100,
         };
       }
+
+      // Same marginal-gain calc as the Base card, just using the winning
+      // cell's own effCrit (best.effCrit) and on-crit multiplier
+      // (bestStats.onCritDmg, already resolved per-branch above) instead of
+      // the no-keystone baseline ones.
+      bestStats.kbwUsed = kbwUsed;
+      bestStats.kbwStoneUsed = kbwStoneUsed;
+      bestStats.kbwGain = kbwEngravingGainPct(best.effCrit, bestStats.onCritDmg / 100, shared.critDmgTotal, kbwValue);
+      bestStats.kbwStoneGain = marginalCritDmgGainPct(best.effCrit, bestStats.onCritDmg / 100, shared.critDmgTotal, kbwStoneValue);
     }
 
     return { cells, best, baseStats, bestStats };
@@ -981,6 +1048,16 @@
       if (onCritEl) onCritEl.textContent = base.onCritDmg.toFixed(2) + "%";
       if (evoEl) evoEl.textContent = base.evoDmg.toFixed(2) + "%";
       if (addEl) addEl.textContent = base.addDmg.toFixed(2) + "%";
+
+      const kbwRow = root.querySelector(".ap-stat-card-row--kbw-base");
+      const kbwEl = root.querySelector(".ap-summary-base-kbw");
+      if (kbwRow) kbwRow.classList.toggle("ap-stat-card-row--hidden", !base.kbwUsed);
+      if (kbwEl) kbwEl.textContent = "+" + base.kbwGain.toFixed(2) + "%";
+
+      const kbwStoneRow = root.querySelector(".ap-stat-card-row--kbwstone-base");
+      const kbwStoneEl = root.querySelector(".ap-summary-base-kbwstone");
+      if (kbwStoneRow) kbwStoneRow.classList.toggle("ap-stat-card-row--hidden", !base.kbwStoneUsed);
+      if (kbwStoneEl) kbwStoneEl.textContent = "+" + base.kbwStoneGain.toFixed(2) + "%";
     }
 
     // Best Setup line (no Crit Dmg)
@@ -1002,6 +1079,16 @@
       if (onCritEl) onCritEl.textContent = best.onCritDmg.toFixed(2) + "%";
       if (evoEl) evoEl.textContent = best.evoDmg.toFixed(2) + "%";
       if (addEl) addEl.textContent = best.addDmg.toFixed(2) + "%";
+
+      const kbwRow = root.querySelector(".ap-stat-card-row--kbw-best");
+      const kbwEl = root.querySelector(".ap-summary-best-kbw");
+      if (kbwRow) kbwRow.classList.toggle("ap-stat-card-row--hidden", !best.kbwUsed);
+      if (kbwEl) kbwEl.textContent = "+" + best.kbwGain.toFixed(2) + "%";
+
+      const kbwStoneRow = root.querySelector(".ap-stat-card-row--kbwstone-best");
+      const kbwStoneEl = root.querySelector(".ap-summary-best-kbwstone");
+      if (kbwStoneRow) kbwStoneRow.classList.toggle("ap-stat-card-row--hidden", !best.kbwStoneUsed);
+      if (kbwStoneEl) kbwStoneEl.textContent = "+" + best.kbwStoneGain.toFixed(2) + "%";
     }
   }
 
