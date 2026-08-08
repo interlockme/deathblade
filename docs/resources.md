@@ -579,10 +579,12 @@
 
 *Late game examples including support buffs. Fill [Arsonistic's calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) with your own stats for accuracy.*
 
-!!! note ""
-    ![Gearing values table 1](assets/shared/gearing-1.png)
-    ![Gearing sticker](assets/shared/gearing-sticker.png)
-    ![Gearing values table 2](assets/shared/gearing-2.png)
+<div class="grid cards" style="grid-template-columns: 1fr 3fr;" markdown>
+
+- ![Gearing sticker](assets/shared/gearing-sticker.png)
+- ![Gearing values table 1](assets/shared/gearing-1.png)
+
+</div>
 
 ## Useful Links
 
