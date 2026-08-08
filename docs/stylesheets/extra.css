@@ -1326,25 +1326,35 @@ h3 { color: #4db6ac; }
 }
 
 /* Dropdown picker and copy-link icon share a single row - no text label
-   above them anymore. Grid keeps the dropdowns visually centered on the
-   card even though the icon only sits on one side: an empty equal-width
-   ghost column on the left balances the icon's column on the right. */
+   above them anymore. The icon is pulled out of normal flow (absolute,
+   pinned to the row's right edge) instead of living in its own grid
+   track, so the dropdowns get the row's full width to center in rather
+   than losing a chunk of it to an empty column reserved just to balance
+   the icon - that reserved column was squeezing the selects enough to
+   clip long build names. */
 .md-typeset .build-compare-header-row {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  position: relative;
+  display: flex;
   align-items: center;
-  column-gap: 0.6em;
-  padding-top: 0.6em;
-  margin-bottom: 0.7em;
+  justify-content: center;
+  /* Top and bottom padding match on purpose so the icon centers itself
+     on the dropdowns' true vertical middle (top:50% against a symmetric
+     box). No margin-bottom here - padding doesn't collapse with a
+     neighbor's margin the way two margins collapse into each other, so
+     stacking padding-bottom on top of the old margin-bottom was adding
+     real extra space below the row that the original design never had.
+     .build-compare-body below supplies the actual gap via its own
+     margin-top, sized to already account for this padding. */
+  padding: 0.6em 2.1em 0.6em;
   border-top: 1px solid rgba(179, 157, 219, 0.18);
 }
 .md-typeset .build-compare-controls {
-  grid-column: 2;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.6em;
   min-width: 0;
+  max-width: 100%;
 }
 /* Small colored dot on each dropdown, kept in sync with its current
    selection (JS) - a quiet visual link to the matching polygon color
@@ -1353,7 +1363,7 @@ h3 { color: #4db6ac; }
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
-  max-width: 40%;
+  min-width: 0;
 }
 .md-typeset .build-compare-select-dot {
   width: 0.65em;
@@ -1371,6 +1381,12 @@ h3 { color: #4db6ac; }
   font-family: inherit;
   min-width: 0;
   flex: 1 1 auto;
+  /* If the row ever gets too tight to fit the full name (very narrow
+     screens), fade it to an ellipsis rather than hard-clipping mid
+     character the way native <select> rendering does by default. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .md-typeset .build-compare-select:focus {
   outline: none;
@@ -1387,11 +1403,13 @@ h3 { color: #4db6ac; }
    of a spelled-out label on its own line - sharing a comparison is a
    nice-to-have, not the main action, so it stays quiet until hovered. */
 .md-typeset .build-compare-share-btn {
-  grid-column: 3;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  justify-self: end;
   flex-shrink: 0;
   width: 1.8em;
   height: 1.8em;
@@ -1402,7 +1420,6 @@ h3 { color: #4db6ac; }
   opacity: 0.7;
   cursor: pointer;
   padding: 0;
-  position: relative;
   transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 .md-typeset .build-compare-share-btn:hover {
@@ -1447,12 +1464,17 @@ h3 { color: #4db6ac; }
    rounded sub-panel above it) instead of two free-floating pieces with a
    gap between them - a shared border + a vertical divider down the
    middle gives the pentagon and the diff card each an explicit, equal
-   half rather than leaving their relative size to flex-basis alone. */
+   half rather than leaving their relative size to flex-basis alone.
+   margin-top trimmed from 0.9em to 0.3em: the header row above now
+   contributes its own 0.6em of padding-bottom (added for icon
+   centering, see .build-compare-header-row) which sits in addition to
+   this margin rather than collapsing into it, so the two together
+   still land on the original ~0.9em gap instead of stacking to 1.5em. */
 .md-typeset .build-compare-body {
   display: flex;
   align-items: stretch;
   justify-content: center;
-  margin-top: 0.9em;
+  margin-top: 0.3em;
   border: 1px solid rgba(179, 157, 219, 0.16);
   border-radius: 8px;
   background-color: rgba(255, 255, 255, 0.02);
