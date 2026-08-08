@@ -206,7 +206,7 @@
   // Swaps the tab title to something in-character while you're away, swaps
   // it back the moment you return. Only on skill-build pages (anywhere with
   // a .build-card) - it'd just be noise on Essentials/Resources/Home.
-  var BLUR_TITLE = "Maelstrom's running out 🥴";
+  var BLUR_TITLE = "Mael's running out 🥴";
 
   function handleVisibilityChange() {
     var onBuildPage = !!document.querySelector(".md-content__inner .build-card");

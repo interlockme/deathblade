@@ -11,6 +11,7 @@
     - Surge post-cast delay was removed, animation cancelling is no longer needed.
 
 !!! tip "Quick Tips"
+    - Optimize Ark Passive nodes or compare bracelet lines [here!](../resources.md#ark-passive-calculator)
     - All Deathblade builds run a pet with the Specialization stat bonus.
     - Always press the next skill during your current skill's animation (skill queuing).
     - Trixion practice requires equipping maxed Spirit Absorption and Max MP engravings.

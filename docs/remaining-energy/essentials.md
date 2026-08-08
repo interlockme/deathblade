@@ -21,10 +21,11 @@
     | Maelstrom | Focus rune (on easier builds with excess orb generation) |
 
 !!! tip "Quick Tips"
+    - Optimize Ark Passive nodes or compare bracelet lines [here!](../resources.md#ark-passive-calculator)
     - All Deathblade builds run a pet with the Specialization stat bonus.
-    - Prioritize hits under Maelstrom buff over back attacks; just Surge to the back.
     - Always press the next skill during your current skill's animation (skill queuing).
     - Trixion practice requires equipping maxed Spirit Absorption and Max MP engravings.
+    - Optimized Training 1 may help smooth things out at lower gem levels.
 
 ## Build Comparison
 
