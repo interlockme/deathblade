@@ -19,6 +19,13 @@
 //   needed - the table rows, dropdowns, and defaults are all generated
 //   from whichever family's build list is picked.
 //
+//   Shareable links: once a reader picks a pair, the URL updates to
+//   ?a=<build-id>&b=<build-id> (no address-bar change on a plain page
+//   load, only after an actual selection) and a "Copy link" button sits
+//   under the dropdowns for grabbing it without touching the address
+//   bar. Opening a link with those params pre-selects that exact pair on
+//   load, overriding data-build-a/data-build-b if both are present.
+//
 //   RE and Surge builds are never compared against each other here, same
 //   reasoning as pentagon-badge.js: RE's fifth axis is Recovery (higher
 //   is better) and Surge's is Exposure (lower is better), and DPS is
@@ -332,14 +339,68 @@
     return card;
   }
 
+  // ----- Shareable compare links -----
+  // Reads/writes ?a=<build-id>&b=<build-id> so a specific matchup (e.g.
+  // essentials.md?a=333-ceiling&b=313-high-floor) can be linked directly
+  // instead of "go to essentials, then pick these two from the
+  // dropdowns." Scoped to exactly one compare widget per page (true for
+  // every essentials.md today), so plain "a"/"b" params are unambiguous
+  // and stay short/shareable rather than namespaced per-family.
+  function getUrlPair(compareBuilds) {
+    var params = new URLSearchParams(window.location.search);
+    var a = params.get("a");
+    var b = params.get("b");
+    if (!a || !b || a === b) return null;
+    var buildA = compareBuilds.filter(function (build) { return build.id === a; })[0];
+    var buildB = compareBuilds.filter(function (build) { return build.id === b; })[0];
+    if (!buildA || !buildB) return null; // unknown/stale id - ignore, fall through to normal default
+    return [buildA.id, buildB.id];
+  }
+
+  function shareUrlFor(idA, idB) {
+    var params = new URLSearchParams(window.location.search);
+    params.set("a", idA);
+    params.set("b", idB);
+    return window.location.pathname + "?" + params.toString() + window.location.hash;
+  }
+
+  // Only touches the address bar once the reader actually picks a pair -
+  // an untouched page load stays on its plain URL rather than getting
+  // ?a=...&b=... appended for every visitor by default.
+  function updateUrl(idA, idB) {
+    if (!window.history || !window.history.replaceState) return;
+    window.history.replaceState(null, "", shareUrlFor(idA, idB));
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    // Fallback for browsers/contexts without the async Clipboard API.
+    var temp = document.createElement("textarea");
+    temp.value = text;
+    temp.style.position = "fixed";
+    temp.style.opacity = "0";
+    document.body.appendChild(temp);
+    temp.select();
+    try {
+      document.execCommand("copy");
+    } catch (e) {
+      // Nothing more we can do - the button's own catch handles user feedback.
+    }
+    document.body.removeChild(temp);
+    return Promise.resolve();
+  }
+
   function renderWidget(container, family) {
     var data = window.DB_BUILD_DATA && window.DB_BUILD_DATA[family];
     if (!data) return;
 
     var compareBuilds = data.builds.filter(function (b) { return b.compareEnabled !== false; });
 
-    var idA = container.getAttribute("data-build-a") || compareBuilds[data.defaultPair[0]].id;
-    var idB = container.getAttribute("data-build-b") || compareBuilds[data.defaultPair[1]].id;
+    var urlPair = getUrlPair(compareBuilds);
+    var idA = (urlPair && urlPair[0]) || container.getAttribute("data-build-a") || compareBuilds[data.defaultPair[0]].id;
+    var idB = (urlPair && urlPair[1]) || container.getAttribute("data-build-b") || compareBuilds[data.defaultPair[1]].id;
     if (idA === idB) {
       // Guard against both dropdowns landing on the same build (e.g. via
       // a manually-edited default) - fall back to the family default pair.
@@ -352,10 +413,11 @@
     container.innerHTML = "";
     container.appendChild(buildOverviewTable(family, data));
 
-    var sectionLabel = document.createElement("div");
-    sectionLabel.className = "build-compare-section-label";
-    sectionLabel.textContent = "Compare Builds";
-    container.appendChild(sectionLabel);
+    // Dropdowns and the share action share one row - no text label above
+    // them anymore, the picker + "vs" already reads as compare controls
+    // on its own. Just the divider/spacing that used to sit on the label.
+    var headerRow = document.createElement("div");
+    headerRow.className = "build-compare-header-row";
 
     // Each select gets its own small color dot (kept in sync on change)
     // instead of a separate link-legend row - the table above already
@@ -386,7 +448,24 @@
     controls.appendChild(wrapA);
     controls.appendChild(vs);
     controls.appendChild(wrapB);
-    container.appendChild(controls);
+    headerRow.appendChild(controls);
+
+    // Icon-only copy button - shares the row with the picker instead of
+    // getting its own line, since sharing a comparison is a nice-to-have,
+    // not an action that needs a spelled-out label.
+    var COPY_ICON =
+      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+    var CHECK_ICON =
+      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+    var shareBtn = document.createElement("button");
+    shareBtn.type = "button";
+    shareBtn.className = "build-compare-share-btn";
+    shareBtn.innerHTML = COPY_ICON;
+    shareBtn.setAttribute("aria-label", "Copy link to this comparison");
+    shareBtn.setAttribute("data-tooltip", "Copy link to this comparison");
+    headerRow.appendChild(shareBtn);
+
+    container.appendChild(headerRow);
 
     var body = document.createElement("div");
     body.className = "build-compare-body";
@@ -407,6 +486,29 @@
 
     renderBody();
 
+    var shareResetTimer = null;
+    function resetShareBtn() {
+      shareBtn.innerHTML = COPY_ICON;
+      shareBtn.setAttribute("data-tooltip", "Copy link to this comparison");
+      shareBtn.setAttribute("aria-label", "Copy link to this comparison");
+    }
+    shareBtn.addEventListener("click", function () {
+      copyToClipboard(window.location.origin + shareUrlFor(buildA.id, buildB.id))
+        .then(function () {
+          clearTimeout(shareResetTimer);
+          shareBtn.innerHTML = CHECK_ICON;
+          shareBtn.setAttribute("data-tooltip", "Link copied");
+          shareBtn.setAttribute("aria-label", "Link copied");
+          shareResetTimer = setTimeout(resetShareBtn, 1800);
+        })
+        .catch(function () {
+          clearTimeout(shareResetTimer);
+          shareBtn.setAttribute("data-tooltip", "Couldn't copy - copy from address bar");
+          shareBtn.setAttribute("aria-label", "Couldn't copy - copy from address bar");
+          shareResetTimer = setTimeout(resetShareBtn, 2400);
+        });
+    });
+
     selectA.addEventListener("change", function () {
       if (selectA.value === selectB.value) {
         // Keep the two picks distinct - snap B to whatever A just gave up.
@@ -414,6 +516,7 @@
       }
       buildA = compareBuilds.filter(function (b) { return b.id === selectA.value; })[0];
       buildB = compareBuilds.filter(function (b) { return b.id === selectB.value; })[0];
+      updateUrl(buildA.id, buildB.id);
       renderBody();
     });
     selectB.addEventListener("change", function () {
@@ -422,6 +525,7 @@
       }
       buildA = compareBuilds.filter(function (b) { return b.id === selectA.value; })[0];
       buildB = compareBuilds.filter(function (b) { return b.id === selectB.value; })[0];
+      updateUrl(buildA.id, buildB.id);
       renderBody();
     });
   }
