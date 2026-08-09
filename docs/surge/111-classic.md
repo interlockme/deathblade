@@ -79,16 +79,16 @@
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Ark Passive<span class="setup-note-arrow"></span></summary>
 
-- You can level Ark Grid cores to your preference, but keep in mind that 17p Moon grants a second Earth Cleaver stack. This lets you slot a cooldown gem into Blade Dance and unlocks its Weak Point Detection tripod.
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes.
 
 </details>
 
 <details class="setup-note" data-kind="note" open markdown>
-<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
-- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+- You can level Ark Grid cores to your preference, but 17p Moon grants a second Earth Cleaver stack. This lets you slot a cooldown gem into Blade Dance and use its Weak Point Detection tripod.
 
 </details>
 
@@ -121,7 +121,7 @@
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
 - Use Legendary Purify on Spincutter if needed.
 - Use Legendary Bleed or Poison instead of Rage if you don't use RC or MI engravings.
@@ -129,7 +129,7 @@
 </details>
 
 <details class="setup-note" data-kind="note" markdown>
-<summary><span class="setup-note-tag">Note</span> Skill Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
 - Earth Explosion tripod on Earth Cleaver is up to personal preference.
     - Increased cast speed and extra stack, lowered mobility and damage.

@@ -72,16 +72,16 @@
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Ark Passive<span class="setup-note-arrow"></span></summary>
 
-The minimum requirement to play this build is 14p Sun and 17p Moon, but damage will be lacking.
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes.
 
 </details>
 
 <details class="setup-note" data-kind="note" open markdown>
-<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
-- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+Damage will be lacking if you settle for the minimum core requirements.
 
 </details>
 
@@ -114,7 +114,7 @@ The minimum requirement to play this build is 14p Sun and 17p Moon, but damage w
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
 - Use Legendary Purify on Spincutter if needed.
 - Use Legendary Bleed or Poison instead of Rage if you don't use RC or MI engravings.
@@ -122,7 +122,7 @@ The minimum requirement to play this build is 14p Sun and 17p Moon, but damage w
 </details>
 
 <details class="setup-note" data-kind="note" markdown>
-<summary><span class="setup-note-tag">Note</span> Skill Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
 - Earth Explosion tripod on Earth Cleaver is up to personal preference.
     - Increased cast speed and extra stack, lowered mobility and damage.

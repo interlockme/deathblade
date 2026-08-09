@@ -70,14 +70,23 @@
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Ark Passive<span class="setup-note-arrow"></span></summary>
 
-- The minimum requirement is shown above. Raise Moon to 17p for increased QoL and damage when you can.
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes.
+- Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a minor DPS loss.
+    - Not as comfortable with +CD% bracelet line and/or low Specialization.
+
+</details>
+
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
+
+- Raise Moon to 17p for increased QoL and damage when you can.
 
 </details>
 
 <details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alt</span> Alternative Ark Grid core setup: 113 (Arts)<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Alternative</span>113 (Arts) core-limited<span class="setup-note-arrow"></span></summary>
 
 <div class="ark-cores" data-family="re" markdown>
 <script type="application/json">
@@ -93,15 +102,6 @@
 - Temporary core-limited option, it only requires a 14p Star.
 - Requires Lv 9+ Fatal Wave CD gem or Optimized Training Lv 1.
     - Avoid +CD% bracelet line for this core-limited variant.
-
-</details>
-
-<details class="setup-note" data-kind="note" open markdown>
-<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
-
-- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
-- Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a minor DPS loss.
-    - Not as comfortable with +CD% bracelet line and/or low Specialization.
 
 </details>
 
@@ -134,15 +134,15 @@
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
 - Use Legendary Galewind, Purify or green Wealth on Head Hunt if you have no mana issues.
-- Legendary Focus on Maelstrom can solve mana issues at a minor loss of orb generation.
+- Legendary Focus on Maelstrom can solve major mana issues at a minor loss of orb generation.
 
 </details>
 
 <details class="setup-note" data-kind="note" markdown>
-<summary><span class="setup-note-tag">Note</span> Skill Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
 - You can bring Head Hunt down to Lv 1 and Void Strike up to Lv 14 for +0.5% DPS and lower mana use.
     - However, Lv 7 is more practical and makes recovery much easier and faster. ★
@@ -152,9 +152,9 @@
 </details>
 
 <details class="setup-note" data-kind="danger" markdown>
-<summary><span class="setup-note-tag">Warning</span> Upcoming Balance Patch (September) — build-specific changes<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Warning</span> Balance Patch<span class="setup-note-arrow"></span></summary>
 
-- Swift Fingers may become the default 1st row tripod for Blitz Rush.
+- Swift Fingers **may** become the default 1st row tripod for Blitz Rush.
     - ~2% DPS loss but CPM and playability increases may make up for it.
     - Void Strike is raised to Lv 13 and Blitz Rush is lowered to Lv 12.
     - Gem priority of Void Strike and Blitz Rush is swapped.
@@ -230,12 +230,9 @@
     </div>
     </div>
 
-    Aim to fit up to Cycle <span class="cycle-badge">2</span>'s Twin Shadows under Cycle <span class="cycle-badge">1</span>'s Maelstrom to reach 3 orbs without recasting or using recovery options. If you only landed up to Soul Absorber, an extra Head Hunt cast is usually enough.
+    Aim to fit up to Cycle **2**'s Twin Shadows under Cycle **1**'s Maelstrom to reach 3 orbs without recasting or using recovery options. If you only landed up to Soul Absorber, an extra Head Hunt cast is usually enough.
 
-    The Maelstrom in Cycle <span class="cycle-badge">2</span> is only cast if you'd otherwise miss 3 orbs. Use your judgment. If cast, it lasts at least until Cycle <span class="cycle-badge">1</span>'s Void Strike; recasting it as it expires aligns cooldowns. If it wasn't needed or it didn't last, nothing changes.
-
-    !!! warning ""
-        Void Strike and Maelstrom only give full orb generation up close. Avoid walking by using mobility skills to get closer to the target — e.g. Maelstrom → Twin Shadows → Void Strike and adapt to changes in your rotation.
+    The Maelstrom in Cycle **2** is only cast if you'd otherwise miss 3 orbs. Use your judgment. If cast, it lasts at least until Cycle **1**'s Void Strike; recasting it as it expires aligns cooldowns. If it wasn't needed or it didn't last, nothing changes.
 
 === "Openers"
 
@@ -248,13 +245,13 @@
     <span class="skill">![](../assets/re/icon-headhunt.png)Head Hunt</span><span class="arrow"> ⇄ </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">2</span><span class="cycle-title">Soul Absorber + Blitz Rush Cycle</span></span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash Cycle</span></span><span class="arrow"> → </span>&nbsp;etc.
     </div>
 
-    - <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle <span class="cycle-badge">2</span> if it's available.
+    - <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle **2** if it's available.
     - It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs:*
     { .lead }
 
-    - Cycle <span class="cycle-badge">1</span> if <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is available, otherwise start from <span class="skill-chip">![](../assets/re/icon-maelstrom.png)Maelstrom</span> + Cycle <span class="cycle-badge">2</span>.
+    - Cycle **1** if <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is available, otherwise start from <span class="skill-chip">![](../assets/re/icon-maelstrom.png)Maelstrom</span> + Cycle **2**.
     - Prioritize Turning Slash earlier for synergy and Deathly Slash last for Adrenaline/RE buff.
 
 === "Recovery"

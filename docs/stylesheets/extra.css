@@ -610,7 +610,7 @@ h3 { color: #4db6ac; }
   gap: 0.3em;
   background-color: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(167, 155, 196, 0.3);
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 0.28em 0.75em 0.28em 0.55em;
   font-size: 0.85em;
   white-space: nowrap;

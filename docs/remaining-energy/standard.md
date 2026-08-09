@@ -55,17 +55,17 @@
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Ark Passive<span class="setup-note-arrow"></span></summary>
 
-- Standard is playable without Ark Grid by design, but you can use the 111 core setup if you already have it.
-    - Save your Ark Grid cores for when you're ready to transition to a modern Deathblade build.
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
 
 </details>
 
 <details class="setup-note" data-kind="note" open markdown>
-<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
-- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+- Standard is playable without Ark Grid by design, but you can use the 111 core setup if you already have it.
+    - Save your Ark Grid cores for when you're ready to transition to a modern Deathblade build.
 
 </details>
 
@@ -98,7 +98,7 @@
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
 - Use Epic Wealth on Soul Absorber for extra orb generation until you're more familiar with the class.
 

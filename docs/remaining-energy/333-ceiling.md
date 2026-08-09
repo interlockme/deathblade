@@ -72,23 +72,23 @@
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Ark Passive<span class="setup-note-arrow"></span></summary>
 
-- The minimum requirement is shown above. Finish up Star to 17p when you can.
-
-</details>
-
-<details class="setup-note" data-kind="note" open markdown>
-<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
-
-- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes.
 - Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a very minor DPS loss.
     - Not as comfortable with +CD% bracelet line and/or low Specialization.
 
 </details>
 
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
+
+- Finish up Star to 17p when you can, Fatal Wave is your highest damage skill.
+
+</details>
+
 <details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alt</span> Alternative Enlightenment setup: Orb Circulation 5<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Alternative</span>Orb Circulation 5<span class="setup-note-arrow"></span></summary>
 
 - Extreme Body Movement 2, Orb Circulation 5, Swordcraft Enhancement 1:
     - Makes this build more forgiving at a ~3% DPS loss by increasing passive orb generation.
@@ -125,14 +125,14 @@
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
 - Use Legendary Galewind, Focus or Purify on Head Hunt if you prefer.
 
 </details>
 
 <details class="setup-note" data-kind="note" markdown>
-<summary><span class="setup-note-tag">Note</span> Skill Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
 - You can bring Head Hunt down to Lv 1 and Void Strike up to Lv 14 for +0.4% DPS and lower mana use.
     - However, Lv 7 is more practical and makes recovery much easier and faster. ★
@@ -141,22 +141,12 @@
 
 </details>
 
-<details class="setup-note" data-kind="danger" markdown>
-<summary><span class="setup-note-tag">Warning</span> Upcoming Balance Patch (September) — build-specific changes<span class="setup-note-arrow"></span></summary>
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Alternative</span>Fatal Wealth<span class="setup-note-arrow"></span></summary>
 
-- Swift Fingers will become the default 1st row tripod for Blitz Rush.
-    - ~1.5% DPS loss but CPM and playability increases make up for it.
-    - Void Strike is raised to Lv 13 and Blitz Rush is lowered to Lv 12.
-    - Gem priority of Void Strike and Blitz Rush is swapped.
-- Apply changes manually if the guide is not updated in time.
-- See [Essentials](essentials.md) for class-wide changes.
-
-</details>
-
-<details class="setup-note" data-kind="danger" markdown>
-<summary><span class="setup-note-tag">Warning</span> Alternative rune setup *(for lazy alts, high latency, slow hands, etc)*<span class="setup-note-arrow"></span></summary>
-
-- Wealth on Fatal Wave can make this build more forgiving at a ~4% DPS loss. It won't cycle as smoothly, but the reduced stress and urgency may suit some playstyles. Consider playing Surge instead of this.
+- Wealth rune on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
+    - It won't cycle as smoothly, but the reduced stress and urgency may suit some people.
+    - Consider playing Surge instead of this or any Fatal Wave build with Orb Control tripod.
 
     | Skill | Rune |
     |---|---|
@@ -166,6 +156,18 @@
     | Twin Shadows | Blue Wealth |
     | Maelstrom | Green Wealth |
     | Leap Ark | Release Potential 3 / Instant Spell 3 |
+
+</details>
+
+<details class="setup-note" data-kind="danger" markdown>
+<summary><span class="setup-note-tag">Warning</span>Balance Patch<span class="setup-note-arrow"></span></summary>
+
+- Swift Fingers will become the default 1st row tripod for Blitz Rush.
+    - ~1.5% DPS loss but CPM and playability increases make up for it.
+    - Void Strike is raised to Lv 13 and Blitz Rush is lowered to Lv 12.
+    - Gem priority of Void Strike and Blitz Rush is swapped.
+- Apply changes manually if the guide is not updated in time.
+- See [Essentials](essentials.md) for class-wide changes.
 
 </details>
 
@@ -226,12 +228,9 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
     </div>
     </div>
 
-    Aim to fit up to Cycle <span class="cycle-badge">2</span>'s Twin Shadows under Cycle <span class="cycle-badge">1</span>'s Maelstrom to reach 3 orbs without recasting or using recovery options. If you only landed up to Soul Absorber, an extra Head Hunt cast is usually enough.
+    Aim to fit up to Cycle **2**'s Twin Shadows under Cycle **1**'s Maelstrom to reach 3 orbs without recasting or using recovery options. If you only landed up to Soul Absorber, an extra Head Hunt cast is usually enough.
 
-    The Maelstrom in Cycle <span class="cycle-badge">2</span> is only cast if you'd otherwise miss 3 orbs. Use your judgment. If cast, it lasts at least until Cycle <span class="cycle-badge">1</span>'s Void Strike; recasting it as it expires aligns cooldowns. If it wasn't needed or it didn't last, nothing changes.
-
-    !!! warning ""
-        Void Strike and Maelstrom only give full orb generation up close. Avoid walking by using mobility skills to get closer to the target — e.g. Maelstrom → Twin Shadows → Void Strike and adapt to changes in your rotation.
+    The Maelstrom in Cycle **2** is only cast if you'd otherwise miss 3 orbs. Use your judgment. If cast, it lasts at least until Cycle **1**'s Void Strike; recasting it as it expires aligns cooldowns. If it wasn't needed or it didn't last, nothing changes.
 
 === "Openers"
 
@@ -244,13 +243,13 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
     <span class="skill">![](../assets/re/icon-headhunt.png)Head Hunt</span><span class="arrow"> ⇄ </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">2</span><span class="cycle-title">Soul Absorber + Blitz Rush Cycle</span></span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash Cycle</span></span><span class="arrow"> → </span>&nbsp;etc.
     </div>
 
-    - <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> + <span class="skill-chip">![](../assets/re/icon-fatalwave.png)![](../assets/re/icon-turningslash.png)![](../assets/re/icon-fatalwave.png)FTF</span> is interchangeable with Cycle <span class="cycle-badge">2</span> if it's available.
+    - <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> + <span class="skill-chip">![](../assets/re/icon-fatalwave.png)![](../assets/re/icon-turningslash.png)![](../assets/re/icon-fatalwave.png)FTF</span> is interchangeable with Cycle **2** if it's available.
     - It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs:*
     { .lead }
 
-    - Cycle <span class="cycle-badge">1</span> if <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is available, otherwise start from <span class="skill-chip">![](../assets/re/icon-maelstrom.png)Maelstrom</span> + Cycle <span class="cycle-badge">2</span>.
+    - Cycle **1** if <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is available, otherwise start from <span class="skill-chip">![](../assets/re/icon-maelstrom.png)Maelstrom</span> + Cycle **2**.
     - Prioritize the FTF combo earlier for better party synergy uptime.
 
 === "Recovery"
@@ -262,7 +261,7 @@ You can share this gem setup with [313 (High Floor)](313-high-floor.md) and 113 
     - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
     - Use <span class="skill-chip">![](../assets/re/icon-headhunt.png)Head Hunt</span> instead of <span class="skill-chip">![](../assets/re/icon-twinshadows.png)Twin Shadows</span> for a cycle to recover stacks if they run out.
     - Use Maelstrom + FTF combo earlier if waiting on main orb generation skills.
-    - Hold Deathly Slash until the next Cycle <span class="cycle-badge">1</span> if it's out of sync. DPS loss, but easier.
+    - Hold Deathly Slash until the next Cycle **1** if it's out of sync. DPS loss, but easier.
 
 === "TL;DR:"
     ![333 TL;DR flowchart](../assets/re/tldr-333.png)

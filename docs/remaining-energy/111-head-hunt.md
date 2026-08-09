@@ -62,16 +62,16 @@
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Ark Passive<span class="setup-note-arrow"></span></summary>
 
-- Technically playable with zero Ark Grid investment, but not recommended.
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes.
 
 </details>
 
 <details class="setup-note" data-kind="note" open markdown>
-<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
-- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+- Playable with zero Ark Grid investment, but not recommended.
 
 </details>
 
@@ -104,14 +104,14 @@
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
-- Use Purify on Head Hunt if you must.
+- Use Purify on Head Hunt if absolutely necessary.
 
 </details>
 
 <details class="setup-note" data-kind="note" markdown>
-<summary><span class="setup-note-tag">Note</span> Skill Adjustments<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
 - You can swap Head Hunt's tripod to Quick Prep and gain an extra gem slot.
     - Change your Head Hunt CD gem to Twin Shadows CD. Enjoy slightly easier recovery!
@@ -174,16 +174,13 @@
     </div>
     </div>
 
-    Aim to fit up to Cycle <span class="cycle-badge">2</span>'s Twin Shadows under Cycle <span class="cycle-badge">1</span>'s Maelstrom to reach 3 orbs without recasting or using recovery options. If you don't, an extra Head Hunt cast is required at the end of Cycle <span class="cycle-badge">2</span>.
+    Aim to fit up to Cycle **2**'s Twin Shadows under Cycle **1**'s Maelstrom to reach 3 orbs without recasting or using recovery options. If you don't, an extra Head Hunt cast is required at the end of Cycle **2**.
 
-    Using Head Hunt in Cycle <span class="cycle-badge">2</span> may force you to cast it at the end of the next Cycle <span class="cycle-badge">1</span>, which creates downtime.
+    Using Head Hunt in Cycle **2** may force you to cast it at the end of the next Cycle **1**, which creates downtime.
 
     Maelstrom management is extremely important when the rotation fails, you should cast it as it expires if needed.
 
     Due to limited orb generation, Turning Slash's after-effects may need to carry over to the following cycle.
-
-    !!! warning ""
-        Void Strike and Maelstrom only give full orb generation up close. Avoid walking by using mobility skills to get closer to the target — e.g. Maelstrom → Twin Shadows → Void Strike and adapt to changes in your rotation.
 
 === "Openers"
 
@@ -196,13 +193,13 @@
     <span class="skill">![](../assets/re/icon-headhunt.png)Head Hunt</span><span class="arrow"> ⇄ </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">2</span><span class="cycle-title">Soul Absorber + Blitz Rush Cycle</span></span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash Cycle</span></span><span class="arrow"> → </span>&nbsp;etc.
     </div>
 
-    - <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle <span class="cycle-badge">2</span> if it's available.
+    - <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle **2** if it's available.
     - It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs:*
     { .lead }
 
-    - Cycle <span class="cycle-badge">1</span> if <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is available, otherwise start from <span class="skill-chip">![](../assets/re/icon-maelstrom.png)Maelstrom</span> + Cycle <span class="cycle-badge">2</span>.
+    - Cycle **1** if <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is available, otherwise start from <span class="skill-chip">![](../assets/re/icon-maelstrom.png)Maelstrom</span> + Cycle **2**.
 
 === "Recovery"
 
