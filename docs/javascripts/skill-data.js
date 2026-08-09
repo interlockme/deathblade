@@ -29,11 +29,11 @@
       },
       twinshadows: {
         tags: [["util", "ORB GEN"], ["util", "RECOVERY"], ["util", "MOBILITY"]],
-        note: "Charges up to two stacks.",
+        note: "Multi-purpose skill that charges up to two stacks.",
       },
       deathlyslash: {
         tags: [["dmg", "DAMAGE"], ["util", "ORB GEN"], ["util", "MOBILITY"]],
-        note: "Strongest attack per cast.",
+        note: "Strongest attack per cast, available every other cycle due to its long cooldown.",
       },
       turningslash: {
         tags: [["util", "SYNERGY"], ["util", "ORB GEN"], ["util", "DESTINY"], ["immune", "PUSH IMMUNE"]],
@@ -41,7 +41,7 @@
       },
       fatalwave: {
         tags: [["dmg", "DAMAGE"], ["util", "ORB GEN"], ["util", "DESTINY"]],
-        note: "Resets based on Destiny activation.",
+        note: "Resets and becomes empowered when the Destiny effect is activated.",
       },
       surge: {
         tags: [["dmg", "DAMAGE"], ["util", "MOBILITY"], ["util", "DESTINY"], ["immune", "PUSH IMMUNE"]],
@@ -49,7 +49,7 @@
       },
       soulabsorber: {
         tags: [["util", "ORB GEN"], ["util", "WEAK POINT"]],
-        note: "Main orb generator, charge under Maelstrom's effect and aim as needed.",
+        note: "Main orb generator, charge under Maelstrom's effect. You can aim its second hit for mobility.",
       },
       blitzrush: {
         tags: [["util", "ORB GEN"], ["util", "RECOVERY"]],
@@ -61,25 +61,25 @@
       },
       bladeassault: {
         tags: [["util", "AWAKENING"], ["dmg", "DAMAGE"], ["util", "ORB GEN"], ["immune", "PUSH IMMUNE"], ["immune", "STATUS IMMUNE"]],
-        note: "Hold fully for maximum damage.",
+        note: "Hold for damage and orb generation.",
       },
       earthcleaver: {
         tags: [["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NOT PARALYSIS IMMUNE"]],
-        note: "",
+        note: "Slow and utility focused.",
       },
       spincutter: {
         tags: [["util", "MOBILITY"]],
-        note: "Can be cast up to 2-3 times.",
+        note: "Can be cast up to 2 times at lv 4.",
       },
       deathsentence: {
         tags: [["dmg", "DAMAGE"], ["util", "STAGGER"], ["util", "MOBILITY"]],
-        note: "",
+        note: "Well-rounded addition to some builds.",
       },
     },
     surge: {
       windcut: {
         tags: [["util", "STACKS"], ["warn", "NOT PARALYSIS IMMUNE"]],
-        note: "Usually cast before Death Trance.",
+        note: "Usually pre-cast before Death Trance.",
       },
       deathtrance: {
         tags: [["util", "BUFF"], ["util", "DESTINY"], ["immune", "PUSH IMMUNE"]],
@@ -107,10 +107,10 @@
       },
       blitzrush: {
         tags: [["dmg", "DAMAGE"]],
-        note: "Skill reset and damage for \uD83D\uDC2F.",
+        note: "Filler that's also a skill reset and core skill for \uD83D\uDC2F.",
       },
       earthcleaver: {
-        tags: [["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NOT PARALYSIS IMMUNE"]],
+        tags: [["dmg", "DAMAGE"], ["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NOT PARALYSIS IMMUNE"]],
         note: "Charges up to two stacks for \uD83E\uDD81.",
       },
       spincutter: {
@@ -123,11 +123,11 @@
       },
       bladeassault: {
         tags: [["util", "AWAKENING"], ["dmg", "DAMAGE"], ["immune", "PUSH IMMUNE"], ["immune", "STATUS IMMUNE"]],
-        note: "Hold fully for maximum damage.",
+        note: "Hold for damage and stack generation.",
       },
       deathlyslash: {
         tags: [["dmg", "DAMAGE"], ["util", "MOBILITY"]],
-        note: "Empowered for \uD83D\uDC06.",
+        note: "Empowered core skill for \uD83D\uDC06.",
       },
       darkaxel: {
         tags: [["util", "MOBILITY"], ["immune", "PUSH IMMUNE"]],
@@ -135,11 +135,11 @@
       },
       upperslash: {
         tags: [["immune", "PUSH IMMUNE"]],
-        note: "Alternative skill for \uD83D\uDC06.",
+        note: "Alternative comfort skill for \uD83D\uDC06.",
       },
       fallstar: {
         tags: [["immune", "PUSH IMMUNE"]],
-        note: "Surely one day this is meta...",
+        note: "Surely one day this will be the meta...",
       },
     },
   };
