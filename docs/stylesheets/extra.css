@@ -374,6 +374,20 @@ h3 { color: #4db6ac; }
 /* ---------- Skill legend tables (Essentials pages) ---------- */
 /* Fixed 48x48 icons regardless of the source asset's resolution.
    Wrap the table in <div class="skills-table" markdown>...</div>. */
+/* The wrapper itself - mainly here so the reference table can scroll
+   sideways on narrow/mobile viewports instead of overflowing the page or
+   getting crushed. Four columns (icon, skill+meter lines, tags, notes)
+   don't fit a phone width once the Tags column's own 140px min-width
+   (below) is honored, so let THIS scroll horizontally rather than the
+   whole page, with a min-width on the table so columns keep their
+   shape until the scrollbar takes over. */
+.md-typeset .skills-table {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.md-typeset .skills-table table {
+  min-width: 560px;
+}
 .md-typeset .skills-table img {
   height: 48px;
   width: 48px;
@@ -3417,17 +3431,25 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .tripod-chip.tripod-t3 { background-color: #e6b422; }
 /* Rune chip — text pill instead of an icon (no rune icon set either),
    colored by the site's four rune tiers: green < blue < epic < legendary.
-   Fixed min-width + centered text so the rune name's length (e.g. short
-   "Focus" vs long "Galewind") doesn't change this chip's own width - if
-   it did, the tripod chips sitting to its left (same flex row, whole
-   group right-aligned via .skill-card-chips' margin-left: auto) would
-   shift left/right card to card depending on which rune each row
-   happens to use, instead of lining up in a column down the grid. */
+   FIXED width (not min-width - min-width still let a wide name like
+   "Galewind" grow past a short one like "Rage"'s box, so the group was
+   still misaligned - this needs a hard ceiling, not just a floor) +
+   centered, truncating text so the rune name's length never changes this
+   chip's own width - if it did, the tripod chips sitting to its left
+   (same flex row, whole group right-aligned via .skill-card-chips'
+   margin-left: auto) would shift left/right card to card depending on
+   which rune each row happens to use, instead of lining up in a column
+   down the grid. 10ch comfortably fits every rune name currently in use
+   ("Galewind" is the longest at 8) with room to spare; text-overflow
+   safety net in case a future rune name runs longer. */
 .md-typeset .rune-chip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 64px;
+  box-sizing: border-box;
+  width: 10ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 0.64rem;
   font-weight: 700;
   letter-spacing: 0.01em;

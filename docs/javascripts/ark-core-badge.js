@@ -8,6 +8,11 @@
 // staying a screenshot) - just this one compact "which points are lit"
 // readout.
 //
+// Each core shows its 3 point breakpoints (10P/14P/17P) as a dot with
+// its point value underneath, always visible (not hover-only) - so a
+// core that genuinely needs 0 points (some builds run a core at 0/3 on
+// purpose) reads as "0 needed", not as missing/broken data.
+//
 // EASY EDIT GUIDE:
 //   <div class="ark-cores" data-family="re" markdown>
 //   <script type="application/json">
@@ -29,10 +34,10 @@
 //              assets/shared/<core>.png.
 //     label  - REQUIRED. The core's in-game name shown under the icon
 //              (e.g. "Levin Slash" for Order Sun Core on a 333 build).
-//     points - REQUIRED. 0-3, how many of the core's 3 point nodes are
-//              invested (the small 10P/14P/17P dots in-game). 0 = core
-//              itself is still unlocked/visible but nothing extra is
-//              spent on it, 3 = fully invested (10P + 14P + 17P all lit).
+//     points - REQUIRED. 0-3, how many of the core's 3 point breakpoints
+//              (10P/14P/17P) are invested. 0 = core is unlocked but
+//              nothing extra spent on it (valid and common - shows as
+//              "10 14 17" all muted, not an error), 3 = fully invested.
 (function () {
   function detectSiteRoot() {
     var scriptEl = document.currentScript || document.querySelector('script[src*="javascripts/ark-core-badge.js"]');
