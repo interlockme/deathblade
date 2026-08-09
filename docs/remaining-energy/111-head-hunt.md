@@ -46,7 +46,16 @@
 ## Ark Setup
 
 ![Ark Passive/Grid tree](../assets/re/argrid-tree-111.png)
-![111 Order cores](../assets/re/ordercores-111.png)
+
+<div class="ark-cores" data-family="re" markdown>
+<script type="application/json">
+[
+  { "core": "sun", "label": "Art Master", "points": 0 },
+  { "core": "moon", "label": "Arts Core", "points": 3 },
+  { "core": "star", "label": "Basics", "points": 0 }
+]
+</script>
+</div>
 
 !!! tip "Ark Grid"
     - Technically playable with zero Ark Grid investment, but not recommended.
@@ -56,7 +65,22 @@
 
 ## Skill Setup
 
-![111 skill setup](../assets/re/skillsetup-111.png)
+<div class="skill-setup" data-family="re" markdown>
+<script type="application/json">
+[
+  {"id": "soulabsorber", "name": "Soul Absorber", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
+  {"id": "deathsentence", "name": "Death Sentence", "level": 14, "tripods": [2, 2, 1], "rune": {"tier": "legendary", "name": "Galewind"}},
+  {"id": "twinshadows", "name": "Twin Shadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "headhunt", "name": "Head Hunt", "level": 7, "tripods": [2, 2], "rune": {"tier": "green", "name": "Wealth"}},
+  {"id": "turningslash", "name": "Turning Slash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "blitzrush", "name": "Blitz Rush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "voidstrike", "name": "Void Strike", "level": 11, "tripods": [3, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "surge", "name": "Deathblade Surge", "subtitle": "Identity"},
+  {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"}
+]
+</script>
+</div>
 
 !!! tip "Rune Adjustments"
     - Use Purify on Head Hunt if you must.

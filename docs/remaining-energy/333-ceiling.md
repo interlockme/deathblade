@@ -56,7 +56,16 @@
 ## Ark Setup
 
 ![Ark Passive/Grid tree](../assets/re/argrid-tree.png)
-![333 Order cores](../assets/re/ordercores-333.png)
+
+<div class="ark-cores" data-family="re" markdown>
+<script type="application/json">
+[
+  { "core": "sun", "label": "Levin Slash", "points": 3 },
+  { "core": "moon", "label": "Deathblade Wave", "points": 3 },
+  { "core": "star", "label": "Death Sword Energy", "points": 2 }
+]
+</script>
+</div>
 
 !!! tip "Ark Grid"
     - The minimum requirement is shown above. Finish up Star to 17p when you can.
@@ -73,7 +82,22 @@
 
 ## Skill Setup
 
-![333 skill setup](../assets/re/skillsetup-333.png)
+<div class="skill-setup" data-family="re" markdown>
+<script type="application/json">
+[
+  {"id": "soulabsorber", "name": "Soul Absorber", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "twinshadows", "name": "Twin Shadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "headhunt", "name": "Head Hunt", "level": 7, "tripods": [1, 2], "rune": {"tier": "green", "name": "Wealth"}},
+  {"id": "turningslash", "name": "Turning Slash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "fatalwave", "name": "Fatal Wave", "level": 14, "tripods": [2, 3, 2], "rune": {"tier": "legendary", "name": "Galewind"}},
+  {"id": "blitzrush", "name": "Blitz Rush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "voidstrike", "name": "Void Strike", "level": 11, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
+  {"id": "surge", "name": "Deathblade Surge", "subtitle": "Identity"},
+  {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"}
+]
+</script>
+</div>
 
 !!! tip "Rune Adjustments"
     - Use Legendary Galewind, Focus or Purify on Head Hunt if you prefer.

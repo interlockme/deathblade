@@ -3247,3 +3247,342 @@ body.page-333-blitz input[type="number"],
 body.page-333-blitz input[type="text"] {
   cursor: text;
 }
+
+/* ==========================================================================
+   Skill Setup cards — native <details>, replaces static skillsetup-*.png
+   ========================================================================== */
+/* Rendered by javascripts/skill-setup.js from a JSON blob (see that file's
+   header comment for the authoring format), using tag/note text shared
+   with each family's Essentials skills table via javascripts/skill-data.js.
+   Markup shape: <div class="skill-setup" data-family="re" markdown>
+   <script type="application/json">[...]</script></div> - the JS appends a
+   .skill-setup-grid of .skill-card <details> elements next to the
+   (invisible) script tag. */
+/* A CSS Grid (the old approach) shares one row TRACK across every card in
+   the same row - so opening card A grows that whole row, and card B next
+   to it (even with align-items: start keeping B's own box short) still
+   sits inside a now-taller row, leaving a dead gap under B before the
+   next row starts. That reads as "B expanded and shows nothing".
+   Masonry positioning (JS-computed, see skill-setup.js's layoutMasonry)
+   fixes this properly: each card is placed in whichever column is
+   currently shortest and positioned with its OWN top offset, so opening
+   a card only pushes down whatever comes after it in ITS column - the
+   neighboring column is untouched. This container just needs to be a
+   positioning root; skill-setup.js sets its height in JS once it knows
+   every card's real height. */
+.md-typeset .skill-setup-grid {
+  position: relative;
+  margin: 0.9em 0 1.2em;
+}
+.md-typeset .skill-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* JS sets transform:translate(x,y) and width per card, then re-runs on
+     any card's ResizeObserver firing (i.e. a toggle open/close) - the
+     transition here is what makes that reflow glide instead of pop. */
+  transition: transform 0.22s ease, width 0.22s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  border: 1px solid rgba(179, 157, 219, 0.28);
+  border-radius: 8px;
+  background-color: #1c1a22;
+  margin: 0;
+  font-size: 1em; /* override the .admonition/details 1em rule's inherited context so nested text below can size relative to this, not the page default */
+}
+/* Cards are positioned (and given their real width) by JS on first
+   layout - hide them until then so they don't all flash stacked at
+   top-left/0-width for a frame first. skill-setup.js adds this class to
+   the grid right after the first successful layoutMasonry() call. */
+.md-typeset .skill-setup-grid:not(.masonry-ready) .skill-card {
+  visibility: hidden;
+}
+.md-typeset .skill-card[open] {
+  border-color: rgba(179, 157, 219, 0.5);
+}
+/* A little softness/polish to match the rest of the site's pastel feel -
+   closed cards glow faintly on hover so the grid feels touchable rather
+   than a flat reference table. Skipped while open (nothing to "invite a
+   click" toward at that point). */
+/* No translateY lift here on purpose - the card's transform is already
+   owned by skill-setup.js's masonry positioning (an inline style, which
+   always wins over a stylesheet transform even on :hover), so this stays
+   to glow/border-only feedback that layers on top of it instead. */
+.md-typeset .skill-card:not([open]):hover {
+  border-color: rgba(199, 125, 255, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(199, 125, 255, 0.15);
+}
+.md-typeset .skill-card-icon {
+  transition: box-shadow 0.15s ease;
+}
+.md-typeset .skill-card:hover .skill-card-icon {
+  box-shadow: 0 0 0 1px rgba(199, 125, 255, 0.55), 0 0 10px rgba(199, 125, 255, 0.4);
+}
+/* Overrides the sitewide details:not([open]) opacity dimming (meant for
+   ??? admonitions) — a skill card is core reference content, not optional
+   depth, so it should read at full strength closed or open. */
+.md-typeset .skill-card:not([open]) {
+  opacity: 1;
+}
+.md-typeset .skill-card summary {
+  display: flex;
+  align-items: center;
+  gap: 0.65em;
+  padding: 0.55em 0.7em;
+  cursor: pointer;
+  list-style: none;
+}
+/* The sitewide `.md-typeset details:not([open]) > summary` padding-top/
+   bottom rule (0,2,2) outranks a plain `.md-typeset .skill-card summary`
+   (0,2,1) on specificity, so on its own the rule above would only hold
+   while open and get overridden back down to 0.28rem the moment a card
+   is closed - a visible height "pop" on first toggle. Re-declaring the
+   same padding on the :not([open]) form matches that specificity (0,3,1)
+   and wins outright, so summary height never changes between states. */
+.md-typeset .skill-card:not([open]) > summary {
+  padding: 0.55em 0.7em;
+}
+.md-typeset .skill-card summary::-webkit-details-marker { display: none; }
+.md-typeset .skill-card summary::marker { content: ""; }
+/* Material draws a default admonition icon on every bare <details> via a
+   masked pseudo-element (background-color + mask-image, not `content`) -
+   .ap-brace-compare's fix comment above covers why `content: none` alone
+   doesn't remove it. This card's triangle is a real .skill-card-arrow
+   span, not a repurposed pseudo-element, so there's nothing to preserve
+   here - just remove Material's icon outright on both possible pseudo-
+   elements rather than reset each property it might use. */
+.md-typeset .skill-card summary::before,
+.md-typeset .skill-card summary::after {
+  display: none !important;
+}
+.md-typeset .skill-card-icon {
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
+  border-radius: 8px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.28);
+}
+.md-typeset .skill-card-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.md-typeset .skill-card-level,
+.md-typeset .skill-card-subtitle {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #a79bc4;
+  text-transform: uppercase;
+}
+.md-typeset .skill-card-subtitle {
+  color: #6f6a80;
+}
+.md-typeset .skill-card-name {
+  display: block;
+  font-weight: 700;
+  color: #e8e6ee;
+  font-size: 0.95em;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.md-typeset .skill-card-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.32em;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 0.4em;
+}
+/* Tripod pick chips — flat placeholder squares (no tripod icon art yet),
+   colored by tier so the tier ordering still reads at a glance. Tier
+   colors intentionally match the in-game tier colors (blue/green/gold)
+   so the mapping is instantly familiar rather than an arbitrary scheme. */
+.md-typeset .tripod-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #161718;
+  flex-shrink: 0;
+}
+.md-typeset .tripod-chip.tripod-t1 { background-color: #64b5f6; }
+.md-typeset .tripod-chip.tripod-t2 { background-color: #66bb6a; }
+.md-typeset .tripod-chip.tripod-t3 { background-color: #e6b422; }
+/* Rune chip — text pill instead of an icon (no rune icon set either),
+   colored by the site's four rune tiers: green < blue < epic < legendary.
+   Fixed min-width + centered text so the rune name's length (e.g. short
+   "Focus" vs long "Galewind") doesn't change this chip's own width - if
+   it did, the tripod chips sitting to its left (same flex row, whole
+   group right-aligned via .skill-card-chips' margin-left: auto) would
+   shift left/right card to card depending on which rune each row
+   happens to use, instead of lining up in a column down the grid. */
+.md-typeset .rune-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 0.22em 0.5em;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.md-typeset .rune-chip.rune-green {
+  background-color: rgba(102, 187, 106, 0.14);
+  color: #81c995;
+  border-color: rgba(102, 187, 106, 0.4);
+}
+.md-typeset .rune-chip.rune-blue {
+  background-color: rgba(100, 181, 246, 0.14);
+  color: #64b5f6;
+  border-color: rgba(100, 181, 246, 0.4);
+}
+.md-typeset .rune-chip.rune-legendary {
+  background-color: rgba(240, 168, 104, 0.16);
+  color: #f0a868;
+  border-color: rgba(240, 168, 104, 0.45);
+}
+.md-typeset .rune-chip.rune-epic {
+  background-color: rgba(199, 125, 255, 0.16);
+  color: #c77dff;
+  border-color: rgba(199, 125, 255, 0.45);
+}
+/* Disclosure arrow — same border-triangle technique as .ap-brace-compare,
+   rotates open instead of using an image/glyph. */
+.md-typeset .skill-card-arrow {
+  flex-shrink: 0;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 5px solid #a79bc4;
+  transition: transform 0.15s ease;
+  margin-left: 0.5em;
+}
+.md-typeset .skill-card[open] .skill-card-arrow {
+  transform: rotate(90deg);
+}
+.md-typeset .skill-card-body {
+  /* Material's base .admonition/details rule puts a 0.6rem side inset on
+     the whole card (for normal admonition body text). .skill-card summary
+     already cancels that with its own `margin: 0 -0.6rem` so its border/
+     background bleed to the true card edge - this div never had that,
+     so its border-top (and left/right content) sat inset from the card
+     edge by that same 0.6rem while summary and the outer card border
+     didn't. Bleed out the same way, then re-pad for content spacing. */
+  margin: 0 -0.6rem;
+  padding: 0.6em calc(0.75em + 0.6rem) 0.75em;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.md-typeset .skill-card-body .tag {
+  margin: 0 4px 6px 0;
+}
+.md-typeset .skill-card-note {
+  margin: 0.3em 0 0;
+  color: #cfc9dd;
+  font-size: 0.88em;
+  line-height: 1.5;
+}
+.md-typeset .skill-card-picks {
+  margin: 0.5em 0 0;
+  padding-left: 1.1em;
+  font-size: 0.86em;
+  color: #cfc9dd;
+}
+.md-typeset .skill-card-picks li {
+  margin: 0.2em 0;
+}
+
+/* ---------- Ark Grid Order Cores (Ark Setup section) ---------- */
+/* Rendered by javascripts/ark-core-badge.js from a JSON blob - see that
+   file's header comment for the authoring format. Small and compact on
+   purpose: this replaces a full ordercores-*.png screenshot (the whole
+   6-core tree + a text legend) with just the 3 Order cores this site's
+   builds actually invest in, each shown as an icon + name + which of its
+   3 point breakpoints (10P/14P/17P) are reached.
+   Accent is Relic red, matching the actual core icon art (sun.png/
+   moon.png/star.png are Relic-quality gems, same as the old ordercores
+   screenshots) - a 17p core needs Relic quality, so that's the honest
+   color to reach for here rather than Legendary orange or Epic purple. */
+.md-typeset .ark-core-row {
+  display: flex;
+  gap: 0.8em;
+  margin: 0.9em 0 1.2em;
+}
+.md-typeset .ark-core-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4em;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0.7em 0.5em 0.6em;
+  border: 1px solid rgba(224, 83, 58, 0.3);
+  border-radius: 10px;
+  background: linear-gradient(180deg, #201a1c 0%, #1a1618 100%);
+  text-align: center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.md-typeset .ark-core-item:hover {
+  border-color: rgba(224, 83, 58, 0.6);
+  box-shadow: 0 0 0 1px rgba(224, 83, 58, 0.2), 0 0 10px rgba(224, 83, 58, 0.3);
+}
+.md-typeset .ark-core-icon {
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(224, 83, 58, 0.45), 0 0 8px rgba(224, 83, 58, 0.3);
+}
+.md-typeset .ark-core-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #e8e6ee;
+  line-height: 1.25;
+}
+.md-typeset .ark-core-dots {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55em;
+}
+/* Each breakpoint is a dot + its point value stacked underneath, so the
+   badge states outright how many points a core needs rather than only
+   showing filled/unfilled with no numbers - a core sitting at 0/3 (some
+   builds genuinely don't need any investment here) now reads as "0
+   points needed, on purpose" instead of looking like missing data. */
+.md-typeset .ark-core-point {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.22em;
+}
+.md-typeset .ark-core-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.md-typeset .ark-core-dot-on {
+  background-color: #e0533a;
+  box-shadow: 0 0 4px rgba(224, 83, 58, 0.75);
+}
+.md-typeset .ark-core-point-label {
+  font-size: 0.56rem;
+  font-weight: 700;
+  color: #6f6a80;
+  line-height: 1;
+}
+.md-typeset .ark-core-point-on .ark-core-point-label {
+  color: #ee8267;
+}

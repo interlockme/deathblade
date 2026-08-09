@@ -1,0 +1,147 @@
+// Renders the "## Ark Setup" section's 3 Order Cores (Sun/Moon/Star) as a
+// small native widget instead of a static ordercores-*.png screenshot.
+// Deliberately only covers the 3 ORDER cores (the red/orange-trimmed ones
+// in-game), not the 3 Chaos cores - the screenshots showed all 6, but
+// every build on this site only ever invests in the Order side, so the
+// Chaos half was dead weight. Also intentionally does NOT try to
+// reproduce the full Ark Grid evolution tree (that's argrid-tree.png,
+// staying a screenshot) - just this one compact "which points are lit"
+// readout.
+//
+// EASY EDIT GUIDE:
+//   <div class="ark-cores" data-family="re" markdown>
+//   <script type="application/json">
+//   [
+//     { "core": "sun", "label": "Levin Slash", "points": 3 },
+//     { "core": "moon", "label": "Deathblade Wave", "points": 3 },
+//     { "core": "star", "label": "Death Sword Energy", "points": 3 }
+//   ]
+//   </script>
+//   </div>
+//
+//   data-family - "re" or "surge". Cosmetic only right now (no per-family
+//                 icon set to pick between), kept for consistency with
+//                 skill-setup.js/essentials-table.js and in case that
+//                 changes later.
+//
+//   Per entry:
+//     core   - REQUIRED. "sun" | "moon" | "star" - picks the icon from
+//              assets/shared/<core>.png.
+//     label  - REQUIRED. The core's in-game name shown under the icon
+//              (e.g. "Levin Slash" for Order Sun Core on a 333 build).
+//     points - REQUIRED. 0-3, how many of the core's 3 point nodes are
+//              invested (the small 10P/14P/17P dots in-game). 0 = core
+//              itself is still unlocked/visible but nothing extra is
+//              spent on it, 3 = fully invested (10P + 14P + 17P all lit).
+(function () {
+  function detectSiteRoot() {
+    var scriptEl = document.currentScript || document.querySelector('script[src*="javascripts/ark-core-badge.js"]');
+    if (scriptEl && scriptEl.src) {
+      return scriptEl.src.replace(/javascripts\/ark-core-badge\.js(\?.*)?(#.*)?$/, "");
+    }
+    var linkEl = document.querySelector('link[href*="stylesheets/extra.css"]');
+    if (linkEl && linkEl.href) {
+      return linkEl.href.replace(/stylesheets\/extra\.css(\?.*)?(#.*)?$/, "");
+    }
+    return "";
+  }
+  var SITE_ROOT = detectSiteRoot();
+
+  var BREAKPOINTS = ["10P", "14P", "17P"];
+  var CORE_ART = { sun: "sun.png", moon: "moon.png", star: "star.png" };
+
+  function el(tag, className) {
+    var e = document.createElement(tag);
+    if (className) e.className = className;
+    return e;
+  }
+
+  function buildItem(entry) {
+    var item = el("div", "ark-core-item");
+
+    var icon = document.createElement("img");
+    icon.className = "ark-core-icon";
+    icon.src = SITE_ROOT + "assets/shared/" + (CORE_ART[entry.core] || "sun.png");
+    icon.alt = "";
+    icon.loading = "lazy";
+    icon.addEventListener("error", function () {
+      icon.style.visibility = "hidden";
+    });
+    item.appendChild(icon);
+
+    item.appendChild(el("span", "ark-core-name")).textContent = entry.label || entry.core;
+
+    var dots = el("div", "ark-core-dots");
+    var points = Math.max(0, Math.min(3, entry.points || 0));
+    BREAKPOINTS.forEach(function (bp, i) {
+      var active = i < points;
+      var point = el("span", "ark-core-point" + (active ? " ark-core-point-on" : ""));
+      var dot = el("span", "ark-core-dot" + (active ? " ark-core-dot-on" : ""));
+      point.appendChild(dot);
+      var num = el("span", "ark-core-point-label");
+      num.textContent = bp.replace("P", "");
+      point.appendChild(num);
+      dots.appendChild(point);
+    });
+    item.appendChild(dots);
+
+    return item;
+  }
+
+  function renderContainer(container) {
+    var script = container.querySelector("script");
+    if (!script) return;
+
+    var entries;
+    try {
+      entries = JSON.parse(script.textContent);
+    } catch (e) {
+      console.error("ark-core-badge.js: invalid JSON in .ark-cores block", e);
+      return;
+    }
+
+    var old = container.querySelector(".ark-core-row");
+    if (old) old.remove();
+
+    var row = el("div", "ark-core-row");
+    entries.forEach(function (entry) {
+      row.appendChild(buildItem(entry));
+    });
+    container.appendChild(row);
+  }
+
+  function scanAndRender(root) {
+    if (!root) return;
+    if (root.matches && root.matches(".ark-cores")) {
+      renderContainer(root);
+    }
+    if (root.querySelectorAll) {
+      root.querySelectorAll(".ark-cores").forEach(renderContainer);
+    }
+  }
+
+  function renderAll() {
+    scanAndRender(document);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderAll);
+  } else {
+    renderAll();
+  }
+
+  if (window.document$) {
+    document$.subscribe(renderAll);
+  }
+
+  if (window.MutationObserver) {
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (m) {
+        m.addedNodes.forEach(function (node) {
+          if (node.nodeType === 1) scanAndRender(node);
+        });
+      });
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+  }
+})();

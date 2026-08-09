@@ -126,25 +126,25 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 
 *Values recorded at 1830 Specialization with no runes or Maelstrom buff, 3 orbs is 30000 meter.*
 
-<div class="skills-table" markdown>
-
-| | Skill | Tags | Notes |
-|---|---|---|---|
-| ![](../assets/re/icon-maelstrom.png) | **Maelstrom**<br>*4201 meter*<br>*self buffed* | <span class="tag tag-util">SYNERGY</span><span class="tag tag-util">BUFF</span><span class="tag tag-warn">NOT PARALYSIS IMMUNE</span> | Increases orb generation and Attack/Move Speed, charges up to two stacks |
-| ![](../assets/re/icon-voidstrike.png) | **Void Strike**<br>*6314 meter* | <span class="tag tag-util">ORB GEN</span> | Main orb generator, use under Maelstrom's effect at a short distance from the boss |
-| ![](../assets/re/icon-twinshadows.png) | **Twin Shadows**<br>*2227 meter* | <span class="tag tag-util">ORB GEN</span><span class="tag tag-util">RECOVERY</span><span class="tag tag-util">MOBILITY</span> | Charges up to two stacks |
-| ![](../assets/re/icon-deathlyslash.png) | **Deathly Slash**<br>*2880 meter* | <span class="tag tag-dmg">DAMAGE</span><span class="tag tag-util">ORB GEN</span><span class="tag tag-util">MOBILITY</span> | Strongest attack per cast |
-| ![](../assets/re/icon-turningslash.png) | **Turning Slash**<br>*2228 meter* | <span class="tag tag-util">SYNERGY</span><span class="tag tag-util">ORB GEN</span><span class="tag tag-util">DESTINY</span><span class="tag tag-immune">PUSH IMMUNE</span> | Applies +4% outgoing and +5% directional damage synergy on hit |
-| ![](../assets/re/icon-fatalwave.png) | **Fatal Wave**<br>*2217 meter*<br>*3879 for 313* | <span class="tag tag-dmg">DAMAGE</span><span class="tag tag-util">ORB GEN</span><span class="tag tag-util">DESTINY</span> | Resets based on Destiny activation |
-| ![](../assets/re/icon-surge.png) | **Surge**<br>*180/s OC2*<br>*450/s OC5* | <span class="tag tag-dmg">DAMAGE</span><span class="tag tag-util">MOBILITY</span><span class="tag tag-util">DESTINY</span><span class="tag tag-immune">PUSH IMMUNE</span> | Consumes orbs to grant the RE buff, Mana Recovery, and skill CDR |
-| ![](../assets/re/icon-soulabsorber.png) | **Soul Absorber**<br>*7418 meter* | <span class="tag tag-util">ORB GEN</span><span class="tag tag-util">WEAK POINT</span> | Main orb generator, charge under Maelstrom's effect and aim as needed |
-| ![](../assets/re/icon-blitzrush.png) | **Blitz Rush**<br>*3156 meter* | <span class="tag tag-util">ORB GEN</span><span class="tag tag-util">RECOVERY</span> | Flexible ranged skill |
-| ![](../assets/re/icon-headhunt.png) | **Head Hunt**<br>*2200 meter* | <span class="tag tag-util">COUNTER</span><span class="tag tag-util">RECOVERY</span><span class="tag tag-warn">NOT PARALYSIS IMMUNE</span> | Most flexible recovery skill |
-| ![](../assets/re/icon-bladeassault.png) | **Blade Assault**<br>*20467 meter* | <span class="tag tag-util">AWAKENING</span><span class="tag tag-dmg">DAMAGE</span><span class="tag tag-util">ORB GEN</span><span class="tag tag-immune">PUSH IMMUNE</span><span class="tag tag-immune">STATUS IMMUNE</span> | Hold fully for maximum damage |
-| ![](../assets/re/icon-earthcleaver.png) | **Earth Cleaver**<br>*2208 meter* | <span class="tag tag-util">COUNTER</span><span class="tag tag-util">MOBILITY</span><span class="tag tag-util">WEAK POINT</span><span class="tag tag-warn">NOT PARALYSIS IMMUNE</span> | — |
-| ![](../assets/re/icon-spincutter.png) | **Spincutter**<br>*592 meter*<br>*per cast* | <span class="tag tag-util">MOBILITY</span> | Can be cast up to 2-3 times |
-| ![](../assets/re/icon-deathsentence.png) | **Death Sentence**<br>*1760 meter* | <span class="tag tag-dmg">DAMAGE</span><span class="tag tag-util">STAGGER</span><span class="tag tag-util">MOBILITY</span> | — |
-
+<div class="skills-table" data-family="re" markdown>
+<script type="application/json">
+[
+  { "id": "maelstrom", "name": "Maelstrom", "lines": ["4201 meter", "self buffed"] },
+  { "id": "voidstrike", "name": "Void Strike", "lines": ["6314 meter"] },
+  { "id": "twinshadows", "name": "Twin Shadows", "lines": ["2227 meter"] },
+  { "id": "deathlyslash", "name": "Deathly Slash", "lines": ["2880 meter"] },
+  { "id": "turningslash", "name": "Turning Slash", "lines": ["2228 meter"] },
+  { "id": "fatalwave", "name": "Fatal Wave", "lines": ["2217 meter", "3879 for 313"] },
+  { "id": "surge", "name": "Surge", "lines": ["180/s OC2", "450/s OC5"] },
+  { "id": "soulabsorber", "name": "Soul Absorber", "lines": ["7418 meter"] },
+  { "id": "blitzrush", "name": "Blitz Rush", "lines": ["3156 meter"] },
+  { "id": "headhunt", "name": "Head Hunt", "lines": ["2200 meter"] },
+  { "id": "bladeassault", "name": "Blade Assault", "lines": ["20467 meter"] },
+  { "id": "earthcleaver", "name": "Earth Cleaver", "lines": ["2208 meter"] },
+  { "id": "spincutter", "name": "Spincutter", "lines": ["592 meter", "per cast"] },
+  { "id": "deathsentence", "name": "Death Sentence", "lines": ["1760 meter"] }
+]
+</script>
 </div>
 
 <div class="tag-legend" markdown>

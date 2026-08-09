@@ -56,7 +56,16 @@
 ## Ark Setup
 
 ![333 Ark Passive/Grid tree](../assets/surge/argrid-tree-333.png)
-![333 Order cores](../assets/surge/ordercores-333.png)
+
+<div class="ark-cores" data-family="surge" markdown>
+<script type="application/json">
+[
+  { "core": "sun", "label": "Deathblade Rush", "points": 2 },
+  { "core": "moon", "label": "Death Blitz", "points": 3 },
+  { "core": "star", "label": "Frostfire Blade", "points": 0 }
+]
+</script>
+</div>
 
 !!! tip "Ark Grid"
     The minimum requirement to play this build is 14p Sun and 17p Moon, but damage will be lacking.
@@ -66,7 +75,22 @@
 
 ## Skill Setup
 
-![333 skill setup](../assets/surge/skillsetup-333.png)
+<div class="skill-setup" data-family="surge" markdown>
+<script type="application/json">
+[
+  {"id": "surpriseattack", "name": "Surprise Attack", "level": 10, "tripods": [1, 1, 1], "rune": {"tier": "epic", "name": "Rage"}},
+  {"id": "windcut", "name": "Wind Cut", "level": 10, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Galewind"}},
+  {"id": "spincutter", "name": "Spincutter", "level": 10, "tripods": [3, 3, 1], "rune": {"tier": "epic", "name": "Galewind"}},
+  {"id": "bladedance", "name": "Blade Dance", "level": 14, "tripods": [1, 2, 2], "rune": {"tier": "epic", "name": "Galewind"}},
+  {"id": "earthcleaver", "name": "Earth Cleaver", "level": 14, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Vision"}},
+  {"id": "turningslash", "name": "Turning Slash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "legendary", "name": "Rage"}},
+  {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
+  {"id": "blitzrush", "name": "Blitz Rush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "legendary", "name": "Galewind"}},
+  {"id": "surge", "name": "Deathblade Surge", "subtitle": "Identity"},
+  {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"}
+]
+</script>
+</div>
 
 !!! tip "Rune Adjustments"
     - Use Legendary Purify on Spincutter if needed.

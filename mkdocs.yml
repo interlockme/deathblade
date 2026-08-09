@@ -30,13 +30,17 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css
+  - stylesheets/extra.css?v=3
 
 extra_javascript:
   - javascripts/extra.js
   - javascripts/cpm-calculator.js
   - javascripts/ark-passive-calculator.js
   - javascripts/build-data.js
+  - javascripts/skill-data.js
+  - javascripts/skill-setup.js?v=3
+  - javascripts/essentials-table.js
+  - javascripts/ark-core-badge.js
   - javascripts/pentagon-badge.js
   - javascripts/rotation-practice.js
   - javascripts/dps-chart.js

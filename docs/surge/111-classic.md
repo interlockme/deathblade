@@ -62,7 +62,17 @@
 ## Ark Setup
 
 ![111 Ark Passive/Grid tree](../assets/surge/argrid-tree-111.png)
-![111 Order cores](../assets/surge/ordercores-111.png)
+
+<!-- ordercores-111.png showed 0/3 on all 3 Order cores (matches the tip below: "level to your preference") - adjust points if that's stale rather than intentional. -->
+<div class="ark-cores" data-family="surge" markdown>
+<script type="application/json">
+[
+  { "core": "sun", "label": "Deathblade Surge", "points": 0 },
+  { "core": "moon", "label": "Surge Core", "points": 0 },
+  { "core": "star", "label": "Strike", "points": 0 }
+]
+</script>
+</div>
 
 !!! tip "Ark Grid"
     - You can level Ark Grid cores to your preference, but keep in mind that 17p Moon grants a second Earth Cleaver stack. This lets you slot a cooldown gem into Blade Dance and unlocks its Weak Point Detection tripod.
@@ -72,7 +82,22 @@
 
 ## Skill Setup
 
-![111 skill setup](../assets/surge/skillsetup-111.png)
+<div class="skill-setup" data-family="surge" markdown>
+<script type="application/json">
+[
+  {"id": "surpriseattack", "name": "Surprise Attack", "level": 10, "tripods": [1, 1, 1], "rune": {"tier": "legendary", "name": "Rage"}},
+  {"id": "windcut", "name": "Wind Cut", "level": 10, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Galewind"}},
+  {"id": "spincutter", "name": "Spincutter", "level": 10, "tripods": [3, 3, 1], "rune": {"tier": "epic", "name": "Galewind"}},
+  {"id": "bladedance", "name": "Blade Dance", "level": 14, "tripods": [1, 2, 2], "rune": {"tier": "epic", "name": "Galewind"}},
+  {"id": "earthcleaver", "name": "Earth Cleaver", "level": 14, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Vision"}},
+  {"id": "turningslash", "name": "Turning Slash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "epic", "name": "Rage"}},
+  {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
+  {"id": "blitzrush", "name": "Blitz Rush", "level": 14, "tripods": [1, 1, 2], "rune": {"tier": "legendary", "name": "Galewind"}},
+  {"id": "surge", "name": "Deathblade Surge", "subtitle": "Identity"},
+  {"id": "breakingmoon", "name": "Breaking Moon", "subtitle": "Technique"}
+]
+</script>
+</div>
 
 !!! tip "Rune Adjustments"
     - Use Legendary Purify on Spincutter if needed.

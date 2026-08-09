@@ -121,27 +121,27 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 
 ## Surge Skills
 
-<div class="skills-table" markdown>
-
-| | Skill | Tags | Notes |
-|---|---|---|---|
-| ![](../assets/surge/icon-windcut.png) | **Wind Cut**<br>*up to 8-9 stacks* | <span class="tag tag-util">STACKS</span><span class="tag tag-warn">NOT PARALYSIS IMMUNE</span> | Usually cast before Death Trance |
-| ![](../assets/surge/icon-deathtrance.png) | **Death Trance** | <span class="tag tag-util">BUFF</span><span class="tag tag-util">DESTINY</span><span class="tag tag-immune">PUSH IMMUNE</span> | Grants buffs and skill CDR |
-| ![](../assets/surge/icon-maelstrom.png) | **Maelstrom**<br>*up to 7 stacks* | <span class="tag tag-util">SYNERGY</span><span class="tag tag-util">BUFF</span><span class="tag tag-warn">NOT PARALYSIS IMMUNE</span> | Increases Attack/Move Speed, charges up to two stacks |
-| ![](../assets/surge/icon-surpriseattack.png) | **Surprise Attack**<br>*up to 7 stacks* | <span class="tag tag-util">SYNERGY</span><span class="tag tag-util">MOBILITY</span><span class="tag tag-util">WEAK POINT</span> | Applies +4% outgoing and +5% directional damage synergy on hit |
-| ![](../assets/surge/icon-breakingmoon.png) | **Breaking Moon**<br>*60 stacks* | <span class="tag tag-dmg">DAMAGE</span><span class="tag tag-util">STACKS</span><span class="tag tag-util">BUFF</span> | Grants 60 stacks on hit and empowers the next Surge with +60% Critical Damage |
-| ![](../assets/surge/icon-surge.png) | **Surge** | <span class="tag tag-dmg">DAMAGE</span><span class="tag tag-immune">PUSH IMMUNE</span> | Consumes 60 stacks to deal maximum damage |
-| ![](../assets/surge/icon-bladedance.png) | **Blade Dance**<br>*up to 9 stacks* | <span class="tag tag-util">STACKS</span><span class="tag tag-dmg">DAMAGE</span> | You can stop holding it about 90% of the way and still generate full stacks |
-| ![](../assets/surge/icon-blitzrush.png) | **Blitz Rush**<br>*up to 7 stacks*<br>*or 1 stack 🐯* | <span class="tag tag-dmg">DAMAGE</span> | Skill reset and damage for 🐯 |
-| ![](../assets/surge/icon-earthcleaver.png) | **Earth Cleaver**<br>*2 to 3 stacks* | <span class="tag tag-util">COUNTER</span><span class="tag tag-util">MOBILITY</span><span class="tag tag-util">WEAK POINT</span><span class="tag tag-warn">NOT PARALYSIS IMMUNE</span> | Charges up to two stacks for 🦁 |
-| ![](../assets/surge/icon-spincutter.png) | **Spincutter**<br>*2 stacks*<br>*per cast* | <span class="tag tag-util">MOBILITY</span><span class="tag tag-util">STACKS</span> | Can be cast up to 3 times, backup stack builder |
-| ![](../assets/surge/icon-turningslash.png) | **Turning Slash**<br>*up to 5 stacks* | <span class="tag tag-util">SYNERGY</span><span class="tag tag-util">DESTINY</span><span class="tag tag-immune">PUSH IMMUNE</span> | Applies +4% outgoing and +5% directional damage synergy on hit, destiny activator for 🐯 |
-| ![](../assets/surge/icon-bladeassault.png) | **Blade Assault**<br>*up to 20 stacks* | <span class="tag tag-util">AWAKENING</span><span class="tag tag-dmg">DAMAGE</span><span class="tag tag-immune">PUSH IMMUNE</span><span class="tag tag-immune">STATUS IMMUNE</span> | Hold fully for maximum damage |
-| ![](../assets/surge/icon-deathlyslash.png) | **Deathly Slash**<br>*up to 8-12 stacks* | <span class="tag tag-dmg">DAMAGE</span><span class="tag tag-util">MOBILITY</span> | Empowered for 🐆 |
-| ![](../assets/surge/icon-darkaxel.png) | **Dark Axel**<br>*2 to 3 stacks* | <span class="tag tag-util">MOBILITY</span><span class="tag tag-immune">PUSH IMMUNE</span> | Jumps over bosses to ensure a back attack |
-| ![](../assets/surge/icon-upperslash.png) | **Upper Slash**<br>*up to 5 stacks* | <span class="tag tag-immune">PUSH IMMUNE</span> | Alternative skill for 🐆 |
-| ![](../assets/surge/icon-fallstar.png) | **Fallstar**<br>*up to 8 stacks* | <span class="tag tag-immune">PUSH IMMUNE</span> | *Surely one day this is meta...* |
-
+<div class="skills-table" data-family="surge" markdown>
+<script type="application/json">
+[
+  { "id": "windcut", "name": "Wind Cut", "lines": ["up to 8-9 stacks"] },
+  { "id": "deathtrance", "name": "Death Trance" },
+  { "id": "maelstrom", "name": "Maelstrom", "lines": ["up to 7 stacks"] },
+  { "id": "surpriseattack", "name": "Surprise Attack", "lines": ["up to 7 stacks"] },
+  { "id": "breakingmoon", "name": "Breaking Moon", "lines": ["60 stacks"] },
+  { "id": "surge", "name": "Surge" },
+  { "id": "bladedance", "name": "Blade Dance", "lines": ["up to 9 stacks"] },
+  { "id": "blitzrush", "name": "Blitz Rush", "lines": ["up to 7 stacks", "or 1 stack \uD83D\uDC2F"] },
+  { "id": "earthcleaver", "name": "Earth Cleaver", "lines": ["2 to 3 stacks"] },
+  { "id": "spincutter", "name": "Spincutter", "lines": ["2 stacks", "per cast"] },
+  { "id": "turningslash", "name": "Turning Slash", "lines": ["up to 5 stacks"] },
+  { "id": "bladeassault", "name": "Blade Assault", "lines": ["up to 20 stacks"] },
+  { "id": "deathlyslash", "name": "Deathly Slash", "lines": ["up to 8-12 stacks"] },
+  { "id": "darkaxel", "name": "Dark Axel", "lines": ["2 to 3 stacks"] },
+  { "id": "upperslash", "name": "Upper Slash", "lines": ["up to 5 stacks"] },
+  { "id": "fallstar", "name": "Fallstar", "lines": ["up to 8 stacks"] }
+]
+</script>
 </div>
 
 <div class="tag-legend" markdown>
