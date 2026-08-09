@@ -77,7 +77,8 @@
   {"id": "blitzrush", "name": "Blitz Rush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "epic", "name": "Wealth"}},
   {"id": "voidstrike", "name": "Void Strike", "level": 11, "tripods": [3, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
   {"id": "surge", "name": "Deathblade Surge", "subtitle": "Identity"},
-  {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"}
+  {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"},
+  {"id": "bladeassault", "name": "Blade Assault", "subtitle": "Awakening"}
 ]
 </script>
 </div>

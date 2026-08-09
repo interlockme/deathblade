@@ -57,6 +57,10 @@
 //   (blue/green/gold = tier 1/2/3) showing just the picked option number.
 //   Swap in real icons later inside buildCard() below; no markdown changes
 //   needed when that art exists.
+//
+//   Skills with neither tripods nor a rune (Identity/Technique/Awakening)
+//   are automatically pulled out of the masonry grid into their own
+//   compact row underneath - nothing to opt into, just omit both fields.
 (function () {
   function detectSiteRoot() {
     var scriptEl = document.currentScript || document.querySelector('script[src*="javascripts/skill-setup.js"]');
@@ -263,13 +267,44 @@
     // fire for the same container.
     var old = container.querySelector(".skill-setup-grid");
     if (old) old.remove();
+    var oldSpecial = container.querySelector(".skill-special-row");
+    if (oldSpecial) oldSpecial.remove();
+
+    // Skills with no tripods and no rune (Identity/Technique/Awakening -
+    // Surge, Deathly Slash, Blade Assault) don't need masonry at all:
+    // there's no chip content to size around, so they're pulled out of
+    // the grid into their own compact row below it instead of taking up
+    // a full masonry slot. Two knock-on benefits: the masonry grid is
+    // left with only "real" build cards, which tends to divide more
+    // evenly between columns as more skills get added over time (an
+    // 11th, 12th, ... normal skill just isn't as visually noticeable a
+    // few pixels of column-height difference as a whole extra card would
+    // be); and grouping the no-build skills together reads better
+    // anyway - they're a different kind of entry (nothing to configure),
+    // so visually clustering them says that on its own.
+    var mainEntries = entries.filter(function (entry) {
+      return (entry.tripods && entry.tripods.length) || entry.rune;
+    });
+    var specialEntries = entries.filter(function (entry) {
+      return !((entry.tripods && entry.tripods.length) || entry.rune);
+    });
 
     var grid = el("div", "skill-setup-grid");
-    entries.forEach(function (entry) {
+    mainEntries.forEach(function (entry) {
       grid.appendChild(buildCard(entry, family));
     });
     container.appendChild(grid);
     initMasonry(grid);
+
+    if (specialEntries.length) {
+      var specialRow = el("div", "skill-special-row");
+      specialEntries.forEach(function (entry) {
+        var card = buildCard(entry, family);
+        card.classList.add("skill-card-special");
+        specialRow.appendChild(card);
+      });
+      container.appendChild(specialRow);
+    }
   }
 
   function scanAndRender(root) {

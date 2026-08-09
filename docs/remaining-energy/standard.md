@@ -71,7 +71,8 @@
   {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
   {"id": "voidstrike", "name": "Void Strike", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
   {"id": "surge", "name": "Deathblade Surge", "subtitle": "Identity"},
-  {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"}
+  {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"},
+  {"id": "bladeassault", "name": "Blade Assault", "subtitle": "Awakening"}
 ]
 </script>
 </div>

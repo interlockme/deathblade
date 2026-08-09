@@ -3309,6 +3309,25 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .skill-setup-grid:not(.masonry-ready) .skill-card {
   visibility: hidden;
 }
+
+/* Identity/Technique/Awakening skills (Surge, Deathly Slash, Blade
+   Assault) - no tripods, no rune, nothing for masonry to size around, so
+   skill-setup.js routes these into a plain flex row here instead of into
+   the masonry grid above. Same .skill-card look, just position: static
+   and evenly sharing the row's width (mirrors .ark-core-row's flex: 1 1 0
+   treatment) rather than absolutely positioned/column-packed. */
+.md-typeset .skill-special-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7em;
+  margin: 0 0 1.2em;
+}
+.md-typeset .skill-card.skill-card-special {
+  position: static;
+  width: auto;
+  flex: 1 1 220px;
+  transform: none;
+}
 .md-typeset .skill-card[open] {
   border-color: rgba(179, 157, 219, 0.5);
 }
