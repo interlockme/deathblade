@@ -76,10 +76,12 @@ Azena's Blessing (P2W)
 
 ## Engravings
 
-| Category | Options |
-|---|---|
-| Engravings | Grudge · Adrenaline · Ambush Master · Raid Captain |
-| Choose One | Keen Blunt Weapon ★ · Cursed Doll |
+<div class="setup-panel" data-accent="lavender" markdown>
+
+<div class="build-stats engraving-summary" markdown>
+<div class="stat"><span class="stat-label">Engravings</span><span class="stat-value">Grudge · Adrenaline · Ambush Master · Raid Captain</span></div>
+<div class="stat"><span class="stat-label">Choose One</span><span class="stat-value">Keen Blunt Weapon ★ · Cursed Doll</span></div>
+</div>
 
 <div class="grid cards engraving-cards" markdown>
 
@@ -103,19 +105,41 @@ Azena's Blessing (P2W)
 
 </div>
 
+</div>
+
 ## Specialization
 
-| Spec | Status | Notes |
-|---|---|---|
-| 1830+ | ✓ Magic number | Ideal and future-proof, but not required |
-| 1818+ | ✓ Breakpoint | No Deathly Slash downtime on [333 (Ceiling)](333-ceiling.md) |
-| +CD% bracelet | ⚠ Raises gem/leap reqs | Release Potential 4 needed for Fatal Wave builds |
+<div class="setup-panel" data-accent="lavender" markdown>
 
-- Lower values are fine, but may experience some downtime.
-- In Trixion, aim for your build's Surge CPM goal to check for downtime or orb issues:
+<div class="build-stats spec-breakpoints" markdown>
+<div class="stat" data-kind="good" markdown="span">
+<span class="stat-label">Magic Number</span><span class="stat-value">1830+</span><span class="food-req">Future-proof, but not required</span>
+</div>
+<div class="stat" data-kind="good" markdown="span">
+<span class="stat-label">Breakpoint</span><span class="stat-value">1818+</span><span class="food-req">No downtime on [333 (Ceiling)](333-ceiling.md)</span>
+</div>
+<div class="stat" data-kind="warn" markdown="span">
+<span class="stat-label">Raises CD leap/gem Requirements</span><span class="stat-value">+CD% bracelet</span><span class="food-req">RP 4 needed for Fatal Wave builds</span>
+</div>
+</div>
+
+Lower values are fine, but may experience some downtime.
+
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span>Trixion CPM Goals<span class="setup-note-arrow"></span></summary>
+
+- Aim for your build's Surge CPM goal in Trixion to check for issues:
     - For [111 (Head Hunt)](111-head-hunt.md) and [313 (High Floor)](313-high-floor.md), try to approach 16 Surge CPM.
-    - For [333 (Ceiling)](333-ceiling.md), try to approach 14.5 Surge CPM (15 after the September update).
-    - Use the [DPS Meter](https://github.com/snoww/loa-logs) and remember to equip maxed Spirit Absorption and Max MP engravings!
+    - For [333 (Ceiling)](333-ceiling.md), try to approach 14.5 Surge CPM (15 after Balance Patch).
+    - Use the [DPS Meter](https://github.com/snoww/loa-logs) and equip maxed Spirit Absorption and Max MP engravings!
+
+</details>
+
+</div>
+
+</div>
 
 ## Gameplay
 

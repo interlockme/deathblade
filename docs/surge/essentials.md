@@ -3,7 +3,7 @@
 <div class="setup-panel" data-accent="pink" markdown>
 <div class="setup-notes" markdown>
 
-<p class="food-required-lead">Vernese Wine or Ealyn's Blessing and Atk/Move Speed feast are <strong>required</strong> to play Surge optimally.</p>
+<p class="food-required-lead">Vernese Wine or Ealyn's Blessing and Atk/Move Speed feast are <strong>recommended</strong> to play Surge optimally.</p>
 
 <div class="food-options" markdown>
 
@@ -22,9 +22,9 @@ Ealyn's Blessing
 </div>
 
 <details class="setup-note" data-kind="note" open markdown>
-<summary><span class="setup-note-tag">Note</span>Where to Buy<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Note</span>Purchase at Peyto Island<span class="setup-note-arrow"></span></summary>
 
-The Bartender on Peyto Island sells both of these items.
+- Their use is conditional, see the engravings section for more detail!
 
 </details>
 
@@ -65,10 +65,12 @@ The Bartender on Peyto Island sells both of these items.
 
 ## Engravings
 
-| Category | Options |
-|---|---|
-| Engravings | Grudge · Adrenaline · Ambush Master |
-| Choose Two | Raid Captain ★ · Keen Blunt Weapon ★ · Mass Increase · Cursed Doll |
+<div class="setup-panel" data-accent="lavender" markdown>
+
+<div class="build-stats engraving-summary" markdown>
+<div class="stat"><span class="stat-label">Engravings</span><span class="stat-value">Grudge · Adrenaline · Ambush Master</span></div>
+<div class="stat"><span class="stat-label">Choose Two</span><span class="stat-value">Raid Captain ★ · Keen Blunt Weapon ★ · Mass Increase · Cursed Doll</span></div>
+</div>
 
 <div class="grid cards engraving-cards" markdown>
 
@@ -110,6 +112,8 @@ The Bartender on Peyto Island sells both of these items.
     { .food-req }
 
     If you can handle the drawbacks, this is ceiling.
+
+</div>
 
 </div>
 
