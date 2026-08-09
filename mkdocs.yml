@@ -38,7 +38,7 @@ extra_javascript:
   - javascripts/ark-passive-calculator.js
   - javascripts/build-data.js
   - javascripts/skill-data.js
-  - javascripts/skill-setup.js?v=3
+  - javascripts/skill-setup.js?v=4
   - javascripts/essentials-table.js
   - javascripts/ark-core-badge.js
   - javascripts/pentagon-badge.js

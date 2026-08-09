@@ -106,6 +106,16 @@
     });
     summary.appendChild(icon);
 
+    // .skill-card-main stacks the name row above the chips row instead of
+    // sharing one row with them - with everything on one row, the chip
+    // cluster (fixed-width, flex-shrink: 0) claimed roughly half the
+    // card's width and left the name only ~80px to work with, ellipsing
+    // almost every skill name ("Soul Absorber" -> "S...") even on wide
+    // masonry columns. Stacking gives the name the card's FULL width on
+    // its own line, and the chips their own line below where they no
+    // longer compete with it for space.
+    var main = el("span", "skill-card-main");
+
     var meta = el("span", "skill-card-meta");
     if (entry.subtitle) {
       meta.appendChild(el("span", "skill-card-subtitle", entry.subtitle));
@@ -113,7 +123,7 @@
       meta.appendChild(el("span", "skill-card-level", "Lv. " + entry.level));
     }
     meta.appendChild(el("span", "skill-card-name", entry.name || entry.id));
-    summary.appendChild(meta);
+    main.appendChild(meta);
 
     var chips = el("span", "skill-card-chips");
     (entry.tripods || []).forEach(function (pick, i) {
@@ -122,7 +132,12 @@
     if (entry.rune) {
       chips.appendChild(el("span", "rune-chip rune-" + entry.rune.tier, entry.rune.name));
     }
-    summary.appendChild(chips);
+    // Special-row cards (Identity/Technique/Awakening) have neither
+    // tripods nor a rune, so skip appending an empty chips row for them.
+    if (chips.children.length) {
+      main.appendChild(chips);
+    }
+    summary.appendChild(main);
     summary.appendChild(el("span", "skill-card-arrow"));
     details.appendChild(summary);
 

@@ -47,6 +47,8 @@
 
 ![Ark Passive/Grid tree](../assets/re/argrid-tree-111.png)
 
+<div class="setup-panel" data-accent="pink" markdown>
+
 <div class="ark-cores" data-family="re" markdown>
 <script type="application/json">
 [
@@ -57,13 +59,29 @@
 </script>
 </div>
 
-!!! tip "Ark Grid"
-    - Technically playable with zero Ark Grid investment, but not recommended.
+<div class="setup-notes" markdown>
 
-!!! note "Adjustments"
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
+
+- Technically playable with zero Ark Grid investment, but not recommended.
+
+</details>
+
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+
+</details>
+
+</div>
+
+</div>
 
 ## Skill Setup
+
+<div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="skill-setup" data-family="re" markdown>
 <script type="application/json">
@@ -83,13 +101,27 @@
 </script>
 </div>
 
-!!! tip "Rune Adjustments"
-    - Use Purify on Head Hunt if you must.
+<div class="setup-notes" markdown>
 
-??? note "Skill Adjustments"
-    - You can swap Head Hunt's tripod to Quick Prep and gain an extra gem slot.
-        - Change your Head Hunt CD gem to Twin Shadows CD. Enjoy slightly easier recovery!
-        - This setup may run into mana issues, use a Focus rune on Head Hunt if necessary.
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Use Purify on Head Hunt if you must.
+
+</details>
+
+<details class="setup-note" data-kind="note" markdown>
+<summary><span class="setup-note-tag">Note</span> Skill Adjustments<span class="setup-note-arrow"></span></summary>
+
+- You can swap Head Hunt's tripod to Quick Prep and gain an extra gem slot.
+    - Change your Head Hunt CD gem to Twin Shadows CD. Enjoy slightly easier recovery!
+    - This setup may run into mana issues, use a Focus rune on Head Hunt if necessary.
+
+</details>
+
+</div>
+
+</div>
 
 ## Gems
 

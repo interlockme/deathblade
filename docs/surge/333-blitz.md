@@ -57,6 +57,8 @@
 
 ![333 Ark Passive/Grid tree](../assets/surge/argrid-tree-333.png)
 
+<div class="setup-panel" data-accent="pink" markdown>
+
 <div class="ark-cores" data-family="surge" markdown>
 <script type="application/json">
 [
@@ -67,13 +69,29 @@
 </script>
 </div>
 
-!!! tip "Ark Grid"
-    The minimum requirement to play this build is 14p Sun and 17p Moon, but damage will be lacking.
+<div class="setup-notes" markdown>
 
-!!! note "Adjustments"
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
+
+The minimum requirement to play this build is 14p Sun and 17p Moon, but damage will be lacking.
+
+</details>
+
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+
+</details>
+
+</div>
+
+</div>
 
 ## Skill Setup
+
+<div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="skill-setup" data-family="surge" markdown>
 <script type="application/json">
@@ -93,16 +111,30 @@
 </script>
 </div>
 
-!!! tip "Rune Adjustments"
-    - Use Legendary Purify on Spincutter if needed.
-    - Use Legendary Bleed or Poison instead of Rage if you don't use RC or MI engravings.
+<div class="setup-notes" markdown>
 
-??? note "Skill Adjustments"
-    - Earth Explosion tripod on Earth Cleaver is up to personal preference.
-        - Increased cast speed and extra stack, lowered mobility and damage.
-    - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
-    - You can use the Quick Prep tripod on Blade Dance as a safety net.
-    - Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer it.
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Use Legendary Purify on Spincutter if needed.
+- Use Legendary Bleed or Poison instead of Rage if you don't use RC or MI engravings.
+
+</details>
+
+<details class="setup-note" data-kind="note" markdown>
+<summary><span class="setup-note-tag">Note</span> Skill Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Earth Explosion tripod on Earth Cleaver is up to personal preference.
+    - Increased cast speed and extra stack, lowered mobility and damage.
+- Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
+- You can use the Quick Prep tripod on Blade Dance as a safety net.
+- Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer it.
+
+</details>
+
+</div>
+
+</div>
 
 ## Gems
 

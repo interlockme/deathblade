@@ -446,10 +446,13 @@ h3 { color: #4db6ac; }
   align-items: center;
   gap: 0.3em;
   white-space: nowrap;
-  background: linear-gradient(180deg, #232327 0%, #19191b 100%);
+  /* Flat tint-over-hairline-border - kept in sync with .rotation-line
+     .skill above, since this is the same chip just sized for inline
+     prose rather than a rotation box. */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 4px;
   padding: 0.1em 0.3em 0.1em 0.3em;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
   transition: border-color 0.15s ease, transform 0.15s ease;
   /* Without this, the chip's text inherits the surrounding paragraph's
      line-height (e.g. 25.6px at 1.6x/16px), which is taller than the
@@ -471,7 +474,7 @@ h3 { color: #4db6ac; }
   vertical-align: text-bottom;
   border-radius: 4px;
   margin: 0;
-  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.3), 0 0 4px rgba(179, 157, 219, 0.2);
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.3);
 }
 
 /* ---------- Skill role tags (Essentials skill tables) ---------- */
@@ -607,7 +610,7 @@ h3 { color: #4db6ac; }
   gap: 0.3em;
   background-color: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(167, 155, 196, 0.3);
-  border-radius: 999px;
+  border-radius: 5px;
   padding: 0.28em 0.75em 0.28em 0.55em;
   font-size: 0.85em;
   white-space: nowrap;
@@ -697,12 +700,13 @@ h3 { color: #4db6ac; }
   flex-wrap: wrap;
   position: relative;
   overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.025);
-  /* A faint corner glow instead of a flat fill - same near-invisible
-     opacity as before at a glance, but gives the box some depth rather
-     than reading as a solid grey rectangle. */
-  background-image: radial-gradient(ellipse 420px 180px at 0% 0%, rgba(179, 157, 219, 0.16), transparent 70%);
-  border: 1px solid rgba(179, 157, 219, 0.32);
+  /* Flat tint-over-hairline-border surface - same convention as .stat/
+     .skill-card/.ark-core-item - rather than this box's previous radial-
+     gradient corner glow, which (on top of the chips' own gradient fill
+     and drop-shadow below) read as over-decorated next to the flatter
+     Skill Setup cards elsewhere on the page. */
+  background-color: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(179, 157, 219, 0.28);
   border-radius: 10px;
   padding: 0.7em 0.9em 0.1em;   /* bottom trimmed - the skill/arrow margin-bottom below supplies it, see note */
   margin: 0.35em 0;
@@ -733,14 +737,17 @@ h3 { color: #4db6ac; }
   align-items: center;
   gap: 0.4em;
   white-space: nowrap;
-  border: 1px solid #313236; /* a shade lighter than the fill, for a soft frame rather than a bright outline */
-  /* A soft top-lit gradient instead of a flat fill, so the chip reads as
-     a slightly raised surface rather than blending into the box behind
-     it - subtle, not a shiny-button look. */
-  background: linear-gradient(180deg, #232327 0%, #19191b 100%);
+  /* Flat tint-over-hairline-border, matching .skill-card and the rest of
+     the Skill Setup section, instead of this chip's previous top-lit
+     gradient fill + drop-shadow - nested inside .rotation-line's own
+     tinted box, that combo read as a separately-styled component rather
+     than a variant of the same card language. A touch more opacity than
+     the container's 0.035 so the chip still stands apart from the box
+     behind it without needing a shadow to do that work. */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
   padding: 0.2em 0.6em 0.2em 0.35em;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
   transition: border-color 0.15s ease, transform 0.15s ease;
 }
 .md-typeset .rotation-line .skill:hover {
@@ -753,11 +760,11 @@ h3 { color: #4db6ac; }
   vertical-align: text-bottom;
   border-radius: 5px;
   margin: 0;
-  /* A soft ring + glow around each icon - echoes the bordered-icon look
-     Lost Ark's own skill UI uses, and gives the most colorful part of
-     the chip (the icon) a bit more presence than a flush, borderless
-     thumbnail sitting flat against the chip background. */
-  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.3), 0 0 5px rgba(179, 157, 219, 0.2);
+  /* A thin ring only (no blur glow) - matches .skill-card-icon's at-rest
+     state rather than the previous soft-glow version, which was part of
+     the same over-decorated combo the chip's gradient/shadow contributed
+     to. */
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.3);
 }
 /* Styled chevron instead of a bare "→" glyph - a plain Unicode arrow
    renders inconsistently across fonts and carries no visual weight.
@@ -800,7 +807,7 @@ h3 { color: #4db6ac; }
 .md-typeset .rotation-line .skill-situational {
   border-style: dashed;
   border-color: #3a3a3f;
-  background: linear-gradient(180deg, #1c1c1f 0%, #171719 100%);
+  background-color: rgba(255, 255, 255, 0.02);
   opacity: 0.75;
 }
 .md-typeset .rotation-line .skill-situational:hover {
@@ -3288,6 +3295,15 @@ body.page-333-blitz input[type="text"] {
   position: relative;
   margin: 0.9em 0 1.2em;
 }
+/* Inside a .setup-panel (see that section below), the panel's own padding
+   plus .setup-notes' divider supplies the spacing instead - avoids doubling
+   up the gap between the grid and the notes that now sit in the same card. */
+.md-typeset .setup-panel > .skill-setup > .skill-setup-grid {
+  margin-bottom: 0;
+}
+.md-typeset .setup-panel > .skill-setup > .skill-special-row {
+  margin-bottom: 0;
+}
 .md-typeset .skill-card {
   position: absolute;
   top: 0;
@@ -3298,9 +3314,52 @@ body.page-333-blitz input[type="text"] {
   transition: transform 0.22s ease, width 0.22s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   border: 1px solid rgba(179, 157, 219, 0.28);
   border-radius: 8px;
-  background-color: #1c1a22;
+  /* A translucent tint over whatever sits behind it (page bg, or the
+     lavender-tinted .setup-panel once these cards live inside one - see
+     that section below) instead of a hardcoded flat color, matching the
+     .stat/.build-compare-table surface convention used everywhere else on
+     the site rather than reading as a separately-designed component. */
+  background-color: rgba(255, 255, 255, 0.035);
   margin: 0;
   font-size: 1em; /* override the .admonition/details 1em rule's inherited context so nested text below can size relative to this, not the page default */
+  /* Lets .skill-card-main below query THIS card's own rendered width
+     (not the viewport's) to decide row-vs-stacked layout - see that
+     rule's comment. JS already gives every card an explicit width, so
+     there's always a real value to contain/query against. */
+  container-type: inline-size;
+  /* Explicit reset - Material's base `.md-typeset details` rule sets its
+     own box-shadow (none at rest, but see the :focus-within override
+     below), and without this the card silently inherits `box-shadow: none`
+     here only to have it OVERRIDDEN again the moment a descendant gets
+     focus - see the :focus-within rule right below this one. */
+  box-shadow: none;
+  /* The sitewide `.md-typeset .admonition, .md-typeset details` rule sets
+     `overflow: hidden` (to keep a generic admonition's title-bar corners
+     from poking past its rounded box) - harmless there since that title
+     bar paints its own background right up to the edge, but here it clips
+     .skill-card-arrow the instant the summary row's content (icon + name
+     + non-shrinking chip cluster) gets tight enough to push the arrow a
+     couple px past the card's true edge, which only shows up in the
+     closed/sideways-pointing state (the open/rotated arrow's narrower
+     bounding box happens to just clear it). Safe to open back up: this
+     card's own summary already paints `background: none` (see below), so
+     there's no corner-bleed for overflow:hidden to have been guarding
+     against in the first place. */
+  overflow: visible;
+}
+/* Material's `.md-typeset details:focus-within` sets a glowing blue
+   `box-shadow: 0 0 0 .2rem #448aff1a` ring around the WHOLE card the
+   instant any descendant (i.e. clicking summary to open/close it) gets
+   focus - that's the "blue rectangle border when clicked" bug. Its
+   selector is `.md-typeset details:focus-within` (specificity 0,2,1);
+   a plain `.md-typeset .skill-card:focus-within` only reaches 0,2,0 and
+   loses the specificity fight outright regardless of source order, so
+   this needs the real ancestor class (.skill-setup-grid /
+   .skill-special-row) added to clear it, same trick as .setup-notes'
+   specificity bump above. */
+.md-typeset .skill-setup-grid .skill-card:focus-within,
+.md-typeset .skill-special-row .skill-card:focus-within {
+  box-shadow: none;
 }
 /* Cards are positioned (and given their real width) by JS on first
    layout - hide them until then so they don't all flash stacked at
@@ -3319,8 +3378,20 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .skill-special-row {
   display: flex;
   flex-wrap: wrap;
+  /* Default flex cross-axis behavior is `stretch` - every item in the same
+     wrapped line is forced to the height of the TALLEST item in that line.
+     With 3 special cards sharing one row, opening any one of them (taller
+     once its body shows) stretched the other two to match, leaving them
+     visually "open" with nothing inside - the exact bug the masonry grid
+     above was built to avoid, just re-introduced here by the plain flex
+     row. flex-start makes each card keep its own natural height instead. */
+  align-items: flex-start;
   gap: 0.7em;
-  margin: 0 0 1.2em;
+  /* Top margin matches .skill-setup-grid's own 0.9em top margin so the
+     gap above this row (vs. the masonry grid above it) reads the same as
+     the gap the grid itself would have above IT - previously 0, so this
+     row sat flush against the grid's bottom edge at every width. */
+  margin: 0.9em 0 1.2em;
 }
 .md-typeset .skill-card.skill-card-special {
   position: static;
@@ -3362,6 +3433,22 @@ body.page-333-blitz input[type="text"] {
   padding: 0.55em 0.7em;
   cursor: pointer;
   list-style: none;
+  /* Material's `.md-typeset .admonition-title,.md-typeset summary` rule
+     sets `background-color: #448aff1a` (its default admonition blue) -
+     this override only reset shape/spacing, never color, so that blue
+     tint survived underneath the card's own translucent overlay. That's
+     the "steel blue" card background: not this card's own background at
+     all, but Material's blue leaking through its summary row on top of
+     it. Same root cause the .setup-note fix already covers elsewhere -
+     just never applied here. */
+  background: none;
+  /* Material's own `.md-typeset summary` rule also sets `overflow:
+     hidden` on the summary itself (not just the card) - harmless for the
+     text, but it clips the disclosure arrow the instant it rotates to
+     point down (open state), since the rotated triangle's bounding box
+     pokes fractionally past the row's tight-fit box. Arrow lives in
+     .skill-card, not summary's overflow context, once this is visible. */
+  overflow: visible;
 }
 /* The sitewide `.md-typeset details:not([open]) > summary` padding-top/
    bottom rule (0,2,2) outranks a plain `.md-typeset .skill-card summary`
@@ -3394,9 +3481,47 @@ body.page-333-blitz input[type="text"] {
   flex-shrink: 0;
   box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.28);
 }
-.md-typeset .skill-card-meta {
+/* Chips (runes+tripods) sit to the right of the name on one row, same
+   place they've always been - NOT stacked below it. A previous pass
+   stacked these into two full-width rows to fix names truncating
+   ("S...", "Hea...") on narrow masonry columns, but that fix overcorrected:
+   it made every card taller everywhere, even the wide 2-column desktop
+   layout that had plenty of room for a single row all along. The real
+   fix only needed to apply where a card is actually narrow, which is
+   exactly what a container query does: .skill-card-main reads its OWN
+   card's rendered width (via container-type: inline-size on .skill-card
+   above) rather than reshaping every card in every column just because
+   SOME column, somewhere, might be tight. */
+.md-typeset .skill-card-main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6em;
   flex: 1 1 auto;
   min-width: 0;
+}
+/* Below ~380px of card width there isn't room for a full name next to
+   the chip cluster (~170px of tripod+rune chips) without crushing it to
+   a handful of characters - that's the narrow single-column case (small
+   screens, or a sidebar-narrowed viewport). Stack there, same as before;
+   everywhere wider stays a single row. */
+@container (max-width: 380px) {
+  .md-typeset .skill-card-main {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35em;
+  }
+  .md-typeset .skill-card-chips {
+    margin-left: 0;
+  }
+}
+.md-typeset .skill-card-meta {
+  min-width: 0;
+  /* Row mode: meta (level+name) takes whatever space the chip cluster
+     doesn't need, and shrinks first since it has an ellipsis safety net
+     - chips don't. Stacked mode (above) doesn't need this: both rows
+     already span the card's full width on their own line. */
+  flex: 1 1 auto;
 }
 .md-typeset .skill-card-level,
 .md-typeset .skill-card-subtitle {
@@ -3416,6 +3541,8 @@ body.page-333-blitz input[type="text"] {
   color: #e8e6ee;
   font-size: 0.95em;
   line-height: 1.25;
+  /* Full card width now (not squeezed next to the chips), but kept as a
+     safety net in case a future skill name is unusually long. */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3424,10 +3551,14 @@ body.page-333-blitz input[type="text"] {
   display: flex;
   align-items: center;
   gap: 0.32em;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  /* Row mode (default): never shrinks (chips have no ellipsis fallback
+     the way the name does) and sits pinned to the card's right edge, the
+     same place it occupied before the chips-below-name detour. Stacked
+     mode's container query above zeroes this back out, since there's no
+     name sharing the row to push away from at that point. */
   flex-shrink: 0;
   margin-left: auto;
-  padding-left: 0.4em;
 }
 /* Tripod pick chips — flat placeholder squares (no tripod icon art yet),
    colored by tier so the tier ordering still reads at a glance. Tier
@@ -3508,7 +3639,12 @@ body.page-333-blitz input[type="text"] {
   border-bottom: 4px solid transparent;
   border-left: 5px solid #a79bc4;
   transition: transform 0.15s ease;
-  margin-left: 0.5em;
+  /* No margin-left here - summary's own `gap: 0.65em` already spaces this
+     from .skill-card-main. An extra margin on top of that gap was double-
+     spacing the arrow for nothing, eating into the row's already-tight
+     fit budget (icon + name + non-shrinking chip cluster) on narrower
+     masonry columns and pushing the arrow past the card's own right edge
+     - see the overflow fix below for why that then reads as "cut off". */
 }
 .md-typeset .skill-card[open] .skill-card-arrow {
   transform: rotate(90deg);
@@ -3551,14 +3687,19 @@ body.page-333-blitz input[type="text"] {
    6-core tree + a text legend) with just the 3 Order cores this site's
    builds actually invest in, each shown as an icon + name + which of its
    3 point breakpoints (10P/14P/17P) are reached.
-   Accent is Relic red, matching the actual core icon art (sun.png/
-   moon.png/star.png are Relic-quality gems, same as the old ordercores
-   screenshots) - a 17p core needs Relic quality, so that's the honest
-   color to reach for here rather than Legendary orange or Epic purple. */
+   Accent matches .build-card/.setup-panel[data-accent="pink"] (#f48fb1)
+   rather than the Relic-red this used to reach for from the core icon art
+   (sun.png/moon.png/star.png are Relic-quality gems) - the red read as an
+   unrelated, more saturated component bolted onto a page whose build
+   cards and Ark Setup panel are both already pink, instead of a variant
+   of them. */
 .md-typeset .ark-core-row {
   display: flex;
   gap: 0.8em;
   margin: 0.9em 0 1.2em;
+}
+.md-typeset .setup-panel > .ark-cores > .ark-core-row {
+  margin-bottom: 0;
 }
 .md-typeset .ark-core-item {
   display: flex;
@@ -3568,22 +3709,28 @@ body.page-333-blitz input[type="text"] {
   flex: 1 1 0;
   min-width: 0;
   padding: 0.7em 0.5em 0.6em;
-  border: 1px solid rgba(224, 83, 58, 0.3);
+  /* Same subtle-tint-over-hairline-border surface as .stat/.skill-card
+     rather than its own bespoke dark gradient - the gradient (and a much
+     stronger 0.3 border) previously made this the one component on the
+     site that looked like a separate skin instead of a variant of the
+     same card. */
+  border: 1px solid rgba(244, 143, 177, 0.22);
   border-radius: 10px;
-  background: linear-gradient(180deg, #201a1c 0%, #1a1618 100%);
+  background-color: rgba(255, 255, 255, 0.03);
   text-align: center;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .md-typeset .ark-core-item:hover {
-  border-color: rgba(224, 83, 58, 0.6);
-  box-shadow: 0 0 0 1px rgba(224, 83, 58, 0.2), 0 0 10px rgba(224, 83, 58, 0.3);
+  border-color: rgba(244, 143, 177, 0.45);
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.15), 0 0 10px rgba(244, 143, 177, 0.22);
 }
 .md-typeset .ark-core-icon {
   height: 40px;
   width: 40px;
   object-fit: contain;
   border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(224, 83, 58, 0.45), 0 0 8px rgba(224, 83, 58, 0.3);
+  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.45), 0 0 8px rgba(244, 143, 177, 0.3);
 }
 .md-typeset .ark-core-name {
   font-size: 0.72rem;
@@ -3614,9 +3761,14 @@ body.page-333-blitz input[type="text"] {
   background-color: rgba(255, 255, 255, 0.14);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
+/* Pastel gold (same tone as .rune-chip.rune-legendary) rather than the
+   card's own pink accent - an activated breakpoint is a distinct piece of
+   information (this node is reached) from the card's structural color, so
+   it reads clearer as its own accent instead of blending into the border/
+   icon glow. */
 .md-typeset .ark-core-dot-on {
-  background-color: #e0533a;
-  box-shadow: 0 0 4px rgba(224, 83, 58, 0.75);
+  background-color: #f0a868;
+  box-shadow: 0 0 4px rgba(240, 168, 104, 0.75);
 }
 .md-typeset .ark-core-point-label {
   font-size: 0.56rem;
@@ -3625,5 +3777,233 @@ body.page-333-blitz input[type="text"] {
   line-height: 1;
 }
 .md-typeset .ark-core-point-on .ark-core-point-label {
-  color: #ee8267;
+  color: #f0a868;
+}
+
+/* ==========================================================================
+   Setup panel + setup notes — Ark Setup / Skill Setup sections
+   ========================================================================== */
+/* .setup-panel wraps a section's widget (.ark-cores or .skill-setup) AND
+   its own follow-up notes in one shared card, e.g.:
+
+   <div class="setup-panel" data-accent="pink" markdown>
+   <div class="ark-cores" data-family="re" markdown>...</div>
+   <div class="setup-notes" markdown>
+   <details class="setup-note" data-kind="tip" open markdown>
+   <summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
+
+   - Body markdown as normal.
+
+   </details>
+   </div>
+   </div>
+
+   data-accent - "pink" (matches .build-card, use for Ark Setup) or
+                 "lavender" (matches .build-compare/.skill-card, use for
+                 Skill Setup).
+
+   Why this exists: !!!/??? admonitions render with Material's own generic
+   green/blue/purple/red palette, which doesn't belong to this site's
+   curated pink/teal/lavender/gold accents - so a stack of them below a
+   custom-built widget read as a library component bolted on afterward
+   rather than a continuation of it. Putting the widget and its notes in
+   one bordered/tinted card (same treatment as .build-card and
+   .build-compare elsewhere on the site), separated only by a hairline
+   divider, makes the notes read as that widget's own footnotes instead. */
+.md-typeset .setup-panel {
+  border-radius: 10px;
+  padding: 1em 1.2em 0.9em;
+  margin: 0.9em 0 1.2em;
+}
+.md-typeset .setup-panel[data-accent="pink"] {
+  border: 1px solid rgba(244, 143, 177, 0.3);
+  background-color: rgba(244, 143, 177, 0.045);
+}
+.md-typeset .setup-panel[data-accent="lavender"] {
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  background-color: rgba(179, 157, 219, 0.045);
+}
+.md-typeset .setup-panel > .ark-cores,
+.md-typeset .setup-panel > .skill-setup {
+  margin: 0;
+}
+
+.md-typeset .setup-notes {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 0.9em;
+  /* Was 0.7em - measured only ~21px between the divider and the first
+     note's tag pill, which reads as cramped next to the generously-padded
+     widget row above it (especially with a closed/collapsed first note,
+     where there's barely any content below to balance it). Bumped for
+     real breathing room instead of a token gap. */
+  padding-top: 1.1em;
+}
+/* A bare .setup-notes with no widget above it (e.g. the Standard build's
+   Ark Setup, which has no ark-cores badge to attach to) still gets the
+   full card treatment via its own .setup-panel wrapper - just without a
+   divider, since there's nothing above to divide from. */
+.md-typeset .setup-panel > .setup-notes:first-child {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Each note is a real <details> (open by default for "always visible"
+   ones, closed for optional depth) rather than a boxed admonition - a
+   flush row inside the shared card, divided from its neighbors by a
+   hairline instead of its own border/background/radius. Overrides the
+   sitewide generic `.md-typeset details` rules (box shape, closed-state
+   opacity dimming) the same way .skill-card already does, since this is
+   core reference content too, not optional depth to visually recede. */
+/* Material's base `.md-typeset details` rule (theirs, in main.css - not
+   ours) sets background-color: var(--md-admonition-bg-color) and a
+   .075rem solid #448aff border with a box-shadow, and its `summary` rule
+   separately sets its own background-color: #448aff1a plus a 2rem
+   left-padding reserved for the admonition icon and a -.6rem negative
+   side margin that intentionally bleeds the title bar past the body's
+   padding. Our old override only reset shape (border-radius/overflow/
+   padding) and never touched color/border/background on either element,
+   so all of that Material blue survived underneath our tag pills - this
+   is the "still looks like a generic admonition" bug. Reset every one of
+   those properties explicitly rather than relying on shape resets alone. */
+.md-typeset .setup-note {
+  border: none;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+  margin: 0;
+  padding: 0.55em 0;
+  opacity: 1;
+}
+.md-typeset .setup-note:not([open]) {
+  opacity: 1;
+}
+/* Material's own `.md-typeset details:not([open])` rule (main.css, not
+   ours) sets `padding-bottom: 0` on any closed <details> - one extra
+   element selector (details) than our plain `.md-typeset .setup-note`
+   class rule above, which is enough to outrank it on specificity despite
+   coming first in source order. Result: a closed note's bottom padding
+   collapses to 0, sticking its summary flush against the divider/next
+   note below it - only visible once a note actually starts closed (e.g.
+   "Skill Adjustments" here), since an always-open note never hits this
+   rule at all. Re-declare with the extra `:not([open])` class-tier to win
+   back the specificity fight and restore the same 0.55em every other side
+   already has. */
+.md-typeset .setup-note:not([open]) {
+  padding-bottom: 0.55em;
+}
+.md-typeset .setup-note + .setup-note {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+/* Material's `.md-typeset details:focus-within` (specificity 0,2,1) sets
+   a glowing blue `box-shadow: 0 0 0 .2rem #448aff1a` ring on the whole
+   element the instant a descendant (i.e. its own summary, right after a
+   click) gets focus. The plain `box-shadow: none` in the base rule above
+   is only (0,2,0) - it loses that fight and the ring reappears on every
+   click regardless, which is the "blue rectangle around the admonition
+   when clicked" bug. Needs the same `.setup-notes` ancestor specificity
+   bump already used for the summary rule below. */
+.md-typeset .setup-notes .setup-note:focus-within {
+  box-shadow: none;
+}
+/* Extra `.setup-notes` ancestor class bumps specificity to (0,3,1),
+   clearly above Material's `[dir=ltr] .md-typeset summary` padding/
+   border-left rules at (0,2,1) - the previous (0,2,1)-vs-(0,2,1) tie
+   only won by cascade order, which is exactly the kind of thing that's
+   easy to accidentally break later (e.g. reordering extra_css). */
+.md-typeset .setup-notes .setup-note > summary,
+.md-typeset .setup-notes .setup-note:not([open]) > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 700;
+  font-size: 0.85em;
+  color: #e8e6ee;
+  /* Material's base `.md-typeset summary` rule sets `overflow: hidden` on
+     every summary - harmless for the text, but .setup-note-arrow's
+     bounding box (built from the border-triangle trick) shifts slightly
+     wider than its 0-width box the instant it rotates 90deg to point down
+     (open state), poking a couple px past this tight-fit row and getting
+     clipped. Same root cause .skill-card summary already had fixed here -
+     just never carried over to this component. */
+  overflow: visible;
+}
+.md-typeset .setup-note > summary::-webkit-details-marker { display: none; }
+.md-typeset .setup-note > summary::marker { content: ""; }
+.md-typeset .setup-note > summary::before,
+.md-typeset .setup-note > summary::after {
+  display: none !important;
+}
+/* Small caps kind label — same pill language as .rune-chip/.tag rather
+   than Material's left-border-stripe treatment, colored from the site's
+   own accent set instead of admonition-default green/blue/purple/red. */
+.md-typeset .setup-note-tag {
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.18em 0.5em;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+.md-typeset .setup-note[data-kind="tip"] .setup-note-tag {
+  color: #4db6ac;
+  background-color: rgba(77, 182, 172, 0.14);
+  border-color: rgba(77, 182, 172, 0.4);
+}
+.md-typeset .setup-note[data-kind="note"] .setup-note-tag {
+  color: #b39ddb;
+  background-color: rgba(179, 157, 219, 0.16);
+  border-color: rgba(179, 157, 219, 0.4);
+}
+.md-typeset .setup-note[data-kind="example"] .setup-note-tag {
+  color: #e6b422;
+  background-color: rgba(230, 180, 34, 0.14);
+  border-color: rgba(230, 180, 34, 0.4);
+}
+.md-typeset .setup-note[data-kind="danger"] .setup-note-tag {
+  color: #ee83ab;
+  background-color: rgba(244, 143, 177, 0.14);
+  border-color: rgba(244, 143, 177, 0.4);
+}
+/* Disclosure arrow - a real span (like .skill-card-arrow) rather than a
+   reused pseudo-element, so it doesn't fight the Material icon-removal
+   rule above over the same ::before/::after slot. */
+.md-typeset .setup-note-arrow {
+  width: 0;
+  height: 0;
+  flex-shrink: 0;
+  margin-left: auto;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 5px solid #a79bc4;
+  transition: transform 0.15s ease;
+}
+.md-typeset .setup-note[open] > summary .setup-note-arrow {
+  transform: rotate(90deg);
+}
+.md-typeset .setup-note > summary + * {
+  margin-top: 0.5em;
+}
+.md-typeset .setup-note p,
+.md-typeset .setup-note ul {
+  margin: 0.3em 0;
+  font-size: 0.88em;
+  color: #cfc9dd;
+  line-height: 1.5;
+}
+.md-typeset .setup-note li {
+  margin: 0.2em 0;
+}
+.md-typeset .setup-note > :last-child {
+  margin-bottom: 0;
 }

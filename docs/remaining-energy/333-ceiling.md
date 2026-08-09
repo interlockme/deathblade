@@ -57,6 +57,8 @@
 
 ![Ark Passive/Grid tree](../assets/re/argrid-tree.png)
 
+<div class="setup-panel" data-accent="pink" markdown>
+
 <div class="ark-cores" data-family="re" markdown>
 <script type="application/json">
 [
@@ -67,20 +69,40 @@
 </script>
 </div>
 
-!!! tip "Ark Grid"
-    - The minimum requirement is shown above. Finish up Star to 17p when you can.
+<div class="setup-notes" markdown>
 
-!!! note "Adjustments"
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
-    - Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a very minor DPS loss.
-        - Not as comfortable with +CD% bracelet line and/or low Specialization.
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
 
-??? example "Alternative Enlightenment setup: Orb Circulation 5"
-    - Extreme Body Movement 2, Orb Circulation 5, Swordcraft Enhancement 1:
-        - Makes this build more forgiving at a ~3% DPS loss by increasing passive orb generation.
-        - Try giving Soul Absorber the Legendary Wealth rune if you run this for an even easier Cycle 2!
+- The minimum requirement is shown above. Finish up Star to 17p when you can.
+
+</details>
+
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+- Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a very minor DPS loss.
+    - Not as comfortable with +CD% bracelet line and/or low Specialization.
+
+</details>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Alt</span> Alternative Enlightenment setup: Orb Circulation 5<span class="setup-note-arrow"></span></summary>
+
+- Extreme Body Movement 2, Orb Circulation 5, Swordcraft Enhancement 1:
+    - Makes this build more forgiving at a ~3% DPS loss by increasing passive orb generation.
+    - Try giving Soul Absorber the Legendary Wealth rune if you run this for an even easier Cycle 2!
+
+</details>
+
+</div>
+
+</div>
 
 ## Skill Setup
+
+<div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="skill-setup" data-family="re" markdown>
 <script type="application/json">
@@ -100,34 +122,56 @@
 </script>
 </div>
 
-!!! tip "Rune Adjustments"
-    - Use Legendary Galewind, Focus or Purify on Head Hunt if you prefer.
+<div class="setup-notes" markdown>
 
-??? note "Skill Adjustments"
-    - You can bring Head Hunt down to Lv 1 and Void Strike up to Lv 14 for +0.4% DPS and lower mana use.
-        - However, Lv 7 is more practical and makes recovery much easier and faster. ★
-        - At Lv 7, Magick Control tripod can help solve mana issues if you don't need the CDR.
-        - Lv 4 Head Hunt (Quick Prep) with Void Strike Lv 13 is a decent overall compromise.
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
 
-??? danger "Upcoming Balance Patch (September) — build-specific changes"
-    - Swift Fingers will become the default 1st row tripod for Blitz Rush.
-        - ~1.5% DPS loss but CPM and playability increases make up for it.
-        - Void Strike is raised to Lv 13 and Blitz Rush is lowered to Lv 12.
-        - Gem priority of Void Strike and Blitz Rush is swapped.
-    - Apply changes manually if the guide is not updated in time.
-    - See [Essentials](essentials.md) for class-wide changes.
+- Use Legendary Galewind, Focus or Purify on Head Hunt if you prefer.
 
-??? danger "Alternative rune setup *(for lazy alts, high latency, slow hands, etc)*"
-    - Wealth on Fatal Wave can make this build more forgiving at a ~4% DPS loss. It won't cycle as smoothly, but the reduced stress and urgency may suit some playstyles. Consider playing Surge instead of this.
+</details>
 
-        | Skill | Rune |
-        |---|---|
-        | Fatal Wave | Epic Wealth |
-        | Void Strike | Epic Wealth |
-        | Soul Absorber | Legendary Wealth |
-        | Twin Shadows | Blue Wealth |
-        | Maelstrom | Green Wealth |
-        | Leap Ark | Release Potential 3 / Instant Spell 3 |
+<details class="setup-note" data-kind="note" markdown>
+<summary><span class="setup-note-tag">Note</span> Skill Adjustments<span class="setup-note-arrow"></span></summary>
+
+- You can bring Head Hunt down to Lv 1 and Void Strike up to Lv 14 for +0.4% DPS and lower mana use.
+    - However, Lv 7 is more practical and makes recovery much easier and faster. ★
+    - At Lv 7, Magick Control tripod can help solve mana issues if you don't need the CDR.
+    - Lv 4 Head Hunt (Quick Prep) with Void Strike Lv 13 is a decent overall compromise.
+
+</details>
+
+<details class="setup-note" data-kind="danger" markdown>
+<summary><span class="setup-note-tag">Warning</span> Upcoming Balance Patch (September) — build-specific changes<span class="setup-note-arrow"></span></summary>
+
+- Swift Fingers will become the default 1st row tripod for Blitz Rush.
+    - ~1.5% DPS loss but CPM and playability increases make up for it.
+    - Void Strike is raised to Lv 13 and Blitz Rush is lowered to Lv 12.
+    - Gem priority of Void Strike and Blitz Rush is swapped.
+- Apply changes manually if the guide is not updated in time.
+- See [Essentials](essentials.md) for class-wide changes.
+
+</details>
+
+<details class="setup-note" data-kind="danger" markdown>
+<summary><span class="setup-note-tag">Warning</span> Alternative rune setup *(for lazy alts, high latency, slow hands, etc)*<span class="setup-note-arrow"></span></summary>
+
+- Wealth on Fatal Wave can make this build more forgiving at a ~4% DPS loss. It won't cycle as smoothly, but the reduced stress and urgency may suit some playstyles. Consider playing Surge instead of this.
+
+    | Skill | Rune |
+    |---|---|
+    | Fatal Wave | Epic Wealth |
+    | Void Strike | Epic Wealth |
+    | Soul Absorber | Legendary Wealth |
+    | Twin Shadows | Blue Wealth |
+    | Maelstrom | Green Wealth |
+    | Leap Ark | Release Potential 3 / Instant Spell 3 |
+
+</details>
+
+</div>
+
+</div>
 
 ## Gems
 

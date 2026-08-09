@@ -55,6 +55,8 @@
 
 ![313 Ark Passive/Grid tree](../assets/re/argrid-tree.png)
 
+<div class="setup-panel" data-accent="pink" markdown>
+
 <div class="ark-cores" data-family="re" markdown>
 <script type="application/json">
 [
@@ -65,31 +67,51 @@
 </script>
 </div>
 
-!!! tip "Ark Grid"
-    - The minimum requirement is shown above. Raise Moon to 17p for increased QoL and damage when you can.
+<div class="setup-notes" markdown>
 
-??? example "Alternative Ark Grid core setup: 113 (Arts)"
-    <div class="ark-cores" data-family="re" markdown>
-    <script type="application/json">
-    [
-      { "core": "sun", "label": "Art Master", "points": 0 },
-      { "core": "moon", "label": "Arts Core", "points": 0 },
-      { "core": "star", "label": "Death Sword Energy", "points": 2 }
-    ]
-    </script>
-    </div>
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
 
-    - Same as 313 but **without** the Fatal Wave reset.
-    - Temporary core-limited option, it only requires a 14p Star.
-    - Requires Lv 9+ Fatal Wave CD gem or Optimized Training Lv 1.
-        - Avoid +CD% bracelet line for this core-limited variant.
+- The minimum requirement is shown above. Raise Moon to 17p for increased QoL and damage when you can.
 
-!!! note "Adjustments"
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
-    - Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a minor DPS loss.
-        - Not as comfortable with +CD% bracelet line and/or low Specialization.
+</details>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Alt</span> Alternative Ark Grid core setup: 113 (Arts)<span class="setup-note-arrow"></span></summary>
+
+<div class="ark-cores" data-family="re" markdown>
+<script type="application/json">
+[
+  { "core": "sun", "label": "Art Master", "points": 0 },
+  { "core": "moon", "label": "Arts Core", "points": 0 },
+  { "core": "star", "label": "Death Sword Energy", "points": 2 }
+]
+</script>
+</div>
+
+- Same as 313 but **without** the Fatal Wave reset.
+- Temporary core-limited option, it only requires a 14p Star.
+- Requires Lv 9+ Fatal Wave CD gem or Optimized Training Lv 1.
+    - Avoid +CD% bracelet line for this core-limited variant.
+
+</details>
+
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+- Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a minor DPS loss.
+    - Not as comfortable with +CD% bracelet line and/or low Specialization.
+
+</details>
+
+</div>
+
+</div>
 
 ## Skill Setup
+
+<div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="skill-setup" data-family="re" markdown>
 <script type="application/json">
@@ -109,23 +131,41 @@
 </script>
 </div>
 
-!!! tip "Rune Adjustments"
-    - Use Legendary Galewind, Purify or green Wealth on Head Hunt if you have no mana issues.
-    - Legendary Focus on Maelstrom can solve mana issues at a minor loss of orb generation.
+<div class="setup-notes" markdown>
 
-??? note "Skill Adjustments"
-    - You can bring Head Hunt down to Lv 1 and Void Strike up to Lv 14 for +0.5% DPS and lower mana use.
-        - However, Lv 7 is more practical and makes recovery much easier and faster. ★
-        - At Lv 7, Magick Control tripod can help solve mana issues if you don't need the CDR.
-        - Lv 4 Head Hunt (Quick Prep) with Void Strike Lv 13 is a decent overall compromise.
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
 
-??? danger "Upcoming Balance Patch (September) — build-specific changes"
-    - Swift Fingers may become the default 1st row tripod for Blitz Rush.
-        - ~2% DPS loss but CPM and playability increases may make up for it.
-        - Void Strike is raised to Lv 13 and Blitz Rush is lowered to Lv 12.
-        - Gem priority of Void Strike and Blitz Rush is swapped.
-    - Needs live testing, 313 is so fast that it might not benefit fully.
-    - See [Essentials](essentials.md) for class-wide changes.
+- Use Legendary Galewind, Purify or green Wealth on Head Hunt if you have no mana issues.
+- Legendary Focus on Maelstrom can solve mana issues at a minor loss of orb generation.
+
+</details>
+
+<details class="setup-note" data-kind="note" markdown>
+<summary><span class="setup-note-tag">Note</span> Skill Adjustments<span class="setup-note-arrow"></span></summary>
+
+- You can bring Head Hunt down to Lv 1 and Void Strike up to Lv 14 for +0.5% DPS and lower mana use.
+    - However, Lv 7 is more practical and makes recovery much easier and faster. ★
+    - At Lv 7, Magick Control tripod can help solve mana issues if you don't need the CDR.
+    - Lv 4 Head Hunt (Quick Prep) with Void Strike Lv 13 is a decent overall compromise.
+
+</details>
+
+<details class="setup-note" data-kind="danger" markdown>
+<summary><span class="setup-note-tag">Warning</span> Upcoming Balance Patch (September) — build-specific changes<span class="setup-note-arrow"></span></summary>
+
+- Swift Fingers may become the default 1st row tripod for Blitz Rush.
+    - ~2% DPS loss but CPM and playability increases may make up for it.
+    - Void Strike is raised to Lv 13 and Blitz Rush is lowered to Lv 12.
+    - Gem priority of Void Strike and Blitz Rush is swapped.
+- Needs live testing, 313 is so fast that it might not benefit fully.
+- See [Essentials](essentials.md) for class-wide changes.
+
+</details>
+
+</div>
+
+</div>
 
 ## Gems
 

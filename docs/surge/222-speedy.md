@@ -62,6 +62,8 @@
 
 ![222 Ark Passive/Grid tree](../assets/surge/argrid-tree-222.png)
 
+<div class="setup-panel" data-accent="pink" markdown>
+
 <div class="ark-cores" data-family="surge" markdown>
 <script type="application/json">
 [
@@ -72,14 +74,30 @@
 </script>
 </div>
 
-!!! tip "Ark Grid"
-    - The minimum requirement to play this build is a 10p Star core, but damage will be lacking.
+<div class="setup-notes" markdown>
 
-!!! note "Adjustments"
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
-    - This build is capable of using Raid Captain + Mass Increase with the least drawbacks.  
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
+
+- The minimum requirement to play this build is a 10p Star core, but damage will be lacking.
+
+</details>
+
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+- This build is capable of using Raid Captain + Mass Increase with the least drawbacks.
+
+</details>
+
+</div>
+
+</div>
 
 ## Skill Setup
+
+<div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="skill-setup" data-family="surge" markdown>
 <script type="application/json">
@@ -99,23 +117,41 @@
 </script>
 </div>
 
-!!! tip "Rune Adjustments"
-    - Use Legendary Purify on Spincutter if needed.
-    - Use Legendary Bleed on Surprise Attack if you prefer it.
+<div class="setup-notes" markdown>
 
-??? note "Skill Adjustments"
-    - Earth Explosion tripod on Earth Cleaver is up to personal preference.
-        - Increased cast speed and extra stack, lowered mobility and damage.
-    - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
-    - Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer it.
-    - You can literally replace Spincutter or Dark Axel for any skill you prefer.
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
 
-??? example "Alternative skill setup: Upper Slash"
-    - You can gain more comfort at a DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
-    - Upper Slash is a push immune skill that generates 5 stacks and allows you to skip Earth Cleaver casts.
-        - Set Upper Slash to use 2-3-2 tripods and give it an Epic Galewind rune.
-        - Lower Earth Cleaver's skill level to 10 and raise Upper Slash to level 14.
-        - Replace both Earth Cleaver gems for Upper Slash CD and another gem of your liking.
+- Use Legendary Purify on Spincutter if needed.
+- Use Legendary Bleed on Surprise Attack if you prefer it.
+
+</details>
+
+<details class="setup-note" data-kind="note" markdown>
+<summary><span class="setup-note-tag">Note</span> Skill Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Earth Explosion tripod on Earth Cleaver is up to personal preference.
+    - Increased cast speed and extra stack, lowered mobility and damage.
+- Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
+- Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer it.
+- You can literally replace Spincutter or Dark Axel for any skill you prefer.
+
+</details>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Alt</span> Alternative skill setup: Upper Slash<span class="setup-note-arrow"></span></summary>
+
+- You can gain more comfort at a DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
+- Upper Slash is a push immune skill that generates 5 stacks and allows you to skip Earth Cleaver casts.
+    - Set Upper Slash to use 2-3-2 tripods and give it an Epic Galewind rune.
+    - Lower Earth Cleaver's skill level to 10 and raise Upper Slash to level 14.
+    - Replace both Earth Cleaver gems for Upper Slash CD and another gem of your liking.
+
+</details>
+
+</div>
+
+</div>
 
 ## Gems
 

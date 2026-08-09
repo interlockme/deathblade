@@ -64,6 +64,8 @@
 ![111 Ark Passive/Grid tree](../assets/surge/argrid-tree-111.png)
 
 <!-- ordercores-111.png showed 0/3 on all 3 Order cores (matches the tip below: "level to your preference") - adjust points if that's stale rather than intentional. -->
+<div class="setup-panel" data-accent="pink" markdown>
+
 <div class="ark-cores" data-family="surge" markdown>
 <script type="application/json">
 [
@@ -74,13 +76,29 @@
 </script>
 </div>
 
-!!! tip "Ark Grid"
-    - You can level Ark Grid cores to your preference, but keep in mind that 17p Moon grants a second Earth Cleaver stack. This lets you slot a cooldown gem into Blade Dance and unlocks its Weak Point Detection tripod.
+<div class="setup-notes" markdown>
 
-!!! note "Adjustments"
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Ark Grid<span class="setup-note-arrow"></span></summary>
+
+- You can level Ark Grid cores to your preference, but keep in mind that 17p Moon grants a second Earth Cleaver stack. This lets you slot a cooldown gem into Blade Dance and unlocks its Weak Point Detection tripod.
+
+</details>
+
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span> Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+
+</details>
+
+</div>
+
+</div>
 
 ## Skill Setup
+
+<div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="skill-setup" data-family="surge" markdown>
 <script type="application/json">
@@ -100,16 +118,30 @@
 </script>
 </div>
 
-!!! tip "Rune Adjustments"
-    - Use Legendary Purify on Spincutter if needed.
-    - Use Legendary Bleed or Poison instead of Rage if you don't use RC or MI engravings.
+<div class="setup-notes" markdown>
 
-??? note "Skill Adjustments"
-    - Earth Explosion tripod on Earth Cleaver is up to personal preference.
-        - Increased cast speed and extra stack, lowered mobility and damage.
-    - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
-    - You can use the Quick Prep tripod on Blade Dance as a safety net.
-    - Dark Axel (1-1-2 tripods) can be used instead of Spincutter if you prefer it.
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span> Rune Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Use Legendary Purify on Spincutter if needed.
+- Use Legendary Bleed or Poison instead of Rage if you don't use RC or MI engravings.
+
+</details>
+
+<details class="setup-note" data-kind="note" markdown>
+<summary><span class="setup-note-tag">Note</span> Skill Adjustments<span class="setup-note-arrow"></span></summary>
+
+- Earth Explosion tripod on Earth Cleaver is up to personal preference.
+    - Increased cast speed and extra stack, lowered mobility and damage.
+- Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
+- You can use the Quick Prep tripod on Blade Dance as a safety net.
+- Dark Axel (1-1-2 tripods) can be used instead of Spincutter if you prefer it.
+
+</details>
+
+</div>
+
+</div>
 
 ## Gems
 
