@@ -3,7 +3,7 @@
 <div class="setup-panel" data-accent="pink" markdown>
 <div class="setup-notes" markdown>
 
-<p class="food-required-lead">Vernese Wine or Ealyn's Blessing and Atk/Move Speed feast are <strong>recommended</strong> to play Surge optimally.</p>
+<p class="food-required-lead">The following food is <strong>recommended</strong> to play Surge optimally:</p>
 
 <div class="food-options" markdown>
 
@@ -17,6 +17,12 @@ Vernese Wine
 ![](../assets/surge/icon-ealynsblessing.png){: .food-option-icon }
 
 Ealyn's Blessing
+</div>
+
+<div class="food-option" markdown>
+![](../assets/shared/icon-feast.png){: .food-option-icon }
+
+Atk/Move Speed Feast
 </div>
 
 </div>
@@ -67,51 +73,106 @@ Ealyn's Blessing
 
 <div class="setup-panel" data-accent="lavender" markdown>
 
-<div class="build-stats engraving-summary" markdown>
-<div class="stat"><span class="stat-label">Engravings</span><span class="stat-value">Grudge · Adrenaline · Ambush Master</span></div>
-<div class="stat"><span class="stat-label">Choose Two</span><span class="stat-value">Raid Captain ★ · Keen Blunt Weapon ★ · Mass Increase · Cursed Doll</span></div>
+<div class="engraving-loadout" markdown>
+<div class="engraving-loadout-group" markdown>
+<span class="engraving-loadout-label">Always Equip</span>
+<span class="engraving-chip">Grudge</span>
+<span class="engraving-chip">Adrenaline</span>
+<span class="engraving-chip">Ambush Master</span>
+</div>
+<div class="engraving-loadout-group" markdown>
+<span class="engraving-loadout-label">Choose 2</span>
+<span class="engraving-loadout-hint">pick the pair below that fits your food & skill level ↓</span>
+</div>
 </div>
 
-<div class="grid cards engraving-cards" markdown>
+<div class="engraving-cards" markdown>
 
--   **Raid Captain** ★
+<details class="engraving-card" data-accent="captain" open markdown>
+<summary>
+<span class="engraving-card-name">Raid Captain</span>
+<span class="engraving-card-badges" markdown>
+<span class="engraving-card-badge engraving-card-badge-top">★ Recommended</span>
+<span class="engraving-card-badge engraving-card-badge-food">Food Required</span>
+</span>
+<span class="engraving-card-arrow"></span>
+</summary>
+<div class="engraving-card-body" markdown>
 
-    ---
+![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine is **required**
+{ .food-req }
 
-    ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine is **required**
-    { .food-req }
+**Pros**{: .best-for } Highest damage bonus.
 
-    May require additional Maelstrom management.
+**Cons:**{: .tradeoff } Requires Maelstrom management for damage.
 
--   **Keen Blunt Weapon** ★
+</div>
+</details>
 
-    ---
+<details class="engraving-card" data-accent="kbw" open markdown>
+<summary>
+<span class="engraving-card-name">Keen Blunt Weapon</span>
+<span class="engraving-card-badges" markdown>
+<span class="engraving-card-badge engraving-card-badge-top">★ Recommended</span>
+<span class="engraving-card-badge engraving-card-badge-safe">Safe Pick</span>
+</span>
+<span class="engraving-card-arrow"></span>
+</summary>
+<div class="engraving-card-body" markdown>
 
-    A safe and efficient choice
-    { .food-req }
+Pair with Cursed Doll if you're just starting out.
+{ .food-req }
 
-    Pair this with Cursed Doll if you're a newer player.
+**Pros:**{: .best-for } A safe default with no drawbacks.
 
--   **Mass Increase**
+**Cons:**{: .tradeoff } None. It's expensive, but so are the others.
 
-    ---
+</div>
+</details>
 
-    ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing is **required**
-    { .food-req }
+<details class="engraving-card" data-accent="mass" open markdown>
+<summary>
+<span class="engraving-card-name">Mass Increase</span>
+<span class="engraving-card-badges" markdown>
+<span class="engraving-card-badge engraving-card-badge-food">Food Required</span>
+</span>
+<span class="engraving-card-arrow"></span>
+</summary>
+<div class="engraving-card-body" markdown>
 
-    May require additional Maelstrom management and player skill. Fewer drawbacks for [222 (Speedy)](222-speedy.md) 🐆
+![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing is **required**
+{ .food-req }
 
--   **Raid Captain + Mass Increase**
+**Pros:**{: .best-for } Highest damage bonus.
 
-    ---
+**Cons:**{: .tradeoff } Requires Maelstrom management for gameplay rather than damage, which can be a damage loss too.
 
-    ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine with Bard or Paladin
-    { .food-req }
+</div>
+</details>
 
-    ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing with Artist or Valkyrie
-    { .food-req }
+<details class="engraving-card" data-accent="combo" open markdown>
+<summary>
+<span class="engraving-card-name">R.C. + M.I.</span>
+<span class="engraving-card-badges" markdown>
+<span class="engraving-card-badge engraving-card-badge-ceiling">★ Ceiling</span>
+<span class="engraving-card-badge engraving-card-badge-food">Food Required</span>
+</span>
+<span class="engraving-card-arrow"></span>
+</summary>
+<div class="engraving-card-body" markdown>
 
-    If you can handle the drawbacks, this is ceiling.
+![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine with Bard or Paladin
+{ .food-req }
+
+![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing with Artist or Valkyrie
+{ .food-req }
+
+**Pros:**{: .best-for } This is ceiling. Fewer drawbacks for [🐆](222-speedy.md).
+
+**Cons:**{: .tradeoff } Maelstrom and food shackles x2.
+
+</div>
+</details>
 
 </div>
 

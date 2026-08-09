@@ -1735,21 +1735,355 @@ h3 { color: #4db6ac; }
   border-color: #4db6ac;
 }
 
-/* ---------- Engraving choice cards (Essentials page) ---------- */
-/* Four cards, each colored to match the engraving it represents: Raid
-   Captain (1) and Keen Blunt Weapon (2) already get the generic pink-red/
-   teal-green treatment from the bare .grid.cards rule above. Mass Increase
-   (3) gets its own lavender-purple here. The 4th card - Raid Captain +
-   Mass Increase combined - gets a color blended from the other two
-   (avg of #f48fb1 and #b39ddb, background likewise), so it visually reads
-   as "both of these at once" rather than introducing an unrelated hue. */
-.md-typeset .grid.cards.engraving-cards > ul > li:nth-child(3) {
-  background-color: #1d1a26;
-  border-color: #b39ddb;
+/* ==========================================================================
+   Engraving loadout + choice cards (Essentials page)
+   ========================================================================== */
+/* Replaces a pair of generic .stat boxes that just repeated engraving names
+   twice - once as "the fixed/choice line" and again as each card's own
+   title below - with no way to tell a fixed engraving from an optional one
+   at a glance, and no room for conditions/tradeoffs beyond one short
+   sentence. The old markup also drifted from reality on the RE page:
+   its stat row named Cursed Doll as the actual alternative to Keen Blunt
+   Weapon, but the card grid below showed Raid Captain (a FIXED engraving
+   there) in Cursed Doll's place, with no Cursed Doll card at all.
+
+   Two pieces, both living inside a shared .setup-panel[data-accent="lavender"]
+   (same wrapper as Ark Setup/Skill Setup, for the same "curated card, not a
+   bolted-on admonition" reason - see that section's own comment):
+
+   1. .engraving-loadout - a single-glance strip. Fixed engravings render as
+      plain chips (nothing to decide, so no card needed); the choice slot
+      just states how many to pick and points down at the cards, instead of
+      re-listing names the cards already show.
+
+   2. .engraving-cards - one real <details class="engraving-card"> per
+      OPTIONAL engraving only (fixed ones never get a card - that's the
+      fixed/optional distinction made structural instead of relying on
+      wording). Each card's closed summary shows its name + role badges
+      (★ Recommended / Safe Pick / Food Required / ★★ Ceiling) so the
+      choice is scannable shut; opening it reveals the fuller food
+      requirement, and Best For:/Tradeoff: lines using the same classes
+      build pages already use for "which build should I pick" framing.
+
+   Structure:
+   <div class="setup-panel" data-accent="lavender" markdown>
+
+   <div class="engraving-loadout" markdown>
+   <div class="engraving-loadout-group" markdown>
+   <span class="engraving-loadout-label">Always Equip</span>
+   <span class="engraving-chip">Grudge</span>
+   <span class="engraving-chip">Adrenaline</span>
+   <span class="engraving-chip">Ambush Master</span>
+   </div>
+   <div class="engraving-loadout-group" markdown>
+   <span class="engraving-loadout-label">Choose 2</span>
+   <span class="engraving-loadout-hint">pick the pair below that fits your food & skill level ↓</span>
+   </div>
+   </div>
+
+   <div class="engraving-cards" markdown>
+   <details class="engraving-card" data-accent="captain" open markdown>
+   <summary>
+   <span class="engraving-card-name">Raid Captain</span>
+   <span class="engraving-card-badges" markdown>
+   <span class="engraving-card-badge engraving-card-badge-top">★ Recommended</span>
+   <span class="engraving-card-badge engraving-card-badge-food">Food Required</span>
+   </span>
+   <span class="engraving-card-arrow"></span>
+   </summary>
+   <div class="engraving-card-body" markdown>
+
+   ![](icon){: .skill-icon } Vernese Wine + ![](icon){: .skill-icon } Feast
+   { .food-req }
+
+   **Best For:**{: .best-for } players who want top ceiling damage.
+
+   **Tradeoff:**{: .tradeoff } may require additional Maelstrom management.
+
+   </div>
+   </details>
+   ... (one per optional engraving) ...
+   </div>
+   </div>
+
+   data-accent on .engraving-card - "captain" (pink, Raid Captain), "kbw"
+   (teal, Keen Blunt Weapon), "mass" (lavender, Mass Increase), "combo"
+   (orchid, a Raid Captain + Mass Increase pairing), or "cursed" (blue,
+   Cursed Doll). Reuses hues already meaningful elsewhere on the site
+   (pink/teal/lavender = the same family each build's own .food-option icon
+   glows) rather than inventing a new palette, and a card's border color is
+   driven entirely by this attribute rather than nth-child position - so
+   cards can be reordered, or a page can show only 2 of the 5 (RE only
+   needs kbw/cursed), without CSS silently mis-coloring one of them. */
+
+.md-typeset .engraving-loadout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6em 1.6em;
+  margin-bottom: 1.1em;
 }
-.md-typeset .grid.cards.engraving-cards > ul > li:nth-child(4) {
-  background-color: #211a23;
-  border-color: #d396c6;
+.md-typeset .engraving-loadout-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+}
+.md-typeset .engraving-loadout-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.md-typeset .engraving-chip {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0.8em;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 0.3em 0.8em;
+  border-radius: 999px;
+  color: #e8e6ee;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+/* A fixed engraving can still carry a hard food requirement (e.g. Raid
+   Captain on the RE page, where it's always equipped but pointless without
+   Atk/Move Speed feast) - it doesn't get its own card to explain that (it's
+   not a choice), so the requirement has to read directly off the chip
+   instead. Pink accent (matches .food-required-lead's own "required"
+   color) plus the same feast icon used everywhere else on the site for
+   this exact requirement, so it's recognizable at a glance rather than a
+   plain-text chip indistinguishable from the no-strings-attached ones next
+   to it. Usage: ![](icon){: .skill-icon } Name wrapped in
+   `.engraving-chip.engraving-chip-food` - pair with an
+   .engraving-loadout-note right after it in the same line (see below). */
+.md-typeset .engraving-chip-food {
+  border-color: rgba(244, 143, 177, 0.45);
+  background-color: rgba(244, 143, 177, 0.09);
+  color: #f4c9d9;
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  line-height: 1.4;
+  gap: 0.35em;
+}
+.md-typeset .engraving-chip-food img.skill-icon {
+  margin: 0;
+  height: 14px;
+  width: 14px;
+}
+.md-typeset .engraving-loadout-hint {
+  font-size: 0.78em;
+  color: #7a7580;
+  font-style: italic;
+  vertical-align: middle;
+}
+
+/* Food requirement tied to a fixed engraving chip (e.g. Raid Captain on
+   the RE page - see .engraving-chip-food above). Sits inline right after
+   the chip it explains, in the SAME line/paragraph (not a separate block
+   below the loadout row), so it visually reads as that chip's own note
+   instead of a stray line of text under the whole group. Wraps onto its
+   own line only if the row runs out of horizontal space.
+   Usage, inside the same .engraving-loadout-group as the chip:
+   <span class="engraving-chip engraving-chip-food">...Raid Captain</span>
+   <span class="engraving-loadout-note">![](icon){: .skill-icon } requires
+   Atk/Move Speed feast</span> */
+.md-typeset .engraving-loadout-note {
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  gap: 0.3em;
+  font-size: 0.78em;
+  color: #a79bc4;
+  font-style: italic;
+  white-space: nowrap;
+}
+.md-typeset .engraving-loadout-note img.skill-icon {
+  margin: 0;
+  height: 12px;
+  width: 12px;
+}
+.md-typeset .engraving-loadout-note strong {
+  color: #f4c9d9;
+  font-style: normal;
+}
+
+.md-typeset .engraving-cards {
+  display: grid;
+  /* 320px, not the more typical ~230px card minimum elsewhere on the site
+     (e.g. .skill-card) - deliberately wide enough that the article column's
+     usual width only ever fits 2 across, so 4 cards form a clean 2x2 grid
+     instead of 3+1 (which leaves the 4th card's row with two empty cells
+     beside it - there's no masonry here to pack around that gap, see the
+     comment above). 2 cards (Remaining Energy) just get one full row. */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0.8em;
+}
+
+/* Built on <details>/<summary> (same instinct as .skill-card/.setup-note -
+   a flush, on-brand card instead of a generic library admonition), but a
+   plain CSS grid rather than .skill-card's JS masonry: there are only ever
+   2-4 of these on a page, not worth the layout-engine overhead masonry
+   solves for a 12+ item skill grid. Every card ships with the `open`
+   attribute in the markdown and stays that way - see the summary rule
+   below, which disables the native collapse toggle entirely so a card
+   can never load (or be clicked) into a blank, content-hidden state. */
+.md-typeset details.engraving-card {
+  margin: 0;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background-color: rgba(255, 255, 255, 0.03);
+  box-shadow: none;
+  overflow: visible;
+  opacity: 1;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+
+
+.md-typeset details.engraving-card[data-accent="captain"] { border-color: rgba(244, 143, 177, 0.35); background-color: rgba(244, 143, 177, 0.05); }
+.md-typeset details.engraving-card[data-accent="captain"]:hover,
+.md-typeset details.engraving-card[data-accent="captain"][open] { border-color: rgba(244, 143, 177, 0.6); }
+
+.md-typeset details.engraving-card[data-accent="kbw"] { border-color: rgba(77, 182, 172, 0.35); background-color: rgba(77, 182, 172, 0.05); }
+.md-typeset details.engraving-card[data-accent="kbw"]:hover,
+.md-typeset details.engraving-card[data-accent="kbw"][open] { border-color: rgba(77, 182, 172, 0.6); }
+
+.md-typeset details.engraving-card[data-accent="mass"] { border-color: rgba(179, 157, 219, 0.35); background-color: rgba(179, 157, 219, 0.05); }
+.md-typeset details.engraving-card[data-accent="mass"]:hover,
+.md-typeset details.engraving-card[data-accent="mass"][open] { border-color: rgba(179, 157, 219, 0.6); }
+
+.md-typeset details.engraving-card[data-accent="combo"] { border-color: rgba(211, 150, 198, 0.35); background-color: rgba(211, 150, 198, 0.05); }
+.md-typeset details.engraving-card[data-accent="combo"]:hover,
+.md-typeset details.engraving-card[data-accent="combo"][open] { border-color: rgba(211, 150, 198, 0.6); }
+
+/* Deep pastel red - Cursed Doll's own in-game engraving color, kept
+   within the same low-opacity pastel treatment as the other accents
+   above so it doesn't clash. */
+.md-typeset details.engraving-card[data-accent="cursed"] { border-color: rgba(229, 115, 115, 0.35); background-color: rgba(229, 115, 115, 0.05); }
+.md-typeset details.engraving-card[data-accent="cursed"]:hover,
+.md-typeset details.engraving-card[data-accent="cursed"][open] { border-color: rgba(229, 115, 115, 0.6); }
+
+/* Explicit resets for the same reason .setup-note/.skill-card need them -
+   Material's base .md-typeset details rule sets its own border/background/
+   box-shadow (already reset above) and its summary rule sets its own
+   admonition-blue background - both would otherwise survive underneath
+   this card's own tint.
+   pointer-events: none turns the summary from a toggle into a plain
+   header: the card always ships `open` in the markdown, and this stops a
+   click from closing it again (native <details> toggles on every summary
+   click regardless of the `open` attribute you started with). */
+.md-typeset details.engraving-card summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  padding: 0.75em 0.9em;
+  margin: 0;
+  border: none;
+  background: none;
+  cursor: default;
+  pointer-events: none;
+  list-style: none;
+  overflow: visible;
+}
+.md-typeset details.engraving-card summary::-webkit-details-marker { display: none; }
+.md-typeset details.engraving-card summary::marker { content: ""; }
+.md-typeset details.engraving-card summary::before,
+.md-typeset details.engraving-card summary::after {
+  display: none !important;
+}
+.md-typeset .engraving-cards details.engraving-card:focus-within {
+  box-shadow: none;
+}
+
+.md-typeset .engraving-card-name {
+  font-weight: 700;
+  font-size: 1em;
+  color: #e8e6ee;
+  margin-right: auto;
+}
+.md-typeset .engraving-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em;
+}
+.md-typeset .engraving-card-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2em 0.55em;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+/* Gold - matches .setup-note[data-kind="example"] and the site's other
+   "this is the one to reach for" accents. */
+.md-typeset .engraving-card-badge-top {
+  color: #e6b422;
+  background-color: rgba(230, 180, 34, 0.14);
+  border-color: rgba(230, 180, 34, 0.4);
+}
+/* Teal - matches .stat[data-kind="good"]/.best-for, the site's "on track/
+   no downside" color. */
+.md-typeset .engraving-card-badge-safe {
+  color: #4db6ac;
+  background-color: rgba(77, 182, 172, 0.14);
+  border-color: rgba(77, 182, 172, 0.4);
+}
+/* Pink - matches .food-required-lead's own "required" emphasis color. */
+.md-typeset .engraving-card-badge-food {
+  color: #ee83ab;
+  background-color: rgba(244, 143, 177, 0.14);
+  border-color: rgba(244, 143, 177, 0.4);
+}
+/* Orchid - the same blended pink/lavender the old combo card used, still
+   reserved for a combined-engraving ceiling pick. */
+.md-typeset .engraving-card-badge-ceiling {
+  color: #d396c6;
+  background-color: rgba(211, 150, 198, 0.14);
+  border-color: rgba(211, 150, 198, 0.4);
+}
+
+/* Cards no longer collapse (see the summary rule above), so the arrow
+   that used to signal "click to expand" is gone rather than left
+   pointing at a permanently-open state. The markup element is kept in
+   the .md files (harmless, empty) so nothing else has to change. */
+.md-typeset .engraving-card-arrow {
+  display: none;
+}
+
+.md-typeset .engraving-card-body {
+  margin: 0;
+  padding: 0.7em 0.9em 0.9em;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+/* :not(.food-req) matters here, not just style: without it this rule's
+   2 classes + 1 type (.engraving-card-body > p) outrank the base
+   .food-req rule below (2 classes, no type), so a food-req paragraph
+   inside a card silently lost its muted color/smaller font/icon-row gap
+   back to plain paragraph styling - it LOOKED like the .food-req class
+   wasn't doing anything. Excluding it here lets the base .food-req rule
+   (and the margin-top override right below) win instead. */
+.md-typeset .engraving-card-body > p:not(.food-req),
+.md-typeset .engraving-card-body > ul {
+  margin: 0.4em 0;
+  font-size: 0.94em;
+  color: #cfc9dd;
+  line-height: 1.5;
+}
+.md-typeset .engraving-card-body > :last-child {
+  margin-bottom: 0;
+}
+.md-typeset .engraving-card-body .food-req {
+  margin-top: 0;
 }
 
 /* Small muted requirement line under a card title, before the descriptive
@@ -4121,10 +4455,10 @@ body.page-333-blitz input[type="text"] {
    <div class="food-option" markdown>
    ![](icon.png){: .food-option-icon }
 
-   **Item Name**
+   Item Name
    </div>
-   ... (repeat per item, 3-4 fit comfortably)
-   </div>
+   ... (repeat per item - pills wrap and hug their own content, so 2
+   items and 4 items both look intentional rather than stretched) </div>
    </div> */
 .md-typeset .food-required {
   border: 1px solid rgba(244, 143, 177, 0.35);
@@ -4134,30 +4468,34 @@ body.page-333-blitz input[type="text"] {
   margin: 1em 0 1.5em;
 }
 .md-typeset .food-required-lead {
-  margin: 0 0 0.9em;
+  margin: 0 0 0.7em;
   font-size: 1em;
   color: #e8e6ee;
 }
 .md-typeset .food-required-lead strong {
   color: #ee83ab;
 }
+/* Compact pills, not big vertical cards - icon + name inline, sized to
+   content (flex: 0 0 auto) rather than stretched to fill the row. With
+   only 2-3 items (Surge has 2), a stretch-to-fill row left each option
+   as an oversized, mostly-empty box; pills that just hug their own
+   content read as a tight, deliberate row either way. */
 .md-typeset .food-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7em;
+  gap: 0.5em;
 }
 .md-typeset .food-option {
-  flex: 1 1 0;
-  min-width: 130px;
+  flex: 0 0 auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   gap: 0.5em;
-  padding: 0.9em 0.6em 0.8em;
+  padding: 0.4em 0.9em 0.4em 0.5em;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+  border-radius: 999px;
   background-color: rgba(255, 255, 255, 0.03);
-  text-align: center;
+  text-align: left;
   transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .md-typeset .food-option:hover {
@@ -4165,15 +4503,15 @@ body.page-333-blitz input[type="text"] {
   background-color: rgba(255, 255, 255, 0.05);
   box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.15), 0 0 10px rgba(244, 143, 177, 0.22);
 }
-/* 40px - roughly 2.5x the inline .skill-icon size elsewhere on the page.
-   Big enough to actually feature the item instead of reading as another
-   inline icon, without ballooning into full art-asset territory. */
+/* 22px - down from the old 40px vertical-card icon, sized to sit inline
+   in a pill next to the name instead of being the item's main visual. */
 .md-typeset .food-option-icon {
-  height: 40px;
-  width: 40px;
+  flex-shrink: 0;
+  height: 22px;
+  width: 22px;
   object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.4), 0 0 8px rgba(244, 143, 177, 0.28);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.4), 0 0 6px rgba(244, 143, 177, 0.25);
 }
 .md-typeset .food-option p {
   margin: 0;
@@ -4181,12 +4519,16 @@ body.page-333-blitz input[type="text"] {
   font-weight: 600;
   color: #e8e6ee;
   line-height: 1.3;
+  white-space: nowrap;
 }
-/* Optional secondary line, e.g. "(P2W)" under Azena's Blessing - usage:
-   a paragraph right after the name, tagged `{ .food-option-tag }`. */
+/* Alternate style for a single option's whole name line (e.g. a P2W
+   item), swapped in via `{ .food-option-tag }` instead of the default
+   `.food-option p` styling above - muted/unbolded so it reads as the
+   less-recommended pick without needing a second line. */
 .md-typeset .food-option-tag {
   margin: 0 !important;
-  font-size: 0.68rem;
+  font-size: 0.78em;
   font-weight: 600;
   color: #a79bc4;
+  white-space: nowrap;
 }

@@ -26,6 +26,12 @@ Azena's Blessing (P2W)
 { .food-option-tag }
 </div>
 
+<div class="food-option" markdown>
+![](../assets/shared/icon-feast.png){: .food-option-icon }
+
+Atk/Move Speed Feast
+</div>
+
 </div>
 
 <details class="setup-note" data-kind="example" markdown>
@@ -78,30 +84,58 @@ Azena's Blessing (P2W)
 
 <div class="setup-panel" data-accent="lavender" markdown>
 
-<div class="build-stats engraving-summary" markdown>
-<div class="stat"><span class="stat-label">Engravings</span><span class="stat-value">Grudge · Adrenaline · Ambush Master · Raid Captain</span></div>
-<div class="stat"><span class="stat-label">Choose One</span><span class="stat-value">Keen Blunt Weapon ★ · Cursed Doll</span></div>
+<div class="engraving-loadout" markdown>
+<div class="engraving-loadout-group" markdown>
+<span class="engraving-loadout-label">Always Equip</span>
+<span class="engraving-chip">Grudge</span>
+<span class="engraving-chip">Adrenaline</span>
+<span class="engraving-chip">Ambush Master</span>
+<span class="engraving-chip engraving-chip-food">![](../assets/shared/icon-feast.png){: .skill-icon } Raid Captain</span>
+<span class="engraving-loadout-note">requires Atk/Move Speed feast</span>
+</div>
+<div class="engraving-loadout-group" markdown>
+<span class="engraving-loadout-label">Choose 1</span>
+<span class="engraving-loadout-hint">pick one of the two below ↓</span>
+</div>
 </div>
 
-<div class="grid cards engraving-cards" markdown>
+<div class="engraving-cards" markdown>
 
--   **Raid Captain**
+<details class="engraving-card" data-accent="kbw" open markdown>
+<summary>
+<span class="engraving-card-name">Keen Blunt Weapon</span>
+<span class="engraving-card-badges" markdown>
+<span class="engraving-card-badge engraving-card-badge-top">★ Recommended</span>
+<span class="engraving-card-badge engraving-card-badge-safe">Safe Pick</span>
+</span>
+<span class="engraving-card-arrow"></span>
+</summary>
+<div class="engraving-card-body" markdown>
 
-    ---
+**Pros:**{: .best-for } Stronger than Cursed Doll by ~1% late game.
 
-    ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast is required for all content
-    { .food-req }
+**Cons:**{: .tradeoff } Expensive and scales off of Adrenaline books.
 
-    Feast also makes your rotations smoother.
+</div>
+</details>
 
--   **Keen Blunt Weapon**
+<!-- TODO: replace with the real Cursed Doll tradeoff copy (crit rate needs, downside details) -->
+<details class="engraving-card" data-accent="cursed" open markdown>
+<summary>
+<span class="engraving-card-name">Cursed Doll</span>
+<span class="engraving-card-badges" markdown>
+<span class="engraving-card-badge engraving-card-badge-safe">Alternative</span>
+</span>
+<span class="engraving-card-arrow"></span>
+</summary>
+<div class="engraving-card-body" markdown>
 
-    ---
+**Pros:**{: .best-for } Newer players or those stuck with it.
 
-    A safe and efficient choice
-    { .food-req }
+**Cons:**{: .tradeoff } The healing reduction can be frustrating.
 
-    Stronger than Cursed Doll by ~0.7% to 1% late game.
+</div>
+</details>
 
 </div>
 
