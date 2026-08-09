@@ -59,7 +59,22 @@
 
 ## Skill Setup
 
-![standard skill setup](../assets/re/skillsetup-standard.png)
+<div class="skill-setup" data-family="re" markdown>
+<script type="application/json">
+[
+  {"id": "spincutter", "name": "Spincutter", "level": 4, "tripods": [3], "rune": {"tier": "legendary", "name": "Galewind"}},
+  {"id": "soulabsorber", "name": "Soul Absorber", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Galewind"}},
+  {"id": "deathsentence", "name": "Death Sentence", "level": 14, "tripods": [2, 2, 1], "rune": {"tier": "legendary", "name": "Focus"}},
+  {"id": "twinshadows", "name": "Twin Shadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "earthcleaver", "name": "Earth Cleaver", "level": 14, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Vision"}},
+  {"id": "turningslash", "name": "Turning Slash", "level": 13, "tripods": [1, 3, 1], "rune": {"tier": "epic", "name": "Focus"}},
+  {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
+  {"id": "voidstrike", "name": "Void Strike", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
+  {"id": "surge", "name": "Deathblade Surge", "subtitle": "Identity"},
+  {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"}
+]
+</script>
+</div>
 
 !!! tip "Rune Adjustments"
     - Use Epic Wealth on Soul Absorber for extra orb generation until you're more familiar with the class.

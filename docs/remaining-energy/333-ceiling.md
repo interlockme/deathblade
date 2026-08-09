@@ -101,9 +101,6 @@
 
 !!! tip "Rune Adjustments"
     - Use Legendary Galewind, Focus or Purify on Head Hunt if you prefer.
-    - Legendary Galewind on Blitz Rush is *viable* if you're very skilled.
-        - Uptime and skill requirement are both increased; this is NOT recommended.
-        - Give Head Hunt a blue Wealth and change Blitz Rush CD gem to Twin Shadows.
 
 ??? note "Skill Adjustments"
     - You can bring Head Hunt down to Lv 1 and Void Strike up to Lv 14 for +0.4% DPS and lower mana use.

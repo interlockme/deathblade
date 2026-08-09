@@ -103,9 +103,6 @@
     - You can use the Quick Prep tripod on Blade Dance as a safety net.
     - Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer it.
 
-!!! danger "Don't remove synergy from Turning Slash"
-    - Don't even think about it, the data is not in your favor.
-
 ## Gems
 
 <div class="gem-priority" markdown>

@@ -110,9 +110,6 @@
     - You can use the Quick Prep tripod on Blade Dance as a safety net.
     - Dark Axel (1-1-2 tripods) can be used instead of Spincutter if you prefer it.
 
-!!! danger "Don't remove synergy from Turning Slash"
-    - Don't even think about it, the data is not in your favor.
-
 ## Gems
 
 <div class="gem-priority" markdown>

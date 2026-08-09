@@ -65,8 +65,8 @@
 <div class="ark-cores" data-family="surge" markdown>
 <script type="application/json">
 [
-  { "core": "sun", "label": "Sword Reset", "points": 0 },
-  { "core": "moon", "label": "Destiny Core", "points": 0 },
+  { "core": "sun", "label": "Deadly Feast", "points": 0 },
+  { "core": "moon", "label": "Dual Blade Dance", "points": 0 },
   { "core": "star", "label": "Swift Resolution", "points": 1 }
 ]
 </script>
@@ -115,9 +115,6 @@
         - Set Upper Slash to use 2-3-2 tripods and give it an Epic Galewind rune.
         - Lower Earth Cleaver's skill level to 10 and raise Upper Slash to level 14.
         - Replace both Earth Cleaver gems for Upper Slash CD and another gem of your liking.
-
-!!! danger "Don't remove synergy from Turning Slash"
-    - Don't even think about it, the data is not in your favor.
 
 ## Gems
 
