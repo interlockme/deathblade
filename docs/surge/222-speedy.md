@@ -63,9 +63,10 @@
 ![222 Ark Passive/Grid tree](../assets/surge/argrid-tree-222.png)
 ![222 Order cores](../assets/surge/ordercores-222.png)
 
-!!! tip ""
-    The minimum requirement to play this build is a 10p Star core, but damage will be lacking.
+!!! tip "Ark Grid"
+    - The minimum requirement to play this build is a 10p Star core, but damage will be lacking.
 
+!!! note "Adjustments"
     - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
     - This build is capable of using Raid Captain + Mass Increase with the least drawbacks.  
 
@@ -92,7 +93,7 @@
         - Replace both Earth Cleaver gems for Upper Slash CD and another gem of your liking.
 
 !!! danger "Don't remove synergy from Turning Slash"
-    Don't even think about it, the data is not in your favor.
+    - Don't even think about it, the data is not in your favor.
 
 ## Gems
 

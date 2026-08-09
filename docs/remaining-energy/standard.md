@@ -1,9 +1,7 @@
 # Standard 🌱
 
-<p class="page-banner page-banner-warning">Placeholder — full writeup coming soon</p>
-
 <div class="build-card-row" markdown>
-<div class="build-card" data-updated="2026-08-07" markdown>
+<div class="build-card" data-updated="2026-08-09" markdown>
 
 <div class="build-stats">
 <div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">7 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 70%"></div></div></div>
@@ -11,35 +9,134 @@
 <div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">AFK Simulator</span></div>
 </div>
 
-**Best For:**{: .best-for } Brand-new Remaining Energy players with no Ark Grid investment yet.
+**Best For:**{: .best-for } Brand-new Remaining Energy players with no Ark Grid yet.
 
-**Tradeoff:**{: .tradeoff } The simplest RE build, but a real damage and recovery downgrade compared to every Ark Grid build on this site.
+**Tradeoff:**{: .tradeoff } Legacy build with some downtime and little to no recovery.
 
-- This page is a placeholder — skill codes, gems, and rotation haven't been written up here yet.
-- See [Pre-Ark Grid](pre-ark-grid.md) for how Standard fits alongside the other early options.
+- Last bastion of the classic Remaining Energy gameplay, now powercrept.
+- Counter is used in rotation often, you must hold it when necessary.
+- Simple to learn and execute, with better mobility than modern builds.
 
 </div>
+<!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Recovery, Speed (0-10).
+     - DPS 8.5 follows the strict -0.5-per-rank pattern below 333 Ceiling
+       (9), consistent with the rest of the RE family.
+     - Mobility 5 is standard across all RE builds.
+     - Recovery/Speed are this build's own read - edit freely. -->
+<div class="pentagon-badge" data-build="standard" data-family="re" markdown>
+<div class="pentagon-badge-title">Build Profile</div>
+<div class="pentagon-svg-mount"></div>
+<div class="pentagon-badge-extra" markdown>
+[KR Video Guide](https://www.youtube.com/watch?v=pZDYek5l1og&t=467s){ .video-chip } [Video Gameplay](https://www.youtube.com/watch?v=xmxCjwImyrg){ .video-chip }
+</div>
+</div>
 </div>
 
-!!! info "In the meantime"
-    Until this page has a full writeup, the [Lost Ark Nexus Standard RE guide](https://lostark-nexus-archive.pages.dev/guides/deathblade/) covers skills, gems, and rotation for this build.
+!!! info ""
+    Since this is a beginner legacy build, this guide strays slightly from the norm to offer a smoother experience without deep min-maxing. For instance, you won't need mana food or stimulants to enjoy the gameplay.
 
 ## Skill Codes
 
-*Coming soon.*
+!!! danger "Before importing"
+    Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+
+=== "Standard"
+
+    ```
+    5F7D5490D9E2C0E26CF09BBA7300EE3738585110117637ED10C8C1ED04B5AF1E35B6428D7172B4FB399678D0F83CE64D3232A844396609F8F5466877D357B98D
+    ```
 
 ## Ark Setup
 
-*Coming soon — Standard is playable with zero Ark Grid investment by design.*
+![Ark Passive/Grid tree](../assets/re/argrid-tree-standard.png)
+
+!!! tip "Ark Grid"
+    - Standard is playable without Ark Grid by design, but you can use the 111 core setup if you already have it.
+        - Save your Ark Grid cores for when you're ready to transition to a modern Deathblade build.
+
+!!! note "Adjustments"
+    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
 
 ## Skill Setup
 
-*Coming soon.*
+![standard skill setup](../assets/re/skillsetup-standard.png)
+
+!!! tip "Rune Adjustments"
+    - Use Epic Wealth on Soul Absorber for extra orb generation until you're more familiar with the class.
 
 ## Gems
 
-*Coming soon.*
+<div class="gem-priority" markdown>
+
+<div class="gem-col gem-col-dmg" markdown>
+**Damage** — *Surge is most important.*
+
+<div class="gem-row" markdown>
+<span class="gem-chip"><span class="gem-num">1</span> ![](../assets/re/icon-surge.png) Surge</span>
+<span class="gem-chip"><span class="gem-num">2</span> ![](../assets/re/icon-soulabsorber.png) Soul Absorber</span>
+<span class="gem-chip"><span class="gem-num">3</span> ![](../assets/re/icon-deathsentence.png) Death Sentence</span>
+<span class="gem-chip"><span class="gem-num">4</span> ![](../assets/re/icon-voidstrike.png) Void Strike</span>
+<span class="gem-chip"><span class="gem-num">5</span> ![](../assets/re/icon-earthcleaver.png) Earth Cleaver</span>
+<span class="gem-chip"><span class="gem-num">6</span> ![](../assets/re/icon-twinshadows.png) Twin Shadows</span>
+<span class="gem-chip"><span class="gem-num">7</span> ![](../assets/re/icon-turningslash.png) Turning Slash</span>
+</div>
+</div>
+
+<div class="gem-col gem-col-cd" markdown>
+**Cooldown** — *Playable with Lv 7s, ideally Lv 8s or higher.*
+
+<div class="gem-row" markdown>
+<span class="gem-chip"><span class="gem-num">1</span> ![](../assets/re/icon-soulabsorber.png) Soul Absorber</span>
+<span class="gem-chip"><span class="gem-num">2</span> ![](../assets/re/icon-deathsentence.png) Death Sentence</span>
+<span class="gem-chip"><span class="gem-num">3</span> ![](../assets/re/icon-maelstrom.png) Maelstrom</span>
+<span class="gem-chip"><span class="gem-num">4</span> ![](../assets/re/icon-voidstrike.png) Void Strike</span>
+</div>
+</div>
+
+</div>
 
 ## Rotation
 
-*Coming soon.*
+Use Spincutter to approach the boss, use an opener and then repeat the main cycle.
+
+Openers stack Adrenaline and apply synergies efficiently at the start of an encounter.
+
+*Opener from zero orbs:*
+{ .lead }
+
+<div class="rotation-line" markdown>
+<span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
+</div>
+
+??? note "*Opener from 3 orbs with ![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant (optional):*"
+    <div class="rotation-line" markdown>
+    <span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
+    </div>
+
+*Main repeating cycle:*
+{ .lead }
+
+<div class="rotation-line" markdown>
+<span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/re/icon-deathlyslash.png)Deathly Slash<span class="skill-situational-tag">**every other rotation**</span></span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
+</div>
+
+- <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is only available every other rotation, just keep going if it's on cooldown.
+- Use <span class="skill-chip">![](../assets/re/icon-spincutter.png)Spincutter</span>  during downtime to reposition, or hold it to dodge upcoming attacks.
+- Use <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> for damage, or hold it for Hyper Awakening or a clutch recovery.
+- The rotation is bottle-necked by Soul Absorber's cooldown. Skip Earth Cleaver if it's up.
+
+*Recovery:*
+{ .lead }
+
+- Use spare Twin Shadows or Maelstrom stacks to recover if it'll help you reach 3 orbs.
+    - If not, just AFK or Surge with 2 orbs and AFK. Welcome to Standard Remaining Energy.
+
+## DPS Spread
+
+<p class="dps-showcase-caption">Full Lv 10 gems</p>
+
+<div class="dps-showcase" markdown>
+<div class="dps-showcase-frame" markdown>
+<div class="dps-chart" data-icon-base="re" data-labels="Deathly Slash,Surge,Soul Absorber,Death Sentence,Void Strike,Earth Cleaver,Twin Shadows,Turning Slash,Bleed,Maelstrom" data-values="19.1,18.1,14.3,11.1,11.1,10,8.1,6.5,0.8,0.5"></div>
+</div>
+</div>

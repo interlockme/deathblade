@@ -1,7 +1,5 @@
 # 111 (Head Hunt) 🔪
 
-<p class="page-banner page-banner-danger">High difficulty — very little room for error</p>
-
 <div class="build-card-row" markdown>
 <div class="build-card" data-updated="2026-08-07" markdown>
 
@@ -50,8 +48,8 @@
 ![Ark Passive/Grid tree](../assets/re/argrid-tree-111.png)
 ![111 Order cores](../assets/re/ordercores-111.png)
 
-!!! tip ""
-    Technically playable with zero Ark Grid investment, but not recommended.
+!!! tip "Ark Grid"
+    - Technically playable with zero Ark Grid investment, but not recommended.
 
 !!! note "Adjustments"
     - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.

@@ -7,10 +7,10 @@
     - Buffed Ark Grid cores increase 111 HH DPS by ~2% and 313 DPS by ~1%.
     - See [333 (Ceiling)](333-ceiling.md) or [313 (High Floor)](313-high-floor.md) for build-specific tripod/gem adjustments.
 
-!!! tip ""
-    Mana food or Azena's Blessing are **required** to play Remaining Energy optimally.
+!!! info ""
+    - Mana food or Azena's Blessing are **required** to play Remaining Energy optimally.
 
-    ![](../assets/re/icon-skewers.png){: .skill-icon } Chewy Grilled Skewers &nbsp;&nbsp; ![](../assets/re/icon-steak.png){: .skill-icon } Herb Steak Meal &nbsp;&nbsp; ![](../assets/re/icon-azena.png){: .skill-icon } Azena's Blessing (P2W)
+        ![](../assets/re/icon-skewers.png){: .skill-icon } Chewy Grilled Skewers &nbsp;&nbsp; ![](../assets/re/icon-steak.png){: .skill-icon } Herb Steak Meal &nbsp;&nbsp; ![](../assets/re/icon-azena.png){: .skill-icon } Azena's Blessing (P2W)
 
 ??? danger "You can lower mana use at a DPS loss to save gold and skip food"
     | Where | Change |

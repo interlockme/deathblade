@@ -58,8 +58,8 @@
 ![Ark Passive/Grid tree](../assets/re/argrid-tree.png)
 ![333 Order cores](../assets/re/ordercores-333.png)
 
-!!! tip ""
-    The minimum requirement is shown above. Finish up Star to 17p when you can.
+!!! tip "Ark Grid"
+    - The minimum requirement is shown above. Finish up Star to 17p when you can.
 
 !!! note "Adjustments"
     - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
@@ -67,7 +67,9 @@
         - Not as comfortable with +CD% bracelet line and/or low Specialization.
 
 ??? example "Alternative Enlightenment setup: Orb Circulation 5"
-    - Extreme Body Movement 2, Orb Circulation 5, Swordcraft Enhancement 1 can make this build more forgiving at a ~3% DPS loss. Try giving Soul Absorber the Legendary Wealth rune if you use this!
+    - Extreme Body Movement 2, Orb Circulation 5, Swordcraft Enhancement 1:
+        - Makes this build more forgiving at a ~3% DPS loss by increasing passive orb generation.
+        - Try giving Soul Absorber the Legendary Wealth rune if you run this for an even easier Cycle 2!
 
 ## Skill Setup
 
@@ -94,16 +96,16 @@
     - See [Essentials](essentials.md) for class-wide changes.
 
 ??? danger "Alternative rune setup *(for lazy alts, high latency, slow hands, etc)*"
-    Wealth on Fatal Wave can make this build more forgiving at a ~4% DPS loss. It won't cycle as smoothly, but the reduced stress and urgency may suit some playstyles. Consider playing Surge instead of this.
+    - Wealth on Fatal Wave can make this build more forgiving at a ~4% DPS loss. It won't cycle as smoothly, but the reduced stress and urgency may suit some playstyles. Consider playing Surge instead of this.
 
-    | Skill | Rune |
-    |---|---|
-    | Fatal Wave | Epic Wealth |
-    | Void Strike | Epic Wealth |
-    | Soul Absorber | Legendary Wealth |
-    | Twin Shadows | Blue Wealth |
-    | Maelstrom | Green Wealth |
-    | Leap Ark | Release Potential 3 / Instant Spell 3 |
+        | Skill | Rune |
+        |---|---|
+        | Fatal Wave | Epic Wealth |
+        | Void Strike | Epic Wealth |
+        | Soul Absorber | Legendary Wealth |
+        | Twin Shadows | Blue Wealth |
+        | Maelstrom | Green Wealth |
+        | Leap Ark | Release Potential 3 / Instant Spell 3 |
 
 ## Gems
 

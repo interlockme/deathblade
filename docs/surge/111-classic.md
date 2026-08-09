@@ -64,8 +64,8 @@
 ![111 Ark Passive/Grid tree](../assets/surge/argrid-tree-111.png)
 ![111 Order cores](../assets/surge/ordercores-111.png)
 
-!!! tip ""
-    You can level Ark Grid cores to your preference, but keep in mind that 17p Moon grants a second Earth Cleaver stack. This lets you slot a cooldown gem into Blade Dance and unlocks its Weak Point Detection tripod.
+!!! tip "Ark Grid"
+    - You can level Ark Grid cores to your preference, but keep in mind that 17p Moon grants a second Earth Cleaver stack. This lets you slot a cooldown gem into Blade Dance and unlocks its Weak Point Detection tripod.
 
 !!! note "Adjustments"
     - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
@@ -86,7 +86,7 @@
     - Dark Axel (1-1-2 tripods) can be used instead of Spincutter if you prefer it.
 
 !!! danger "Don't remove synergy from Turning Slash"
-    Don't even think about it, the data is not in your favor.
+    - Don't even think about it, the data is not in your favor.
 
 ## Gems
 

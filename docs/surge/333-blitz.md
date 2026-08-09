@@ -58,7 +58,7 @@
 ![333 Ark Passive/Grid tree](../assets/surge/argrid-tree-333.png)
 ![333 Order cores](../assets/surge/ordercores-333.png)
 
-!!! tip ""
+!!! tip "Ark Grid"
     The minimum requirement to play this build is 14p Sun and 17p Moon, but damage will be lacking.
 
 !!! note "Adjustments"
@@ -80,7 +80,7 @@
     - Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer it.
 
 !!! danger "Don't remove synergy from Turning Slash"
-    Don't even think about it, the data is not in your favor.
+    - Don't even think about it, the data is not in your favor.
 
 ## Gems
 

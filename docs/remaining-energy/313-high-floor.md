@@ -56,13 +56,8 @@
 ![313 Ark Passive/Grid tree](../assets/re/argrid-tree.png)
 ![313 Order cores](../assets/re/ordercores-313.png)
 
-!!! tip ""
-    The minimum requirement is shown above. Raise Moon to 17p for increased QoL and damage when you can.
-
-!!! note "Adjustments"
-    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
-    - Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a minor DPS loss.
-        - Not as comfortable with +CD% bracelet line and/or low Specialization.
+!!! tip "Ark Grid"
+    - The minimum requirement is shown above. Raise Moon to 17p for increased QoL and damage when you can.
 
 ??? example "Alternative Ark Grid core setup: 113 (Arts)"
     ![113 Arts cores](../assets/re/ordercores-113arts.png)
@@ -71,6 +66,11 @@
     - Temporary core-limited option, it only requires a 14p Star.
     - Requires Lv 9+ Fatal Wave CD gem or Optimized Training Lv 1.
         - Avoid +CD% bracelet line for this core-limited variant.
+
+!!! note "Adjustments"
+    - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes if needed.
+    - Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a minor DPS loss.
+        - Not as comfortable with +CD% bracelet line and/or low Specialization.
 
 ## Skill Setup
 
