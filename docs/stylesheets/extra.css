@@ -3994,10 +3994,20 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .setup-note > summary + * {
   margin-top: 0.5em;
 }
-.md-typeset .setup-note p,
-.md-typeset .setup-note ul {
+/* Scoped to DIRECT children only (`>`), not `.setup-note ul` generally.
+   A nested list (e.g. "You can swap Head Hunt's tripod..." -> "Change your
+   Head Hunt CD gem...") puts its inner <ul> inside a <li> of the outer one,
+   so a bare descendant selector matched BOTH levels and applied this
+   font-size twice - compounding with the sitewide `li li` dimming rule
+   (0.92em) on top of that shrank sub-bullets to ~11.4px, well past
+   "subtly smaller" into "hard to read". Scoping to direct children applies
+   this size once, at the top level; the nested <ul> then just inherits it
+   and gets dimmed by the single sitewide `li li` rule, same as any other
+   nested list on the site. */
+.md-typeset .setup-note > p,
+.md-typeset .setup-note > ul {
   margin: 0.3em 0;
-  font-size: 0.88em;
+  font-size: 0.94em; /* was 0.88em - read a touch small even before the nested-list compounding above */
   color: #cfc9dd;
   line-height: 1.5;
 }
@@ -4006,4 +4016,96 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .setup-note > :last-child {
   margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Food/consumable requirement callout — Essentials page
+   ========================================================================== */
+/* Pulled out of the setup-note stack entirely: "mana food is required" is
+   the single most important line on this page (get it wrong and the whole
+   build's mana sustain falls apart), so it reads as its own featured
+   callout instead of just another collapsible row in the notes list -
+   same instinct as .build-card getting its own treatment instead of
+   being folded into prose. Danger/warn colored (same pink family as
+   .setup-note's "danger" kind and .build-card itself - see that rule's
+   own comment) since the requirement framing is deliberately urgent, not
+   a neutral tip.
+
+   Structure:
+   <div class="food-required" markdown>
+   <p class="food-required-lead">Mana food or Azena's Blessing are
+   **required** to play Remaining Energy optimally.</p>
+
+   <div class="food-options" markdown>
+   <div class="food-option" markdown>
+   ![](icon.png){: .food-option-icon }
+
+   **Item Name**
+   </div>
+   ... (repeat per item, 3-4 fit comfortably)
+   </div>
+   </div> */
+.md-typeset .food-required {
+  border: 1px solid rgba(244, 143, 177, 0.35);
+  background-color: rgba(244, 143, 177, 0.055);
+  border-radius: 10px;
+  padding: 1em 1.2em 1.1em;
+  margin: 1em 0 1.5em;
+}
+.md-typeset .food-required-lead {
+  margin: 0 0 0.9em;
+  font-size: 1em;
+  color: #e8e6ee;
+}
+.md-typeset .food-required-lead strong {
+  color: #ee83ab;
+}
+.md-typeset .food-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7em;
+}
+.md-typeset .food-option {
+  flex: 1 1 0;
+  min-width: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.9em 0.6em 0.8em;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.03);
+  text-align: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.md-typeset .food-option:hover {
+  border-color: rgba(244, 143, 177, 0.45);
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.15), 0 0 10px rgba(244, 143, 177, 0.22);
+}
+/* 40px - roughly 2.5x the inline .skill-icon size elsewhere on the page.
+   Big enough to actually feature the item instead of reading as another
+   inline icon, without ballooning into full art-asset territory. */
+.md-typeset .food-option-icon {
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.4), 0 0 8px rgba(244, 143, 177, 0.28);
+}
+.md-typeset .food-option p {
+  margin: 0;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #e8e6ee;
+  line-height: 1.3;
+}
+/* Optional secondary line, e.g. "(P2W)" under Azena's Blessing - usage:
+   a paragraph right after the name, tagged `{ .food-option-tag }`. */
+.md-typeset .food-option-tag {
+  margin: 0 !important;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #a79bc4;
 }

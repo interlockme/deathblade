@@ -1,22 +1,61 @@
 # Essentials
 
-??? danger "Upcoming (September Balance Patch)"
-    - Death Trance no longer auto-deactivates mid-stack via a side node.
-    - Stack cap increased from 60 to 80. Extra stacks now roll over.
-    - Breaking Moon changes to a Normal skill and gives 60 stacks on hit.
-    - Complete rework of 222 cores and playstyle. It's actually good now.
-    - Blitz Rush gains a 27% cast speed tripod and 20% more attack range.
-    - Turning Slash and Surprise Attack's after-effects now also apply Synergy.
-    - Overall damage increases, Surge is now competitive with RE.
-    - Surge post-cast delay was removed, animation cancelling is no longer needed.
+<div class="setup-panel" data-accent="pink" markdown>
+<div class="setup-notes" markdown>
 
-!!! tip "Quick Tips"
-    - Optimize Ark Passive nodes or compare bracelet lines [here!](../resources.md#ark-passive-calculator)
-    - All Deathblade builds run a pet with the Specialization stat bonus.
-    - Always press the next skill during your current skill's animation (skill queuing).
-    - Trixion practice requires equipping maxed Spirit Absorption and Max MP engravings.
-    - The Bartender on Peyto Island sells ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine and ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing.
-    - Optimized Training 1 may help smooth things out at lower gem levels.
+<p class="food-required-lead">Vernese Wine or Ealyn's Blessing and Atk/Move Speed feast are <strong>required</strong> to play Surge optimally.</p>
+
+<div class="food-options" markdown>
+
+<div class="food-option" markdown>
+![](../assets/surge/icon-vernesewine.png){: .food-option-icon }
+
+Vernese Wine
+</div>
+
+<div class="food-option" markdown>
+![](../assets/surge/icon-ealynsblessing.png){: .food-option-icon }
+
+Ealyn's Blessing
+</div>
+
+</div>
+
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span>Where to Buy<span class="setup-note-arrow"></span></summary>
+
+The Bartender on Peyto Island sells both of these items.
+
+</details>
+
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span>Quick Tips<span class="setup-note-arrow"></span></summary>
+
+- Optimize Ark Passive nodes or compare bracelet lines [here!](../resources.md#ark-passive-calculator)
+- All Deathblade builds run a pet with the Specialization stat bonus.
+- Always press the next skill during your current skill's animation (skill queuing).
+- Trixion practice requires equipping maxed Spirit Absorption and Max MP engravings.
+- Optimized Training 1 may help smooth things out at lower gem levels.
+
+</details>
+
+<!-- TODO: drop this whole block once the September balance patch ships -->
+<details class="setup-note" data-kind="danger" markdown>
+<summary><span class="setup-note-tag">Warning</span>Balance Patch<span class="setup-note-arrow"></span></summary>
+
+- Death Trance no longer auto-deactivates mid-stack via a side node.
+- Stack cap increased from 60 to 80. Extra stacks now roll over.
+- Breaking Moon changes to a Normal skill and gives 60 stacks on hit.
+- Complete rework of 222 cores and playstyle. It's actually good now.
+- Blitz Rush gains a 27% cast speed tripod and 20% more attack range.
+- Turning Slash and Surprise Attack's after-effects now also apply Synergy.
+- Overall damage increases, Surge is now competitive with RE.
+- Surge post-cast delay was removed, animation cancelling is no longer needed.
+
+</details>
+
+</div>
+</div>
 
 ## Build Comparison
 

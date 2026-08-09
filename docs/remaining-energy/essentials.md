@@ -1,31 +1,70 @@
 # Essentials
 
-??? danger "Upcoming (September Balance Patch)"
-    - Blitz Rush gains a 27% cast speed tripod and 20% more attack range.
-    - Turning Slash's after-effect now also applies Synergy.
-    - Surge's buffed coefficient increases DPS for all RE builds by ~1%.
-    - Buffed Ark Grid cores increase 111 HH DPS by ~2% and 313 DPS by ~1%.
-    - See [333 (Ceiling)](333-ceiling.md) or [313 (High Floor)](313-high-floor.md) for build-specific tripod/gem adjustments.
+<div class="setup-panel" data-accent="pink" markdown>
+<div class="setup-notes" markdown>
 
-!!! info ""
-    - Mana food or Azena's Blessing are **required** to play Remaining Energy optimally.
+<p class="food-required-lead">Mana food and Atk/Move Speed feast are <strong>required</strong> to play Ark Grid Remaining Energy optimally.</p>
 
-        ![](../assets/re/icon-skewers.png){: .skill-icon } Chewy Grilled Skewers &nbsp;&nbsp; ![](../assets/re/icon-steak.png){: .skill-icon } Herb Steak Meal &nbsp;&nbsp; ![](../assets/re/icon-azena.png){: .skill-icon } Azena's Blessing (P2W)
+<div class="food-options" markdown>
 
-??? danger "You can lower mana use at a DPS loss to save gold and skip food"
-    | Where | Change |
-    |---|---|
-    | Evolution Ark | Raise Illicit Spell instead of Limit Break (unimportant content only) |
-    | Leap Ark | Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 ★ |
-    | Head Hunt | Magick Control tripod, Focus rune, or simply use it at Lv 1 |
-    | Maelstrom | Focus rune (on easier builds with excess orb generation) |
+<div class="food-option" markdown>
+![](../assets/re/icon-skewers.png){: .food-option-icon }
 
-!!! tip "Quick Tips"
-    - Optimize Ark Passive nodes or compare bracelet lines [here!](../resources.md#ark-passive-calculator)
-    - All Deathblade builds run a pet with the Specialization stat bonus.
-    - Always press the next skill during your current skill's animation (skill queuing).
-    - Trixion practice requires equipping maxed Spirit Absorption and Max MP engravings.
-    - Optimized Training 1 may help smooth things out at lower gem levels.
+Chewy Grilled Skewers
+</div>
+
+<div class="food-option" markdown>
+![](../assets/re/icon-steak.png){: .food-option-icon }
+
+Herb Steak Meal
+</div>
+
+<div class="food-option" markdown>
+![](../assets/re/icon-azena.png){: .food-option-icon }
+
+Azena's Blessing (P2W)
+{ .food-option-tag }
+</div>
+
+</div>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Alternative</span>You can lower mana use at a DPS loss to save gold and skip mana food!<span class="setup-note-arrow"></span></summary>
+
+| Where | Change |
+|---|---|
+| Evolution Ark | Raise Illicit Spell instead of Limit Break (unimportant content only) |
+| Leap Ark | Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 ★ |
+| Head Hunt | Magick Control tripod, Focus rune, or simply use it at Lv 1 |
+| Maelstrom | Focus rune (on easier builds with excess orb generation) |
+
+</details>
+
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span>Quick Tips<span class="setup-note-arrow"></span></summary>
+
+- Optimize Ark Passive nodes or compare bracelet lines [here!](../resources.md#ark-passive-calculator)
+- All Deathblade builds run a pet with the Specialization stat bonus.
+- Always press the next skill during your current skill's animation (skill queuing).
+- Trixion practice requires equipping maxed Spirit Absorption and Max MP engravings.
+- Optimized Training 1 may help smooth things out at lower gem levels.
+
+</details>
+
+<!-- TODO: drop this whole block once the September balance patch ships -->
+<details class="setup-note" data-kind="danger" markdown>
+<summary><span class="setup-note-tag">Warning</span>Balance Patch<span class="setup-note-arrow"></span></summary>
+
+- Blitz Rush gains a 27% cast speed tripod and 20% more attack range.
+- Turning Slash's after-effect now also applies Synergy.
+- Surge's buffed coefficient increases DPS for all RE builds by ~1%.
+- Buffed Ark Grid cores increase 111 HH DPS by ~2% and 313 DPS by ~1%.
+- See [333 (Ceiling)](333-ceiling.md) or [313 (High Floor)](313-high-floor.md) for build-specific tripod/gem adjustments.
+
+</details>
+
+</div>
+</div>
 
 ## Build Comparison
 
