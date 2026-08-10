@@ -35,6 +35,8 @@
 !!! info ""
     Since this is a beginner legacy build, this guide strays slightly from the norm to offer a smoother experience without deep min-maxing. For instance, you won't need mana food or stimulants to enjoy the gameplay.
 
+    *New to Deathblade entirely? [Surge](../surge/essentials.md) is generally more beginner-friendly and outperforms RE Standard.*
+
 ## Skill Codes
 
 !!! danger "Before importing"
@@ -214,9 +216,9 @@
 
 ## Rotation
 
-Use Spincutter to approach the boss, use an opener and then repeat the main cycle.
+Cast Spincutter to approach the boss, use the opener and continue to loop the main cycle afterwards.
 
-Openers stack Adrenaline and apply synergies efficiently at the start of an encounter.
+The opener stacks Adrenaline and applies synergies efficiently as you build up to the encounter's first Surge.
 
 *Opener from zero orbs:*
 { .lead }
@@ -224,11 +226,6 @@ Openers stack Adrenaline and apply synergies efficiently at the start of an enco
 <div class="rotation-line" markdown>
 <span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
 </div>
-
-??? note "*Opener from 3 orbs with ![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant (optional):*"
-    <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
-    </div>
 
 *Main repeating cycle:*
 { .lead }
@@ -240,7 +237,8 @@ Openers stack Adrenaline and apply synergies efficiently at the start of an enco
 - <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is only available every other rotation, just keep going if it's on cooldown.
 - Use <span class="skill-chip">![](../assets/re/icon-spincutter.png)Spincutter</span>  during downtime to reposition, or hold it to dodge upcoming attacks.
 - Use <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> for damage, or hold it for Hyper Awakening or a clutch recovery.
-- The rotation is bottle-necked by Soul Absorber's cooldown. Skip Earth Cleaver if it's up.
+- The rotation is bottle-necked entirely by Soul Absorber's cooldown, it is what it is.
+    - You can skip Earth Cleaver if Soul Absorber's off cooldown already.
 
 *Recovery:*
 { .lead }
