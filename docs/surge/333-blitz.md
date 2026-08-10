@@ -158,9 +158,10 @@
   {"id": "turningslash", "name": "Turning Slash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "legendary", "name": "Rage"}},
   {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
   {"id": "blitzrush", "name": "Blitz Rush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "legendary", "name": "Galewind"}},
-  {"id": "surge", "name": "Deathblade Surge", "subtitle": "Identity"},
+  {"id": "deathtrance", "name": "Death Trance", "subtitle": "Identity"},
   {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"},
-  {"id": "bladeassault", "name": "Blade Assault", "subtitle": "Awakening"}
+  {"id": "bladeassault", "name": "Blade Assault", "subtitle": "Awakening"},
+  {"id": "surge", "name": "Deathblade Surge", "subtitle": "Identity"}
 ]
 </script>
 </div>
