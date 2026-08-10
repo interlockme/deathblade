@@ -1823,6 +1823,17 @@ h3 { color: #4db6ac; }
   gap: 0.6em 1.6em;
   margin-bottom: 1.1em;
 }
+/* md_in_html wraps each group's line-separated span content in its own <p>
+   (no blank lines between the spans, but it's still block-level content
+   getting parsed), and that <p>'s default 16px top/bottom margins don't
+   collapse against the flex container - they stack fully on top of the
+   gap above, ballooning the ~10px intended gap between the wrapped rows to
+   ~42px. Zero them out here so .engraving-loadout's own `gap` is the only
+   thing controlling spacing between rows. */
+.md-typeset .engraving-loadout p,
+.md-typeset .engraving-loadout-group p {
+  margin: 0;
+}
 .md-typeset .engraving-loadout-group {
   display: flex;
   flex-wrap: wrap;
