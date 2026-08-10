@@ -55,7 +55,7 @@
 
 ## Ark Setup
 
-<div class="setup-panel" data-accent="neutral" markdown>
+<div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="ark-passives" data-family="surge" markdown>
 <script type="application/json">

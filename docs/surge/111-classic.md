@@ -61,8 +61,7 @@
 
 ## Ark Setup
 
-<!-- ordercores-111.png showed 0/3 on all 3 Order cores (matches the tip below: "level to your preference") - adjust points if that's stale rather than intentional. -->
-<div class="setup-panel" data-accent="neutral" markdown>
+<div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="ark-passives" data-family="surge" markdown>
 <script type="application/json">
