@@ -457,9 +457,7 @@
 
 <p class="page-banner page-banner-warning">Not applicable to NA servers yet</p>
 
-*Compares Trixion damage to raid damage. Watch [this](https://www.youtube.com/watch?v=dlUS8vUaNLA) to learn about Trixion multipliers.*
-
-*Enter your Raid CPM and back-attack rate to compare builds. Highest Final Multiplier wins.*
+*Compares Trixion damage to raid damage across builds. Watch [this](https://www.youtube.com/watch?v=dlUS8vUaNLA) to learn about Trixion multipliers.*
 
 <div class="cpm-calc">
 

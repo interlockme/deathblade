@@ -74,10 +74,6 @@ Atk/Move Speed Feast
 
 ## Build Comparison
 
-*New to Deathblade entirely? [Surge](../surge/essentials.md) is generally more beginner-friendly.*
-
-*Note: Trixion DPS is just a dummy test. Real raid performance is what actually matters!*
-
 <div class="build-compare" data-family="re"></div>
 
 ## Engravings
@@ -91,7 +87,7 @@ Atk/Move Speed Feast
 <span class="engraving-chip">Adrenaline</span>
 <span class="engraving-chip">Ambush Master</span>
 <span class="engraving-chip engraving-chip-food">![](../assets/shared/icon-feast.png){: .skill-icon } Raid Captain</span>
-<span class="engraving-loadout-note">requires Atk/Move Speed feast</span>
+<span class="engraving-loadout-note">![](../assets/shared/icon-feast.png){: .skill-icon }requires Atk/Move Speed feast</span>
 </div>
 <div class="engraving-loadout-group" markdown>
 <span class="engraving-loadout-label">Choose 1</span>
@@ -114,7 +110,7 @@ Atk/Move Speed Feast
 
 **Pros:**{: .best-for } Stronger than Cursed Doll by ~1% late game.
 
-**Cons:**{: .tradeoff } Expensive and scales off of Adrenaline books.
+**Cons:**{: .tradeoff } Scales with Adrenaline relic books.
 
 </div>
 </details>
@@ -130,9 +126,9 @@ Atk/Move Speed Feast
 </summary>
 <div class="engraving-card-body" markdown>
 
-**Pros:**{: .best-for } Newer players or those stuck with it.
+**Pros:**{: .best-for } Inexpensive and reliable.
 
-**Cons:**{: .tradeoff } The healing reduction can be frustrating.
+**Cons:**{: .tradeoff } The healing penalty can be frustrating.
 
 </div>
 </details>
@@ -221,8 +217,6 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 
 ## Remaining Energy Skills
 
-*Values recorded at 1830 Specialization with no runes or Maelstrom buff, 3 orbs is 30000 meter.*
-
 <div class="skills-table" data-family="re" markdown>
 <script type="application/json">
 [
@@ -243,6 +237,8 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 ]
 </script>
 </div>
+
+*Values recorded at 1830 Specialization with no runes or Maelstrom buff, 3 orbs is 30000 meter.*
 
 <div class="tag-legend" markdown>
 <span class="tag-legend-item"><span class="tag-legend-dot tag-legend-dmg"></span>Damage</span>

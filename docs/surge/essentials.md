@@ -3,7 +3,7 @@
 <div class="setup-panel" data-accent="pink" markdown>
 <div class="setup-notes" markdown>
 
-<p class="food-required-lead">The following food is <strong>recommended</strong> to play Surge optimally:</p>
+<p class="food-required-lead">Atk/Move Speed food and feast is <strong>recommended</strong> to play Surge optimally.</p>
 
 <div class="food-options" markdown>
 
@@ -27,10 +27,10 @@ Atk/Move Speed Feast
 
 </div>
 
-<details class="setup-note" data-kind="note" open markdown>
+<details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Purchase at Peyto Island<span class="setup-note-arrow"></span></summary>
 
-- Their use is conditional, see the engravings section for more detail!
+- Check the engravings section for more details!
 
 </details>
 
@@ -65,8 +65,6 @@ Atk/Move Speed Feast
 
 ## Build Comparison
 
-*Note: Trixion DPS is just a dummy test. Real raid performance is what actually matters!*
-
 <div class="build-compare" data-family="surge"></div>
 
 ## Engravings
@@ -99,7 +97,7 @@ Atk/Move Speed Feast
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine is **required**
+![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine required
 { .food-req }
 
 **Pros**{: .best-for } Highest damage bonus.
@@ -125,7 +123,7 @@ Pair with Cursed Doll if you're just starting out.
 
 **Pros:**{: .best-for } A safe default with no drawbacks.
 
-**Cons:**{: .tradeoff } None. It's expensive, but so are the others.
+**Cons:**{: .tradeoff } Scales with Adrenaline relic books.
 
 </div>
 </details>
@@ -140,7 +138,7 @@ Pair with Cursed Doll if you're just starting out.
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing is **required**
+![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing required
 { .food-req }
 
 **Pros:**{: .best-for } Highest damage bonus.
@@ -161,10 +159,10 @@ Pair with Cursed Doll if you're just starting out.
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine with Bard or Paladin
+![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine required with Bard or Paladin
 { .food-req }
 
-![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing with Artist or Valkyrie
+![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing required with Artist or Valkyrie
 { .food-req }
 
 **Pros:**{: .best-for } This is ceiling. Fewer drawbacks for [🐆](222-speedy.md).
