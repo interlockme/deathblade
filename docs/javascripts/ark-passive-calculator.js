@@ -1199,57 +1199,103 @@
   // browsers/private-mode sessions block storage entirely, so every call
   // is wrapped and failures are silently ignored - the calculator still
   // works perfectly without persistence, it just won't remember next time.
+  //
+  // Presets: 3 independent storage slots rather than 1. Slot 1 reuses the
+  // original STORAGE_KEY unchanged, so anyone with data saved before this
+  // feature existed keeps it - it just becomes "Preset 1" instead of the
+  // only slot. Slots 2/3 are new, empty until the reader saves into them.
+  // Which slot is "active" (currently loaded into the form) is itself
+  // saved separately, so a reader who was on Preset 2 last visit comes
+  // back to Preset 2, not always Preset 1.
   const STORAGE_KEY = "ap-calc-deathblade-v1";
+  const PRESET_COUNT = 3;
+  const PRESET_KEYS = [STORAGE_KEY, STORAGE_KEY + "-preset2", STORAGE_KEY + "-preset3"];
+  const ACTIVE_PRESET_KEY = STORAGE_KEY + "-active-preset";
 
-  function saveInputs(root) {
+  function presetStorageKey(presetId) {
+    return PRESET_KEYS[presetId - 1] || PRESET_KEYS[0];
+  }
+
+  function getActivePresetId() {
     try {
-      const data = {};
-      root.querySelectorAll("input, select").forEach((el) => {
-        if (!el.id) return;
-        data[el.id] = (el.type === "checkbox" || el.type === "radio") ? el.checked : el.value;
-      });
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      const raw = localStorage.getItem(ACTIVE_PRESET_KEY);
+      const id = parseInt(raw, 10);
+      if (id >= 1 && id <= PRESET_COUNT) return id;
+    } catch (e) {
+      /* storage unavailable */
+    }
+    return 1;
+  }
+
+  function setActivePresetId(id) {
+    try {
+      localStorage.setItem(ACTIVE_PRESET_KEY, String(id));
+    } catch (e) {
+      /* storage unavailable - the switch still works for this page view,
+         it just won't be remembered on the next visit */
+    }
+  }
+
+  // Reads every field on the widget into a plain {id: value} object - the
+  // shared shape used by localStorage persistence, Export, and Import
+  // alike, so all three always agree on what a "full setup" looks like.
+  function collectFieldData(root) {
+    const data = {};
+    root.querySelectorAll("input, select").forEach((el) => {
+      if (!el.id) return;
+      data[el.id] = (el.type === "checkbox" || el.type === "radio") ? el.checked : el.value;
+    });
+    return data;
+  }
+
+  // Applies a {id: value} object (from storage, or a pasted/uploaded
+  // Import) onto the widget's fields. Missing keys are left untouched
+  // rather than guessed at - callers that want a full reset to authored
+  // defaults first should call resetFieldsToDefaults(root) before this.
+  function applyFieldData(root, data) {
+    if (!data || typeof data !== "object") return;
+    root.querySelectorAll("input, select").forEach((el) => {
+      if (!el.id || !(el.id in data)) return;
+      if (el.type === "checkbox" || el.type === "radio") {
+        el.checked = !!data[el.id];
+      } else if (el.tagName === "SELECT") {
+        // Only restore if the stored value still matches a real option -
+        // if a future edit ever renames/removes an option's value, a
+        // stale stored value would otherwise leave the select showing no
+        // selection at all (selectedIndex -1) instead of falling back to
+        // the authored default.
+        const stillValid = Array.from(el.options).some((opt) => opt.value === data[el.id]);
+        if (stillValid) el.value = data[el.id];
+      } else {
+        el.value = data[el.id];
+      }
+    });
+  }
+
+  function saveInputs(root, presetId) {
+    try {
+      const data = collectFieldData(root);
+      localStorage.setItem(presetStorageKey(presetId), JSON.stringify(data));
     } catch (e) {
       /* storage unavailable - nothing to do */
     }
   }
 
-  function loadInputs(root) {
+  function loadInputs(root, presetId) {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(presetStorageKey(presetId));
       if (!raw) return;
-      const data = JSON.parse(raw);
-      root.querySelectorAll("input, select").forEach((el) => {
-        if (!el.id || !(el.id in data)) return; // no stored value, or a
-        // field that didn't exist when this was saved - leave it at its
-        // authored HTML default rather than guessing.
-        if (el.type === "checkbox" || el.type === "radio") {
-          el.checked = !!data[el.id];
-        } else if (el.tagName === "SELECT") {
-          // Only restore if the stored value still matches a real option -
-          // if a future edit ever renames/removes an option's value, a
-          // stale stored value would otherwise leave the select showing no
-          // selection at all (selectedIndex -1) instead of falling back to
-          // the authored default.
-          const stillValid = Array.from(el.options).some((opt) => opt.value === data[el.id]);
-          if (stillValid) el.value = data[el.id];
-        } else {
-          el.value = data[el.id];
-        }
-      });
+      applyFieldData(root, JSON.parse(raw));
     } catch (e) {
       /* corrupted or blocked storage - fall back to authored defaults */
     }
   }
 
-  function resetInputs(root) {
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch (e) {
-      /* storage unavailable - nothing to clear */
-    }
-
-    // Restore every input and select in this container to its HTML default
+  // Restores every field to its authored HTML default WITHOUT touching
+  // storage - the shared step both "switch to an empty/different preset"
+  // and "Reset to defaults" need before layering their own data on top
+  // (or, for Reset, instead of any data at all).
+  function resetFieldsToDefaults(root) {
     root.querySelectorAll("input, select").forEach((el) => {
       if (el.type === "checkbox" || el.type === "radio") {
         el.checked = el.defaultChecked;
@@ -1260,10 +1306,162 @@
         el.value = el.defaultValue;
       }
     });
+  }
 
+  function resetInputs(root) {
+    const activeId = getActivePresetId();
+    try {
+      localStorage.removeItem(presetStorageKey(activeId));
+    } catch (e) {
+      /* storage unavailable - nothing to clear */
+    }
+    resetFieldsToDefaults(root);
     // Instantly re-calculate calculations and refresh value/range displays
     update(root);
   }
+
+  // Swaps which of the 3 slots is loaded into the form. The slot being
+  // left behind already has its latest edits saved (every field change
+  // calls saveInputs for the active preset - see the input/change
+  // listeners in init()), so nothing is lost by switching away from it.
+  function switchPreset(root, newId) {
+    if (newId === getActivePresetId()) return;
+    resetFieldsToDefaults(root);
+    loadInputs(root, newId);
+    setActivePresetId(newId);
+    normalizeChaosCoreExclusivity(root);
+    updatePresetButtonStates(root);
+    update(root);
+  }
+
+  function updatePresetButtonStates(root) {
+    const activeId = getActivePresetId();
+    root.querySelectorAll(".ap-calc-preset").forEach((btn) => {
+      const isActive = parseInt(btn.dataset.preset, 10) === activeId;
+      btn.classList.toggle("ap-calc-preset-active", isActive);
+      btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+    root.querySelectorAll(".ap-calc-popover-preset-num").forEach((el) => {
+      el.textContent = activeId;
+    });
+  }
+
+  // ----- Export / Import -----
+  // Export wraps the raw field data with a small envelope (format marker
+  // + version) rather than handing back the bare {id: value} object - so
+  // a reader who pastes something unrelated into Import gets a clear
+  // "that's not an export from this calculator" instead of it silently
+  // half-applying whatever keys happen to match by coincidence. Import
+  // still accepts a bare {id: value} object too (no envelope) for anyone
+  // hand-editing or scripting against the format directly.
+  const EXPORT_FORMAT_MARKER = "deathblade-ap-calc";
+  const EXPORT_FORMAT_VERSION = 1;
+
+  function buildExportPayload(root) {
+    return {
+      format: EXPORT_FORMAT_MARKER,
+      version: EXPORT_FORMAT_VERSION,
+      exportedAt: new Date().toISOString(),
+      data: collectFieldData(root),
+    };
+  }
+
+  // Returns the {id: value} data object from a parsed import payload, or
+  // null if the shape is unrecognized. Accepts the envelope Export
+  // produces, OR a bare data object (envelope-less).
+  function extractImportData(parsed) {
+    if (!parsed || typeof parsed !== "object") return null;
+    if (parsed.data && typeof parsed.data === "object") return parsed.data;
+    // No "data" key - treat the whole object as bare field data as long
+    // as it isn't obviously something else entirely (has at least one
+    // key, none of which are itself an object/array - a real field value
+    // is always a string or boolean).
+    const values = Object.values(parsed);
+    if (values.length && values.every((v) => typeof v === "string" || typeof v === "boolean")) {
+      return parsed;
+    }
+    return null;
+  }
+
+  function showPopoverMessage(popoverEl, text, isError) {
+    const msgEl = popoverEl.querySelector(".ap-calc-popover-msg");
+    if (!msgEl) return;
+    msgEl.textContent = text;
+    msgEl.classList.toggle("ap-calc-popover-msg-error", !!isError);
+  }
+
+  function openPopover(root, kind, triggerEl) {
+    root.querySelectorAll(".ap-calc-popover").forEach((p) => { p.hidden = true; });
+    const popoverEl = root.querySelector('.ap-calc-popover[data-popover="' + kind + '"]');
+    if (!popoverEl) return;
+    showPopoverMessage(popoverEl, "", false);
+    updatePresetButtonStates(root);
+    if (kind === "export") {
+      const payload = buildExportPayload(root);
+      popoverEl.querySelector(".ap-calc-popover-textarea").value = JSON.stringify(payload, null, 2);
+    } else if (kind === "import") {
+      const textarea = popoverEl.querySelector(".ap-calc-popover-textarea");
+      textarea.value = "";
+      const fileInput = popoverEl.querySelector(".ap-calc-popover-file");
+      if (fileInput) fileInput.value = "";
+    }
+    popoverEl.hidden = false;
+    const focusEl = popoverEl.querySelector("textarea");
+    if (focusEl) focusEl.focus();
+    popoverEl.__triggerEl = triggerEl || null;
+  }
+
+  function closePopover(popoverEl) {
+    popoverEl.hidden = true;
+    if (popoverEl.__triggerEl && typeof popoverEl.__triggerEl.focus === "function") {
+      popoverEl.__triggerEl.focus();
+    }
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    return Promise.reject(new Error("Clipboard API unavailable"));
+  }
+
+  function downloadJson(filename, text) {
+    const blob = new Blob([text], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    // Revoke on next tick - some browsers need the click to fully process
+    // first before the object URL can be safely released.
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
+  function applyImportText(root, popoverEl, text) {
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (e) {
+      showPopoverMessage(popoverEl, "That's not valid JSON - check for a truncated paste.", true);
+      return;
+    }
+    const data = extractImportData(parsed);
+    if (!data) {
+      showPopoverMessage(popoverEl, "Doesn't look like a Deathblade Ark Passive Calculator export.", true);
+      return;
+    }
+    const activeId = getActivePresetId();
+    resetFieldsToDefaults(root);
+    applyFieldData(root, data);
+    normalizeChaosCoreExclusivity(root);
+    saveInputs(root, activeId);
+    update(root);
+    showPopoverMessage(popoverEl, "Imported into Preset " + activeId + ".", false);
+  }
+
+
 
   // Once 3 of the 5 Party & Positioning toggles are checked, the rest are
   // disabled (not force-unchecked) so it's obvious at a glance why they
@@ -1326,8 +1524,10 @@
   // ----- Initialisation -----
   function init() {
     document.querySelectorAll(".ap-calc").forEach((root) => {
-      loadInputs(root);
+      const activeId = getActivePresetId();
+      loadInputs(root, activeId);
       normalizeChaosCoreExclusivity(root);
+      updatePresetButtonStates(root);
 
       const flashyEl = root.querySelector(".ap-flashy-atk");
       const stableEl = root.querySelector(".ap-stable-atk");
@@ -1346,11 +1546,11 @@
       root.querySelectorAll("input, select").forEach((el) => {
         el.addEventListener("input", () => {
           update(root);
-          saveInputs(root);
+          saveInputs(root, getActivePresetId());
         });
         el.addEventListener("change", () => {
           update(root);
-          saveInputs(root);
+          saveInputs(root, getActivePresetId());
         });
       });
       const resetEl = root.querySelector(".ap-calc-reset");
@@ -1360,6 +1560,94 @@
       // listener attached directly to the link, so the reset never
       // actually ran. A <button> isn't part of that interception at all.
       if (resetEl) resetEl.addEventListener("click", () => resetInputs(root));
+
+      // Preset switcher: 3 small number buttons, matching the reset
+      // link's own subtle text-link treatment (see the CSS) rather than
+      // boxed tabs - this is a footnote-level control, not a new section
+      // of the widget, so it shouldn't visually compete with the actual
+      // gear/results panels above it.
+      root.querySelectorAll(".ap-calc-preset").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          switchPreset(root, parseInt(btn.dataset.preset, 10));
+        });
+      });
+
+      // Export / Import: open as an absolutely-positioned popover anchored
+      // to the footnote, so opening one never shifts the reset link, the
+      // preset buttons, or anything above them - it just floats above the
+      // page and closes again.
+      const exportBtn = root.querySelector(".ap-calc-export");
+      const importBtn = root.querySelector(".ap-calc-import");
+      if (exportBtn) {
+        exportBtn.addEventListener("click", () => openPopover(root, "export", exportBtn));
+      }
+      if (importBtn) {
+        importBtn.addEventListener("click", () => openPopover(root, "import", importBtn));
+      }
+
+      root.querySelectorAll(".ap-calc-popover").forEach((popoverEl) => {
+        const closeBtn = popoverEl.querySelector(".ap-calc-popover-close");
+        if (closeBtn) closeBtn.addEventListener("click", () => closePopover(popoverEl));
+
+        const copyBtn = popoverEl.querySelector(".ap-calc-popover-copy");
+        if (copyBtn) {
+          copyBtn.addEventListener("click", () => {
+            const text = popoverEl.querySelector(".ap-calc-popover-textarea").value;
+            copyToClipboard(text)
+              .then(() => showPopoverMessage(popoverEl, "Copied to clipboard.", false))
+              .catch(() => showPopoverMessage(popoverEl, "Couldn't access the clipboard - select the text above and copy manually.", true));
+          });
+        }
+
+        const downloadBtn = popoverEl.querySelector(".ap-calc-popover-download");
+        if (downloadBtn) {
+          downloadBtn.addEventListener("click", () => {
+            const text = popoverEl.querySelector(".ap-calc-popover-textarea").value;
+            downloadJson("deathblade-ap-calc-preset-" + getActivePresetId() + ".json", text);
+          });
+        }
+
+        const loadBtn = popoverEl.querySelector(".ap-calc-popover-load");
+        if (loadBtn) {
+          loadBtn.addEventListener("click", () => {
+            const text = popoverEl.querySelector(".ap-calc-popover-textarea").value.trim();
+            if (!text) {
+              showPopoverMessage(popoverEl, "Paste your exported JSON above, or choose a file below.", true);
+              return;
+            }
+            applyImportText(root, popoverEl, text);
+          });
+        }
+
+        const fileInput = popoverEl.querySelector(".ap-calc-popover-file");
+        if (fileInput) {
+          fileInput.addEventListener("change", () => {
+            const file = fileInput.files && fileInput.files[0];
+            if (!file) return;
+            file.text().then((text) => {
+              popoverEl.querySelector(".ap-calc-popover-textarea").value = text;
+              applyImportText(root, popoverEl, text);
+            });
+          });
+        }
+      });
+
+      // Click outside any open popover, or Escape, closes it - same
+      // dismissal pattern as any lightweight menu/tooltip on the site.
+      document.addEventListener("click", (ev) => {
+        root.querySelectorAll(".ap-calc-popover").forEach((popoverEl) => {
+          if (popoverEl.hidden) return;
+          if (popoverEl.contains(ev.target) || ev.target === popoverEl.__triggerEl) return;
+          closePopover(popoverEl);
+        });
+      });
+      document.addEventListener("keydown", (ev) => {
+        if (ev.key !== "Escape") return;
+        root.querySelectorAll(".ap-calc-popover").forEach((popoverEl) => {
+          if (!popoverEl.hidden) closePopover(popoverEl);
+        });
+      });
+
       update(root);
     });
   }

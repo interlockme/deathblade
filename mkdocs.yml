@@ -41,6 +41,7 @@ extra_javascript:
   - javascripts/skill-setup.js?v=4
   - javascripts/essentials-table.js
   - javascripts/ark-core-badge.js
+  - javascripts/ark-passive-tree.js
   - javascripts/pentagon-badge.js
   - javascripts/rotation-practice.js
   - javascripts/dps-chart.js

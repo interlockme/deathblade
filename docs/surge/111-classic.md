@@ -61,10 +61,64 @@
 
 ## Ark Setup
 
-![111 Ark Passive/Grid tree](../assets/surge/argrid-tree-111.png)
-
 <!-- ordercores-111.png showed 0/3 on all 3 Order cores (matches the tip below: "level to your preference") - adjust points if that's stale rather than intentional. -->
-<div class="setup-panel" data-accent="pink" markdown>
+<div class="setup-panel" data-accent="neutral" markdown>
+
+<div class="ark-passives" data-family="surge" markdown>
+<script type="application/json">
+{
+  "columns": [
+    { "id": "evolution", "label": "Evolution", "points": 140, "tiers": [
+      { "label": "Tier 1", "nodes": [
+        { "name": "Crit", "level": 10, "max": 30, "icon": "ap-icons/critical.png" },
+        { "name": "Specialization", "level": 30, "max": 30, "icon": "ap-icons/specialization.png" }
+      ] },
+      { "label": "Tier 2", "nodes": [
+        { "name": "Keen Sense", "level": 2, "max": 2, "icon": "ap-icons/keen-sense.png" },
+        { "name": "Limit Break", "level": 1, "max": 3, "icon": "ap-icons/limit-break-evo.png" }
+      ] },
+      { "label": "Tier 3", "nodes": [
+        { "name": "Strike", "level": 2, "max": 2, "icon": "ap-icons/strike.png" }
+      ] },
+      { "label": "Tier 4", "nodes": [
+        { "name": "Master", "level": 1, "max": 1, "icon": "ap-icons/master.png" },
+        { "name": "Pulverize", "level": 1, "max": 1, "icon": "ap-icons/pulverize.png" }
+      ] },
+      { "label": "Tier 5", "nodes": [
+        { "name": "Standing Striker", "level": 2, "max": 2, "icon": "ap-icons/standing-striker.png" }
+      ] }
+    ] },
+    { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [
+      { "label": "Tier 1", "nodes": [
+        { "name": "Surge Enhancement", "level": 1, "max": 1, "icon": "ap-icons/surge-enhancement.png" }
+      ] },
+      { "label": "Tier 2", "nodes": [
+        { "name": "Orb Compression", "level": 3, "max": 3, "icon": "ap-icons/orb-compression.png" }
+      ] },
+      { "label": "Tier 3", "nodes": [
+        { "name": "Orb Control", "level": 1, "max": 5, "icon": "ap-icons/orb-control.png" },
+        { "name": "Limit Break", "level": 3, "max": 3, "icon": "ap-icons/limit-break-enl.png" }
+      ] },
+      { "label": "Tier 4", "nodes": [
+        { "name": "Chaos Infusion", "level": 1, "max": 5, "icon": "ap-icons/chaos-infusion.png" },
+        { "name": "Chaotic Power", "level": 3, "max": 3, "icon": "ap-icons/chaotic-power.png" }
+      ] }
+    ] },
+    { "id": "leap", "label": "Leap", "points": 70, "tiers": [
+      { "label": "Tier 1", "nodes": [
+        { "name": "Awakening Amplifier", "level": 1, "max": 3, "icon": "ap-icons/awakening-amplifier.png" },
+        { "name": "Unleashed Power", "level": 5, "max": 5, "icon": "ap-icons/unleashed-power.png" },
+        { "name": "Release Potential", "level": 3, "max": 5, "icon": "ap-icons/release-potential.png" },
+        { "name": "Instant Spell", "level": 3, "max": 3, "icon": "ap-icons/instant-spell.png" }
+      ] },
+      { "label": "Tier 2", "nodes": [
+        { "name": "Path of the Blade", "level": 3, "max": 3, "icon": "ap-icons/path-of-the-blade.png" }
+      ] }
+    ] }
+  ]
+}
+</script>
+</div>
 
 <div class="ark-cores" data-family="surge" markdown>
 <script type="application/json">

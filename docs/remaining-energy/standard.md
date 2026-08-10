@@ -48,9 +48,62 @@
 
 ## Ark Setup
 
-![Ark Passive/Grid tree](../assets/re/argrid-tree-standard.png)
+<div class="setup-panel" data-accent="neutral" markdown>
 
-<div class="setup-panel" data-accent="pink" markdown>
+<div class="ark-passives" data-family="re" markdown>
+<script type="application/json">
+{
+  "columns": [
+    { "id": "evolution", "label": "Evolution", "points": 140, "tiers": [
+      { "label": "Tier 1", "nodes": [
+        { "name": "Crit", "level": 10, "max": 30, "icon": "ap-icons/critical.png" },
+        { "name": "Specialization", "level": 30, "max": 30, "icon": "ap-icons/specialization.png" }
+      ] },
+      { "label": "Tier 2", "nodes": [
+        { "name": "Keen Sense", "level": 2, "max": 2, "icon": "ap-icons/keen-sense.png" },
+        { "name": "Limit Break", "level": 1, "max": 3, "icon": "ap-icons/limit-break-evo.png" }
+      ] },
+      { "label": "Tier 3", "nodes": [
+        { "name": "Strike", "level": 2, "max": 2, "icon": "ap-icons/strike.png" }
+      ] },
+      { "label": "Tier 4", "nodes": [
+        { "name": "Master", "level": 1, "max": 1, "icon": "ap-icons/master.png" },
+        { "name": "Pulverize", "level": 1, "max": 1, "icon": "ap-icons/pulverize.png" }
+      ] },
+      { "label": "Tier 5", "nodes": [
+        { "name": "Standing Striker", "level": 2, "max": 2, "icon": "ap-icons/standing-striker.png" }
+      ] }
+    ] },
+    { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [
+      { "label": "Tier 1", "nodes": [
+        { "name": "Swift Strike", "level": 1, "max": 1, "icon": "ap-icons/swift-strike.png" }
+      ] },
+      { "label": "Tier 2", "nodes": [
+        { "name": "Remaining Energy", "level": 3, "max": 3, "icon": "ap-icons/remaining-energy.png" }
+      ] },
+      { "label": "Tier 3", "nodes": [
+        { "name": "Firm Will", "level": 3, "max": 3, "icon": "ap-icons/firm-will.png" }
+      ] },
+      { "label": "Tier 4", "nodes": [
+        { "name": "Extreme Body Movement", "level": 3, "max": 3, "icon": "ap-icons/extreme-body-movement.png" },
+        { "name": "Orb Circulation", "level": 2, "max": 5, "icon": "ap-icons/orb-circulation.png" }
+      ] }
+    ] },
+    { "id": "leap", "label": "Leap", "points": 70, "tiers": [
+      { "label": "Tier 1", "nodes": [
+        { "name": "Transcendent Power", "level": 3, "max": 5, "icon": "ap-icons/transcendent-power.png" },
+        { "name": "Awakening Amplifier", "level": 1, "max": 3, "icon": "ap-icons/awakening-amplifier.png" },
+        { "name": "Unleashed Power", "level": 5, "max": 5, "icon": "ap-icons/unleashed-power.png" },
+        { "name": "Instant Spell", "level": 3, "max": 3, "icon": "ap-icons/instant-spell.png" }
+      ] },
+      { "label": "Tier 2", "nodes": [
+        { "name": "Dance of Nightmares", "level": 3, "max": 3, "icon": "ap-icons/dance-of-nightmares.png" }
+      ] }
+    ] }
+  ]
+}
+</script>
+</div>
 
 <div class="setup-notes" markdown>
 

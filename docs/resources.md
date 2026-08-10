@@ -388,7 +388,33 @@
     </div>
   </div>
 
-  <p class="ap-calc-footnote">Your inputs are saved in this browser so they're still here next visit. <button type="button" class="ap-calc-reset">Reset to defaults</button></p>
+  <p class="ap-calc-footnote">Your inputs are saved in this browser so they're still here next visit.
+  <span class="ap-calc-preset-group" role="group" aria-label="Preset slot">Preset <button type="button" class="ap-calc-preset" data-preset="1">1</button><button type="button" class="ap-calc-preset" data-preset="2">2</button><button type="button" class="ap-calc-preset" data-preset="3">3</button></span>
+  <button type="button" class="ap-calc-export">Export</button>
+  <button type="button" class="ap-calc-import">Import</button>
+  <button type="button" class="ap-calc-reset">Reset to defaults</button>
+  <span class="ap-calc-popover" data-popover="export" hidden>
+    <span class="ap-calc-popover-title">Export Preset <span class="ap-calc-popover-preset-num"></span></span>
+    <textarea class="ap-calc-popover-textarea" readonly rows="4" spellcheck="false"></textarea>
+    <span class="ap-calc-popover-actions">
+      <button type="button" class="ap-calc-popover-copy">Copy to Clipboard</button>
+      <button type="button" class="ap-calc-popover-download">Download .json</button>
+      <button type="button" class="ap-calc-popover-close">Close</button>
+    </span>
+    <span class="ap-calc-popover-msg" aria-live="polite"></span>
+  </span>
+  <span class="ap-calc-popover" data-popover="import" hidden>
+    <span class="ap-calc-popover-title">Import into Preset <span class="ap-calc-popover-preset-num"></span></span>
+    <textarea class="ap-calc-popover-textarea" rows="4" spellcheck="false" placeholder="Paste exported JSON here, or choose a file below."></textarea>
+    <input type="file" class="ap-calc-popover-file" accept="application/json,.json">
+    <span class="ap-calc-popover-actions">
+      <button type="button" class="ap-calc-popover-load">Load</button>
+      <button type="button" class="ap-calc-popover-close">Cancel</button>
+    </span>
+    <span class="ap-calc-popover-msg" aria-live="polite"></span>
+  </span>
+  </p>
+
 
 </div> <!-- end ap-calc-live -->
 

@@ -434,8 +434,34 @@ h3 { color: #4db6ac; }
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
+/* Card treatment matching .build-compare table's own polish (lavender
+   border/tint + tinted header row + uppercase header text) rather than
+   the flat generic table:not([class]) styling every other bare table on
+   the site gets. Same specificity as that generic rule (.md-typeset +
+   one class + table element, in both cases), so as the later rule in the
+   file this wins on the properties it actually sets (border/background/
+   header) while still falling through to the generic rule for anything
+   it doesn't touch (row hover, base cell padding). This table has no
+   separate outer wrapper card the way .build-compare does (it's a bare
+   reference table sitting directly on the page, not nested inside a
+   picker/pentagon widget), so the border+tint that lives on
+   .build-compare's OUTER div there is folded directly onto the table
+   element itself here instead - one layer doing the job two layers do
+   there. */
 .md-typeset .skills-table table {
   min-width: 560px;
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: rgba(179, 157, 219, 0.045);
+}
+.md-typeset .skills-table table th {
+  background-color: rgba(179, 157, 219, 0.12);
+  color: #a79bc4;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 .md-typeset .skills-table img {
   height: 48px;
@@ -2461,6 +2487,16 @@ h3 { color: #4db6ac; }
   gap: 1em;
   position: sticky;
   top: 4.4rem;
+  /* position: sticky always creates its own stacking context, and without
+     an explicit z-index that context paints in plain DOM order among its
+     siblings - so .ap-brace-compare (a later sibling, living outside this
+     column on purpose - see its own comment) was painting on top of
+     EVERYTHING in here, including the Export/Import popovers' own
+     z-index: 30, because that 30 only ranks things inside this context,
+     not against outside elements. A small explicit z-index here lifts the
+     whole sticky column (and everything nested in it) above later
+     unpositioned content like .ap-brace-compare instead. */
+  z-index: 2;
 }
 @media screen and (max-width: 900px) {
   .md-typeset .ap-calc-layout {
@@ -3186,14 +3222,24 @@ h3 { color: #4db6ac; }
    are saved to this browser's localStorage on every change (see the JS
    header comment), so a reader coming back later sees their own last
    setup instead of a blank form. The reset link is the escape hatch back
-   to the authored HTML defaults. */
+   to the authored HTML defaults.
+
+   Preset switcher (3 slots) + Export/Import share this same footnote row
+   rather than getting their own section - they're all "manage my saved
+   data" actions, same tier of importance as Reset, so keeping them
+   together as plain text-link controls (not boxed buttons) means the
+   actual widget above stays the visual focus and nothing here competes
+   with it for attention. */
 .md-typeset .ap-calc-footnote {
+  position: relative; /* anchors the Export/Import popovers below */
   margin: 0.7em 0 0;
   font-size: 0.72em;
   color: #6f6a80;
   text-align: right;
 }
-.md-typeset .ap-calc-footnote .ap-calc-reset {
+.md-typeset .ap-calc-footnote .ap-calc-reset,
+.md-typeset .ap-calc-footnote .ap-calc-export,
+.md-typeset .ap-calc-footnote .ap-calc-import {
   color: #a79bc4;
   text-decoration: underline;
   text-decoration-color: rgba(179, 157, 219, 0.4);
@@ -3202,14 +3248,140 @@ h3 { color: #4db6ac; }
   background: none;
   border: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 0 0.9em;
   font: inherit;
   font-size: 1em;
   cursor: pointer;
 }
-.md-typeset .ap-calc-footnote .ap-calc-reset:hover {
+.md-typeset .ap-calc-footnote .ap-calc-reset:hover,
+.md-typeset .ap-calc-footnote .ap-calc-export:hover,
+.md-typeset .ap-calc-footnote .ap-calc-import:hover {
   color: #ee83ab;
   text-decoration-color: currentColor;
+}
+
+/* Preset group: "Preset 1 2 3" with the active slot picked out by solid
+   color+weight instead of an underline, since underline here would read
+   as "clickable" for all three equally - the distinction that matters is
+   WHICH one is active, not that they're all links. */
+.md-typeset .ap-calc-footnote .ap-calc-preset-group {
+  margin-left: 0.9em;
+}
+.md-typeset .ap-calc-footnote .ap-calc-preset {
+  background: none;
+  border: none;
+  padding: 0 0.2em;
+  margin: 0;
+  font: inherit;
+  font-size: 1em;
+  color: #6f6a80;
+  cursor: pointer;
+}
+.md-typeset .ap-calc-footnote .ap-calc-preset:hover {
+  color: #a79bc4;
+}
+.md-typeset .ap-calc-footnote .ap-calc-preset-active {
+  color: #ee83ab;
+  font-weight: 700;
+}
+
+/* Export/Import popovers - position: absolute so opening either one
+   floats above the page instead of pushing the footnote/reset link (or
+   anything above them) down; closed by default via the [hidden]
+   attribute the JS toggles. Anchored to .ap-calc-footnote's
+   position: relative above. */
+.md-typeset .ap-calc-popover {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.6em;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+  width: min(380px, 90vw);
+  padding: 0.9em 1em 1em;
+  border-radius: 10px;
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  background-color: #1c1a22;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  text-align: left;
+  font-size: 1.05em;
+  color: #cfc9dd;
+  white-space: normal;
+}
+.md-typeset .ap-calc-popover[hidden] {
+  display: none;
+}
+.md-typeset .ap-calc-popover-title {
+  font-weight: 700;
+  font-size: 0.9em;
+  color: #e8e6ee;
+}
+.md-typeset .ap-calc-popover-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  font-size: 0.78em;
+  line-height: 1.4;
+  color: #cfc9dd;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 0.5em 0.6em;
+}
+.md-typeset .ap-calc-popover-file {
+  font-size: 0.78em;
+  color: #9c96a8;
+}
+.md-typeset .ap-calc-popover-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em 0.8em;
+  justify-content: flex-end;
+}
+.md-typeset .ap-calc-popover-actions button {
+  background: none;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  border-radius: 999px;
+  padding: 0.3em 0.9em;
+  font: inherit;
+  font-size: 0.78em;
+  font-weight: 600;
+  color: #a79bc4;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .ap-calc-popover-actions button:hover {
+  color: #ee83ab;
+  border-color: rgba(238, 131, 171, 0.5);
+  background-color: rgba(238, 131, 171, 0.08);
+}
+.md-typeset .ap-calc-popover-msg {
+  font-size: 0.78em;
+  color: #7fd8b8;
+  min-height: 1.2em;
+  text-align: right;
+}
+.md-typeset .ap-calc-popover-msg-error {
+  color: #f0a8a8;
+}
+
+@media screen and (max-width: 480px) {
+  /* On narrow widths the footnote's own text already wraps to several
+     lines - keeping this row right-aligned would leave "Preset 1 2 3
+     Export Import Reset to defaults" ragged against the right edge with
+     the persistence notice ragged against the left, reading as two
+     unrelated fragments. Left-aligning the whole block below the notice
+     keeps it one coherent stack instead. */
+  .md-typeset .ap-calc-footnote {
+    text-align: left;
+  }
+  .md-typeset .ap-calc-popover {
+    right: auto;
+    left: 0;
+  }
 }
 
 /* ---------- Keyboard focus visibility ---------- */
@@ -4120,19 +4292,52 @@ body.page-333-blitz input[type="text"] {
    cards and Ark Setup panel are both already pink, instead of a variant
    of them. */
 .md-typeset .ark-core-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* 3 explicit row tracks - icon / name / dots - so each .ark-core-item
+     below can subgrid into them. This replaces a flex row of independently-
+     sized flex-column items: with flex, keeping the dots row aligned across
+     cards required forcing every card's name to reserve a fixed 2-line
+     height (min-height: 2.5em), which then left dead space around any
+     1-line name - top-aligned it left a gap below the name (before dots),
+     bottom-aligned it left a gap above the name (after the icon). Neither
+     is correct for a 1-line-name row; the space needs to just not exist
+     there. With grid + subgrid, each row's height is set by the tallest
+     card's content IN THAT ROW ONLY - a row of three 1-line names gets a
+     1-line-tall name track (zero reserved space), and only a row that
+     actually contains "Deathblade Surge" gets a 2-line-tall name track,
+     shared by its siblings so their dots still land at that same y. No
+     fixed heights, no leftover gap on either side, on any row. */
+  grid-template-rows: auto auto auto;
   gap: 0.8em;
   margin: 0.9em 0 1.2em;
 }
 .md-typeset .setup-panel > .ark-cores > .ark-core-row {
+  /* Base .ark-core-row rule above still carries margin: 0.9em 0 1.2em -
+     zero BOTH here, not just bottom. The divider between .ark-passives
+     and .ark-cores already supplies 1.1em of padding-top on .ark-cores
+     itself; leaving this row's own 0.9em margin-top on top of that
+     nearly doubled the gap above the cards (~2em) versus the ~0.9em gap
+     below them to the next divider (.setup-notes' margin-top), which is
+     exactly the asymmetry that made the top gap look "much further"
+     than the bottom one. */
+  margin-top: 0;
   margin-bottom: 0;
 }
 .md-typeset .ark-core-item {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  /* Subgrid: this card's own icon/name/dots rows sync to .ark-core-row's
+     3 row tracks above (grid-row: span 3 makes it occupy all 3), instead
+     of each card sizing its rows independently the way flex-direction:
+     column did. That's what lets the name row's height come from the
+     tallest name IN THIS SPECIFIC ROW OF CARDS rather than a fixed
+     universal min-height - see .ark-core-row's comment for the full
+     reasoning. */
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  justify-items: center;
   align-items: center;
-  gap: 0.4em;
-  flex: 1 1 0;
+  row-gap: 0.4em;
   min-width: 0;
   padding: 0.7em 0.5em 0.6em;
   /* Same subtle-tint-over-hairline-border surface as .stat/.skill-card
@@ -4163,6 +4368,12 @@ body.page-333-blitz input[type="text"] {
   font-weight: 700;
   color: #e8e6ee;
   line-height: 1.25;
+  text-align: center;
+  /* No fixed height here anymore - the subgrid row itself is only ever as
+     tall as this row of 3 cards' tallest name (see .ark-core-row), so a
+     row of all-1-line names gets a 1-line-tall track with nothing to
+     center within. align-items: center on .ark-core-item handles the rare
+     case where a 2-line name shares a row with 1-line siblings. */
 }
 .md-typeset .ark-core-dots {
   display: flex;
@@ -4204,6 +4415,195 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .ark-core-point-on .ark-core-point-label {
   color: #f0a868;
+}
+
+/* ---------- Ark Passive tree (Evolution/Enlightenment/Leap) ---------- */
+/* Rendered by javascripts/ark-passive-tree.js from a JSON blob (same
+   authoring pattern as .ark-cores/ark-core-badge.js - see that file's
+   header comment) - replaces the old argrid-tree*.png screenshot of the
+   FULL in-game grid (all three trees, every node, every 0/x slot still
+   showing) with just the nodes actually invested. A screenshot shows
+   ~40 nodes to communicate ~15 real decisions; this shows the 15.
+   Structure:
+   <div class="ark-passives" markdown>
+   <script type="application/json">
+   {
+     "columns": [
+       { "id": "evolution", "label": "Evolution", "points": 140, "tiers": [
+         { "label": "Tier 1", "nodes": [
+           { "name": "Node Name", "level": 30, "max": 30, "icon": "ap-icons/x.png" }
+         ] }
+       ] },
+       { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [...] },
+       { "id": "leap", "label": "Leap", "points": 70, "tiers": [...] }
+     ]
+   }
+   </script>
+   </div>
+
+   Three fixed columns (id drives the accent color - see the [data-column]
+   rules below), each with its own point budget shown next to its title
+   the same way the in-game screenshot header reads "Evolution (140)".
+   Tiers within a column are only a label + node list, no nesting needed -
+   a build only ever invests a handful of nodes per tier, so the visual
+   hierarchy is column > tier > node, never deeper.
+
+   Column accents intentionally reuse hues already meaningful elsewhere on
+   the site rather than lifting the in-game gold/blue/green directly:
+   amber (#f0a868, same as .ark-core-dot-on/.rune-legendary) for Evolution,
+   lavender (#b39ddb, same as .setup-panel[data-accent="lavender"]) for
+   Enlightenment, teal (#4db6ac, same as .tag-util/.gem-col-cd) for Leap -
+   so this reads as three accents from this site's own palette, not a
+   re-skin of the game's UI or of mokokompendium's reference layout. */
+.md-typeset .ark-passives {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1em 1.2em;
+  margin: 0.9em 0 1.2em;
+}
+.md-typeset .setup-panel > .ark-passives {
+  margin: 0;
+}
+/* Each column gets its own card (border + faint tinted background, same
+   language as .engraving-card) instead of all three sharing one row
+   inside the outer .setup-panel border. Evolution/Enlightenment/Leap
+   rarely have the same number of tiers, so forcing them into one shared
+   box meant the panel's height followed the tallest column and left a
+   visibly empty stretch under whichever column was shortest (usually
+   Leap, the smallest point pool). Independent cards remove the shared
+   bottom edge that made that gap read as broken - each card just ends
+   where its own content ends. */
+.md-typeset .ark-passive-col {
+  flex: 1 1 220px;
+  min-width: 200px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.02);
+  padding: 0.9em 1em 1.1em;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.md-typeset .ark-passive-col[data-column="evolution"] { border-color: rgba(240, 168, 104, 0.22); }
+.md-typeset .ark-passive-col[data-column="enlightenment"] { border-color: rgba(179, 157, 219, 0.22); }
+.md-typeset .ark-passive-col[data-column="leap"] { border-color: rgba(77, 182, 172, 0.22); }
+/* Same hover treatment as .ark-core-item below it (border brightens,
+   background lifts slightly, accent-colored glow) so the two widget
+   types read as one family of cards rather than the passives side being
+   static while the cores side reacts. */
+.md-typeset .ark-passive-col[data-column="evolution"]:hover {
+  border-color: rgba(240, 168, 104, 0.5);
+  background-color: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 0 1px rgba(240, 168, 104, 0.15), 0 0 10px rgba(240, 168, 104, 0.2);
+}
+.md-typeset .ark-passive-col[data-column="enlightenment"]:hover {
+  border-color: rgba(179, 157, 219, 0.5);
+  background-color: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.15), 0 0 10px rgba(179, 157, 219, 0.2);
+}
+.md-typeset .ark-passive-col[data-column="leap"]:hover {
+  border-color: rgba(77, 182, 172, 0.5);
+  background-color: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 0 1px rgba(77, 182, 172, 0.15), 0 0 10px rgba(77, 182, 172, 0.2);
+}
+.md-typeset .ark-passive-col-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  margin-bottom: 0.7em;
+  padding-bottom: 0.4em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.md-typeset .ark-passive-col-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.md-typeset .ark-passive-col-points {
+  font-size: 0.68rem;
+  color: #7a7580;
+  font-weight: 600;
+}
+.md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-col-title { color: #f0a868; }
+.md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-col-title { color: #b39ddb; }
+.md-typeset .ark-passive-col[data-column="leap"] .ark-passive-col-title { color: #4db6ac; }
+
+.md-typeset .ark-passive-tier + .ark-passive-tier {
+  margin-top: 0.65em;
+}
+.md-typeset .ark-passive-tier-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6f6a80;
+  font-weight: 700;
+  margin-bottom: 0.35em;
+}
+.md-typeset .ark-passive-node {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.3em 0;
+}
+.md-typeset .ark-passive-node-icon {
+  height: 26px;
+  width: 26px;
+  min-width: 26px;
+  object-fit: cover;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.04);
+}
+.md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-node-icon {
+  box-shadow: 0 0 0 1px rgba(240, 168, 104, 0.45), 0 0 6px rgba(240, 168, 104, 0.25);
+}
+.md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-node-icon {
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.45), 0 0 6px rgba(179, 157, 219, 0.25);
+}
+.md-typeset .ark-passive-col[data-column="leap"] .ark-passive-node-icon {
+  box-shadow: 0 0 0 1px rgba(77, 182, 172, 0.45), 0 0 6px rgba(77, 182, 172, 0.25);
+}
+.md-typeset .ark-passive-node-name {
+  font-size: 0.82em;
+  color: #e8e6ee;
+  font-weight: 600;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Level shown as current/max (e.g. "2/2", "21/30") rather than the
+   in-game screenshot's separate "10P" cost + "Lv 0/2" pairing - the point
+   cost is an authoring/optimization detail (relevant to the Ark Passive
+   Calculator linked below this section), not something a reader scanning
+   "what's my setup" needs repeated per node. A maxed node (level == max)
+   gets the filled treatment below so a glance across the column shows
+   which picks are capped vs. still partial. */
+.md-typeset .ark-passive-node-level {
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  padding: 0.1em 0.5em;
+  border-radius: 999px;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #9c96a8;
+  background-color: rgba(255, 255, 255, 0.03);
+}
+.md-typeset .ark-passive-node-level[data-maxed="true"] {
+  border-color: transparent;
+}
+.md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-node-level[data-maxed="true"] {
+  color: #f0a868;
+  background-color: rgba(240, 168, 104, 0.14);
+}
+.md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-node-level[data-maxed="true"] {
+  color: #b39ddb;
+  background-color: rgba(179, 157, 219, 0.14);
+}
+.md-typeset .ark-passive-col[data-column="leap"] .ark-passive-node-level[data-maxed="true"] {
+  color: #4db6ac;
+  background-color: rgba(77, 182, 172, 0.14);
 }
 
 /* ==========================================================================
@@ -4249,9 +4649,29 @@ body.page-333-blitz input[type="text"] {
   border: 1px solid rgba(179, 157, 219, 0.3);
   background-color: rgba(179, 157, 219, 0.045);
 }
+/* "neutral" - for Ark Setup specifically, now that it holds the Ark
+   Passive tree's own three tinted column cards plus the pink-accented
+   Ark Grid cores cards. A pink outer panel on top of those competed with
+   them instead of framing them, so this is a quiet gray/white surface
+   (same border/background values as .engraving-card's untinted state)
+   that lets the colorful cards inside read as the content. */
+.md-typeset .setup-panel[data-accent="neutral"] {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background-color: rgba(255, 255, 255, 0.03);
+}
 .md-typeset .setup-panel > .ark-cores,
-.md-typeset .setup-panel > .skill-setup {
+.md-typeset .setup-panel > .skill-setup,
+.md-typeset .setup-panel > .ark-passives {
   margin: 0;
+}
+/* When both widgets share one setup-panel (Ark Passive tree above Ark
+   Grid Order Cores - both are "Ark Setup" content, kept together instead
+   of two separate cards), divide them the same way .setup-notes divides
+   from the widget above it, rather than leaving them touching. */
+.md-typeset .setup-panel > .ark-passives + .ark-cores {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 0.9em;
+  padding-top: 1.1em;
 }
 
 .md-typeset .setup-notes {
