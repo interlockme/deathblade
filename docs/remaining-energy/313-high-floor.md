@@ -251,7 +251,7 @@
 <span class="gem-chip"><span class="gem-num">2</span> ![](../assets/re/icon-turningslash.png) Turning Slash</span>
 </div>
 
-<span class="gem-col-title">(Recovery) — *Pick two.*</span>
+**(Recovery)** — *Pick two.*
 
 <div class="gem-row gem-row-optional" markdown>
 <span class="gem-chip gem-chip-optional">![](../assets/re/icon-soulabsorber.png) Soul Absorber</span>
