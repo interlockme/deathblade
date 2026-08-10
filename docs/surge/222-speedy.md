@@ -199,7 +199,7 @@
 - Upper Slash is a push immune skill that generates 5 stacks and allows you to skip Earth Cleaver casts.
     - Set Upper Slash to use 2-3-2 tripods and give it an Epic Galewind rune.
     - Lower Earth Cleaver's skill level to 10 and raise Upper Slash to level 14.
-    - Replace both Earth Cleaver gems for Upper Slash CD and another gem of your liking.
+    - Replace both Earth Cleaver gems for Upper Slash CD and any other gem you prefer.
     - Alternatively, keep Earth Cleaver as is and only use Upper Slash as a safety net.
 
 </details>
@@ -210,10 +210,14 @@
 
 ## Gems
 
+<div class="setup-panel" data-accent="lavender" markdown>
+
 <div class="gem-priority" markdown>
 
 <div class="gem-col gem-col-dmg" markdown>
-**Damage** — *Prioritize Surge. Surge is everything.*
+<div class="gem-col-header" markdown>
+![](../assets/shared/damagegem.png){: .gem-type-icon } <span class="gem-col-title">Damage</span>
+</div>
 
 <div class="gem-row" markdown>
 <span class="gem-chip"><span class="gem-num">1</span> ![](../assets/surge/icon-surge.png) Surge</span>
@@ -223,12 +227,12 @@
 <span class="gem-chip"><span class="gem-num">5</span> ![](../assets/surge/icon-windcut.png) Wind Cut</span>
 </div>
 
-You can replace Wind Cut damage for Dark Axel CD.
-
 </div>
 
 <div class="gem-col gem-col-cd" markdown>
-**Cooldown** — *Playable with Lv 7s, ideally Lv 8s or higher.*
+<div class="gem-col-header" markdown>
+![](../assets/shared/cooldowngem.png){: .gem-type-icon } <span class="gem-col-title">Cooldown</span>
+</div>
 
 <div class="gem-row" markdown>
 <span class="gem-chip"><span class="gem-num">1</span> ![](../assets/surge/icon-windcut.png) Wind Cut</span>
@@ -238,6 +242,28 @@ You can replace Wind Cut damage for Dark Axel CD.
 <span class="gem-chip"><span class="gem-num">5</span> ![](../assets/surge/icon-earthcleaver.png) Earth Cleaver</span>
 <span class="gem-chip"><span class="gem-num">6</span> ![](../assets/surge/icon-maelstrom.png) Maelstrom</span>
 </div>
+</div>
+
+</div>
+
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span>Gem Basics<span class="setup-note-arrow"></span></summary>
+
+- Level your #1 priority gem in each column first.
+- Playable with Lv 7s, ideally Lv 8s or higher.
+
+</details>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Alternative</span>Optional Changes<span class="setup-note-arrow"></span></summary>
+
+- You can replace Wind Cut damage for Dark Axel CD.
+- See Upper Slash skill setup for gem changes when using it.
+
+</details>
+
 </div>
 
 </div>

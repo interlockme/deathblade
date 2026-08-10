@@ -192,10 +192,14 @@
 
 ## Gems
 
+<div class="setup-panel" data-accent="lavender" markdown>
+
 <div class="gem-priority" markdown>
 
 <div class="gem-col gem-col-dmg" markdown>
-**Damage** — *Prioritize Surge. Surge is everything.*
+<div class="gem-col-header" markdown>
+![](../assets/shared/damagegem.png){: .gem-type-icon } <span class="gem-col-title">Damage</span>
+</div>
 
 <div class="gem-row" markdown>
 <span class="gem-chip"><span class="gem-num">1</span> ![](../assets/surge/icon-surge.png) Surge</span>
@@ -207,7 +211,9 @@
 </div>
 
 <div class="gem-col gem-col-cd" markdown>
-**Cooldown** — *Playable with Lv 7s, ideally Lv 8s or higher.*
+<div class="gem-col-header" markdown>
+![](../assets/shared/cooldowngem.png){: .gem-type-icon } <span class="gem-col-title">Cooldown</span>
+</div>
 
 <div class="gem-row" markdown>
 <span class="gem-chip"><span class="gem-num">1</span> ![](../assets/surge/icon-windcut.png) Wind Cut</span>
@@ -217,6 +223,20 @@
 <span class="gem-chip"><span class="gem-num">5</span> ![](../assets/surge/icon-maelstrom.png) Maelstrom</span>
 <span class="gem-chip"><span class="gem-num">6</span> ![](../assets/surge/icon-earthcleaver.png) Earth Cleaver</span>
 </div>
+</div>
+
+</div>
+
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span>Gem Basics<span class="setup-note-arrow"></span></summary>
+
+- Level your #1 priority gem in each column first.
+- Playable with Lv 7s, ideally Lv 8s or higher.
+
+</details>
+
 </div>
 
 </div>

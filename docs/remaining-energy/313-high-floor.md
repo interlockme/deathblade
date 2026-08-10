@@ -221,10 +221,14 @@
 
 ## Gems
 
+<div class="setup-panel" data-accent="lavender" markdown>
+
 <div class="gem-priority" markdown>
 
 <div class="gem-col gem-col-dmg" markdown>
-**Damage** — *Prioritize Fatal Wave or Surge.*
+<div class="gem-col-header" markdown>
+![](../assets/shared/damagegem.png){: .gem-type-icon } <span class="gem-col-title">Damage</span>
+</div>
 
 <div class="gem-row" markdown>
 <span class="gem-chip"><span class="gem-num">1</span> ![](../assets/re/icon-surge.png) Surge</span>
@@ -238,17 +242,16 @@
 </div>
 
 <div class="gem-col gem-col-cd" markdown>
-**Cooldown** — *Playable with Lv 7s, ideally Lv 8s or higher.*
+<div class="gem-col-header" markdown>
+![](../assets/shared/cooldowngem.png){: .gem-type-icon } <span class="gem-col-title">Cooldown</span>
+</div>
 
 <div class="gem-row" markdown>
 <span class="gem-chip"><span class="gem-num">1</span> ![](../assets/re/icon-maelstrom.png) Maelstrom</span>
 <span class="gem-chip"><span class="gem-num">2</span> ![](../assets/re/icon-turningslash.png) Turning Slash</span>
 </div>
-</div>
 
-</div>
-
-**Cooldown (Optional)** — *Pick two, used for easier recovery.*
+<span class="gem-col-title">(Recovery) — *Pick two.*</span>
 
 <div class="gem-row gem-row-optional" markdown>
 <span class="gem-chip gem-chip-optional">![](../assets/re/icon-soulabsorber.png) Soul Absorber</span>
@@ -257,10 +260,32 @@
 <span class="gem-chip gem-chip-optional">![](../assets/re/icon-twinshadows.png) Twin Shadows</span>
 <span class="gem-chip gem-chip-optional">![](../assets/re/icon-fatalwave.png) Fatal Wave</span>
 </div>
+</div>
+
+</div>
+
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tip</span>Gem Basics<span class="setup-note-arrow"></span></summary>
+
+- Level your #1 priority gem in each column first.
+- Playable with Lv 7s, ideally Lv 8s or higher.
+
+</details>
+
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span>Recovery Pairings<span class="setup-note-arrow"></span></summary>
 
 - Soul Absorber + Void Strike is the default, it grants mindless recovery in the worst case scenario.
 - Blitz Rush + Twin Shadows is better for skilled players, it grants faster recovery from smaller mistakes.
 - Fatal Wave + Blitz Rush **must** be used for 113 (Arts) or when sharing gems with [333 (Ceiling)](333-ceiling.md).
+
+</details>
+
+</div>
+
+</div>
 
 ## Rotation
 
