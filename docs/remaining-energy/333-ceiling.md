@@ -90,7 +90,7 @@
 <details class="setup-note" data-kind="example" markdown>
 <summary><span class="setup-note-tag">Alternative</span>Orb Circulation 5<span class="setup-note-arrow"></span></summary>
 
-- Extreme Body Movement 2, Orb Circulation 5, Swordcraft Enhancement 1:
+- Set Enlightenment to Extreme Body Movement 2, Orb Circulation 5, Swordcraft Enhancement 1.
     - Makes this build more forgiving at a ~3% DPS loss by increasing passive orb generation.
     - Try giving Soul Absorber the Legendary Wealth rune if you run this for an even easier Cycle 2!
 
@@ -146,7 +146,7 @@
 
 - Wealth rune on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
     - It won't cycle as smoothly, but the reduced stress and urgency may suit some people.
-    - Consider playing Surge instead of this or any Fatal Wave build with Orb Control tripod.
+    - Consider playing Surge instead of this or any build with Fatal Wave Orb Control tripod.
 
     | Skill | Rune |
     |---|---|
