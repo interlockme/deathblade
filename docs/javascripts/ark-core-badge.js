@@ -74,7 +74,14 @@
     });
     item.appendChild(icon);
 
-    item.appendChild(el("span", "ark-core-name")).textContent = entry.label || entry.core;
+    // Name + points live together in one column to the right of the icon
+    // (matches the in-game core tooltip layout - icon left, name/points
+    // stacked right of it) instead of each being centered independently
+    // under the icon - that's what lets the name and the points row line
+    // up under each other on a shared left edge.
+    var info = el("div", "ark-core-info");
+
+    info.appendChild(el("span", "ark-core-name")).textContent = entry.label || entry.core;
 
     var dots = el("div", "ark-core-dots");
     var points = Math.max(0, Math.min(3, entry.points || 0));
@@ -88,7 +95,9 @@
       point.appendChild(num);
       dots.appendChild(point);
     });
-    item.appendChild(dots);
+    info.appendChild(dots);
+
+    item.appendChild(info);
 
     return item;
   }

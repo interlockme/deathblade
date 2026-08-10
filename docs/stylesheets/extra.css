@@ -4021,8 +4021,8 @@ body.page-333-blitz input[type="text"] {
    Assault) - no tripods, no rune, nothing for masonry to size around, so
    skill-setup.js routes these into a plain flex row here instead of into
    the masonry grid above. Same .skill-card look, just position: static
-   and evenly sharing the row's width (mirrors .ark-core-row's flex: 1 1 0
-   treatment) rather than absolutely positioned/column-packed. */
+   and evenly sharing the row's width rather than absolutely positioned/
+   column-packed. */
 .md-typeset .skill-special-row {
   display: flex;
   flex-wrap: wrap;
@@ -4344,23 +4344,27 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-core-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  /* 3 explicit row tracks - icon / name / dots - so each .ark-core-item
-     below can subgrid into them. This replaces a flex row of independently-
-     sized flex-column items: with flex, keeping the dots row aligned across
-     cards required forcing every card's name to reserve a fixed 2-line
-     height (min-height: 2.5em), which then left dead space around any
-     1-line name - top-aligned it left a gap below the name (before dots),
-     bottom-aligned it left a gap above the name (after the icon). Neither
-     is correct for a 1-line-name row; the space needs to just not exist
-     there. With grid + subgrid, each row's height is set by the tallest
-     card's content IN THAT ROW ONLY - a row of three 1-line names gets a
-     1-line-tall name track (zero reserved space), and only a row that
-     actually contains "Deathblade Surge" gets a 2-line-tall name track,
-     shared by its siblings so their dots still land at that same y. No
-     fixed heights, no leftover gap on either side, on any row. */
-  grid-template-rows: auto auto auto;
   gap: 0.8em;
   margin: 0.9em 0 1.2em;
+}
+@media screen and (max-width: 480px) {
+  /* Icon-left/text-right cards need more horizontal room per card than
+     the old icon-on-top layout did, so 3 across gets tight on a phone
+     (especially with a longer name like "Death Sword Energy" wrapping
+     hard against the dots). Stack to 1 column rather than let text wrap
+     to the point of feeling cramped. */
+  .md-typeset .ark-core-row {
+    grid-template-columns: 1fr;
+  }
+  /* The wider desktop gap and left padding (1.4em/1.3em) are there to
+     center the icon between the border and the text on a card stretched
+     to 1/3 of the row's width - stacked to full width on a phone, that
+     balance isn't needed, so both drop back to a tighter, more natural
+     spacing. */
+  .md-typeset .ark-core-item {
+    gap: 0.65em;
+    padding-left: 0.8em;
+  }
 }
 .md-typeset .setup-panel > .ark-cores > .ark-core-row {
   /* Base .ark-core-row rule above still carries margin: 0.9em 0 1.2em -
@@ -4375,21 +4379,17 @@ body.page-333-blitz input[type="text"] {
   margin-bottom: 0;
 }
 .md-typeset .ark-core-item {
-  display: grid;
-  /* Subgrid: this card's own icon/name/dots rows sync to .ark-core-row's
-     3 row tracks above (grid-row: span 3 makes it occupy all 3), instead
-     of each card sizing its rows independently the way flex-direction:
-     column did. That's what lets the name row's height come from the
-     tallest name IN THIS SPECIFIC ROW OF CARDS rather than a fixed
-     universal min-height - see .ark-core-row's comment for the full
-     reasoning. */
-  grid-template-rows: subgrid;
-  grid-row: span 3;
-  justify-items: center;
+  /* Icon left, name+points stacked to its right (matches the in-game core
+     tooltip - see the reference screenshot this was built from) rather
+     than icon-on-top-of-centered-text. That's what lets the name and the
+     points row share a left edge instead of each being independently
+     centered under the icon, and it trims a full row of vertical space
+     off every card versus the old icon/name/dots stack. */
+  display: flex;
   align-items: center;
-  row-gap: 0.4em;
+  gap: 1.1em;
   min-width: 0;
-  padding: 0.7em 0.5em 0.6em;
+  padding: 0.6em 0.8em 0.6em 1.1em;
   /* Same subtle-tint-over-hairline-border surface as .stat/.skill-card
      rather than its own bespoke dark gradient - the gradient (and a much
      stronger 0.3 border) previously made this the one component on the
@@ -4398,7 +4398,6 @@ body.page-333-blitz input[type="text"] {
   border: 1px solid rgba(244, 143, 177, 0.22);
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.03);
-  text-align: center;
   transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .md-typeset .ark-core-item:hover {
@@ -4407,23 +4406,27 @@ body.page-333-blitz input[type="text"] {
   box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.15), 0 0 10px rgba(244, 143, 177, 0.22);
 }
 .md-typeset .ark-core-icon {
-  height: 40px;
-  width: 40px;
+  height: 38px;
+  width: 38px;
+  flex: 0 0 auto;
   object-fit: contain;
   border-radius: 50%;
   box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.45), 0 0 8px rgba(244, 143, 177, 0.3);
+}
+.md-typeset .ark-core-info {
+  /* Name and dots row share this column's left edge - no centering on
+     either child - so they line up under each other next to the icon. */
+  display: flex;
+  flex-direction: column;
+  gap: 0.32em;
+  min-width: 0;
 }
 .md-typeset .ark-core-name {
   font-size: 0.72rem;
   font-weight: 700;
   color: #e8e6ee;
   line-height: 1.25;
-  text-align: center;
-  /* No fixed height here anymore - the subgrid row itself is only ever as
-     tall as this row of 3 cards' tallest name (see .ark-core-row), so a
-     row of all-1-line names gets a 1-line-tall track with nothing to
-     center within. align-items: center on .ark-core-item handles the rare
-     case where a 2-line name shares a row with 1-line siblings. */
+  text-align: left;
 }
 .md-typeset .ark-core-dots {
   display: flex;
