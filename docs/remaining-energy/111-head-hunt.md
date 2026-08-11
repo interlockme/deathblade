@@ -122,7 +122,7 @@
 
 </details>
 
-<details class="setup-note" data-kind="note" open markdown>
+<details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
 - Playable with zero Ark Grid investment, but not recommended.

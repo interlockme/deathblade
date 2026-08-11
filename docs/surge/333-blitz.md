@@ -132,7 +132,7 @@
 
 </details>
 
-<details class="setup-note" data-kind="note" open markdown>
+<details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
 - Damage will be lacking if you settle for the minimum core requirements.

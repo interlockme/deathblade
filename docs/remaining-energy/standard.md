@@ -116,7 +116,7 @@
 
 </details>
 
-<details class="setup-note" data-kind="note" open markdown>
+<details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
 - Standard is playable without Ark Grid by design, but you can use the 111 core setup if you already have it.

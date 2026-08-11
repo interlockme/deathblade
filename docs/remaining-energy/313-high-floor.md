@@ -130,7 +130,7 @@
 
 </details>
 
-<details class="setup-note" data-kind="note" open markdown>
+<details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
 - Raise Moon to 17p for increased QoL and damage when you can.
