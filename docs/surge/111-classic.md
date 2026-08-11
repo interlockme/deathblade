@@ -260,7 +260,7 @@
 <div class="gem-item-alts" markdown>
 
 <div class="gem-alt" markdown>
-![](../assets/surge/icon-earthcleaver.png){: .gem-alt-icon } **Earth Cleaver** — Use Earth Cleaver CD instead of Blade Dance CD pre-Ark Grid; set Quick Prep tripod on Blade Dance to compensate.
+![](../assets/surge/icon-earthcleaver.png){: .gem-alt-icon } **Earth Cleaver** — Use Earth Cleaver instead of Blade Dance pre-Ark Grid; set Quick Prep tripod on Blade Dance to compensate.
 </div>
 </div>
 

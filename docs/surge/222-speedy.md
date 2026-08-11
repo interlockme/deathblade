@@ -236,10 +236,21 @@
 <span class="gem-item-rank">2</span>
 ![](../assets/surge/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
 </div>
-<div class="gem-item" data-rank="3" markdown>
+<details class="gem-item gem-item-expandable" data-rank="3" markdown>
+<summary markdown="span">
 <span class="gem-item-rank">3</span>
 ![](../assets/surge/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
+<span class="gem-item-arrow"></span>
+</summary>
+
+<div class="gem-item-alts" markdown>
+
+<div class="gem-alt" markdown>
+![](../assets/surge/icon-upperslash.png){: .gem-alt-icon } **Upper Slash** — Optional in the Upper Slash build.
 </div>
+</div>
+
+</details>
 <div class="gem-item" data-rank="4" markdown>
 <span class="gem-item-rank">4</span>
 ![](../assets/surge/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
@@ -284,10 +295,21 @@
 <span class="gem-item-rank">4</span>
 ![](../assets/surge/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
 </div>
-<div class="gem-item" data-rank="5" markdown>
+<details class="gem-item gem-item-expandable" data-rank="5" markdown>
+<summary markdown="span">
 <span class="gem-item-rank">5</span>
 ![](../assets/surge/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
+<span class="gem-item-arrow"></span>
+</summary>
+
+<div class="gem-item-alts" markdown>
+
+<div class="gem-alt" markdown>
+![](../assets/surge/icon-upperslash.png){: .gem-alt-icon } **Upper Slash** — Required in the Upper Slash build.
 </div>
+</div>
+
+</details>
 <div class="gem-item" data-rank="6" markdown>
 <span class="gem-item-rank">6</span>
 ![](../assets/surge/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
