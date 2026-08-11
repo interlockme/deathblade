@@ -47,7 +47,7 @@ Atk/Move Speed Feast
 
 <!-- TODO: drop this whole block once the September balance patch ships -->
 <details class="setup-note" data-kind="danger" markdown>
-<summary><span class="setup-note-tag">Warning</span>Balance Patch<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Warn</span>Balance Patch<span class="setup-note-arrow"></span></summary>
 
 - Death Trance no longer auto-deactivates mid-stack via a side node.
 - Stack cap increased from 60 to 80. Extra stacks now roll over.

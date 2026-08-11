@@ -138,7 +138,7 @@
 </details>
 
 <details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alternative</span>113 (Arts) core-limited<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Alt</span>113 (Arts) core-limited<span class="setup-note-arrow"></span></summary>
 
 <div class="ark-cores" data-family="re" markdown>
 <script type="application/json">
@@ -204,7 +204,7 @@
 </details>
 
 <details class="setup-note" data-kind="danger" markdown>
-<summary><span class="setup-note-tag">Warning</span> Balance Patch<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Warn</span> Balance Patch<span class="setup-note-arrow"></span></summary>
 
 - Swift Fingers **may** become the default 1st row tripod for Blitz Rush.
     - ~2% DPS loss but CPM and playability increases may make up for it.

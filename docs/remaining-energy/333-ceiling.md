@@ -140,7 +140,7 @@
 </details>
 
 <details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alternative</span>Orb Circulation 5<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Alt</span>Orb Circulation 5<span class="setup-note-arrow"></span></summary>
 
 - Makes this build more forgiving at a ~3% DPS loss by increasing passive orb generation.
 
@@ -225,7 +225,7 @@
 </details>
 
 <details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alternative</span>Fatal Wealth<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Alt</span>Fatal Wealth<span class="setup-note-arrow"></span></summary>
 
 - Wealth rune on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
 - It won't cycle as smoothly, but the reduced stress and urgency may suit some people.
@@ -266,7 +266,7 @@
 </details>
 
 <details class="setup-note" data-kind="danger" markdown>
-<summary><span class="setup-note-tag">Warning</span>Balance Patch<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Warn</span>Balance Patch<span class="setup-note-arrow"></span></summary>
 
 - Swift Fingers will become the default 1st row tripod for Blitz Rush.
     - ~1.5% DPS loss but CPM and playability increases make up for it.

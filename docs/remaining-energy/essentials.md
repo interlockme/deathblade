@@ -35,7 +35,7 @@ Atk/Move Speed Feast
 </div>
 
 <details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alternative</span>You can lower mana use at a DPS loss to save gold and skip mana food!<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Alt</span>You can lower mana use at a DPS loss to save gold and skip mana food!<span class="setup-note-arrow"></span></summary>
 
 | Where | Change |
 |---|---|
@@ -59,7 +59,7 @@ Atk/Move Speed Feast
 
 <!-- TODO: drop this whole block once the September balance patch ships -->
 <details class="setup-note" data-kind="danger" markdown>
-<summary><span class="setup-note-tag">Warning</span>Balance Patch<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Warn</span>Balance Patch<span class="setup-note-arrow"></span></summary>
 
 - Blitz Rush gains a 27% cast speed tripod and 20% more attack range.
 - Turning Slash's after-effect now also applies Synergy.

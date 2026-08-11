@@ -194,7 +194,7 @@
 </details>
 
 <details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alternative</span>Upper Slash<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Alt</span>Upper Slash<span class="setup-note-arrow"></span></summary>
 
 - You can gain more comfort at a DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
 - Upper Slash is a push immune skill that generates 5 stacks and allows you to skip Earth Cleaver casts.
