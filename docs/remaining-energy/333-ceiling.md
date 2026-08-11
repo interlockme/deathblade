@@ -29,7 +29,7 @@
 <div class="pentagon-badge-title">Build Profile</div>
 <div class="pentagon-svg-mount"></div>
 <div class="pentagon-badge-extra" markdown>
-[KR Video Guide](https://youtu.be/Wwm7apTwg84?si=dmO_fvNxoXuoQuf5){ .video-chip } [Video Gameplay](https://www.youtube.com/watch?v=MP--TuRX3xI){ .video-chip }
+[Video Guide](https://youtu.be/Wwm7apTwg84?si=dmO_fvNxoXuoQuf5){ .video-chip } [Gameplay](https://www.youtube.com/watch?v=MP--TuRX3xI){ .video-chip }
 </div>
 </div>
 </div>
