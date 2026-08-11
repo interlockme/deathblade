@@ -143,7 +143,14 @@
 <summary><span class="setup-note-tag">Alternative</span>Orb Circulation 5<span class="setup-note-arrow"></span></summary>
 
 - Makes this build more forgiving at a ~3% DPS loss by increasing passive orb generation.
-- Try giving Soul Absorber the Legendary Wealth rune if you run this for an even easier Cycle 2!
+
+<div class="skill-setup" data-family="re" markdown>
+<script type="application/json">
+[
+  {"id": "soulabsorber", "name": "Soul Absorber", "level": 14, "rune": {"tier": "legendary", "name": "Wealth"}}
+]
+</script>
+</div>
 
 <div class="ark-passives ark-passives-compact" data-family="re" markdown>
 <script type="application/json">
@@ -227,11 +234,11 @@
 <div class="skill-setup" data-family="re" markdown>
 <script type="application/json">
 [
-  {"id": "fatalwave", "name": "Fatal Wave", "level": 14, "tripods": [2, 3, 2], "rune": {"tier": "epic", "name": "Wealth"}},
-  {"id": "voidstrike", "name": "Void Strike", "level": 11, "tripods": [3, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
-  {"id": "soulabsorber", "name": "Soul Absorber", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
-  {"id": "twinshadows", "name": "Twin Shadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "blue", "name": "Wealth"}},
-  {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "green", "name": "Wealth"}}
+  {"id": "fatalwave", "name": "Fatal Wave", "level": 14, "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "voidstrike", "name": "Void Strike", "level": 11, "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "soulabsorber", "name": "Soul Absorber", "level": 14, "rune": {"tier": "legendary", "name": "Wealth"}},
+  {"id": "twinshadows", "name": "Twin Shadows", "level": 14, "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "maelstrom", "name": "Maelstrom", "level": 10, "rune": {"tier": "green", "name": "Wealth"}}
 ]
 </script>
 </div>

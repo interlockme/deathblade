@@ -205,7 +205,7 @@
 <script type="application/json">
 [
   {"id": "upperslash", "name": "Upper Slash", "level": 14, "tripods": [2, 3, 2], "rune": {"tier": "epic", "name": "Galewind"}},
-  {"id": "earthcleaver", "name": "Earth Cleaver", "level": 10, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Vision"}}
+  {"id": "earthcleaver", "name": "Earth Cleaver", "level": 10, "rune": {"tier": "legendary", "name": "Vision"}}
 ]
 </script>
 </div>
