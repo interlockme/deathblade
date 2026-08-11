@@ -639,38 +639,62 @@ h3 { color: #4db6ac; }
   content: none !important;
 }
 
-/* ---------- Gem priority: horizontal chip layout ---------- */
-/* Structure (lives inside a .setup-panel[data-accent="neutral"], same
-   "widget + setup-notes footnotes" shell as Ark Setup/Skill Setup, so
-   Gems reads as the same kind of section rather than a bolted-on
-   extra — neutral because the gem-col-dmg/gem-col-cd tint below is
-   already the section's own color story, same reasoning as Ark
-   Setup's neutral panel letting its colorful cards read as content):
-   <div class="setup-panel" data-accent="neutral" markdown>
+/* ---------- Gem priority: ranked row layout ---------- */
+/* Structure (lives inside a .setup-panel[data-accent="lavender"], same
+   shell + accent as every other build-page section):
+   <div class="setup-panel" data-accent="lavender" markdown>
    <div class="gem-priority" markdown>
    <div class="gem-col gem-col-dmg" markdown>
    <div class="gem-col-header" markdown>
-   ![](icon){: .gem-type-icon } <span class="gem-col-title">Damage</span> — *tip*
+   ![](icon){: .gem-type-icon } <span class="gem-col-title">Damage</span>
    </div>
-   <div class="gem-row" markdown>
-   <span class="gem-chip"><span class="gem-num">1</span> ![](icon) Name</span>
-   ...
+   <div class="gem-list" markdown>
+   <div class="gem-item" data-rank="1" markdown>
+   <span class="gem-item-rank">1</span>
+   ![](icon){: .gem-item-icon } <span class="gem-item-name">Surge</span>
+   </div>
+   ...more plain .gem-item rows...
+   <details class="gem-item gem-item-expandable" data-rank="3" markdown>
+   <summary>
+   <span class="gem-item-rank">3</span>
+   ![](icon){: .gem-item-icon } <span class="gem-item-name">Soul Absorber</span>
+   <span class="gem-item-arrow"></span>
+   </summary>
+
+   <div class="gem-item-alts" markdown>
+
+   <div class="gem-alt" markdown>
+   **Blitz Rush** — one-line reason this replaces the row above.
+   </div>
+
+   </div>
+
+   </details>
    </div>
    </div>
    <div class="gem-col gem-col-cd" markdown> ... Cooldown ... </div>
    </div>
-   <div class="setup-notes" markdown> ...general gem tips as setup-note
-   cards, same as every other section's footnotes... </div>
+   <div class="setup-notes" markdown> ...general gem tips, unrelated to
+   any one row... </div>
    </div>
-   Damage/Cooldown columns are tinted via the gem-col-dmg / gem-col-cd
-   modifier class (rose for Damage, teal for Cooldown) so the two
-   priority lists read apart from each other at a glance. .gem-type-icon
-   is the one tasteful spot the damage/cooldown gem icon art gets used —
-   once per column header, not per chip, so it reads as a category
-   marker rather than decoration sprinkled everywhere.
-   For a flexible/optional pick (e.g. "pick two of these"), use the
-   gem-row-optional + gem-chip-optional variant instead — see the
-   "Optional gems" block further down. */
+
+   Rank badge + skill icon + name sit on one fixed grid (1.7em/1.7em/1fr)
+   shared by every row, so nothing shifts out of alignment as priority
+   drops — only color communicates rank (solid accent + tinted
+   background for #1, a step down for #2, a shared quiet "floor" tone
+   for #3 and below) and that floor is deliberately still legible, so a
+   7-gem list never makes its last entry read as skippable.
+   .gem-type-icon in the column header is the one tasteful spot the
+   uploaded damage/cooldown gem art appears - once per column, not
+   once per row.
+
+   Rows that have a real alternative use <details> instead of <div> -
+   same disclosure instinct as .setup-note/.engraving-card elsewhere on
+   the site, and the row itself doubles as the <summary>. A plain row
+   never grows an arrow, so the arrow is what signals "this one has an
+   alternative" - no extra badge or color needed to say so, and nothing
+   about the row's own weight changes, so it never reads as more
+   important than its rank actually is. */
 .md-typeset .gem-priority {
   display: flex;
   flex-wrap: wrap;
@@ -683,23 +707,18 @@ h3 { color: #4db6ac; }
   flex: 1 1 300px;
   min-width: 240px;
 }
-/* Icon + title + tip, replacing the old plain "**Damage** — *tip*"
-   paragraph. Wraps onto its own line on narrow columns rather than
-   forcing the tip to truncate. */
 .md-typeset .gem-col-header {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  column-gap: 0.5em;
-  row-gap: 0.15em;
-  margin: 0 0 0.15em;
+  gap: 0.5em;
+  margin: 0 0 0.7em;
 }
 .md-typeset .gem-col-header p {
   display: contents;
 }
 .md-typeset .gem-type-icon {
-  height: 1.5em;
-  width: 1.5em;
+  height: 1.4em;
+  width: 1.4em;
   vertical-align: middle;
   border-radius: 50%;
   margin: 0;
@@ -717,106 +736,255 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .gem-col-dmg .gem-col-title { color: #f48fb1; }
 .md-typeset .gem-col-cd .gem-col-title { color: #4db6ac; }
-.md-typeset .gem-row {
+
+.md-typeset .gem-list {
   display: flex;
-  flex-wrap: wrap;
-  margin: 0.7em 0 -0.65em 0; /* -0.65em cancels the last row's own bottom margin so it doesn't push into the next paragraph */
-}
-.md-typeset .gem-row p {
-  margin: 0;
-  display: contents;
-}
-/* Margin (not flex `gap`) drives the spacing here — some in-app/embedded
-   renderers don't support gap on flex containers, which left wrapped
-   chip rows touching. Margins on the chip itself work everywhere. */
-.md-typeset .gem-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3em;
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(167, 155, 196, 0.3);
-  border-radius: 6px;
-  padding: 0.28em 0.75em 0.28em 0.55em;
-  font-size: 0.85em;
-  white-space: nowrap;
-  margin: 0 0.5em 0.65em 0;
-  /* Sparkle sweep lives on ::after, clipped to the pill by this
-     overflow/position pair - see the sparkle rules further down. */
-  position: relative;
-  overflow: hidden;
-}
-/* ---------- Gem chip hover sparkle ---------- */
-/* CSS-only shimmer sweep - they're called "gems" for a reason. A soft
-   diagonal highlight slides left-to-right across the chip on hover, then
-   resets; overflow:hidden on .gem-chip (above) clips it to the pill shape
-   instead of spilling past the rounded corners. Respects the sitewide
-   prefers-reduced-motion block near the bottom of this file, same as every
-   other animation here. */
-.md-typeset .gem-chip::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 45%;
-  height: 100%;
-  background: linear-gradient(
-    115deg,
-    transparent,
-    rgba(255, 255, 255, 0.5) 45%,
-    transparent 90%
-  );
-  transform: skewX(-20deg);
-  pointer-events: none;
-}
-.md-typeset .gem-chip:hover::after {
-  animation: gem-sparkle 0.85s ease;
-}
-@keyframes gem-sparkle {
-  from { left: -60%; }
-  to { left: 130%; }
-}
-.md-typeset .gem-col-dmg .gem-chip {
-  border-color: rgba(244, 143, 177, 0.4);
-  background-color: rgba(244, 143, 177, 0.05);
-}
-.md-typeset .gem-col-cd .gem-chip {
-  border-color: rgba(77, 182, 172, 0.4);
-  background-color: rgba(77, 182, 172, 0.05);
-}
-.md-typeset .gem-chip .gem-num {
-  color: #a79bc4;
-  font-weight: 700;
-  font-size: 0.85em;
-  margin-right: 0.05em;
-}
-.md-typeset .gem-col-dmg .gem-chip .gem-num { color: #f48fb1; }
-.md-typeset .gem-col-cd .gem-chip .gem-num { color: #4db6ac; }
-.md-typeset .gem-chip img {
-  height: 1.1em;
-  width: 1.1em;
-  vertical-align: middle;
-  border-radius: 3px;
-  margin: 0;
+  flex-direction: column;
+  gap: 0.45em;
 }
 
-/* Optional/flexible gem picks (e.g. 313's "pick two") — dashed border
-   marks these as discretionary rather than a strict priority order.
-   Colored teal like Cooldown chips since these are still cooldown gems,
-   just a flexible subset of them.
-   Structure:
-   <div class="gem-row gem-row-optional" markdown>
-   <span class="gem-chip gem-chip-optional">![](icon) Name</span>
-   ...
-   </div> */
-.md-typeset .gem-row-optional {
-  margin-top: 0.5em;
+/* Shared row shell - the plain <div> variant, and also the base
+   styling every <details> row inherits before its own rules narrow
+   the grid down to the summary. */
+.md-typeset .gem-item {
+  border-radius: 8px;
+  padding: 0.55em 0.85em;
+  border: 1px solid transparent;
+  transition: border-color 0.15s ease;
 }
-.md-typeset .gem-chip-optional {
-  border-style: dashed;
-  border-color: rgba(77, 182, 172, 0.4);
-  background-color: rgba(77, 182, 172, 0.05);
+/* Grid layout only applies to the plain <div> row, NOT the <details>
+   wrapper - .gem-item-expandable also carries the .gem-item class (for
+   shared background/border/padding above), so an unscoped grid rule
+   here would also land on <details>, making its two real children
+   (<summary> and .gem-item-alts) into auto-placed grid items squeezed
+   into the first 1.7em column instead of stacking normally. <summary>
+   defines this same grid layout for itself, scoped further down. */
+.md-typeset .gem-item:not(.gem-item-expandable) {
+  display: grid;
+  grid-template-columns: 1.7em 1.7em 1fr auto;
+  align-items: center;
+  column-gap: 0.7em;
 }
-.md-typeset .gem-chip-optional .gem-num { color: #4db6ac; }
+.md-typeset .gem-item p {
+  display: contents;
+}
+.md-typeset .gem-col-dmg .gem-item {
+  background-color: rgba(255, 255, 255, 0.035);
+  border-color: rgba(244, 143, 177, 0.18);
+}
+.md-typeset .gem-col-cd .gem-item {
+  background-color: rgba(255, 255, 255, 0.035);
+  border-color: rgba(77, 182, 172, 0.18);
+}
+.md-typeset .gem-item-rank {
+  width: 1.7em;
+  height: 1.7em;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.78em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.md-typeset .gem-item-icon {
+  width: 1.7em;
+  height: 1.7em;
+  border-radius: 5px;
+  margin: 0;
+  object-fit: contain;
+  /* Thin ring, matching .skill-card-icon/.rotation-line img's at-rest
+     state elsewhere on the site - without this the icon looked bare
+     next to every other icon treatment on the page. */
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.28);
+  transition: box-shadow 0.15s ease;
+}
+.md-typeset .gem-item-name {
+  font-size: 0.92em;
+  color: #b8b2c0;
+}
+
+/* Hover feedback, matching .rotation-line .skill/.skill-card elsewhere:
+   border lift + a glow on the icon specifically. Applies to plain rows
+   too (not just expandable ones) - same as the old .gem-chip sparkle,
+   a decorative "this is a real list item" cue doesn't require the row
+   to be clickable. Tinted per column (rose/teal), not the sitewide
+   generic purple .skill-card-icon glow uses - a gem row is already
+   living inside its column's own color story, so the hover state
+   should stay in that story rather than jumping to a third color. */
+.md-typeset .gem-col-dmg .gem-item:hover { border-color: rgba(244, 143, 177, 0.5); }
+.md-typeset .gem-col-cd .gem-item:hover { border-color: rgba(77, 182, 172, 0.5); }
+.md-typeset .gem-col-dmg .gem-item:hover .gem-item-icon {
+  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.65), 0 0 10px rgba(244, 143, 177, 0.45);
+}
+.md-typeset .gem-col-cd .gem-item:hover .gem-item-icon {
+  box-shadow: 0 0 0 1px rgba(77, 182, 172, 0.65), 0 0 10px rgba(77, 182, 172, 0.45);
+}
+
+/* Rank floor (rank 3+, and the base tone rank 1/2 override below) -
+   quiet but never low-contrast enough to read as "skip this one". */
+.md-typeset .gem-col-dmg .gem-item-rank { background-color: rgba(244, 143, 177, 0.11); color: #c99bab; }
+.md-typeset .gem-col-cd .gem-item-rank { background-color: rgba(77, 182, 172, 0.11); color: #86bdb3; }
+
+/* Rank 2 - a clear step up from the floor, still short of rank 1. */
+.md-typeset .gem-col-dmg .gem-item[data-rank="2"] .gem-item-rank { background-color: rgba(244, 143, 177, 0.18); color: #eab3c6; }
+.md-typeset .gem-col-cd .gem-item[data-rank="2"] .gem-item-rank { background-color: rgba(77, 182, 172, 0.18); color: #a4d9d0; }
+.md-typeset .gem-item[data-rank="2"] .gem-item-name { color: #d8d2de; }
+
+/* Rank 1 - the unambiguous default. Full accent color plus a soft
+   tinted row background, never a size change (a bigger rank-1 row
+   would break the shared grid every other row aligns to). */
+.md-typeset .gem-col-dmg .gem-item[data-rank="1"] {
+  background: linear-gradient(90deg, rgba(244, 143, 177, 0.14), rgba(244, 143, 177, 0.04));
+  border-color: rgba(244, 143, 177, 0.55);
+}
+.md-typeset .gem-col-cd .gem-item[data-rank="1"] {
+  background: linear-gradient(90deg, rgba(77, 182, 172, 0.14), rgba(77, 182, 172, 0.04));
+  border-color: rgba(77, 182, 172, 0.55);
+}
+.md-typeset .gem-col-dmg .gem-item[data-rank="1"] .gem-item-rank { background-color: #f48fb1; color: #241a20; }
+.md-typeset .gem-col-cd .gem-item[data-rank="1"] .gem-item-rank { background-color: #4db6ac; color: #0a1f1c; }
+.md-typeset .gem-item[data-rank="1"] .gem-item-name {
+  font-weight: 600;
+  color: #f0e6ea;
+}
+
+/* Expandable rows - <details> standing in for the plain <div>, laid
+   out identically via <summary> so nothing shifts when a row happens
+   to have an alternative. */
+.md-typeset details.gem-item-expandable {
+  padding: 0;
+  /* .md-typeset details {margin: 0.6em 0} (the sitewide admonition rule,
+     ~line 156) is written for a details block sitting on its own between
+     paragraphs, so it stacks extra top/bottom margin on top of .gem-list's
+     own `gap` - a plain <div> row never pays that tax, so an expandable row
+     floated further from its neighbors than the uniform gap everywhere
+     else. Zero it so .gem-list's gap is the only spacing, same as every
+     other row. */
+  margin: 0;
+  /* That same sitewide rule also sets `overflow: hidden`, there to clip a
+     title bar's corners to the box's own border-radius. We don't need that
+     clipping (the fixes below make the row a single flat box with no inner
+     title bar to clip), and hidden overflow was cutting off the hover glow
+     .gem-item-icon gets everywhere else, so expandable rows alone lost the
+     glow on hover. */
+  overflow: visible;
+}
+/* Overrides the sitewide details:not([open]) opacity dimming (meant for
+   ??? admonitions elsewhere) and its summary padding override - same
+   fix .skill-card already needed for the same reason: a gem row is
+   core reference content, not optional depth, so a closed row should
+   look identical in weight to the plain rows next to it. */
+.md-typeset details.gem-item-expandable:not([open]) {
+  opacity: 1;
+}
+.md-typeset details.gem-item-expandable:not([open]) > summary {
+  padding-top: 0.55em;
+  padding-bottom: 0.55em;
+}
+/* This row has no admonition "type" class (note/tip/warning/etc), so none
+   of the palette overrides above ever touch it - it falls straight through
+   to Material's own default title-bar styling for a bare <details>: a
+   background tint, its own small top-corner border-radius, and (in some
+   Material versions) negative side margins meant to bleed a title bar out
+   to the admonition box's edges. All of that is designed for a title bar
+   sitting above separate body content, not for *being* the entire row, so
+   it rendered as a second, mismatched box stacked on top of ours instead of
+   just being the row. Reset every property Material sets by default -
+   background/radius/margin/color - so <summary> is nothing more than the
+   grid it's declared as here. */
+.md-typeset details.gem-item-expandable > summary {
+  display: grid;
+  grid-template-columns: 1.7em 1.7em 1fr auto;
+  align-items: center;
+  column-gap: 0.7em;
+  padding: 0.55em 0.85em;
+  margin: 0;
+  background: none;
+  border-radius: 0;
+  color: inherit;
+  cursor: pointer;
+  list-style: none;
+}
+.md-typeset details.gem-item-expandable > summary::-webkit-details-marker { display: none; }
+.md-typeset details.gem-item-expandable > summary::marker { content: ""; }
+.md-typeset details.gem-item-expandable > summary::before,
+.md-typeset details.gem-item-expandable > summary::after {
+  display: none !important;
+}
+.md-typeset details.gem-item-expandable:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+.md-typeset .gem-item-arrow {
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform 0.15s ease;
+}
+.md-typeset .gem-col-dmg .gem-item-arrow { border-left: 5px solid rgba(244, 143, 177, 0.55); }
+.md-typeset .gem-col-cd .gem-item-arrow { border-left: 5px solid rgba(77, 182, 172, 0.55); }
+.md-typeset details.gem-item-expandable[open] .gem-item-arrow {
+  transform: rotate(90deg);
+}
+
+/* Hidden by default so it stays hidden while the <details> is closed -
+   setting `display` unconditionally on a child of <details> beats the
+   browser's own `details:not([open]) > :not(summary) { display: none }`
+   UA rule on specificity, which is exactly what made every expansion
+   render permanently open (and empty, since its markdown never got a
+   chance to parse either - see the <summary markdown="span"> fix). Only
+   switch it to flex once the parent actually has [open]. */
+.md-typeset .gem-item-alts {
+  display: none;
+  flex-direction: column;
+  gap: 0.5em;
+  /* Left margin matches the right margin (0.6em) rather than the old
+     3.2em indent under the name column - the old value kept the dashed
+     box aligned under the row's text but left it visually floating on
+     the card's right side, out of step with the plain rows above it
+     which run edge-to-edge. */
+  margin: 0 0.6em 0.6em 0.6em;
+  padding: 0.6em 0.8em;
+  border-radius: 6px;
+}
+.md-typeset details[open] > .gem-item-alts {
+  display: flex;
+}
+.md-typeset .gem-col-dmg .gem-item-alts {
+  border: 1px dashed rgba(244, 143, 177, 0.3);
+  background-color: rgba(244, 143, 177, 0.03);
+}
+.md-typeset .gem-col-cd .gem-item-alts {
+  border: 1px dashed rgba(77, 182, 172, 0.3);
+  background-color: rgba(77, 182, 172, 0.03);
+}
+.md-typeset .gem-alt {
+  font-size: 0.85em;
+  color: #948da3;
+  line-height: 1.5;
+}
+.md-typeset .gem-alt p {
+  margin: 0;
+}
+.md-typeset .gem-alt strong {
+  color: #d8d2de;
+}
+/* Small inline icon in front of an alt gem's name - same ring treatment
+   as .gem-item-icon so it reads as the same decoration family, but sized
+   down and set inline (not grid/flex) so it rides along the text line
+   instead of adding a row of its own height. Kept deliberately smaller
+   than .gem-item-icon (1.7em) so the dashed box's row spacing/line-height
+   never has to grow to fit it. */
+.md-typeset .gem-alt-icon {
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: 4px;
+  object-fit: contain;
+  vertical-align: -0.2em;
+  margin-right: 0.35em;
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.28);
+}
+
 
 /* ---------- Rotation/opener sequences, styled as cards ---------- */
 .md-typeset .rotation-line {
@@ -3592,6 +3760,10 @@ h3 { color: #4db6ac; }
   height: 1.75em;
   object-fit: contain;
   border-radius: 4px;
+  /* Same thin ring the gem/skill icons wear elsewhere on the page
+     (.gem-item-icon, .skill-card-icon) - without it this was the one
+     icon spot left bare next to every other icon treatment on the site. */
+  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.28);
 }
 .md-typeset .dps-chart-label-text {
   font-size: 1.02em;
@@ -3958,10 +4130,13 @@ body.page-333-blitz input[type="text"] {
   margin: 0.9em 0 1.2em;
 }
 /* Inside a .setup-panel (see that section below), the panel's own padding
-   plus .setup-notes' divider supplies the spacing instead - avoids doubling
-   up the gap between the grid and the notes that now sit in the same card. */
+   supplies the spacing instead - avoids doubling up the gap between the
+   panel edge and the grid. Zeroing only margin-bottom left margin-top's
+   0.9em stacked on top of the panel's own 1em top padding, making the
+   gap above the cards ~1.9em versus ~1.2em on the sides - noticeably
+   more breathing room on top than left/right for no reason. Zero both. */
 .md-typeset .setup-panel > .skill-setup > .skill-setup-grid {
-  margin-bottom: 0;
+  margin: 0;
 }
 .md-typeset .setup-panel > .skill-setup > .skill-special-row {
   margin-bottom: 0;
@@ -4199,7 +4374,12 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .skill-card-name {
   display: block;
-  font-weight: 700;
+  /* Lighter than the site's usual 700 heading weight - this is one name
+     among a dense grid of cards, not a page heading, and at 700 it was
+     pulling more visual weight than the icon/chips next to it or the
+     gem-item-name rows in the section right below this one (which sit at
+     600 for their own rank-1 row, plain weight otherwise). */
+  font-weight: 500;
   color: #e8e6ee;
   font-size: 0.95em;
   line-height: 1.25;
@@ -4225,7 +4405,13 @@ body.page-333-blitz input[type="text"] {
 /* Tripod pick chips — flat placeholder squares (no tripod icon art yet),
    colored by tier so the tier ordering still reads at a glance. Tier
    colors intentionally match the in-game tier colors (blue/green/gold)
-   so the mapping is instantly familiar rather than an arbitrary scheme. */
+   so the mapping is instantly familiar rather than an arbitrary scheme.
+   Until real tripod icon art exists, a bit of an embossed/glossy
+   treatment - top inner highlight, bottom inner shadow, thin dark outer
+   ring - keeps the flat color squares from reading as bare/unfinished
+   placeholders, same instinct as the ring .gem-item-icon/.skill-card-icon
+   wear elsewhere so this section doesn't look like the one spot on the
+   page still missing a decoration pass. */
 .md-typeset .tripod-chip {
   display: inline-flex;
   align-items: center;
@@ -4237,6 +4423,10 @@ body.page-333-blitz input[type="text"] {
   font-weight: 700;
   color: #161718;
   flex-shrink: 0;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -7px 9px rgba(0, 0, 0, 0.2);
 }
 .md-typeset .tripod-chip.tripod-t1 { background-color: #64b5f6; }
 .md-typeset .tripod-chip.tripod-t2 { background-color: #66bb6a; }
@@ -4755,6 +4945,49 @@ body.page-333-blitz input[type="text"] {
   background-color: rgba(77, 182, 172, 0.14);
 }
 
+/* Compact variant - a single Ark Passive column pasted as a supplementary
+   reference inside a setup-note body (e.g. 333-ceiling.md's "Orb
+   Circulation 5" alternative), rather than the page's own full-size
+   "## Ark Setup" widget. Same widget, same JSON shape, just scaled down
+   across every part (icon, text, padding) so it reads as a small aside
+   next to the note's own bullet list instead of a second full-weight
+   Ark Setup section competing with the real one higher up the page. */
+.md-typeset .ark-passives.ark-passives-compact {
+  margin: 0.7em 0 0;
+}
+.md-typeset .ark-passives-compact .ark-passive-col {
+  padding: 0.6em 0.7em 0.75em;
+}
+.md-typeset .ark-passives-compact .ark-passive-col-header {
+  margin-bottom: 0.5em;
+  padding-bottom: 0.3em;
+}
+.md-typeset .ark-passives-compact .ark-passive-col-title {
+  font-size: 0.68rem;
+}
+.md-typeset .ark-passives-compact .ark-passive-col-points {
+  font-size: 0.6rem;
+}
+.md-typeset .ark-passives-compact .ark-passive-tier {
+  padding: 0 0.6em;
+  gap: 0.22em;
+}
+.md-typeset .ark-passives-compact .ark-passive-tier-label {
+  font-size: 0.52rem;
+}
+.md-typeset .ark-passives-compact .ark-passive-node-icon {
+  height: 14px;
+  width: 14px;
+  min-width: 14px;
+}
+.md-typeset .ark-passives-compact .ark-passive-node-name {
+  font-size: 0.72em;
+}
+.md-typeset .ark-passives-compact .ark-passive-node-level {
+  font-size: 0.58rem;
+  padding: 0.03em 0.32em;
+}
+
 /* ==========================================================================
    Setup panel + setup notes — Ark Setup / Skill Setup sections
    ========================================================================== */
@@ -4815,12 +5048,15 @@ body.page-333-blitz input[type="text"] {
 }
 /* When both widgets share one setup-panel (Ark Passive tree above Ark
    Grid Order Cores - both are "Ark Setup" content, kept together instead
-   of two separate cards), divide them the same way .setup-notes divides
-   from the widget above it, rather than leaving them touching. */
+   of two separate cards), previously divided with a hairline border like
+   .setup-notes gets from the widget above it. Dropped the divider (and
+   the extra padding-top it justified) so the core row instead sits the
+   same 0.8em away from the tree above it as the core cards already sit
+   from each other via .ark-core-row's own grid gap - one consistent
+   rhythm through the whole panel instead of a bigger jump before Ark
+   Grid Order specifically. */
 .md-typeset .setup-panel > .ark-passives + .ark-cores {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  margin-top: 0.9em;
-  padding-top: 1.1em;
+  margin-top: 0.8em;
 }
 
 .md-typeset .setup-notes {

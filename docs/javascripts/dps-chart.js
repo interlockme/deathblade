@@ -92,7 +92,6 @@
       row.className = "dps-chart-row";
       row.style.setProperty("--dps-target", lengthPct.toFixed(1) + "%");
       row.style.setProperty("--dps-delay", (i * 55) + "ms");
-      row.title = label + ": " + fmtPct(val) + " of total damage";
 
       var labelWrap = document.createElement("span");
       labelWrap.className = "dps-chart-label";

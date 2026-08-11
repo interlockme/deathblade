@@ -146,6 +146,31 @@
     - Makes this build more forgiving at a ~3% DPS loss by increasing passive orb generation.
     - Try giving Soul Absorber the Legendary Wealth rune if you run this for an even easier Cycle 2!
 
+<div class="ark-passives ark-passives-compact" data-family="re" markdown>
+<script type="application/json">
+{
+  "columns": [
+    { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [
+      { "label": "Tier 1", "nodes": [
+        { "name": "Swift Strike", "level": 1, "max": 1, "icon": "ap-icons/swift-strike.png" }
+      ] },
+      { "label": "Tier 2", "nodes": [
+        { "name": "Remaining Energy", "level": 3, "max": 3, "icon": "ap-icons/remaining-energy.png" }
+      ] },
+      { "label": "Tier 3", "nodes": [
+        { "name": "Firm Will", "level": 3, "max": 3, "icon": "ap-icons/firm-will.png" },
+        { "name": "Swordcraft Enhancement", "level": 1, "max": 5, "icon": "ap-icons/swordcraft-enhancement.png" }
+      ] },
+      { "label": "Tier 4", "nodes": [
+        { "name": "Extreme Body Movement", "level": 2, "max": 3, "icon": "ap-icons/extreme-body-movement.png" },
+        { "name": "Orb Circulation", "level": 5, "max": 5, "icon": "ap-icons/orb-circulation.png" }
+      ] }
+    ] }
+  ]
+}
+</script>
+</div>
+
 </details>
 
 </div>
@@ -238,14 +263,35 @@
 ![](../assets/shared/damagegem.png){: .gem-type-icon } <span class="gem-col-title">Damage</span>
 </div>
 
-<div class="gem-row" markdown>
-<span class="gem-chip"><span class="gem-num">1</span> ![](../assets/re/icon-fatalwave.png) Fatal Wave</span>
-<span class="gem-chip"><span class="gem-num">2</span> ![](../assets/re/icon-surge.png) Surge</span>
-<span class="gem-chip"><span class="gem-num">3</span> ![](../assets/re/icon-twinshadows.png) Twin Shadows</span>
-<span class="gem-chip"><span class="gem-num">4</span> ![](../assets/re/icon-soulabsorber.png) Soul Absorber</span>
-<span class="gem-chip"><span class="gem-num">5</span> ![](../assets/re/icon-turningslash.png) Turning Slash</span>
-<span class="gem-chip"><span class="gem-num">6</span> ![](../assets/re/icon-blitzrush.png) Blitz Rush</span>
-<span class="gem-chip"><span class="gem-num">7</span> ![](../assets/re/icon-voidstrike.png) Void Strike</span>
+<div class="gem-list" markdown>
+<div class="gem-item" data-rank="1" markdown>
+<span class="gem-item-rank">1</span>
+![](../assets/re/icon-fatalwave.png){: .gem-item-icon } <span class="gem-item-name">Fatal Wave</span>
+</div>
+<div class="gem-item" data-rank="2" markdown>
+<span class="gem-item-rank">2</span>
+![](../assets/re/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
+</div>
+<div class="gem-item" data-rank="3" markdown>
+<span class="gem-item-rank">3</span>
+![](../assets/re/icon-twinshadows.png){: .gem-item-icon } <span class="gem-item-name">Twin Shadows</span>
+</div>
+<div class="gem-item" data-rank="4" markdown>
+<span class="gem-item-rank">4</span>
+![](../assets/re/icon-soulabsorber.png){: .gem-item-icon } <span class="gem-item-name">Soul Absorber</span>
+</div>
+<div class="gem-item" data-rank="5" markdown>
+<span class="gem-item-rank">5</span>
+![](../assets/re/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
+</div>
+<div class="gem-item" data-rank="6" markdown>
+<span class="gem-item-rank">6</span>
+![](../assets/re/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
+</div>
+<div class="gem-item" data-rank="7" markdown>
+<span class="gem-item-rank">7</span>
+![](../assets/re/icon-voidstrike.png){: .gem-item-icon } <span class="gem-item-name">Void Strike</span>
+</div>
 </div>
 </div>
 
@@ -254,11 +300,23 @@
 ![](../assets/shared/cooldowngem.png){: .gem-type-icon } <span class="gem-col-title">Cooldown</span>
 </div>
 
-<div class="gem-row" markdown>
-<span class="gem-chip"><span class="gem-num">1</span> ![](../assets/re/icon-maelstrom.png) Maelstrom</span>
-<span class="gem-chip"><span class="gem-num">2</span> ![](../assets/re/icon-blitzrush.png) Blitz Rush</span>
-<span class="gem-chip"><span class="gem-num">3</span> ![](../assets/re/icon-turningslash.png) Turning Slash</span>
-<span class="gem-chip"><span class="gem-num">4</span> ![](../assets/re/icon-fatalwave.png) Fatal Wave</span>
+<div class="gem-list" markdown>
+<div class="gem-item" data-rank="1" markdown>
+<span class="gem-item-rank">1</span>
+![](../assets/re/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
+</div>
+<div class="gem-item" data-rank="2" markdown>
+<span class="gem-item-rank">2</span>
+![](../assets/re/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
+</div>
+<div class="gem-item" data-rank="3" markdown>
+<span class="gem-item-rank">3</span>
+![](../assets/re/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
+</div>
+<div class="gem-item" data-rank="4" markdown>
+<span class="gem-item-rank">4</span>
+![](../assets/re/icon-fatalwave.png){: .gem-item-icon } <span class="gem-item-name">Fatal Wave</span>
+</div>
 </div>
 </div>
 

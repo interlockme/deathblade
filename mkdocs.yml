@@ -45,6 +45,7 @@ extra_javascript:
   - javascripts/pentagon-badge.js
   - javascripts/rotation-practice.js
   - javascripts/dps-chart.js
+  - javascripts/gem-dps-tooltip.js
   - javascripts/build-compare.js
   - javascripts/last-updated.js
 

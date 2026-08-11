@@ -202,12 +202,27 @@
 ![](../assets/shared/damagegem.png){: .gem-type-icon } <span class="gem-col-title">Damage</span>
 </div>
 
-<div class="gem-row" markdown>
-<span class="gem-chip"><span class="gem-num">1</span> ![](../assets/surge/icon-surge.png) Surge</span>
-<span class="gem-chip"><span class="gem-num">2</span> ![](../assets/surge/icon-blitzrush.png) Blitz Rush</span>
-<span class="gem-chip"><span class="gem-num">3</span> ![](../assets/surge/icon-bladedance.png) Blade Dance</span>
-<span class="gem-chip"><span class="gem-num">4</span> ![](../assets/surge/icon-earthcleaver.png) Earth Cleaver</span>
-<span class="gem-chip"><span class="gem-num">5</span> ![](../assets/surge/icon-turningslash.png) Turning Slash</span>
+<div class="gem-list" markdown>
+<div class="gem-item" data-rank="1" markdown>
+<span class="gem-item-rank">1</span>
+![](../assets/surge/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
+</div>
+<div class="gem-item" data-rank="2" markdown>
+<span class="gem-item-rank">2</span>
+![](../assets/surge/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
+</div>
+<div class="gem-item" data-rank="3" markdown>
+<span class="gem-item-rank">3</span>
+![](../assets/surge/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
+</div>
+<div class="gem-item" data-rank="4" markdown>
+<span class="gem-item-rank">4</span>
+![](../assets/surge/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
+</div>
+<div class="gem-item" data-rank="5" markdown>
+<span class="gem-item-rank">5</span>
+![](../assets/surge/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
+</div>
 </div>
 </div>
 
@@ -216,13 +231,31 @@
 ![](../assets/shared/cooldowngem.png){: .gem-type-icon } <span class="gem-col-title">Cooldown</span>
 </div>
 
-<div class="gem-row" markdown>
-<span class="gem-chip"><span class="gem-num">1</span> ![](../assets/surge/icon-windcut.png) Wind Cut</span>
-<span class="gem-chip"><span class="gem-num">2</span> ![](../assets/surge/icon-blitzrush.png) Blitz Rush</span>
-<span class="gem-chip"><span class="gem-num">3</span> ![](../assets/surge/icon-bladedance.png) Blade Dance</span>
-<span class="gem-chip"><span class="gem-num">4</span> ![](../assets/surge/icon-surpriseattack.png) Surprise Attack</span>
-<span class="gem-chip"><span class="gem-num">5</span> ![](../assets/surge/icon-maelstrom.png) Maelstrom</span>
-<span class="gem-chip"><span class="gem-num">6</span> ![](../assets/surge/icon-earthcleaver.png) Earth Cleaver</span>
+<div class="gem-list" markdown>
+<div class="gem-item" data-rank="1" markdown>
+<span class="gem-item-rank">1</span>
+![](../assets/surge/icon-windcut.png){: .gem-item-icon } <span class="gem-item-name">Wind Cut</span>
+</div>
+<div class="gem-item" data-rank="2" markdown>
+<span class="gem-item-rank">2</span>
+![](../assets/surge/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
+</div>
+<div class="gem-item" data-rank="3" markdown>
+<span class="gem-item-rank">3</span>
+![](../assets/surge/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
+</div>
+<div class="gem-item" data-rank="4" markdown>
+<span class="gem-item-rank">4</span>
+![](../assets/surge/icon-surpriseattack.png){: .gem-item-icon } <span class="gem-item-name">Surprise Attack</span>
+</div>
+<div class="gem-item" data-rank="5" markdown>
+<span class="gem-item-rank">5</span>
+![](../assets/surge/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
+</div>
+<div class="gem-item" data-rank="6" markdown>
+<span class="gem-item-rank">6</span>
+![](../assets/surge/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
+</div>
 </div>
 </div>
 
