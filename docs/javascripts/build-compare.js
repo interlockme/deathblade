@@ -123,15 +123,28 @@
       dot.className = "build-compare-dot";
       dot.style.backgroundColor = build.accent;
       nameLink.appendChild(dot);
-      nameLink.appendChild(document.createTextNode(build.name));
-      nameCell.appendChild(nameLink);
+      // Star goes INSIDE the link, appended to the same text node run as
+      // the name - not as a sibling after the closing </a>. This link is
+      // display:inline-flex, which makes it a single atomic box in the
+      // outer (cell) flow; on a narrow mobile column the name text wraps
+      // to 2 lines INSIDE that box, but the box's own footprint still
+      // claims the full line width doing so, leaving zero room after it
+      // for anything else on that line - a star appended outside the
+      // link was forced onto a stranded 3rd line no matter what
+      // (non-breaking space between it and the name doesn't help: nbsp
+      // only blocks a break where there's still room not to break, it
+      // can't invent room that isn't there). Keeping the star as part of
+      // the SAME text flow the name itself wraps inside of means it just
+      // rides along on whichever line the name's last word lands on
+      // instead of competing separately for outer line space.
+      var nameText = build.name;
       if (build.recommended) {
-        // Plain unicode star, matching how "★" appears elsewhere on the
-        // site (e.g. the tab labels on each build's own page) - not part
-        // of the link, and no color/size override, so it's just the
-        // default white text character rather than a styled badge.
-        nameCell.appendChild(document.createTextNode(" \u2605"));
+        // Non-breaking space so the star can't get split off onto its
+        // own line even within this shared text run.
+        nameText += "\u00a0\u2605";
       }
+      nameLink.appendChild(document.createTextNode(nameText));
+      nameCell.appendChild(nameLink);
       row.appendChild(nameCell);
 
       var diffCell = document.createElement("td");

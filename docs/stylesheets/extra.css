@@ -2080,11 +2080,35 @@ h3 { color: #4db6ac; }
 .md-typeset .engraving-loadout-group p {
   margin: 0;
 }
+/* .engraving-loadout-group's own children are NOT the chip spans - like
+   .engraving-loadout above, md_in_html wraps a run of same-paragraph
+   inline content (the label + every chip + the note, all on consecutive
+   lines with no blank line between them) in a single shared <p>. That
+   means the ACTUAL flex container needs to be that <p>, not the group
+   div around it: display:flex/gap set on .engraving-loadout-group only
+   ever had ONE flex item (the whole <p>) to lay out, a no-op. Inside
+   that <p>, the chip spans were never real flex items at all - they
+   were just ordinary inline content wrapping the normal browser way,
+   with only a single collapsed whitespace character's worth of gap
+   between them (and between wrapped lines, just the paragraph's line-
+   height, not the intended gap value). That's what let a wrapped chip
+   like Raid Captain end up sitting right under Grudge with barely any
+   separation - the "gap" declared below was never actually reaching the
+   chips it was meant to space out. .engraving-loadout-group itself stays
+   a plain block now; its child <p> is the real flex row. */
 .md-typeset .engraving-loadout-group {
+  display: block;
+}
+.md-typeset .engraving-loadout-group > p {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5em;
+  /* row-gap (between wrapped lines) bumped a bit above the column-gap
+     (between chips on the same line) - a touch more headroom for the
+     case that actually matters on mobile: a chip like Raid Captain
+     wrapping onto its own line under Grudge/Adrenaline/Ambush Master
+     shouldn't ever read as flush against the row above it. */
+  gap: 0.65em 0.5em;
 }
 .md-typeset .engraving-loadout-label {
   font-size: 0.62rem;
