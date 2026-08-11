@@ -4361,27 +4361,23 @@ body.page-333-blitz input[type="text"] {
   flex: 1 1 auto;
   min-width: 0;
 }
-/* Below ~380px of card width there isn't room for a full name next to
-   the chip cluster (~170px of tripod+rune chips) without crushing it to
-   a handful of characters - that's the narrow single-column case (small
-   screens, or a sidebar-narrowed viewport). Stack there, same as before;
-   everywhere wider stays a single row. */
-@container (max-width: 380px) {
-  .md-typeset .skill-card-main {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.35em;
-  }
-  .md-typeset .skill-card-chips {
-    margin-left: 0;
-  }
-}
+/* Chips never wrap below the name anymore - see .skill-card-name's
+   comment for why. Row layout stays fixed at every card width; the
+   name's own ellipsis is what absorbs a too-narrow card, not a stacked
+   second line. (Previously this had a `@container (max-width: 380px)`
+   rule that switched to a stacked column layout below that width, on
+   the theory that only a narrow sidebar-squeezed desktop column or a
+   genuinely tiny screen would ever hit it. In practice a plain single-
+   column mobile card is very often ALREADY narrower than 380px on its
+   own - e.g. an iPhone SE's 375px viewport minus page padding - so real
+   phones hit the stacked layout on every card, all the time, which is
+   the exact "cards grow tall" symptom this was supposed to only be a
+   rare fallback for.) */
 .md-typeset .skill-card-meta {
   min-width: 0;
-  /* Row mode: meta (level+name) takes whatever space the chip cluster
-     doesn't need, and shrinks first since it has an ellipsis safety net
-     - chips don't. Stacked mode (above) doesn't need this: both rows
-     already span the card's full width on their own line. */
+  /* Meta (level+name) takes whatever space the chip cluster doesn't
+     need, and shrinks first - it has an ellipsis safety net, chips
+     don't (see .skill-card-chips' flex-shrink: 0 below). */
   flex: 1 1 auto;
 }
 .md-typeset .skill-card-level,
@@ -4407,8 +4403,10 @@ body.page-333-blitz input[type="text"] {
   color: #e8e6ee;
   font-size: 0.95em;
   line-height: 1.25;
-  /* Full card width now (not squeezed next to the chips), but kept as a
-     safety net in case a future skill name is unusually long. */
+  /* The safety net for a narrow card, full-time now (not just past some
+     width threshold): truncates with an ellipsis rather than wrapping
+     or pushing the card taller. A truncated name reads better on a
+     small phone than every card on the page growing a second row. */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
