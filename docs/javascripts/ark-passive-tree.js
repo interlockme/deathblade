@@ -122,8 +122,61 @@
       }
     });
     wrap.appendChild(row);
+    watchRowWraps(row);
 
     return wrap;
+  }
+
+  // ---- Wrap-aware tier dividers ---------------------------------------
+  // .ark-passive-tier-row lays its tiers out with flex-wrap: wrap (see
+  // extra.css) - once the row runs out of width, a tier drops to its own
+  // new line. Each tier's divider/left-indent in the CSS is keyed off
+  // :first-child / :not(:first-child), which only tracks DOM order, not
+  // which line a tier actually rendered on: a tier that wraps to a new
+  // row is still not the DOM's first child, so it keeps the divider AND
+  // the left padding meant to separate it from a PREVIOUS tier that's no
+  // longer next to it - visually, that tier sits indented relative to
+  // the tier above it that legitimately IS first in its own row. CSS has
+  // no selector for "first in a wrapped flex line", so this measures it
+  // directly: any tier whose offsetTop differs from the previous tier's
+  // is starting a new visual row, and gets a class that zeroes its
+  // padding-left and hides its divider - same treatment the true
+  // DOM-first tier already gets from the plain CSS rule.
+  function markRowStarts(row) {
+    var tiers = Array.prototype.filter.call(row.children, function (c) {
+      return c.classList && c.classList.contains("ark-passive-tier");
+    });
+    var prevTop = null;
+    tiers.forEach(function (tier) {
+      var top = tier.offsetTop;
+      var isRowStart = prevTop === null || top !== prevTop;
+      tier.classList.toggle("ark-passive-tier-row-start", isRowStart);
+      prevTop = top;
+    });
+  }
+
+  function watchRowWraps(row) {
+    var scheduled = false;
+    function schedule() {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(function () {
+        scheduled = false;
+        markRowStarts(row);
+      });
+    }
+
+    schedule();
+
+    // Re-measure whenever the row's own width changes (viewport resize,
+    // sidebar toggle, etc) - the same condition that changes how many
+    // tiers fit on one line.
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(schedule);
+      ro.observe(row);
+    } else {
+      window.addEventListener("resize", schedule);
+    }
   }
 
   function renderContainer(container) {

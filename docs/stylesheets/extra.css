@@ -4819,11 +4819,7 @@ body.page-333-blitz input[type="text"] {
      (numbers spilling past the border). See the @container fallback
      below for where that floor still doesn't fit. */
   flex-wrap: nowrap;
-  /* Safety net, not the primary fix: if some future longer node name or
-     an unusually tier-dense column ever undershoots the @container
-     threshold below, this clips at the row's own edge instead of
-     letting a level badge visually escape the card border. */
-  overflow: hidden;
+  overflow: visible;
 }
 /* Squeezed widths - most commonly the range where mkdocs-material's own
    nav sidebar has just reappeared, narrowing the content column without
@@ -4865,6 +4861,54 @@ body.page-333-blitz input[type="text"] {
     rgba(255, 255, 255, 0.09) 80%,
     transparent
   );
+}
+/* JS-measured counterpart to :first-child above (see markRowStarts in
+   ark-passive-tree.js). Once .ark-passive-tier-row wraps, a tier that
+   starts a new visual row is still not the DOM's :first-child, so the
+   rules above still give it left padding + a divider meant to separate
+   it from the tier before it - a tier it's no longer next to. JS tags
+   that tier with .ark-passive-tier-row-start.
+
+   IMPORTANT: this must NOT change the tier's actual padding/width, only
+   how it paints. padding-left is one of the inputs the browser's flex
+   line-wrapping uses to decide how many tiers fit per visual row - and
+   markRowStarts' offsetTop measurement (and the ResizeObserver that
+   re-triggers it) both depend on that same wrapping outcome. Toggling a
+   width-affecting property here closes a feedback loop: shrinking a
+   row-start tier can free up just enough space for it to rejoin the
+   previous line, which un-marks it as row-start, which restores its
+   width, which wraps it again - flickering every frame at whatever
+   width sits on that knife-edge. transform is paint-only (no effect on
+   flex sizing, doesn't fire ResizeObserver), so it gets the same "flush
+   to the card edge" look while leaving every width the mutation could
+   feed back into completely unchanged.
+
+   The transform is applied to the tier's direct CHILDREN, not the tier
+   box itself. The tier box's own border edge is already positioned
+   flush against the row's left edge once it's the first tier on a
+   wrapped line - transforming the box itself would shift that edge an
+   extra 0.8em past the row's bounds, and .ark-passive-tier-row's
+   overflow: hidden then clips whatever hangs over (this is what ate the
+   "T" off "TIER 3" / "TIER 4" the first time round). The 0.8em of
+   padding lives INSIDE the box between its border and its content, so
+   sliding the children left by that same 0.8em tucks them into space
+   the box already owns - flush with the border edge, nothing hanging
+   outside it - while the box itself, and therefore the row's wrap
+   calculation, never moves.
+
+   :not(:first-child) still matters because markRowStarts also (rightly)
+   marks the true DOM-first tier as a row start - but that one already
+   sits flush via the plain :first-child rule above (padding-left: 0),
+   so its children need no additional shift.
+
+   The divider is safe as a plain property (not transform) since it's an
+   absolutely-positioned ::before, already out of flow and not part of
+   any width calculation. */
+.md-typeset .ark-passive-tier.ark-passive-tier-row-start:not(:first-child) > * {
+  transform: translateX(-0.8em);
+}
+.md-typeset .ark-passive-tier.ark-passive-tier-row-start::before {
+  content: none;
 }
 .md-typeset .ark-passive-tier-label {
   font-size: 0.58rem;
@@ -4955,6 +4999,9 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-passives.ark-passives-compact {
   margin: 0.7em 0 0;
 }
+.md-typeset .ark-passives-compact .ark-passive-tier:first-child {
+  padding-left: 0;
+}
 .md-typeset .ark-passives-compact .ark-passive-col {
   padding: 0.6em 0.7em 0.75em;
 }
@@ -4971,6 +5018,18 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-passives-compact .ark-passive-tier {
   padding: 0 0.6em;
   gap: 0.22em;
+}
+/* Compact-scoped counterpart to the base .ark-passive-tier-row-start
+   child-shift rule above. That base rule slides a wrapped tier's
+   children left by 0.8em to tuck them into ITS OWN padding box - but
+   the compact variant's padding is only 0.6em (see rule just above),
+   not 0.8em. Reusing the base rule's fixed -0.8em here overshoots the
+   compact tier's actual padding by 0.2em, sliding content past its own
+   left edge into the divider/border area - the misalignment seen on
+   the compact card inside the 333-ceiling admonition. This override
+   matches the shift to the padding compact tiers actually have. */
+.md-typeset .ark-passives-compact .ark-passive-tier.ark-passive-tier-row-start:not(:first-child) > * {
+  transform: translateX(-0.6em);
 }
 .md-typeset .ark-passives-compact .ark-passive-tier-label {
   font-size: 0.52rem;
