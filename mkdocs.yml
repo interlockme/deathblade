@@ -30,7 +30,7 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=4
+  - stylesheets/extra.css?v=5
 
 extra_javascript:
   - javascripts/extra.js
