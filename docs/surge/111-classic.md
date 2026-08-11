@@ -250,10 +250,21 @@
 <span class="gem-item-rank">3</span>
 ![](../assets/surge/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
 </div>
-<div class="gem-item" data-rank="4" markdown>
+<details class="gem-item gem-item-expandable" data-rank="4" markdown>
+<summary markdown="span">
 <span class="gem-item-rank">4</span>
 ![](../assets/surge/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
+<span class="gem-item-arrow"></span>
+</summary>
+
+<div class="gem-item-alts" markdown>
+
+<div class="gem-alt" markdown>
+![](../assets/surge/icon-earthcleaver.png){: .gem-alt-icon } **Earth Cleaver** — Use Earth Cleaver CD instead of Blade Dance CD pre-Ark Grid; set Quick Prep tripod on Blade Dance to compensate.
 </div>
+</div>
+
+</details>
 <div class="gem-item" data-rank="5" markdown>
 <span class="gem-item-rank">5</span>
 ![](../assets/surge/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
@@ -264,26 +275,6 @@
 </div>
 </div>
 </div>
-
-</div>
-
-<div class="setup-notes" markdown>
-
-<details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span>Gem Basics<span class="setup-note-arrow"></span></summary>
-
-- Level your #1 priority gem in each column first.
-- Playable with Lv 7s, ideally Lv 8s or higher.
-
-</details>
-
-<details class="setup-note" data-kind="note" markdown>
-<summary><span class="setup-note-tag">Note</span>Pre-Ark Grid<span class="setup-note-arrow"></span></summary>
-
-- Earth Cleaver CD must be used instead of Blade Dance CD pre-Ark Grid.
-    - Use Quick Prep tripod on Blade Dance to compensate.
-
-</details>
 
 </div>
 

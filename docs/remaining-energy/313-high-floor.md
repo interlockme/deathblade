@@ -286,11 +286,7 @@
 <div class="gem-item-alts" markdown>
 
 <div class="gem-alt" markdown>
-![](../assets/re/icon-blitzrush.png){: .gem-alt-icon } **Blitz Rush** — Faster recovery from smaller mistakes, pairs with Twin Shadows below. For skilled players.
-</div>
-
-<div class="gem-alt" markdown>
-![](../assets/re/icon-fatalwave.png){: .gem-alt-icon } **Fatal Wave** — Required for 113 (Arts) or when sharing gems with 333 (Ceiling), pairs with Blitz Rush.
+![](../assets/re/icon-blitzrush.png){: .gem-alt-icon } **Blitz Rush** — Faster recovery from smaller mistakes, pairs with Twin Shadows or Fatal Wave below.
 </div>
 </div>
 
@@ -307,23 +303,14 @@
 <div class="gem-alt" markdown>
 ![](../assets/re/icon-twinshadows.png){: .gem-alt-icon } **Twin Shadows** — Pairs with Blitz Rush above for the skilled-player recovery route.
 </div>
+<div class="gem-alt" markdown>
+![](../assets/re/icon-fatalwave.png){: .gem-alt-icon } **Fatal Wave** — Required for 113 (Arts) or when sharing gems with 333 (Ceiling), pairs with Blitz Rush.
+</div>
 </div>
 
 </details>
 </div>
 </div>
-
-</div>
-
-<div class="setup-notes" markdown>
-
-<details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span>Gem Basics<span class="setup-note-arrow"></span></summary>
-
-- Level your #1 priority gem in each column first.
-- Playable with Lv 7s, ideally Lv 8s or higher.
-
-</details>
 
 </div>
 

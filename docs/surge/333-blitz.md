@@ -261,18 +261,6 @@
 
 </div>
 
-<div class="setup-notes" markdown>
-
-<details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span>Gem Basics<span class="setup-note-arrow"></span></summary>
-
-- Level your #1 priority gem in each column first.
-- Playable with Lv 7s, ideally Lv 8s or higher.
-
-</details>
-
-</div>
-
 </div>
 
 ## Rotation

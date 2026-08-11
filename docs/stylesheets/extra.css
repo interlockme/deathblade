@@ -5059,6 +5059,19 @@ body.page-333-blitz input[type="text"] {
   margin-top: 0.8em;
 }
 
+/* The panel's own padding is 1em top / 1.2em sides / 0.9em bottom - the
+   bottom is intentionally the tightest of the three because .setup-notes
+   (when present) adds its own padding-top on top of it, so the two
+   together land at a comfortable gap below the divider. A gem-priority
+   panel with no follow-up notes (most of them - see gem-priority comment
+   above) never adds that extra padding, so its bottom edge is left with
+   only the bare 0.9em - visibly tighter than the 1.2em down each side.
+   Bump it back up to match whenever there's no .setup-notes to make up
+   the difference. */
+.md-typeset .setup-panel:has(> .gem-priority):not(:has(.setup-notes)) {
+  padding-bottom: 1.2em;
+}
+
 .md-typeset .setup-notes {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   margin-top: 0.9em;

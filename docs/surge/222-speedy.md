@@ -247,7 +247,7 @@
 <div class="gem-item-alts" markdown>
 
 <div class="gem-alt" markdown>
-![](../assets/surge/icon-darkaxel.png){: .gem-alt-icon } **Dark Axel** — See Upper Slash skill setup for gem changes when using it.
+![](../assets/surge/icon-darkaxel.png){: .gem-alt-icon } **Dark Axel** — Swap this to Dark Axel CD if you prefer.
 </div>
 </div>
 
@@ -287,26 +287,6 @@
 </div>
 </div>
 </div>
-
-</div>
-
-<div class="setup-notes" markdown>
-
-<details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span>Gem Basics<span class="setup-note-arrow"></span></summary>
-
-- Level your #1 priority gem in each column first.
-- Playable with Lv 7s, ideally Lv 8s or higher.
-
-</details>
-
-<details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alternative</span>Optional Changes<span class="setup-note-arrow"></span></summary>
-
-- You can replace Wind Cut damage for Dark Axel CD.
-- See Upper Slash skill setup for gem changes when using it.
-
-</details>
 
 </div>
 

@@ -142,9 +142,8 @@
 <details class="setup-note" data-kind="example" markdown>
 <summary><span class="setup-note-tag">Alternative</span>Orb Circulation 5<span class="setup-note-arrow"></span></summary>
 
-- Set Enlightenment to Extreme Body Movement 2, Orb Circulation 5, Swordcraft Enhancement 1.
-    - Makes this build more forgiving at a ~3% DPS loss by increasing passive orb generation.
-    - Try giving Soul Absorber the Legendary Wealth rune if you run this for an even easier Cycle 2!
+- Makes this build more forgiving at a ~3% DPS loss by increasing passive orb generation.
+- Try giving Soul Absorber the Legendary Wealth rune if you run this for an even easier Cycle 2!
 
 <div class="ark-passives ark-passives-compact" data-family="re" markdown>
 <script type="application/json">
@@ -323,14 +322,6 @@
 </div>
 
 <div class="setup-notes" markdown>
-
-<details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span>Gem Basics<span class="setup-note-arrow"></span></summary>
-
-- Level your #1 priority gem in each column first.
-- Playable with Lv 7s, ideally Lv 8s or higher.
-
-</details>
 
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Gem Sharing<span class="setup-note-arrow"></span></summary>
