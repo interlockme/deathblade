@@ -175,7 +175,21 @@
   // .skill-setup-grid for the CSS half of this (position: relative on
   // the grid, position: absolute + a transform/width transition on each
   // .skill-card).
-  var MASONRY_MIN_WIDTH = 320; // keep in sync with the old grid-template-columns minmax()
+  // Must clear the 380px threshold in .skill-card-main's @container
+  // query (extra.css) - that's the point a card's own width gets too
+  // tight to fit the chip cluster beside the name on one row, forcing
+  // it onto its own stacked line and inflating the card's height.
+  // Deliberately padded well above 380, not just past it: `grid.
+  // clientWidth` is an integer (subpixel layout widths get rounded),
+  // `.skill-card` is `box-sizing: border-box` (Material's sitewide
+  // reset) so the 2px border eats into the content box a container
+  // query actually measures against, and browser zoom/scrollbar width
+  // can shift the measured containerWidth by a few px either way. Any
+  // of those alone is only a couple px, but they can stack - a small
+  // buffer (previously 10px) still left a narrow real-world range where
+  // 2 columns get picked at a colWidth that renders just under 380.
+  // 30px of headroom absorbs that with room to spare.
+  var MASONRY_MIN_WIDTH = 410;
   var MASONRY_GAP = 11; // ~0.7em at the site's 16px root, matches the old CSS grid gap
 
   function layoutMasonry(grid) {
