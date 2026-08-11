@@ -167,7 +167,7 @@
   {"id": "deathtrance", "name": "Death Trance", "subtitle": "Identity"},
   {"id": "breakingmoon", "name": "Breaking Moon", "subtitle": "Technique"},
   {"id": "bladeassault", "name": "Blade Assault", "subtitle": "Awakening"},
-  {"id": "surge", "name": "Deathblade Surge", "subtitle": "Identity"}
+  {"id": "surge", "name": "Surge", "subtitle": "Identity"}
 ]
 </script>
 </div>

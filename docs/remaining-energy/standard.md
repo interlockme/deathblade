@@ -27,7 +27,7 @@
 <div class="pentagon-badge-title">Build Profile</div>
 <div class="pentagon-svg-mount"></div>
 <div class="pentagon-badge-extra" markdown>
-[KR Video Guide](https://www.youtube.com/watch?v=pZDYek5l1og&t=467s){ .video-chip } [Video Gameplay](https://www.youtube.com/watch?v=xmxCjwImyrg){ .video-chip }
+[Video Guide](https://www.youtube.com/watch?v=pZDYek5l1og&t=467s){ .video-chip } [Gameplay](https://www.youtube.com/watch?v=xmxCjwImyrg){ .video-chip }
 </div>
 </div>
 </div>
@@ -143,7 +143,7 @@
   {"id": "turningslash", "name": "Turning Slash", "level": 13, "tripods": [1, 3, 1], "rune": {"tier": "epic", "name": "Focus"}},
   {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
   {"id": "voidstrike", "name": "Void Strike", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
-  {"id": "surge", "name": "Deathblade Surge", "subtitle": "Identity"},
+  {"id": "surge", "name": "Surge", "subtitle": "Identity"},
   {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"},
   {"id": "bladeassault", "name": "Blade Assault", "subtitle": "Awakening"}
 ]
