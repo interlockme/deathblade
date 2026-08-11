@@ -221,17 +221,40 @@
 <summary><span class="setup-note-tag">Alternative</span>Fatal Wealth<span class="setup-note-arrow"></span></summary>
 
 - Wealth rune on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
-    - It won't cycle as smoothly, but the reduced stress and urgency may suit some people.
-    - Consider playing Surge instead of this or any build with Fatal Wave Orb Control tripod.
+- It won't cycle as smoothly, but the reduced stress and urgency may suit some people.
+- Consider playing Surge instead of this or any 333 build with Fatal Wave Orb Control tripod.
 
-    | Skill | Rune |
-    |---|---|
-    | Fatal Wave | Epic Wealth |
-    | Void Strike | Epic Wealth |
-    | Soul Absorber | Legendary Wealth |
-    | Twin Shadows | Blue Wealth |
-    | Maelstrom | Green Wealth |
-    | Leap Ark | Release Potential 3 / Instant Spell 3 |
+<div class="skill-setup" data-family="re" markdown>
+<script type="application/json">
+[
+  {"id": "fatalwave", "name": "Fatal Wave", "level": 14, "tripods": [2, 3, 2], "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "voidstrike", "name": "Void Strike", "level": 11, "tripods": [3, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "soulabsorber", "name": "Soul Absorber", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
+  {"id": "twinshadows", "name": "Twin Shadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "green", "name": "Wealth"}}
+]
+</script>
+</div>
+
+<div class="ark-passives ark-passives-compact" data-family="re" markdown>
+<script type="application/json">
+{
+  "columns": [
+    { "id": "leap", "label": "Leap", "points": 70, "tiers": [
+      { "label": "Tier 1", "nodes": [
+        { "name": "Awakening Amplifier", "level": 1, "max": 3, "icon": "ap-icons/awakening-amplifier.png" },
+        { "name": "Unleashed Power", "level": 5, "max": 5, "icon": "ap-icons/unleashed-power.png" },
+        { "name": "Release Potential", "level": 3, "max": 5, "icon": "ap-icons/release-potential.png" },
+        { "name": "Instant Spell", "level": 3, "max": 3, "icon": "ap-icons/instant-spell.png" }
+      ] },
+      { "label": "Tier 2", "nodes": [
+        { "name": "Dance of Nightmares", "level": 3, "max": 3, "icon": "ap-icons/dance-of-nightmares.png" }
+      ] }
+    ] }
+  ]
+}
+</script>
+</div>
 
 </details>
 

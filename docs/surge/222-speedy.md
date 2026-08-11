@@ -198,10 +198,17 @@
 
 - You can gain more comfort at a DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
 - Upper Slash is a push immune skill that generates 5 stacks and allows you to skip Earth Cleaver casts.
-    - Set Upper Slash to use 2-3-2 tripods and give it an Epic Galewind rune.
-    - Lower Earth Cleaver's skill level to 10 and raise Upper Slash to level 14.
-    - Replace both Earth Cleaver gems for Upper Slash CD and any other gem you prefer.
-    - Alternatively, keep Earth Cleaver as is and only use Upper Slash as a safety net.
+- Replace both Earth Cleaver gems for Upper Slash CD and any other gem you prefer.
+- Alternatively, keep Earth Cleaver as is and only use Upper Slash as a safety net.
+
+<div class="skill-setup" data-family="surge" markdown>
+<script type="application/json">
+[
+  {"id": "upperslash", "name": "Upper Slash", "level": 14, "tripods": [2, 3, 2], "rune": {"tier": "epic", "name": "Galewind"}},
+  {"id": "earthcleaver", "name": "Earth Cleaver", "level": 10, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Vision"}}
+]
+</script>
+</div>
 
 </details>
 

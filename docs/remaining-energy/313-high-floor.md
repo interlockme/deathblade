@@ -151,9 +151,9 @@
 </div>
 
 - Same as 313 but **without** the Fatal Wave reset.
-- Temporary core-limited option, it only requires a 14p Star.
 - Requires Lv 9+ Fatal Wave CD gem or Optimized Training Lv 1.
     - Avoid +CD% bracelet line for this core-limited variant.
+    - Check gem section to see which gems to replace from 313.
 
 </details>
 
