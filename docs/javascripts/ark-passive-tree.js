@@ -115,11 +115,13 @@
     }
     wrap.appendChild(header);
 
+    var row = el("div", "ark-passive-tier-row");
     (col.tiers || []).forEach(function (t) {
       if (t.nodes && t.nodes.length) {
-        wrap.appendChild(buildTier(t, family));
+        row.appendChild(buildTier(t, family));
       }
     });
+    wrap.appendChild(row);
 
     return wrap;
   }

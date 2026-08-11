@@ -190,7 +190,18 @@
     // width to lay out against.
     if (!containerWidth) return;
 
-    var cols = Math.max(1, Math.floor((containerWidth + MASONRY_GAP) / (MASONRY_MIN_WIDTH + MASONRY_GAP)));
+    // Capped at 2: at wide container widths (article column with no
+    // sidebar, or a wide viewport) this math alone would floor to 3 or
+    // 4, packing skill cards tightly enough that the chip cluster
+    // (runes/tripods) no longer fits beside the name on one row - see
+    // .skill-card-main's @container rule above, which stacks name/chips
+    // once a CARD itself drops below ~380px. Three or four columns
+    // squeezes each card well under that width on anything but an
+    // extremely wide screen, forcing the stacked layout everywhere and
+    // making the grid look cramped. Two columns is the most this design
+    // is meant to support; MASONRY_MIN_WIDTH still governs collapsing to
+    // a single column on narrow screens.
+    var cols = Math.max(1, Math.min(2, Math.floor((containerWidth + MASONRY_GAP) / (MASONRY_MIN_WIDTH + MASONRY_GAP))));
     var colWidth = (containerWidth - MASONRY_GAP * (cols - 1)) / cols;
     var colHeights = new Array(cols).fill(0);
 

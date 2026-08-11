@@ -2002,13 +2002,17 @@ h3 { color: #4db6ac; }
 
 .md-typeset .engraving-cards {
   display: grid;
-  /* 320px, not the more typical ~230px card minimum elsewhere on the site
-     (e.g. .skill-card) - deliberately wide enough that the article column's
-     usual width only ever fits 2 across, so 4 cards form a clean 2x2 grid
-     instead of 3+1 (which leaves the 4th card's row with two empty cells
-     beside it - there's no masonry here to pack around that gap, see the
-     comment above). 2 cards (Remaining Energy) just get one full row. */
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  /* Capped at 2 columns, never 3+ - a plain `repeat(auto-fit, minmax(320px,
+     1fr))` only guarantees a minimum per card, not a maximum column count,
+     so a wide enough container (article column with no sidebar, or a wide
+     viewport) still fit 3 across once there was room for 3*320px+gaps,
+     leaving whichever engraving set has exactly 3 cards (Surge) cramped
+     into a 3-up row instead of the intended 2x2ish grid. The `max(320px,
+     ...)` term is the standard "auto-fit but capped" trick: forcing each
+     column's minimum to be at least half the row's own width (minus the
+     gap) makes a 3rd column mathematically unable to fit, regardless of
+     how wide the container gets - only 2 or 1 (narrow) are ever possible. */
+  grid-template-columns: repeat(auto-fit, minmax(max(320px, calc((100% - 0.8em) / 2)), 1fr));
   gap: 0.8em;
 }
 
@@ -2476,7 +2480,15 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .ap-calc-gear {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  /* Always a single column - a fixed 230px auto-fit here used to pack 2
+     (sometimes momentarily 3) groups per row once the left column of
+     .ap-calc-layout got wide enough (a roomy viewport, sidebar hidden,
+     etc), squeezing each card's own field labels ("Bracelet" -> "Bra")
+     and inputs down to the point of illegibility. Each group (Crit Rate,
+     Crit Damage, Crit Hit Damage, Additional Damage, ...) reads better
+     as its own full-width row regardless of how much horizontal room is
+     available - there's no width at which 2-up was actually the goal. */
+  grid-template-columns: 1fr;
   gap: 0.9em;
   align-content: start;
   /* align-items defaults to stretch, which was forcing every group in a row
@@ -4494,12 +4506,14 @@ body.page-333-blitz input[type="text"] {
    </script>
    </div>
 
-   Three fixed columns (id drives the accent color - see the [data-column]
+   Three fixed rows (id drives the accent color - see the [data-column]
    rules below), each with its own point budget shown next to its title
    the same way the in-game screenshot header reads "Evolution (140)".
-   Tiers within a column are only a label + node list, no nesting needed -
-   a build only ever invests a handful of nodes per tier, so the visual
-   hierarchy is column > tier > node, never deeper.
+   Tiers within a row are a label + node list laid out horizontally
+   (see .ark-passive-tier-row below) rather than stacked - a build only
+   ever invests a handful of nodes per tier, so most tiers are one or two
+   nodes wide and read fine left to right, letting each row's height
+   follow its tallest tier instead of the sum of every tier's own block.
 
    Column accents intentionally reuse hues already meaningful elsewhere on
    the site rather than lifting the in-game gold/blue/green directly:
@@ -4510,31 +4524,32 @@ body.page-333-blitz input[type="text"] {
    re-skin of the game's UI or of mokokompendium's reference layout. */
 .md-typeset .ark-passives {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 1em 1.2em;
+  flex-direction: column;
+  gap: 0.6em;
   margin: 0.9em 0 1.2em;
 }
 .md-typeset .setup-panel > .ark-passives {
   margin: 0;
 }
-/* Each column gets its own card (border + faint tinted background, same
-   language as .engraving-card) instead of all three sharing one row
-   inside the outer .setup-panel border. Evolution/Enlightenment/Leap
-   rarely have the same number of tiers, so forcing them into one shared
-   box meant the panel's height followed the tallest column and left a
-   visibly empty stretch under whichever column was shortest (usually
-   Leap, the smallest point pool). Independent cards remove the shared
-   bottom edge that made that gap read as broken - each card just ends
-   where its own content ends. */
+/* Each tree gets its own full-width card (border + faint tinted
+   background, same language as .engraving-card), stacked one per row
+   instead of the three trees sitting side by side - a full-width row
+   gives the horizontal tier layout room to lay tiers out left to right
+   without wrapping on anything but the narrowest screens, which a
+   ~220px-wide column never had. */
 .md-typeset .ark-passive-col {
-  flex: 1 1 220px;
-  min-width: 200px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.02);
   padding: 0.9em 1em 1.1em;
   transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  /* Lets .ark-passive-tier-row below query THIS card's own rendered
+     width (not the viewport's) to decide nowrap-and-shrink vs. wrap -
+     same technique as .skill-card/.skill-card-main use for the same
+     reason: the mkdocs-material sidebar/TOC coming and going changes
+     this card's actual available width at a given viewport size, so a
+     viewport media query is the wrong signal to key off of. */
+  container-type: inline-size;
 }
 .md-typeset .ark-passive-col[data-column="evolution"] { border-color: rgba(240, 168, 104, 0.22); }
 .md-typeset .ark-passive-col[data-column="enlightenment"] { border-color: rgba(179, 157, 219, 0.22); }
@@ -4581,27 +4596,104 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-col-title { color: #b39ddb; }
 .md-typeset .ark-passive-col[data-column="leap"] .ark-passive-col-title { color: #4db6ac; }
 
-.md-typeset .ark-passive-tier + .ark-passive-tier {
-  margin-top: 0.65em;
+/* Tiers now render as horizontal segments in a single row (one row per
+   column) instead of a stacked vertical list - a build only ever touches
+   a handful of nodes per tier, so laying tiers side by side lets each
+   column's height follow its widest tier instead of the sum of every
+   tier's own heading + rows. .ark-passive-tier-row is the flex container;
+   each .ark-passive-tier is one tier's own little stack (label + its
+   nodes) - no boxes/borders around each tier, just a thin faded rule
+   between consecutive tiers, enough separation to read as distinct
+   groups without stacking another nested border on top of the column's
+   own card border.
+
+   The divider is a ::before pseudo-element on the tier itself (not a
+   separate flex item between tiers) specifically so it travels with its
+   own tier when .ark-passive-tier-row wraps - a standalone divider
+   element between two tiers would strand itself at the end of a wrapped
+   line with nothing after it once its neighbor dropped to the next row.
+   align-items: stretch (the flex default) still gives every tier the
+   full height of the tallest tier in its line, so position: absolute;
+   inset-block: 0 on the pseudo-element reaches exactly as tall as that
+   line's tallest tier, keeping dividers lined up top-to-bottom same as
+   before. */
+.md-typeset .ark-passive-tier-row {
+  display: flex;
+  /* Tiers stay on one line and shrink together to fit instead of
+     wrapping, but ONLY once there's genuinely enough room - wrapping is
+     what stranded a lone last tier (e.g. Evolution's Tier 5) on its own
+     row, misaligned under nothing, at wide/comfortable widths. Every
+     tier can shrink a fair amount safely without wrap (node names have
+     their own min-width: 0 + ellipsis), but the icon + level badge on
+     each node are a hard floor that can't shrink further - cramming
+     nowrap below that floor doesn't wrap, it overflows the card outright
+     (numbers spilling past the border). See the @container fallback
+     below for where that floor still doesn't fit. */
+  flex-wrap: nowrap;
+  /* Safety net, not the primary fix: if some future longer node name or
+     an unusually tier-dense column ever undershoots the @container
+     threshold below, this clips at the row's own edge instead of
+     letting a level badge visually escape the card border. */
+  overflow: hidden;
+}
+/* Squeezed widths - most commonly the range where mkdocs-material's own
+   nav sidebar has just reappeared, narrowing the content column without
+   yet giving tiers enough room to shrink into on one line - fall back to
+   wrapping (tiers drop to their own line, same as before) rather than
+   forcing nowrap past its floor and overflowing. Threshold is
+   deliberately generous (well above a phone's own width) specifically
+   to cover that in-between sidebar range, not just true mobile. */
+@container (max-width: 700px) {
+  .md-typeset .ark-passive-tier-row {
+    flex-wrap: wrap;
+    row-gap: 0.6em;
+  }
+}
+.md-typeset .ark-passive-tier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  padding: 0 0.8em;
+}
+.md-typeset .ark-passive-tier:first-child {
+  padding-left: 0;
+}
+.md-typeset .ark-passive-tier:last-child {
+  padding-right: 0;
+}
+.md-typeset .ark-passive-tier:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.09) 20%,
+    rgba(255, 255, 255, 0.09) 80%,
+    transparent
+  );
 }
 .md-typeset .ark-passive-tier-label {
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #6f6a80;
   font-weight: 700;
-  margin-bottom: 0.35em;
+  white-space: nowrap;
 }
 .md-typeset .ark-passive-node {
   display: flex;
   align-items: center;
-  gap: 0.55em;
-  padding: 0.3em 0;
+  gap: 0.35em;
 }
 .md-typeset .ark-passive-node-icon {
-  height: 26px;
-  width: 26px;
-  min-width: 26px;
+  height: 17px;
+  width: 17px;
+  min-width: 17px;
   object-fit: cover;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.04);
@@ -4616,9 +4708,9 @@ body.page-333-blitz input[type="text"] {
   box-shadow: 0 0 0 1px rgba(77, 182, 172, 0.45), 0 0 6px rgba(77, 182, 172, 0.25);
 }
 .md-typeset .ark-passive-node-name {
-  font-size: 0.82em;
+  font-size: 0.8em;
   color: #e8e6ee;
-  font-weight: 600;
+  font-weight: 500;
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
@@ -4631,12 +4723,17 @@ body.page-333-blitz input[type="text"] {
    Calculator linked below this section), not something a reader scanning
    "what's my setup" needs repeated per node. A maxed node (level == max)
    gets the filled treatment below so a glance across the column shows
-   which picks are capped vs. still partial. */
+   which picks are capped vs. still partial.
+   Smaller/lighter than a first pass (0.72rem/700 weight/wider padding) -
+   this badge is one of the few non-shrinkable parts of a node row (see
+   .ark-passive-tier-row's nowrap comment above), so its own footprint
+   directly sets the floor every tier has to fit inside without wrapping.
+   Trimming it here buys real room back before that floor is reached. */
 .md-typeset .ark-passive-node-level {
-  font-size: 0.72rem;
-  font-weight: 700;
+  font-size: 0.64rem;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
-  padding: 0.1em 0.5em;
+  padding: 0.05em 0.4em;
   border-radius: 999px;
   white-space: nowrap;
   border: 1px solid rgba(255, 255, 255, 0.12);
