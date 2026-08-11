@@ -199,7 +199,7 @@
 
 <div class="gem-col gem-col-dmg" markdown>
 <div class="gem-col-header" markdown>
-![](../assets/shared/damagegem.png){: .gem-type-icon } <span class="gem-col-title">Damage</span>
+<span class="gem-col-title">Damage</span>
 </div>
 
 <div class="gem-list" markdown>
@@ -228,7 +228,7 @@
 
 <div class="gem-col gem-col-cd" markdown>
 <div class="gem-col-header" markdown>
-![](../assets/shared/cooldowngem.png){: .gem-type-icon } <span class="gem-col-title">Cooldown</span>
+<span class="gem-col-title">Cooldown</span>
 </div>
 
 <div class="gem-list" markdown>
