@@ -5004,6 +5004,9 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-passives-compact .ark-passive-tier:first-child {
   padding-left: 0;
 }
+.md-typeset .ark-passives-compact .ark-passive-tier:last-child {
+  padding-right: 0;
+}
 .md-typeset .ark-passives-compact .ark-passive-col {
   padding: 0.6em 0.7em 0.75em;
 }
