@@ -4840,6 +4840,7 @@ body.page-333-blitz input[type="text"] {
   flex-direction: column;
   gap: 0.3em;
   padding: 0 0.8em;
+  min-width: 0;
 }
 .md-typeset .ark-passive-tier:first-child {
   padding-left: 0;
@@ -4922,6 +4923,7 @@ body.page-333-blitz input[type="text"] {
   display: flex;
   align-items: center;
   gap: 0.35em;
+  min-width: 0;
 }
 .md-typeset .ark-passive-node-icon {
   height: 17px;
@@ -4963,7 +4965,7 @@ body.page-333-blitz input[type="text"] {
    directly sets the floor every tier has to fit inside without wrapping.
    Trimming it here buys real room back before that floor is reached. */
 .md-typeset .ark-passive-node-level {
-  font-size: 0.6rem;
+  font-size: 0.64rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   padding: 0.05em 0.4em;
