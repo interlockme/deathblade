@@ -37,12 +37,16 @@ Atk/Move Speed Feast
 <details class="setup-note" data-kind="example" markdown>
 <summary><span class="setup-note-tag">Alt</span>You can lower mana use at a DPS loss to save gold and skip mana food!<span class="setup-note-arrow"></span></summary>
 
+<div class="food-alt-table" markdown>
+
 | Where | Change |
 |---|---|
 | Evolution Ark | Raise Illicit Spell instead of Limit Break (unimportant content only) |
 | Leap Ark | Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 ★ |
 | Head Hunt | Magick Control tripod, Focus rune, or simply use it at Lv 1 |
 | Maelstrom | Focus rune (on easier builds with excess orb generation) |
+
+</div>
 
 </details>
 

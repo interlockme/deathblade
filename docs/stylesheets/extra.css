@@ -471,6 +471,29 @@ h3 { color: #4db6ac; }
   border-radius: 8px;
 }
 
+/* ---------- Small reference tables inside admonitions/setup-notes ---------- */
+/* Same card polish as .skills-table (border/tint + tinted uppercase header)
+   but deliberately WITHOUT its tr:nth-child(even) zebra striping - that rule
+   earns its keep on the 14-row skill legend table where tracking a row
+   across four columns needs the extra help; a 4-row two-column table like
+   the "skip mana food" alt-setup table doesn't, and striping it would just
+   add visual noise for no readability gain. Wrap the markdown table in
+   <div class="food-alt-table" markdown>...</div>. */
+.md-typeset .food-alt-table table {
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: rgba(179, 157, 219, 0.045);
+}
+.md-typeset .food-alt-table table th {
+  background-color: rgba(179, 157, 219, 0.12);
+  color: #a79bc4;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 /* ---------- Inline skill icons outside tables/rotation-lines ---------- */
 /* Add `{: .skill-icon }` after an image to size it consistently no matter
    the source asset's resolution, e.g. ![](../assets/re/icon-surge.png){: .skill-icon } */
@@ -5273,15 +5296,22 @@ body.page-333-blitz input[type="text"] {
 }
 /* Small caps kind label — same pill language as .rune-chip/.tag rather
    than Material's left-border-stripe treatment, colored from the site's
-   own accent set instead of admonition-default green/blue/purple/red. */
+   own accent set instead of admonition-default green/blue/purple/red.
+   Fixed width (not padding-driven) so every pill occupies the same
+   horizontal space regardless of label length (TIP vs NOTE vs WARN) -
+   otherwise each summary's title starts at a different x position and
+   the whole stack reads as misaligned. Centered text inside that fixed
+   box keeps each label looking intentional rather than left-crammed. */
 .md-typeset .setup-note-tag {
   display: inline-block;
   flex-shrink: 0;
+  width: 52px;
+  text-align: center;
   font-size: 0.6rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 0.18em 0.5em;
+  padding: 0.18em 0;
   border-radius: 999px;
   border: 1px solid transparent;
 }
