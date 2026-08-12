@@ -4001,8 +4001,30 @@ h3 { color: #4db6ac; }
     align-items: center;
     position: fixed;
     right: 2rem;
-    top: 50%;
-    transform: translateY(-50%);
+    /* Vertically centered via top:0/bottom:0 + margin:auto rather than
+       the more common top:50%/transform:translateY(-50%): that -50% is
+       relative to THIS element's own height, which varies by page (more
+       sections = more marks = a taller stack) and only sometimes lands
+       on a whole pixel - see the extra_javascript-injected .section-
+       tracker-label comment below for the actual bug this caused
+       (fractional-pixel transforms blur their own text on Firefox,
+       Chrome doesn't show it, hence "just this one spot" reports). The
+       top/bottom+margin:auto centering technique reaches the same
+       centered position through ordinary box layout instead of a
+       compositor transform, so there's no separate paint layer for
+       Firefox to place off the pixel grid in the first place. */
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    /* Without an explicit height, the browser resolves this fixed box's
+       'auto' height by stretching it to fill the full top:0/bottom:0
+       span (viewport height) rather than shrink-wrapping its 6-or-so
+       marks and centering that smaller box - margin:auto only splits
+       the LEFTOVER space evenly once a height is known, it doesn't by
+       itself imply shrink-to-fit. max-content forces the shrink-wrap
+       so there's leftover space for margin:auto to split in the first
+       place. */
+    height: max-content;
     z-index: 4;
   }
 }
@@ -4061,7 +4083,21 @@ h3 { color: #4db6ac; }
 .section-tracker-label {
   position: absolute;
   right: calc(100% + 0.6em);
-  top: 50%;
+  /* Vertically centered via top:0/bottom:0 + margin:auto, not
+     top:50%/transform:translateY(-50%) - same fractional-pixel-transform
+     Firefox text-blur issue as .section-tracker above (this label is
+     real text, so it's the more visible half of that bug: hover any
+     mark on a wide/1400px+ screen in Firefox and the tooltip text came
+     out soft). The 4px horizontal slide-in on hover stays a transform
+     (translateX only now) since a plain whole-pixel translateX never
+     lands on a fractional offset the way a height-relative -50% can. */
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  /* Same height: max-content note as .section-tracker above - without it
+     this stretches to the item's full height instead of shrink-wrapping
+     its own single line of text and centering that. */
+  height: max-content;
   max-width: 13em;
   padding: 0.32em 0.75em;
   border-radius: 999px;
@@ -4069,7 +4105,7 @@ h3 { color: #4db6ac; }
   background-color: rgba(20, 20, 24, 0.82);
   backdrop-filter: blur(4px);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
-  transform: translate(4px, -50%);
+  transform: translateX(4px);
   font-size: 0.7em;
   font-weight: 600;
   color: var(--md-default-fg-color--light);
@@ -4083,7 +4119,7 @@ h3 { color: #4db6ac; }
 .section-tracker-item:hover .section-tracker-label,
 .section-tracker-item:focus-visible .section-tracker-label {
   opacity: 1;
-  transform: translate(0, -50%);
+  transform: translateX(0);
 }
 .section-tracker-item:hover .section-tracker-mark,
 .section-tracker-item:focus-visible .section-tracker-mark {
