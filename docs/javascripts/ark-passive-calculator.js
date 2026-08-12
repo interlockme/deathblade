@@ -1559,7 +1559,23 @@
       // for SPA-style navigation and was racing with (and beating) a click
       // listener attached directly to the link, so the reset never
       // actually ran. A <button> isn't part of that interception at all.
-      if (resetEl) resetEl.addEventListener("click", () => resetInputs(root));
+      // Confirmed via native confirm() rather than a popover - this is a
+      // destructive, one-shot action (unlike Export/Import's popovers,
+      // which stay open for review), so a blocking native dialog is more
+      // appropriate than a dismissable custom UI. Message calls out that
+      // only the active preset is cleared, since resetInputs() only ever
+      // touches presetStorageKey(activeId) - the other two slots are
+      // untouched and this is easy to misread as a full wipe.
+      if (resetEl) {
+        resetEl.addEventListener("click", () => {
+          const activeId = getActivePresetId();
+          const confirmed = window.confirm(
+            "Reset Preset " + activeId + " to defaults? This clears Preset " +
+            activeId + " only - your other presets aren't affected."
+          );
+          if (confirmed) resetInputs(root);
+        });
+      }
 
       // Preset switcher: 3 small number buttons, matching the reset
       // link's own subtle text-link treatment (see the CSS) rather than
