@@ -4289,12 +4289,13 @@ body.page-333-blitz input[type="text"] {
   transition: transform 0.22s ease, width 0.22s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   border: 1px solid rgba(179, 157, 219, 0.28);
   border-radius: 8px;
-  /* A translucent tint over whatever sits behind it (page bg, or the
-     lavender-tinted .setup-panel once these cards live inside one - see
-     that section below) instead of a hardcoded flat color, matching the
-     .stat/.build-compare-table surface convention used everywhere else on
-     the site rather than reading as a separately-designed component. */
-  background-color: rgba(255, 255, 255, 0.035);
+  /* Lavender-matched tint (not a neutral white one) so it reads purple by
+     default even outside a .setup-panel, and layers WITH the panel's own
+     lavender wash when nested in one instead of a white overlay diluting
+     it back toward gray - the previous rgba(255,255,255,...) version was
+     doing exactly that, which is why cards read flat/colorless even
+     inside a lavender-tinted panel. */
+  background-color: rgba(179, 157, 219, 0.065);
   margin: 0;
   font-size: 1em; /* override the .admonition/details 1em rule's inherited context so nested text below can size relative to this, not the page default */
   /* Lets .skill-card-main below query THIS card's own rendered width
@@ -4630,12 +4631,16 @@ body.page-333-blitz input[type="text"] {
      the whole card (for normal admonition body text). .skill-card summary
      already cancels that with its own `margin: 0 -0.6rem` so its border/
      background bleed to the true card edge - this div never had that,
-     so its border-top (and left/right content) sat inset from the card
-     edge by that same 0.6rem while summary and the outer card border
-     didn't. Bleed out the same way, then re-pad for content spacing. */
+     so its content sat inset from the card edge by that same 0.6rem
+     while summary and the outer card border didn't. Bleed out the same
+     way, then re-pad for content spacing. */
   margin: 0 -0.6rem;
   padding: 0.6em calc(0.75em + 0.6rem) 0.75em;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  /* No border-top - the reference mockup separates the name row from the
+     tags/description with spacing alone, no hairline. A previous pass
+     added one here to make a supposedly-invisible divider visible, but
+     the mockup never had a line to begin with; the fix was solving the
+     wrong problem. */
 }
 .md-typeset .skill-card-body .tag {
   margin: 0 4px 6px 0;
