@@ -3284,6 +3284,14 @@ h3 { color: #4db6ac; }
   padding: 0.6em 0.85em;
   cursor: pointer;
   list-style: none;
+  /* Material's `.md-typeset .admonition-title,.md-typeset summary` rule
+     sets `background-color: #448aff1a` (its default admonition blue) -
+     this rule reset spacing/color/cursor but never touched background,
+     so that blue tint survived underneath on what's meant to be a
+     neutral, unfilled panel (see .ap-brace-compare's own comment above:
+     "no fill as .ap-calc-results"). Same root cause the .skill-card and
+     .setup-note fixes already cover elsewhere - just missed here. */
+  background: none;
 }
 .md-typeset .ap-brace-compare summary::before {
   content: "";
