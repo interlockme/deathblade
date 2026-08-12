@@ -1,6 +1,6 @@
 # 111 (Classic) 🦁
 
-<p class="page-banner page-banner-warning">Not available in NA servers yet</p>
+<p class="page-banner page-banner-warning">Not available in NA/EU servers yet</p>
 
 <div class="build-card-row" markdown>
 <div class="build-card" data-updated="2026-08-07" markdown>

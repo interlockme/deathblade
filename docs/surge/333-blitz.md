@@ -1,6 +1,6 @@
 # 333 (Blitz) <span class="tiger-emoji" title="rawr">🐯</span>
 
-<p class="page-banner page-banner-warning">Not available in NA servers yet</p>
+<p class="page-banner page-banner-warning">Not available in NA/EU servers yet</p>
 
 ??? danger "But why male models? 🐯 "
     ![333 Blitz meme](../assets/surge/blitz-meme.png)

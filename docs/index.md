@@ -22,6 +22,8 @@
 
 </div>
 
+<p class="page-banner page-banner-warning">Note: DPS numbers and Surge guide have been built early for the upcoming update and do not reflect NA/EU servers yet.</p>
+
 ---
 
 **What do the build names mean?** Names like 333, 313, 111, and 222 are shorthand for each build's Ark Grid Core assignment — not a difficulty rating. Choose a build for more information.
