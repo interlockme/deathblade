@@ -4,12 +4,19 @@
 // per-build personal converter, distinct from the "실전배율" sheet that
 // generated the fixed-back-attack-rate reference tables published
 // elsewhere on this page. This tool lets the reader plug in their OWN
-// raid CPM and back-attack rate (or raw ratio) per build, instead of
-// reading off a table built for the build's assumed average.
+// raid CPM and Combat Analyzer "Back Attack Percentage" reading per
+// build, instead of reading off a table built for the build's assumed
+// average.
+//
+// The single Back Attack % field is the raw Combat Analyzer ratio, not
+// the actual back-attack rate the multiplier math needs - every input is
+// run through the ratio->rate conversion below (the live "≈ N% rate"
+// readout beside the field just surfaces that conversion, it's not a
+// separate input).
 //
 // Formulas verified directly against the spreadsheet's cells, not
 // re-derived from the published table's output:
-//   1. Ratio -> Rate (only used if the reader has a raw meter ratio):
+//   1. Ratio -> Rate:
 //      Rate% = Ratio / (Ratio + 1.35975 * (100 - Ratio)) * 100
 //   2. Rate -> Adjusted Multiplier:
 //      P = Rate% / 100
@@ -61,7 +68,7 @@
   // combos per build and offers them back as clickable chips. Best-effort:
   // wrapped in try/catch since some browsers/private sessions block storage
   // entirely, and the calculator works fine without it either way.
-  var HISTORY_KEY = "cpm-calc-history-deathblade-v1";
+  var HISTORY_KEY = "cpm-calc-history-deathblade-v2";
   var HISTORY_MAX = 4;
 
   function loadHistory() {
@@ -90,8 +97,7 @@
     list = list.filter(function (e) {
       return !(
         e.cpm.toFixed(2) === entry.cpm.toFixed(2) &&
-        e.ba.toFixed(1) === entry.ba.toFixed(1) &&
-        e.mode === entry.mode
+        e.ba.toFixed(1) === entry.ba.toFixed(1)
       );
     });
     list.unshift(entry);
@@ -121,19 +127,12 @@
       var chip = document.createElement("button");
       chip.type = "button";
       chip.className = "cpm-calc-recent-chip";
-      var suffix = entry.mode === "ratio" ? " ratio" : "%";
-      chip.textContent = entry.cpm.toFixed(2) + " cpm · " + entry.ba.toFixed(1) + suffix;
+      chip.textContent = entry.cpm.toFixed(2) + " cpm · " + entry.ba.toFixed(1) + "%";
       chip.addEventListener("click", function () {
         var raidCPMInput = row.querySelector(".cpm-calc-raidcpm");
         var baInput = row.querySelector(".cpm-calc-ba-input");
-        var modeInputs = row.querySelectorAll(
-          'input[name="cpm-calc-ba-mode-' + buildKey + '"]'
-        );
         raidCPMInput.value = entry.cpm;
         baInput.value = entry.ba;
-        modeInputs.forEach(function (input) {
-          input.checked = input.value === entry.mode;
-        });
         updateRow(row);
       });
       wrap.appendChild(chip);
@@ -159,24 +158,13 @@
     var wrap = document.createElement("div");
     wrap.className = "cpm-calc-recent";
     wrap.hidden = true;
-    var inputs = row.querySelector(".cpm-calc-inputs");
-    if (inputs) {
-      inputs.insertAdjacentElement("afterend", wrap);
+    var body = row.querySelector(".cpm-calc-body");
+    if (body) {
+      body.insertAdjacentElement("afterend", wrap);
     } else {
       row.appendChild(wrap);
     }
     return wrap;
-  }
-
-  function getBaMode(row, buildKey) {
-    const inputs = row.querySelectorAll(
-      'input[name="cpm-calc-ba-mode-' + buildKey + '"]'
-    );
-    let mode = "rate";
-    inputs.forEach((input) => {
-      if (input.checked) mode = input.value;
-    });
-    return mode;
   }
 
   function updateRow(row) {
@@ -186,24 +174,29 @@
 
     const raidCPMInput = row.querySelector(".cpm-calc-raidcpm");
     const baInput = row.querySelector(".cpm-calc-ba-input");
+    const baRateEl = row.querySelector(".cpm-calc-ba-rate");
     const baseMultInput = row.querySelector(".cpm-calc-basemult-input");
     const resultEl = row.querySelector(".cpm-calc-result-value");
     const adjEl = row.querySelector(".cpm-calc-adj-value");
     const barFill = row.querySelector(".cpm-calc-bar-fill");
 
     const raidCPM = parseFloat(raidCPMInput.value);
+    // This is the raw Combat Analyzer "Back Attack Percentage" reading (a
+    // ratio, not the actual back-attack rate) - always converted below,
+    // there's no separate rate-entry mode anymore.
     const baValue = parseFloat(baInput.value);
     // Falls back to the known-correct constant if the reader clears the
     // field or types something invalid, rather than breaking the calc.
     const baseMultRaw = parseFloat(baseMultInput.value);
     const baseMult = isFinite(baseMultRaw) && baseMultRaw > 0 ? baseMultRaw : build.baseMultiplier;
 
-    const validInputs =
-      isFinite(raidCPM) &&
-      raidCPM > 0 &&
-      isFinite(baValue) &&
-      baValue >= 0 &&
-      baValue <= 100;
+    const baValid = isFinite(baValue) && baValue >= 0 && baValue <= 100;
+
+    if (baRateEl) {
+      baRateEl.textContent = baValid ? "≈ " + ratioToRate(baValue).toFixed(1) + "% rate" : "";
+    }
+
+    const validInputs = isFinite(raidCPM) && raidCPM > 0 && baValid;
 
     if (!validInputs) {
       resultEl.textContent = "—";
@@ -212,13 +205,11 @@
       delete row.dataset.finalMult;
       delete row.dataset.pendingCpm;
       delete row.dataset.pendingBa;
-      delete row.dataset.pendingMode;
       highlightBest();
       return;
     }
 
-    const mode = getBaMode(row, buildKey);
-    const ratePercent = mode === "ratio" ? ratioToRate(baValue) : baValue;
+    const ratePercent = ratioToRate(baValue);
     const adjMult = adjustedMultiplier(baseMult, ratePercent);
     const finalMult = finalMultiplier(raidCPM, build.trixionCPM, adjMult);
 
@@ -234,7 +225,6 @@
     // keystroke and would otherwise spam a new entry per digit typed.
     row.dataset.pendingCpm = String(raidCPM);
     row.dataset.pendingBa = String(baValue);
-    row.dataset.pendingMode = mode;
   }
 
   function highlightBest() {
@@ -290,7 +280,6 @@
           recordHistory(buildKey, {
             cpm: parseFloat(row.dataset.pendingCpm),
             ba: parseFloat(row.dataset.pendingBa),
-            mode: row.dataset.pendingMode,
           });
           renderRecentChips(row, buildKey);
         });

@@ -2476,12 +2476,36 @@ h3 { color: #4db6ac; }
   padding: 1em 1.2em 1.2em;
   margin: 1em 0 1.5em;
 }
+/* Intro line above the rows - was falling back to plain body text with
+   no rule of its own. Muted lavender matches the same palette as
+   .cpm-calc's border/.cpm-calc-row-meta rather than reading as an
+   unstyled leftover paragraph. */
+.md-typeset .cpm-calc-hint {
+  margin: 0 0 1em;
+  font-size: 0.85em;
+  color: #a79bc4;
+  line-height: 1.5;
+}
+.md-typeset .cpm-calc-hint strong {
+  color: #e8e6ee;
+}
+/* Teal left-edge accent (matching the multiplier bar and the "best" row
+   highlight below) rather than .ap-calc-group's per-category colors - the
+   three rows are peer options (which build should I play), not different
+   stat categories, so one consistent accent reads better than inventing
+   three arbitrary hues. container-type lets .cpm-calc-body below query
+   the ROW's own rendered width (not the viewport's) to decide side-by-side
+   vs stacked - same technique .ark-passive-col/.skill-card use, since the
+   sidebar/TOC coming and going changes a row's actual width at a given
+   viewport size. */
 .md-typeset .cpm-calc-row {
   border: 1px solid rgba(255, 255, 255, 0.07);
+  border-left: 3px solid rgba(77, 182, 172, 0.35);
   border-radius: 8px;
   padding: 0.8em 1em;
   margin-top: 0.8em;
   transition: border-color 0.15s ease, background-color 0.15s ease;
+  container-type: inline-size;
 }
 .md-typeset .cpm-calc-row:first-of-type {
   margin-top: 0;
@@ -2491,6 +2515,7 @@ h3 { color: #4db6ac; }
    should I actually play" is the whole point of comparing side by side. */
 .md-typeset .cpm-calc-row-best {
   border-color: rgba(77, 182, 172, 0.5);
+  border-left-color: #4db6ac;
   background-color: rgba(77, 182, 172, 0.06);
 }
 .md-typeset .cpm-calc-row-header {
@@ -2508,12 +2533,31 @@ h3 { color: #4db6ac; }
   font-size: 0.78em;
   color: #a79bc4;
 }
+/* Inputs on the left, Adjusted/Final Multiplier + bar on the right - puts
+   the payoff beside the fields that drive it instead of stacked
+   underneath, the same "inputs feed a result panel beside them" shape as
+   .ap-calc-layout's gear/live-results split, and reads more compact than
+   the old fully-stacked rows. Drops to stacked (see @container below)
+   once the row itself gets too narrow for both columns. */
+.md-typeset .cpm-calc-body {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.2em;
+}
+@container (max-width: 480px) {
+  .md-typeset .cpm-calc-body {
+    flex-direction: column;
+  }
+  .md-typeset .cpm-calc-results {
+    width: 100%;
+  }
+}
 .md-typeset .cpm-calc-inputs {
   display: flex;
   flex-wrap: wrap;
   align-items: end;
   gap: 0.9em;
-  margin-bottom: 0.7em;
 }
 .md-typeset .cpm-calc-field {
   display: flex;
@@ -2541,6 +2585,20 @@ h3 { color: #4db6ac; }
   outline: none;
   border-color: #b39ddb;
 }
+/* Back-Attack % is the raw Combat Analyzer reading (a ratio, not the
+   actual back-attack rate) - this small readout beside the input shows
+   the converted rate live so the reader never has to do the ratio->rate
+   math themselves, without a second input field to maintain. */
+.md-typeset .cpm-calc-ba-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.md-typeset .cpm-calc-ba-rate {
+  font-size: 0.72em;
+  color: #6f6a80;
+  white-space: nowrap;
+}
 /* Base Multiplier is a per-build constant from the Trixion parse - almost
    never something the reader should change, but patches do shift it, so
    it's editable rather than hardcoded. Muted so it visually reads as
@@ -2564,23 +2622,18 @@ h3 { color: #4db6ac; }
   border-style: solid;
   color: #e8e6ee;
 }
-.md-typeset .cpm-calc-toggle {
+/* Right-hand column of .cpm-calc-body - fixed-ish width so the bar below
+   doesn't stretch full-card-width and dwarf the numbers above it. */
+.md-typeset .cpm-calc-results {
   display: flex;
-  gap: 0.9em;
-  font-size: 0.85em;
-  color: #cfc9dd;
-  padding-bottom: 0.4em;
-}
-.md-typeset .cpm-calc-toggle label {
-  display: flex;
-  align-items: center;
-  gap: 0.3em;
-  cursor: pointer;
+  flex-direction: column;
+  gap: 0.4em;
+  flex: 0 0 auto;
+  min-width: 13em;
 }
 .md-typeset .cpm-calc-output {
   display: flex;
   gap: 1.5em;
-  margin-bottom: 0.5em;
 }
 .md-typeset .cpm-calc-output-item {
   display: flex;
@@ -2605,15 +2658,16 @@ h3 { color: #4db6ac; }
 
 /* ---------- CPM calculator: recent-inputs chips ---------- */
 /* Injected by cpm-calculator.js (localStorage-backed), right after
-   .cpm-calc-inputs in each row. Deliberately quieter than the gem-priority
-   chips (smaller, single muted tone) since these are a shortcut, not a
-   primary piece of content on the page. */
+   .cpm-calc-body in each row (full width, below both columns).
+   Deliberately quieter than the gem-priority chips (smaller, single
+   muted tone) since these are a shortcut, not a primary piece of content
+   on the page. */
 .md-typeset .cpm-calc-recent {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5em;
-  margin: -0.15em 0 0.7em;
+  margin: 0.6em 0 0;
 }
 .md-typeset .cpm-calc-recent-label {
   font-size: 0.6rem;
