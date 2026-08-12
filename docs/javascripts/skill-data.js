@@ -20,7 +20,7 @@
   window.DB_SKILL_DATA = {
     re: {
       maelstrom: {
-        tags: [["util", "SYNERGY"], ["util", "BUFF"], ["warn", "NOT PARALYSIS IMMUNE"]],
+        tags: [["util", "SYNERGY"], ["util", "BUFF"], ["warn", "NO PARA IMMUNE"]],
         note: "Increases orb generation and Attack/Move Speed, charges up to two stacks.",
       },
       voidstrike: {
@@ -56,7 +56,7 @@
         note: "Flexible ranged skill.",
       },
       headhunt: {
-        tags: [["util", "COUNTER"], ["util", "RECOVERY"], ["warn", "NOT PARALYSIS IMMUNE"]],
+        tags: [["util", "COUNTER"], ["util", "RECOVERY"], ["warn", "NO PARA IMMUNE"]],
         note: "Most flexible recovery skill.",
       },
       bladeassault: {
@@ -64,7 +64,7 @@
         note: "Hold for damage and orb generation.",
       },
       earthcleaver: {
-        tags: [["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NOT PARALYSIS IMMUNE"]],
+        tags: [["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NO PARA IMMUNE"]],
         note: "Slow and utility focused.",
       },
       spincutter: {
@@ -78,7 +78,7 @@
     },
     surge: {
       windcut: {
-        tags: [["util", "STACKS"], ["warn", "NOT PARALYSIS IMMUNE"]],
+        tags: [["util", "STACKS"], ["warn", "NO PARA IMMUNE"]],
         note: "Usually pre-cast before Death Trance.",
       },
       deathtrance: {
@@ -86,7 +86,7 @@
         note: "Grants buffs and skill CDR.",
       },
       maelstrom: {
-        tags: [["util", "SYNERGY"], ["util", "BUFF"], ["warn", "NOT PARALYSIS IMMUNE"]],
+        tags: [["util", "SYNERGY"], ["util", "BUFF"], ["warn", "NO PARA IMMUNE"]],
         note: "Increases Attack/Move Speed, charges up to two stacks.",
       },
       surpriseattack: {
@@ -110,7 +110,7 @@
         note: "Filler that's also a skill reset and core skill for \uD83D\uDC2F.",
       },
       earthcleaver: {
-        tags: [["dmg", "DAMAGE"], ["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NOT PARALYSIS IMMUNE"]],
+        tags: [["dmg", "DAMAGE"], ["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NO PARA IMMUNE"]],
         note: "Charges up to two stacks for \uD83E\uDD81.",
       },
       spincutter: {
