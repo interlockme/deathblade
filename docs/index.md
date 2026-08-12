@@ -16,13 +16,13 @@
 
     ---
 
-    Not available before the September Update.
+    Nimble repositioning for one massive hit.
 
     [Get started →](surge/essentials.md)
 
 </div>
 
-<p class="page-banner page-banner-warning">Note: DPS numbers and Surge guide have been built early for the upcoming update and do not reflect NA/EU servers yet.</p>
+<p class="page-banner page-banner-warning">Note: DPS numbers and Surge guides have been built early for the upcoming update and do not reflect NA/EU servers yet.</p>
 
 ---
 
