@@ -4303,7 +4303,7 @@ body.page-333-blitz input[type="text"] {
      it back toward gray - the previous rgba(255,255,255,...) version was
      doing exactly that, which is why cards read flat/colorless even
      inside a lavender-tinted panel. */
-  background-color: rgba(179, 157, 219, 0.065);
+  background-color: rgba(179, 157, 219, 0.045);
   margin: 0;
   font-size: 1em; /* override the .admonition/details 1em rule's inherited context so nested text below can size relative to this, not the page default */
   /* Lets .skill-card-main below query THIS card's own rendered width
@@ -4738,7 +4738,7 @@ body.page-333-blitz input[type="text"] {
      same card. */
   border: 1px solid rgba(244, 143, 177, 0.22);
   border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(255, 255, 255, 0.02);
   transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .md-typeset .ark-core-item:hover {
