@@ -4363,7 +4363,7 @@ body.page-333-blitz input[type="text"] {
    these is just a hook for any future visual distinction - nothing
    currently keys off it. */
 .md-typeset .skill-card[open] {
-  border-color: rgba(179, 157, 219, 0.5);
+  border-color: rgba(199, 125, 255, 0.6);
 }
 /* A little softness/polish to match the rest of the site's pastel feel -
    closed cards glow faintly on hover so the grid feels touchable rather
