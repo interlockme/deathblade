@@ -4185,9 +4185,6 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .setup-panel > .skill-setup > .skill-setup-grid {
   margin: 0;
 }
-.md-typeset .setup-panel > .skill-setup > .skill-special-row {
-  margin-bottom: 0;
-}
 .md-typeset .skill-card {
   position: absolute;
   top: 0;
@@ -4238,11 +4235,9 @@ body.page-333-blitz input[type="text"] {
    selector is `.md-typeset details:focus-within` (specificity 0,2,1);
    a plain `.md-typeset .skill-card:focus-within` only reaches 0,2,0 and
    loses the specificity fight outright regardless of source order, so
-   this needs the real ancestor class (.skill-setup-grid /
-   .skill-special-row) added to clear it, same trick as .setup-notes'
-   specificity bump above. */
-.md-typeset .skill-setup-grid .skill-card:focus-within,
-.md-typeset .skill-special-row .skill-card:focus-within {
+   this needs the real ancestor class (.skill-setup-grid) added to clear
+   it, same trick as .setup-notes' specificity bump above. */
+.md-typeset .skill-setup-grid .skill-card:focus-within {
   box-shadow: none;
 }
 /* Cards are positioned (and given their real width) by JS on first
@@ -4254,35 +4249,16 @@ body.page-333-blitz input[type="text"] {
 }
 
 /* Identity/Technique/Awakening skills (Surge, Deathly Slash, Blade
-   Assault) - no tripods, no rune, nothing for masonry to size around, so
-   skill-setup.js routes these into a plain flex row here instead of into
-   the masonry grid above. Same .skill-card look, just position: static
-   and evenly sharing the row's width rather than absolutely positioned/
-   column-packed. */
-.md-typeset .skill-special-row {
-  display: flex;
-  flex-wrap: wrap;
-  /* Default flex cross-axis behavior is `stretch` - every item in the same
-     wrapped line is forced to the height of the TALLEST item in that line.
-     With 3 special cards sharing one row, opening any one of them (taller
-     once its body shows) stretched the other two to match, leaving them
-     visually "open" with nothing inside - the exact bug the masonry grid
-     above was built to avoid, just re-introduced here by the plain flex
-     row. flex-start makes each card keep its own natural height instead. */
-  align-items: flex-start;
-  gap: 0.7em;
-  /* Top margin matches .skill-setup-grid's own 0.9em top margin so the
-     gap above this row (vs. the masonry grid above it) reads the same as
-     the gap the grid itself would have above IT - previously 0, so this
-     row sat flush against the grid's bottom edge at every width. */
-  margin: 0.9em 0 1.2em;
-}
-.md-typeset .skill-card.skill-card-special {
-  position: static;
-  width: auto;
-  flex: 1 1 220px;
-  transform: none;
-}
+   Assault) render as normal .skill-card cards inline in the main
+   .skill-setup-grid, just without a .skill-card-chips row (see
+   skill-setup.js's buildCard - it only appends that row when there are
+   tripods and/or a rune to show). They used to be pulled into a separate
+   .skill-special-row container/grid below the main one; that grouped
+   them visually apart from the rest of the set, which read as a lesser/
+   different tier of card rather than a normal skill. The
+   .skill-card-special class buildCard/renderContainer still add to
+   these is just a hook for any future visual distinction - nothing
+   currently keys off it. */
 .md-typeset .skill-card[open] {
   border-color: rgba(179, 157, 219, 0.5);
 }
@@ -4406,7 +4382,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .skill-card-level,
 .md-typeset .skill-card-subtitle {
   display: block;
-  font-size: 0.66rem;
+  font-size: 0.56rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   color: #a79bc4;
@@ -4424,7 +4400,7 @@ body.page-333-blitz input[type="text"] {
      600 for their own rank-1 row, plain weight otherwise). */
   font-weight: 500;
   color: #e8e6ee;
-  font-size: 0.95em;
+  font-size: 0.9em;
   line-height: 1.25;
   /* The safety net for a narrow card, full-time now (not just past some
      width threshold): truncates with an ellipsis rather than wrapping
@@ -4461,9 +4437,9 @@ body.page-333-blitz input[type="text"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50px;
   font-size: 0.72rem;
   font-weight: 700;
   color: #161718;
@@ -4476,6 +4452,15 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .tripod-chip.tripod-t1 { background-color: #64b5f6; }
 .md-typeset .tripod-chip.tripod-t2 { background-color: #66bb6a; }
 .md-typeset .tripod-chip.tripod-t3 { background-color: #e6b422; }
+/* A same-size, invisible stand-in for a tripod tier this skill hasn't
+   reached yet (see skill-setup.js's buildCard comment on why this is
+   padded in rather than just omitted) - visibility:hidden rather than
+   display:none so it still takes up its slot's width/height in the flex
+   row, keeping every card's real tripod chips aligned tier-for-tier
+   regardless of how many tiers each one actually has. */
+.md-typeset .tripod-chip.tripod-chip-empty {
+  visibility: hidden;
+}
 /* Rune chip — text pill instead of an icon (no rune icon set either),
    colored by the site's four rune tiers: green < blue < epic < legendary.
    FIXED width (not min-width - min-width still let a wide name like

@@ -59,8 +59,9 @@
 //   needed when that art exists.
 //
 //   Skills with neither tripods nor a rune (Identity/Technique/Awakening)
-//   are automatically pulled out of the masonry grid into their own
-//   compact row underneath - nothing to opt into, just omit both fields.
+//   render as normal cards (just without a chips row) inline in the same
+//   masonry grid as every other skill, in whatever order they appear in
+//   the JSON - nothing to opt into, just omit both fields.
 (function () {
   function detectSiteRoot() {
     var scriptEl = document.currentScript || document.querySelector('script[src*="javascripts/skill-setup.js"]');
@@ -126,14 +127,40 @@
     main.appendChild(meta);
 
     var chips = el("span", "skill-card-chips");
-    (entry.tripods || []).forEach(function (pick, i) {
-      chips.appendChild(el("span", "tripod-chip tripod-t" + (i + 1), String(pick)));
-    });
+    // Always render exactly 3 tripod slots (blue/green/gold, left to
+    // right) when this skill has ANY tripods at all - not just
+    // entry.tripods.length of them. A skill that hasn't reached its 3rd
+    // tripod tier yet (e.g. a level 7 skill with only tripods: [2, 2])
+    // still gets a slot reserved for the tier it doesn't have; that slot
+    // is rendered invisible (tripod-chip-empty) rather than just omitted.
+    // Omitting it outright used to pull every chip after the gap one slot
+    // to the right (they sit right before the rune chip, which is itself
+    // pinned to the row's right edge via .skill-card-chips' margin-left:
+    // auto) - so a 2-tripod card's tier1/tier2 chips landed under where
+    // OTHER cards' tier2/tier3 chips sit, instead of lining up tier-for-
+    // tier down the grid. A same-size invisible placeholder keeps that
+    // slot's width without drawing anything into it, so every card's
+    // tier1 chip is always in the same column as every other card's
+    // tier1 chip, regardless of how many tiers each skill actually has.
+    // (entry.tripods array is always filled from tier1 upward per the
+    // EASY EDIT GUIDE above, so a short array always means the MISSING
+    // tier is the last one, never the first - safe to pad at the end.)
+    if (entry.tripods && entry.tripods.length) {
+      for (var t = 0; t < 3; t++) {
+        if (t < entry.tripods.length) {
+          chips.appendChild(el("span", "tripod-chip tripod-t" + (t + 1), String(entry.tripods[t])));
+        } else {
+          var placeholder = el("span", "tripod-chip tripod-chip-empty");
+          placeholder.setAttribute("aria-hidden", "true");
+          chips.appendChild(placeholder);
+        }
+      }
+    }
     if (entry.rune) {
       chips.appendChild(el("span", "rune-chip rune-" + entry.rune.tier, entry.rune.name));
     }
-    // Special-row cards (Identity/Technique/Awakening) have neither
-    // tripods nor a rune, so skip appending an empty chips row for them.
+    // Identity/Technique/Awakening cards have neither tripods nor a
+    // rune, so skip appending an empty chips row for them.
     if (chips.children.length) {
       main.appendChild(chips);
     }
@@ -193,9 +220,7 @@
   var MASONRY_GAP = 11; // ~0.7em at the site's 16px root, matches the old CSS grid gap
 
   function layoutMasonry(grid) {
-    var cards = Array.prototype.filter.call(grid.children, function (c) {
-      return c.classList && c.classList.contains("skill-card");
-    });
+    var cards = cardsOf(grid);
     if (!cards.length) return;
 
     var containerWidth = grid.clientWidth;
@@ -216,7 +241,17 @@
     // is meant to support; MASONRY_MIN_WIDTH still governs collapsing to
     // a single column on narrow screens.
     var cols = Math.max(1, Math.min(2, Math.floor((containerWidth + MASONRY_GAP) / (MASONRY_MIN_WIDTH + MASONRY_GAP))));
-    var colWidth = (containerWidth - MASONRY_GAP * (cols - 1)) / cols;
+    // Floored to a whole pixel, not left fractional: the right-hand
+    // column's translateX below is this value plus the gap, so a
+    // fractional colWidth put every non-first column at a fractional x
+    // offset. Chrome antialiases a fractionally-transformed subtree fine,
+    // but Firefox rasterizes it at an offset that doesn't line up with
+    // the pixel grid and the text inside comes out visibly soft - hence
+    // "right column blurry, left column (always x=0, always whole)
+    // fine, only on Firefox". Flooring (not rounding) means colWidth*cols
+    // can undershoot containerWidth by up to a pixel; harmless since
+    // these are absolutely positioned and don't need to fill it exactly.
+    var colWidth = Math.floor((containerWidth - MASONRY_GAP * (cols - 1)) / cols);
     var colHeights = new Array(cols).fill(0);
 
     cards.forEach(function (card) {
@@ -307,44 +342,30 @@
     // fire for the same container.
     var old = container.querySelector(".skill-setup-grid");
     if (old) old.remove();
+    // Legacy cleanup: an earlier version of this script rendered
+    // Identity/Technique/Awakening cards into a separate .skill-special-row
+    // container instead of the main grid. Nothing writes that element
+    // anymore, but on an instant-navigation swap the DOM could still be
+    // holding one from before this script last updated - drop it so it
+    // doesn't linger as an orphaned duplicate.
     var oldSpecial = container.querySelector(".skill-special-row");
     if (oldSpecial) oldSpecial.remove();
 
+    // All entries render as normal cards in one grid, in JSON order.
     // Skills with no tripods and no rune (Identity/Technique/Awakening -
-    // Surge, Deathly Slash, Blade Assault) don't need masonry at all:
-    // there's no chip content to size around, so they're pulled out of
-    // the grid into their own compact row below it instead of taking up
-    // a full masonry slot. Two knock-on benefits: the masonry grid is
-    // left with only "real" build cards, which tends to divide more
-    // evenly between columns as more skills get added over time (an
-    // 11th, 12th, ... normal skill just isn't as visually noticeable a
-    // few pixels of column-height difference as a whole extra card would
-    // be); and grouping the no-build skills together reads better
-    // anyway - they're a different kind of entry (nothing to configure),
-    // so visually clustering them says that on its own.
-    var mainEntries = entries.filter(function (entry) {
-      return (entry.tripods && entry.tripods.length) || entry.rune;
-    });
-    var specialEntries = entries.filter(function (entry) {
-      return !((entry.tripods && entry.tripods.length) || entry.rune);
-    });
-
+    // Surge, Deathly Slash, Blade Assault) just get a card with no chips
+    // row - they used to be pulled into a separate row/container below
+    // the main grid, but that read as a visually distinct, lesser group
+    // instead of a normal part of the skill set.
     var grid = el("div", "skill-setup-grid");
-    mainEntries.forEach(function (entry) {
-      grid.appendChild(buildCard(entry, family));
+    entries.forEach(function (entry) {
+      var card = buildCard(entry, family);
+      var isSpecial = !((entry.tripods && entry.tripods.length) || entry.rune);
+      if (isSpecial) card.classList.add("skill-card-special");
+      grid.appendChild(card);
     });
     container.appendChild(grid);
     initMasonry(grid);
-
-    if (specialEntries.length) {
-      var specialRow = el("div", "skill-special-row");
-      specialEntries.forEach(function (entry) {
-        var card = buildCard(entry, family);
-        card.classList.add("skill-card-special");
-        specialRow.appendChild(card);
-      });
-      container.appendChild(specialRow);
-    }
   }
 
   function scanAndRender(root) {
