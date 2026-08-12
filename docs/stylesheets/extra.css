@@ -2439,6 +2439,47 @@ h3 { color: #4db6ac; }
   border-color: #4db6ac;
 }
 
+/* ---------- Gearing Values reference images ---------- */
+/* Two screenshots (sticker legend, values table) dropped straight into a
+   .grid.cards pair for the side-by-side layout - but without a modifier
+   they'd inherit the base .grid.cards nth-child(1)/(2) pink/teal pair,
+   which is the RE/Surge choice coding from the homepage cards above (see
+   .prearc-cards for the same idea done as a three-way split) - a
+   meaningful pairing there, coincidental and misleading here since these
+   two panels aren't a choice between anything, just two reference images
+   sitting side by side. .gearing-cards swaps both to the same neutral
+   lavender every other reference component on the site uses instead
+   (matches .cpm-calc/.skills-table's border+tint), and turns off the
+   hover lift/shadow those RE/Surge option cards get - nothing happens on
+   click here, so a hover-pop would imply interactivity that isn't there.
+   nth-child(1)/(2) selectors (not a blanket > li rule) so this reliably
+   outweighs the base pink/teal rule by specificity regardless of source
+   order in the file, rather than depending on being declared later.
+   Padding + the image's own border-radius give the screenshot breathing
+   room inside the card frame instead of bleeding flush to its rounded
+   corners. Usage - just keep swapping the two image lines, no other
+   markup needed:
+   <div class="grid cards gearing-cards" style="grid-template-columns: 1fr 3fr;" markdown>
+   - ![](sticker.png)
+   - ![](table.png)
+   </div> */
+.md-typeset .grid.cards.gearing-cards > ul > li:nth-child(1),
+.md-typeset .grid.cards.gearing-cards > ul > li:nth-child(2) {
+  background-color: #1d1d21;
+  border-color: rgba(179, 157, 219, 0.3);
+  padding: 0.6em;
+}
+.md-typeset .grid.cards.gearing-cards > ul > li:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(179, 157, 219, 0.5);
+}
+.md-typeset .grid.cards.gearing-cards img {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+}
+
 /* ---------- Page-level availability banner ---------- */
 /* Replaces cramming "NOT IN NA SERVERS YET" or an emoji into the H1 itself.
    Usage, right under the H1:
