@@ -333,30 +333,43 @@ h3 { color: #4db6ac; }
 }
 
 /* ---------- Tables ---------- */
-/* Every other boxed component on the site (.build-card, .highlight,
-   .rotation-line, .cycle-card) has a lavender border - tables were the one
-   exception, just a rounded header color with an invisible edge against
-   the page background. Same border tone as .highlight, and the same
-   zebra/hover treatment .skills-table already had, generalized to every
-   table so a plain Build Comparison table gets the same "track your row"
-   help the skill-reference tables did. */
+/* Every other boxed component on the site (.build-card, .cpm-calc,
+   .skills-table, .food-alt-table) uses the same lavender-tinted card
+   language - a lavender border, a faint lavender-tinted body, and an
+   uppercase tinted header row. This generic rule is what any bare
+   markdown table gets with zero markup (no wrapper class, no `{: .foo }`
+   needed) - it's deliberately the DEFAULT now, not a fallback, so a new
+   table just typed as plain markdown (like Useful Links below) already
+   matches the site instead of reading as the one unstyled leftover.
+   .skills-table/.food-alt-table/.build-compare still carry their own
+   more specific rules on top of this for the things that actually vary
+   per-table (zebra striping, min-width, icon sizing) - those aren't
+   being removed, this rule just means their color/border imitates the
+   card language and this rule already gets those wrapper-less tables
+   there for free. */
 .md-typeset table:not([class]) {
-  border: 1px solid rgba(179, 157, 219, 0.2);
+  border: 1px solid rgba(179, 157, 219, 0.3);
   border-radius: 8px;
   overflow: hidden;
-  /* Opaque instead of a translucent white overlay - a translucent bg lets
-     whatever's behind it show through, which looked fine against the
+  /* Opaque instead of a translucent lavender overlay - a translucent bg
+     lets whatever's behind it show through, which looked fine against the
      plain page but meant a table inside a colored admonition (warning,
      danger, tip, etc.) got its body tinted by that admonition's color
-     while the th header above it (opaque #201d29) stayed neutral -
-     an inconsistent half-tinted look. This is the same color the old
-     translucent overlay produced against the page background, just
-     hardcoded so it no longer depends on what's underneath. */
-  background-color: #1b1c1e;
+     while the th header above it stayed a different, unrelated tint - an
+     inconsistent half-tinted look. These are the same colors
+     rgba(179, 157, 219, 0.045) [body] and rgba(179, 157, 219, 0.12)
+     [header] - the same tint .skills-table/.food-alt-table use - produce
+     against the page's #161718 background, just hardcoded so they no
+     longer depend on what's underneath. */
+  background-color: #1d1d21;
 }
 .md-typeset table:not([class]) th {
-  background-color: #201d29;
+  background-color: #29272f;
   color: #a79bc4;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 .md-typeset table:not([class]) tr:hover {
   background-color: rgba(255, 255, 255, 0.035);
@@ -2585,6 +2598,14 @@ h3 { color: #4db6ac; }
   outline: none;
   border-color: #b39ddb;
 }
+/* Raid CPM and Base Multiplier now carry min/max attrs (see
+   cpm-calculator.js for the actual clamp-on-blur enforcement - :out-of-
+   range here is just the live visual cue while typing, before blur
+   snaps the value back in range). Reuses the site's standard danger red
+   rather than inventing a new color for this one warning state. */
+.md-typeset .cpm-calc-field input[type="number"]:out-of-range {
+  border-color: #e57373;
+}
 /* Back-Attack % is the raw Combat Analyzer reading (a ratio, not the
    actual back-attack rate) - this small readout beside the input shows
    the converted rate live so the reader never has to do the ratio->rate
@@ -2626,6 +2647,10 @@ h3 { color: #4db6ac; }
   border-style: solid;
   color: #e8e6ee;
 }
+.md-typeset .cpm-calc-field-muted input[type="number"]:out-of-range {
+  border-color: #e57373;
+  border-style: solid;
+}
 /* Right-hand column of .cpm-calc-body - fixed-ish width so the bar below
    doesn't stretch full-card-width and dwarf the numbers above it. */
 .md-typeset .cpm-calc-results {
@@ -2649,6 +2674,25 @@ h3 { color: #4db6ac; }
   letter-spacing: 0.05em;
   color: #a79bc4;
   font-weight: 700;
+  line-height: 1.4;
+}
+/* Adjusted/Final Multiplier sit side by side in .cpm-calc-output as two
+   flex columns (label, then value). Their value spans use different
+   font-sizes (0.95em vs 1.1em) - with only the default prose line-height
+   inherited, that difference in font-size produced a different line-box
+   height per column, so "1.1195" and "0.703" landed at visibly different
+   baselines even though both columns start from an identical label. A
+   shared line-height fixed in rem (not em, so it doesn't scale with each
+   span's own font-size) forces both line boxes to the same height
+   regardless of font-size, which is what actually keeps the two values
+   aligned. margin-top nudges both down by the same fixed amount so the
+   value line starts right under the label instead of via default spacing. */
+.md-typeset .cpm-calc-adj-value,
+.md-typeset .cpm-calc-result-value {
+  display: block;
+  line-height: 1.35rem;
+  margin-top: 0.05em;
+  font-variant-numeric: tabular-nums;
 }
 .md-typeset .cpm-calc-adj-value {
   font-size: 0.95em;
@@ -2658,6 +2702,17 @@ h3 { color: #4db6ac; }
   font-size: 1.1em;
   font-weight: 700;
   color: #4db6ac;
+}
+/* Before either field has valid input, both values show a plain "—"
+   placeholder (see cpm-calculator.js). Left unstyled that placeholder
+   inherited the same bold teal treatment as a real Final Multiplier
+   result, which reads as "there's already an answer here" - toggled off
+   via .cpm-calc-output-empty (added/removed by the JS alongside the
+   textContent swap) so an empty row visually reads as empty. */
+.md-typeset .cpm-calc-adj-value.cpm-calc-output-empty,
+.md-typeset .cpm-calc-result-value.cpm-calc-output-empty {
+  color: #6f6a80;
+  font-weight: 400;
 }
 
 /* ---------- CPM calculator: recent-inputs chips ---------- */
@@ -2905,6 +2960,16 @@ h3 { color: #4db6ac; }
 .md-typeset .ap-calc-field-row input[type="number"]:focus {
   outline: none;
   border-color: #b39ddb;
+}
+/* Crit Stat, Weapon Quality, Astrogem Level, Demon Damage %, and Bracelet
+   Crit Stat Equipped all carry min/max attrs, but a free-typed number
+   field can still momentarily hold a value outside them before
+   ark-passive-calculator.js's blur handler snaps it back in range (same
+   pattern as the CPM calculator's Raid CPM/Base Multiplier fields) - this
+   is the live cue while typing. Reuses the site's standard danger red
+   rather than inventing a new color for this one warning state. */
+.md-typeset .ap-calc-field-row input[type="number"]:out-of-range {
+  border-color: #e57373;
 }
 .md-typeset .ap-calc-field-row input[type="checkbox"] {
   width: 1.1em;

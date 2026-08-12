@@ -498,7 +498,7 @@
 <div class="cpm-calc-inputs">
 <label class="cpm-calc-field">
 <span class="cpm-calc-field-label">Raid CPM</span>
-<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 9.5">
+<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" max="20" placeholder="e.g. 9.5">
 </label>
 <label class="cpm-calc-field">
 <span class="cpm-calc-field-label cpm-calc-ba-label">Back Attack %</span>
@@ -509,7 +509,7 @@
 </label>
 <label class="cpm-calc-field cpm-calc-field-muted">
 <span class="cpm-calc-field-label">Base Multiplier</span>
-<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
+<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0.5" max="2">
 </label>
 </div>
 <div class="cpm-calc-results">
@@ -539,7 +539,7 @@
 <div class="cpm-calc-inputs">
 <label class="cpm-calc-field">
 <span class="cpm-calc-field-label">Raid CPM</span>
-<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 6.5">
+<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" max="20" placeholder="e.g. 6.5">
 </label>
 <label class="cpm-calc-field">
 <span class="cpm-calc-field-label cpm-calc-ba-label">Back Attack %</span>
@@ -550,7 +550,7 @@
 </label>
 <label class="cpm-calc-field cpm-calc-field-muted">
 <span class="cpm-calc-field-label">Base Multiplier</span>
-<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
+<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0.5" max="2">
 </label>
 </div>
 <div class="cpm-calc-results">
@@ -580,7 +580,7 @@
 <div class="cpm-calc-inputs">
 <label class="cpm-calc-field">
 <span class="cpm-calc-field-label">Raid CPM</span>
-<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" placeholder="e.g. 6">
+<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" max="20" placeholder="e.g. 6">
 </label>
 <label class="cpm-calc-field">
 <span class="cpm-calc-field-label cpm-calc-ba-label">Back Attack %</span>
@@ -591,7 +591,7 @@
 </label>
 <label class="cpm-calc-field cpm-calc-field-muted">
 <span class="cpm-calc-field-label">Base Multiplier</span>
-<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0">
+<input type="number" class="cpm-calc-basemult-input" step="0.01" min="0.5" max="2">
 </label>
 </div>
 <div class="cpm-calc-results">

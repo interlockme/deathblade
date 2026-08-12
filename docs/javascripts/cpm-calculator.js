@@ -35,6 +35,26 @@
   const E_NONBACK = 2.603831;
   const RATIO_TO_RATE_CONST = 1.35975;
 
+  // Input guardrails. No real build's Raid CPM comes remotely close to 20
+  // (the highest Trixion CPM among BUILDS above is ~15.1, and real raid
+  // CPM is always below the Trixion-parse ceiling per the Final Multiplier
+  // comment below) - 20 is a generous ceiling that only catches fat-finger/
+  // pasted-garbage entries, not a real reading. Base Multiplier is a
+  // per-build constant that occasionally shifts with balance patches
+  // (current values run 1.20-1.23), so 0.5-2 leaves plenty of headroom for
+  // future patches while still catching typos like a stray extra digit.
+  const RAID_CPM_MIN = 0;
+  const RAID_CPM_MAX = 20;
+  const BASE_MULT_MIN = 0.5;
+  const BASE_MULT_MAX = 2;
+  // Back-Attack % is a Combat Analyzer ratio reading, so 0-100 is a hard
+  // ceiling (not just a sanity bound like the two above) - anything outside
+  // it is already rejected by baValid in updateRow(), this just makes the
+  // field itself snap back in line with that instead of sitting there
+  // showing a number the calc was silently ignoring.
+  const BACK_ATTACK_MIN = 0;
+  const BACK_ATTACK_MAX = 100;
+
   function ratioToRate(ratioPercent) {
     return (
       (ratioPercent / (ratioPercent + RATIO_TO_RATE_CONST * (100 - ratioPercent))) *
@@ -187,8 +207,16 @@
     const baValue = parseFloat(baInput.value);
     // Falls back to the known-correct constant if the reader clears the
     // field or types something invalid, rather than breaking the calc.
+    // clampOnBlur() below is the primary guard against out-of-range values
+    // actually sitting in the field, but this re-checks the bounds here
+    // too (recent-chip clicks and other programmatic value.set calls don't
+    // go through blur) so a stray out-of-range number can't silently
+    // produce a result.
     const baseMultRaw = parseFloat(baseMultInput.value);
-    const baseMult = isFinite(baseMultRaw) && baseMultRaw > 0 ? baseMultRaw : build.baseMultiplier;
+    const baseMult =
+      isFinite(baseMultRaw) && baseMultRaw >= BASE_MULT_MIN && baseMultRaw <= BASE_MULT_MAX
+        ? baseMultRaw
+        : build.baseMultiplier;
 
     const baValid = isFinite(baValue) && baValue >= 0 && baValue <= 100;
 
@@ -196,11 +224,14 @@
       baRateEl.textContent = baValid ? "≈ " + ratioToRate(baValue).toFixed(1) + "% rate" : "";
     }
 
-    const validInputs = isFinite(raidCPM) && raidCPM > 0 && baValid;
+    const raidCPMValid = isFinite(raidCPM) && raidCPM > RAID_CPM_MIN && raidCPM <= RAID_CPM_MAX;
+    const validInputs = raidCPMValid && baValid;
 
     if (!validInputs) {
       resultEl.textContent = "—";
       adjEl.textContent = "—";
+      resultEl.classList.add("cpm-calc-output-empty");
+      adjEl.classList.add("cpm-calc-output-empty");
       barFill.style.width = "0%";
       delete row.dataset.finalMult;
       delete row.dataset.pendingCpm;
@@ -208,6 +239,9 @@
       highlightBest();
       return;
     }
+
+    resultEl.classList.remove("cpm-calc-output-empty");
+    adjEl.classList.remove("cpm-calc-output-empty");
 
     const ratePercent = ratioToRate(baValue);
     const adjMult = adjustedMultiplier(baseMult, ratePercent);
@@ -252,6 +286,24 @@
     }
   }
 
+  // Snaps a field back into [min, max] once the reader's done typing,
+  // rather than fighting them mid-keystroke (clamping on "input" would
+  // make it impossible to type e.g. "9.5" past an intermediate "9" that's
+  // already >= a low max). :out-of-range styling (see extra.css) gives a
+  // live visual cue before blur actually corrects the value.
+  function clampOnBlur(input, min, max, decimals, row) {
+    if (!input) return;
+    input.addEventListener("blur", () => {
+      const raw = parseFloat(input.value);
+      if (!isFinite(raw)) return; // empty/invalid - updateRow already shows "—"
+      const clamped = Math.min(max, Math.max(min, raw));
+      if (clamped !== raw) {
+        input.value = clamped.toFixed(decimals);
+        updateRow(row);
+      }
+    });
+  }
+
   function init() {
     document.querySelectorAll(".cpm-calc-row").forEach((row) => {
       const buildKey = row.dataset.build;
@@ -265,6 +317,10 @@
         input.addEventListener("input", () => updateRow(row));
       });
       updateRow(row);
+
+      clampOnBlur(row.querySelector(".cpm-calc-raidcpm"), RAID_CPM_MIN, RAID_CPM_MAX, 2, row);
+      clampOnBlur(baseMultInput, BASE_MULT_MIN, BASE_MULT_MAX, 2, row);
+      clampOnBlur(row.querySelector(".cpm-calc-ba-input"), BACK_ATTACK_MIN, BACK_ATTACK_MAX, 2, row);
 
       ensureRecentChipsContainer(row);
       renderRecentChips(row, buildKey);

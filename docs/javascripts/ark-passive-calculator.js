@@ -1553,6 +1553,31 @@
           saveInputs(root, getActivePresetId());
         });
       });
+      // readInputs() already clamps every number field to its min/max when
+      // computing (Crit Stat, Weapon Quality, Astrogem Level, Demon
+      // Damage %, Bracelet Crit Stat Equipped), but that only guards the
+      // math - it left the field itself still showing whatever the reader
+      // typed, so a stray extra digit could sit there looking accepted.
+      // This snaps the displayed value back into range on blur too (same
+      // pattern as the CPM calculator's Raid CPM/Base Multiplier fields),
+      // generic over every number input here rather than listing each
+      // field, since they all already carry min/max attrs in the markup.
+      root.querySelectorAll('input[type="number"]').forEach((el) => {
+        el.addEventListener("blur", () => {
+          const raw = parseFloat(el.value);
+          if (!isFinite(raw)) return; // empty/invalid - readInputs() falls back to its default
+          const min = el.min !== "" ? parseFloat(el.min) : null;
+          const max = el.max !== "" ? parseFloat(el.max) : null;
+          let clamped = raw;
+          if (min !== null) clamped = Math.max(min, clamped);
+          if (max !== null) clamped = Math.min(max, clamped);
+          if (clamped !== raw) {
+            el.value = String(clamped);
+            update(root);
+            saveInputs(root, getActivePresetId());
+          }
+        });
+      });
       const resetEl = root.querySelector(".ap-calc-reset");
       // A real <button>, not an <a href="#"> - this site has Material's
       // navigation.instant enabled, which intercepts <a> clicks globally
