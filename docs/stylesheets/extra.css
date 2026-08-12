@@ -2595,6 +2595,10 @@ h3 { color: #4db6ac; }
   gap: 0.5em;
 }
 .md-typeset .cpm-calc-ba-rate {
+  display: inline-block;
+  min-width: 6.3em;
+  min-height: 1.3em;
+  line-height: 1.3em;
   font-size: 0.72em;
   color: #6f6a80;
   white-space: nowrap;
