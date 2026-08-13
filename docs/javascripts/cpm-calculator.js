@@ -304,7 +304,166 @@
     });
   }
 
+  // ----- Surges/Min scratch-pad (top of the CPM Calculator card) -----
+  // Folded in here rather than kept as its own script/file: it's a tiny
+  // unit conversion (count over a clip -> a per-minute rate) the reader
+  // does once and copies into Raid CPM below, not a persistent tool with
+  // state of its own, so it doesn't earn a separate file. No
+  // localStorage, no history - unlike the rows above this has nothing
+  // worth remembering between visits.
+
+  // Accepts, in order of priority:
+  //   1. "1h 2m 3s" / "2m3s" / "90s" / "5m" - any subset of h/m/s tokens,
+  //      space-optional, unit letters required.
+  //   2. "hh:mm:ss" or "mm:ss" colon form.
+  //   3. A bare number, treated as whole seconds (Combat Analyzer clip
+  //      lengths are usually read off in seconds, so no unit means
+  //      seconds, not minutes).
+  const SPM_UNIT_RE = /(\d+(?:\.\d+)?)\s*(h|m|s)/gi;
+
+  // Guardrails, same spirit as RAID_CPM_MAX etc. above: catch fat-finger/
+  // pasted-garbage entries on blur rather than block typing mid-keystroke.
+  // Count is a raw Combat Analyzer surge tally for one clip - three digits
+  // (999) is already far beyond any real reading. Time is capped at
+  // 120m 60s (7260s) - a two-hour-plus clip is well past any real pull
+  // length, but the round "120m 60s" ceiling is easier for a reader to
+  // reason about than an odd derived number.
+  const SPM_COUNT_MIN = 0;
+  const SPM_COUNT_MAX = 999;
+  const SPM_TIME_MAX_SECONDS = 120 * 60 + 60;
+
+  // Renders a clamped seconds value back into the same "Xm Ys" shape the
+  // parser accepts, so a corrected field stays editable/consistent with
+  // what a reader would type - not a raw second count they'd have to
+  // re-parse in their head.
+  function spmFormatSeconds(totalSeconds) {
+    const s = Math.round(totalSeconds);
+    const m = Math.floor(s / 60);
+    const secs = s % 60;
+    if (m > 0 && secs > 0) return `${m}m ${secs}s`;
+    if (m > 0) return `${m}m`;
+    return `${secs}s`;
+  }
+
+  function spmParseTimeToSeconds(raw) {
+    if (raw == null) return NaN;
+    const str = String(raw).trim().toLowerCase();
+    if (!str) return NaN;
+
+    // Bare number -> seconds.
+    if (/^\d+(\.\d+)?$/.test(str)) {
+      return parseFloat(str);
+    }
+
+    // Colon form: mm:ss or hh:mm:ss.
+    if (/^\d+(:\d+){1,2}$/.test(str)) {
+      const parts = str.split(":").map(Number);
+      if (parts.some((n) => !isFinite(n))) return NaN;
+      let seconds = 0;
+      for (const part of parts) {
+        seconds = seconds * 60 + part;
+      }
+      return seconds;
+    }
+
+    // Unit form: sum whatever h/m/s tokens are present. A token letter
+    // used twice (e.g. "5m 3m") is deliberately allowed to just add up -
+    // rejecting it isn't worth the extra code for a scratch-pad field.
+    let seconds = 0;
+    let matched = false;
+    let consumed = "";
+    let m;
+    SPM_UNIT_RE.lastIndex = 0;
+    while ((m = SPM_UNIT_RE.exec(str)) !== null) {
+      matched = true;
+      consumed += m[0];
+      const value = parseFloat(m[1]);
+      const unit = m[2];
+      if (unit === "h") seconds += value * 3600;
+      else if (unit === "m") seconds += value * 60;
+      else seconds += value;
+    }
+    if (!matched) return NaN;
+    // Reject leftover text the regex scan didn't account for - e.g.
+    // "121m 55555" (a valid "121m" token followed by mashed digits with
+    // no unit letter). Without this, unmatched characters are silently
+    // dropped and a token found anywhere in the garbage still returns a
+    // "valid" result. Compare lengths with whitespace stripped from both
+    // sides so a space between number and unit ("121 m") doesn't trip it.
+    if (str.replace(/\s+/g, "").length !== consumed.replace(/\s+/g, "").length) {
+      return NaN;
+    }
+    return seconds;
+  }
+
+  function spmUpdate(widget) {
+    const timeInput = widget.querySelector(".spm-calc-time");
+    const countInput = widget.querySelector(".spm-calc-count");
+    const resultEl = widget.querySelector(".spm-calc-result-value");
+    if (!timeInput || !countInput || !resultEl) return;
+
+    const seconds = spmParseTimeToSeconds(timeInput.value);
+    const count = parseFloat(countInput.value);
+
+    const timeValid = isFinite(seconds) && seconds > 0 && seconds <= SPM_TIME_MAX_SECONDS;
+    const countValid = isFinite(count) && count >= 0;
+
+    timeInput.classList.toggle(
+      "spm-calc-input-invalid",
+      timeInput.value.trim() !== "" && !timeValid
+    );
+
+    if (!timeValid || !countValid) {
+      resultEl.textContent = "—";
+      resultEl.classList.add("spm-calc-output-empty");
+      return;
+    }
+
+    const perMinute = count * (60 / seconds);
+    resultEl.textContent = perMinute.toFixed(2);
+    resultEl.classList.remove("spm-calc-output-empty");
+  }
+
+  function spmInit() {
+    document.querySelectorAll(".spm-calc").forEach((widget) => {
+      const timeInput = widget.querySelector(".spm-calc-time");
+      const countInput = widget.querySelector(".spm-calc-count");
+
+      widget.querySelectorAll("input").forEach((input) => {
+        input.addEventListener("input", () => spmUpdate(widget));
+      });
+
+      // Clamp on blur (not on input) for the same reason as clampOnBlur
+      // above: correcting mid-keystroke would make it impossible to type
+      // past an intermediate value that's already over the ceiling.
+      if (timeInput) {
+        timeInput.addEventListener("blur", () => {
+          const seconds = spmParseTimeToSeconds(timeInput.value);
+          if (!isFinite(seconds)) return; // empty/unparseable - leave as-is
+          if (seconds > SPM_TIME_MAX_SECONDS) {
+            timeInput.value = spmFormatSeconds(SPM_TIME_MAX_SECONDS);
+            spmUpdate(widget);
+          }
+        });
+      }
+      if (countInput) {
+        countInput.addEventListener("blur", () => {
+          const raw = parseFloat(countInput.value);
+          if (!isFinite(raw)) return;
+          const clamped = Math.min(SPM_COUNT_MAX, Math.max(SPM_COUNT_MIN, raw));
+          if (clamped !== raw) {
+            countInput.value = clamped;
+            spmUpdate(widget);
+          }
+        });
+      }
+
+      spmUpdate(widget);
+    });
+  }
+
   function init() {
+    spmInit();
     document.querySelectorAll(".cpm-calc-row").forEach((row) => {
       const buildKey = row.dataset.build;
       const build = BUILDS[buildKey];

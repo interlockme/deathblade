@@ -487,7 +487,21 @@
 
 <div class="cpm-calc">
 
-<p class="cpm-calc-hint">Check your in-game Combat Analyzer for the <strong>Back Attack Percentage</strong> entry and enter that number below.</p>
+<div class="cpm-calc-header">
+
+<p class="cpm-calc-hint">Enter your in-game Combat Analyzer's <strong>Back Attack Percentage</strong> below.</p>
+
+<div class="spm-calc">
+<div class="spm-calc-inputs">
+<span class="spm-calc-info-icon" role="img" title="Time elapsed: &quot;2m 3s&quot;, &quot;123s&quot; (bare number = seconds), or mm:ss / hh:mm:ss. Max 120m 60s.">i</span>
+<input type="text" class="spm-calc-time" placeholder="2m 3s" inputmode="text" autocomplete="off" maxlength="10" aria-label="Time elapsed, e.g. 2m 3s or 123 seconds, max 120m 60s">
+<span class="spm-calc-x">&times;</span>
+<input type="number" class="spm-calc-count" placeholder="32" min="0" max="999" step="1" aria-label="Number of surges, max 999">
+</div>
+<span class="spm-calc-result"><span class="spm-calc-result-value spm-calc-output-empty">—</span><span class="spm-calc-result-unit">CPM</span></span>
+</div>
+
+</div>
 
 <div class="cpm-calc-row" data-build="333-re">
 <div class="cpm-calc-row-header">

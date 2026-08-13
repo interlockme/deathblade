@@ -2529,6 +2529,11 @@ h3 { color: #4db6ac; }
   border-radius: 10px;
   padding: 1em 1.2em 1.2em;
   margin: 1em 0 1.5em;
+  /* Lets .cpm-calc-header below query the CARD's own rendered width (not
+     the viewport's) to decide side-by-side vs stacked - same reasoning
+     as .cpm-calc-row's container-type further down, and independent of
+     it (each row still queries against itself for .cpm-calc-body). */
+  container-type: inline-size;
 }
 /* Intro line above the rows - was falling back to plain body text with
    no rule of its own. Muted lavender matches the same palette as
@@ -2542,6 +2547,168 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .cpm-calc-hint strong {
   color: #e8e6ee;
+}
+/* Row pairing the hint text with the Surges/Min scratch-pad widget so
+   the widget sits at the top-right of the card instead of full-width
+   above/below the hint. align-items: center so the hint's single line
+   sits level with the middle of the (taller, padded) widget box instead
+   of pinned to its top edge, which left a lopsided gap under the hint. */
+.md-typeset .cpm-calc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+}
+.md-typeset .cpm-calc-header .cpm-calc-hint {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+@container (max-width: 420px) {
+  .md-typeset .cpm-calc-header {
+    flex-direction: column;
+  }
+  .md-typeset .spm-calc {
+    align-self: stretch;
+    justify-content: center;
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+}
+
+/* ---------- Surges/Min scratch-pad (top of the CPM Calculator card) ---------- */
+/* Deliberately its own small self-contained box rather than folded into
+   .cpm-calc-hint's row of text - it's a quick unit conversion (count over
+   a clip -> a per-minute rate) the reader does once and copies into Raid
+   CPM below, not a persistent input the calculator itself depends on, so
+   it gets a visually distinct "tool," not another calculator row.
+   One horizontal row (info icon, inputs, result all inline) rather than
+   a stacked column - a single compact line keeps the whole card's header
+   short instead of ballooning it taller than the hint text beside it. */
+.md-typeset .spm-calc {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5em;
+  flex: 0 0 auto;
+  padding: 0.4em 0.7em;
+  background-color: #161718;
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  border-radius: 8px;
+  white-space: nowrap;
+}
+/* Small circled "i", same hover/focus treatment as .ap-brace-info-icon
+   elsewhere on the page - reused rather than duplicated wholesale, but
+   kept as its own class since it sits first in a flex row (no preceding
+   label text to hang a left margin off of) instead of trailing a label. */
+.md-typeset .spm-calc-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  border: 1px solid rgba(167, 155, 196, 0.6);
+  color: #a79bc4;
+  font-size: 0.8em;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+}
+.md-typeset .spm-calc-info-icon:hover {
+  border-color: #a79bc4;
+  color: #cfc9dd;
+}
+.md-typeset .spm-calc-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.md-typeset .spm-calc-time,
+.md-typeset .spm-calc-count {
+  background-color: #1c1d1f;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  border-radius: 6px;
+  color: #e8e6ee;
+  padding: 0.3em 0.4em;
+  font-size: 0.85em;
+  font-family: inherit;
+  text-align: center;
+}
+/* Wide enough for the longest accepted string ("120m 60s", the parser's
+   own max-clamp ceiling) without the text getting cut off or scrolling
+   inside the box. */
+.md-typeset .spm-calc-time {
+  width: 6.5em;
+}
+/* Wide enough for a 4th fat-fingered digit (the max="999" attribute
+   doesn't stop someone from typing "9999" - it's only enforced on blur
+   by clampOnBlur in cpm-calculator.js) plus the number spinner UI some
+   browsers draw inside the box, so a reader mid-typing past the ceiling
+   sees their own digits, not a clipped value. */
+.md-typeset .spm-calc-count {
+  width: 4.6em;
+}
+.md-typeset .spm-calc-time:focus,
+.md-typeset .spm-calc-count:focus {
+  outline: none;
+  border-color: #b39ddb;
+}
+/* Live invalid cue for the time field - unlike cpm-calc's numeric fields
+   there's no min/max/:out-of-range to lean on here since this is a
+   free-text field (it has to accept "2m 3s", not just a number), so the
+   JS toggles this class itself once the text fails to parse. */
+.md-typeset .spm-calc-time.spm-calc-input-invalid {
+  border-color: #e57373;
+}
+/* Count field IS a native number input with min/max, so unlike the time
+   field above it gets the live :out-of-range cue for free - it just
+   needs the same red border color wired up (this was missing, which is
+   why typing past 999 showed no warning until blur silently clamped
+   it). Declared after the :focus rule above so it wins while the field
+   is still focused and being typed into, matching the cpm-calc-field
+   pattern elsewhere on this page. */
+.md-typeset .spm-calc-count:out-of-range {
+  border-color: #e57373;
+}
+.md-typeset .spm-calc-x {
+  color: #6f6a80;
+  font-size: 0.8em;
+}
+.md-typeset .spm-calc-result {
+  font-size: 0.85em;
+  color: #6f6a80;
+  white-space: nowrap;
+}
+/* min-width (not width) reserves room for a typical result (up to a
+   3-digit whole number, e.g. "999.99") so the box's own overall width -
+   and with it, .cpm-calc-header's space-between layout - doesn't shift
+   left/right on every keystroke for the common case. Deliberately NOT
+   sized to the mathematical worst case (a tiny time value can push the
+   result to 5+ digits) - min-width still lets the box grow past 6ch if
+   a reader actually hits that, it just stops reserving dead space for
+   it up front, since that made ordinary results (e.g. "64.00") sit with
+   a visibly empty gap before them. Right-aligned so results sit flush
+   against the "CPM" unit instead of floating in the reserved space. */
+.md-typeset .spm-calc-result-value {
+  display: inline-block;
+  min-width: 6ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: #4db6ac;
+}
+/* Same empty-state treatment as .cpm-calc-result-value.cpm-calc-output-
+   empty - plain "—" placeholder shouldn't read as bold teal like a real
+   result. */
+.md-typeset .spm-calc-result-value.spm-calc-output-empty {
+  color: #6f6a80;
+  font-weight: 400;
+}
+.md-typeset .spm-calc-result-unit {
+  margin-left: 0.2em;
 }
 /* Teal left-edge accent (matching the multiplier bar and the "best" row
    highlight below) rather than .ap-calc-group's per-category colors - the
