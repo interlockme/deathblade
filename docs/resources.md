@@ -630,6 +630,8 @@
 
 ## Bid Calculator
 
+*Finds the optimal auction bid amount based on personal intent.*
+
 <div class="bid-calc">
 
 <div class="bid-calc-controls">
