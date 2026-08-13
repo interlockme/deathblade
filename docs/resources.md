@@ -674,7 +674,7 @@
 </tbody>
 </table>
 
-<p class="bid-calc-footnote">Party Profit is each other member's cut if that row wins.Next Bidder needs a +10% raise to outbid you.</p>
+<p class="bid-calc-footnote">Party Profit is each other member's cut if that row wins. Next Bidder needs a +10% raise to outbid you.</p>
 
 </div>
 
