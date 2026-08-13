@@ -616,8 +616,6 @@
 
 ## Auction Bid Calculator
 
-*Finds the optimal raid auction bid.*
-
 <div class="bid-calc">
 
 <div class="bid-calc-controls">
@@ -676,7 +674,7 @@
 </tbody>
 </table>
 
-<p class="bid-calc-footnote">Party Profit is each other member's cut if that row wins. Next Bidder needs a +10% raise to outbid you - hover an Intent above for what that means for you.</p>
+<p class="bid-calc-footnote">Party Profit is each other member's cut if that row wins.</p>
 
 </div>
 
