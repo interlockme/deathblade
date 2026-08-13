@@ -614,6 +614,72 @@
 
 </div>
 
+## Auction Bid Calculator
+
+*Finds the optimal raid auction bid.*
+
+<div class="bid-calc">
+
+<div class="bid-calc-controls">
+<div class="bid-calc-field-row">
+<label class="bid-calc-field-label" for="bid-market-price">Market Price</label>
+<input type="text" inputmode="numeric" autocomplete="off" id="bid-market-price" class="bid-market-price" placeholder="e.g. 9,000">
+</div>
+<div class="bid-calc-toggle" role="group" aria-label="Raid size">
+<span class="bid-calc-field-label">Raid Size</span>
+<label class="bid-calc-radio-label"><input type="radio" name="bid-raid-size" class="bid-raid-size" value="4"> 4</label>
+<label class="bid-calc-radio-label"><input type="radio" name="bid-raid-size" class="bid-raid-size" value="8" checked> 8</label>
+</div>
+<div class="bid-calc-field-row bid-calc-field-muted">
+<label class="bid-calc-field-label" for="bid-market-fee">Market Fee %</label>
+<input type="number" id="bid-market-fee" class="bid-market-fee" min="0" max="20" step="0.5" value="5">
+</div>
+</div>
+
+<div class="bid-calc-intent" role="group" aria-label="Bidding intent">
+<span class="bid-calc-field-label">Intent</span>
+<label class="bid-calc-radio-label" title="Splits the gold evenly - you and everyone else net the same amount."><input type="radio" name="bid-intent" class="bid-intent" value="equal" checked> Equal Profit</label>
+<label class="bid-calc-radio-label" title="Solid profit if you win - and outbidding you costs the rival more."><input type="radio" name="bid-intent" class="bid-intent" value="punish"> Profit &amp; Punish Next Bidder</label>
+<label class="bid-calc-radio-label" title="Highest possible profit - if you get outbid, it just falls back to an even split."><input type="radio" name="bid-intent" class="bid-intent" value="max"> Max Profit</label>
+</div>
+
+<div class="bid-calc-result">
+<span class="bid-calc-result-label">Amount to Bid</span>
+<span class="bid-calc-result-value">—</span>
+<button type="button" class="bid-calc-copy-btn" aria-label="Copy amount to bid" data-tooltip="Copy amount" disabled>
+<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+
+<table class="bid-calc-table">
+<thead>
+<tr>
+<th class="bid-calc-th-label"></th>
+<th>Bid</th>
+<th>Profit</th>
+<th>Party Profit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="bid-calc-row-you">
+<td class="bid-calc-row-label">You</td>
+<td class="bid-calc-you-bid">—</td>
+<td class="bid-calc-you-profit">—</td>
+<td class="bid-calc-you-party">—</td>
+</tr>
+<tr class="bid-calc-row-next">
+<td class="bid-calc-row-label">Next Bidder</td>
+<td class="bid-calc-next-bid">—</td>
+<td class="bid-calc-next-profit">—</td>
+<td class="bid-calc-next-party">—</td>
+</tr>
+</tbody>
+</table>
+
+<p class="bid-calc-footnote">Party Profit is each other member's cut if that row wins. Next Bidder needs a +10% raise to outbid you - hover an Intent above for what that means for you.</p>
+
+</div>
+
 ## Gearing Values
 
 *Late game examples including support buffs. Fill [Arsonistic's calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) with your own stats for accuracy.*

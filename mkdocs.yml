@@ -30,11 +30,12 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=5
+  - stylesheets/extra.css?v=6
 
 extra_javascript:
   - javascripts/extra.js
   - javascripts/cpm-calculator.js
+  - javascripts/bid-calculator.js
   - javascripts/ark-passive-calculator.js
   - javascripts/build-data.js
   - javascripts/skill-data.js

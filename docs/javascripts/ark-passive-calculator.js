@@ -1673,25 +1673,33 @@
         }
       });
 
-      // Click outside any open popover, or Escape, closes it - same
-      // dismissal pattern as any lightweight menu/tooltip on the site.
-      document.addEventListener("click", (ev) => {
-        root.querySelectorAll(".ap-calc-popover").forEach((popoverEl) => {
-          if (popoverEl.hidden) return;
-          if (popoverEl.contains(ev.target) || ev.target === popoverEl.__triggerEl) return;
-          closePopover(popoverEl);
-        });
-      });
-      document.addEventListener("keydown", (ev) => {
-        if (ev.key !== "Escape") return;
-        root.querySelectorAll(".ap-calc-popover").forEach((popoverEl) => {
-          if (!popoverEl.hidden) closePopover(popoverEl);
-        });
-      });
-
       update(root);
     });
   }
+
+  // Click outside any open popover, or Escape, closes it - same dismissal
+  // pattern as any lightweight menu/tooltip on the site. Bound ONCE at
+  // module scope (not per init() call) and scoped to `document` for the
+  // lookup itself - init() re-runs on every instant navigation to this
+  // page (document$.subscribe below), and binding these two listeners
+  // inside that per-root loop meant every revisit left another pair of
+  // permanent document-level listeners behind, each closing over that
+  // load's now-stale `root` and never cleaned up. There's normally just
+  // one .ap-calc per page, so querying from `document` instead of a
+  // specific `root` costs nothing in practice.
+  document.addEventListener("click", (ev) => {
+    document.querySelectorAll(".ap-calc-popover").forEach((popoverEl) => {
+      if (popoverEl.hidden) return;
+      if (popoverEl.contains(ev.target) || ev.target === popoverEl.__triggerEl) return;
+      closePopover(popoverEl);
+    });
+  });
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key !== "Escape") return;
+    document.querySelectorAll(".ap-calc-popover").forEach((popoverEl) => {
+      if (!popoverEl.hidden) closePopover(popoverEl);
+    });
+  });
 
   if (typeof document$ !== "undefined") {
     document$.subscribe(init);

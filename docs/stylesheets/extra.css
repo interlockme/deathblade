@@ -2812,6 +2812,298 @@ h3 { color: #4db6ac; }
   outline: none;
 }
 
+/* ---------- Raid auction bid calculator ---------- */
+/* Same card shell as .cpm-calc - lavender border, dark panel, lavender
+   field/radio accents throughout. An earlier version tinted the whole
+   card amber to flag "this one's gold, not a damage stat" - looked like
+   a stray warning banner instead of a calculator, so gold is now used
+   the way it's used in-game: just on the headline number itself
+   (.bid-calc-result-value) and the copy confirmation, not the card shell. */
+.md-typeset .bid-calc {
+  border: 1px solid rgba(179, 157, 219, 0.28);
+  background-color: rgba(179, 157, 219, 0.045);
+  border-radius: 10px;
+  padding: 1em 1.2em 1.2em;
+  margin: 1em 0 1.5em;
+}
+.md-typeset .bid-calc-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1em 1.4em;
+  padding-bottom: 0.9em;
+  margin-bottom: 0.9em;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.md-typeset .bid-calc-field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+.md-typeset .bid-calc-field-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+}
+.md-typeset .bid-calc-field-row input[type="number"],
+.md-typeset .bid-calc-field-row input.bid-market-price {
+  width: 8em;
+  background-color: #161718;
+  border: 1px solid rgba(179, 157, 219, 0.35);
+  border-radius: 6px;
+  color: #e8e6ee;
+  padding: 0.35em 0.5em;
+  font-size: 0.95em;
+  font-family: inherit;
+}
+.md-typeset .bid-calc-field-row input[type="number"]:focus,
+.md-typeset .bid-calc-field-row input.bid-market-price:focus {
+  outline: none;
+  border-color: #b39ddb;
+}
+.md-typeset .bid-calc-field-row input[type="number"]:out-of-range {
+  border-color: #e57373;
+}
+/* .bid-market-price is type="text" (not type="number") so commas can be
+   typed/displayed - a real number input rejects any "," keystroke, and a
+   6-7 digit gold price with no thousands separators is hard to read at a
+   glance. :out-of-range doesn't exist for text inputs, so out-of-range
+   styling for price is applied via this class from JS instead (see
+   bid-calculator.js's clampOnBlur/validity check). */
+.md-typeset .bid-calc-field-row input.bid-market-price.bid-calc-input-invalid {
+  border-color: #e57373;
+}
+/* Market Fee mirrors .cpm-calc-field-muted's "leave this alone unless you
+   know why you're touching it" treatment - almost always the default 5%
+   AH cut, but editable since it's occasionally been different for certain
+   items/events. */
+.md-typeset .bid-calc-field-muted .bid-calc-field-label {
+  color: #6f6a80;
+}
+.md-typeset .bid-calc-field-muted input[type="number"] {
+  width: 5em;
+  background-color: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: #8a849a;
+}
+.md-typeset .bid-calc-field-muted input[type="number"]:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #cfc9dd;
+}
+.md-typeset .bid-calc-field-muted input[type="number"]:focus {
+  border-color: #b39ddb;
+  border-style: solid;
+  color: #e8e6ee;
+}
+/* Raid Size / Intent pickers - same real-radio-inputs approach as
+   .ap-brace-spec-toggle (mutual exclusivity native to the browser rather
+   than JS-enforced), lavender accent-color to match the rest of the card. */
+.md-typeset .bid-calc-toggle,
+.md-typeset .bid-calc-intent {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7em;
+  margin: 0;
+}
+.md-typeset .bid-calc-intent {
+  padding-bottom: 0.9em;
+  margin-bottom: 0.9em;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.md-typeset .bid-calc-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.82em;
+  color: #cfc9dd;
+  cursor: pointer;
+}
+.md-typeset .bid-calc-radio-label input[type="radio"] {
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  accent-color: #a79bc4;
+  cursor: pointer;
+}
+/* Each Intent label now carries its own one-line native title (see
+   resources.md) instead of one shared info-icon with a paragraph tooltip
+   covering all three - a dotted underline is the standard "there's a
+   hover hint here" affordance instead of making the reader guess. */
+.md-typeset .bid-calc-intent .bid-calc-radio-label {
+  text-decoration: underline dotted rgba(167, 155, 196, 0.5);
+  text-underline-offset: 3px;
+}
+/* The headline number - same treatment as .cpm-calc-result-value (bold,
+   tabular-nums, muted "—" placeholder before valid input) but sized up
+   since this is the single payoff of the whole card, not one of two
+   side-by-side figures. */
+.md-typeset .bid-calc-result {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin-bottom: 0.9em;
+}
+.md-typeset .bid-calc-result-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a79bc4;
+  font-weight: 700;
+}
+.md-typeset .bid-calc-result-value {
+  font-size: 1.6em;
+  font-weight: 700;
+  color: #e6b422;
+  font-variant-numeric: tabular-nums;
+}
+.md-typeset .bid-calc-result-value.bid-calc-result-empty {
+  color: #6f6a80;
+  font-weight: 400;
+}
+/* Icon-only copy button, same shape/hover/custom-tooltip language as
+   .build-compare-share-btn (native title is invisible to some touch/
+   screen-reader flows and reads late, so this reuses that hand-rolled
+   data-tooltip instead). align-self overrides the row's own baseline
+   alignment so the button centers on the tall result number instead of
+   sitting low against its text baseline. Disabled state (no valid bid
+   yet) just dims and drops pointer events rather than hiding it, so the
+   layout doesn't jump the moment a valid Market Price is typed. */
+.md-typeset .bid-calc-copy-btn {
+  position: relative;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.9em;
+  height: 1.9em;
+  background: none;
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  border-radius: 6px;
+  color: #a79bc4;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.md-typeset .bid-calc-copy-btn:hover,
+.md-typeset .bid-calc-copy-btn:focus-visible {
+  color: #b39ddb;
+  border-color: rgba(179, 157, 219, 0.55);
+  outline: none;
+}
+.md-typeset .bid-calc-copy-btn svg {
+  display: block;
+}
+.md-typeset .bid-calc-copy-btn.bid-calc-copy-btn-copied {
+  color: #4db6ac;
+  border-color: rgba(77, 182, 172, 0.5);
+}
+.md-typeset .bid-calc-copy-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+.md-typeset .bid-calc-copy-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 0;
+  background-color: #161718;
+  color: #e8e6ee;
+  font-size: 0.68rem;
+  font-weight: 600;
+  font-family: inherit;
+  white-space: nowrap;
+  padding: 0.35em 0.6em;
+  border: 1px solid rgba(179, 157, 219, 0.3);
+  border-radius: 5px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(2px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 5;
+}
+.md-typeset .bid-calc-copy-btn:hover::after,
+.md-typeset .bid-calc-copy-btn:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* You / Next Bidder comparison - same card polish as .ap-brace-compare-table
+   (tinted uppercase header, no vertical rules) rather than Material's
+   default table style, so it reads as part of this component instead of
+   plain page content. */
+.md-typeset .bid-calc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+/* Sub-300px widths (narrower than any real phone viewport, but the
+   sidebar/TOC coming and going can still squeeze a reader's actual
+   content column this tight) run out of room for three comma-formatted
+   gold columns - scrolls instead of forcing an overflow like the other
+   reference tables on this site (see .skills-table-wrap). */
+@media (max-width: 340px) {
+  .md-typeset .bid-calc-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+.md-typeset .bid-calc-table th {
+  text-align: right;
+  font-size: 0.78em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6f6a80;
+  padding: 0.3em 0.5em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.md-typeset .bid-calc-table .bid-calc-th-label {
+  text-align: left;
+}
+.md-typeset .bid-calc-table td {
+  padding: 0.5em;
+  text-align: right;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-variant-numeric: tabular-nums;
+  vertical-align: top;
+}
+.md-typeset .bid-calc-table tr:last-child td {
+  border-bottom: none;
+}
+.md-typeset .bid-calc-table .bid-calc-row-label {
+  text-align: left;
+  font-weight: 700;
+  color: #e8e6ee;
+}
+.md-typeset .bid-calc-table .bid-calc-you-profit {
+  color: #4db6ac;
+  font-weight: 700;
+}
+.md-typeset .bid-calc-table .bid-calc-next-profit {
+  color: #cfc9dd;
+}
+/* Toggled by the JS once a rival's profit from outbidding you actually
+   exceeds their share of your bid - i.e. bidding low (Max Profit) really
+   does invite someone to take the item from you, and this row should say
+   so instead of sitting there looking as neutral as the deterred case. */
+.md-typeset .bid-calc-row-next-risk .bid-calc-next-profit {
+  color: #e57373;
+  font-weight: 700;
+}
+.md-typeset .bid-calc-table.bid-calc-table-empty td:not(.bid-calc-row-label) {
+  color: #6f6a80;
+}
+.md-typeset .bid-calc-footnote {
+  margin: 0.9em 0 0;
+  font-size: 0.78em;
+  color: #6f6a80;
+  line-height: 1.5;
+}
+
 /* ---------- Ark Passive node comparison calculator ---------- */
 /* Same card shell as .cpm-calc (lavender border, dark panel) so the two
    calculators read as one family. Inputs are grouped by which final stat
