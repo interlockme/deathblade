@@ -199,7 +199,7 @@
 - You can gain more comfort at a DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
 - Upper Slash is a push immune skill that generates 5 stacks and allows you to skip Earth Cleaver casts.
 - Replace both Earth Cleaver gems for Upper Slash CD and any other gem you prefer.
-- Alternatively, keep Earth Cleaver as is and only use Upper Slash as a safety net.
+- Optionally, replace Earth Cleaver entirely for Lv 1-4 Head hunt and raise Surprise Attack.
 
 <div class="skill-setup" data-family="surge" markdown>
 <script type="application/json">
