@@ -614,7 +614,7 @@
 
 </div>
 
-## Auction Bid Calculator
+## Bid Calculator
 
 <div class="bid-calc">
 
