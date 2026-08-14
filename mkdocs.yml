@@ -30,26 +30,26 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=6
+  - stylesheets/extra.css?v=7
 
 extra_javascript:
-  - javascripts/site-utils.js?v=1
-  - javascripts/extra.js?v=1
-  - javascripts/cpm-calculator.js?v=1
-  - javascripts/bid-calculator.js?v=1
-  - javascripts/ark-passive-calculator.js?v=1
-  - javascripts/build-data.js?v=1
-  - javascripts/skill-data.js?v=1
-  - javascripts/skill-setup.js?v=4
-  - javascripts/essentials-table.js?v=1
-  - javascripts/ark-core-badge.js?v=1
-  - javascripts/ark-passive-tree.js?v=1
-  - javascripts/pentagon-badge.js?v=1
-  - javascripts/rotation-practice.js?v=1
-  - javascripts/dps-chart.js?v=1
-  - javascripts/gem-dps-tooltip.js?v=1
-  - javascripts/build-compare.js?v=1
-  - javascripts/last-updated.js?v=1
+  - javascripts/site-utils.js?v=2
+  - javascripts/extra.js?v=2
+  - javascripts/cpm-calculator.js?v=2
+  - javascripts/bid-calculator.js?v=2
+  - javascripts/ark-passive-calculator.js?v=2
+  - javascripts/build-data.js?v=2
+  - javascripts/skill-data.js?v=2
+  - javascripts/skill-setup.js?v=5
+  - javascripts/essentials-table.js?v=2
+  - javascripts/ark-core-badge.js?v=2
+  - javascripts/ark-passive-tree.js?v=2
+  - javascripts/pentagon-badge.js?v=2
+  - javascripts/rotation-practice.js?v=2
+  - javascripts/dps-chart.js?v=2
+  - javascripts/gem-dps-tooltip.js?v=2
+  - javascripts/build-compare.js?v=2
+  - javascripts/last-updated.js?v=2
 
 extra:
   generator: false

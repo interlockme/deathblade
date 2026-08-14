@@ -46,7 +46,7 @@ html {
 ::-webkit-scrollbar-thumb {
   background-color: rgba(179, 157, 219, 0.35);
   border-radius: 999px;
-  border: 2px solid #161718;
+  border: 2px solid var(--md-default-bg-color);
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: rgba(179, 157, 219, 0.55);
@@ -60,13 +60,13 @@ html {
   background-color: #1b1c1d; /* same neutral shade as the header/tabs bar */
 }
 .md-footer-nav__link {
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
 }
 .md-footer-nav__link:hover {
   color: #ee83ab; /* matches --md-accent-fg-color */
 }
 .md-footer-meta {
-  background-color: #161718; /* page bg, so the generator-credit row (empty, generator: false) doesn't add a visible second stripe */
+  background-color: var(--md-default-bg-color); /* page bg, so the generator-credit row (empty, generator: false) doesn't add a visible second stripe */
 }
 
 h1, h2, h3 {
@@ -517,31 +517,6 @@ h3 { color: #4db6ac; }
   vertical-align: text-bottom;
   border-radius: 4px;
   margin: 0 2px 0 4px;
-}
-
-/* ---------- Compact inline cycle number badge for prose ---------- */
-/* A smaller standalone version of the cycle-card-header's numeral badge,
-   sized to sit inline in a sentence. Deliberately NOT a bordered chip
-   like .skill-chip — a lone circle is already a self-contained visual
-   unit, and wrapping it in a second box just to hold one digit looked
-   cramped (20px .cycle-num doesn't fit a compact chip's padding) and
-   repeating "Cycle 2" as text next to a "2" badge was redundant. Instead,
-   write "Cycle" as normal prose and drop the numeral in after it:
-   e.g. "...interchangeable with Cycle <span class="cycle-badge">2</span> if..." */
-.md-typeset .cycle-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: #b39ddb;
-  color: #161718;
-  font-weight: 700;
-  font-size: 0.7rem;
-  line-height: 1;
-  vertical-align: middle;
-  flex-shrink: 0;
 }
 
 /* ---------- Reusable skill chip for prose (outside rotation-lines) ---------- */
@@ -1187,13 +1162,13 @@ h3 { color: #4db6ac; }
   height: 20px;
   border-radius: 50%;
   background-color: #b39ddb;
-  color: #161718;
+  color: var(--md-default-bg-color);
   font-weight: 700;
   font-size: 0.72rem;
   flex-shrink: 0;
 }
 .md-typeset .cycle-title {
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   font-weight: 700;
   font-size: 0.95em;
 }
@@ -1360,7 +1335,7 @@ h3 { color: #4db6ac; }
 .md-typeset .stat-value {
   font-size: 0.95em;
   font-weight: 600;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   line-height: 1.3;
 }
 
@@ -1561,7 +1536,7 @@ h3 { color: #4db6ac; }
   stroke-width: 1;
 }
 .pentagon-dot {
-  fill: #161718;
+  fill: var(--md-default-bg-color);
   stroke-width: 1.5;
 }
 .pentagon-label {
@@ -1783,10 +1758,10 @@ h3 { color: #4db6ac; }
   flex-shrink: 0;
 }
 .md-typeset .build-compare-select {
-  background-color: #161718;
+  background-color: var(--md-default-bg-color);
   border: 1px solid rgba(179, 157, 219, 0.35);
   border-radius: 6px;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   padding: 0.35em 0.6em;
   font-size: 0.85em;
   font-family: inherit;
@@ -1850,8 +1825,8 @@ h3 { color: #4db6ac; }
   bottom: calc(100% + 7px);
   right: 0;
   transform: translateY(2px);
-  background-color: #161718;
-  color: #e8e6ee;
+  background-color: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
   font-size: 0.68rem;
   font-weight: 600;
   font-family: inherit;
@@ -2163,7 +2138,7 @@ h3 { color: #4db6ac; }
   line-height: 1.4;
   padding: 0.3em 0.8em;
   border-radius: 999px;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.14);
 }
@@ -2326,7 +2301,7 @@ h3 { color: #4db6ac; }
 .md-typeset .engraving-card-name {
   font-weight: 700;
   font-size: 1em;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   margin-right: auto;
 }
 .md-typeset .engraving-card-badges {
@@ -2483,8 +2458,7 @@ h3 { color: #4db6ac; }
 /* ---------- Page-level availability banner ---------- */
 /* Replaces cramming "NOT IN NA SERVERS YET" or an emoji into the H1 itself.
    Usage, right under the H1:
-   <p class="page-banner page-banner-warning">Not available in NA servers yet</p>
-   Swap the modifier class for page-banner-danger if the severity calls for it. */
+   <p class="page-banner page-banner-warning">Not available in NA servers yet</p> */
 .md-typeset .page-banner {
   display: flex;
   align-items: center;
@@ -2506,14 +2480,6 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .page-banner-warning::before {
   content: "▲";
-}
-.md-typeset .page-banner-danger {
-  border: 1px solid rgba(229, 115, 115, 0.35);
-  background-color: #271717;
-  color: #e57373;
-}
-.md-typeset .page-banner-danger::before {
-  content: "⚠";
 }
 
 /* ---------- Personal CPM/back-attack multiplier calculator ---------- */
@@ -2546,7 +2512,7 @@ h3 { color: #4db6ac; }
   line-height: 1.5;
 }
 .md-typeset .cpm-calc-hint strong {
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
 }
 /* Row pairing the hint text with the Surges/Min scratch-pad widget so
    the widget sits at the top-right of the card instead of full-width
@@ -2592,7 +2558,7 @@ h3 { color: #4db6ac; }
   gap: 0.5em;
   flex: 0 0 auto;
   padding: 0.4em 0.7em;
-  background-color: #161718;
+  background-color: var(--md-default-bg-color);
   border: 1px solid rgba(179, 157, 219, 0.3);
   border-radius: 8px;
   white-space: nowrap;
@@ -2631,7 +2597,7 @@ h3 { color: #4db6ac; }
   background-color: #1c1d1f;
   border: 1px solid rgba(179, 157, 219, 0.35);
   border-radius: 6px;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   padding: 0.3em 0.4em;
   font-size: 0.85em;
   font-family: inherit;
@@ -2748,7 +2714,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .cpm-calc-row-title {
   font-weight: 700;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
 }
 .md-typeset .cpm-calc-row-meta {
   font-size: 0.78em;
@@ -2794,10 +2760,10 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .cpm-calc-field input[type="number"] {
   width: 6.5em;
-  background-color: #161718;
+  background-color: var(--md-default-bg-color);
   border: 1px solid rgba(179, 157, 219, 0.35);
   border-radius: 6px;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   padding: 0.35em 0.5em;
   font-size: 0.95em;
   font-family: inherit;
@@ -2853,7 +2819,7 @@ h3 { color: #4db6ac; }
 .md-typeset .cpm-calc-field-muted input[type="number"]:focus {
   border-color: #b39ddb;
   border-style: solid;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
 }
 .md-typeset .cpm-calc-field-muted input[type="number"]:out-of-range {
   border-color: #e57373;
@@ -3017,10 +2983,10 @@ h3 { color: #4db6ac; }
 .md-typeset .bid-calc-field-row input[type="number"],
 .md-typeset .bid-calc-field-row input.bid-market-price {
   width: 8em;
-  background-color: #161718;
+  background-color: var(--md-default-bg-color);
   border: 1px solid rgba(179, 157, 219, 0.35);
   border-radius: 6px;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   padding: 0.35em 0.5em;
   font-size: 0.95em;
   font-family: inherit;
@@ -3062,7 +3028,7 @@ h3 { color: #4db6ac; }
 .md-typeset .bid-calc-field-muted input[type="number"]:focus {
   border-color: #b39ddb;
   border-style: solid;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
 }
 /* Raid Size / Intent pickers - same real-radio-inputs approach as
    .ap-brace-spec-toggle (mutual exclusivity native to the browser rather
@@ -3179,8 +3145,8 @@ h3 { color: #4db6ac; }
   position: absolute;
   bottom: calc(100% + 7px);
   left: 0;
-  background-color: #161718;
-  color: #e8e6ee;
+  background-color: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
   font-size: 0.68rem;
   font-weight: 600;
   font-family: inherit;
@@ -3244,7 +3210,7 @@ h3 { color: #4db6ac; }
 .md-typeset .bid-calc-table .bid-calc-row-label {
   text-align: left;
   font-weight: 700;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
 }
 .md-typeset .bid-calc-table .bid-calc-you-profit {
   color: #4db6ac;
@@ -3360,10 +3326,10 @@ h3 { color: #4db6ac; }
   color: #cfc9dd;
 }
 .md-typeset .ap-calc-mini-field select {
-  background-color: #161718;
+  background-color: var(--md-default-bg-color);
   border: 1px solid rgba(179, 157, 219, 0.35);
   border-radius: 6px;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   padding: 0.3em 0.5em;
   font-size: 0.85em;
   font-family: inherit;
@@ -3443,10 +3409,10 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .ap-calc-field-row select,
 .md-typeset .ap-calc-field-row input[type="number"] {
-  background-color: #161718;
+  background-color: var(--md-default-bg-color);
   border: 1px solid rgba(179, 157, 219, 0.35);
   border-radius: 6px;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   padding: 0.3em 0.5em;
   font-size: 0.85em;
   font-family: inherit;
@@ -3658,7 +3624,7 @@ h3 { color: #4db6ac; }
   flex: 1;
   font-size: 0.88em;
   font-weight: 600;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   min-width: 0;
 }
 .md-typeset .ap-calc-result-row-best .ap-result-combo {
@@ -3667,7 +3633,7 @@ h3 { color: #4db6ac; }
 .md-typeset .ap-result-pct {
   font-size: 1em;
   font-weight: 700;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   text-align: right;
 }
 .md-typeset .ap-calc-result-row-best .ap-result-pct {
@@ -3778,7 +3744,7 @@ h3 { color: #4db6ac; }
 .md-typeset .ap-summary-label--evodmg   { color: #b39ddb; }
 .md-typeset .ap-summary-value {
   font-weight: 700;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
 }
 /* Toggled by JS instead of an inline color when a raw (uncapped) Crit Rate
    total exceeds 100% - a clear warning that points are being wasted past
@@ -3976,7 +3942,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .ap-brace-row-label {
   font-weight: 400;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   text-align: left;
 }
 /* The Low/Mid/High figures embedded in each bracelet line's own label
@@ -4226,7 +4192,7 @@ h3 { color: #4db6ac; }
 .md-typeset .ap-calc-popover-title {
   font-weight: 700;
   font-size: 0.9em;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
 }
 .md-typeset .ap-calc-popover-textarea {
   width: 100%;
@@ -4476,7 +4442,7 @@ h3 { color: #4db6ac; }
 .md-typeset .dps-chart-value {
   font-size: 1em;
   font-weight: 600;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
@@ -5067,7 +5033,7 @@ body.page-333-blitz input[type="text"] {
      gem-item-name rows in the section right below this one (which sit at
      600 for their own rank-1 row, plain weight otherwise). */
   font-weight: 500;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   font-size: 0.9em;
   line-height: 1.25;
   /* The safety net for a narrow card, full-time now (not just past some
@@ -5110,7 +5076,7 @@ body.page-333-blitz input[type="text"] {
   border-radius: 50px;
   font-size: 0.72rem;
   font-weight: 700;
-  color: #161718;
+  color: var(--md-default-bg-color);
   flex-shrink: 0;
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.28),
@@ -5330,7 +5296,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-core-name {
   font-size: 0.72rem;
   font-weight: 500;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   line-height: 1.25;
   text-align: left;
 }
@@ -5646,7 +5612,7 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .ark-passive-node-name {
   font-size: 0.85em;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   font-weight: 500;
   flex: 1 1 auto;
   min-width: 0;
@@ -5935,7 +5901,7 @@ body.page-333-blitz input[type="text"] {
   list-style: none;
   font-weight: 700;
   font-size: 0.85em;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   /* Material's base `.md-typeset summary` rule sets `overflow: hidden` on
      every summary - harmless for the text, but .setup-note-arrow's
      bounding box (built from the border-triangle trick) shifts slightly
@@ -6072,7 +6038,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .food-required-lead {
   margin: 0 0 0.7em;
   font-size: 1em;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
 }
 .md-typeset .food-required-lead strong {
   color: #ee83ab;
@@ -6119,7 +6085,7 @@ body.page-333-blitz input[type="text"] {
   margin: 0;
   font-size: 0.85em;
   font-weight: 600;
-  color: #e8e6ee;
+  color: var(--md-default-fg-color);
   line-height: 1.3;
   white-space: nowrap;
 }
