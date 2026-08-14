@@ -372,7 +372,7 @@
     - Use Maelstrom + Fatal Wave earlier if waiting on main orb generation skills.
 
 === "TL;DR:"
-    ![313 TL;DR flowchart](../assets/re/tldr-313.png)
+    ![313 TL;DR flowchart](../assets/re/tldr-313.png){ loading=lazy }
 
 ## DPS Spread
 

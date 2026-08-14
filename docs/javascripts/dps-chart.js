@@ -103,9 +103,7 @@
         icon.loading = "lazy";
         // A missing icon file (skill without an icon-*.png yet) just
         // collapses away instead of showing a broken-image glyph.
-        icon.addEventListener("error", function () {
-          icon.style.display = "none";
-        });
+        window.SiteUtils.hideOnError(icon, "display");
         labelWrap.appendChild(icon);
       }
       var labelText = document.createElement("span");

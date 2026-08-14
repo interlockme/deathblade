@@ -55,11 +55,7 @@
   var BREAKPOINTS = ["10P", "14P", "17P"];
   var CORE_ART = { sun: "sun.png", moon: "moon.png", star: "star.png" };
 
-  function el(tag, className) {
-    var e = document.createElement(tag);
-    if (className) e.className = className;
-    return e;
-  }
+  var el = window.SiteUtils.el;
 
   function buildItem(entry) {
     var item = el("div", "ark-core-item");
@@ -69,9 +65,7 @@
     icon.src = SITE_ROOT + "assets/shared/" + (CORE_ART[entry.core] || "sun.png");
     icon.alt = "";
     icon.loading = "lazy";
-    icon.addEventListener("error", function () {
-      icon.style.visibility = "hidden";
-    });
+    window.SiteUtils.hideOnError(icon);
     item.appendChild(icon);
 
     // Name + points live together in one column to the right of the icon

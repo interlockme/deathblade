@@ -3,7 +3,7 @@
 <p class="page-banner page-banner-warning">Not available in NA/EU servers yet</p>
 
 ??? danger "But why male models? 🐯 "
-    ![333 Blitz meme](../assets/surge/blitz-meme.png)
+    ![333 Blitz meme](../assets/surge/blitz-meme.png){ loading=lazy }
 
 <div class="build-card-row" markdown>
 <div class="build-card" data-updated="2026-08-07" markdown>

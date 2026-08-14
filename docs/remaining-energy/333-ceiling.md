@@ -420,7 +420,7 @@
     - Hold Deathly Slash until the next Cycle **1** if it's out of sync. DPS loss, but easier.
 
 === "TL;DR:"
-    ![333 TL;DR flowchart](../assets/re/tldr-333.png)
+    ![333 TL;DR flowchart](../assets/re/tldr-333.png){ loading=lazy }
 
 ## DPS Spread
 

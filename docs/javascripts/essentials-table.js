@@ -50,11 +50,7 @@
   }
   var SITE_ROOT = detectSiteRoot();
 
-  function el(tag, className) {
-    var e = document.createElement(tag);
-    if (className) e.className = className;
-    return e;
-  }
+  var el = window.SiteUtils.el;
 
   function buildRow(entry, family) {
     var tr = document.createElement("tr");
@@ -64,9 +60,7 @@
     icon.src = SITE_ROOT + "assets/" + family + "/icon-" + entry.id + ".png";
     icon.alt = "";
     icon.loading = "lazy";
-    icon.addEventListener("error", function () {
-      icon.style.visibility = "hidden";
-    });
+    window.SiteUtils.hideOnError(icon);
     iconTd.appendChild(icon);
     tr.appendChild(iconTd);
 

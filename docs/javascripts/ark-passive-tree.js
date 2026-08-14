@@ -65,11 +65,7 @@
   }
   var SITE_ROOT = detectSiteRoot();
 
-  function el(tag, className) {
-    var e = document.createElement(tag);
-    if (className) e.className = className;
-    return e;
-  }
+  var el = window.SiteUtils.el;
 
   function buildNode(entry, family) {
     var row = el("div", "ark-passive-node");
@@ -79,9 +75,7 @@
     icon.src = SITE_ROOT + "assets/" + family + "/" + entry.icon;
     icon.alt = "";
     icon.loading = "lazy";
-    icon.addEventListener("error", function () {
-      icon.style.visibility = "hidden";
-    });
+    window.SiteUtils.hideOnError(icon);
     row.appendChild(icon);
 
     row.appendChild(el("span", "ark-passive-node-name")).textContent = entry.name || "";

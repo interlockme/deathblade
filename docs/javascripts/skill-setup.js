@@ -82,12 +82,7 @@
   }
   var SITE_ROOT = detectSiteRoot();
 
-  function el(tag, className, text) {
-    var e = document.createElement(tag);
-    if (className) e.className = className;
-    if (text != null) e.textContent = text;
-    return e;
-  }
+  var el = window.SiteUtils.el;
 
   function buildCard(entry, family) {
     var details = document.createElement("details");
@@ -102,9 +97,7 @@
     icon.loading = "lazy";
     // A missing icon just collapses away instead of showing a broken-
     // image glyph, same graceful-degradation as dps-chart.js icons.
-    icon.addEventListener("error", function () {
-      icon.style.visibility = "hidden";
-    });
+    window.SiteUtils.hideOnError(icon);
     summary.appendChild(icon);
 
     // .skill-card-main stacks the name row above the chips row instead of
