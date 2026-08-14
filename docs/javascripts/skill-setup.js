@@ -263,15 +263,9 @@
   }
 
   function initMasonry(grid) {
-    var scheduled = false;
-    function schedule() {
-      if (scheduled) return;
-      scheduled = true;
-      requestAnimationFrame(function () {
-        scheduled = false;
-        layoutMasonry(grid);
-      });
-    }
+    var schedule = window.SiteUtils.rafSchedule(function () {
+      layoutMasonry(grid);
+    });
 
     schedule();
 

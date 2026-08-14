@@ -46,5 +46,25 @@
     iconSrc: function (siteRoot, relIcon) {
       return siteRoot + "assets/shared/" + relIcon;
     },
+
+    // Coalesce repeated calls into at most one requestAnimationFrame-timed
+    // invocation of fn. Returns a schedule() function - call it as often
+    // as you like (resize events, ResizeObserver callbacks, input events
+    // during a drag, ...) and fn runs at most once per animation frame,
+    // with no arguments. Previously this exact scheduled-flag +
+    // requestAnimationFrame wrapper was copy-pasted identically into
+    // skill-setup.js's initMasonry and ark-passive-tree.js's
+    // watchRowWraps; centralized here per this file's own stated purpose.
+    rafSchedule: function (fn) {
+      var scheduled = false;
+      return function () {
+        if (scheduled) return;
+        scheduled = true;
+        requestAnimationFrame(function () {
+          scheduled = false;
+          fn();
+        });
+      };
+    },
   };
 })();

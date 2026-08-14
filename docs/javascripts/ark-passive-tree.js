@@ -150,15 +150,9 @@
   }
 
   function watchRowWraps(row) {
-    var scheduled = false;
-    function schedule() {
-      if (scheduled) return;
-      scheduled = true;
-      requestAnimationFrame(function () {
-        scheduled = false;
-        markRowStarts(row);
-      });
-    }
+    var schedule = window.SiteUtils.rafSchedule(function () {
+      markRowStarts(row);
+    });
 
     schedule();
 

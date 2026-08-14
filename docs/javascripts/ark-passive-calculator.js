@@ -1543,15 +1543,25 @@
         });
       }
 
+      // Coalesced to at most one recompute+render+save per animation
+      // frame, shared across every field in this root. Range sliders fire
+      // "input" continuously while dragging (the number/select fields
+      // mostly fire once per keystroke or selection), and update() does a
+      // full grid + bracelet-comparison re-render while saveInputs() does
+      // a synchronous JSON.stringify + localStorage.setItem - uncoalesced,
+      // a single slider drag could run that whole chain dozens of times a
+      // second. rafSchedule() only delays *when* the latest DOM values get
+      // read and saved (by at most one frame), never *which* values -
+      // input fields already hold their final value synchronously by the
+      // time any event fires, so this can't drop or reorder data.
+      const scheduleUpdate = window.SiteUtils.rafSchedule(() => {
+        update(root);
+        saveInputs(root, getActivePresetId());
+      });
+
       root.querySelectorAll("input, select").forEach((el) => {
-        el.addEventListener("input", () => {
-          update(root);
-          saveInputs(root, getActivePresetId());
-        });
-        el.addEventListener("change", () => {
-          update(root);
-          saveInputs(root, getActivePresetId());
-        });
+        el.addEventListener("input", scheduleUpdate);
+        el.addEventListener("change", scheduleUpdate);
       });
       // readInputs() already clamps every number field to its min/max when
       // computing (Crit Stat, Weapon Quality, Astrogem Level, Demon
@@ -1573,8 +1583,7 @@
           if (max !== null) clamped = Math.min(max, clamped);
           if (clamped !== raw) {
             el.value = String(clamped);
-            update(root);
-            saveInputs(root, getActivePresetId());
+            scheduleUpdate();
           }
         });
       });
