@@ -59,8 +59,7 @@
 
 <div class="ark-passives" data-family="re" markdown>
 <script type="application/json">
-{
-  "columns": [
+[
     { "id": "evolution", "label": "Evolution", "points": 140, "tiers": [
       { "label": "Tier 1", "nodes": [
         { "name": "Crit", "level": 10, "max": 30, "icon": "ap-icons/critical.png" },
@@ -107,7 +106,6 @@
       ] }
     ] }
   ]
-}
 </script>
 </div>
 
@@ -373,14 +371,20 @@
     <div class="cycle-card" markdown>
     <div class="cycle-card-header"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash</span></div>
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+    <script type="application/json">
+    ["maelstrom", "voidstrike", "twinshadows", "deathlyslash", "fatalwave", "turningslash", "fatalwave", "surge"]
+    </script>
     </div>
     </div>
 
     <div class="cycle-card" markdown>
     <div class="cycle-card-header"><span class="cycle-num">2</span><span class="cycle-title">Soul Absorber + Blitz Rush</span></div>
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/shared/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/shared/icon-maelstrom.png)Maelstrom<span class="skill-situational-tag">situational</span></span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+    <script type="application/json">
+    ["soulabsorber", "blitzrush", "twinshadows",
+     { "id": "maelstrom", "situational": true },
+     "fatalwave", "turningslash", "fatalwave", "surge"]
+    </script>
     </div>
     </div>
 
@@ -396,7 +400,12 @@
     { .lead }
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/shared/icon-headhunt.png)Head Hunt</span><span class="arrow"> ⇄ </span><span class="skill">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">2</span><span class="cycle-title">Soul Absorber + Blitz Rush Cycle</span></span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash Cycle</span></span><span class="arrow"> → </span>&nbsp;etc.
+    <script type="application/json">
+    ["headhunt", "twinshadows", "maelstrom", "turningslash", "deathlyslash", "fatalwave", "surge",
+     { "cycleRef": 2, "title": "Soul Absorber + Blitz Rush Cycle" },
+     { "cycleRef": 1, "title": "Void Strike + Deathly Slash Cycle" },
+     { "suffix": "etc." }]
+    </script>
     </div>
 
     - <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> + <span class="skill-chip">![](../assets/shared/icon-fatalwave.png)![](../assets/shared/icon-turningslash.png)![](../assets/shared/icon-fatalwave.png)FTF</span> is interchangeable with Cycle **2** if it's available.

@@ -998,6 +998,11 @@ h3 { color: #4db6ac; }
 
 
 /* ---------- Rotation/opener sequences, styled as cards ---------- */
+/* Authored as a compact JSON step list, not handwritten span markup -
+   see rotation-line.js's EASY EDIT GUIDE for the format. The rules below
+   style whatever DOM that script builds (.rotation-line > .skill/.arrow,
+   img + text inside .skill) - the shape is unchanged from the old
+   handwritten markup, only how it gets authored changed. */
 .md-typeset .rotation-line {
   display: flex;
   align-items: center;
@@ -1106,8 +1111,9 @@ h3 { color: #4db6ac; }
    control uses elsewhere. Was previously written inline as plain
    italicized text: *( icon Name — situational )*, which didn't stand
    out from a real step in the sequence until you actually read it.
-   Usage:
-   <span class="skill skill-situational">![](path)Name<span class="skill-situational-tag">situational</span></span> */
+   This DOM is now built by rotation-line.js from a step like
+   { "id": "headhunt", "situational": true } - see that file's EASY EDIT
+   GUIDE rather than writing this markup by hand. */
 .md-typeset .rotation-line .skill-situational {
   border-style: dashed;
   border-color: #3a3a3f;

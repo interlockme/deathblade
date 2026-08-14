@@ -64,8 +64,7 @@
 
 <div class="ark-passives" data-family="surge" markdown>
 <script type="application/json">
-{
-  "columns": [
+[
     { "id": "evolution", "label": "Evolution", "points": 140, "tiers": [
       { "label": "Tier 1", "nodes": [
         { "name": "Crit", "level": 10, "max": 30, "icon": "ap-icons/critical.png" },
@@ -114,7 +113,6 @@
       ] }
     ] }
   ]
-}
 </script>
 </div>
 
@@ -337,7 +335,9 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
 === "Main Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+    <script type="application/json">
+    ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "turningslash", "earthcleaver", "bladedance", "deathlyslash", "surpriseattack", "surge"]
+    </script>
     </div>
 
     - Cast <span class="skill-chip">![](../assets/shared/icon-spincutter.png)Spincutter</span> instead of <span class="skill-chip">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span> as needed.
@@ -350,7 +350,9 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
     { .lead }
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-upperslash.png)Upper Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+    <script type="application/json">
+    ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "upperslash", "turningslash", "bladedance", "deathlyslash", "surpriseattack", "surge"]
+    </script>
     </div>
 
     - Cast <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> whenever you want, I'm not your mom.

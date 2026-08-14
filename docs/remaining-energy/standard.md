@@ -54,8 +54,7 @@
 
 <div class="ark-passives" data-family="re" markdown>
 <script type="application/json">
-{
-  "columns": [
+[
     { "id": "evolution", "label": "Evolution", "points": 140, "tiers": [
       { "label": "Tier 1", "nodes": [
         { "name": "Crit", "level": 10, "max": 30, "icon": "ap-icons/critical.png" },
@@ -103,7 +102,6 @@
       ] }
     ] }
   ]
-}
 </script>
 </div>
 
@@ -245,14 +243,20 @@ The opener stacks Adrenaline and applies synergies efficiently as you build up t
 { .lead }
 
 <div class="rotation-line" markdown>
-<span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+<script type="application/json">
+["maelstrom", "twinshadows", "turningslash", "soulabsorber", "voidstrike", "deathlyslash", "surge"]
+</script>
 </div>
 
 *Main repeating cycle:*
 { .lead }
 
 <div class="rotation-line" markdown>
-<span class="skill">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/shared/icon-deathlyslash.png)Deathly Slash<span class="skill-situational-tag">**every other rotation**</span></span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+<script type="application/json">
+["twinshadows", "deathsentence", "maelstrom",
+ { "id": "deathlyslash", "situational": "every other rotation" },
+ "turningslash", "earthcleaver", "soulabsorber", "voidstrike", "surge"]
+</script>
 </div>
 
 - <span class="skill-chip">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span> is only available every other rotation, just keep going if it's on cooldown.

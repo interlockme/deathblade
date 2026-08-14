@@ -65,8 +65,7 @@
 
 <div class="ark-passives" data-family="surge" markdown>
 <script type="application/json">
-{
-  "columns": [
+[
     { "id": "evolution", "label": "Evolution", "points": 140, "tiers": [
       { "label": "Tier 1", "nodes": [
         { "name": "Crit", "level": 10, "max": 30, "icon": "ap-icons/critical.png" },
@@ -115,7 +114,6 @@
       ] }
     ] }
   ]
-}
 </script>
 </div>
 
@@ -296,7 +294,10 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 === "Opener/Breaking Moon Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill skill-situational">![](../assets/shared/icon-turningslash.png) or ![](../assets/shared/icon-surpriseattack.png)<span class="skill-situational-tag">synergy/adrenaline</span></span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-breakingmoon.png)Breaking Moon</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+    <script type="application/json">
+    [{ "icons": ["turningslash", "surpriseattack"], "situational": "synergy/adrenaline" },
+     "windcut", "deathtrance", "maelstrom", "surpriseattack", "breakingmoon", "surge"]
+    </script>
     </div>
 
     - If you already have a Maelstrom (or Rage) buff of 3 seconds or more, consider skipping it.
@@ -304,7 +305,11 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 === "Main Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/shared/icon-surpriseattack.png)Surprise Attack<span class="skill-situational-tag">situational</span></span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+    <script type="application/json">
+    ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "earthcleaver", "turningslash", "bladedance", "blitzrush",
+     { "id": "surpriseattack", "situational": true },
+     "surge"]
+    </script>
     </div>
 
     - Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge (Raid Captain).
@@ -315,7 +320,9 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
     { .lead }
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+    <script type="application/json">
+    ["maelstrom", "windcut", "deathtrance", "surpriseattack", "windcut", "earthcleaver", "turningslash", "maelstrom", "bladedance", "blitzrush", "surpriseattack", "surge"]
+    </script>
     </div>
 
     - Use your judgment. Not every skill needs the Maelstrom buff, so prioritize Surge.
@@ -324,7 +331,9 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 === "Awakening Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladeassault.png)Blade Assault</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+    <script type="application/json">
+    ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "turningslash", "bladedance", "bladeassault", "surge"]
+    </script>
     </div>
 
 *From zero orbs:*

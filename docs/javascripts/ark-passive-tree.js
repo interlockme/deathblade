@@ -10,27 +10,32 @@
 // EASY EDIT GUIDE:
 //   <div class="ark-passives" markdown>
 //   <script type="application/json">
-//   {
-//     "columns": [
-//       {
-//         "id": "evolution",
-//         "label": "Evolution",
-//         "points": 140,
-//         "tiers": [
-//           {
-//             "label": "Tier 1",
-//             "nodes": [
-//               { "name": "Node Name", "level": 30, "max": 30, "icon": "ap-icons/x.png" }
-//             ]
-//           }
-//         ]
-//       },
-//       { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [...] },
-//       { "id": "leap", "label": "Leap", "points": 70, "tiers": [...] }
-//     ]
-//   }
+//   [
+//     {
+//       "id": "evolution",
+//       "label": "Evolution",
+//       "points": 140,
+//       "tiers": [
+//         {
+//           "label": "Tier 1",
+//           "nodes": [
+//             { "name": "Node Name", "level": 30, "max": 30, "icon": "ap-icons/x.png" }
+//           ]
+//         }
+//       ]
+//     },
+//     { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [...] },
+//     { "id": "leap", "label": "Leap", "points": 70, "tiers": [...] }
+//   ]
 //   </script>
 //   </div>
+//
+//   NOTE: the root is a bare array of columns (not {"columns": [...]}).
+//   A top-level JSON object breaks after an in-app nav - see
+//   rotation-line.js's EASY EDIT GUIDE comment for why (mkdocs-material's
+//   instant-nav script re-execution drops the script's type attribute, so
+//   a bare { at the start of the payload gets parsed as a JS block
+//   statement instead of JSON). Keeping the root an array sidesteps it.
 //
 //   columns[].id     - REQUIRED. "evolution" | "enlightenment" | "leap" -
 //                       picks the column's accent color (see the
@@ -190,7 +195,7 @@
       n.remove();
     });
 
-    (data.columns || []).forEach(function (col) {
+    (data || []).forEach(function (col) {
       container.appendChild(buildColumn(col));
     });
   }

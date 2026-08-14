@@ -59,8 +59,7 @@
 
 <div class="ark-passives" data-family="surge" markdown>
 <script type="application/json">
-{
-  "columns": [
+[
     { "id": "evolution", "label": "Evolution", "points": 140, "tiers": [
       { "label": "Tier 1", "nodes": [
         { "name": "Crit", "level": 10, "max": 30, "icon": "ap-icons/critical.png" },
@@ -109,7 +108,6 @@
       ] }
     ] }
   ]
-}
 </script>
 </div>
 
@@ -277,7 +275,11 @@ Apply damage synergy if needed, then use the main cycle and repeat it as best yo
 === "Main Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/shared/icon-surpriseattack.png)Surprise Attack<span class="skill-situational-tag">situational</span></span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+    <script type="application/json">
+    ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "earthcleaver", "bladedance", "deathlyslash", "blitzrush", "turningslash", "blitzrush",
+     { "id": "surpriseattack", "situational": true },
+     "surge"]
+    </script>
     </div>
 
     - Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge.
@@ -285,7 +287,9 @@ Apply damage synergy if needed, then use the main cycle and repeat it as best yo
 === "Awakening Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladeassault.png)Blade Assault</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
+    <script type="application/json">
+    ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "bladeassault", "deathlyslash", "turningslash", "blitzrush", "surge"]
+    </script>
     </div>
 
 *From zero orbs:*
