@@ -293,6 +293,11 @@
       cardsOf(grid).forEach(function (card) {
         ro.observe(card);
       });
+      // Stashed on the grid so renderContainer can disconnect it before
+      // this grid is torn down on the next instant-navigation re-render -
+      // otherwise every revisit to the page leaves another ResizeObserver
+      // behind, still watching now-detached elements forever.
+      grid.__masonryObserver = ro;
     } else {
       // No ResizeObserver: still react to the interactions that actually
       // change layout, just without the fine-grained auto-detection.
@@ -341,7 +346,10 @@
     // makes it harmless for more than one of the three triggers below to
     // fire for the same container.
     var old = container.querySelector(".skill-setup-grid");
-    if (old) old.remove();
+    if (old) {
+      if (old.__masonryObserver) old.__masonryObserver.disconnect();
+      old.remove();
+    }
     // Legacy cleanup: an earlier version of this script rendered
     // Identity/Technique/Awakening cards into a separate .skill-special-row
     // container instead of the main grid. Nothing writes that element

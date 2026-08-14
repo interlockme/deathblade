@@ -174,6 +174,11 @@
     if (window.ResizeObserver) {
       var ro = new ResizeObserver(schedule);
       ro.observe(row);
+      // Stashed on the row so renderContainer can disconnect it before
+      // this row is torn down on the next instant-navigation re-render -
+      // otherwise every revisit to the page leaves another ResizeObserver
+      // behind, still watching a now-detached row forever.
+      row.__wrapObserver = ro;
     } else {
       window.addEventListener("resize", schedule);
     }
@@ -192,6 +197,8 @@
     }
 
     container.querySelectorAll(".ark-passive-col").forEach(function (n) {
+      var row = n.querySelector(".ark-passive-tier-row");
+      if (row && row.__wrapObserver) row.__wrapObserver.disconnect();
       n.remove();
     });
 
