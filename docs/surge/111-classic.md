@@ -299,7 +299,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
     <span class="skill skill-situational">![](../assets/shared/icon-turningslash.png) or ![](../assets/shared/icon-surpriseattack.png)<span class="skill-situational-tag">synergy/adrenaline</span></span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-breakingmoon.png)Breaking Moon</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
     </div>
 
-    - If you already have a Maelstrom (or Rage) buff of 3 seconds or more, do not cast it.
+    - If you already have a Maelstrom (or Rage) buff of 3 seconds or more, consider skipping it.
 
 === "Main Cycle"
 
