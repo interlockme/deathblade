@@ -152,26 +152,24 @@
 
 <div class="ark-passives ark-passives-compact" data-family="re" markdown>
 <script type="application/json">
-{
-  "columns": [
-    { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [
-      { "label": "Tier 1", "nodes": [
-        { "id": "swiftstrike", "level": 1, "max": 1 }
-      ] },
-      { "label": "Tier 2", "nodes": [
-        { "id": "remainingenergy", "level": 3, "max": 3 }
-      ] },
-      { "label": "Tier 3", "nodes": [
-        { "id": "firmwill", "level": 3, "max": 3 },
-        { "id": "swordcraftenhancement", "level": 1, "max": 5 }
-      ] },
-      { "label": "Tier 4", "nodes": [
-        { "id": "extremebodymovement", "level": 2, "max": 3 },
-        { "id": "orbcirculation", "level": 5, "max": 5 }
-      ] }
+[
+  { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [
+    { "label": "Tier 1", "nodes": [
+      { "id": "swiftstrike", "level": 1, "max": 1 }
+    ] },
+    { "label": "Tier 2", "nodes": [
+      { "id": "remainingenergy", "level": 3, "max": 3 }
+    ] },
+    { "label": "Tier 3", "nodes": [
+      { "id": "firmwill", "level": 3, "max": 3 },
+      { "id": "swordcraftenhancement", "level": 1, "max": 5 }
+    ] },
+    { "label": "Tier 4", "nodes": [
+      { "id": "extremebodymovement", "level": 2, "max": 3 },
+      { "id": "orbcirculation", "level": 5, "max": 5 }
     ] }
-  ]
-}
+  ] }
+]
 </script>
 </div>
 
@@ -243,21 +241,19 @@
 
 <div class="ark-passives ark-passives-compact" data-family="re" markdown>
 <script type="application/json">
-{
-  "columns": [
-    { "id": "leap", "label": "Leap", "points": 70, "tiers": [
-      { "label": "Tier 1", "nodes": [
-        { "id": "awakeningamplifier", "level": 1, "max": 3 },
-        { "id": "unleashedpower", "level": 5, "max": 5 },
-        { "id": "releasepotential", "level": 3, "max": 5 },
-        { "id": "instantspell", "level": 3, "max": 3 }
-      ] },
-      { "label": "Tier 2", "nodes": [
-        { "id": "danceofnightmares", "level": 3, "max": 3 }
-      ] }
+[
+  { "id": "leap", "label": "Leap", "points": 70, "tiers": [
+    { "label": "Tier 1", "nodes": [
+      { "id": "awakeningamplifier", "level": 1, "max": 3 },
+      { "id": "unleashedpower", "level": 5, "max": 5 },
+      { "id": "releasepotential", "level": 3, "max": 5 },
+      { "id": "instantspell", "level": 3, "max": 3 }
+    ] },
+    { "label": "Tier 2", "nodes": [
+      { "id": "danceofnightmares", "level": 3, "max": 3 }
     ] }
-  ]
-}
+  ] }
+]
 </script>
 </div>
 
