@@ -11,7 +11,7 @@
 //
 // Keyed by family ("re" / "surge") then skill id - the SAME id you use
 // in a Skill Setup JSON entry's "id" field, matching the icon-<id>.png
-// filename convention every asset in assets/<family>/ already follows.
+// filename convention every icon in assets/shared/ already follows.
 //
 // tags: array of ["dmg"|"util"|"immune"|"warn", "LABEL TEXT"] pairs,
 // rendered with the site's existing .tag/.tag-dmg/.tag-util/etc classes -

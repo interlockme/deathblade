@@ -3,9 +3,9 @@
 //
 // EASY EDIT GUIDE (read this before touching a build's numbers):
 //   Each chart is just a <div class="dps-chart" data-labels="..."
-//   data-values="..." data-icon-base="re"></div> - see a build page's
+//   data-values="..." data-show-icons></div> - see a build page's
 //   "## Trixion DPS" section for the exact markup shape. To update a
-//   build's split after a balance pass, edit the two data- attributes;
+//   build's split after a balance pass, edit the data- attributes;
 //   nothing here needs to change, and there's no screenshot to retake.
 //
 //   data-labels / data-values are parallel comma-separated lists, same
@@ -14,8 +14,10 @@
 //   sorts them, and the chart draws top-to-bottom in list order rather
 //   than re-sorting.
 //
-//   data-icon-base is just the asset subfolder name - "re" or "surge" -
-//   not a relative path. Icon URLs are resolved against the site's own
+//   data-show-icons is a bare boolean attribute (present or absent) -
+//   every icon lives under assets/shared/ now, so there's no per-family
+//   folder left to name; this just controls whether label rows get a
+//   skill icon at all. Icon URLs are resolved against the site's own
 //   root (detected from this script's own <script src> tag, which the
 //   browser always reports as a fully-resolved absolute URL) rather than
 //   a hardcoded "../assets/..." - a hardcoded relative path breaks as
@@ -68,7 +70,7 @@
     return label.toLowerCase().replace(/[^a-z0-9]/g, "");
   }
 
-  function buildChart(container, labels, values, accent, iconBase) {
+  function buildChart(container, labels, values, accent, showIcons) {
     var maxVal = Math.max.apply(null, values);
 
     var list = document.createElement("div");
@@ -95,10 +97,10 @@
 
       var labelWrap = document.createElement("span");
       labelWrap.className = "dps-chart-label";
-      if (iconBase) {
+      if (showIcons) {
         var icon = document.createElement("img");
         icon.className = "dps-chart-icon";
-        icon.src = SITE_ROOT + "assets/" + iconBase + "/icon-" + iconSlug(label) + ".png";
+        icon.src = window.SiteUtils.iconSrc(SITE_ROOT, "icon-" + iconSlug(label) + ".png");
         icon.alt = "";
         icon.loading = "lazy";
         // A missing icon file (skill without an icon-*.png yet) just
@@ -164,8 +166,8 @@
       }
 
       var accent = chart.getAttribute("data-accent") || null;
-      var iconBase = chart.getAttribute("data-icon-base") || null;
-      buildChart(chart, labels, values, accent, iconBase);
+      var showIcons = chart.hasAttribute("data-show-icons");
+      buildChart(chart, labels, values, accent, showIcons);
 
       if (observer) {
         observer.observe(chart);

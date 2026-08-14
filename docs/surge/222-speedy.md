@@ -230,42 +230,42 @@
 <div class="gem-list" markdown>
 <div class="gem-item" data-rank="1" markdown>
 <span class="gem-item-rank">1</span>
-![](../assets/surge/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
+![](../assets/shared/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
 </div>
 <div class="gem-item" data-rank="2" markdown>
 <span class="gem-item-rank">2</span>
-![](../assets/surge/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
+![](../assets/shared/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
 </div>
 <details class="gem-item gem-item-expandable" data-rank="3" markdown>
 <summary markdown="span">
 <span class="gem-item-rank">3</span>
-![](../assets/surge/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
+![](../assets/shared/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
 <span class="gem-item-arrow"></span>
 </summary>
 
 <div class="gem-item-alts" markdown>
 
 <div class="gem-alt" markdown>
-![](../assets/surge/icon-upperslash.png){: .gem-alt-icon } **Upper Slash** — Optional in the Upper Slash build.
+![](../assets/shared/icon-upperslash.png){: .gem-alt-icon } **Upper Slash** — Optional in the Upper Slash build.
 </div>
 </div>
 
 </details>
 <div class="gem-item" data-rank="4" markdown>
 <span class="gem-item-rank">4</span>
-![](../assets/surge/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
+![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
 </div>
 <details class="gem-item gem-item-expandable" data-rank="5" markdown>
 <summary markdown="span">
 <span class="gem-item-rank">5</span>
-![](../assets/surge/icon-windcut.png){: .gem-item-icon } <span class="gem-item-name">Wind Cut</span>
+![](../assets/shared/icon-windcut.png){: .gem-item-icon } <span class="gem-item-name">Wind Cut</span>
 <span class="gem-item-arrow"></span>
 </summary>
 
 <div class="gem-item-alts" markdown>
 
 <div class="gem-alt" markdown>
-![](../assets/surge/icon-darkaxel.png){: .gem-alt-icon } **Dark Axel** — Swap this to Dark Axel CD if you prefer.
+![](../assets/shared/icon-darkaxel.png){: .gem-alt-icon } **Dark Axel** — Swap this to Dark Axel CD if you prefer.
 </div>
 </div>
 
@@ -281,38 +281,38 @@
 <div class="gem-list" markdown>
 <div class="gem-item" data-rank="1" markdown>
 <span class="gem-item-rank">1</span>
-![](../assets/surge/icon-windcut.png){: .gem-item-icon } <span class="gem-item-name">Wind Cut</span>
+![](../assets/shared/icon-windcut.png){: .gem-item-icon } <span class="gem-item-name">Wind Cut</span>
 </div>
 <div class="gem-item" data-rank="2" markdown>
 <span class="gem-item-rank">2</span>
-![](../assets/surge/icon-surpriseattack.png){: .gem-item-icon } <span class="gem-item-name">Surprise Attack</span>
+![](../assets/shared/icon-surpriseattack.png){: .gem-item-icon } <span class="gem-item-name">Surprise Attack</span>
 </div>
 <div class="gem-item" data-rank="3" markdown>
 <span class="gem-item-rank">3</span>
-![](../assets/surge/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
+![](../assets/shared/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
 </div>
 <div class="gem-item" data-rank="4" markdown>
 <span class="gem-item-rank">4</span>
-![](../assets/surge/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
+![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
 </div>
 <details class="gem-item gem-item-expandable" data-rank="5" markdown>
 <summary markdown="span">
 <span class="gem-item-rank">5</span>
-![](../assets/surge/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
+![](../assets/shared/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
 <span class="gem-item-arrow"></span>
 </summary>
 
 <div class="gem-item-alts" markdown>
 
 <div class="gem-alt" markdown>
-![](../assets/surge/icon-upperslash.png){: .gem-alt-icon } **Upper Slash** — Required in the Upper Slash build.
+![](../assets/shared/icon-upperslash.png){: .gem-alt-icon } **Upper Slash** — Required in the Upper Slash build.
 </div>
 </div>
 
 </details>
 <div class="gem-item" data-rank="6" markdown>
 <span class="gem-item-rank">6</span>
-![](../assets/surge/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
+![](../assets/shared/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
 </div>
 </div>
 </div>
@@ -337,11 +337,11 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
 === "Main Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
     </div>
 
-    - Cast <span class="skill-chip">![](../assets/surge/icon-spincutter.png)Spincutter</span> instead of <span class="skill-chip">![](../assets/surge/icon-earthcleaver.png)Earth Cleaver</span> as needed.
-    - Cast <span class="skill-chip">![](../assets/surge/icon-bladeassault.png)Blade Assault</span> whenever you want, I'm not your mom.
+    - Cast <span class="skill-chip">![](../assets/shared/icon-spincutter.png)Spincutter</span> instead of <span class="skill-chip">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span> as needed.
+    - Cast <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> whenever you want, I'm not your mom.
     - You don't strictly have to cast Wind Cut before Death Trance for this build.
 
 === "Upper Slash"
@@ -350,10 +350,10 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
     { .lead }
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-upperslash.png)Upper Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-upperslash.png)Upper Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
     </div>
 
-    - Cast <span class="skill-chip">![](../assets/surge/icon-bladeassault.png)Blade Assault</span> whenever you want, I'm not your mom.
+    - Cast <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> whenever you want, I'm not your mom.
     - You don't strictly have to cast Wind Cut before Death Trance for this build.
 
 *From zero orbs:*
@@ -366,6 +366,6 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-<div class="dps-chart" data-icon-base="surge" data-labels="Surge,Deathly Slash,Blade Dance,Earth Cleaver,Turning Slash,Wind Cut" data-values="47.67,30.59,6.64,4.79,3.09,3"></div>
+<div class="dps-chart" data-show-icons data-labels="Surge,Deathly Slash,Blade Dance,Earth Cleaver,Turning Slash,Wind Cut" data-values="47.67,30.59,6.64,4.79,3.09,3"></div>
 </div>
 </div>

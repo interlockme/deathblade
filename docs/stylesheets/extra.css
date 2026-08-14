@@ -509,7 +509,7 @@ h3 { color: #4db6ac; }
 
 /* ---------- Inline skill icons outside tables/rotation-lines ---------- */
 /* Add `{: .skill-icon }` after an image to size it consistently no matter
-   the source asset's resolution, e.g. ![](../assets/re/icon-surge.png){: .skill-icon } */
+   the source asset's resolution, e.g. ![](../assets/shared/icon-surge.png){: .skill-icon } */
 .md-typeset img.skill-icon {
   height: 1.1em;
   width: 1.1em;
@@ -547,7 +547,7 @@ h3 { color: #4db6ac; }
 /* ---------- Reusable skill chip for prose (outside rotation-lines) ---------- */
 /* Same look as the chips inside .rotation-line/.cycle-card, but sized to
    sit inline in a normal paragraph without stretching the line height.
-   Usage: <span class="skill-chip">![](../assets/re/icon-headhunt.png)Head Hunt</span>
+   Usage: <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span>
    The gradient/shadow/glow/lift below match the .rotation-line redesign,
    safe to reuse here since none of them add layout height - box-shadow
    and transform are paint-only, they don't participate in line-height

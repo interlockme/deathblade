@@ -27,12 +27,11 @@
 //   </script>
 //   </div>
 //
-//   data-family     - "re" or "surge". Picks both the icon folder
-//                     (assets/<family>/icon-<id>.png) and which half of
+//   data-family     - "re" or "surge". Picks which half of
 //                     skill-data.js to read tags/notes from.
 //
 //   Per skill entry:
-//     id      - REQUIRED. Matches icon-<id>.png in assets/<family>/ AND
+//     id      - REQUIRED. Matches icon-<id>.png in assets/shared/ AND
 //               the key in skill-data.js. Same lowercase-no-punctuation
 //               slug convention as every icon-*.png asset already uses
 //               (e.g. "Twin Shadows" -> "twinshadows").
@@ -92,7 +91,7 @@
 
     var icon = document.createElement("img");
     icon.className = "skill-card-icon";
-    icon.src = SITE_ROOT + "assets/" + family + "/icon-" + entry.id + ".png";
+    icon.src = window.SiteUtils.iconSrc(SITE_ROOT, "icon-" + entry.id + ".png");
     icon.alt = "";
     icon.loading = "lazy";
     // A missing icon just collapses away instead of showing a broken-

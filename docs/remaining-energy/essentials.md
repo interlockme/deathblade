@@ -8,19 +8,19 @@
 <div class="food-options" markdown>
 
 <div class="food-option" markdown>
-![](../assets/re/icon-skewers.png){: .food-option-icon }
+![](../assets/shared/icon-skewers.png){: .food-option-icon }
 
 Chewy Grilled Skewers
 </div>
 
 <div class="food-option" markdown>
-![](../assets/re/icon-steak.png){: .food-option-icon }
+![](../assets/shared/icon-steak.png){: .food-option-icon }
 
 Herb Steak Meal
 </div>
 
 <div class="food-option" markdown>
-![](../assets/re/icon-azena.png){: .food-option-icon }
+![](../assets/shared/icon-azena.png){: .food-option-icon }
 
 Azena's Blessing (P2W)
 { .food-option-tag }

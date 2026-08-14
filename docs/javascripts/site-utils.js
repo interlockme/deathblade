@@ -31,5 +31,20 @@
         }
       });
     },
+
+    // Resolve an icon's real URL. Every icon (skills, consumables, Ark
+    // Passive nodes) lives under assets/shared/ regardless of which
+    // build family (RE/Surge) uses it - relIcon is the path under that
+    // folder, e.g. "icon-surge.png" or "ap-icons/critical.png". There
+    // used to be a per-family assets/re/ and assets/surge/ icon split
+    // with a manually maintained list of which icons happened to be
+    // identical across both; that list is gone now that every icon file
+    // lives in one place, so this is just a path join. assets/re/ and
+    // assets/surge/ no longer exist at all - genuinely family-specific
+    // page media (tldr screenshots, memes) now lives flat under
+    // assets/ instead.
+    iconSrc: function (siteRoot, relIcon) {
+      return siteRoot + "assets/shared/" + relIcon;
+    },
   };
 })();

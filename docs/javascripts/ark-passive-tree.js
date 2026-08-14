@@ -67,12 +67,12 @@
 
   var el = window.SiteUtils.el;
 
-  function buildNode(entry, family) {
+  function buildNode(entry) {
     var row = el("div", "ark-passive-node");
 
     var icon = document.createElement("img");
     icon.className = "ark-passive-node-icon";
-    icon.src = SITE_ROOT + "assets/" + family + "/" + entry.icon;
+    icon.src = window.SiteUtils.iconSrc(SITE_ROOT, entry.icon);
     icon.alt = "";
     icon.loading = "lazy";
     window.SiteUtils.hideOnError(icon);
@@ -89,16 +89,16 @@
     return row;
   }
 
-  function buildTier(tier, family) {
+  function buildTier(tier) {
     var wrap = el("div", "ark-passive-tier");
     wrap.appendChild(el("div", "ark-passive-tier-label")).textContent = tier.label || "";
     (tier.nodes || []).forEach(function (n) {
-      wrap.appendChild(buildNode(n, family));
+      wrap.appendChild(buildNode(n));
     });
     return wrap;
   }
 
-  function buildColumn(col, family) {
+  function buildColumn(col) {
     var wrap = el("div", "ark-passive-col");
     wrap.setAttribute("data-column", col.id || "");
 
@@ -112,7 +112,7 @@
     var row = el("div", "ark-passive-tier-row");
     (col.tiers || []).forEach(function (t) {
       if (t.nodes && t.nodes.length) {
-        row.appendChild(buildTier(t, family));
+        row.appendChild(buildTier(t));
       }
     });
     wrap.appendChild(row);
@@ -196,9 +196,8 @@
       n.remove();
     });
 
-    var family = container.getAttribute("data-family") || "surge";
     (data.columns || []).forEach(function (col) {
-      container.appendChild(buildColumn(col, family));
+      container.appendChild(buildColumn(col));
     });
   }
 

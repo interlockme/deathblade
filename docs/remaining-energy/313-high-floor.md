@@ -233,31 +233,31 @@
 <div class="gem-list" markdown>
 <div class="gem-item" data-rank="1" markdown>
 <span class="gem-item-rank">1</span>
-![](../assets/re/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
+![](../assets/shared/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
 </div>
 <div class="gem-item" data-rank="2" markdown>
 <span class="gem-item-rank">2</span>
-![](../assets/re/icon-fatalwave.png){: .gem-item-icon } <span class="gem-item-name">Fatal Wave</span>
+![](../assets/shared/icon-fatalwave.png){: .gem-item-icon } <span class="gem-item-name">Fatal Wave</span>
 </div>
 <div class="gem-item" data-rank="3" markdown>
 <span class="gem-item-rank">3</span>
-![](../assets/re/icon-twinshadows.png){: .gem-item-icon } <span class="gem-item-name">Twin Shadows</span>
+![](../assets/shared/icon-twinshadows.png){: .gem-item-icon } <span class="gem-item-name">Twin Shadows</span>
 </div>
 <div class="gem-item" data-rank="4" markdown>
 <span class="gem-item-rank">4</span>
-![](../assets/re/icon-soulabsorber.png){: .gem-item-icon } <span class="gem-item-name">Soul Absorber</span>
+![](../assets/shared/icon-soulabsorber.png){: .gem-item-icon } <span class="gem-item-name">Soul Absorber</span>
 </div>
 <div class="gem-item" data-rank="5" markdown>
 <span class="gem-item-rank">5</span>
-![](../assets/re/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
+![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
 </div>
 <div class="gem-item" data-rank="6" markdown>
 <span class="gem-item-rank">6</span>
-![](../assets/re/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
+![](../assets/shared/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
 </div>
 <div class="gem-item" data-rank="7" markdown>
 <span class="gem-item-rank">7</span>
-![](../assets/re/icon-voidstrike.png){: .gem-item-icon } <span class="gem-item-name">Void Strike</span>
+![](../assets/shared/icon-voidstrike.png){: .gem-item-icon } <span class="gem-item-name">Void Strike</span>
 </div>
 </div>
 </div>
@@ -270,23 +270,23 @@
 <div class="gem-list" markdown>
 <div class="gem-item" data-rank="1" markdown>
 <span class="gem-item-rank">1</span>
-![](../assets/re/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
+![](../assets/shared/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
 </div>
 <div class="gem-item" data-rank="2" markdown>
 <span class="gem-item-rank">2</span>
-![](../assets/re/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
+![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
 </div>
 <details class="gem-item gem-item-expandable" data-rank="3" markdown>
 <summary markdown="span">
 <span class="gem-item-rank">3</span>
-![](../assets/re/icon-soulabsorber.png){: .gem-item-icon } <span class="gem-item-name">Soul Absorber</span>
+![](../assets/shared/icon-soulabsorber.png){: .gem-item-icon } <span class="gem-item-name">Soul Absorber</span>
 <span class="gem-item-arrow"></span>
 </summary>
 
 <div class="gem-item-alts" markdown>
 
 <div class="gem-alt" markdown>
-![](../assets/re/icon-blitzrush.png){: .gem-alt-icon } **Blitz Rush** — Faster recovery from smaller mistakes, pairs with Twin Shadows or Fatal Wave below.
+![](../assets/shared/icon-blitzrush.png){: .gem-alt-icon } **Blitz Rush** — Faster recovery from smaller mistakes, pairs with Twin Shadows or Fatal Wave below.
 </div>
 </div>
 
@@ -294,17 +294,17 @@
 <details class="gem-item gem-item-expandable" data-rank="4" markdown>
 <summary markdown="span">
 <span class="gem-item-rank">4</span>
-![](../assets/re/icon-voidstrike.png){: .gem-item-icon } <span class="gem-item-name">Void Strike</span>
+![](../assets/shared/icon-voidstrike.png){: .gem-item-icon } <span class="gem-item-name">Void Strike</span>
 <span class="gem-item-arrow"></span>
 </summary>
 
 <div class="gem-item-alts" markdown>
 
 <div class="gem-alt" markdown>
-![](../assets/re/icon-twinshadows.png){: .gem-alt-icon } **Twin Shadows** — Pairs with Blitz Rush above for the skilled-player recovery route.
+![](../assets/shared/icon-twinshadows.png){: .gem-alt-icon } **Twin Shadows** — Pairs with Blitz Rush above for the skilled-player recovery route.
 </div>
 <div class="gem-alt" markdown>
-![](../assets/re/icon-fatalwave.png){: .gem-alt-icon } **Fatal Wave** — Required for 113 (Arts) or when sharing gems with 333 (Ceiling), pairs with Blitz Rush.
+![](../assets/shared/icon-fatalwave.png){: .gem-alt-icon } **Fatal Wave** — Required for 113 (Arts) or when sharing gems with 333 (Ceiling), pairs with Blitz Rush.
 </div>
 </div>
 
@@ -325,14 +325,14 @@
     <div class="cycle-card" markdown>
     <div class="cycle-card-header"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash</span></div>
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
     </div>
     </div>
 
     <div class="cycle-card" markdown>
     <div class="cycle-card-header"><span class="cycle-num">2</span><span class="cycle-title">Soul Absorber + Blitz Rush</span></div>
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/re/icon-maelstrom.png)Maelstrom<span class="skill-situational-tag">situational</span></span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/shared/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/shared/icon-maelstrom.png)Maelstrom<span class="skill-situational-tag">situational</span></span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-fatalwave.png)Fatal Wave</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
     </div>
     </div>
 
@@ -348,16 +348,16 @@
     { .lead }
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/re/icon-headhunt.png)Head Hunt</span><span class="arrow"> ⇄ </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">2</span><span class="cycle-title">Soul Absorber + Blitz Rush Cycle</span></span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash Cycle</span></span><span class="arrow"> → </span>&nbsp;etc.
+    <span class="skill">![](../assets/shared/icon-headhunt.png)Head Hunt</span><span class="arrow"> ⇄ </span><span class="skill">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">2</span><span class="cycle-title">Soul Absorber + Blitz Rush Cycle</span></span><span class="arrow"> → </span><span class="skill"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash Cycle</span></span><span class="arrow"> → </span>&nbsp;etc.
     </div>
 
-    - <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle **2** if it's available.
+    - <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle **2** if it's available.
     - It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs:*
     { .lead }
 
-    - Cycle **1** if <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is available, otherwise start from <span class="skill-chip">![](../assets/re/icon-maelstrom.png)Maelstrom</span> + Cycle **2**.
+    - Cycle **1** if <span class="skill-chip">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span> is available, otherwise start from <span class="skill-chip">![](../assets/shared/icon-maelstrom.png)Maelstrom</span> + Cycle **2**.
     - Prioritize Turning Slash earlier for synergy and Deathly Slash last for Adrenaline/RE buff.
 
 === "Recovery"
@@ -366,13 +366,13 @@
         Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
 
     - 313 plays similarly, just Turning Slash → Fatal Wave instead of FTF.
-    - Use <span class="skill-chip">![](../assets/re/icon-headhunt.png)Head Hunt</span> when a little short on orbs, just cast if unsure.
+    - Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> when a little short on orbs, just cast if unsure.
     - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
-    - Use <span class="skill-chip">![](../assets/re/icon-headhunt.png)Head Hunt</span> instead of <span class="skill-chip">![](../assets/re/icon-twinshadows.png)Twin Shadows</span> for a cycle to recover stacks if they run out.
+    - Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> instead of <span class="skill-chip">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span> for a cycle to recover stacks if they run out.
     - Use Maelstrom + Fatal Wave earlier if waiting on main orb generation skills.
 
 === "TL;DR:"
-    ![313 TL;DR flowchart](../assets/re/tldr-313.png){ loading=lazy }
+    ![313 TL;DR flowchart](../assets/tldr-313.png){ loading=lazy }
 
 ## DPS Spread
 
@@ -380,6 +380,6 @@
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-<div class="dps-chart" data-icon-base="re" data-labels="Deathly Slash,Fatal Wave,Surge,Twin Shadows,Soul Absorber,Turning Slash,Blitz Rush,Void Strike,Bleed,Maelstrom" data-values="20.9,20.7,19.1,9.5,8.5,8,6.9,5.5,0.6,0.3"></div>
+<div class="dps-chart" data-show-icons data-labels="Deathly Slash,Fatal Wave,Surge,Twin Shadows,Soul Absorber,Turning Slash,Blitz Rush,Void Strike,Bleed,Maelstrom" data-values="20.9,20.7,19.1,9.5,8.5,8,6.9,5.5,0.6,0.3"></div>
 </div>
 </div>

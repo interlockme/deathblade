@@ -21,12 +21,11 @@
 //   </div>
 //
 //   data-family - "re" or "surge". Same meaning as skill-setup.js: picks
-//                 the icon folder (assets/<family>/icon-<id>.png) and
 //                 which half of skill-data.js to read tags/notes from.
 //
 //   Per row:
-//     id    - REQUIRED. Matches icon-<id>.png AND the key in
-//             skill-data.js. Same slug every icon-*.png asset uses.
+//     id    - REQUIRED. Matches icon-<id>.png in assets/shared/ AND the
+//             key in skill-data.js. Same slug every icon-*.png asset uses.
 //     name  - REQUIRED. Bold skill name shown in the first text cell.
 //     lines - OPTIONAL array of small italic lines under the name (a
 //             meter/stack value, a cast-rate note, etc). Omit for skills
@@ -57,7 +56,7 @@
 
     var iconTd = document.createElement("td");
     var icon = document.createElement("img");
-    icon.src = SITE_ROOT + "assets/" + family + "/icon-" + entry.id + ".png";
+    icon.src = window.SiteUtils.iconSrc(SITE_ROOT, "icon-" + entry.id + ".png");
     icon.alt = "";
     icon.loading = "lazy";
     window.SiteUtils.hideOnError(icon);

@@ -211,23 +211,23 @@
 <div class="gem-list" markdown>
 <div class="gem-item" data-rank="1" markdown>
 <span class="gem-item-rank">1</span>
-![](../assets/surge/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
+![](../assets/shared/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
 </div>
 <div class="gem-item" data-rank="2" markdown>
 <span class="gem-item-rank">2</span>
-![](../assets/surge/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
+![](../assets/shared/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
 </div>
 <div class="gem-item" data-rank="3" markdown>
 <span class="gem-item-rank">3</span>
-![](../assets/surge/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
+![](../assets/shared/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
 </div>
 <div class="gem-item" data-rank="4" markdown>
 <span class="gem-item-rank">4</span>
-![](../assets/surge/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
+![](../assets/shared/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
 </div>
 <div class="gem-item" data-rank="5" markdown>
 <span class="gem-item-rank">5</span>
-![](../assets/surge/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
+![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
 </div>
 </div>
 </div>
@@ -240,38 +240,38 @@
 <div class="gem-list" markdown>
 <div class="gem-item" data-rank="1" markdown>
 <span class="gem-item-rank">1</span>
-![](../assets/surge/icon-windcut.png){: .gem-item-icon } <span class="gem-item-name">Wind Cut</span>
+![](../assets/shared/icon-windcut.png){: .gem-item-icon } <span class="gem-item-name">Wind Cut</span>
 </div>
 <div class="gem-item" data-rank="2" markdown>
 <span class="gem-item-rank">2</span>
-![](../assets/surge/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
+![](../assets/shared/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
 </div>
 <div class="gem-item" data-rank="3" markdown>
 <span class="gem-item-rank">3</span>
-![](../assets/surge/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
+![](../assets/shared/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
 </div>
 <details class="gem-item gem-item-expandable" data-rank="4" markdown>
 <summary markdown="span">
 <span class="gem-item-rank">4</span>
-![](../assets/surge/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
+![](../assets/shared/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
 <span class="gem-item-arrow"></span>
 </summary>
 
 <div class="gem-item-alts" markdown>
 
 <div class="gem-alt" markdown>
-![](../assets/surge/icon-earthcleaver.png){: .gem-alt-icon } **Earth Cleaver** — Use Earth Cleaver instead of Blade Dance pre-Ark Grid; set Quick Prep tripod on Blade Dance to compensate.
+![](../assets/shared/icon-earthcleaver.png){: .gem-alt-icon } **Earth Cleaver** — Use Earth Cleaver instead of Blade Dance pre-Ark Grid; set Quick Prep tripod on Blade Dance to compensate.
 </div>
 </div>
 
 </details>
 <div class="gem-item" data-rank="5" markdown>
 <span class="gem-item-rank">5</span>
-![](../assets/surge/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
+![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
 </div>
 <div class="gem-item" data-rank="6" markdown>
 <span class="gem-item-rank">6</span>
-![](../assets/surge/icon-surpriseattack.png){: .gem-item-icon } <span class="gem-item-name">Surprise Attack</span>
+![](../assets/shared/icon-surpriseattack.png){: .gem-item-icon } <span class="gem-item-name">Surprise Attack</span>
 </div>
 </div>
 </div>
@@ -296,7 +296,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 === "Opener/Breaking Moon Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill skill-situational">![](../assets/surge/icon-turningslash.png) or ![](../assets/surge/icon-surpriseattack.png)<span class="skill-situational-tag">synergy/adrenaline</span></span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-breakingmoon.png)Breaking Moon</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
+    <span class="skill skill-situational">![](../assets/shared/icon-turningslash.png) or ![](../assets/shared/icon-surpriseattack.png)<span class="skill-situational-tag">synergy/adrenaline</span></span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-breakingmoon.png)Breaking Moon</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
     </div>
 
     - If you already have a Maelstrom (or Rage) buff of 3 seconds or more, do not cast it.
@@ -304,7 +304,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 === "Main Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/surge/icon-surpriseattack.png)Surprise Attack<span class="skill-situational-tag">situational</span></span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/shared/icon-surpriseattack.png)Surprise Attack<span class="skill-situational-tag">situational</span></span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
     </div>
 
     - Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge (Raid Captain).
@@ -315,7 +315,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
     { .lead }
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
     </div>
 
     - Use your judgment. Not every skill needs the Maelstrom buff, so prioritize Surge.
@@ -324,7 +324,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 === "Awakening Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladeassault.png)Blade Assault</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladeassault.png)Blade Assault</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
     </div>
 
 *From zero orbs:*
@@ -337,6 +337,6 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-<div class="dps-chart" data-icon-base="surge" data-labels="Surge,Breaking Moon,Earth Cleaver,Blade Dance,Blitz Rush,Turning Slash" data-values="74.41,6.51,4.22,4.1,2.73,2.55"></div>
+<div class="dps-chart" data-show-icons data-labels="Surge,Breaking Moon,Earth Cleaver,Blade Dance,Blitz Rush,Turning Slash" data-values="74.41,6.51,4.22,4.1,2.73,2.55"></div>
 </div>
 </div>

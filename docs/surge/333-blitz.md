@@ -3,7 +3,7 @@
 <p class="page-banner page-banner-warning">Not available in NA/EU servers yet</p>
 
 ??? danger "But why male models? 🐯 "
-    ![333 Blitz meme](../assets/surge/blitz-meme.png){ loading=lazy }
+    ![333 Blitz meme](../assets/blitz-meme.png){ loading=lazy }
 
 <div class="build-card-row" markdown>
 <div class="build-card" data-updated="2026-08-07" markdown>
@@ -37,7 +37,7 @@
 <div class="pentagon-badge-title">Build Profile</div>
 <div class="pentagon-svg-mount"></div>
 <div class="pentagon-badge-extra" markdown>
-[Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [Gameplay](../assets/surge/tiger.mp4){ .video-chip }
+[Video Guide](https://www.youtube.com/watch?v=pzFa5zOuNik){ .video-chip } [Gameplay](../assets/tiger.mp4){ .video-chip }
 </div>
 </div>
 </div>
@@ -205,23 +205,23 @@
 <div class="gem-list" markdown>
 <div class="gem-item" data-rank="1" markdown>
 <span class="gem-item-rank">1</span>
-![](../assets/surge/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
+![](../assets/shared/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
 </div>
 <div class="gem-item" data-rank="2" markdown>
 <span class="gem-item-rank">2</span>
-![](../assets/surge/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
+![](../assets/shared/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
 </div>
 <div class="gem-item" data-rank="3" markdown>
 <span class="gem-item-rank">3</span>
-![](../assets/surge/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
+![](../assets/shared/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
 </div>
 <div class="gem-item" data-rank="4" markdown>
 <span class="gem-item-rank">4</span>
-![](../assets/surge/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
+![](../assets/shared/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
 </div>
 <div class="gem-item" data-rank="5" markdown>
 <span class="gem-item-rank">5</span>
-![](../assets/surge/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
+![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
 </div>
 </div>
 </div>
@@ -234,27 +234,27 @@
 <div class="gem-list" markdown>
 <div class="gem-item" data-rank="1" markdown>
 <span class="gem-item-rank">1</span>
-![](../assets/surge/icon-windcut.png){: .gem-item-icon } <span class="gem-item-name">Wind Cut</span>
+![](../assets/shared/icon-windcut.png){: .gem-item-icon } <span class="gem-item-name">Wind Cut</span>
 </div>
 <div class="gem-item" data-rank="2" markdown>
 <span class="gem-item-rank">2</span>
-![](../assets/surge/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
+![](../assets/shared/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
 </div>
 <div class="gem-item" data-rank="3" markdown>
 <span class="gem-item-rank">3</span>
-![](../assets/surge/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
+![](../assets/shared/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
 </div>
 <div class="gem-item" data-rank="4" markdown>
 <span class="gem-item-rank">4</span>
-![](../assets/surge/icon-surpriseattack.png){: .gem-item-icon } <span class="gem-item-name">Surprise Attack</span>
+![](../assets/shared/icon-surpriseattack.png){: .gem-item-icon } <span class="gem-item-name">Surprise Attack</span>
 </div>
 <div class="gem-item" data-rank="5" markdown>
 <span class="gem-item-rank">5</span>
-![](../assets/surge/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
+![](../assets/shared/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
 </div>
 <div class="gem-item" data-rank="6" markdown>
 <span class="gem-item-rank">6</span>
-![](../assets/surge/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
+![](../assets/shared/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
 </div>
 </div>
 </div>
@@ -277,7 +277,7 @@ Apply damage synergy if needed, then use the main cycle and repeat it as best yo
 === "Main Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/surge/icon-surpriseattack.png)Surprise Attack<span class="skill-situational-tag">situational</span></span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladedance.png)Blade Dance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/shared/icon-surpriseattack.png)Surprise Attack<span class="skill-situational-tag">situational</span></span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
     </div>
 
     - Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge.
@@ -285,7 +285,7 @@ Apply damage synergy if needed, then use the main cycle and repeat it as best yo
 === "Awakening Cycle"
 
     <div class="rotation-line" markdown>
-    <span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-bladeassault.png)Blade Assault</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/surge/icon-surge.png)Surge</span>
+    <span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathtrance.png)Death Trance</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surpriseattack.png)Surprise Attack</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-windcut.png)Wind Cut</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-bladeassault.png)Blade Assault</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-blitzrush.png)Blitz Rush</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
     </div>
 
 *From zero orbs:*
@@ -298,6 +298,6 @@ Apply damage synergy if needed, then use the main cycle and repeat it as best yo
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-<div class="dps-chart" data-icon-base="surge" data-labels="Surge,Blitz Rush,Deathly Slash,Blade Dance,Earth Cleaver" data-values="43.89,26.99,12.85,4.21,4.04"></div>
+<div class="dps-chart" data-show-icons data-labels="Surge,Blitz Rush,Deathly Slash,Blade Dance,Earth Cleaver" data-values="43.89,26.99,12.85,4.21,4.04"></div>
 </div>
 </div>

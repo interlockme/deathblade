@@ -8,13 +8,13 @@
 <div class="food-options" markdown>
 
 <div class="food-option" markdown>
-![](../assets/surge/icon-vernesewine.png){: .food-option-icon }
+![](../assets/shared/icon-vernesewine.png){: .food-option-icon }
 
 Vernese Wine
 </div>
 
 <div class="food-option" markdown>
-![](../assets/surge/icon-ealynsblessing.png){: .food-option-icon }
+![](../assets/shared/icon-ealynsblessing.png){: .food-option-icon }
 
 Ealyn's Blessing
 </div>
@@ -97,7 +97,7 @@ Atk/Move Speed Feast
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine required
+![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/shared/icon-vernesewine.png){: .skill-icon } Vernese Wine required
 { .food-req }
 
 **Pros**{: .best-for } Highest damage bonus.
@@ -138,7 +138,7 @@ Pair with Cursed Doll if you're just starting out.
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing required
+![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/shared/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing required
 { .food-req }
 
 **Pros:**{: .best-for } Highest damage bonus.
@@ -159,10 +159,10 @@ Pair with Cursed Doll if you're just starting out.
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/surge/icon-vernesewine.png){: .skill-icon } Vernese Wine required with Bard or Paladin
+![](../assets/shared/icon-vernesewine.png){: .skill-icon } Vernese Wine required with Bard or Paladin
 { .food-req }
 
-![](../assets/surge/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing required with Artist or Valkyrie
+![](../assets/shared/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing required with Artist or Valkyrie
 { .food-req }
 
 **Pros:**{: .best-for } This is ceiling. Fewer drawbacks for [🐆](222-speedy.md).

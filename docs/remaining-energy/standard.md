@@ -177,31 +177,31 @@
 <div class="gem-list" markdown>
 <div class="gem-item" data-rank="1" markdown>
 <span class="gem-item-rank">1</span>
-![](../assets/re/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
+![](../assets/shared/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
 </div>
 <div class="gem-item" data-rank="2" markdown>
 <span class="gem-item-rank">2</span>
-![](../assets/re/icon-soulabsorber.png){: .gem-item-icon } <span class="gem-item-name">Soul Absorber</span>
+![](../assets/shared/icon-soulabsorber.png){: .gem-item-icon } <span class="gem-item-name">Soul Absorber</span>
 </div>
 <div class="gem-item" data-rank="3" markdown>
 <span class="gem-item-rank">3</span>
-![](../assets/re/icon-deathsentence.png){: .gem-item-icon } <span class="gem-item-name">Death Sentence</span>
+![](../assets/shared/icon-deathsentence.png){: .gem-item-icon } <span class="gem-item-name">Death Sentence</span>
 </div>
 <div class="gem-item" data-rank="4" markdown>
 <span class="gem-item-rank">4</span>
-![](../assets/re/icon-voidstrike.png){: .gem-item-icon } <span class="gem-item-name">Void Strike</span>
+![](../assets/shared/icon-voidstrike.png){: .gem-item-icon } <span class="gem-item-name">Void Strike</span>
 </div>
 <div class="gem-item" data-rank="5" markdown>
 <span class="gem-item-rank">5</span>
-![](../assets/re/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
+![](../assets/shared/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
 </div>
 <div class="gem-item" data-rank="6" markdown>
 <span class="gem-item-rank">6</span>
-![](../assets/re/icon-twinshadows.png){: .gem-item-icon } <span class="gem-item-name">Twin Shadows</span>
+![](../assets/shared/icon-twinshadows.png){: .gem-item-icon } <span class="gem-item-name">Twin Shadows</span>
 </div>
 <div class="gem-item" data-rank="7" markdown>
 <span class="gem-item-rank">7</span>
-![](../assets/re/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
+![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
 </div>
 </div>
 </div>
@@ -214,19 +214,19 @@
 <div class="gem-list" markdown>
 <div class="gem-item" data-rank="1" markdown>
 <span class="gem-item-rank">1</span>
-![](../assets/re/icon-soulabsorber.png){: .gem-item-icon } <span class="gem-item-name">Soul Absorber</span>
+![](../assets/shared/icon-soulabsorber.png){: .gem-item-icon } <span class="gem-item-name">Soul Absorber</span>
 </div>
 <div class="gem-item" data-rank="2" markdown>
 <span class="gem-item-rank">2</span>
-![](../assets/re/icon-deathsentence.png){: .gem-item-icon } <span class="gem-item-name">Death Sentence</span>
+![](../assets/shared/icon-deathsentence.png){: .gem-item-icon } <span class="gem-item-name">Death Sentence</span>
 </div>
 <div class="gem-item" data-rank="3" markdown>
 <span class="gem-item-rank">3</span>
-![](../assets/re/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
+![](../assets/shared/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
 </div>
 <div class="gem-item" data-rank="4" markdown>
 <span class="gem-item-rank">4</span>
-![](../assets/re/icon-voidstrike.png){: .gem-item-icon } <span class="gem-item-name">Void Strike</span>
+![](../assets/shared/icon-voidstrike.png){: .gem-item-icon } <span class="gem-item-name">Void Strike</span>
 </div>
 </div>
 </div>
@@ -245,19 +245,19 @@ The opener stacks Adrenaline and applies synergies efficiently as you build up t
 { .lead }
 
 <div class="rotation-line" markdown>
-<span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
+<span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
 </div>
 
 *Main repeating cycle:*
 { .lead }
 
 <div class="rotation-line" markdown>
-<span class="skill">![](../assets/re/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/re/icon-deathlyslash.png)Deathly Slash<span class="skill-situational-tag">**every other rotation**</span></span><span class="skill">![](../assets/re/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/re/icon-surge.png)Surge</span>
+<span class="skill">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-deathsentence.png)Death Sentence</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-maelstrom.png)Maelstrom</span><span class="arrow"> → </span><span class="skill skill-situational">![](../assets/shared/icon-deathlyslash.png)Deathly Slash<span class="skill-situational-tag">**every other rotation**</span></span><span class="skill">![](../assets/shared/icon-turningslash.png)Turning Slash</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-soulabsorber.png)Soul Absorber</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-voidstrike.png)Void Strike</span><span class="arrow"> → </span><span class="skill">![](../assets/shared/icon-surge.png)Surge</span>
 </div>
 
-- <span class="skill-chip">![](../assets/re/icon-deathlyslash.png)Deathly Slash</span> is only available every other rotation, just keep going if it's on cooldown.
-- Use <span class="skill-chip">![](../assets/re/icon-spincutter.png)Spincutter</span>  during downtime to reposition, or hold it to dodge upcoming attacks.
-- Use <span class="skill-chip">![](../assets/re/icon-bladeassault.png)Blade Assault</span> for damage, or hold it for Hyper Awakening or a clutch recovery.
+- <span class="skill-chip">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span> is only available every other rotation, just keep going if it's on cooldown.
+- Use <span class="skill-chip">![](../assets/shared/icon-spincutter.png)Spincutter</span>  during downtime to reposition, or hold it to dodge upcoming attacks.
+- Use <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> for damage, or hold it for Hyper Awakening or a clutch recovery.
 - The rotation is bottle-necked entirely by Soul Absorber's cooldown, it is what it is.
     - You can skip Earth Cleaver if Soul Absorber's off cooldown already.
 
@@ -273,6 +273,6 @@ The opener stacks Adrenaline and applies synergies efficiently as you build up t
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-<div class="dps-chart" data-icon-base="re" data-labels="Deathly Slash,Surge,Soul Absorber,Death Sentence,Void Strike,Earth Cleaver,Twin Shadows,Turning Slash,Bleed,Maelstrom" data-values="19.1,18.1,14.3,11.1,11.1,10,8.1,6.5,0.8,0.5"></div>
+<div class="dps-chart" data-show-icons data-labels="Deathly Slash,Surge,Soul Absorber,Death Sentence,Void Strike,Earth Cleaver,Twin Shadows,Turning Slash,Bleed,Maelstrom" data-values="19.1,18.1,14.3,11.1,11.1,10,8.1,6.5,0.8,0.5"></div>
 </div>
 </div>
