@@ -14,15 +14,14 @@
 //   [
 //     {
 //       "id": "fatalwave",
-//       "name": "Fatal Wave",
 //       "level": 14,
 //       "tripods": [2, 3, 2],
 //       "rune": { "tier": "epic", "name": "Wealth" },
 //       "picks": ["Optional build-specific bullet, e.g. why this tripod"]
 //     },
 //     { "id": "surge", "name": "Deathblade Surge" },
-//     { "id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique" },
-//     { "id": "bladeassault", "name": "Blade Assault", "subtitle": "Awakening" }
+//     { "id": "deathlyslash", "subtitle": "Technique" },
+//     { "id": "bladeassault", "subtitle": "Awakening" }
 //   ]
 //   </script>
 //   </div>
@@ -32,12 +31,16 @@
 //
 //   Per skill entry:
 //     id      - REQUIRED. Matches icon-<id>.png in assets/shared/ AND
-//               the key in skill-data.js. Same lowercase-no-punctuation
-//               slug convention as every icon-*.png asset already uses
-//               (e.g. "Twin Shadows" -> "twinshadows").
-//     name    - REQUIRED. Display name on the card (can differ from the
-//               essentials.md name if this build's screen calls it
-//               something slightly different, e.g. "Deathblade Surge").
+//               the key in skill-data.js AND skill-names.js. Same
+//               lowercase-no-punctuation slug convention as every
+//               icon-*.png asset already uses (e.g. "Twin Shadows" ->
+//               "twinshadows").
+//     name    - OPTIONAL. Display name on the card. Omit to resolve from
+//               DB_SKILL_NAMES[id] (skill-names.js) - every skill on
+//               this site uses its skill-names.js name as-is here, so
+//               that's the default. Only set this to override the
+//               display text for a one-off case (e.g. this build's
+//               screen genuinely calls it something else).
 //     level   - Skill level, shown as "Lv. <level>". Omit for skills
 //               without a normal level (pair with "subtitle" instead).
 //     subtitle - Small label shown instead of a level, e.g. "Technique",
@@ -62,24 +65,7 @@
 //   masonry grid as every other skill, in whatever order they appear in
 //   the JSON - nothing to opt into, just omit both fields.
 (function () {
-  function detectSiteRoot() {
-    var scriptEl = document.currentScript || document.querySelector('script[src*="javascripts/skill-setup.js"]');
-    if (scriptEl && scriptEl.src) {
-      return scriptEl.src.replace(/javascripts\/skill-setup\.js(\?.*)?(#.*)?$/, "");
-    }
-    // Fallback: derive from the site stylesheet link, same trick as
-    // dps-chart.js/build-compare.js use for the same reason - a JS
-    // inserted <img> needs an absolute URL, not a relative one, since
-    // mkdocs's directory-style page URLs add a path segment a real
-    // markdown image gets auto-corrected for at build time but a
-    // runtime-inserted one does not.
-    var linkEl = document.querySelector('link[href*="stylesheets/extra.css"]');
-    if (linkEl && linkEl.href) {
-      return linkEl.href.replace(/stylesheets\/extra\.css(\?.*)?(#.*)?$/, "");
-    }
-    return "";
-  }
-  var SITE_ROOT = detectSiteRoot();
+  var SITE_ROOT = window.SiteUtils.detectSiteRoot("skill-setup.js");
 
   var el = window.SiteUtils.el;
 
@@ -115,7 +101,7 @@
     } else if (entry.level != null) {
       meta.appendChild(el("span", "skill-card-level", "Lv. " + entry.level));
     }
-    meta.appendChild(el("span", "skill-card-name", entry.name || entry.id));
+    meta.appendChild(el("span", "skill-card-name", entry.name || (window.DB_SKILL_NAMES && window.DB_SKILL_NAMES[entry.id]) || entry.id));
     main.appendChild(meta);
 
     var chips = el("span", "skill-card-chips");
@@ -302,29 +288,9 @@
 
   function renderContainer(container) {
     var family = container.getAttribute("data-family") || "re";
-    // mkdocs-material's instant-navigation content swap recreates every
-    // <script> element found in newly-inserted page content so that real
-    // JS assets actually re-execute (a <script> inserted via innerHTML/
-    // DOM-diffing doesn't run on its own). For a <script src="...">, it
-    // copies every attribute across; for an inline script like ours (no
-    // src), it only copies the text content - our type="application/json"
-    // attribute gets silently dropped in that process. So this container
-    // is guaranteed by the EASY EDIT GUIDE above to hold exactly one
-    // <script>, matched on the bare tag rather than its type - matching
-    // on type only works on a hard page load, not after clicking a nav
-    // link. (The recreated tag becomes a plain, harmless-to-run script
-    // since our JSON payload also happens to be valid as a JS expression
-    // statement - it's evaluated and discarded, textContent is untouched.)
-    var script = container.querySelector("script");
-    if (!script) return;
-
-    var entries;
-    try {
-      entries = JSON.parse(script.textContent);
-    } catch (e) {
-      console.error("skill-setup.js: invalid JSON in .skill-setup block", e);
-      return;
-    }
+    var result = window.SiteUtils.readInlineJSON(container, "skill-setup.js");
+    if (!result) return;
+    var entries = result.data;
 
     // Re-running on an instant-navigation page swap: drop any
     // previously-rendered grid before rebuilding, rather than appending
@@ -362,59 +328,5 @@
     initMasonry(grid);
   }
 
-  function scanAndRender(root) {
-    if (!root) return;
-    if (root.matches && root.matches(".skill-setup[data-family]")) {
-      renderContainer(root);
-    }
-    if (root.querySelectorAll) {
-      root.querySelectorAll(".skill-setup[data-family]").forEach(renderContainer);
-    }
-  }
-
-  function renderAll() {
-    scanAndRender(document);
-  }
-
-  // Three independent, overlapping triggers - deliberately redundant
-  // (renderContainer above is a safe no-op-then-rebuild if called twice
-  // for the same container) rather than picking a single "correct" one,
-  // since a wrong assumption about mkdocs-material's instant-navigation
-  // timing here means the whole Skill Setup section silently fails to
-  // render until a manual reload with no visible error.
-  //
-  // 1) A normal/direct page load. This script can run either before or
-  //    after the HTML parser reaches DOMContentLoaded depending on where
-  //    mkdocs places extra_javascript, so check readyState instead of
-  //    assuming: run immediately if the DOM is already parsed, otherwise
-  //    wait for the event.
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", renderAll);
-  } else {
-    renderAll();
-  }
-
-  // 2) navigation.instant page swaps. document$ is Material's own hook
-  //    that re-emits on every page view, including the very first one -
-  //    see dps-chart.js/build-compare.js/pentagon-badge.js for the same
-  //    pattern elsewhere in this project.
-  if (window.document$) {
-    document$.subscribe(renderAll);
-  }
-
-  // 3) Belt-and-suspenders: watch the page body directly and render any
-  //    Skill Setup container the moment it's inserted, regardless of
-  //    which mechanism put it there. Cheap per mutation (a class check
-  //    on added element nodes), so safe to leave running for the page's
-  //    whole lifetime alongside the calculators' own frequent DOM updates.
-  if (window.MutationObserver) {
-    var observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (m) {
-        m.addedNodes.forEach(function (node) {
-          if (node.nodeType === 1) scanAndRender(node);
-        });
-      });
-    });
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-  }
+  window.SiteUtils.registerRenderer(".skill-setup[data-family]", renderContainer);
 })();

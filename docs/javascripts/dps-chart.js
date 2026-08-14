@@ -14,6 +14,20 @@
 //   sorts them, and the chart draws top-to-bottom in list order rather
 //   than re-sorting.
 //
+//   data-ids is an OPTIONAL third parallel comma-separated list (same
+//   order/length as data-labels) - the skill id backing each row (e.g.
+//   "deathlyslash"), same id convention as a Skill Setup entry or a
+//   gem-priority.js row. When present, it's the AUTHORITATIVE source
+//   for that row's icon (icon-<id>.png, no derivation) instead of the
+//   label-text-derived slug below, AND it's what gem-dps-tooltip.js
+//   matches against to attach a damage-share tooltip to the matching
+//   gem card, instead of comparing rendered name text. Include it for
+//   every row backed by a real skill id (basically everything - even a
+//   non-skill row like "Bleed" still gets one, since its icon file just
+//   happens to already be named icon-bleed.png). data-labels stays
+//   REQUIRED regardless - it's still the row's actual display text, ids
+//   are additive.
+//
 //   data-show-icons is a bare boolean attribute (present or absent) -
 //   every icon lives under assets/shared/ now, so there's no per-family
 //   folder left to name; this just controls whether label rows get a
@@ -26,13 +40,16 @@
 //   (/surge/111-classic/) add a path segment normal markdown images get
 //   auto-corrected for at build time, but a JS-inserted <img> does not.
 //
-//   Each row's icon is derived from its label - "Twin Shadows" ->
-//   icon-twinshadows.png - same lowercase-and-strip-spaces convention
-//   every existing icon-*.png in this repo already follows. If a skill's
-//   label doesn't have a matching icon-*.png in that folder yet, add one
-//   (or copy it over from the sibling re/surge folder if the skill is
-//   shared, like Death Trance) rather than special-casing the filename
-//   here - a row with no matching file just quietly shows no icon.
+//   Each row's icon is derived from its label ONLY as a fallback when
+//   data-ids is missing/malformed for that row - "Twin Shadows" ->
+//   icon-twinshadows.png, same lowercase-and-strip-spaces convention
+//   every existing icon-*.png in this repo already follows. Prefer
+//   adding the id to data-ids over relying on this: it's a silent-
+//   failure path (a typo or stray space in the label just quietly
+//   shows no icon, with nothing to catch it), which is exactly why
+//   data-ids exists. If a skill has no icon-*.png yet, add one (or copy
+//   it over from the sibling re/surge folder if it's shared, like Death
+//   Trance) rather than special-casing the filename here.
 //
 //   data-accent is optional (defaults to the site's teal, matching the
 //   Trixion DPS stat-bar-fill-teal color used elsewhere).
@@ -70,7 +87,7 @@
     return label.toLowerCase().replace(/[^a-z0-9]/g, "");
   }
 
-  function buildChart(container, labels, values, accent, showIcons) {
+  function buildChart(container, labels, values, ids, accent, showIcons) {
     var maxVal = Math.max.apply(null, values);
 
     var list = document.createElement("div");
@@ -100,7 +117,12 @@
       if (showIcons) {
         var icon = document.createElement("img");
         icon.className = "dps-chart-icon";
-        icon.src = window.SiteUtils.iconSrc(SITE_ROOT, "icon-" + iconSlug(label) + ".png");
+        // Prefer the authoritative id when data-ids supplied one for
+        // this row; only derive a slug from the label text as a
+        // fallback (see this file's top comment on why that path is
+        // considered a silent-failure risk, not the primary route).
+        var slug = (ids && ids[i]) ? ids[i] : iconSlug(label);
+        icon.src = window.SiteUtils.iconSrc(SITE_ROOT, "icon-" + slug + ".png");
         icon.alt = "";
         icon.loading = "lazy";
         // A missing icon file (skill without an icon-*.png yet) just
@@ -165,9 +187,19 @@
         return; // malformed data - fail quietly rather than draw a broken chart
       }
 
+      var idsAttr = chart.getAttribute("data-ids");
+      var ids = idsAttr
+        ? idsAttr.split(",").map(function (s) { return s.trim(); })
+        : null;
+      // Malformed (wrong length) data-ids just falls back to the
+      // label-derived slug for every row rather than half-applying it -
+      // same "fail quietly, don't half-draw" rule as the values/labels
+      // length check above.
+      if (ids && ids.length !== labels.length) ids = null;
+
       var accent = chart.getAttribute("data-accent") || null;
       var showIcons = chart.hasAttribute("data-show-icons");
-      buildChart(chart, labels, values, accent, showIcons);
+      buildChart(chart, labels, values, ids, accent, showIcons);
 
       if (observer) {
         observer.observe(chart);

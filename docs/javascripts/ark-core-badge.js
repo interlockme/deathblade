@@ -39,18 +39,7 @@
 //              nothing extra spent on it (valid and common - shows as
 //              "10 14 17" all muted, not an error), 3 = fully invested.
 (function () {
-  function detectSiteRoot() {
-    var scriptEl = document.currentScript || document.querySelector('script[src*="javascripts/ark-core-badge.js"]');
-    if (scriptEl && scriptEl.src) {
-      return scriptEl.src.replace(/javascripts\/ark-core-badge\.js(\?.*)?(#.*)?$/, "");
-    }
-    var linkEl = document.querySelector('link[href*="stylesheets/extra.css"]');
-    if (linkEl && linkEl.href) {
-      return linkEl.href.replace(/stylesheets\/extra\.css(\?.*)?(#.*)?$/, "");
-    }
-    return "";
-  }
-  var SITE_ROOT = detectSiteRoot();
+  var SITE_ROOT = window.SiteUtils.detectSiteRoot("ark-core-badge.js");
 
   var BREAKPOINTS = ["10P", "14P", "17P"];
   var CORE_ART = { sun: "sun.png", moon: "moon.png", star: "star.png" };
@@ -97,59 +86,18 @@
   }
 
   function renderContainer(container) {
-    var script = container.querySelector("script");
-    if (!script) return;
-
-    var entries;
-    try {
-      entries = JSON.parse(script.textContent);
-    } catch (e) {
-      console.error("ark-core-badge.js: invalid JSON in .ark-cores block", e);
-      return;
-    }
+    var result = window.SiteUtils.readInlineJSON(container, "ark-core-badge.js");
+    if (!result) return;
 
     var old = container.querySelector(".ark-core-row");
     if (old) old.remove();
 
     var row = el("div", "ark-core-row");
-    entries.forEach(function (entry) {
+    result.data.forEach(function (entry) {
       row.appendChild(buildItem(entry));
     });
     container.appendChild(row);
   }
 
-  function scanAndRender(root) {
-    if (!root) return;
-    if (root.matches && root.matches(".ark-cores")) {
-      renderContainer(root);
-    }
-    if (root.querySelectorAll) {
-      root.querySelectorAll(".ark-cores").forEach(renderContainer);
-    }
-  }
-
-  function renderAll() {
-    scanAndRender(document);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", renderAll);
-  } else {
-    renderAll();
-  }
-
-  if (window.document$) {
-    document$.subscribe(renderAll);
-  }
-
-  if (window.MutationObserver) {
-    var observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (m) {
-        m.addedNodes.forEach(function (node) {
-          if (node.nodeType === 1) scanAndRender(node);
-        });
-      });
-    });
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-  }
+  window.SiteUtils.registerRenderer(".ark-cores", renderContainer);
 })();

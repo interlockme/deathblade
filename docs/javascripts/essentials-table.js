@@ -35,19 +35,7 @@
 //   skill-data.js so this table and the matching build-page skill cards
 //   can't drift out of sync.
 (function () {
-  function detectSiteRoot() {
-    var scriptEl = document.currentScript || document.querySelector('script[src*="javascripts/essentials-table.js"]');
-    if (scriptEl && scriptEl.src) {
-      return scriptEl.src.replace(/javascripts\/essentials-table\.js(\?.*)?(#.*)?$/, "");
-    }
-    // Fallback, same trick as skill-setup.js/dps-chart.js/build-compare.js.
-    var linkEl = document.querySelector('link[href*="stylesheets/extra.css"]');
-    if (linkEl && linkEl.href) {
-      return linkEl.href.replace(/stylesheets\/extra\.css(\?.*)?(#.*)?$/, "");
-    }
-    return "";
-  }
-  var SITE_ROOT = detectSiteRoot();
+  var SITE_ROOT = window.SiteUtils.detectSiteRoot("essentials-table.js");
 
   var el = window.SiteUtils.el;
 
@@ -94,20 +82,9 @@
 
   function renderContainer(container) {
     var family = container.getAttribute("data-family") || "re";
-    // Same reasoning as skill-setup.js's renderContainer: match the
-    // script tag on its bare element (not the type attribute), since
-    // Material's instant-navigation content swap drops type="..." off a
-    // recreated inline <script> when it re-runs it after a page swap.
-    var script = container.querySelector("script");
-    if (!script) return;
-
-    var entries;
-    try {
-      entries = JSON.parse(script.textContent);
-    } catch (e) {
-      console.error("essentials-table.js: invalid JSON in .skills-table block", e);
-      return;
-    }
+    var result = window.SiteUtils.readInlineJSON(container, "essentials-table.js");
+    if (!result) return;
+    var entries = result.data;
 
     // Drop any previously-rendered table before rebuilding, same
     // idempotency reasoning as skill-setup.js (re-runs on nav swap and
@@ -135,40 +112,5 @@
     container.appendChild(table);
   }
 
-  function scanAndRender(root) {
-    if (!root) return;
-    if (root.matches && root.matches(".skills-table[data-family]")) {
-      renderContainer(root);
-    }
-    if (root.querySelectorAll) {
-      root.querySelectorAll(".skills-table[data-family]").forEach(renderContainer);
-    }
-  }
-
-  function renderAll() {
-    scanAndRender(document);
-  }
-
-  // Same three overlapping triggers as skill-setup.js, for the same
-  // "no wrong assumption about instant-navigation timing" reasoning.
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", renderAll);
-  } else {
-    renderAll();
-  }
-
-  if (window.document$) {
-    document$.subscribe(renderAll);
-  }
-
-  if (window.MutationObserver) {
-    var observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (m) {
-        m.addedNodes.forEach(function (node) {
-          if (node.nodeType === 1) scanAndRender(node);
-        });
-      });
-    });
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-  }
+  window.SiteUtils.registerRenderer(".skills-table[data-family]", renderContainer);
 })();

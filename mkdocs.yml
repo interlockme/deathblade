@@ -33,7 +33,7 @@ extra_css:
   - stylesheets/extra.css?v=7
 
 extra_javascript:
-  - javascripts/site-utils.js?v=2
+  - javascripts/site-utils.js?v=3
   - javascripts/extra.js?v=2
   - javascripts/cpm-calculator.js?v=2
   - javascripts/bid-calculator.js?v=2
@@ -41,15 +41,17 @@ extra_javascript:
   - javascripts/build-data.js?v=2
   - javascripts/skill-data.js?v=2
   - javascripts/skill-names.js?v=1
-  - javascripts/skill-setup.js?v=5
-  - javascripts/essentials-table.js?v=2
-  - javascripts/ark-core-badge.js?v=2
-  - javascripts/ark-passive-tree.js?v=2
+  - javascripts/skill-setup.js?v=7
+  - javascripts/essentials-table.js?v=3
+  - javascripts/ark-core-badge.js?v=3
+  - javascripts/ap-node-names.js?v=1
+  - javascripts/ark-passive-tree.js?v=4
+  - javascripts/gem-priority.js?v=4
   - javascripts/pentagon-badge.js?v=2
-  - javascripts/rotation-line.js?v=1
+  - javascripts/rotation-line.js?v=2
   - javascripts/rotation-practice.js?v=2
-  - javascripts/dps-chart.js?v=2
-  - javascripts/gem-dps-tooltip.js?v=2
+  - javascripts/dps-chart.js?v=3
+  - javascripts/gem-dps-tooltip.js?v=4
   - javascripts/build-compare.js?v=2
   - javascripts/last-updated.js?v=2
 

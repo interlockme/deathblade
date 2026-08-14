@@ -7,11 +7,14 @@
 // there's no meaningful "% of total damage" figure to show them.
 //
 // EASY EDIT GUIDE: there is nothing to edit here. Once a build page's
-// <div class="dps-chart" data-labels="..." data-values="..."> is
-// correct, matching gem cards in its "## Gems" -> Damage column pick
-// up the same numbers automatically by matching on the skill name -
-// "Fatal Wave" gem card <-> "Fatal Wave" chart label. A gem whose name
-// has no matching chart label (e.g. it's absent from that build's
+// <div class="dps-chart" data-labels="..." data-values="..."
+// data-ids="..."> is correct, matching gem cards in its "## Gems" ->
+// Damage column pick up the same numbers automatically by matching on
+// skill id - a gem-priority.js row's data-id (e.g. "fatalwave") against
+// the chart's data-ids at the same position. Falls back to comparing
+// rendered name text (old behavior) only if the chart has no data-ids
+// at all, for any chart that hasn't been given one yet. A gem with no
+// id/name match in the chart (e.g. it's absent from that build's
 // recorded split) is just left without a tooltip.
 
 (function () {
@@ -32,11 +35,20 @@
     if (!values.length || values.length !== labels.length || values.some(isNaN)) {
       return null; // malformed data - same "fail quietly" rule dps-chart.js follows
     }
-    var map = {};
+
+    var idsAttr = chart.getAttribute("data-ids");
+    var ids = idsAttr
+      ? idsAttr.split(",").map(function (s) { return s.trim(); })
+      : null;
+    if (ids && ids.length !== values.length) ids = null; // malformed - ignore, name fallback still applies
+
+    var byId = {};
+    var byName = {};
     labels.forEach(function (label, i) {
-      map[label.toLowerCase()] = values[i];
+      byName[label.toLowerCase()] = values[i];
+      if (ids && ids[i]) byId[ids[i]] = values[i];
     });
-    return map;
+    return { byId: byId, byName: byName };
   }
 
   function applyTooltips() {
@@ -63,18 +75,55 @@
       dmgItems.forEach(function (el) {
         var nameEl = el.querySelector(".gem-item-name");
         if (!nameEl) return;
-        var name = nameEl.textContent.trim().toLowerCase();
-        if (!(name in shareMap)) return;
 
-        var pct = shareMap[name];
+        var id = el.getAttribute("data-id");
+        var pct = id && id in shareMap.byId ? shareMap.byId[id] : undefined;
+        if (pct === undefined) {
+          var name = nameEl.textContent.trim().toLowerCase();
+          pct = shareMap.byName[name];
+        }
+        if (pct === undefined) return;
+
         el.title = nameEl.textContent.trim() + ": " + fmtPct(pct) + " of total damage";
       });
     });
   }
 
+  // Same three-trigger pattern SiteUtils.registerRenderer() documents
+  // (direct/hard load, Material instant-nav via document$, and a
+  // MutationObserver belt-and-suspenders) - this file predates that
+  // helper and only had the document$ leg, which meant a plain page
+  // load could race gem-priority.js's own render (or land in a gap
+  // where document$ had already fired once before this subscription
+  // was registered and never fires again on that load), leaving the
+  // Damage column with no tooltips until an actual nav occurred.
+  // applyTooltips() itself is already idempotent (just (re)sets
+  // el.title), so calling it redundantly across all three triggers is
+  // harmless, same as every registerRenderer-based widget.
+  function run() {
+    applyTooltips();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+
   if (window.document$) {
-    document$.subscribe(function () {
-      applyTooltips();
+    document$.subscribe(run);
+  }
+
+  if (window.MutationObserver) {
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (m) {
+        m.addedNodes.forEach(function (node) {
+          if (node.nodeType === 1 && (node.matches(".gem-priority, .dps-chart") || node.querySelector(".gem-priority, .dps-chart"))) {
+            run();
+          }
+        });
+      });
     });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
   }
 })();

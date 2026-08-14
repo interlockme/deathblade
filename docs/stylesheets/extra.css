@@ -1147,6 +1147,7 @@ h3 { color: #4db6ac; }
    it reads as this card's body, not a second nested box. Any strategy text
    for the cycle stays outside the card as a normal paragraph, same as before. */
 .md-typeset .cycle-card {
+  background-color: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(179, 157, 219, 0.32);
   border-radius: 10px;
   overflow: hidden;

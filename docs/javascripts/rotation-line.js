@@ -51,35 +51,12 @@
 //   for the "-> Cycle 2 -> Cycle 1 -> etc." loop-back), add one more
 //   entry at the very end: { "suffix": "etc." }
 (function () {
-  function detectSiteRoot() {
-    var scriptEl = document.currentScript || document.querySelector('script[src*="javascripts/rotation-line.js"]');
-    if (scriptEl && scriptEl.src) {
-      return scriptEl.src.replace(/javascripts\/rotation-line\.js(\?.*)?(#.*)?$/, "");
-    }
-    // Fallback, same trick as skill-setup.js/essentials-table.js/dps-chart.js.
-    var linkEl = document.querySelector('link[href*="stylesheets/extra.css"]');
-    if (linkEl && linkEl.href) {
-      return linkEl.href.replace(/stylesheets\/extra\.css(\?.*)?(#.*)?$/, "");
-    }
-    return "";
-  }
-  var SITE_ROOT = detectSiteRoot();
+  var SITE_ROOT = window.SiteUtils.detectSiteRoot("rotation-line.js");
 
   var el = window.SiteUtils.el;
   var iconSrc = window.SiteUtils.iconSrc;
   var hideOnError = window.SiteUtils.hideOnError;
-
-  // Just enough Markdown to matter for a situational tag - "**word**"
-  // becomes <strong>word</strong>, everything else is plain text. Not a
-  // general Markdown parser, this data never reaches pymdownx since it's
-  // built client-side after the page's own Markdown pass already ran.
-  function appendInlineBold(parent, text) {
-    var parts = text.split(/\*\*(.+?)\*\*/g);
-    parts.forEach(function (part, i) {
-      if (!part) return;
-      parent.appendChild(i % 2 === 1 ? el("strong", null, part) : document.createTextNode(part));
-    });
-  }
+  var appendInlineBold = window.SiteUtils.appendInlineBold;
 
   function buildIcon(id) {
     var img = document.createElement("img");
@@ -125,54 +102,25 @@
   }
 
   function renderLine(line) {
-    // mkdocs-material's instant-navigation content swap recreates every
-    // <script> element found in newly-inserted page content so that real
-    // JS assets actually re-execute (a <script> inserted via innerHTML/
-    // DOM-diffing doesn't run on its own). For a <script src="...">, it
-    // copies every attribute across; for an inline script like ours (no
-    // src), it only copies the text content - our type="application/json"
-    // attribute gets silently dropped in that process. So this line is
-    // guaranteed by the EASY EDIT GUIDE above to hold exactly one
-    // <script>, matched on the bare tag rather than its type - matching
-    // on type only works on a hard page load, not after clicking a nav
-    // link (see skill-setup.js's renderContainer for the same fix and a
-    // longer explanation). The recreated tag becomes a plain, harmless-
-    // to-run script since our JSON payload is required to be array-rooted
-    // (see EASY EDIT GUIDE), which also happens to be valid as a JS
-    // expression statement - it's evaluated and discarded, textContent is
-    // untouched. A top-level *object* payload is NOT safe here: as a JS
-    // statement `{` opens a block, and a string key immediately followed
-    // by `:` is a syntax error the recreated script throws for real,
-    // which is exactly the bug that used to make rotation lines stay
-    // empty after a regular nav click (worked fine on reload/direct load,
-    // where the browser's normal parser respects the original type and
-    // never executes it at all).
-    var scriptEl = line.querySelector("script");
-    if (!scriptEl) return; // handwritten/legacy markup, or no data to render - leave it alone
+    // Peek at the raw script text ourselves, before handing off to
+    // SiteUtils.readInlineJSON, purely so we can skip re-parsing (and
+    // more importantly, skip the DOM teardown/rebuild below) when
+    // nothing's actually changed. document$ can (and does, even on a
+    // plain page load with zero navigation - verified via
+    // instrumentation) emit several times in quick succession, and the
+    // MutationObserver layer piles on top of that. Without this guard
+    // every extra emission means a pointless full teardown-and-rebuild
+    // of every rotation-line on the page - wasteful, and a window
+    // (however brief) where the line has no .skill/.arrow children at
+    // all.
+    var peekScript = line.querySelector("script");
+    if (peekScript && line._rotationRawData === peekScript.textContent) return;
 
-    // document$ can (and does, even on a plain page load with zero
-    // navigation - verified via instrumentation) emit several times in
-    // quick succession, and the MutationObserver layer piles on top of
-    // that. Without this guard every extra emission means a pointless
-    // full teardown-and-rebuild of every rotation-line on the page -
-    // wasteful, and a window (however brief) where the line has no
-    // .skill/.arrow children at all. Skip straight to a no-op when the
-    // underlying data hasn't actually changed.
-    var raw = scriptEl.textContent;
-    if (line._rotationRawData === raw) return;
-
-    var data;
-    try {
-      data = JSON.parse(raw);
-    } catch (err) {
-      console.error("rotation-line: invalid JSON, leaving line unrendered", err, line);
-      return;
-    }
-
-    if (!Array.isArray(data)) {
-      console.error("rotation-line: root must be an array, leaving line unrendered", line);
-      return;
-    }
+    var result = window.SiteUtils.readInlineJSON(line, "rotation-line.js");
+    if (!result) return; // handwritten/legacy markup, invalid JSON, or no data - leave it alone
+    var scriptEl = result.script;
+    var raw = result.raw;
+    var data = result.data;
 
     // A trailing `{ "suffix": "..." }` marker (an object with ONLY a
     // "suffix" key - real steps always have id/icons/cycleRef) carries
@@ -210,43 +158,5 @@
     line._rotationRawData = raw;
   }
 
-  function renderAll() {
-    document.querySelectorAll(".rotation-line").forEach(renderLine);
-  }
-
-  // Three independent, overlapping triggers, same reasoning and same
-  // pattern as skill-setup.js (see its comment for the full rationale):
-  // document$ alone reliably re-fires on Material's instant-navigation
-  // page swaps, but is NOT guaranteed to fire before a true first/direct
-  // page load's DOM is actually ready - which is why rotation lines were
-  // staying empty until something else (a nav, a reload) triggered a
-  // document$ emission. renderLine()/renderAll() are idempotent, so it's
-  // safe to just fire from all three rather than get the timing "right".
-
-  // 1) Normal/direct page load.
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", renderAll);
-  } else {
-    renderAll();
-  }
-
-  // 2) navigation.instant page swaps.
-  if (window.document$) {
-    document$.subscribe(renderAll);
-  }
-
-  // 3) Belt-and-suspenders: render any .rotation-line the moment it's
-  // inserted, regardless of which mechanism put it there.
-  if (window.MutationObserver) {
-    var observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (m) {
-        m.addedNodes.forEach(function (node) {
-          if (node.nodeType !== 1) return;
-          if (node.matches && node.matches(".rotation-line")) renderLine(node);
-          if (node.querySelectorAll) node.querySelectorAll(".rotation-line").forEach(renderLine);
-        });
-      });
-    });
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-  }
+  window.SiteUtils.registerRenderer(".rotation-line", renderLine);
 })();

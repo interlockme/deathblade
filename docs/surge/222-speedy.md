@@ -67,49 +67,49 @@
 [
     { "id": "evolution", "label": "Evolution", "points": 140, "tiers": [
       { "label": "Tier 1", "nodes": [
-        { "name": "Crit", "level": 10, "max": 30, "icon": "ap-icons/critical.png" },
-        { "name": "Specialization", "level": 30, "max": 30, "icon": "ap-icons/specialization.png" }
+        { "id": "crit", "level": 10, "max": 30 },
+        { "id": "specialization", "level": 30, "max": 30 }
       ] },
       { "label": "Tier 2", "nodes": [
-        { "name": "Keen Sense", "level": 2, "max": 2, "icon": "ap-icons/keen-sense.png" },
-        { "name": "Limit Break", "level": 1, "max": 3, "icon": "ap-icons/limit-break-evo.png" }
+        { "id": "keensense", "level": 2, "max": 2 },
+        { "id": "limitbreakevo", "level": 1, "max": 3 }
       ] },
       { "label": "Tier 3", "nodes": [
-        { "name": "Strike", "level": 2, "max": 2, "icon": "ap-icons/strike.png" }
+        { "id": "strike", "level": 2, "max": 2 }
       ] },
       { "label": "Tier 4", "nodes": [
-        { "name": "Master", "level": 1, "max": 1, "icon": "ap-icons/master.png" },
-        { "name": "Pulverize", "level": 1, "max": 1, "icon": "ap-icons/pulverize.png" }
+        { "id": "master", "level": 1, "max": 1 },
+        { "id": "pulverize", "level": 1, "max": 1 }
       ] },
       { "label": "Tier 5", "nodes": [
-        { "name": "Standing Striker", "level": 2, "max": 2, "icon": "ap-icons/standing-striker.png" }
+        { "id": "standingstriker", "level": 2, "max": 2 }
       ] }
     ] },
     { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [
       { "label": "Tier 1", "nodes": [
-        { "name": "Surge Enhancement", "level": 1, "max": 1, "icon": "ap-icons/surge-enhancement.png" }
+        { "id": "surgeenhancement", "level": 1, "max": 1 }
       ] },
       { "label": "Tier 2", "nodes": [
-        { "name": "Orb Compression", "level": 3, "max": 3, "icon": "ap-icons/orb-compression.png" }
+        { "id": "orbcompression", "level": 3, "max": 3 }
       ] },
       { "label": "Tier 3", "nodes": [
-        { "name": "Orb Control", "level": 1, "max": 5, "icon": "ap-icons/orb-control.png" },
-        { "name": "Limit Break", "level": 3, "max": 3, "icon": "ap-icons/limit-break-enl.png" }
+        { "id": "orbcontrol", "level": 1, "max": 5 },
+        { "id": "limitbreakenl", "level": 3, "max": 3 }
       ] },
       { "label": "Tier 4", "nodes": [
-        { "name": "Chaos Infusion", "level": 1, "max": 5, "icon": "ap-icons/chaos-infusion.png" },
-        { "name": "Chaotic Power", "level": 3, "max": 3, "icon": "ap-icons/chaotic-power.png" }
+        { "id": "chaosinfusion", "level": 1, "max": 5 },
+        { "id": "chaoticpower", "level": 3, "max": 3 }
       ] }
     ] },
     { "id": "leap", "label": "Leap", "points": 70, "tiers": [
       { "label": "Tier 1", "nodes": [
-        { "name": "Awakening Amplifier", "level": 1, "max": 3, "icon": "ap-icons/awakening-amplifier.png" },
-        { "name": "Unleashed Power", "level": 5, "max": 5, "icon": "ap-icons/unleashed-power.png" },
-        { "name": "Release Potential", "level": 3, "max": 5, "icon": "ap-icons/release-potential.png" },
-        { "name": "Instant Spell", "level": 3, "max": 3, "icon": "ap-icons/instant-spell.png" }
+        { "id": "awakeningamplifier", "level": 1, "max": 3 },
+        { "id": "unleashedpower", "level": 5, "max": 5 },
+        { "id": "releasepotential", "level": 3, "max": 5 },
+        { "id": "instantspell", "level": 3, "max": 3 }
       ] },
       { "label": "Tier 2", "nodes": [
-        { "name": "Dance of Screams", "level": 3, "max": 3, "icon": "ap-icons/dance-of-screams.png" }
+        { "id": "danceofscreams", "level": 3, "max": 3 }
       ] }
     ] }
   ]
@@ -154,18 +154,18 @@
 <div class="skill-setup" data-family="surge" markdown>
 <script type="application/json">
 [
-  {"id": "surpriseattack", "name": "Surprise Attack", "level": 10, "tripods": [1, 1, 1], "rune": {"tier": "legendary", "name": "Rage"}},
-  {"id": "windcut", "name": "Wind Cut", "level": 14, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Galewind"}},
-  {"id": "spincutter", "name": "Spincutter", "level": 10, "tripods": [3, 3, 1], "rune": {"tier": "epic", "name": "Galewind"}},
-  {"id": "bladedance", "name": "Blade Dance", "level": 14, "tripods": [1, 1, 2], "rune": {"tier": "legendary", "name": "Galewind"}},
-  {"id": "darkaxel", "name": "Dark Axel", "level": 10, "tripods": [1, 1, 2], "rune": {"tier": "epic", "name": "Galewind"}},
-  {"id": "earthcleaver", "name": "Earth Cleaver", "level": 14, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Vision"}},
-  {"id": "turningslash", "name": "Turning Slash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "legendary", "name": "Poison"}},
-  {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
-  {"id": "deathtrance", "name": "Death Trance", "subtitle": "Identity"},
-  {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"},
-  {"id": "bladeassault", "name": "Blade Assault", "subtitle": "Awakening"},
-  {"id": "surge", "name": "Surge", "subtitle": "Identity"}
+  {"id": "surpriseattack", "level": 10, "tripods": [1, 1, 1], "rune": {"tier": "legendary", "name": "Rage"}},
+  {"id": "windcut", "level": 14, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Galewind"}},
+  {"id": "spincutter", "level": 10, "tripods": [3, 3, 1], "rune": {"tier": "epic", "name": "Galewind"}},
+  {"id": "bladedance", "level": 14, "tripods": [1, 1, 2], "rune": {"tier": "legendary", "name": "Galewind"}},
+  {"id": "darkaxel", "level": 10, "tripods": [1, 1, 2], "rune": {"tier": "epic", "name": "Galewind"}},
+  {"id": "earthcleaver", "level": 14, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Vision"}},
+  {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "legendary", "name": "Poison"}},
+  {"id": "maelstrom", "level": 10, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
+  {"id": "deathtrance", "subtitle": "Identity"},
+  {"id": "deathlyslash", "subtitle": "Technique"},
+  {"id": "bladeassault", "subtitle": "Awakening"},
+  {"id": "surge", "subtitle": "Identity"}
 ]
 </script>
 </div>
@@ -202,8 +202,8 @@
 <div class="skill-setup" data-family="surge" markdown>
 <script type="application/json">
 [
-  {"id": "upperslash", "name": "Upper Slash", "level": 14, "tripods": [2, 3, 2], "rune": {"tier": "epic", "name": "Galewind"}},
-  {"id": "earthcleaver", "name": "Earth Cleaver", "level": 10, "rune": {"tier": "legendary", "name": "Vision"}}
+  {"id": "upperslash", "level": 14, "tripods": [2, 3, 2], "rune": {"tier": "epic", "name": "Galewind"}},
+  {"id": "earthcleaver", "level": 10, "rune": {"tier": "legendary", "name": "Vision"}}
 ]
 </script>
 </div>
@@ -219,102 +219,31 @@
 <div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="gem-priority" markdown>
-
-<div class="gem-col gem-col-dmg" markdown>
-<div class="gem-col-header" markdown>
-<span class="gem-col-title">Damage</span>
-</div>
-
-<div class="gem-list" markdown>
-<div class="gem-item" data-rank="1" markdown>
-<span class="gem-item-rank">1</span>
-![](../assets/shared/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
-</div>
-<div class="gem-item" data-rank="2" markdown>
-<span class="gem-item-rank">2</span>
-![](../assets/shared/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
-</div>
-<details class="gem-item gem-item-expandable" data-rank="3" markdown>
-<summary markdown="span">
-<span class="gem-item-rank">3</span>
-![](../assets/shared/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
-<span class="gem-item-arrow"></span>
-</summary>
-
-<div class="gem-item-alts" markdown>
-
-<div class="gem-alt" markdown>
-![](../assets/shared/icon-upperslash.png){: .gem-alt-icon } **Upper Slash** — Optional in the Upper Slash build.
-</div>
-</div>
-
-</details>
-<div class="gem-item" data-rank="4" markdown>
-<span class="gem-item-rank">4</span>
-![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
-</div>
-<details class="gem-item gem-item-expandable" data-rank="5" markdown>
-<summary markdown="span">
-<span class="gem-item-rank">5</span>
-![](../assets/shared/icon-windcut.png){: .gem-item-icon } <span class="gem-item-name">Wind Cut</span>
-<span class="gem-item-arrow"></span>
-</summary>
-
-<div class="gem-item-alts" markdown>
-
-<div class="gem-alt" markdown>
-![](../assets/shared/icon-darkaxel.png){: .gem-alt-icon } **Dark Axel** — Swap this to Dark Axel CD if you prefer.
-</div>
-</div>
-
-</details>
-</div>
-</div>
-
-<div class="gem-col gem-col-cd" markdown>
-<div class="gem-col-header" markdown>
-<span class="gem-col-title">Cooldown</span>
-</div>
-
-<div class="gem-list" markdown>
-<div class="gem-item" data-rank="1" markdown>
-<span class="gem-item-rank">1</span>
-![](../assets/shared/icon-windcut.png){: .gem-item-icon } <span class="gem-item-name">Wind Cut</span>
-</div>
-<div class="gem-item" data-rank="2" markdown>
-<span class="gem-item-rank">2</span>
-![](../assets/shared/icon-surpriseattack.png){: .gem-item-icon } <span class="gem-item-name">Surprise Attack</span>
-</div>
-<div class="gem-item" data-rank="3" markdown>
-<span class="gem-item-rank">3</span>
-![](../assets/shared/icon-bladedance.png){: .gem-item-icon } <span class="gem-item-name">Blade Dance</span>
-</div>
-<div class="gem-item" data-rank="4" markdown>
-<span class="gem-item-rank">4</span>
-![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
-</div>
-<details class="gem-item gem-item-expandable" data-rank="5" markdown>
-<summary markdown="span">
-<span class="gem-item-rank">5</span>
-![](../assets/shared/icon-earthcleaver.png){: .gem-item-icon } <span class="gem-item-name">Earth Cleaver</span>
-<span class="gem-item-arrow"></span>
-</summary>
-
-<div class="gem-item-alts" markdown>
-
-<div class="gem-alt" markdown>
-![](../assets/shared/icon-upperslash.png){: .gem-alt-icon } **Upper Slash** — Required in the Upper Slash build.
-</div>
-</div>
-
-</details>
-<div class="gem-item" data-rank="6" markdown>
-<span class="gem-item-rank">6</span>
-![](../assets/shared/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
-</div>
-</div>
-</div>
-
+<script type="application/json">
+[
+  { "col": "dmg", "label": "Damage", "items": [
+    "surge",
+    "bladedance",
+    { "id": "earthcleaver", "alts": [
+      { "id": "upperslash", "note": "Optional in the Upper Slash build." }
+    ] },
+    "turningslash",
+    { "id": "windcut", "alts": [
+      { "id": "darkaxel", "note": "Swap this to Dark Axel CD if you prefer." }
+    ] }
+  ] },
+  { "col": "cd", "label": "Cooldown", "items": [
+    "windcut",
+    "surpriseattack",
+    "bladedance",
+    "turningslash",
+    { "id": "earthcleaver", "alts": [
+      { "id": "upperslash", "note": "Required in the Upper Slash build." }
+    ] },
+    "maelstrom"
+  ] }
+]
+</script>
 </div>
 
 </div>
@@ -368,6 +297,6 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-<div class="dps-chart" data-show-icons data-labels="Surge,Deathly Slash,Blade Dance,Earth Cleaver,Turning Slash,Wind Cut" data-values="47.67,30.59,6.64,4.79,3.09,3"></div>
+<div class="dps-chart" data-show-icons data-labels="Surge,Deathly Slash,Blade Dance,Earth Cleaver,Turning Slash,Wind Cut" data-values="47.67,30.59,6.64,4.79,3.09,3" data-ids="surge,deathlyslash,bladedance,earthcleaver,turningslash,windcut"></div>
 </div>
 </div>

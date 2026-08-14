@@ -62,47 +62,47 @@
 [
     { "id": "evolution", "label": "Evolution", "points": 140, "tiers": [
       { "label": "Tier 1", "nodes": [
-        { "name": "Crit", "level": 10, "max": 30, "icon": "ap-icons/critical.png" },
-        { "name": "Specialization", "level": 30, "max": 30, "icon": "ap-icons/specialization.png" }
+        { "id": "crit", "level": 10, "max": 30 },
+        { "id": "specialization", "level": 30, "max": 30 }
       ] },
       { "label": "Tier 2", "nodes": [
-        { "name": "Keen Sense", "level": 2, "max": 2, "icon": "ap-icons/keen-sense.png" },
-        { "name": "Limit Break", "level": 1, "max": 3, "icon": "ap-icons/limit-break-evo.png" }
+        { "id": "keensense", "level": 2, "max": 2 },
+        { "id": "limitbreakevo", "level": 1, "max": 3 }
       ] },
       { "label": "Tier 3", "nodes": [
-        { "name": "Strike", "level": 2, "max": 2, "icon": "ap-icons/strike.png" }
+        { "id": "strike", "level": 2, "max": 2 }
       ] },
       { "label": "Tier 4", "nodes": [
-        { "name": "Master", "level": 1, "max": 1, "icon": "ap-icons/master.png" },
-        { "name": "Pulverize", "level": 1, "max": 1, "icon": "ap-icons/pulverize.png" }
+        { "id": "master", "level": 1, "max": 1 },
+        { "id": "pulverize", "level": 1, "max": 1 }
       ] },
       { "label": "Tier 5", "nodes": [
-        { "name": "Standing Striker", "level": 2, "max": 2, "icon": "ap-icons/standing-striker.png" }
+        { "id": "standingstriker", "level": 2, "max": 2 }
       ] }
     ] },
     { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [
       { "label": "Tier 1", "nodes": [
-        { "name": "Swift Strike", "level": 1, "max": 1, "icon": "ap-icons/swift-strike.png" }
+        { "id": "swiftstrike", "level": 1, "max": 1 }
       ] },
       { "label": "Tier 2", "nodes": [
-        { "name": "Remaining Energy", "level": 3, "max": 3, "icon": "ap-icons/remaining-energy.png" }
+        { "id": "remainingenergy", "level": 3, "max": 3 }
       ] },
       { "label": "Tier 3", "nodes": [
-        { "name": "Firm Will", "level": 3, "max": 3, "icon": "ap-icons/firm-will.png" }
+        { "id": "firmwill", "level": 3, "max": 3 }
       ] },
       { "label": "Tier 4", "nodes": [
-        { "name": "Extreme Body Movement", "level": 3, "max": 3, "icon": "ap-icons/extreme-body-movement.png" },
-        { "name": "Orb Circulation", "level": 2, "max": 5, "icon": "ap-icons/orb-circulation.png" }
+        { "id": "extremebodymovement", "level": 3, "max": 3 },
+        { "id": "orbcirculation", "level": 2, "max": 5 }
       ] }
     ] },
     { "id": "leap", "label": "Leap", "points": 70, "tiers": [
       { "label": "Tier 1", "nodes": [
-        { "name": "Unleashed Power", "level": 5, "max": 5, "icon": "ap-icons/unleashed-power.png" },
-        { "name": "Release Potential", "level": 4, "max": 5, "icon": "ap-icons/release-potential.png" },
-        { "name": "Instant Spell", "level": 2, "max": 3, "icon": "ap-icons/instant-spell.png" }
+        { "id": "unleashedpower", "level": 5, "max": 5 },
+        { "id": "releasepotential", "level": 4, "max": 5 },
+        { "id": "instantspell", "level": 2, "max": 3 }
       ] },
       { "label": "Tier 2", "nodes": [
-        { "name": "Dance of Nightmares", "level": 3, "max": 3, "icon": "ap-icons/dance-of-nightmares.png" }
+        { "id": "danceofnightmares", "level": 3, "max": 3 }
       ] }
     ] }
   ]
@@ -145,7 +145,7 @@
 <div class="skill-setup" data-family="re" markdown>
 <script type="application/json">
 [
-  {"id": "soulabsorber", "name": "Soul Absorber", "level": 14, "rune": {"tier": "legendary", "name": "Wealth"}}
+  {"id": "soulabsorber", "level": 14, "rune": {"tier": "legendary", "name": "Wealth"}}
 ]
 </script>
 </div>
@@ -156,18 +156,18 @@
   "columns": [
     { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [
       { "label": "Tier 1", "nodes": [
-        { "name": "Swift Strike", "level": 1, "max": 1, "icon": "ap-icons/swift-strike.png" }
+        { "id": "swiftstrike", "level": 1, "max": 1 }
       ] },
       { "label": "Tier 2", "nodes": [
-        { "name": "Remaining Energy", "level": 3, "max": 3, "icon": "ap-icons/remaining-energy.png" }
+        { "id": "remainingenergy", "level": 3, "max": 3 }
       ] },
       { "label": "Tier 3", "nodes": [
-        { "name": "Firm Will", "level": 3, "max": 3, "icon": "ap-icons/firm-will.png" },
-        { "name": "Swordcraft Enhancement", "level": 1, "max": 5, "icon": "ap-icons/swordcraft-enhancement.png" }
+        { "id": "firmwill", "level": 3, "max": 3 },
+        { "id": "swordcraftenhancement", "level": 1, "max": 5 }
       ] },
       { "label": "Tier 4", "nodes": [
-        { "name": "Extreme Body Movement", "level": 2, "max": 3, "icon": "ap-icons/extreme-body-movement.png" },
-        { "name": "Orb Circulation", "level": 5, "max": 5, "icon": "ap-icons/orb-circulation.png" }
+        { "id": "extremebodymovement", "level": 2, "max": 3 },
+        { "id": "orbcirculation", "level": 5, "max": 5 }
       ] }
     ] }
   ]
@@ -188,17 +188,17 @@
 <div class="skill-setup" data-family="re" markdown>
 <script type="application/json">
 [
-  {"id": "soulabsorber", "name": "Soul Absorber", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
-  {"id": "twinshadows", "name": "Twin Shadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
-  {"id": "headhunt", "name": "Head Hunt", "level": 7, "tripods": [1, 2], "rune": {"tier": "green", "name": "Wealth"}},
-  {"id": "turningslash", "name": "Turning Slash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "blue", "name": "Wealth"}},
-  {"id": "maelstrom", "name": "Maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "blue", "name": "Wealth"}},
-  {"id": "fatalwave", "name": "Fatal Wave", "level": 14, "tripods": [2, 3, 2], "rune": {"tier": "legendary", "name": "Galewind"}},
-  {"id": "blitzrush", "name": "Blitz Rush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "blue", "name": "Wealth"}},
-  {"id": "voidstrike", "name": "Void Strike", "level": 11, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
-  {"id": "surge", "name": "Surge", "subtitle": "Identity"},
-  {"id": "deathlyslash", "name": "Deathly Slash", "subtitle": "Technique"},
-  {"id": "bladeassault", "name": "Blade Assault", "subtitle": "Awakening"}
+  {"id": "soulabsorber", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "twinshadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "headhunt", "level": 7, "tripods": [1, 2], "rune": {"tier": "green", "name": "Wealth"}},
+  {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "fatalwave", "level": 14, "tripods": [2, 3, 2], "rune": {"tier": "legendary", "name": "Galewind"}},
+  {"id": "blitzrush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "voidstrike", "level": 11, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
+  {"id": "surge", "subtitle": "Identity"},
+  {"id": "deathlyslash", "subtitle": "Technique"},
+  {"id": "bladeassault", "subtitle": "Awakening"}
 ]
 </script>
 </div>
@@ -232,11 +232,11 @@
 <div class="skill-setup" data-family="re" markdown>
 <script type="application/json">
 [
-  {"id": "fatalwave", "name": "Fatal Wave", "level": 14, "rune": {"tier": "epic", "name": "Wealth"}},
-  {"id": "voidstrike", "name": "Void Strike", "level": 11, "rune": {"tier": "epic", "name": "Wealth"}},
-  {"id": "soulabsorber", "name": "Soul Absorber", "level": 14, "rune": {"tier": "legendary", "name": "Wealth"}},
-  {"id": "twinshadows", "name": "Twin Shadows", "level": 14, "rune": {"tier": "blue", "name": "Wealth"}},
-  {"id": "maelstrom", "name": "Maelstrom", "level": 10, "rune": {"tier": "green", "name": "Wealth"}}
+  {"id": "fatalwave", "level": 14, "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "voidstrike", "level": 11, "rune": {"tier": "epic", "name": "Wealth"}},
+  {"id": "soulabsorber", "level": 14, "rune": {"tier": "legendary", "name": "Wealth"}},
+  {"id": "twinshadows", "level": 14, "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "maelstrom", "level": 10, "rune": {"tier": "green", "name": "Wealth"}}
 ]
 </script>
 </div>
@@ -247,13 +247,13 @@
   "columns": [
     { "id": "leap", "label": "Leap", "points": 70, "tiers": [
       { "label": "Tier 1", "nodes": [
-        { "name": "Awakening Amplifier", "level": 1, "max": 3, "icon": "ap-icons/awakening-amplifier.png" },
-        { "name": "Unleashed Power", "level": 5, "max": 5, "icon": "ap-icons/unleashed-power.png" },
-        { "name": "Release Potential", "level": 3, "max": 5, "icon": "ap-icons/release-potential.png" },
-        { "name": "Instant Spell", "level": 3, "max": 3, "icon": "ap-icons/instant-spell.png" }
+        { "id": "awakeningamplifier", "level": 1, "max": 3 },
+        { "id": "unleashedpower", "level": 5, "max": 5 },
+        { "id": "releasepotential", "level": 3, "max": 5 },
+        { "id": "instantspell", "level": 3, "max": 3 }
       ] },
       { "label": "Tier 2", "nodes": [
-        { "name": "Dance of Nightmares", "level": 3, "max": 3, "icon": "ap-icons/dance-of-nightmares.png" }
+        { "id": "danceofnightmares", "level": 3, "max": 3 }
       ] }
     ] }
   ]
@@ -284,69 +284,17 @@
 <div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="gem-priority" markdown>
-
-<div class="gem-col gem-col-dmg" markdown>
-<div class="gem-col-header" markdown>
-<span class="gem-col-title">Damage</span>
-</div>
-
-<div class="gem-list" markdown>
-<div class="gem-item" data-rank="1" markdown>
-<span class="gem-item-rank">1</span>
-![](../assets/shared/icon-fatalwave.png){: .gem-item-icon } <span class="gem-item-name">Fatal Wave</span>
-</div>
-<div class="gem-item" data-rank="2" markdown>
-<span class="gem-item-rank">2</span>
-![](../assets/shared/icon-surge.png){: .gem-item-icon } <span class="gem-item-name">Surge</span>
-</div>
-<div class="gem-item" data-rank="3" markdown>
-<span class="gem-item-rank">3</span>
-![](../assets/shared/icon-twinshadows.png){: .gem-item-icon } <span class="gem-item-name">Twin Shadows</span>
-</div>
-<div class="gem-item" data-rank="4" markdown>
-<span class="gem-item-rank">4</span>
-![](../assets/shared/icon-soulabsorber.png){: .gem-item-icon } <span class="gem-item-name">Soul Absorber</span>
-</div>
-<div class="gem-item" data-rank="5" markdown>
-<span class="gem-item-rank">5</span>
-![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
-</div>
-<div class="gem-item" data-rank="6" markdown>
-<span class="gem-item-rank">6</span>
-![](../assets/shared/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
-</div>
-<div class="gem-item" data-rank="7" markdown>
-<span class="gem-item-rank">7</span>
-![](../assets/shared/icon-voidstrike.png){: .gem-item-icon } <span class="gem-item-name">Void Strike</span>
-</div>
-</div>
-</div>
-
-<div class="gem-col gem-col-cd" markdown>
-<div class="gem-col-header" markdown>
-<span class="gem-col-title">Cooldown</span>
-</div>
-
-<div class="gem-list" markdown>
-<div class="gem-item" data-rank="1" markdown>
-<span class="gem-item-rank">1</span>
-![](../assets/shared/icon-maelstrom.png){: .gem-item-icon } <span class="gem-item-name">Maelstrom</span>
-</div>
-<div class="gem-item" data-rank="2" markdown>
-<span class="gem-item-rank">2</span>
-![](../assets/shared/icon-blitzrush.png){: .gem-item-icon } <span class="gem-item-name">Blitz Rush</span>
-</div>
-<div class="gem-item" data-rank="3" markdown>
-<span class="gem-item-rank">3</span>
-![](../assets/shared/icon-turningslash.png){: .gem-item-icon } <span class="gem-item-name">Turning Slash</span>
-</div>
-<div class="gem-item" data-rank="4" markdown>
-<span class="gem-item-rank">4</span>
-![](../assets/shared/icon-fatalwave.png){: .gem-item-icon } <span class="gem-item-name">Fatal Wave</span>
-</div>
-</div>
-</div>
-
+<script type="application/json">
+[
+  { "col": "dmg", "label": "Damage", "items": [
+    "fatalwave", "surge", "twinshadows", "soulabsorber",
+    "turningslash", "blitzrush", "voidstrike"
+  ] },
+  { "col": "cd", "label": "Cooldown", "items": [
+    "maelstrom", "blitzrush", "turningslash", "fatalwave"
+  ] }
+]
+</script>
 </div>
 
 <div class="setup-notes" markdown>
@@ -437,6 +385,6 @@
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-<div class="dps-chart" data-show-icons data-labels="Fatal Wave,Deathly Slash,Surge,Twin Shadows,Soul Absorber,Turning Slash,Blitz Rush,Void Strike,Bleed,Maelstrom" data-values="34.6,17.8,15.5,7.7,6.7,6.5,5.6,4.7,0.5,0.3"></div>
+<div class="dps-chart" data-show-icons data-labels="Fatal Wave,Deathly Slash,Surge,Twin Shadows,Soul Absorber,Turning Slash,Blitz Rush,Void Strike,Bleed,Maelstrom" data-values="34.6,17.8,15.5,7.7,6.7,6.5,5.6,4.7,0.5,0.3" data-ids="fatalwave,deathlyslash,surge,twinshadows,soulabsorber,turningslash,blitzrush,voidstrike,bleed,maelstrom"></div>
 </div>
 </div>
