@@ -341,7 +341,7 @@
 
     <div class="rotation-line" markdown>
     <script type="application/json">
-    ["headhunt", "twinshadows", "maelstrom", "turningslash", "deathlyslash", "fatalwave", "surge",
+    [{ "id": "headhunt", "swapNext": true }, "twinshadows", "maelstrom", "turningslash", "deathlyslash", "fatalwave", "surge",
      { "cycleRef": 2, "title": "Soul Absorber + Blitz Rush Cycle" },
      { "cycleRef": 1, "title": "Void Strike + Deathly Slash Cycle" },
      { "suffix": "etc." }]

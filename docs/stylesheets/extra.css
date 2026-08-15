@@ -1125,6 +1125,62 @@ h3 { color: var(--dbc-teal); }
   border-right: 2px solid #cf99c7;
   transform: rotate(45deg);
   opacity: 0.75;
+  /* Nudge the glyph itself left within the track - `left` (not part of
+     the rotate transform above) so it doesn't touch .arrow's own width/
+     margins, which are what actually position the skill boxes on either
+     side. Purely a visual recenter: the chevron sat visually closer to
+     the box on its right than the one on its left. */
+  position: relative;
+  left: -2px;
+}
+
+/* Order-interchangeable variant, take 2: the first attempt (two
+   converging triangles, ▶◀) didn't read as a variant of the normal
+   chevron at all - different shape family, different track width - so
+   it looked broken/foreign next to real .arrow chevrons on the same
+   line instead of like "the same arrow, plus info". This version reuses
+   .arrow's exact chevron shape (7x7 box, 2px border, rotate(45deg)) and
+   its 10px track width unchanged, and just stacks a second chevron
+   facing backward directly above the normal forward one - same
+   size/weight, purely additive. Set via
+   { "id": "headhunt", "swapNext": true } on the step BEFORE this arrow -
+   see rotation-line.js's EASY EDIT GUIDE. font-size: 0 and the hidden
+   real "→" text are inherited from .arrow; only the flex direction and
+   the ::before/::after shapes differ. */
+.md-typeset .rotation-line .arrow-swap {
+  flex-direction: column;
+  gap: 3px;
+  cursor: help;
+}
+.md-typeset .rotation-line .arrow-swap::before,
+.md-typeset .rotation-line .arrow-swap::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  opacity: 0.75;
+}
+.md-typeset .rotation-line .arrow-swap::before {
+  /* Same forward chevron as .arrow::before (border-top + border-right,
+     rotate 45deg = pointing right). Comes first in the column, so it's
+     the top one - same left-nudge direction as the normal .arrow
+     chevron, and for the same reason (`left`, not the rotate transform,
+     so the track/margins that position the skill boxes stay put). */
+  border-top: 2px solid #cf99c7;
+  border-right: 2px solid #cf99c7;
+  transform: rotate(45deg);
+  position: relative;
+  left: -2px;
+}
+.md-typeset .rotation-line .arrow-swap::after {
+  /* Mirror of the above (border-bottom + border-left, same rotation) =
+     pointing left, stacked below the forward one. Nudged the opposite
+     way (right) so the pair stays visually centered as a unit instead
+     of both drifting the same direction. */
+  border-bottom: 2px solid #cf99c7;
+  border-left: 2px solid #cf99c7;
+  transform: rotate(45deg);
+  position: relative;
+  left: 2px;
 }
 
 /* ---------- Situational/skippable rotation step ---------- */

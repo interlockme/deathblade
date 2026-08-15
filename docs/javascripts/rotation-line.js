@@ -44,6 +44,13 @@
 //       - a pseudo-step pointing at a Cycle card above instead of a
 //         real skill (no icon). Renders the same cycle-num/cycle-title
 //         pill the Cycle card's own header uses.
+//     { "id": "headhunt", "swapNext": true }
+//       - marks the arrow to the NEXT step as order-interchangeable
+//         (e.g. Head Hunt/Twin Shadows as the opener's first two steps -
+//         either can go first) instead of a fixed sequence. Renders as a
+//         distinct two-headed chevron instead of the normal one, with a
+//         hover tooltip explaining why. Put the flag on the step BEFORE
+//         the arrow you want to change, not the one after.
 //
 //   The root must always be a bare array (never a top-level object - see
 //   the note on mkdocs-material's instant-navigation below for why). For
@@ -95,9 +102,10 @@
     return span;
   }
 
-  function buildArrow() {
-    var span = el("span", "arrow");
+  function buildArrow(swap) {
+    var span = el("span", swap ? "arrow arrow-swap" : "arrow");
     span.textContent = " \u2192 ";
+    if (swap) span.title = "Order interchangeable";
     return span;
   }
 
@@ -147,7 +155,11 @@
 
     var frag = document.createDocumentFragment();
     steps.forEach(function (step, i) {
-      if (i > 0) frag.appendChild(buildArrow());
+      if (i > 0) {
+        var prev = steps[i - 1];
+        var swap = prev && typeof prev === "object" && prev.swapNext === true;
+        frag.appendChild(buildArrow(swap));
+      }
       frag.appendChild(buildStep(step));
     });
     if (suffix) {
