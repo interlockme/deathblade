@@ -39,6 +39,7 @@ extra_javascript:
   - javascripts/bid-calculator.js?v=3
   - javascripts/ark-passive-calculator.js?v=3
   - javascripts/build-data.js?v=2
+  - javascripts/build-stats-badge.js?v=1
   - javascripts/skill-data.js?v=2
   - javascripts/skill-names.js?v=1
   - javascripts/skill-setup.js?v=7

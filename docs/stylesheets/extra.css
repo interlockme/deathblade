@@ -1,10 +1,42 @@
 /* Dark-mode pastel theme, background matched to the class-selection flowchart art */
 
+/* ---------- Site accent palette ---------- */
+/* Named custom properties for the site's own accent colors, each reused
+   in 4-51 places below as raw hex before this block existed - edit a
+   color HERE and every rule that references it updates, instead of
+   hunting every occurrence by hand (same problem the icon-asset/JS
+   dedup work already solved on the JS side).
+   Deliberately NOT exhaustive: colors used only 1-3 times are genuine
+   one-offs, left as literals. Also doesn't touch the rgba(r, g, b, alpha)
+   calls that reuse these same colors' RGB triplets for translucent
+   fills/borders (e.g. rgba(179, 157, 219, 0.15) is --dbc-purple at low
+   alpha) - unifying those too would need separate --dbc-*-rgb triplet
+   variables for use inside rgba(), a bigger follow-up, not done here.
+   The two compound `#ee83ab1a` / `#448aff1a` 8-digit hex+alpha literals
+   below (CSS shorthand for hex + ~10% alpha) are left as-is for the same
+   reason - a var() reference can't be concatenated with a trailing alpha
+   suffix like that. */
+:root {
+  --dbc-pink: #ee83ab;         /* primary accent - Difficulty bar, danger admonition border, headers */
+  --dbc-teal: #4db6ac;         /* Trixion DPS bar, h3 headings, "good"/on-track stat variant */
+  --dbc-lavender: #a79bc4;     /* stat-label text, muted secondary accent - most-used color on the site */
+  --dbc-purple: #b39ddb;       /* h2 headings, Evolution-category accent */
+  --dbc-lilac: #cfc9dd;        /* light lavender body/label text */
+  --dbc-slate: #6f6a80;        /* muted purple-gray secondary text */
+  --dbc-red: #e57373;          /* danger/error accent, replaces Material's default #ff1744 */
+  --dbc-rose: #f48fb1;         /* secondary pink accent */
+  --dbc-gold: #e6b422;         /* warn/conditional accent */
+  --dbc-orange: #f0a868;       /* on-crit damage category accent */
+  --dbc-blue: #64b5f6;         /* info accent */
+  --dbc-blue-bright: #448aff;  /* Material's default admonition/info blue */
+  --dbc-sky: #7ec4e8;          /* additional damage category accent */
+}
+
 [data-md-color-scheme="slate"] {
   --md-default-bg-color: #161718;
   --md-default-fg-color: #e8e6ee;
   --md-default-fg-color--light: #c9c6d4;
-  --md-accent-fg-color: #ee83ab; /* softer than Material's default vibrant #f50056 hover pink */
+  --md-accent-fg-color: var(--dbc-pink); /* softer than Material's default vibrant #f50056 hover pink */
   --md-accent-fg-color--transparent: #ee83ab1a;
 }
 
@@ -63,7 +95,7 @@ html {
   color: var(--md-default-fg-color);
 }
 .md-footer-nav__link:hover {
-  color: #ee83ab; /* matches --md-accent-fg-color */
+  color: var(--dbc-pink); /* matches --md-accent-fg-color */
 }
 .md-footer-meta {
   background-color: var(--md-default-bg-color); /* page bg, so the generator-credit row (empty, generator: false) doesn't add a visible second stripe */
@@ -74,8 +106,8 @@ h1, h2, h3 {
 }
 
 h1 { color: #e64a89; }
-h2 { color: #b39ddb; } /* muted lavender, used sparingly as an accent, not a fill color */
-h3 { color: #4db6ac; }
+h2 { color: var(--dbc-purple); } /* muted lavender, used sparingly as an accent, not a fill color */
+h3 { color: var(--dbc-teal); }
 
 /* ---------- Lead paragraph (opt-in) ---------- */
 /* A slightly larger, lighter-colored treatment for the first sentence
@@ -199,7 +231,7 @@ h3 { color: #4db6ac; }
       `.md-typeset .X` (2 classes), so despite loading after Material's
       CSS, lower specificity meant Material's default note/tip/warning/
       danger/example colors were winning outright (verified via computed
-      style: .danger was rendering Material's #ff1744, not our #e57373).
+      style: .danger was rendering Material's #ff1744, not our var(--dbc-red)).
       Matching that selector shape here is what actually applies the site
       palette instead of just looking close to it in a screenshot.
    2) Only `.admonition-title` (the `!!!` case) was ever targeted, so a
@@ -215,71 +247,71 @@ h3 { color: #4db6ac; }
 .md-typeset .note > .admonition-title,
 .md-typeset .note > summary {
   background-color: #201d29;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
 }
 .md-typeset .note > .admonition-title::before,
 .md-typeset .note > summary::before {
-  background-color: #a79bc4;
+  background-color: var(--dbc-lavender);
 }
 
 .md-typeset .admonition.tip,
 .md-typeset details.tip {
-  border-color: #4db6ac;
+  border-color: var(--dbc-teal);
   background-color: #182422;
 }
 .md-typeset .tip > .admonition-title,
 .md-typeset .tip > summary {
   background-color: #182422;
-  color: #4db6ac;
+  color: var(--dbc-teal);
 }
 .md-typeset .tip > .admonition-title::before,
 .md-typeset .tip > summary::before {
-  background-color: #4db6ac;
+  background-color: var(--dbc-teal);
 }
 
 .md-typeset .admonition.warning,
 .md-typeset details.warning {
-  border-color: #e6b422;
+  border-color: var(--dbc-gold);
   background-color: #26210f;
 }
 .md-typeset .warning > .admonition-title,
 .md-typeset .warning > summary {
   background-color: #26210f;
-  color: #e6b422;
+  color: var(--dbc-gold);
 }
 .md-typeset .warning > .admonition-title::before,
 .md-typeset .warning > summary::before {
-  background-color: #e6b422;
+  background-color: var(--dbc-gold);
 }
 
 .md-typeset .admonition.danger,
 .md-typeset details.danger {
-  border-color: #e57373;
+  border-color: var(--dbc-red);
   background-color: #271717;
 }
 .md-typeset .danger > .admonition-title,
 .md-typeset .danger > summary {
   background-color: #271717;
-  color: #e57373;
+  color: var(--dbc-red);
 }
 .md-typeset .danger > .admonition-title::before,
 .md-typeset .danger > summary::before {
-  background-color: #e57373;
+  background-color: var(--dbc-red);
 }
 
 .md-typeset .admonition.example,
 .md-typeset details.example {
-  border-color: #64b5f6;
+  border-color: var(--dbc-blue);
   background-color: #161f28;
 }
 .md-typeset .example > .admonition-title,
 .md-typeset .example > summary {
   background-color: #161f28;
-  color: #64b5f6;
+  color: var(--dbc-blue);
 }
 .md-typeset .example > .admonition-title::before,
 .md-typeset .example > summary::before {
-  background-color: #64b5f6;
+  background-color: var(--dbc-blue);
 }
 
 /* "info" had no override at all and fell through to Material's stock
@@ -289,17 +321,17 @@ h3 { color: #4db6ac; }
    card rather than introducing yet another unrelated hue. */
 .md-typeset .admonition.info,
 .md-typeset details.info {
-  border-color: #f48fb1;
+  border-color: var(--dbc-rose);
   background-color: #241a20;
 }
 .md-typeset .info > .admonition-title,
 .md-typeset .info > summary {
   background-color: #241a20;
-  color: #f48fb1;
+  color: var(--dbc-rose);
 }
 .md-typeset .info > .admonition-title::before,
 .md-typeset .info > summary::before {
-  background-color: #f48fb1;
+  background-color: var(--dbc-rose);
 }
 
 /* A table or list immediately followed by related notes: group visually */
@@ -326,10 +358,10 @@ h3 { color: #4db6ac; }
    default gray icon color - recolor to the site's lavender accent so it
    doesn't stand out as the one untouched default element. */
 .md-typeset .highlight button.md-code__button {
-  color: #a79bc4;
+  color: var(--dbc-lavender);
 }
 .md-typeset .highlight button.md-code__button:hover {
-  color: #ee83ab;
+  color: var(--dbc-pink);
 }
 
 /* ---------- Tables ---------- */
@@ -365,7 +397,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset table:not([class]) th {
   background-color: #29272f;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -414,7 +446,7 @@ h3 { color: #4db6ac; }
   flex-wrap: wrap;
   gap: 0.9em;
   font-size: 0.72rem;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   margin: 0.3em 0 0.8em;
 }
 .md-typeset .tag-legend-item {
@@ -428,10 +460,10 @@ h3 { color: #4db6ac; }
   border-radius: 2px;
   margin-right: 5px;
 }
-.md-typeset .tag-legend-dmg { background-color: #f48fb1; }
-.md-typeset .tag-legend-util { background-color: #4db6ac; }
-.md-typeset .tag-legend-immune { background-color: #64b5f6; }
-.md-typeset .tag-legend-warn { background-color: #e6b422; }
+.md-typeset .tag-legend-dmg { background-color: var(--dbc-rose); }
+.md-typeset .tag-legend-util { background-color: var(--dbc-teal); }
+.md-typeset .tag-legend-immune { background-color: var(--dbc-blue); }
+.md-typeset .tag-legend-warn { background-color: var(--dbc-gold); }
 
 /* ---------- Skill legend tables (Essentials pages) ---------- */
 /* Fixed 48x48 icons regardless of the source asset's resolution.
@@ -470,7 +502,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .skills-table table th {
   background-color: rgba(179, 157, 219, 0.12);
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -500,7 +532,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .food-alt-table table th {
   background-color: rgba(179, 157, 219, 0.12);
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -584,22 +616,22 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .tag-dmg {
   background-color: rgba(244, 143, 177, 0.14);
-  color: #f48fb1;
+  color: var(--dbc-rose);
   border-color: rgba(244, 143, 177, 0.35);
 }
 .md-typeset .tag-util {
   background-color: rgba(77, 182, 172, 0.14);
-  color: #4db6ac;
+  color: var(--dbc-teal);
   border-color: rgba(77, 182, 172, 0.35);
 }
 .md-typeset .tag-immune {
   background-color: rgba(100, 181, 246, 0.14);
-  color: #64b5f6;
+  color: var(--dbc-blue);
   border-color: rgba(100, 181, 246, 0.35);
 }
 .md-typeset .tag-warn {
   background-color: rgba(230, 180, 34, 0.14);
-  color: #e6b422;
+  color: var(--dbc-gold);
   border-color: rgba(230, 180, 34, 0.35);
 }
 .md-typeset .skills-table td:nth-child(3) {
@@ -610,7 +642,7 @@ h3 { color: #4db6ac; }
 
 /* ---------- Links: more visibly clickable ---------- */
 .md-typeset a:not(.md-button) {
-  color: #f48fb1;
+  color: var(--dbc-rose);
   text-decoration: underline;
   text-decoration-color: rgba(244, 143, 177, 0.4);
   text-underline-offset: 2px;
@@ -737,8 +769,8 @@ h3 { color: #4db6ac; }
   font-weight: 700;
   color: #e8e3f0;
 }
-.md-typeset .gem-col-dmg .gem-col-title { color: #f48fb1; }
-.md-typeset .gem-col-cd .gem-col-title { color: #4db6ac; }
+.md-typeset .gem-col-dmg .gem-col-title { color: var(--dbc-rose); }
+.md-typeset .gem-col-cd .gem-col-title { color: var(--dbc-teal); }
 
 .md-typeset .gem-list {
   display: flex;
@@ -844,8 +876,8 @@ h3 { color: #4db6ac; }
   background: linear-gradient(90deg, rgba(77, 182, 172, 0.14), rgba(77, 182, 172, 0.04));
   border-color: rgba(77, 182, 172, 0.55);
 }
-.md-typeset .gem-col-dmg .gem-item[data-rank="1"] .gem-item-rank { background-color: #f48fb1; color: #241a20; }
-.md-typeset .gem-col-cd .gem-item[data-rank="1"] .gem-item-rank { background-color: #4db6ac; color: #0a1f1c; }
+.md-typeset .gem-col-dmg .gem-item[data-rank="1"] .gem-item-rank { background-color: var(--dbc-rose); color: #241a20; }
+.md-typeset .gem-col-cd .gem-item[data-rank="1"] .gem-item-rank { background-color: var(--dbc-teal); color: #0a1f1c; }
 .md-typeset .gem-item[data-rank="1"] .gem-item-name {
   font-weight: 600;
   color: #f0e6ea;
@@ -1170,18 +1202,18 @@ h3 { color: #4db6ac; }
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: #b39ddb;
+  background-color: var(--dbc-purple);
   color: var(--md-default-bg-color);
   font-weight: 700;
   font-size: 0.72rem;
   flex-shrink: 0;
 }
 .md-typeset .cycle-num-1 {
-  background-color: #f48fb1;
+  background-color: var(--dbc-rose);
   color: #241a20;
 }
 .md-typeset .cycle-num-2 {
-  background-color: #4db6ac;
+  background-color: var(--dbc-teal);
   color: #0a1f1c;
 }
 .md-typeset .cycle-title {
@@ -1261,7 +1293,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .rotation-line.practice-mode .skill.practice-current {
   opacity: 1;
-  border-color: #b39ddb;
+  border-color: var(--dbc-purple);
   box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.55), 0 0 10px rgba(179, 157, 219, 0.35);
   transform: translateY(-1px) scale(1.04);
 }
@@ -1345,7 +1377,7 @@ h3 { color: #4db6ac; }
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-weight: 700;
   margin-bottom: 2px;
 }
@@ -1370,7 +1402,7 @@ h3 { color: #4db6ac; }
   border-color: rgba(77, 182, 172, 0.5);
   background-color: rgba(77, 182, 172, 0.07);
 }
-.md-typeset .stat[data-kind="good"] .stat-label { color: #4db6ac; }
+.md-typeset .stat[data-kind="good"] .stat-label { color: var(--dbc-teal); }
 .md-typeset .stat[data-kind="warn"] {
   border-color: rgba(230, 180, 34, 0.3);
   background-color: rgba(230, 180, 34, 0.045);
@@ -1379,7 +1411,7 @@ h3 { color: #4db6ac; }
   border-color: rgba(230, 180, 34, 0.5);
   background-color: rgba(230, 180, 34, 0.07);
 }
-.md-typeset .stat[data-kind="warn"] .stat-label { color: #e6b422; }
+.md-typeset .stat[data-kind="warn"] .stat-label { color: var(--dbc-gold); }
 /* .food-req (a small muted note line, defined further down) doubles here
    as a stat's secondary description under .stat-value - same "quiet
    footnote" role it already plays under an engraving card title, just
@@ -1400,7 +1432,7 @@ h3 { color: #4db6ac; }
 .md-typeset .stat-bar-fill {
   height: 100%;
   border-radius: 999px;
-  background-color: #ee83ab;
+  background-color: var(--dbc-pink);
 }
 /* Trixion multiplier bar: same stat-bar-track/fill shape as Difficulty,
    but on a FIXED 1.0-1.3 scale rather than the data's own min/max. Values
@@ -1413,7 +1445,7 @@ h3 { color: #4db6ac; }
   background-color: rgba(77, 182, 172, 0.15);
 }
 .md-typeset .stat-bar-fill-teal {
-  background-color: #4db6ac;
+  background-color: var(--dbc-teal);
 }
 /* Muted/striped variant for a value that isn't confirmed yet (333-blitz.md's
    "1.20?" is unverified) - visually distinct from a normal solid fill so it
@@ -1422,8 +1454,8 @@ h3 { color: #4db6ac; }
   background-color: transparent;
   background-image: repeating-linear-gradient(
     135deg,
-    #4db6ac 0,
-    #4db6ac 3px,
+    var(--dbc-teal) 0,
+    var(--dbc-teal) 3px,
     transparent 3px,
     transparent 6px
   );
@@ -1441,10 +1473,10 @@ h3 { color: #4db6ac; }
   font-weight: 700;
 }
 .md-typeset .best-for {
-  color: #4db6ac;
+  color: var(--dbc-teal);
 }
 .md-typeset .tradeoff {
-  color: #ee83ab;
+  color: var(--dbc-pink);
 }
 
 .md-typeset .build-card ul {
@@ -1461,7 +1493,7 @@ h3 { color: #4db6ac; }
   padding: 0.25em 0.8em;
   border-radius: 999px;
   background-color: rgba(100, 181, 246, 0.12);
-  color: #64b5f6 !important;
+  color: var(--dbc-blue) !important;
   border: 1px solid rgba(100, 181, 246, 0.32);
   text-decoration: none !important;
 }
@@ -1496,7 +1528,7 @@ h3 { color: #4db6ac; }
    </div>
 
    Optional attributes on .pentagon-badge:
-   - data-accent="#ee83ab"   (defaults to the site pink if omitted)
+   - data-accent="var(--dbc-pink)"   (defaults to the site pink if omitted)
    - data-caption="..."      (small italic note under the badge, e.g.
                                used on Surge pages to flag that Exposure
                                is inverted - lower is safer, not higher) */
@@ -1526,7 +1558,7 @@ h3 { color: #4db6ac; }
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-weight: 700;
   margin-bottom: 0.3em;
   text-align: center;
@@ -1561,7 +1593,7 @@ h3 { color: #4db6ac; }
   font-size: 8.5px;
   font-weight: 700;
   letter-spacing: 0.03em;
-  fill: #a79bc4;
+  fill: var(--dbc-lavender);
   text-transform: uppercase;
 }
 /* Video chips (moved out of the build-card body into the badge) sit in
@@ -1587,7 +1619,7 @@ h3 { color: #4db6ac; }
    than better like the other four. */
 .pentagon-badge-caption {
   font-size: 0.62rem;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   text-align: center;
   margin-top: 0.5em;
   line-height: 1.35;
@@ -1793,11 +1825,11 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .build-compare-select:focus {
   outline: none;
-  border-color: #b39ddb;
+  border-color: var(--dbc-purple);
 }
 .md-typeset .build-compare-vs {
   font-size: 0.75em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
@@ -1819,7 +1851,7 @@ h3 { color: #4db6ac; }
   background: none;
   border: 1px solid rgba(179, 157, 219, 0.25);
   border-radius: 6px;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   opacity: 0.7;
   cursor: pointer;
   padding: 0;
@@ -1827,7 +1859,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .build-compare-share-btn:hover {
   opacity: 1;
-  color: #b39ddb;
+  color: var(--dbc-purple);
   border-color: rgba(179, 157, 219, 0.5);
 }
 .md-typeset .build-compare-share-btn svg {
@@ -1932,7 +1964,7 @@ h3 { color: #4db6ac; }
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-weight: 700;
   margin-top: 0.85em;
   margin-bottom: 0.9em;
@@ -1988,7 +2020,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .build-compare-diffcard-empty {
   font-size: 0.85em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-style: italic;
   text-align: center;
 }
@@ -2002,11 +2034,11 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .grid.cards > ul > li:nth-child(1) {
   background-color: #241a20;
-  border-color: #f48fb1;
+  border-color: var(--dbc-rose);
 }
 .md-typeset .grid.cards > ul > li:nth-child(2) {
   background-color: #16221f;
-  border-color: #4db6ac;
+  border-color: var(--dbc-teal);
 }
 
 /* ==========================================================================
@@ -2142,7 +2174,7 @@ h3 { color: #4db6ac; }
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-weight: 700;
   white-space: nowrap;
   vertical-align: middle;
@@ -2208,7 +2240,7 @@ h3 { color: #4db6ac; }
   align-items: center;
   gap: 0.3em;
   font-size: 0.78em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-style: italic;
   white-space: nowrap;
 }
@@ -2340,20 +2372,20 @@ h3 { color: #4db6ac; }
 /* Gold - matches .setup-note[data-kind="example"] and the site's other
    "this is the one to reach for" accents. */
 .md-typeset .engraving-card-badge-top {
-  color: #e6b422;
+  color: var(--dbc-gold);
   background-color: rgba(230, 180, 34, 0.14);
   border-color: rgba(230, 180, 34, 0.4);
 }
 /* Teal - matches .stat[data-kind="good"]/.best-for, the site's "on track/
    no downside" color. */
 .md-typeset .engraving-card-badge-safe {
-  color: #4db6ac;
+  color: var(--dbc-teal);
   background-color: rgba(77, 182, 172, 0.14);
   border-color: rgba(77, 182, 172, 0.4);
 }
 /* Pink - matches .food-required-lead's own "required" emphasis color. */
 .md-typeset .engraving-card-badge-food {
-  color: #ee83ab;
+  color: var(--dbc-pink);
   background-color: rgba(244, 143, 177, 0.14);
   border-color: rgba(244, 143, 177, 0.4);
 }
@@ -2389,7 +2421,7 @@ h3 { color: #4db6ac; }
 .md-typeset .engraving-card-body > ul {
   margin: 0.4em 0;
   font-size: 0.94em;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   line-height: 1.5;
 }
 .md-typeset .engraving-card-body > :last-child {
@@ -2410,7 +2442,7 @@ h3 { color: #4db6ac; }
   flex-wrap: wrap;
   gap: 0.3em;
   font-size: 0.85em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   margin: 0.3em 0 0.6em;
 }
 .md-typeset .food-req img.skill-icon {
@@ -2420,15 +2452,15 @@ h3 { color: #4db6ac; }
 /* ---------- Pre-Ark Grid page option cards ---------- */
 .md-typeset .grid.cards.prearc-cards > ul > li:nth-child(1) {
   background-color: #241a20;
-  border-color: #f48fb1;
+  border-color: var(--dbc-rose);
 }
 .md-typeset .grid.cards.prearc-cards > ul > li:nth-child(2) {
   background-color: #26210f;
-  border-color: #e6b422;
+  border-color: var(--dbc-gold);
 }
 .md-typeset .grid.cards.prearc-cards > ul > li:nth-child(3) {
   background-color: #16221f;
-  border-color: #4db6ac;
+  border-color: var(--dbc-teal);
 }
 
 /* ---------- Gearing Values reference images ---------- */
@@ -2493,7 +2525,7 @@ h3 { color: #4db6ac; }
 .md-typeset .page-banner-warning {
   border: 1px solid rgba(230, 180, 34, 0.35);
   background-color: #26210f;
-  color: #e6b422;
+  color: var(--dbc-gold);
 }
 .md-typeset .page-banner-warning::before {
   content: "▲";
@@ -2525,7 +2557,7 @@ h3 { color: #4db6ac; }
 .md-typeset .cpm-calc-hint {
   margin: 0 0 1em;
   font-size: 0.85em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   line-height: 1.5;
 }
 .md-typeset .cpm-calc-hint strong {
@@ -2593,7 +2625,7 @@ h3 { color: #4db6ac; }
   height: 1.2em;
   border-radius: 50%;
   border: 1px solid rgba(167, 155, 196, 0.6);
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-size: 0.8em;
   font-style: italic;
   font-weight: 700;
@@ -2601,8 +2633,8 @@ h3 { color: #4db6ac; }
   cursor: help;
 }
 .md-typeset .spm-calc-info-icon:hover {
-  border-color: #a79bc4;
-  color: #cfc9dd;
+  border-color: var(--dbc-lavender);
+  color: var(--dbc-lilac);
 }
 .md-typeset .spm-calc-inputs {
   display: flex;
@@ -2637,14 +2669,14 @@ h3 { color: #4db6ac; }
 .md-typeset .spm-calc-time:focus,
 .md-typeset .spm-calc-count:focus {
   outline: none;
-  border-color: #b39ddb;
+  border-color: var(--dbc-purple);
 }
 /* Live invalid cue for the time field - unlike cpm-calc's numeric fields
    there's no min/max/:out-of-range to lean on here since this is a
    free-text field (it has to accept "2m 3s", not just a number), so the
    JS toggles this class itself once the text fails to parse. */
 .md-typeset .spm-calc-time.spm-calc-input-invalid {
-  border-color: #e57373;
+  border-color: var(--dbc-red);
 }
 /* Count field IS a native number input with min/max, so unlike the time
    field above it gets the live :out-of-range cue for free - it just
@@ -2654,15 +2686,15 @@ h3 { color: #4db6ac; }
    is still focused and being typed into, matching the cpm-calc-field
    pattern elsewhere on this page. */
 .md-typeset .spm-calc-count:out-of-range {
-  border-color: #e57373;
+  border-color: var(--dbc-red);
 }
 .md-typeset .spm-calc-x {
-  color: #6f6a80;
+  color: var(--dbc-slate);
   font-size: 0.8em;
 }
 .md-typeset .spm-calc-result {
   font-size: 0.85em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   white-space: nowrap;
 }
 /* min-width (not width) reserves room for a typical result (up to a
@@ -2681,13 +2713,13 @@ h3 { color: #4db6ac; }
   text-align: right;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
-  color: #4db6ac;
+  color: var(--dbc-teal);
 }
 /* Same empty-state treatment as .cpm-calc-result-value.cpm-calc-output-
    empty - plain "—" placeholder shouldn't read as bold teal like a real
    result. */
 .md-typeset .spm-calc-result-value.spm-calc-output-empty {
-  color: #6f6a80;
+  color: var(--dbc-slate);
   font-weight: 400;
 }
 .md-typeset .spm-calc-result-unit {
@@ -2719,7 +2751,7 @@ h3 { color: #4db6ac; }
    should I actually play" is the whole point of comparing side by side. */
 .md-typeset .cpm-calc-row-best {
   border-color: rgba(77, 182, 172, 0.5);
-  border-left-color: #4db6ac;
+  border-left-color: var(--dbc-teal);
   background-color: rgba(77, 182, 172, 0.06);
 }
 .md-typeset .cpm-calc-row-header {
@@ -2735,7 +2767,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .cpm-calc-row-meta {
   font-size: 0.78em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
 }
 /* Inputs on the left, Adjusted/Final Multiplier + bar on the right - puts
    the payoff beside the fields that drive it instead of stacked
@@ -2772,7 +2804,7 @@ h3 { color: #4db6ac; }
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-weight: 700;
 }
 .md-typeset .cpm-calc-field input[type="number"] {
@@ -2787,7 +2819,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .cpm-calc-field input[type="number"]:focus {
   outline: none;
-  border-color: #b39ddb;
+  border-color: var(--dbc-purple);
 }
 /* Raid CPM and Base Multiplier now carry min/max attrs (see
    cpm-calculator.js for the actual clamp-on-blur enforcement - :out-of-
@@ -2795,7 +2827,7 @@ h3 { color: #4db6ac; }
    snaps the value back in range). Reuses the site's standard danger red
    rather than inventing a new color for this one warning state. */
 .md-typeset .cpm-calc-field input[type="number"]:out-of-range {
-  border-color: #e57373;
+  border-color: var(--dbc-red);
 }
 /* Back-Attack % is the raw Combat Analyzer reading (a ratio, not the
    actual back-attack rate) - this small readout beside the input shows
@@ -2812,7 +2844,7 @@ h3 { color: #4db6ac; }
   min-height: 1.3em;
   line-height: 1.3em;
   font-size: 0.72em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   white-space: nowrap;
 }
 /* Base Multiplier is a per-build constant from the Trixion parse - almost
@@ -2821,7 +2853,7 @@ h3 { color: #4db6ac; }
    "leave this alone unless you know why you're touching it," distinct
    from Raid CPM/Back-Attack which the reader is expected to fill in. */
 .md-typeset .cpm-calc-field-muted .cpm-calc-field-label {
-  color: #6f6a80;
+  color: var(--dbc-slate);
 }
 .md-typeset .cpm-calc-field-muted input[type="number"] {
   width: 5em;
@@ -2831,15 +2863,15 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .cpm-calc-field-muted input[type="number"]:hover {
   border-color: rgba(255, 255, 255, 0.3);
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
 }
 .md-typeset .cpm-calc-field-muted input[type="number"]:focus {
-  border-color: #b39ddb;
+  border-color: var(--dbc-purple);
   border-style: solid;
   color: var(--md-default-fg-color);
 }
 .md-typeset .cpm-calc-field-muted input[type="number"]:out-of-range {
-  border-color: #e57373;
+  border-color: var(--dbc-red);
   border-style: solid;
 }
 /* Right-hand column of .cpm-calc-body - fixed-ish width so the bar below
@@ -2863,7 +2895,7 @@ h3 { color: #4db6ac; }
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-weight: 700;
   line-height: 1.4;
 }
@@ -2887,12 +2919,12 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .cpm-calc-adj-value {
   font-size: 0.95em;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
 }
 .md-typeset .cpm-calc-result-value {
   font-size: 1.1em;
   font-weight: 700;
-  color: #4db6ac;
+  color: var(--dbc-teal);
 }
 /* Before either field has valid input, both values show a plain "—"
    placeholder (see cpm-calculator.js). Left unstyled that placeholder
@@ -2902,7 +2934,7 @@ h3 { color: #4db6ac; }
    textContent swap) so an empty row visually reads as empty. */
 .md-typeset .cpm-calc-adj-value.cpm-calc-output-empty,
 .md-typeset .cpm-calc-result-value.cpm-calc-output-empty {
-  color: #6f6a80;
+  color: var(--dbc-slate);
   font-weight: 400;
 }
 
@@ -2923,14 +2955,14 @@ h3 { color: #4db6ac; }
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   font-weight: 700;
   margin-right: 0.1em;
 }
 .md-typeset .cpm-calc-recent-chip {
   font-family: inherit;
   font-size: 0.76em;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   background-color: rgba(179, 157, 219, 0.08);
   border: 1px solid rgba(179, 157, 219, 0.3);
   border-radius: 999px;
@@ -2940,7 +2972,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .cpm-calc-recent-chip:hover,
 .md-typeset .cpm-calc-recent-chip:focus-visible {
-  border-color: #ee83ab;
+  border-color: var(--dbc-pink);
   color: #ffb3cf;
   background-color: rgba(238, 131, 171, 0.08);
   outline: none;
@@ -2948,7 +2980,7 @@ h3 { color: #4db6ac; }
 .md-typeset .cpm-calc-recent-clear {
   font-family: inherit;
   font-size: 0.72em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   background: none;
   border: none;
   cursor: pointer;
@@ -2958,7 +2990,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .cpm-calc-recent-clear:hover,
 .md-typeset .cpm-calc-recent-clear:focus-visible {
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   outline: none;
 }
 
@@ -3002,7 +3034,7 @@ h3 { color: #4db6ac; }
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-weight: 700;
 }
 .md-typeset .bid-calc-field-row input[type="number"],
@@ -3019,10 +3051,10 @@ h3 { color: #4db6ac; }
 .md-typeset .bid-calc-field-row input[type="number"]:focus,
 .md-typeset .bid-calc-field-row input.bid-market-price:focus {
   outline: none;
-  border-color: #b39ddb;
+  border-color: var(--dbc-purple);
 }
 .md-typeset .bid-calc-field-row input[type="number"]:out-of-range {
-  border-color: #e57373;
+  border-color: var(--dbc-red);
 }
 /* .bid-market-price is type="text" (not type="number") so commas can be
    typed/displayed - a real number input rejects any "," keystroke, and a
@@ -3031,14 +3063,14 @@ h3 { color: #4db6ac; }
    styling for price is applied via this class from JS instead (see
    bid-calculator.js's clampOnBlur/validity check). */
 .md-typeset .bid-calc-field-row input.bid-market-price.bid-calc-input-invalid {
-  border-color: #e57373;
+  border-color: var(--dbc-red);
 }
 /* Market Fee mirrors .cpm-calc-field-muted's "leave this alone unless you
    know why you're touching it" treatment - almost always the default 5%
    AH cut, but editable since it's occasionally been different for certain
    items/events. */
 .md-typeset .bid-calc-field-muted .bid-calc-field-label {
-  color: #6f6a80;
+  color: var(--dbc-slate);
 }
 .md-typeset .bid-calc-field-muted input[type="number"] {
   width: 5em;
@@ -3048,10 +3080,10 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .bid-calc-field-muted input[type="number"]:hover {
   border-color: rgba(255, 255, 255, 0.3);
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
 }
 .md-typeset .bid-calc-field-muted input[type="number"]:focus {
-  border-color: #b39ddb;
+  border-color: var(--dbc-purple);
   border-style: solid;
   color: var(--md-default-fg-color);
 }
@@ -3076,14 +3108,14 @@ h3 { color: #4db6ac; }
   align-items: center;
   gap: 0.4em;
   font-size: 0.82em;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   cursor: pointer;
 }
 .md-typeset .bid-calc-radio-label input[type="radio"] {
   width: 1em;
   height: 1em;
   margin: 0;
-  accent-color: #a79bc4;
+  accent-color: var(--dbc-lavender);
   cursor: pointer;
 }
 /* Each Intent label now carries its own one-line native title (see
@@ -3109,17 +3141,17 @@ h3 { color: #4db6ac; }
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-weight: 700;
 }
 .md-typeset .bid-calc-result-value {
   font-size: 1.6em;
   font-weight: 700;
-  color: #e6b422;
+  color: var(--dbc-gold);
   font-variant-numeric: tabular-nums;
 }
 .md-typeset .bid-calc-result-value.bid-calc-result-empty {
-  color: #6f6a80;
+  color: var(--dbc-slate);
   font-weight: 400;
 }
 /* Icon-only copy button, same shape/hover/custom-tooltip language as
@@ -3142,14 +3174,14 @@ h3 { color: #4db6ac; }
   background: none;
   border: 1px solid rgba(179, 157, 219, 0.3);
   border-radius: 6px;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   cursor: pointer;
   padding: 0;
   transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 .md-typeset .bid-calc-copy-btn:hover,
 .md-typeset .bid-calc-copy-btn:focus-visible {
-  color: #b39ddb;
+  color: var(--dbc-purple);
   border-color: rgba(179, 157, 219, 0.55);
   outline: none;
 }
@@ -3157,7 +3189,7 @@ h3 { color: #4db6ac; }
   display: block;
 }
 .md-typeset .bid-calc-copy-btn.bid-calc-copy-btn-copied {
-  color: #4db6ac;
+  color: var(--dbc-teal);
   border-color: rgba(77, 182, 172, 0.5);
 }
 .md-typeset .bid-calc-copy-btn:disabled {
@@ -3219,7 +3251,7 @@ h3 { color: #4db6ac; }
   font-size: 0.78em;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   padding: 0.3em 0.5em;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -3242,27 +3274,27 @@ h3 { color: #4db6ac; }
   color: var(--md-default-fg-color);
 }
 .md-typeset .bid-calc-table .bid-calc-you-profit {
-  color: #4db6ac;
+  color: var(--dbc-teal);
   font-weight: 700;
 }
 .md-typeset .bid-calc-table .bid-calc-next-profit {
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
 }
 /* Toggled by the JS once a rival's profit from outbidding you actually
    exceeds their share of your bid - i.e. bidding low (Max Profit) really
    does invite someone to take the item from you, and this row should say
    so instead of sitting there looking as neutral as the deterred case. */
 .md-typeset .bid-calc-row-next-risk .bid-calc-next-profit {
-  color: #e57373;
+  color: var(--dbc-red);
   font-weight: 700;
 }
 .md-typeset .bid-calc-table.bid-calc-table-empty td:not(.bid-calc-row-label) {
-  color: #6f6a80;
+  color: var(--dbc-slate);
 }
 .md-typeset .bid-calc-footnote {
   margin: 0.9em 0 0;
   font-size: 0.78em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   line-height: 1.5;
 }
 
@@ -3340,7 +3372,7 @@ h3 { color: #4db6ac; }
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
-  color: var(--ap-cat, #a79bc4);
+  color: var(--ap-cat, var(--dbc-lavender));
   flex-shrink: 0;
 }
 .md-typeset .ap-calc-mini-field .ap-calc-field-label {
@@ -3352,7 +3384,7 @@ h3 { color: #4db6ac; }
      (no dark background/border, default browser chrome). Mirrored here to
      match .ap-calc-field-row's label + select rules exactly. */
   font-size: 0.82em;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
 }
 .md-typeset .ap-calc-mini-field select {
   background-color: var(--md-default-bg-color);
@@ -3365,9 +3397,9 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .ap-calc-mini-field select:focus {
   outline: none;
-  border-color: #b39ddb;
+  border-color: var(--dbc-purple);
 }
-.md-typeset .ap-calc-mini-field--evo-dmg { --ap-cat: #b39ddb; }
+.md-typeset .ap-calc-mini-field--evo-dmg { --ap-cat: var(--dbc-purple); }
 .md-typeset .ap-calc-live {
   display: flex;
   flex-direction: column;
@@ -3409,17 +3441,17 @@ h3 { color: #4db6ac; }
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--ap-cat, #a79bc4);
+  color: var(--ap-cat, var(--dbc-lavender));
   font-weight: 700;
   margin-bottom: 0.55em;
 }
-.md-typeset .ap-calc-group--crit-rate  { --ap-cat: #ee83ab; }
-.md-typeset .ap-calc-group--crit-dmg   { --ap-cat: #4db6ac; }
-.md-typeset .ap-calc-group--oncrit-dmg { --ap-cat: #f0a868; }
-.md-typeset .ap-calc-group--add-dmg    { --ap-cat: #7ec4e8; }
+.md-typeset .ap-calc-group--crit-rate  { --ap-cat: var(--dbc-pink); }
+.md-typeset .ap-calc-group--crit-dmg   { --ap-cat: var(--dbc-teal); }
+.md-typeset .ap-calc-group--oncrit-dmg { --ap-cat: var(--dbc-orange); }
+.md-typeset .ap-calc-group--add-dmg    { --ap-cat: var(--dbc-sky); }
 /* Evolution Damage has no full group anymore - its one field (Leap Rank)
    lives in the .ap-calc-mini-field strip above instead, which carries its
-   own --ap-cat: #b39ddb. */
+   own --ap-cat: var(--dbc-purple). */
 
 .md-typeset .ap-calc-field-row {
   display: flex;
@@ -3433,7 +3465,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .ap-calc-field-row label.ap-calc-field-label {
   font-size: 0.82em;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   flex: 1;
 }
 .md-typeset .ap-calc-field-row select,
@@ -3454,7 +3486,7 @@ h3 { color: #4db6ac; }
 .md-typeset .ap-calc-field-row select:focus,
 .md-typeset .ap-calc-field-row input[type="number"]:focus {
   outline: none;
-  border-color: #b39ddb;
+  border-color: var(--dbc-purple);
 }
 /* Crit Stat, Weapon Quality, Astrogem Level, Demon Damage %, and Bracelet
    Crit Stat Equipped all carry min/max attrs, but a free-typed number
@@ -3464,12 +3496,12 @@ h3 { color: #4db6ac; }
    is the live cue while typing. Reuses the site's standard danger red
    rather than inventing a new color for this one warning state. */
 .md-typeset .ap-calc-field-row input[type="number"]:out-of-range {
-  border-color: #e57373;
+  border-color: var(--dbc-red);
 }
 .md-typeset .ap-calc-field-row input[type="checkbox"] {
   width: 1.1em;
   height: 1.1em;
-  accent-color: #ee83ab;
+  accent-color: var(--dbc-pink);
   cursor: pointer;
 }
 /* Range sliders (Back-Attack Rate, Adrenaline Uptime) show a live "N%"
@@ -3511,12 +3543,12 @@ h3 { color: #4db6ac; }
      card it was pushing the "100%" value past the card edge in Firefox
      specifically, while looking correct in Chromium. */
   min-width: 0;
-  accent-color: #ee83ab;
+  accent-color: var(--dbc-pink);
 }
 .md-typeset .ap-calc-range-value {
   font-size: 0.85em;
   font-weight: 700;
-  color: #ee83ab;
+  color: var(--dbc-pink);
   min-width: 3em;
   text-align: right;
 }
@@ -3560,7 +3592,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .ap-calc-pair-check-label {
   font-size: 0.82em;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   white-space: nowrap;
 }
 .md-typeset .ap-calc-pair-check .ap-value-display {
@@ -3580,7 +3612,7 @@ h3 { color: #4db6ac; }
   padding: 0.7em 0.85em;
 }
 .md-typeset .ap-calc-party-card .ap-calc-group-title {
-  color: #4db6ac;
+  color: var(--dbc-teal);
 }
 /* A field gets `disabled` (not silently reset) when something else makes
    it inapplicable - the Party & Positioning checkboxes past the 3-of-5
@@ -3613,7 +3645,7 @@ h3 { color: #4db6ac; }
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-weight: 700;
   margin-bottom: 0.6em;
 }
@@ -3642,12 +3674,12 @@ h3 { color: #4db6ac; }
   justify-content: center;
   font-size: 0.72em;
   font-weight: 700;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   background-color: rgba(255, 255, 255, 0.07);
 }
 .md-typeset .ap-calc-result-row-best .ap-result-rank {
   color: #0f1210;
-  background-color: #4db6ac;
+  background-color: var(--dbc-teal);
 }
 .md-typeset .ap-result-combo {
   flex: 1;
@@ -3657,7 +3689,7 @@ h3 { color: #4db6ac; }
   min-width: 0;
 }
 .md-typeset .ap-calc-result-row-best .ap-result-combo {
-  color: #4db6ac;
+  color: var(--dbc-teal);
 }
 .md-typeset .ap-result-pct {
   font-size: 1em;
@@ -3666,17 +3698,17 @@ h3 { color: #4db6ac; }
   text-align: right;
 }
 .md-typeset .ap-calc-result-row-best .ap-result-pct {
-  color: #4db6ac;
+  color: var(--dbc-teal);
 }
 .md-typeset .ap-result-delta {
   flex-shrink: 0;
   font-size: 0.72em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   min-width: 5.5em;
   text-align: right;
 }
 .md-typeset .ap-calc-result-row-best .ap-result-delta {
-  color: #4db6ac;
+  color: var(--dbc-teal);
   font-weight: 600;
 }
 @media screen and (max-width: 480px) {
@@ -3690,7 +3722,7 @@ h3 { color: #4db6ac; }
    effect (e.g. "+0.95% Crit Rate") so a reader can sanity-check their own
    inputs without knowing the underlying formula. */
 .md-typeset .ap-value-display {
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-size: 0.75em;
   min-width: 4.5em;
   text-align: right;
@@ -3730,7 +3762,7 @@ h3 { color: #4db6ac; }
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-weight: 700;
   margin-bottom: 0.65em;
   display: flex;
@@ -3738,7 +3770,7 @@ h3 { color: #4db6ac; }
   gap: 0.5em;
 }
 .md-typeset .ap-stat-card-best .ap-stat-card-title {
-  color: #4db6ac;
+  color: var(--dbc-teal);
 }
 /* Names the actual winning combo (e.g. "LB1/KS2 + Critical + Master") right
    in the Best card's header - filled by JS from result.bestStats.label,
@@ -3748,7 +3780,7 @@ h3 { color: #4db6ac; }
   text-transform: none;
   letter-spacing: normal;
   font-weight: 600;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
 }
 .md-typeset .ap-stat-card-row {
   display: flex;
@@ -3762,15 +3794,15 @@ h3 { color: #4db6ac; }
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 .md-typeset .ap-summary-label {
-  color: #a79bc4;
+  color: var(--dbc-lavender);
 }
 /* Same five category colors as the gear groups above, so a label down here
    visually traces back to the group that feeds it. */
-.md-typeset .ap-summary-label--critrate { color: #ee83ab; }
-.md-typeset .ap-summary-label--critdmg  { color: #4db6ac; }
-.md-typeset .ap-summary-label--oncrit   { color: #f0a868; }
-.md-typeset .ap-summary-label--adddmg   { color: #7ec4e8; }
-.md-typeset .ap-summary-label--evodmg   { color: #b39ddb; }
+.md-typeset .ap-summary-label--critrate { color: var(--dbc-pink); }
+.md-typeset .ap-summary-label--critdmg  { color: var(--dbc-teal); }
+.md-typeset .ap-summary-label--oncrit   { color: var(--dbc-orange); }
+.md-typeset .ap-summary-label--adddmg   { color: var(--dbc-sky); }
+.md-typeset .ap-summary-label--evodmg   { color: var(--dbc-purple); }
 .md-typeset .ap-summary-value {
   font-weight: 700;
   color: var(--md-default-fg-color);
@@ -3779,7 +3811,7 @@ h3 { color: #4db6ac; }
    total exceeds 100% - a clear warning that points are being wasted past
    the cap, matching the same red used for other danger states on the site. */
 .md-typeset .ap-summary-value.ap-summary-value-warn {
-  color: #e57373;
+  color: var(--dbc-red);
 }
 /* Keen Blunt Weapon / KBW Ability Stone rows only mean anything once that
    engraving/stone is actually equipped - toggled by JS (see renderGrid)
@@ -3840,7 +3872,7 @@ h3 { color: #4db6ac; }
   gap: 0.6em;
   font-size: 0.92em;
   font-weight: 700;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   padding: 0.6em 0.85em;
   cursor: pointer;
   list-style: none;
@@ -3866,7 +3898,7 @@ h3 { color: #4db6ac; }
   -webkit-mask-image: none;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-left: 5px solid #a79bc4;
+  border-left: 5px solid var(--dbc-lavender);
   border-right: none;
   transition: transform 0.15s ease;
 }
@@ -3881,7 +3913,7 @@ h3 { color: #4db6ac; }
 }
 .md-typeset .ap-brace-compare-intro {
   font-size: 0.9em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   margin: 0 0 0.7em;
 }
 /* RE/Surge Deathblade picker for the Spec +80/100/120 line - real radio
@@ -3900,21 +3932,21 @@ h3 { color: #4db6ac; }
 .md-typeset .ap-brace-spec-toggle .ap-calc-field-label {
   margin: 0;
   font-size: 0.82em;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
 }
 .md-typeset .ap-brace-radio-label {
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
   font-size: 0.82em;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   cursor: pointer;
 }
 .md-typeset .ap-brace-radio-label input[type="radio"] {
   width: 1em;
   height: 1em;
   margin: 0;
-  accent-color: #a79bc4;
+  accent-color: var(--dbc-lavender);
   cursor: pointer;
 }
 .md-typeset .ap-brace-compare-inputs {
@@ -3940,7 +3972,7 @@ h3 { color: #4db6ac; }
   font-size: 0.82em;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   padding: 0.3em 0.6em;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -3953,13 +3985,13 @@ h3 { color: #4db6ac; }
    coloring readers asked for lives on the bracelet-line labels instead
    (see .ap-brace-label-low/mid/high/downside below). */
 .md-typeset .ap-brace-compare-table th.ap-brace-th-low {
-  color: #7ec4e8;
+  color: var(--dbc-sky);
 }
 .md-typeset .ap-brace-compare-table th.ap-brace-th-mid {
-  color: #b39ddb;
+  color: var(--dbc-purple);
 }
 .md-typeset .ap-brace-compare-table th.ap-brace-th-high {
-  color: #f0a868;
+  color: var(--dbc-orange);
 }
 .md-typeset .ap-brace-compare-table td {
   padding: 0.45em 0.6em;
@@ -3986,16 +4018,16 @@ h3 { color: #4db6ac; }
    Low/Mid/High tier at all - it's the fixed downside baked into that
    line regardless of tier. */
 .md-typeset .ap-brace-label-low {
-  color: #7ec4e8;
+  color: var(--dbc-sky);
 }
 .md-typeset .ap-brace-label-mid {
-  color: #b39ddb;
+  color: var(--dbc-purple);
 }
 .md-typeset .ap-brace-label-high {
-  color: #f0a868;
+  color: var(--dbc-orange);
 }
 .md-typeset .ap-brace-label-downside {
-  color: #ee83ab;
+  color: var(--dbc-pink);
 }
 /* The fixed "+1.5%" Crit Hit Damage tag on the two Crit Rate/Crit Dmg
    dual lines, and the fixed "+2.5%" Dmg vs Demon/Archdemon tag on the
@@ -4004,7 +4036,7 @@ h3 { color: #4db6ac; }
    teal/green Low used to use (now freed up by Low's move to blue above)
    so they still read as a distinct, called-out number. */
 .md-typeset .ap-brace-label-fixed {
-  color: #4db6ac;
+  color: var(--dbc-teal);
 }
 /* Hover tooltip badge for rows with a caveat - replaces the old always-
    visible note line under the label so a caveat doesn't cost vertical
@@ -4020,7 +4052,7 @@ h3 { color: #4db6ac; }
   margin-left: 0.4em;
   border-radius: 50%;
   border: 1px solid rgba(167, 155, 196, 0.6);
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-size: 0.8em;
   font-style: italic;
   font-weight: 700;
@@ -4029,8 +4061,8 @@ h3 { color: #4db6ac; }
   vertical-align: middle;
 }
 .md-typeset .ap-brace-info-icon:hover {
-  border-color: #a79bc4;
-  color: #cfc9dd;
+  border-color: var(--dbc-lavender);
+  color: var(--dbc-lilac);
 }
 /* Small always-visible tag flagging that a row's number is damage-share
    only (currently the Spec row, for both RE and Surge - neither model has
@@ -4071,7 +4103,7 @@ h3 { color: #4db6ac; }
   border-radius: 3px;
   background: rgba(167, 155, 196, 0.12);
   border: 1px solid rgba(167, 155, 196, 0.5);
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   font-size: 0.62em;
   font-weight: 700;
   line-height: 1;
@@ -4081,12 +4113,12 @@ h3 { color: #4db6ac; }
   cursor: help;
 }
 .md-typeset .ap-brace-build-tag:hover {
-  border-color: #a79bc4;
-  color: #cfc9dd;
+  border-color: var(--dbc-lavender);
+  color: var(--dbc-lilac);
 }
 .md-typeset .ap-brace-tier-val {
   font-weight: 400;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   text-align: right;
   white-space: nowrap;
 }
@@ -4094,11 +4126,11 @@ h3 { color: #4db6ac; }
    target - dimmed so they read as situational at a glance, rather than a
    plain always-on gain like every other row's numbers. */
 .md-typeset .ap-brace-row-situational .ap-brace-tier-val {
-  color: #6f6a80;
+  color: var(--dbc-slate);
 }
 .md-typeset .ap-brace-compare-flip-note {
   font-size: 0.78em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   font-style: italic;
   margin: 0.6em 0 0;
 }
@@ -4108,7 +4140,7 @@ h3 { color: #4db6ac; }
    under the table rather than another row of it. */
 .md-typeset .ap-brace-compare-footer-note {
   font-size: 0.8em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   margin: 1.1em 0 0;
   padding-top: 0.7em;
   border-top: 1px dashed rgba(255, 255, 255, 0.08);
@@ -4139,13 +4171,13 @@ h3 { color: #4db6ac; }
   position: relative; /* anchors the Export/Import popovers below */
   margin: 0.7em 0 0;
   font-size: 0.72em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   text-align: right;
 }
 .md-typeset .ap-calc-footnote .ap-calc-reset,
 .md-typeset .ap-calc-footnote .ap-calc-export,
 .md-typeset .ap-calc-footnote .ap-calc-import {
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   text-decoration: underline;
   text-decoration-color: rgba(179, 157, 219, 0.4);
   /* Reset the <button> defaults so this reads as the same inline text
@@ -4161,7 +4193,7 @@ h3 { color: #4db6ac; }
 .md-typeset .ap-calc-footnote .ap-calc-reset:hover,
 .md-typeset .ap-calc-footnote .ap-calc-export:hover,
 .md-typeset .ap-calc-footnote .ap-calc-import:hover {
-  color: #ee83ab;
+  color: var(--dbc-pink);
   text-decoration-color: currentColor;
 }
 
@@ -4179,14 +4211,14 @@ h3 { color: #4db6ac; }
   margin: 0;
   font: inherit;
   font-size: 1em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   cursor: pointer;
 }
 .md-typeset .ap-calc-footnote .ap-calc-preset:hover {
-  color: #a79bc4;
+  color: var(--dbc-lavender);
 }
 .md-typeset .ap-calc-footnote .ap-calc-preset-active {
-  color: #ee83ab;
+  color: var(--dbc-pink);
   font-weight: 700;
 }
 
@@ -4212,7 +4244,7 @@ h3 { color: #4db6ac; }
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
   text-align: left;
   font-size: 1.05em;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   white-space: normal;
 }
 .md-typeset .ap-calc-popover[hidden] {
@@ -4230,7 +4262,7 @@ h3 { color: #4db6ac; }
   font-family: "Roboto Mono", ui-monospace, monospace;
   font-size: 0.78em;
   line-height: 1.4;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   background-color: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 6px;
@@ -4254,12 +4286,12 @@ h3 { color: #4db6ac; }
   font: inherit;
   font-size: 0.78em;
   font-weight: 600;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
 }
 .md-typeset .ap-calc-popover-actions button:hover {
-  color: #ee83ab;
+  color: var(--dbc-pink);
   border-color: rgba(238, 131, 171, 0.5);
   background-color: rgba(238, 131, 171, 0.08);
 }
@@ -4297,7 +4329,7 @@ h3 { color: #4db6ac; }
    are a <label>/<span>, not form controls, so they don't receive
    keyboard focus at all in their current markup. */
 .md-typeset a:focus-visible {
-  outline: 2px solid #ee83ab;
+  outline: 2px solid var(--dbc-pink);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -4359,7 +4391,7 @@ h3 { color: #4db6ac; }
 .md-typeset .tabbed-set > input:nth-of-type(6):checked ~ .tabbed-labels > label:nth-of-type(6),
 .md-typeset .tabbed-set > input:nth-of-type(7):checked ~ .tabbed-labels > label:nth-of-type(7),
 .md-typeset .tabbed-set > input:nth-of-type(8):checked ~ .tabbed-labels > label:nth-of-type(8) {
-  color: #b39ddb;
+  color: var(--dbc-purple);
   font-weight: 400;
   opacity: 1;
 }
@@ -4441,7 +4473,7 @@ h3 { color: #4db6ac; }
 .md-typeset .dps-chart-label-text {
   font-size: 1.02em;
   font-weight: 500;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4457,7 +4489,7 @@ h3 { color: #4db6ac; }
   overflow: hidden;
 }
 .md-typeset .dps-chart-fill {
-  --dps-accent: #4db6ac;
+  --dps-accent: var(--dbc-teal);
   height: 100%;
   width: 0%;
   border-radius: 999px;
@@ -4482,7 +4514,7 @@ h3 { color: #4db6ac; }
   flex-basis: 100%;
   text-align: center;
   font-size: 0.92em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   margin: 0.2em 0 0;
 }
 
@@ -4596,8 +4628,8 @@ h3 { color: #4db6ac; }
   text-decoration: none !important;
 }
 .md-typeset .quick-jump-pills a:hover {
-  border-color: #ee83ab;
-  color: #ee83ab !important;
+  border-color: var(--dbc-pink);
+  color: var(--dbc-pink) !important;
 }
 /* ---------- Desktop section tracker (scrollspy nav) ---------- */
 /* Built by javascripts/extra.js from a page's own H2s (any page with
@@ -4749,11 +4781,11 @@ h3 { color: #4db6ac; }
 }
 .section-tracker-item:hover .section-tracker-mark,
 .section-tracker-item:focus-visible .section-tracker-mark {
-  border-color: #ee83ab;
+  border-color: var(--dbc-pink);
 }
 .section-tracker-item.is-active .section-tracker-mark {
-  background-color: #ee83ab;
-  border-color: #ee83ab;
+  background-color: var(--dbc-pink);
+  border-color: var(--dbc-pink);
   transform: scaleY(1.3);
   box-shadow: 0 0 7px 1px rgba(238, 131, 171, 0.65);
 }
@@ -5048,11 +5080,11 @@ body.page-333-blitz input[type="text"] {
   font-size: 0.56rem;
   font-weight: 700;
   letter-spacing: 0.03em;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   text-transform: uppercase;
 }
 .md-typeset .skill-card-subtitle {
-  color: #6f6a80;
+  color: var(--dbc-slate);
 }
 .md-typeset .skill-card-name {
   display: block;
@@ -5112,9 +5144,9 @@ body.page-333-blitz input[type="text"] {
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
     inset 0 -7px 9px rgba(0, 0, 0, 0.2);
 }
-.md-typeset .tripod-chip.tripod-t1 { background-color: #64b5f6; }
+.md-typeset .tripod-chip.tripod-t1 { background-color: var(--dbc-blue); }
 .md-typeset .tripod-chip.tripod-t2 { background-color: #66bb6a; }
-.md-typeset .tripod-chip.tripod-t3 { background-color: #e6b422; }
+.md-typeset .tripod-chip.tripod-t3 { background-color: var(--dbc-gold); }
 /* A same-size, invisible stand-in for a tripod tier this skill hasn't
    reached yet (see skill-setup.js's buildCard comment on why this is
    padded in rather than just omitted) - visibility:hidden rather than
@@ -5161,12 +5193,12 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .rune-chip.rune-blue {
   background-color: rgba(100, 181, 246, 0.14);
-  color: #64b5f6;
+  color: var(--dbc-blue);
   border-color: rgba(100, 181, 246, 0.4);
 }
 .md-typeset .rune-chip.rune-legendary {
   background-color: rgba(240, 168, 104, 0.16);
-  color: #f0a868;
+  color: var(--dbc-orange);
   border-color: rgba(240, 168, 104, 0.45);
 }
 .md-typeset .rune-chip.rune-epic {
@@ -5182,7 +5214,7 @@ body.page-333-blitz input[type="text"] {
   height: 0;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-left: 5px solid #a79bc4;
+  border-left: 5px solid var(--dbc-lavender);
   transition: transform 0.15s ease;
   /* No margin-left here - summary's own `gap: 0.65em` already spaces this
      from .skill-card-main. An extra margin on top of that gap was double-
@@ -5215,7 +5247,7 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .skill-card-note {
   margin: 0.3em 0 0;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   font-size: 0.88em;
   line-height: 1.5;
 }
@@ -5223,7 +5255,7 @@ body.page-333-blitz input[type="text"] {
   margin: 0.5em 0 0;
   padding-left: 1.1em;
   font-size: 0.86em;
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
 }
 .md-typeset .skill-card-picks li {
   margin: 0.2em 0;
@@ -5236,7 +5268,7 @@ body.page-333-blitz input[type="text"] {
    6-core tree + a text legend) with just the 3 Order cores this site's
    builds actually invest in, each shown as an icon + name + which of its
    3 point breakpoints (10P/14P/17P) are reached.
-   Accent matches .build-card/.setup-panel[data-accent="pink"] (#f48fb1)
+   Accent matches .build-card/.setup-panel[data-accent="pink"] (var(--dbc-rose))
    rather than the Relic-red this used to reach for from the core icon art
    (sun.png/moon.png/star.png are Relic-quality gems) - the red read as an
    unrelated, more saturated component bolted onto a page whose build
@@ -5358,17 +5390,17 @@ body.page-333-blitz input[type="text"] {
    it reads clearer as its own accent instead of blending into the border/
    icon glow. */
 .md-typeset .ark-core-dot-on {
-  background-color: #f0a868;
+  background-color: var(--dbc-orange);
   box-shadow: 0 0 4px rgba(240, 168, 104, 0.75);
 }
 .md-typeset .ark-core-point-label {
   font-size: 0.56rem;
   font-weight: 700;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   line-height: 1;
 }
 .md-typeset .ark-core-point-on .ark-core-point-label {
-  color: #f0a868;
+  color: var(--dbc-orange);
 }
 
 /* ---------- Ark Passive tree (Evolution/Enlightenment/Leap) ---------- */
@@ -5406,9 +5438,9 @@ body.page-333-blitz input[type="text"] {
 
    Column accents intentionally reuse hues already meaningful elsewhere on
    the site rather than lifting the in-game gold/blue/green directly:
-   amber (#f0a868, same as .ark-core-dot-on/.rune-legendary) for Evolution,
-   lavender (#b39ddb, same as .setup-panel[data-accent="lavender"]) for
-   Enlightenment, teal (#4db6ac, same as .tag-util/.gem-col-cd) for Leap -
+   amber (var(--dbc-orange), same as .ark-core-dot-on/.rune-legendary) for Evolution,
+   lavender (var(--dbc-purple), same as .setup-panel[data-accent="lavender"]) for
+   Enlightenment, teal (var(--dbc-teal), same as .tag-util/.gem-col-cd) for Leap -
    so this reads as three accents from this site's own palette, not a
    re-skin of the game's UI or of mokokompendium's reference layout. */
 .md-typeset .ark-passives {
@@ -5478,9 +5510,9 @@ body.page-333-blitz input[type="text"] {
   color: #7a7580;
   font-weight: 600;
 }
-.md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-col-title { color: #f0a868; }
-.md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-col-title { color: #b39ddb; }
-.md-typeset .ark-passive-col[data-column="leap"] .ark-passive-col-title { color: #4db6ac; }
+.md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-col-title { color: var(--dbc-orange); }
+.md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-col-title { color: var(--dbc-purple); }
+.md-typeset .ark-passive-col[data-column="leap"] .ark-passive-col-title { color: var(--dbc-teal); }
 
 /* Tiers now render as horizontal segments in a single row (one row per
    column) instead of a stacked vertical list - a build only ever touches
@@ -5612,7 +5644,7 @@ body.page-333-blitz input[type="text"] {
   font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #6f6a80;
+  color: var(--dbc-slate);
   font-weight: 700;
   white-space: nowrap;
 }
@@ -5676,15 +5708,15 @@ body.page-333-blitz input[type="text"] {
   border-color: transparent;
 }
 .md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-node-level[data-maxed="true"] {
-  color: #f0a868;
+  color: var(--dbc-orange);
   background-color: rgba(240, 168, 104, 0.14);
 }
 .md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-node-level[data-maxed="true"] {
-  color: #b39ddb;
+  color: var(--dbc-purple);
   background-color: rgba(179, 157, 219, 0.14);
 }
 .md-typeset .ark-passive-col[data-column="leap"] .ark-passive-node-level[data-maxed="true"] {
-  color: #4db6ac;
+  color: var(--dbc-teal);
   background-color: rgba(77, 182, 172, 0.14);
 }
 
@@ -5862,7 +5894,7 @@ body.page-333-blitz input[type="text"] {
    core reference content too, not optional depth to visually recede. */
 /* Material's base `.md-typeset details` rule (theirs, in main.css - not
    ours) sets background-color: var(--md-admonition-bg-color) and a
-   .075rem solid #448aff border with a box-shadow, and its `summary` rule
+   .075rem solid var(--dbc-blue-bright) border with a box-shadow, and its `summary` rule
    separately sets its own background-color: #448aff1a plus a 2rem
    left-padding reserved for the admonition icon and a -.6rem negative
    side margin that intentionally bleeds the title bar past the body's
@@ -5968,22 +6000,22 @@ body.page-333-blitz input[type="text"] {
   border: 1px solid transparent;
 }
 .md-typeset .setup-note[data-kind="tip"] .setup-note-tag {
-  color: #4db6ac;
+  color: var(--dbc-teal);
   background-color: rgba(77, 182, 172, 0.14);
   border-color: rgba(77, 182, 172, 0.4);
 }
 .md-typeset .setup-note[data-kind="note"] .setup-note-tag {
-  color: #b39ddb;
+  color: var(--dbc-purple);
   background-color: rgba(179, 157, 219, 0.16);
   border-color: rgba(179, 157, 219, 0.4);
 }
 .md-typeset .setup-note[data-kind="example"] .setup-note-tag {
-  color: #e6b422;
+  color: var(--dbc-gold);
   background-color: rgba(230, 180, 34, 0.14);
   border-color: rgba(230, 180, 34, 0.4);
 }
 .md-typeset .setup-note[data-kind="danger"] .setup-note-tag {
-  color: #ee83ab;
+  color: var(--dbc-pink);
   background-color: rgba(244, 143, 177, 0.14);
   border-color: rgba(244, 143, 177, 0.4);
 }
@@ -5997,7 +6029,7 @@ body.page-333-blitz input[type="text"] {
   margin-left: auto;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-left: 5px solid #a79bc4;
+  border-left: 5px solid var(--dbc-lavender);
   transition: transform 0.15s ease;
 }
 .md-typeset .setup-note[open] > summary .setup-note-arrow {
@@ -6020,7 +6052,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .setup-note > ul {
   margin: 0.3em 0;
   font-size: 0.94em; /* was 0.88em - read a touch small even before the nested-list compounding above */
-  color: #cfc9dd;
+  color: var(--dbc-lilac);
   line-height: 1.5;
 }
 .md-typeset .setup-note li {
@@ -6070,7 +6102,7 @@ body.page-333-blitz input[type="text"] {
   color: var(--md-default-fg-color);
 }
 .md-typeset .food-required-lead strong {
-  color: #ee83ab;
+  color: var(--dbc-pink);
 }
 /* Compact pills, not big vertical cards - icon + name inline, sized to
    content (flex: 0 0 auto) rather than stretched to fill the row. With
@@ -6126,6 +6158,6 @@ body.page-333-blitz input[type="text"] {
   margin: 0 !important;
   font-size: 0.78em;
   font-weight: 600;
-  color: #a79bc4;
+  color: var(--dbc-lavender);
   white-space: nowrap;
 }

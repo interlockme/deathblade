@@ -3,11 +3,7 @@
 <div class="build-card-row" markdown>
 <div class="build-card" data-updated="2026-08-07" markdown>
 
-<div class="build-stats">
-<div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">8 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 80%"></div></div></div>
-<div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">1.17 Multiplier</span><div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill stat-bar-fill-teal" style="width: 57%"></div></div></div>
-<div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">Fast & Comfy</span></div>
-</div>
+<div class="build-stats" data-build="313-high-floor" data-family="re"></div>
 
 **Best For:**{: .best-for } Players who want a simpler, faster, and more forgiving Fatal Wave build.
 

@@ -3,11 +3,7 @@
 <div class="build-card-row" markdown>
 <div class="build-card" data-updated="2026-08-09" markdown>
 
-<div class="build-stats">
-<div class="stat"><span class="stat-label">Difficulty</span><span class="stat-value">7 / 10</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width: 70%"></div></div></div>
-<div class="stat"><span class="stat-label">Trixion DPS</span><span class="stat-value">Not measured</span></div>
-<div class="stat"><span class="stat-label">Playstyle</span><span class="stat-value">AFK Simulator</span></div>
-</div>
+<div class="build-stats" data-build="standard" data-family="re"></div>
 
 **Best For:**{: .best-for } Brand-new Remaining Energy players with no Ark Grid yet.
 
