@@ -45,6 +45,10 @@
   --dbc-sky: #7ec4e8;          /* additional damage category accent */
   --dbc-pink-bright: #ffb3cf;  /* hover/active state pink - links, tabs, chips, section tracker */
   --dbc-arrow: #cf99c7;        /* rotation-line chevron color (.arrow/.arrow-swap) */
+  --dbc-green: #66bb6a;        /* rune-chip "green" tier, tripod-chip tier 2 */
+  --dbc-green-rgb: 102, 187, 106;
+  --dbc-violet: #c77dff;       /* rune-chip "epic" tier, .skill-card border/hover glow */
+  --dbc-violet-rgb: 199, 125, 255;
 }
 
 [data-md-color-scheme="slate"] {
@@ -5050,7 +5054,7 @@ body.page-333-blitz input[type="text"] {
    these is just a hook for any future visual distinction - nothing
    currently keys off it. */
 .md-typeset .skill-card[open] {
-  border-color: rgba(199, 125, 255, 0.6);
+  border-color: rgba(var(--dbc-violet-rgb), 0.6);
 }
 /* A little softness/polish to match the rest of the site's pastel feel -
    closed cards glow faintly on hover so the grid feels touchable rather
@@ -5061,14 +5065,14 @@ body.page-333-blitz input[type="text"] {
    always wins over a stylesheet transform even on :hover), so this stays
    to glow/border-only feedback that layers on top of it instead. */
 .md-typeset .skill-card:not([open]):hover {
-  border-color: rgba(199, 125, 255, 0.4);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(199, 125, 255, 0.15);
+  border-color: rgba(var(--dbc-violet-rgb), 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(var(--dbc-violet-rgb), 0.15);
 }
 .md-typeset .skill-card-icon {
   transition: box-shadow 0.15s ease;
 }
 .md-typeset .skill-card:hover .skill-card-icon {
-  box-shadow: 0 0 0 1px rgba(199, 125, 255, 0.55), 0 0 10px rgba(199, 125, 255, 0.4);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-violet-rgb), 0.55), 0 0 10px rgba(var(--dbc-violet-rgb), 0.4);
 }
 /* Overrides the sitewide details:not([open]) opacity dimming (meant for
    ??? admonitions) — a skill card is core reference content, not optional
@@ -5240,7 +5244,7 @@ body.page-333-blitz input[type="text"] {
     inset 0 -7px 9px rgba(0, 0, 0, 0.2);
 }
 .md-typeset .tripod-chip.tripod-t1 { background-color: var(--dbc-blue); }
-.md-typeset .tripod-chip.tripod-t2 { background-color: #66bb6a; }
+.md-typeset .tripod-chip.tripod-t2 { background-color: var(--dbc-green); }
 .md-typeset .tripod-chip.tripod-t3 { background-color: var(--dbc-gold); }
 /* A same-size, invisible stand-in for a tripod tier this skill hasn't
    reached yet (see skill-setup.js's buildCard comment on why this is
@@ -5282,9 +5286,9 @@ body.page-333-blitz input[type="text"] {
   flex-shrink: 0;
 }
 .md-typeset .rune-chip.rune-green {
-  background-color: rgba(102, 187, 106, 0.14);
+  background-color: rgba(var(--dbc-green-rgb), 0.14);
   color: #81c995;
-  border-color: rgba(102, 187, 106, 0.4);
+  border-color: rgba(var(--dbc-green-rgb), 0.4);
 }
 .md-typeset .rune-chip.rune-blue {
   background-color: rgba(var(--dbc-blue-rgb), 0.14);
@@ -5297,9 +5301,9 @@ body.page-333-blitz input[type="text"] {
   border-color: rgba(var(--dbc-orange-rgb), 0.45);
 }
 .md-typeset .rune-chip.rune-epic {
-  background-color: rgba(199, 125, 255, 0.16);
-  color: #c77dff;
-  border-color: rgba(199, 125, 255, 0.45);
+  background-color: rgba(var(--dbc-violet-rgb), 0.16);
+  color: var(--dbc-violet);
+  border-color: rgba(var(--dbc-violet-rgb), 0.45);
 }
 /* Disclosure arrow — same border-triangle technique as .ap-brace-compare,
    rotates open instead of using an image/glyph. */
