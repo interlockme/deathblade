@@ -1323,7 +1323,8 @@
   // Swaps which of the 3 slots is loaded into the form. The slot being
   // left behind already has its latest edits saved (every field change
   // calls saveInputs for the active preset - see the input/change
-  // listeners in init()), so nothing is lost by switching away from it.
+  // listeners in initApCalcRoot()), so nothing is lost by switching away
+  // from it.
   function switchPreset(root, newId) {
     if (newId === getActivePresetId()) return;
     resetFieldsToDefaults(root);
@@ -1522,8 +1523,20 @@
   }
 
   // ----- Initialisation -----
-  function init() {
-    document.querySelectorAll(".ap-calc").forEach((root) => {
+  // initApCalcRoot() attaches listeners directly onto the calculator's own
+  // static markup instead of rebuilding it from scratch each call - so,
+  // unlike the JSON-data-driven widgets registerRenderer was originally
+  // written for, calling this twice on the same root would double-attach
+  // every listener below (duplicate localStorage writes, duplicate reset
+  // confirms, duplicate popover opens, ...) rather than harmlessly re-doing
+  // idempotent work. This guard is what makes it safe to hand to
+  // registerRenderer, whose three triggers can otherwise all fire for the
+  // same root on a single hard load.
+  function initApCalcRoot(root) {
+    if (root.dataset.apCalcInit) return;
+    root.dataset.apCalcInit = "1";
+
+    {
       const activeId = getActivePresetId();
       loadInputs(root, activeId);
       normalizeChaosCoreExclusivity(root);
@@ -1683,19 +1696,20 @@
       });
 
       update(root);
-    });
+    }
   }
 
   // Click outside any open popover, or Escape, closes it - same dismissal
   // pattern as any lightweight menu/tooltip on the site. Bound ONCE at
-  // module scope (not per init() call) and scoped to `document` for the
-  // lookup itself - init() re-runs on every instant navigation to this
-  // page (document$.subscribe below), and binding these two listeners
-  // inside that per-root loop meant every revisit left another pair of
-  // permanent document-level listeners behind, each closing over that
-  // load's now-stale `root` and never cleaned up. There's normally just
-  // one .ap-calc per page, so querying from `document` instead of a
-  // specific `root` costs nothing in practice.
+  // module scope (not inside initApCalcRoot()) and scoped to `document`
+  // for the lookup itself - initApCalcRoot() re-runs per root across
+  // every registerRenderer trigger (hard load, instant nav, mutation),
+  // and binding these two listeners inside that per-root logic meant
+  // every revisit left another pair of permanent document-level listeners
+  // behind, each closing over that load's now-stale `root` and never
+  // cleaned up. There's normally just one .ap-calc per page, so querying
+  // from `document` instead of a specific `root` costs nothing in
+  // practice.
   document.addEventListener("click", (ev) => {
     document.querySelectorAll(".ap-calc-popover").forEach((popoverEl) => {
       if (popoverEl.hidden) return;
@@ -1710,11 +1724,12 @@
     });
   });
 
-  if (typeof document$ !== "undefined") {
-    document$.subscribe(init);
-  } else {
-    document.addEventListener("DOMContentLoaded", init);
-  }
+  // Was a hand-rolled document$-only subscription (see site-utils.js's
+  // registerRenderer doc comment for why that's not safe to assume covers
+  // every case on its own) - the dataset guard on initApCalcRoot() is what
+  // makes it safe to hand to registerRenderer directly instead of going
+  // through init()'s own querySelectorAll first.
+  window.SiteUtils.registerRenderer(".ap-calc", initApCalcRoot);
 
   window.__arkPassiveCalc = { computeGridAndSummary, computeBraceletComparison, EVOLUTION_SPLITS, COMBINED_KEYSTONES };
 })();

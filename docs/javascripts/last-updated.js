@@ -25,22 +25,22 @@
     return MONTHS[m - 1] + " " + d + ", " + y;
   }
 
-  function render() {
-    document.querySelectorAll(".build-card[data-updated]").forEach(function (card) {
-      var existing = card.querySelector(".last-updated-badge");
-      if (existing) existing.remove(); // instant-nav re-render: rebuild rather than trust stale text
+  function renderCard(card) {
+    var existing = card.querySelector(".last-updated-badge");
+    if (existing) existing.remove(); // re-render: rebuild rather than trust stale text
 
-      var formatted = formatDate(card.getAttribute("data-updated"));
-      if (!formatted) return; // malformed date - fail quietly, no badge
+    var formatted = formatDate(card.getAttribute("data-updated"));
+    if (!formatted) return; // malformed date - fail quietly, no badge
 
-      var badge = document.createElement("span");
-      badge.className = "last-updated-badge";
-      badge.textContent = "Updated " + formatted;
-      card.appendChild(badge);
-    });
+    var badge = document.createElement("span");
+    badge.className = "last-updated-badge";
+    badge.textContent = "Updated " + formatted;
+    card.appendChild(badge);
   }
 
-  if (window.document$) {
-    document$.subscribe(render);
-  }
+  // Was a lone document$ subscription - see site-utils.js's registerRenderer
+  // doc comment for why that's not safe to assume covers every case on its
+  // own. renderCard() was already idempotent (tears down its own badge
+  // before rebuilding), so this is a drop-in swap.
+  window.SiteUtils.registerRenderer(".build-card[data-updated]", renderCard);
 })();

@@ -89,41 +89,18 @@
     });
   }
 
-  // Same three-trigger pattern SiteUtils.registerRenderer() documents
-  // (direct/hard load, Material instant-nav via document$, and a
-  // MutationObserver belt-and-suspenders) - this file predates that
-  // helper and only had the document$ leg, which meant a plain page
-  // load could race gem-priority.js's own render (or land in a gap
-  // where document$ had already fired once before this subscription
-  // was registered and never fires again on that load), leaving the
-  // Damage column with no tooltips until an actual nav occurred.
-  // applyTooltips() itself is already idempotent (just (re)sets
-  // el.title), so calling it redundantly across all three triggers is
-  // harmless, same as every registerRenderer-based widget.
-  function run() {
+  // Formerly a hand-rolled copy of the same three-trigger pattern
+  // SiteUtils.registerRenderer() now centralizes (direct/hard load,
+  // Material instant-nav via document$, and a MutationObserver belt-and-
+  // suspenders) - see that helper's doc comment in site-utils.js.
+  // applyTooltips() itself scans the whole document rather than a single
+  // container, so renderContainer below ignores the specific container
+  // registerRenderer hands it and just re-scans everything; it's already
+  // idempotent (just (re)sets el.title), so calling it redundantly across
+  // matches and triggers is harmless, same as every registerRenderer-based
+  // widget. Selector kept identical to this file's old MutationObserver
+  // matcher so it re-runs on the same set of DOM changes as before.
+  window.SiteUtils.registerRenderer(".gem-priority, .dps-chart", function () {
     applyTooltips();
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", run);
-  } else {
-    run();
-  }
-
-  if (window.document$) {
-    document$.subscribe(run);
-  }
-
-  if (window.MutationObserver) {
-    var observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (m) {
-        m.addedNodes.forEach(function (node) {
-          if (node.nodeType === 1 && (node.matches(".gem-priority, .dps-chart") || node.querySelector(".gem-priority, .dps-chart"))) {
-            run();
-          }
-        });
-      });
-    });
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-  }
+  });
 })();

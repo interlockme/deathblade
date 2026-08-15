@@ -535,15 +535,14 @@
     });
   }
 
-  function renderAll() {
-    document.querySelectorAll(".build-compare[data-family]").forEach(function (container) {
-      renderWidget(container, container.getAttribute("data-family"));
-    });
+  function renderContainer(container) {
+    renderWidget(container, container.getAttribute("data-family"));
   }
 
-  if (window.document$) {
-    document$.subscribe(function () {
-      renderAll();
-    });
-  }
+  // Was a lone document$ subscription - renderWidget() was already
+  // idempotent (container.innerHTML reset every call, fresh selects/
+  // buttons each time so no listener ever double-attaches to a surviving
+  // node), so this is a drop-in swap to the shared hard-load/instant-nav/
+  // mutation trigger set. See site-utils.js's registerRenderer doc comment.
+  window.SiteUtils.registerRenderer(".build-compare[data-family]", renderContainer);
 })();

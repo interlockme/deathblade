@@ -145,64 +145,74 @@
     return list;
   }
 
-  function renderDpsCharts() {
-    var charts = document.querySelectorAll(".dps-chart[data-values]");
-    if (!charts.length) return;
-
-    var observer =
-      "IntersectionObserver" in window
-        ? new IntersectionObserver(
-            function (entries) {
-              entries.forEach(function (entry) {
-                if (entry.isIntersecting) {
-                  entry.target.classList.add("dps-chart-in-view");
-                  observer.unobserve(entry.target);
-                }
-              });
-            },
-            { threshold: 0.35 }
-          )
-        : null;
-
-    charts.forEach(function (chart) {
-      var values = (chart.getAttribute("data-values") || "")
-        .split(",")
-        .map(function (s) { return parseFloat(s.trim()); });
-      var labels = (chart.getAttribute("data-labels") || "")
-        .split(",")
-        .map(function (s) { return s.trim(); });
-      if (!values.length || values.length !== labels.length || values.some(isNaN)) {
-        return; // malformed data - fail quietly rather than draw a broken chart
-      }
-
-      var idsAttr = chart.getAttribute("data-ids");
-      var ids = idsAttr
-        ? idsAttr.split(",").map(function (s) { return s.trim(); })
-        : null;
-      // Malformed (wrong length) data-ids just falls back to the
-      // label-derived slug for every row rather than half-applying it -
-      // same "fail quietly, don't half-draw" rule as the values/labels
-      // length check above.
-      if (ids && ids.length !== labels.length) ids = null;
-
-      var accent = chart.getAttribute("data-accent") || null;
-      var showIcons = chart.hasAttribute("data-show-icons");
-      buildChart(chart, labels, values, ids, accent, showIcons);
-
-      if (observer) {
-        observer.observe(chart);
-      } else {
-        // No IntersectionObserver support - just show the bars filled in
-        // rather than leaving them permanently collapsed at 0 width.
-        chart.classList.add("dps-chart-in-view");
-      }
-    });
+  // One IntersectionObserver shared across every chart on the page,
+  // created lazily on first use rather than per-render - registerRenderer
+  // can call renderChart() once per matching container across three
+  // overlapping triggers, and a fresh "new IntersectionObserver(...)" on
+  // every one of those calls would leak an observer instance each time
+  // instead of reusing the same one.
+  var dpsObserver = null;
+  function getObserver() {
+    if (dpsObserver || !("IntersectionObserver" in window)) return dpsObserver;
+    dpsObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("dps-chart-in-view");
+            dpsObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.35 }
+    );
+    return dpsObserver;
   }
 
-  if (window.document$) {
-    document$.subscribe(function () {
-      renderDpsCharts();
-    });
+  function renderChart(chart) {
+    var values = (chart.getAttribute("data-values") || "")
+      .split(",")
+      .map(function (s) { return parseFloat(s.trim()); });
+    var labels = (chart.getAttribute("data-labels") || "")
+      .split(",")
+      .map(function (s) { return s.trim(); });
+    if (!values.length || values.length !== labels.length || values.some(isNaN)) {
+      return; // malformed data - fail quietly rather than draw a broken chart
+    }
+
+    var idsAttr = chart.getAttribute("data-ids");
+    var ids = idsAttr
+      ? idsAttr.split(",").map(function (s) { return s.trim(); })
+      : null;
+    // Malformed (wrong length) data-ids just falls back to the
+    // label-derived slug for every row rather than half-applying it -
+    // same "fail quietly, don't half-draw" rule as the values/labels
+    // length check above.
+    if (ids && ids.length !== labels.length) ids = null;
+
+    var accent = chart.getAttribute("data-accent") || null;
+    var showIcons = chart.hasAttribute("data-show-icons");
+    buildChart(chart, labels, values, ids, accent, showIcons);
+
+    var observer = getObserver();
+    if (observer) {
+      // Re-observing a target already registered on this same observer
+      // (e.g. a redundant re-render before it's scrolled into view) is a
+      // safe no-op per the IntersectionObserver spec - fine to call every
+      // time rather than tracking whether this chart was observed before.
+      observer.observe(chart);
+    } else {
+      // No IntersectionObserver support - just show the bars filled in
+      // rather than leaving them permanently collapsed at 0 width.
+      chart.classList.add("dps-chart-in-view");
+    }
   }
+
+  // Was a lone document$ subscription - renderChart() rebuilds each
+  // chart's DOM from scratch every call (buildChart() replaces
+  // container.innerHTML) and re-observing an already-observed chart is a
+  // harmless no-op, so this is a drop-in swap to the shared hard-load/
+  // instant-nav/mutation trigger set. See site-utils.js's registerRenderer
+  // doc comment.
+  window.SiteUtils.registerRenderer(".dps-chart[data-values]", renderChart);
 })();
 

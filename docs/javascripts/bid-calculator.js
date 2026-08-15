@@ -290,32 +290,38 @@
     });
   }
 
-  function init() {
-    document.querySelectorAll(".bid-calc").forEach(function (root) {
-      initCopyButton(root);
+  function initRoot(root) {
+    // Unlike the JSON-data-driven widgets registerRenderer was originally
+    // written for, this attaches listeners directly onto the calculator's
+    // own static markup instead of rebuilding it from scratch each call -
+    // so, unlike those widgets, calling this twice on the same root would
+    // double-attach every listener below rather than harmlessly re-doing
+    // idempotent work. This guard is what makes it safe to hand to
+    // registerRenderer, whose three triggers can otherwise all fire for
+    // the same root on a single hard load.
+    if (root.dataset.bidCalcInit) return;
+    root.dataset.bidCalcInit = "1";
 
-      var priceInput = root.querySelector(".bid-market-price");
+    initCopyButton(root);
 
-      root.querySelectorAll("input").forEach(function (input) {
-        input.addEventListener("input", function () {
-          if (input === priceInput) formatPriceInput(input);
-          update(root);
-        });
+    var priceInput = root.querySelector(".bid-market-price");
+
+    root.querySelectorAll("input").forEach(function (input) {
+      input.addEventListener("input", function () {
+        if (input === priceInput) formatPriceInput(input);
+        update(root);
       });
-
-      clampOnBlur(priceInput, MARKET_PRICE_MIN, MARKET_PRICE_MAX, root, true);
-      clampOnBlur(root.querySelector(".bid-market-fee"), MARKET_FEE_MIN, MARKET_FEE_MAX, root);
-
-      update(root);
     });
+
+    clampOnBlur(priceInput, MARKET_PRICE_MIN, MARKET_PRICE_MAX, root, true);
+    clampOnBlur(root.querySelector(".bid-market-fee"), MARKET_FEE_MIN, MARKET_FEE_MAX, root);
+
+    update(root);
   }
 
-  // navigation.instant swaps page content via AJAX, so DOMContentLoaded
-  // only fires once. document$ re-emits on every page load, including
-  // instant navigations.
-  if (typeof document$ !== "undefined") {
-    document$.subscribe(init);
-  } else {
-    document.addEventListener("DOMContentLoaded", init);
-  }
+  // Was a hand-rolled document$-only subscription (see site-utils.js's
+  // registerRenderer doc comment for why that's not safe to assume covers
+  // every case on its own) - the dataset guard above is what makes
+  // initRoot() safe to hand to it directly.
+  window.SiteUtils.registerRenderer(".bid-calc", initRoot);
 })();

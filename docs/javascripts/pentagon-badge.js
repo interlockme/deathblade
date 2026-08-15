@@ -206,29 +206,27 @@
     };
   }
 
-  function renderPentagonBadges() {
-    document.querySelectorAll(".pentagon-badge[data-build], .pentagon-badge[data-values]").forEach(function (badge) {
-      var mount = badge.querySelector(".pentagon-svg-mount");
-      if (!mount) return;
+  function renderBadge(badge) {
+    var mount = badge.querySelector(".pentagon-svg-mount");
+    if (!mount) return;
 
-      var resolved = resolveBadgeData(badge);
-      if (!resolved) return;
+    var resolved = resolveBadgeData(badge);
+    if (!resolved) return;
 
-      mount.innerHTML = "";
-      mount.appendChild(buildPentagonSvg(resolved.values, resolved.labels, resolved.accent, resolved.caption));
+    mount.innerHTML = "";
+    mount.appendChild(buildPentagonSvg(resolved.values, resolved.labels, resolved.accent, resolved.caption));
 
-      if (resolved.caption && !badge.querySelector(".pentagon-badge-caption")) {
-        var captionEl = document.createElement("div");
-        captionEl.className = "pentagon-badge-caption";
-        captionEl.textContent = resolved.caption;
-        badge.appendChild(captionEl);
-      }
-    });
+    if (resolved.caption && !badge.querySelector(".pentagon-badge-caption")) {
+      var captionEl = document.createElement("div");
+      captionEl.className = "pentagon-badge-caption";
+      captionEl.textContent = resolved.caption;
+      badge.appendChild(captionEl);
+    }
   }
 
-  if (window.document$) {
-    document$.subscribe(function () {
-      renderPentagonBadges();
-    });
-  }
+  // Was a lone document$ subscription - renderBadge() was already
+  // idempotent (mount.innerHTML reset every call, caption guarded by its
+  // own existence check), so this is a drop-in swap to the shared
+  // hard-load/instant-nav/mutation trigger set. See site-utils.js.
+  window.SiteUtils.registerRenderer(".pentagon-badge[data-build], .pentagon-badge[data-values]", renderBadge);
 })();

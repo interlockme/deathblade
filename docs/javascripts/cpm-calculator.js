@@ -424,90 +424,99 @@
     resultEl.classList.remove("spm-calc-output-empty");
   }
 
-  function spmInit() {
-    document.querySelectorAll(".spm-calc").forEach((widget) => {
-      const timeInput = widget.querySelector(".spm-calc-time");
-      const countInput = widget.querySelector(".spm-calc-count");
+  // Both initSpmWidget() and initCpmRow() attach listeners directly onto
+  // each widget's own static markup instead of rebuilding it from scratch
+  // each call - so, unlike the JSON-data-driven widgets registerRenderer
+  // was originally written for, calling either of these twice on the same
+  // element would double-attach every listener below rather than
+  // harmlessly re-doing idempotent work. The dataset guard at the top of
+  // each is what makes them safe to hand to registerRenderer, whose three
+  // triggers can otherwise all fire for the same element on a single hard
+  // load.
 
-      widget.querySelectorAll("input").forEach((input) => {
-        input.addEventListener("input", () => spmUpdate(widget));
+  function initSpmWidget(widget) {
+    if (widget.dataset.spmCalcInit) return;
+    widget.dataset.spmCalcInit = "1";
+
+    const timeInput = widget.querySelector(".spm-calc-time");
+    const countInput = widget.querySelector(".spm-calc-count");
+
+    widget.querySelectorAll("input").forEach((input) => {
+      input.addEventListener("input", () => spmUpdate(widget));
+    });
+
+    // Clamp on blur (not on input) for the same reason as clampOnBlur
+    // above: correcting mid-keystroke would make it impossible to type
+    // past an intermediate value that's already over the ceiling.
+    if (timeInput) {
+      timeInput.addEventListener("blur", () => {
+        const seconds = spmParseTimeToSeconds(timeInput.value);
+        if (!isFinite(seconds)) return; // empty/unparseable - leave as-is
+        if (seconds > SPM_TIME_MAX_SECONDS) {
+          timeInput.value = spmFormatSeconds(SPM_TIME_MAX_SECONDS);
+          spmUpdate(widget);
+        }
       });
+    }
+    if (countInput) {
+      countInput.addEventListener("blur", () => {
+        const raw = parseFloat(countInput.value);
+        if (!isFinite(raw)) return;
+        const clamped = Math.min(SPM_COUNT_MAX, Math.max(SPM_COUNT_MIN, raw));
+        if (clamped !== raw) {
+          countInput.value = clamped;
+          spmUpdate(widget);
+        }
+      });
+    }
 
-      // Clamp on blur (not on input) for the same reason as clampOnBlur
-      // above: correcting mid-keystroke would make it impossible to type
-      // past an intermediate value that's already over the ceiling.
-      if (timeInput) {
-        timeInput.addEventListener("blur", () => {
-          const seconds = spmParseTimeToSeconds(timeInput.value);
-          if (!isFinite(seconds)) return; // empty/unparseable - leave as-is
-          if (seconds > SPM_TIME_MAX_SECONDS) {
-            timeInput.value = spmFormatSeconds(SPM_TIME_MAX_SECONDS);
-            spmUpdate(widget);
-          }
-        });
-      }
-      if (countInput) {
-        countInput.addEventListener("blur", () => {
-          const raw = parseFloat(countInput.value);
-          if (!isFinite(raw)) return;
-          const clamped = Math.min(SPM_COUNT_MAX, Math.max(SPM_COUNT_MIN, raw));
-          if (clamped !== raw) {
-            countInput.value = clamped;
-            spmUpdate(widget);
-          }
-        });
-      }
+    spmUpdate(widget);
+  }
 
-      spmUpdate(widget);
+  function initCpmRow(row) {
+    if (row.dataset.cpmCalcInit) return;
+    row.dataset.cpmCalcInit = "1";
+
+    const buildKey = row.dataset.build;
+    const build = BUILDS[buildKey];
+    const baseMultInput = row.querySelector(".cpm-calc-basemult-input");
+    if (build && baseMultInput && !baseMultInput.value) {
+      baseMultInput.value = build.baseMultiplier.toFixed(2);
+    }
+
+    row.querySelectorAll("input").forEach((input) => {
+      input.addEventListener("input", () => updateRow(row));
+    });
+    updateRow(row);
+
+    clampOnBlur(row.querySelector(".cpm-calc-raidcpm"), RAID_CPM_MIN, RAID_CPM_MAX, 2, row);
+    clampOnBlur(baseMultInput, BASE_MULT_MIN, BASE_MULT_MAX, 2, row);
+    clampOnBlur(row.querySelector(".cpm-calc-ba-input"), BACK_ATTACK_MIN, BACK_ATTACK_MAX, 2, row);
+
+    ensureRecentChipsContainer(row);
+    renderRecentChips(row, buildKey);
+
+    // Record to history on blur rather than every keystroke - once the
+    // reader has settled on a value and moved on, not mid-typing.
+    const raidCPMInput = row.querySelector(".cpm-calc-raidcpm");
+    const baInput = row.querySelector(".cpm-calc-ba-input");
+    [raidCPMInput, baInput].forEach((el) => {
+      if (!el) return;
+      el.addEventListener("blur", () => {
+        if (row.dataset.pendingCpm === undefined) return; // no valid result yet
+        recordHistory(buildKey, {
+          cpm: parseFloat(row.dataset.pendingCpm),
+          ba: parseFloat(row.dataset.pendingBa),
+        });
+        renderRecentChips(row, buildKey);
+      });
     });
   }
 
-  function init() {
-    spmInit();
-    document.querySelectorAll(".cpm-calc-row").forEach((row) => {
-      const buildKey = row.dataset.build;
-      const build = BUILDS[buildKey];
-      const baseMultInput = row.querySelector(".cpm-calc-basemult-input");
-      if (build && baseMultInput && !baseMultInput.value) {
-        baseMultInput.value = build.baseMultiplier.toFixed(2);
-      }
-
-      row.querySelectorAll("input").forEach((input) => {
-        input.addEventListener("input", () => updateRow(row));
-      });
-      updateRow(row);
-
-      clampOnBlur(row.querySelector(".cpm-calc-raidcpm"), RAID_CPM_MIN, RAID_CPM_MAX, 2, row);
-      clampOnBlur(baseMultInput, BASE_MULT_MIN, BASE_MULT_MAX, 2, row);
-      clampOnBlur(row.querySelector(".cpm-calc-ba-input"), BACK_ATTACK_MIN, BACK_ATTACK_MAX, 2, row);
-
-      ensureRecentChipsContainer(row);
-      renderRecentChips(row, buildKey);
-
-      // Record to history on blur rather than every keystroke - once the
-      // reader has settled on a value and moved on, not mid-typing.
-      const raidCPMInput = row.querySelector(".cpm-calc-raidcpm");
-      const baInput = row.querySelector(".cpm-calc-ba-input");
-      [raidCPMInput, baInput].forEach((el) => {
-        if (!el) return;
-        el.addEventListener("blur", () => {
-          if (row.dataset.pendingCpm === undefined) return; // no valid result yet
-          recordHistory(buildKey, {
-            cpm: parseFloat(row.dataset.pendingCpm),
-            ba: parseFloat(row.dataset.pendingBa),
-          });
-          renderRecentChips(row, buildKey);
-        });
-      });
-    });
-  }
-
-  // navigation.instant swaps page content via AJAX, so DOMContentLoaded
-  // only fires once. document$ re-emits on every page load, including
-  // instant navigations.
-  if (typeof document$ !== "undefined") {
-    document$.subscribe(init);
-  } else {
-    document.addEventListener("DOMContentLoaded", init);
-  }
+  // Was a hand-rolled document$-only subscription (see site-utils.js's
+  // registerRenderer doc comment for why that's not safe to assume covers
+  // every case on its own) - the dataset guards above are what make these
+  // safe to hand to it directly.
+  window.SiteUtils.registerRenderer(".spm-calc", initSpmWidget);
+  window.SiteUtils.registerRenderer(".cpm-calc-row", initCpmRow);
 })();
