@@ -74,10 +74,6 @@
   background-color: var(--dbc-header-footer-bg) !important; /* matches the lavender setup-note surface, see --dbc-header-footer-bg */
 }
 
-.md-header {
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
-}
-
 /* ---------- Selection & scrollbar theming ---------- */
 /* Default browser selection (blue) and scrollbar (gray) clash with the
    pastel palette used everywhere else on the site - small detail, but it's
