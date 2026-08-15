@@ -57,6 +57,8 @@
     ```
     DCDFB3E872FB4DD3E910EFA0CAE35A3D30CDFB850D8280939B84BD32CBC8AA21D5F83501E60BDC9F1689AD68BA7FF12C867FFD1A6ED480726DE7CA09B38FEEA9
     ```
+    ??? note "🐆 vs 🐯"
+        ![222 vs 333](../assets/leopardvstiger.png){ loading=lazy }
 
 ## Ark Setup
 
@@ -271,7 +273,8 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
 
     - Cast <span class="skill-chip">![](../assets/shared/icon-spincutter.png)Spincutter</span> instead of <span class="skill-chip">![](../assets/shared/icon-earthcleaver.png)Earth Cleaver</span> as needed.
     - Cast <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> whenever you want, I'm not your mom.
-    - You don't strictly have to cast Wind Cut before Death Trance for this build.
+    - You don't strictly have to precast Wind Cut before Death Trance for this build.
+        - If you Surged right after Deathly Slash in the previous cycle, it might be smoother to skip the precast.
 
 === "Upper Slash"
 
@@ -285,7 +288,29 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
     </div>
 
     - Cast <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> whenever you want, I'm not your mom.
-    - You don't strictly have to cast Wind Cut before Death Trance for this build.
+    - You don't strictly have to precast Wind Cut before Death Trance for this build.
+        - If you Surged right after Deathly Slash in the previous cycle, it might be smoother to skip the precast.
+
+    ??? note "Beast Mode"
+        Alternate between these two cycles:
+
+        <div class="cycle-card" markdown>
+        <div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Surprise Skip</span></div>
+        <div class="rotation-line" markdown>
+        <script type="application/json">
+        ["windcut", "deathtrance", "surpriseattack","maelstrom", "windcut", "upperslash", "turningslash", "bladedance", "deathlyslash", "surge"]
+        </script>
+        </div>
+        </div>
+
+        <div class="cycle-card" markdown>
+        <div class="cycle-card-header"><span class="cycle-num cycle-num-2">2</span><span class="cycle-title">Wind Cut Skip</span></div>
+        <div class="rotation-line" markdown>
+        <script type="application/json">
+        ["surpriseattack", "deathtrance", "windcut","maelstrom", "surpriseattack", "upperslash", "turningslash", "bladedance", "deathlyslash", "surge"]
+        </script>
+        </div>
+        </div>
 
 *From zero orbs:*
 { .lead }
