@@ -252,7 +252,7 @@
     Use an **Opener**, then alternate between these two cycles as needed:
 
     <div class="cycle-card" markdown>
-    <div class="cycle-card-header"><span class="cycle-num">1</span><span class="cycle-title">Void Strike + Deathly Slash</span></div>
+    <div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Void Strike + Deathly Slash</span></div>
     <div class="rotation-line" markdown>
     <script type="application/json">
     ["maelstrom", "voidstrike", "twinshadows", "deathlyslash", "turningslash", "fatalwave", "surge"]
@@ -261,7 +261,7 @@
     </div>
 
     <div class="cycle-card" markdown>
-    <div class="cycle-card-header"><span class="cycle-num">2</span><span class="cycle-title">Soul Absorber + Blitz Rush</span></div>
+    <div class="cycle-card-header"><span class="cycle-num cycle-num-2">2</span><span class="cycle-title">Soul Absorber + Blitz Rush</span></div>
     <div class="rotation-line" markdown>
     <script type="application/json">
     ["soulabsorber", "blitzrush", "twinshadows",

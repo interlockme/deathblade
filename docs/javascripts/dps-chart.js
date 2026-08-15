@@ -55,26 +55,14 @@
 //   Trixion DPS stat-bar-fill-teal color used elsewhere).
 
 (function () {
-  function detectSiteRoot() {
-    var scriptEl = document.currentScript || document.querySelector('script[src*="javascripts/dps-chart.js"]');
-    if (scriptEl && scriptEl.src) {
-      return scriptEl.src.replace(/javascripts\/dps-chart\.js(\?.*)?(#.*)?$/, "");
-    }
-    // Fallback: derive from the site stylesheet link, in case this script
-    // ever gets loaded in a way that clears document.currentScript.
-    var linkEl = document.querySelector('link[href*="stylesheets/extra.css"]');
-    if (linkEl && linkEl.href) {
-      return linkEl.href.replace(/stylesheets\/extra\.css(\?.*)?(#.*)?$/, "");
-    }
-    return "";
-  }
-
   // Captured once, synchronously, while this script first loads -
   // document.currentScript is only valid during that initial execution,
   // not later inside document$.subscribe (mkdocs-material's instant
   // navigation reuses this same script tag across page swaps, so one
-  // capture up front covers every subsequent render).
-  var SITE_ROOT = detectSiteRoot();
+  // capture up front covers every subsequent render). See
+  // SiteUtils.detectSiteRoot's own comment in site-utils.js for why this
+  // can't just be a hardcoded relative path.
+  var SITE_ROOT = window.SiteUtils.detectSiteRoot("dps-chart.js");
 
   function fmtPct(n) {
     // Trim to at most 1 decimal, but drop a trailing ".0" so whole

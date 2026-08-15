@@ -38,36 +38,21 @@
   // detectSiteRoot()'s comment below for why that distinction matters.
   var FAMILY_FOLDER = { re: "remaining-energy", surge: "surge" };
 
-  function detectSiteRoot() {
-    // Same trick dps-chart.js uses: read this script's own fully-resolved
-    // <script src>, which the browser always reports as an absolute URL
-    // regardless of how deep the current page's own directory-style URL
-    // is (e.g. /remaining-energy/essentials/). Building links this way -
-    // instead of a markdown-relative "333-ceiling.md" - is what actually
-    // fixes the 404: a JS-inserted <a href="333-ceiling.md"> resolves
-    // against the CURRENT page URL in the browser, so from
-    // .../remaining-energy/essentials/ it lands on
-    // .../remaining-energy/essentials/333-ceiling.md, which doesn't
-    // exist. mkdocs rewrites markdown-native relative links at build
-    // time to account for that extra directory segment; a raw href set
-    // at runtime never goes through that rewrite, so it has to be built
-    // as an absolute site URL instead.
-    var scriptEl = document.currentScript || document.querySelector('script[src*="javascripts/build-compare.js"]');
-    if (scriptEl && scriptEl.src) {
-      return scriptEl.src.replace(/javascripts\/build-compare\.js(\?.*)?(#.*)?$/, "");
-    }
-    var linkEl = document.querySelector('link[href*="stylesheets/extra.css"]');
-    if (linkEl && linkEl.href) {
-      return linkEl.href.replace(/stylesheets\/extra\.css(\?.*)?(#.*)?$/, "");
-    }
-    return "";
-  }
-
+  // Links are built as absolute site URLs via SiteUtils.detectSiteRoot,
+  // not markdown-relative paths like "333-ceiling.md" - a JS-inserted
+  // <a href="333-ceiling.md"> resolves against the CURRENT page URL in
+  // the browser, so from .../remaining-energy/essentials/ it lands on
+  // .../remaining-energy/essentials/333-ceiling.md, which doesn't exist.
+  // mkdocs rewrites markdown-native relative links at build time to
+  // account for that extra directory segment; a raw href set at runtime
+  // never goes through that rewrite, so it has to be built as an
+  // absolute site URL instead.
+  //
   // Captured once, synchronously, on first script execution - see
-  // dps-chart.js's identical comment for why this can't be recomputed
+  // SiteUtils.detectSiteRoot's comment for why this can't be recomputed
   // lazily inside document$.subscribe (document.currentScript is only
   // valid during the initial synchronous run).
-  var SITE_ROOT = detectSiteRoot();
+  var SITE_ROOT = window.SiteUtils.detectSiteRoot("build-compare.js");
 
   function buildUrl(family, build) {
     return SITE_ROOT + FAMILY_FOLDER[family] + "/" + build.id + "/";

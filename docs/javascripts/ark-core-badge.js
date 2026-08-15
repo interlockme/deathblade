@@ -51,7 +51,7 @@
 
     var icon = document.createElement("img");
     icon.className = "ark-core-icon";
-    icon.src = SITE_ROOT + "assets/shared/" + (CORE_ART[entry.core] || "sun.png");
+    icon.src = window.SiteUtils.iconSrc(SITE_ROOT, CORE_ART[entry.core] || "sun.png");
     icon.alt = "";
     icon.loading = "lazy";
     window.SiteUtils.hideOnError(icon);

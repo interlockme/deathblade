@@ -73,7 +73,7 @@
     if (step.situational) span.classList.add("skill-situational");
 
     if (step.cycleRef != null) {
-      span.appendChild(el("span", "cycle-num", String(step.cycleRef)));
+      span.appendChild(el("span", "cycle-num cycle-num-" + step.cycleRef, String(step.cycleRef)));
       span.appendChild(el("span", "cycle-title", step.title || ""));
     } else if (step.icons && step.icons.length) {
       step.icons.forEach(function (id, i) {

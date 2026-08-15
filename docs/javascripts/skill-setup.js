@@ -180,20 +180,17 @@
   // .skill-setup-grid for the CSS half of this (position: relative on
   // the grid, position: absolute + a transform/width transition on each
   // .skill-card).
-  // Must clear the 380px threshold in .skill-card-main's @container
-  // query (extra.css) - that's the point a card's own width gets too
-  // tight to fit the chip cluster beside the name on one row, forcing
-  // it onto its own stacked line and inflating the card's height.
-  // Deliberately padded well above 380, not just past it: `grid.
-  // clientWidth` is an integer (subpixel layout widths get rounded),
-  // `.skill-card` is `box-sizing: border-box` (Material's sitewide
-  // reset) so the 2px border eats into the content box a container
-  // query actually measures against, and browser zoom/scrollbar width
-  // can shift the measured containerWidth by a few px either way. Any
-  // of those alone is only a couple px, but they can stack - a small
-  // buffer (previously 10px) still left a narrow real-world range where
-  // 2 columns get picked at a colWidth that renders just under 380.
-  // 30px of headroom absorbs that with room to spare.
+  // NOTE: this used to be pinned 30px above a 380px threshold in
+  // .skill-card-main's @container query, back when a too-narrow card
+  // fell back to a stacked name/chips layout. That @container rule is
+  // gone now (see .skill-card-main's comment in extra.css) - a too-
+  // narrow card just ellipsis-truncates the name instead of stacking,
+  // so there's no CSS breakpoint left to stay clear of. 410 is kept as
+  // a floor purely on its own layout-quality merits: below that, a
+  // card's chip cluster (runes/tripods) starts crowding the name badly
+  // even with truncation helping. If you retune this, it no longer
+  // needs to track anything in extra.css - just eyeball card
+  // readability at the new width.
   var MASONRY_MIN_WIDTH = 410;
   var MASONRY_GAP = 11; // ~0.7em at the site's 16px root, matches the old CSS grid gap
 
@@ -209,15 +206,14 @@
 
     // Capped at 2: at wide container widths (article column with no
     // sidebar, or a wide viewport) this math alone would floor to 3 or
-    // 4, packing skill cards tightly enough that the chip cluster
-    // (runes/tripods) no longer fits beside the name on one row - see
-    // .skill-card-main's @container rule above, which stacks name/chips
-    // once a CARD itself drops below ~380px. Three or four columns
-    // squeezes each card well under that width on anything but an
-    // extremely wide screen, forcing the stacked layout everywhere and
-    // making the grid look cramped. Two columns is the most this design
-    // is meant to support; MASONRY_MIN_WIDTH still governs collapsing to
-    // a single column on narrow screens.
+    // 4, packing skill cards tight enough that the chip cluster
+    // (runes/tripods) crowds the name badly even with its ellipsis
+    // truncation absorbing some of it - see .skill-card-main's comment
+    // in extra.css. Three or four columns squeezes each card well under
+    // MASONRY_MIN_WIDTH on anything but an extremely wide screen, making
+    // the grid look cramped. Two columns is the most this design is
+    // meant to support; MASONRY_MIN_WIDTH still governs collapsing to a
+    // single column on narrow screens.
     var cols = Math.max(1, Math.min(2, Math.floor((containerWidth + MASONRY_GAP) / (MASONRY_MIN_WIDTH + MASONRY_GAP))));
     // Floored to a whole pixel, not left fractional: the right-hand
     // column's translateX below is this value plus the gap, so a
