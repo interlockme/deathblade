@@ -1,6 +1,6 @@
 # 333 (Blitz) <span class="tiger-emoji" title="rawr">🐯</span>
 
-<p class="page-banner page-banner-warning">Not available in NA/EU servers yet</p>
+<p class="page-banner page-banner-warning">Not available in NA/EU servers yet, rotations subject to change</p>
 
 <div class="build-card-row" markdown>
 <div class="build-card" data-updated="2026-08-07" markdown>
