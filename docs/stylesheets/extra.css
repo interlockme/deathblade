@@ -6152,22 +6152,37 @@ body.page-333-blitz input[type="text"] {
   border-radius: 999px;
   border: 1px solid transparent;
 }
-.md-typeset .setup-note[data-kind="tip"] .setup-note-tag {
+/* `> summary > .setup-note-tag`, not the descendant-combinator
+   `.setup-note-tag` these used to end in: a .setup-note's body can hold
+   another .setup-note (e.g. 222-speedy's "Alt" Upper Slash card nesting
+   a "Note" 🐆 vs 🐯 card), and the nested tag is still a *descendant* of
+   the outer .setup-note - so the outer's data-kind selector matched it
+   too. Both rules then had equal specificity (element+attr, descendant,
+   class), so it came down to source order: whichever data-kind block is
+   declared later here wins, regardless of which color the nested note
+   actually asked for - e.g. an inner Note tag silently painted gold
+   because an outer Alt/example wrapped it and "example" happens to be
+   declared after "note" below. Scoping to `> summary >` matches only
+   that details element's own immediate tag (a .setup-note-tag only ever
+   sits inside its own <summary>, itself always a direct child of the
+   .setup-note), so a nested card's tag is untouched by its parent's
+   data-kind and keeps its own color regardless of source order. */
+.md-typeset .setup-note[data-kind="tip"] > summary > .setup-note-tag {
   color: var(--dbc-teal);
   background-color: rgba(var(--dbc-teal-rgb), 0.14);
   border-color: rgba(var(--dbc-teal-rgb), 0.4);
 }
-.md-typeset .setup-note[data-kind="note"] .setup-note-tag {
+.md-typeset .setup-note[data-kind="note"] > summary > .setup-note-tag {
   color: var(--dbc-purple);
   background-color: rgba(var(--dbc-purple-rgb), 0.16);
   border-color: rgba(var(--dbc-purple-rgb), 0.4);
 }
-.md-typeset .setup-note[data-kind="example"] .setup-note-tag {
+.md-typeset .setup-note[data-kind="example"] > summary > .setup-note-tag {
   color: var(--dbc-gold);
   background-color: rgba(var(--dbc-gold-rgb), 0.14);
   border-color: rgba(var(--dbc-gold-rgb), 0.4);
 }
-.md-typeset .setup-note[data-kind="danger"] .setup-note-tag {
+.md-typeset .setup-note[data-kind="danger"] > summary > .setup-note-tag {
   color: var(--dbc-pink);
   background-color: rgba(var(--dbc-rose-rgb), 0.14);
   border-color: rgba(var(--dbc-rose-rgb), 0.4);
