@@ -15,7 +15,7 @@
 - Highest mobility of all Deathblade builds by far.
 - Counter is used in rotation, you must hold it when necessary.
 - Very high gem efficiency, Surge and Deathly Slash are nearly all of your DPS.
-- Must constantly balance Surge and Deathly Slash back attack rate with Surge CPM.
+- Must constantly balance Surge and Deathly Slash back-attack rate with Surge CPM.
 
 </div>
 <!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Exposure, Speed (0-10).
@@ -193,7 +193,7 @@
 - You can gain more comfort at a DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
 - Upper Slash is a push immune skill that generates 5 stacks and allows you to skip Earth Cleaver casts.
 - Replace both Earth Cleaver gems for Upper Slash CD and any other gem you prefer.
-- Optionally, replace Earth Cleaver entirely for Lv 1 Head hunt and max Surprise Attack.
+- Optionally, replace Earth Cleaver entirely for Lv 1 Head Hunt and max Surprise Attack.
 
 <div class="skill-setup" data-family="surge" markdown>
 <script type="application/json">

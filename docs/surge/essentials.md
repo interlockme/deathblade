@@ -100,7 +100,7 @@ Atk/Move Speed Feast
 ![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/shared/icon-vernesewine.png){: .skill-icon } Vernese Wine required
 { .food-req }
 
-**Pros**{: .best-for } Highest damage bonus.
+**Pros:**{: .best-for } Highest damage bonus.
 
 **Cons:**{: .tradeoff } Requires Maelstrom management for damage.
 
@@ -217,7 +217,7 @@ Knowing roughly how many stacks each skill generates is important for adapting y
 
 ### Combat Performance
 
-**Surge Casts Per Minute (CPM)** and back attack rate are useful measures of how efficiently you cycle Surge.
+**Surge Casts Per Minute (CPM)** and back-attack rate are useful measures of how efficiently you cycle Surge.
 
 Only compare CPM between the **same encounter and build**, as boss uptime and mechanics heavily affect it.
 

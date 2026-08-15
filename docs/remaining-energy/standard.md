@@ -15,10 +15,13 @@
 
 </div>
 <!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Recovery, Speed (0-10).
-     - DPS 8.5 follows the strict -0.5-per-rank pattern below 333 Ceiling
-       (9), consistent with the rest of the RE family.
-     - Mobility 5 is standard across all RE builds.
-     - Recovery/Speed are this build's own read - edit freely. -->
+     - DPS 6 = lowest in the RE family, well below 333 Ceiling (9) -
+       reflects the powercrept legacy kit, not a rank-pattern value.
+     - Mobility 8 breaks from the "5 across all RE builds" norm on
+       purpose - no Ark Grid investment means nothing is holding this
+       build's base mobility back, and the page's own prose calls out
+       "better mobility than modern builds".
+     - Difficulty/Recovery/Speed are this build's own read - edit freely. -->
 <div class="pentagon-badge" data-build="standard" data-family="re" markdown>
 <div class="pentagon-badge-title">Build Profile</div>
 <div class="pentagon-svg-mount"></div>
@@ -204,7 +207,7 @@ The opener stacks Adrenaline and applies synergies efficiently as you build up t
 </div>
 
 - <span class="skill-chip">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span> is only available every other rotation, just keep going if it's on cooldown.
-- Use <span class="skill-chip">![](../assets/shared/icon-spincutter.png)Spincutter</span>  during downtime to reposition, or hold it to dodge upcoming attacks.
+- Use <span class="skill-chip">![](../assets/shared/icon-spincutter.png)Spincutter</span> during downtime to reposition, or hold it to dodge upcoming attacks.
 - Use <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> for damage, or hold it for Hyper Awakening or a clutch recovery.
 - The rotation is bottle-necked entirely by Soul Absorber's cooldown, it is what it is.
     - You can skip Earth Cleaver if Soul Absorber's off cooldown already.

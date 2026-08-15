@@ -7,29 +7,44 @@
    hunting every occurrence by hand (same problem the icon-asset/JS
    dedup work already solved on the JS side).
    Deliberately NOT exhaustive: colors used only 1-3 times are genuine
-   one-offs, left as literals. Also doesn't touch the rgba(r, g, b, alpha)
-   calls that reuse these same colors' RGB triplets for translucent
-   fills/borders (e.g. rgba(179, 157, 219, 0.15) is --dbc-purple at low
-   alpha) - unifying those too would need separate --dbc-*-rgb triplet
-   variables for use inside rgba(), a bigger follow-up, not done here.
-   The two compound `#ee83ab1a` / `#448aff1a` 8-digit hex+alpha literals
-   below (CSS shorthand for hex + ~10% alpha) are left as-is for the same
-   reason - a var() reference can't be concatenated with a trailing alpha
-   suffix like that. */
+   one-offs, left as literals.
+   Colors whose RGB triplet also gets reused inside rgba(...) for
+   translucent fills/borders (e.g. rgba(var(--dbc-purple-rgb), 0.15) is
+   --dbc-purple at low alpha) additionally get a --dbc-*-rgb companion
+   below, so those call sites read rgba(var(--dbc-purple-rgb), 0.15)
+   instead of repeating the raw triplet - same "edit once" goal as the
+   hex vars above. Only added for colors actually reused this way inside
+   rgba(); a color with just one or two translucent uses stays a literal
+   triplet, same one-off reasoning as the hex vars.
+   The one remaining #ee83ab1a compound hex+alpha literal (--md-accent-
+   fg-color--transparent below) is left as-is for a different reason - a
+   var() reference can't be concatenated with a trailing alpha suffix
+   like that, so there's no way to express it via variable at all. */
 :root {
   --dbc-pink: #ee83ab;         /* primary accent - Difficulty bar, danger admonition border, headers */
+  --dbc-pink-rgb: 238, 131, 171;
   --dbc-teal: #4db6ac;         /* Trixion DPS bar, h3 headings, "good"/on-track stat variant */
+  --dbc-teal-rgb: 77, 182, 172;
   --dbc-lavender: #a79bc4;     /* stat-label text, muted secondary accent - most-used color on the site */
+  --dbc-lavender-rgb: 167, 155, 196;
   --dbc-purple: #b39ddb;       /* h2 headings, Evolution-category accent */
+  --dbc-purple-rgb: 179, 157, 219;
   --dbc-lilac: #cfc9dd;        /* light lavender body/label text */
   --dbc-slate: #6f6a80;        /* muted purple-gray secondary text */
   --dbc-red: #e57373;          /* danger/error accent, replaces Material's default #ff1744 */
+  --dbc-red-rgb: 229, 115, 115;
   --dbc-rose: #f48fb1;         /* secondary pink accent */
+  --dbc-rose-rgb: 244, 143, 177;
   --dbc-gold: #e6b422;         /* warn/conditional accent */
+  --dbc-gold-rgb: 230, 180, 34;
   --dbc-orange: #f0a868;       /* on-crit damage category accent */
+  --dbc-orange-rgb: 240, 168, 104;
   --dbc-blue: #64b5f6;         /* info accent */
+  --dbc-blue-rgb: 100, 181, 246;
   --dbc-blue-bright: #448aff;  /* Material's default admonition/info blue */
   --dbc-sky: #7ec4e8;          /* additional damage category accent */
+  --dbc-pink-bright: #ffb3cf;  /* hover/active state pink - links, tabs, chips, section tracker */
+  --dbc-arrow: #cf99c7;        /* rotation-line chevron color (.arrow/.arrow-swap) */
 }
 
 [data-md-color-scheme="slate"] {
@@ -61,12 +76,12 @@
    the kind of thing that makes a themed site feel finished rather than
    half-skinned. */
 [data-md-color-scheme="slate"] ::selection {
-  background-color: rgba(238, 131, 171, 0.35);
+  background-color: rgba(var(--dbc-pink-rgb), 0.35);
   color: #fff;
 }
 html {
   scrollbar-width: thin;
-  scrollbar-color: rgba(179, 157, 219, 0.45) transparent;
+  scrollbar-color: rgba(var(--dbc-purple-rgb), 0.45) transparent;
 }
 ::-webkit-scrollbar {
   width: 10px;
@@ -76,12 +91,12 @@ html {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(179, 157, 219, 0.35);
+  background-color: rgba(var(--dbc-purple-rgb), 0.35);
   border-radius: 999px;
   border: 2px solid var(--md-default-bg-color);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(179, 157, 219, 0.55);
+  background-color: rgba(var(--dbc-purple-rgb), 0.55);
 }
 
 /* Footer now shows real Previous/Next page links (navigation.footer),
@@ -130,7 +145,7 @@ h3 { color: var(--dbc-teal); }
   margin-top: 1.9em;
   padding-top: 0.7em;
   border-top: 1px solid transparent;
-  border-image: linear-gradient(90deg, transparent, rgba(179, 157, 219, 0.45) 50%, transparent) 1;
+  border-image: linear-gradient(90deg, transparent, rgba(var(--dbc-purple-rgb), 0.45) 50%, transparent) 1;
 }
 .md-typeset h1 + h2,
 .md-typeset .build-card + h2,
@@ -178,7 +193,7 @@ h3 { color: var(--dbc-teal); }
   border: none;
   height: 1px;
   margin: 2em 0;
-  background: linear-gradient(90deg, transparent, rgba(179, 157, 219, 0.45) 50%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(var(--dbc-purple-rgb), 0.45) 50%, transparent);
 }
 
 /* ---------- Admonitions ---------- */
@@ -346,7 +361,7 @@ h3 { color: var(--dbc-teal); }
    .rotation-line/.cycle-card so it reads as part of the same visual
    language instead of a stock Material leftover. */
 .md-typeset .highlight {
-  border: 1px solid rgba(179, 157, 219, 0.32);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.32);
   border-radius: 8px;
   overflow: hidden;
   margin: 0.6em 0;
@@ -380,7 +395,7 @@ h3 { color: var(--dbc-teal); }
    card language and this rule already gets those wrapper-less tables
    there for free. */
 .md-typeset table:not([class]) {
-  border: 1px solid rgba(179, 157, 219, 0.3);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: 8px;
   overflow: hidden;
   /* Opaque instead of a translucent lavender overlay - a translucent bg
@@ -389,7 +404,7 @@ h3 { color: var(--dbc-teal); }
      danger, tip, etc.) got its body tinted by that admonition's color
      while the th header above it stayed a different, unrelated tint - an
      inconsistent half-tinted look. These are the same colors
-     rgba(179, 157, 219, 0.045) [body] and rgba(179, 157, 219, 0.12)
+     rgba(var(--dbc-purple-rgb), 0.045) [body] and rgba(var(--dbc-purple-rgb), 0.12)
      [header] - the same tint .skills-table/.food-alt-table use - produce
      against the page's #161718 background, just hardcoded so they no
      longer depend on what's underneath. */
@@ -495,13 +510,13 @@ h3 { color: var(--dbc-teal); }
    there. */
 .md-typeset .skills-table table {
   min-width: 560px;
-  border: 1px solid rgba(179, 157, 219, 0.3);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: 10px;
   overflow: hidden;
-  background-color: rgba(179, 157, 219, 0.045);
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
 }
 .md-typeset .skills-table table th {
-  background-color: rgba(179, 157, 219, 0.12);
+  background-color: rgba(var(--dbc-purple-rgb), 0.12);
   color: var(--dbc-lavender);
   font-size: 0.68rem;
   font-weight: 700;
@@ -525,13 +540,13 @@ h3 { color: var(--dbc-teal); }
    add visual noise for no readability gain. Wrap the markdown table in
    <div class="food-alt-table" markdown>...</div>. */
 .md-typeset .food-alt-table table {
-  border: 1px solid rgba(179, 157, 219, 0.3);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: 10px;
   overflow: hidden;
-  background-color: rgba(179, 157, 219, 0.045);
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
 }
 .md-typeset .food-alt-table table th {
-  background-color: rgba(179, 157, 219, 0.12);
+  background-color: rgba(var(--dbc-purple-rgb), 0.12);
   color: var(--dbc-lavender);
   font-size: 0.68rem;
   font-weight: 700;
@@ -582,7 +597,7 @@ h3 { color: var(--dbc-teal); }
   vertical-align: middle;
 }
 .md-typeset .skill-chip:hover {
-  border-color: rgba(179, 157, 219, 0.55);
+  border-color: rgba(var(--dbc-purple-rgb), 0.55);
   transform: translateY(-1px);
 }
 .md-typeset .skill-chip img {
@@ -592,7 +607,7 @@ h3 { color: var(--dbc-teal); }
   vertical-align: text-bottom;
   border-radius: 4px;
   margin: 0;
-  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.3);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.3);
 }
 
 /* ---------- Skill role tags (Essentials skill tables) ---------- */
@@ -615,24 +630,24 @@ h3 { color: var(--dbc-teal); }
   border: 1px solid transparent;
 }
 .md-typeset .tag-dmg {
-  background-color: rgba(244, 143, 177, 0.14);
+  background-color: rgba(var(--dbc-rose-rgb), 0.14);
   color: var(--dbc-rose);
-  border-color: rgba(244, 143, 177, 0.35);
+  border-color: rgba(var(--dbc-rose-rgb), 0.35);
 }
 .md-typeset .tag-util {
-  background-color: rgba(77, 182, 172, 0.14);
+  background-color: rgba(var(--dbc-teal-rgb), 0.14);
   color: var(--dbc-teal);
-  border-color: rgba(77, 182, 172, 0.35);
+  border-color: rgba(var(--dbc-teal-rgb), 0.35);
 }
 .md-typeset .tag-immune {
-  background-color: rgba(100, 181, 246, 0.14);
+  background-color: rgba(var(--dbc-blue-rgb), 0.14);
   color: var(--dbc-blue);
-  border-color: rgba(100, 181, 246, 0.35);
+  border-color: rgba(var(--dbc-blue-rgb), 0.35);
 }
 .md-typeset .tag-warn {
-  background-color: rgba(230, 180, 34, 0.14);
+  background-color: rgba(var(--dbc-gold-rgb), 0.14);
   color: var(--dbc-gold);
-  border-color: rgba(230, 180, 34, 0.35);
+  border-color: rgba(var(--dbc-gold-rgb), 0.35);
 }
 .md-typeset .skills-table td:nth-child(3) {
   /* Tags column - allow badges to wrap onto multiple lines */
@@ -644,12 +659,12 @@ h3 { color: var(--dbc-teal); }
 .md-typeset a:not(.md-button) {
   color: var(--dbc-rose);
   text-decoration: underline;
-  text-decoration-color: rgba(244, 143, 177, 0.4);
+  text-decoration-color: rgba(var(--dbc-rose-rgb), 0.4);
   text-underline-offset: 2px;
 }
 .md-typeset a:not(.md-button):hover {
-  color: #ffb3cf;
-  text-decoration-color: #ffb3cf;
+  color: var(--dbc-pink-bright);
+  text-decoration-color: var(--dbc-pink-bright);
 }
 
 /* Material's JS quietly wraps each tab label's text in a real
@@ -805,11 +820,11 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .gem-col-dmg .gem-item {
   background-color: rgba(255, 255, 255, 0.035);
-  border-color: rgba(244, 143, 177, 0.18);
+  border-color: rgba(var(--dbc-rose-rgb), 0.18);
 }
 .md-typeset .gem-col-cd .gem-item {
   background-color: rgba(255, 255, 255, 0.035);
-  border-color: rgba(77, 182, 172, 0.18);
+  border-color: rgba(var(--dbc-teal-rgb), 0.18);
 }
 .md-typeset .gem-item-rank {
   width: 1.7em;
@@ -830,7 +845,7 @@ h3 { color: var(--dbc-teal); }
   /* Thin ring, matching .skill-card-icon/.rotation-line img's at-rest
      state elsewhere on the site - without this the icon looked bare
      next to every other icon treatment on the page. */
-  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.28);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.28);
   transition: box-shadow 0.15s ease;
 }
 .md-typeset .gem-item-name {
@@ -846,35 +861,35 @@ h3 { color: var(--dbc-teal); }
    generic purple .skill-card-icon glow uses - a gem row is already
    living inside its column's own color story, so the hover state
    should stay in that story rather than jumping to a third color. */
-.md-typeset .gem-col-dmg .gem-item:hover { border-color: rgba(244, 143, 177, 0.5); }
-.md-typeset .gem-col-cd .gem-item:hover { border-color: rgba(77, 182, 172, 0.5); }
+.md-typeset .gem-col-dmg .gem-item:hover { border-color: rgba(var(--dbc-rose-rgb), 0.5); }
+.md-typeset .gem-col-cd .gem-item:hover { border-color: rgba(var(--dbc-teal-rgb), 0.5); }
 .md-typeset .gem-col-dmg .gem-item:hover .gem-item-icon {
-  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.65), 0 0 10px rgba(244, 143, 177, 0.45);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.65), 0 0 10px rgba(var(--dbc-rose-rgb), 0.45);
 }
 .md-typeset .gem-col-cd .gem-item:hover .gem-item-icon {
-  box-shadow: 0 0 0 1px rgba(77, 182, 172, 0.65), 0 0 10px rgba(77, 182, 172, 0.45);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-teal-rgb), 0.65), 0 0 10px rgba(var(--dbc-teal-rgb), 0.45);
 }
 
 /* Rank floor (rank 3+, and the base tone rank 1/2 override below) -
    quiet but never low-contrast enough to read as "skip this one". */
-.md-typeset .gem-col-dmg .gem-item-rank { background-color: rgba(244, 143, 177, 0.11); color: #c99bab; }
-.md-typeset .gem-col-cd .gem-item-rank { background-color: rgba(77, 182, 172, 0.11); color: #86bdb3; }
+.md-typeset .gem-col-dmg .gem-item-rank { background-color: rgba(var(--dbc-rose-rgb), 0.11); color: #c99bab; }
+.md-typeset .gem-col-cd .gem-item-rank { background-color: rgba(var(--dbc-teal-rgb), 0.11); color: #86bdb3; }
 
 /* Rank 2 - a clear step up from the floor, still short of rank 1. */
-.md-typeset .gem-col-dmg .gem-item[data-rank="2"] .gem-item-rank { background-color: rgba(244, 143, 177, 0.18); color: #eab3c6; }
-.md-typeset .gem-col-cd .gem-item[data-rank="2"] .gem-item-rank { background-color: rgba(77, 182, 172, 0.18); color: #a4d9d0; }
+.md-typeset .gem-col-dmg .gem-item[data-rank="2"] .gem-item-rank { background-color: rgba(var(--dbc-rose-rgb), 0.18); color: #eab3c6; }
+.md-typeset .gem-col-cd .gem-item[data-rank="2"] .gem-item-rank { background-color: rgba(var(--dbc-teal-rgb), 0.18); color: #a4d9d0; }
 .md-typeset .gem-item[data-rank="2"] .gem-item-name { color: #d8d2de; }
 
 /* Rank 1 - the unambiguous default. Full accent color plus a soft
    tinted row background, never a size change (a bigger rank-1 row
    would break the shared grid every other row aligns to). */
 .md-typeset .gem-col-dmg .gem-item[data-rank="1"] {
-  background: linear-gradient(90deg, rgba(244, 143, 177, 0.14), rgba(244, 143, 177, 0.04));
-  border-color: rgba(244, 143, 177, 0.55);
+  background: linear-gradient(90deg, rgba(var(--dbc-rose-rgb), 0.14), rgba(var(--dbc-rose-rgb), 0.04));
+  border-color: rgba(var(--dbc-rose-rgb), 0.55);
 }
 .md-typeset .gem-col-cd .gem-item[data-rank="1"] {
-  background: linear-gradient(90deg, rgba(77, 182, 172, 0.14), rgba(77, 182, 172, 0.04));
-  border-color: rgba(77, 182, 172, 0.55);
+  background: linear-gradient(90deg, rgba(var(--dbc-teal-rgb), 0.14), rgba(var(--dbc-teal-rgb), 0.04));
+  border-color: rgba(var(--dbc-teal-rgb), 0.55);
 }
 .md-typeset .gem-col-dmg .gem-item[data-rank="1"] .gem-item-rank { background-color: var(--dbc-rose); color: #241a20; }
 .md-typeset .gem-col-cd .gem-item[data-rank="1"] .gem-item-rank { background-color: var(--dbc-teal); color: #0a1f1c; }
@@ -956,8 +971,8 @@ h3 { color: var(--dbc-teal); }
   border-bottom: 4px solid transparent;
   transition: transform 0.15s ease;
 }
-.md-typeset .gem-col-dmg .gem-item-arrow { border-left: 5px solid rgba(244, 143, 177, 0.55); }
-.md-typeset .gem-col-cd .gem-item-arrow { border-left: 5px solid rgba(77, 182, 172, 0.55); }
+.md-typeset .gem-col-dmg .gem-item-arrow { border-left: 5px solid rgba(var(--dbc-rose-rgb), 0.55); }
+.md-typeset .gem-col-cd .gem-item-arrow { border-left: 5px solid rgba(var(--dbc-teal-rgb), 0.55); }
 .md-typeset details.gem-item-expandable[open] .gem-item-arrow {
   transform: rotate(90deg);
 }
@@ -986,12 +1001,12 @@ h3 { color: var(--dbc-teal); }
   display: flex;
 }
 .md-typeset .gem-col-dmg .gem-item-alts {
-  border: 1px dashed rgba(244, 143, 177, 0.3);
-  background-color: rgba(244, 143, 177, 0.03);
+  border: 1px dashed rgba(var(--dbc-rose-rgb), 0.3);
+  background-color: rgba(var(--dbc-rose-rgb), 0.03);
 }
 .md-typeset .gem-col-cd .gem-item-alts {
-  border: 1px dashed rgba(77, 182, 172, 0.3);
-  background-color: rgba(77, 182, 172, 0.03);
+  border: 1px dashed rgba(var(--dbc-teal-rgb), 0.3);
+  background-color: rgba(var(--dbc-teal-rgb), 0.03);
 }
 .md-typeset .gem-alt {
   font-size: 0.85em;
@@ -1017,7 +1032,7 @@ h3 { color: var(--dbc-teal); }
   object-fit: contain;
   vertical-align: -0.2em;
   margin-right: 0.35em;
-  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.28);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.28);
 }
 
 
@@ -1039,7 +1054,7 @@ h3 { color: var(--dbc-teal); }
      and drop-shadow below) read as over-decorated next to the flatter
      Skill Setup cards elsewhere on the page. */
   background-color: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(179, 157, 219, 0.28);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
   border-radius: 10px;
   padding: 0.7em 0.9em 0.1em;   /* bottom trimmed - the skill/arrow margin-bottom below supplies it, see note */
   margin: 0.35em 0;
@@ -1098,7 +1113,7 @@ h3 { color: var(--dbc-teal); }
   transition: border-color 0.15s ease, transform 0.15s ease;
 }
 .md-typeset .rotation-line .skill:hover {
-  border-color: rgba(179, 157, 219, 0.55);
+  border-color: rgba(var(--dbc-purple-rgb), 0.55);
   transform: translateY(-1px);
 }
 .md-typeset .rotation-line img {
@@ -1111,7 +1126,7 @@ h3 { color: var(--dbc-teal); }
      state rather than the previous soft-glow version, which was part of
      the same over-decorated combo the chip's gradient/shadow contributed
      to. */
-  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.3);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.3);
 }
 /* Styled chevron instead of a bare "→" glyph - a plain Unicode arrow
    renders inconsistently across fonts and carries no visual weight.
@@ -1135,8 +1150,8 @@ h3 { color: var(--dbc-teal); }
   content: "";
   width: 7px;
   height: 7px;
-  border-top: 2px solid #cf99c7;
-  border-right: 2px solid #cf99c7;
+  border-top: 2px solid var(--dbc-arrow);
+  border-right: 2px solid var(--dbc-arrow);
   transform: rotate(45deg);
   opacity: 0.75;
   /* Nudge the glyph itself left and up within the track - `left`/`top`
@@ -1183,8 +1198,8 @@ h3 { color: var(--dbc-teal); }
      so the track/margins that position the skill boxes stay put). Same
      -4px `top` as .arrow::before too, to bring the whole pair up level
      with the skill boxes' vertical center. */
-  border-top: 2px solid #cf99c7;
-  border-right: 2px solid #cf99c7;
+  border-top: 2px solid var(--dbc-arrow);
+  border-right: 2px solid var(--dbc-arrow);
   transform: rotate(45deg);
   position: relative;
   left: -2px;
@@ -1197,8 +1212,8 @@ h3 { color: var(--dbc-teal); }
      of both drifting the same direction; same -4px `top` as ::before so
      the pair moves up together rather than compressing toward each
      other. */
-  border-bottom: 2px solid #cf99c7;
-  border-left: 2px solid #cf99c7;
+  border-bottom: 2px solid var(--dbc-arrow);
+  border-left: 2px solid var(--dbc-arrow);
   transform: rotate(45deg);
   position: relative;
   left: 2px;
@@ -1224,7 +1239,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .rotation-line .skill-situational:hover {
   opacity: 1;
-  border-color: rgba(179, 157, 219, 0.5);
+  border-color: rgba(var(--dbc-purple-rgb), 0.5);
 }
 .md-typeset .rotation-line .skill-situational img {
   box-shadow: none;
@@ -1260,7 +1275,7 @@ h3 { color: var(--dbc-teal); }
    here rather than falling out of the numbering automatically. */
 .md-typeset .cycle-card {
   background-color: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(179, 157, 219, 0.32);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.32);
   border-radius: 10px;
   overflow: hidden;
   margin: 0.8em 0 0.6em;
@@ -1269,9 +1284,9 @@ h3 { color: var(--dbc-teal); }
   display: flex;
   align-items: center;
   gap: 0.5em;
-  background-color: rgba(179, 157, 219, 0.08);
+  background-color: rgba(var(--dbc-purple-rgb), 0.08);
   padding: 0.5em 0.9em;
-  border-bottom: 1px solid rgba(179, 157, 219, 0.2);
+  border-bottom: 1px solid rgba(var(--dbc-purple-rgb), 0.2);
 }
 .md-typeset .cycle-num {
   display: inline-flex;
@@ -1332,7 +1347,7 @@ h3 { color: var(--dbc-teal); }
   top: -0.7em;
   right: 0.5em;
   z-index: 3;
-  border: 1px solid rgba(179, 157, 219, 0.4);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
   background-color: #1c1c1f;
   color: #cbb9e8;
   border-radius: 999px;
@@ -1345,7 +1360,7 @@ h3 { color: var(--dbc-teal); }
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 .md-typeset .rotation-practice-toggle:hover {
-  border-color: rgba(179, 157, 219, 0.75);
+  border-color: rgba(var(--dbc-purple-rgb), 0.75);
   background-color: #232327;
 }
 /* Inside a cycle-card header, the toggle is an ordinary flex item (not
@@ -1358,7 +1373,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .rotation-line.practice-mode {
   cursor: pointer;
-  border-color: rgba(179, 157, 219, 0.55);
+  border-color: rgba(var(--dbc-purple-rgb), 0.55);
   user-select: none;
   -webkit-user-select: none;
 }
@@ -1372,7 +1387,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .rotation-line.practice-mode .skill.practice-current {
   opacity: 1;
   border-color: var(--dbc-purple);
-  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.55), 0 0 10px rgba(179, 157, 219, 0.35);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.55), 0 0 10px rgba(var(--dbc-purple-rgb), 0.35);
   transform: translateY(-1px) scale(1.04);
 }
 /* Arrows dim along with their neighboring skills so the sequence still
@@ -1393,8 +1408,8 @@ h3 { color: var(--dbc-teal); }
    [▶ Video Guide](url){ .video-chip }
    </div> */
 .md-typeset .build-card {
-  border: 1px solid rgba(244, 143, 177, 0.3);
-  background-color: rgba(244, 143, 177, 0.045);
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.3);
+  background-color: rgba(var(--dbc-rose-rgb), 0.045);
   border-radius: 10px;
   padding: 1em 1.2em 1.1em;
   margin: 1em 0 1.5em;
@@ -1441,14 +1456,14 @@ h3 { color: var(--dbc-teal); }
   flex-direction: column;
   flex: 1 1 130px;
   background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(244, 143, 177, 0.22);
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.22);
   border-radius: 8px;
   padding: 0.45em 0.9em;
   min-width: 108px;
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 .md-typeset .stat:hover {
-  border-color: rgba(244, 143, 177, 0.42);
+  border-color: rgba(var(--dbc-rose-rgb), 0.42);
   background-color: rgba(255, 255, 255, 0.05);
 }
 .md-typeset .stat-label {
@@ -1473,21 +1488,21 @@ h3 { color: var(--dbc-teal); }
    original pink, unchanged, so every existing .build-card stat row is
    unaffected. */
 .md-typeset .stat[data-kind="good"] {
-  border-color: rgba(77, 182, 172, 0.3);
-  background-color: rgba(77, 182, 172, 0.045);
+  border-color: rgba(var(--dbc-teal-rgb), 0.3);
+  background-color: rgba(var(--dbc-teal-rgb), 0.045);
 }
 .md-typeset .stat[data-kind="good"]:hover {
-  border-color: rgba(77, 182, 172, 0.5);
-  background-color: rgba(77, 182, 172, 0.07);
+  border-color: rgba(var(--dbc-teal-rgb), 0.5);
+  background-color: rgba(var(--dbc-teal-rgb), 0.07);
 }
 .md-typeset .stat[data-kind="good"] .stat-label { color: var(--dbc-teal); }
 .md-typeset .stat[data-kind="warn"] {
-  border-color: rgba(230, 180, 34, 0.3);
-  background-color: rgba(230, 180, 34, 0.045);
+  border-color: rgba(var(--dbc-gold-rgb), 0.3);
+  background-color: rgba(var(--dbc-gold-rgb), 0.045);
 }
 .md-typeset .stat[data-kind="warn"]:hover {
-  border-color: rgba(230, 180, 34, 0.5);
-  background-color: rgba(230, 180, 34, 0.07);
+  border-color: rgba(var(--dbc-gold-rgb), 0.5);
+  background-color: rgba(var(--dbc-gold-rgb), 0.07);
 }
 .md-typeset .stat[data-kind="warn"] .stat-label { color: var(--dbc-gold); }
 /* .food-req (a small muted note line, defined further down) doubles here
@@ -1503,7 +1518,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .stat-bar-track {
   height: 4px;
   border-radius: 999px;
-  background-color: rgba(244, 143, 177, 0.15);
+  background-color: rgba(var(--dbc-rose-rgb), 0.15);
   margin-top: 0.4em;
   overflow: hidden;
 }
@@ -1520,7 +1535,7 @@ h3 { color: var(--dbc-teal); }
    Usage: <div class="stat-bar-track stat-bar-track-teal"><div class="stat-bar-fill
    stat-bar-fill-teal" style="width: 60%"></div></div> after the stat-value. */
 .md-typeset .stat-bar-track-teal {
-  background-color: rgba(77, 182, 172, 0.15);
+  background-color: rgba(var(--dbc-teal-rgb), 0.15);
 }
 .md-typeset .stat-bar-fill-teal {
   background-color: var(--dbc-teal);
@@ -1570,13 +1585,13 @@ h3 { color: var(--dbc-teal); }
   font-weight: 600;
   padding: 0.25em 0.8em;
   border-radius: 999px;
-  background-color: rgba(100, 181, 246, 0.12);
+  background-color: rgba(var(--dbc-blue-rgb), 0.12);
   color: var(--dbc-blue) !important;
-  border: 1px solid rgba(100, 181, 246, 0.32);
+  border: 1px solid rgba(var(--dbc-blue-rgb), 0.32);
   text-decoration: none !important;
 }
 .md-typeset a.video-chip:hover {
-  background-color: rgba(100, 181, 246, 0.22);
+  background-color: rgba(var(--dbc-blue-rgb), 0.22);
   color: #90caf9 !important;
 }
 .md-typeset a.video-chip::before {
@@ -1627,8 +1642,8 @@ h3 { color: var(--dbc-teal); }
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid rgba(244, 143, 177, 0.3);
-  background-color: rgba(244, 143, 177, 0.045);
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.3);
+  background-color: rgba(var(--dbc-rose-rgb), 0.045);
   border-radius: 10px;
   padding: 0.8em 0.6em 0.6em;
 }
@@ -1652,14 +1667,14 @@ h3 { color: var(--dbc-teal); }
 }
 .pentagon-ring {
   fill: none;
-  stroke: rgba(179, 157, 219, 0.16);
+  stroke: rgba(var(--dbc-purple-rgb), 0.16);
   stroke-width: 1;
 }
 .pentagon-ring-outer {
-  stroke: rgba(179, 157, 219, 0.28);
+  stroke: rgba(var(--dbc-purple-rgb), 0.28);
 }
 .pentagon-spoke {
-  stroke: rgba(179, 157, 219, 0.16);
+  stroke: rgba(var(--dbc-purple-rgb), 0.16);
   stroke-width: 1;
 }
 .pentagon-dot {
@@ -1724,7 +1739,7 @@ h3 { color: var(--dbc-teal); }
   }
   .md-typeset .build-compare-svg-mount {
     border-right: none;
-    border-bottom: 1px solid rgba(179, 157, 219, 0.16);
+    border-bottom: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
   }
   /* The overview table's fixed-width columns (see .build-compare table's
      table-layout:fixed comment) plus the nowrap Playstyle column squeeze
@@ -1770,8 +1785,8 @@ h3 { color: var(--dbc-teal); }
    floating in the card" with no visual boundary telling you where the
    table starts, this reads as a distinct sub-panel instead. */
 .md-typeset .build-compare {
-  border: 1px solid rgba(179, 157, 219, 0.3);
-  background-color: rgba(179, 157, 219, 0.045);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
   border-radius: 10px;
   padding: 1.1em 1.2em 1.1em;
   margin: 1em 0 1.5em;
@@ -1793,14 +1808,14 @@ h3 { color: var(--dbc-teal); }
      Fixed + explicit per-column percentages spreads that width out on
      purpose instead of leaving it to the browser's guess. */
   table-layout: fixed;
-  border: 1px solid rgba(179, 157, 219, 0.16);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
   border-radius: 8px;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.025);
   margin: 0 0 0.6em;
 }
 .md-typeset .build-compare table th {
-  background-color: rgba(179, 157, 219, 0.1);
+  background-color: rgba(var(--dbc-purple-rgb), 0.1);
   font-size: 0.68rem;
 }
 .md-typeset .build-compare table th:nth-child(1),
@@ -1859,7 +1874,7 @@ h3 { color: var(--dbc-teal); }
      .build-compare-body below supplies the actual gap via its own
      margin-top, sized to already account for this padding. */
   padding: 0.6em 2.1em 0.6em;
-  border-top: 1px solid rgba(179, 157, 219, 0.18);
+  border-top: 1px solid rgba(var(--dbc-purple-rgb), 0.18);
 }
 .md-typeset .build-compare-controls {
   display: flex;
@@ -1886,7 +1901,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .build-compare-select {
   background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(179, 157, 219, 0.35);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
   border-radius: 6px;
   color: var(--md-default-fg-color);
   padding: 0.35em 0.6em;
@@ -1927,7 +1942,7 @@ h3 { color: var(--dbc-teal); }
   width: 1.8em;
   height: 1.8em;
   background: none;
-  border: 1px solid rgba(179, 157, 219, 0.25);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.25);
   border-radius: 6px;
   color: var(--dbc-lavender);
   opacity: 0.7;
@@ -1938,7 +1953,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .build-compare-share-btn:hover {
   opacity: 1;
   color: var(--dbc-purple);
-  border-color: rgba(179, 157, 219, 0.5);
+  border-color: rgba(var(--dbc-purple-rgb), 0.5);
 }
 .md-typeset .build-compare-share-btn svg {
   display: block;
@@ -1961,7 +1976,7 @@ h3 { color: var(--dbc-teal); }
   letter-spacing: normal;
   white-space: nowrap;
   padding: 0.35em 0.6em;
-  border: 1px solid rgba(179, 157, 219, 0.3);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: 5px;
   opacity: 0;
   pointer-events: none;
@@ -1988,7 +2003,7 @@ h3 { color: var(--dbc-teal); }
   align-items: stretch;
   justify-content: center;
   margin-top: 0.3em;
-  border: 1px solid rgba(179, 157, 219, 0.16);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
   border-radius: 8px;
   background-color: rgba(255, 255, 255, 0.02);
   overflow: hidden;
@@ -2003,7 +2018,7 @@ h3 { color: var(--dbc-teal); }
   align-items: flex-start;
   justify-content: center;
   padding: 1.3em 1em;
-  border-right: 1px solid rgba(179, 157, 219, 0.16);
+  border-right: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
 }
 .md-typeset .build-compare-svg-mount svg {
   width: min(230px, 100%);
@@ -2281,8 +2296,8 @@ h3 { color: var(--dbc-teal); }
    `.engraving-chip.engraving-chip-food` - pair with an
    .engraving-loadout-note right after it in the same line (see below). */
 .md-typeset .engraving-chip-food {
-  border-color: rgba(244, 143, 177, 0.45);
-  background-color: rgba(244, 143, 177, 0.09);
+  border-color: rgba(var(--dbc-rose-rgb), 0.45);
+  background-color: rgba(var(--dbc-rose-rgb), 0.09);
   color: #f4c9d9;
   display: inline-flex;
   vertical-align: middle;
@@ -2369,17 +2384,17 @@ h3 { color: var(--dbc-teal); }
 }
 
 
-.md-typeset details.engraving-card[data-accent="captain"] { border-color: rgba(244, 143, 177, 0.35); background-color: rgba(244, 143, 177, 0.05); }
+.md-typeset details.engraving-card[data-accent="captain"] { border-color: rgba(var(--dbc-rose-rgb), 0.35); background-color: rgba(var(--dbc-rose-rgb), 0.05); }
 .md-typeset details.engraving-card[data-accent="captain"]:hover,
-.md-typeset details.engraving-card[data-accent="captain"][open] { border-color: rgba(244, 143, 177, 0.6); }
+.md-typeset details.engraving-card[data-accent="captain"][open] { border-color: rgba(var(--dbc-rose-rgb), 0.6); }
 
-.md-typeset details.engraving-card[data-accent="kbw"] { border-color: rgba(77, 182, 172, 0.35); background-color: rgba(77, 182, 172, 0.05); }
+.md-typeset details.engraving-card[data-accent="kbw"] { border-color: rgba(var(--dbc-teal-rgb), 0.35); background-color: rgba(var(--dbc-teal-rgb), 0.05); }
 .md-typeset details.engraving-card[data-accent="kbw"]:hover,
-.md-typeset details.engraving-card[data-accent="kbw"][open] { border-color: rgba(77, 182, 172, 0.6); }
+.md-typeset details.engraving-card[data-accent="kbw"][open] { border-color: rgba(var(--dbc-teal-rgb), 0.6); }
 
-.md-typeset details.engraving-card[data-accent="mass"] { border-color: rgba(179, 157, 219, 0.35); background-color: rgba(179, 157, 219, 0.05); }
+.md-typeset details.engraving-card[data-accent="mass"] { border-color: rgba(var(--dbc-purple-rgb), 0.35); background-color: rgba(var(--dbc-purple-rgb), 0.05); }
 .md-typeset details.engraving-card[data-accent="mass"]:hover,
-.md-typeset details.engraving-card[data-accent="mass"][open] { border-color: rgba(179, 157, 219, 0.6); }
+.md-typeset details.engraving-card[data-accent="mass"][open] { border-color: rgba(var(--dbc-purple-rgb), 0.6); }
 
 .md-typeset details.engraving-card[data-accent="combo"] { border-color: rgba(211, 150, 198, 0.35); background-color: rgba(211, 150, 198, 0.05); }
 .md-typeset details.engraving-card[data-accent="combo"]:hover,
@@ -2388,9 +2403,9 @@ h3 { color: var(--dbc-teal); }
 /* Deep pastel red - Cursed Doll's own in-game engraving color, kept
    within the same low-opacity pastel treatment as the other accents
    above so it doesn't clash. */
-.md-typeset details.engraving-card[data-accent="cursed"] { border-color: rgba(229, 115, 115, 0.35); background-color: rgba(229, 115, 115, 0.05); }
+.md-typeset details.engraving-card[data-accent="cursed"] { border-color: rgba(var(--dbc-red-rgb), 0.35); background-color: rgba(var(--dbc-red-rgb), 0.05); }
 .md-typeset details.engraving-card[data-accent="cursed"]:hover,
-.md-typeset details.engraving-card[data-accent="cursed"][open] { border-color: rgba(229, 115, 115, 0.6); }
+.md-typeset details.engraving-card[data-accent="cursed"][open] { border-color: rgba(var(--dbc-red-rgb), 0.6); }
 
 /* Explicit resets for the same reason .setup-note/.skill-card need them -
    Material's base .md-typeset details rule sets its own border/background/
@@ -2451,21 +2466,21 @@ h3 { color: var(--dbc-teal); }
    "this is the one to reach for" accents. */
 .md-typeset .engraving-card-badge-top {
   color: var(--dbc-gold);
-  background-color: rgba(230, 180, 34, 0.14);
-  border-color: rgba(230, 180, 34, 0.4);
+  background-color: rgba(var(--dbc-gold-rgb), 0.14);
+  border-color: rgba(var(--dbc-gold-rgb), 0.4);
 }
 /* Teal - matches .stat[data-kind="good"]/.best-for, the site's "on track/
    no downside" color. */
 .md-typeset .engraving-card-badge-safe {
   color: var(--dbc-teal);
-  background-color: rgba(77, 182, 172, 0.14);
-  border-color: rgba(77, 182, 172, 0.4);
+  background-color: rgba(var(--dbc-teal-rgb), 0.14);
+  border-color: rgba(var(--dbc-teal-rgb), 0.4);
 }
 /* Pink - matches .food-required-lead's own "required" emphasis color. */
 .md-typeset .engraving-card-badge-food {
   color: var(--dbc-pink);
-  background-color: rgba(244, 143, 177, 0.14);
-  border-color: rgba(244, 143, 177, 0.4);
+  background-color: rgba(var(--dbc-rose-rgb), 0.14);
+  border-color: rgba(var(--dbc-rose-rgb), 0.4);
 }
 /* Orchid - the same blended pink/lavender the old combo card used, still
    reserved for a combined-engraving ceiling pick. */
@@ -2568,13 +2583,13 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .grid.cards.gearing-cards > ul > li:nth-child(1),
 .md-typeset .grid.cards.gearing-cards > ul > li:nth-child(2) {
   background-color: #1d1d21;
-  border-color: rgba(179, 157, 219, 0.3);
+  border-color: rgba(var(--dbc-purple-rgb), 0.3);
   padding: 0.6em;
 }
 .md-typeset .grid.cards.gearing-cards > ul > li:hover {
   transform: none;
   box-shadow: none;
-  border-color: rgba(179, 157, 219, 0.5);
+  border-color: rgba(var(--dbc-purple-rgb), 0.5);
 }
 .md-typeset .grid.cards.gearing-cards img {
   display: block;
@@ -2601,7 +2616,7 @@ h3 { color: var(--dbc-teal); }
   line-height: 1;
 }
 .md-typeset .page-banner-warning {
-  border: 1px solid rgba(230, 180, 34, 0.35);
+  border: 1px solid rgba(var(--dbc-gold-rgb), 0.35);
   background-color: #26210f;
   color: var(--dbc-gold);
 }
@@ -2617,8 +2632,8 @@ h3 { color: var(--dbc-teal); }
    (RaidCPM/TrixionCPM * AdjustedMultiplier) which lands in a different,
    lower range than the 1.0-1.3-scaled Adjusted Multiplier bars use. */
 .md-typeset .cpm-calc {
-  border: 1px solid rgba(179, 157, 219, 0.28);
-  background-color: rgba(179, 157, 219, 0.045);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
   border-radius: 10px;
   padding: 1em 1.2em 1.2em;
   margin: 1em 0 1.5em;
@@ -2686,7 +2701,7 @@ h3 { color: var(--dbc-teal); }
   flex: 0 0 auto;
   padding: 0.4em 0.7em;
   background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(179, 157, 219, 0.3);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: 8px;
   white-space: nowrap;
 }
@@ -2702,7 +2717,7 @@ h3 { color: var(--dbc-teal); }
   width: 1.2em;
   height: 1.2em;
   border-radius: 50%;
-  border: 1px solid rgba(167, 155, 196, 0.6);
+  border: 1px solid rgba(var(--dbc-lavender-rgb), 0.6);
   color: var(--dbc-lavender);
   font-size: 0.8em;
   font-style: italic;
@@ -2722,7 +2737,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .spm-calc-time,
 .md-typeset .spm-calc-count {
   background-color: #1c1d1f;
-  border: 1px solid rgba(179, 157, 219, 0.35);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
   border-radius: 6px;
   color: var(--md-default-fg-color);
   padding: 0.3em 0.4em;
@@ -2814,7 +2829,7 @@ h3 { color: var(--dbc-teal); }
    viewport size. */
 .md-typeset .cpm-calc-row {
   border: 1px solid rgba(255, 255, 255, 0.07);
-  border-left: 3px solid rgba(77, 182, 172, 0.35);
+  border-left: 3px solid rgba(var(--dbc-teal-rgb), 0.35);
   border-radius: 8px;
   padding: 0.8em 1em;
   margin-top: 0.8em;
@@ -2828,9 +2843,9 @@ h3 { color: var(--dbc-teal); }
    Multiplier, once at least two rows have valid input - "which build
    should I actually play" is the whole point of comparing side by side. */
 .md-typeset .cpm-calc-row-best {
-  border-color: rgba(77, 182, 172, 0.5);
+  border-color: rgba(var(--dbc-teal-rgb), 0.5);
   border-left-color: var(--dbc-teal);
-  background-color: rgba(77, 182, 172, 0.06);
+  background-color: rgba(var(--dbc-teal-rgb), 0.06);
 }
 .md-typeset .cpm-calc-row-header {
   display: flex;
@@ -2888,7 +2903,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .cpm-calc-field input[type="number"] {
   width: 6.5em;
   background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(179, 157, 219, 0.35);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
   border-radius: 6px;
   color: var(--md-default-fg-color);
   padding: 0.35em 0.5em;
@@ -3041,8 +3056,8 @@ h3 { color: var(--dbc-teal); }
   font-family: inherit;
   font-size: 0.76em;
   color: var(--dbc-lilac);
-  background-color: rgba(179, 157, 219, 0.08);
-  border: 1px solid rgba(179, 157, 219, 0.3);
+  background-color: rgba(var(--dbc-purple-rgb), 0.08);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: 999px;
   padding: 0.28em 0.75em;
   cursor: pointer;
@@ -3051,8 +3066,8 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .cpm-calc-recent-chip:hover,
 .md-typeset .cpm-calc-recent-chip:focus-visible {
   border-color: var(--dbc-pink);
-  color: #ffb3cf;
-  background-color: rgba(238, 131, 171, 0.08);
+  color: var(--dbc-pink-bright);
+  background-color: rgba(var(--dbc-pink-rgb), 0.08);
   outline: none;
 }
 .md-typeset .cpm-calc-recent-clear {
@@ -3080,8 +3095,8 @@ h3 { color: var(--dbc-teal); }
    the way it's used in-game: just on the headline number itself
    (.bid-calc-result-value) and the copy confirmation, not the card shell. */
 .md-typeset .bid-calc {
-  border: 1px solid rgba(179, 157, 219, 0.28);
-  background-color: rgba(179, 157, 219, 0.045);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
   border-radius: 10px;
   padding: 1em 1.2em 1.2em;
   margin: 1em 0 1.5em;
@@ -3119,7 +3134,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .bid-calc-field-row input.bid-market-price {
   width: 8em;
   background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(179, 157, 219, 0.35);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
   border-radius: 6px;
   color: var(--md-default-fg-color);
   padding: 0.35em 0.5em;
@@ -3201,7 +3216,7 @@ h3 { color: var(--dbc-teal); }
    covering all three - a dotted underline is the standard "there's a
    hover hint here" affordance instead of making the reader guess. */
 .md-typeset .bid-calc-intent .bid-calc-radio-label {
-  text-decoration: underline dotted rgba(167, 155, 196, 0.5);
+  text-decoration: underline dotted rgba(var(--dbc-lavender-rgb), 0.5);
   text-underline-offset: 3px;
 }
 /* The headline number - same treatment as .cpm-calc-result-value (bold,
@@ -3250,7 +3265,7 @@ h3 { color: var(--dbc-teal); }
   width: 1.9em;
   height: 1.9em;
   background: none;
-  border: 1px solid rgba(179, 157, 219, 0.3);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: 6px;
   color: var(--dbc-lavender);
   cursor: pointer;
@@ -3260,7 +3275,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .bid-calc-copy-btn:hover,
 .md-typeset .bid-calc-copy-btn:focus-visible {
   color: var(--dbc-purple);
-  border-color: rgba(179, 157, 219, 0.55);
+  border-color: rgba(var(--dbc-purple-rgb), 0.55);
   outline: none;
 }
 .md-typeset .bid-calc-copy-btn svg {
@@ -3268,7 +3283,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .bid-calc-copy-btn.bid-calc-copy-btn-copied {
   color: var(--dbc-teal);
-  border-color: rgba(77, 182, 172, 0.5);
+  border-color: rgba(var(--dbc-teal-rgb), 0.5);
 }
 .md-typeset .bid-calc-copy-btn:disabled {
   opacity: 0.35;
@@ -3287,7 +3302,7 @@ h3 { color: var(--dbc-teal); }
   font-family: inherit;
   white-space: nowrap;
   padding: 0.35em 0.6em;
-  border: 1px solid rgba(179, 157, 219, 0.3);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: 5px;
   opacity: 0;
   pointer-events: none;
@@ -3394,8 +3409,8 @@ h3 { color: var(--dbc-teal); }
    takeaway stays "pick the highlighted cell" rather than inviting the
    reader to hand-compute multiplier math. */
 .md-typeset .ap-calc {
-  border: 1px solid rgba(179, 157, 219, 0.28);
-  background-color: rgba(179, 157, 219, 0.045);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
   border-radius: 10px;
   padding: 1em 1.2em 1.2em;
   margin: 1em 0 1.5em;
@@ -3466,7 +3481,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-calc-mini-field select {
   background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(179, 157, 219, 0.35);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
   border-radius: 6px;
   color: var(--md-default-fg-color);
   padding: 0.3em 0.5em;
@@ -3549,7 +3564,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-calc-field-row select,
 .md-typeset .ap-calc-field-row input[type="number"] {
   background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(179, 157, 219, 0.35);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
   border-radius: 6px;
   color: var(--md-default-fg-color);
   padding: 0.3em 0.5em;
@@ -3684,8 +3699,8 @@ h3 { color: var(--dbc-teal); }
    "best cell" highlight below) and sitting directly above the grid it
    feeds. ---- */
 .md-typeset .ap-calc-party-card {
-  border: 1px solid rgba(77, 182, 172, 0.35);
-  background-color: rgba(77, 182, 172, 0.05);
+  border: 1px solid rgba(var(--dbc-teal-rgb), 0.35);
+  background-color: rgba(var(--dbc-teal-rgb), 0.05);
   border-radius: 8px;
   padding: 0.7em 0.85em;
 }
@@ -3739,8 +3754,8 @@ h3 { color: var(--dbc-teal); }
   margin-top: 0.4em;
 }
 .md-typeset .ap-calc-result-row-best {
-  border-color: rgba(77, 182, 172, 0.5);
-  background-color: rgba(77, 182, 172, 0.09);
+  border-color: rgba(var(--dbc-teal-rgb), 0.5);
+  background-color: rgba(var(--dbc-teal-rgb), 0.09);
 }
 .md-typeset .ap-result-rank {
   flex-shrink: 0;
@@ -3814,7 +3829,7 @@ h3 { color: var(--dbc-teal); }
    the Best card visually promoted (teal border, same treatment as the #1
    row in the results list above) so the eye lands on it first. */
 .md-typeset .ap-calc-summary {
-  border-top: 1px solid rgba(179, 157, 219, 0.2);
+  border-top: 1px solid rgba(var(--dbc-purple-rgb), 0.2);
   padding-top: 0.9em;
 }
 .md-typeset .ap-calc-stat-cards {
@@ -3833,8 +3848,8 @@ h3 { color: var(--dbc-teal); }
   padding: 0.7em 0.85em;
 }
 .md-typeset .ap-stat-card-best {
-  border-color: rgba(77, 182, 172, 0.5);
-  background-color: rgba(77, 182, 172, 0.06);
+  border-color: rgba(var(--dbc-teal-rgb), 0.5);
+  background-color: rgba(var(--dbc-teal-rgb), 0.06);
 }
 .md-typeset .ap-stat-card-title {
   font-size: 0.68rem;
@@ -4129,7 +4144,7 @@ h3 { color: var(--dbc-teal); }
   height: 1.2em;
   margin-left: 0.4em;
   border-radius: 50%;
-  border: 1px solid rgba(167, 155, 196, 0.6);
+  border: 1px solid rgba(var(--dbc-lavender-rgb), 0.6);
   color: var(--dbc-lavender);
   font-size: 0.8em;
   font-style: italic;
@@ -4179,8 +4194,8 @@ h3 { color: var(--dbc-teal); }
   margin-left: 0.35em;
   padding: 0.02em 0.35em;
   border-radius: 3px;
-  background: rgba(167, 155, 196, 0.12);
-  border: 1px solid rgba(167, 155, 196, 0.5);
+  background: rgba(var(--dbc-lavender-rgb), 0.12);
+  border: 1px solid rgba(var(--dbc-lavender-rgb), 0.5);
   color: var(--dbc-lavender);
   font-size: 0.62em;
   font-weight: 700;
@@ -4257,7 +4272,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-calc-footnote .ap-calc-import {
   color: var(--dbc-lavender);
   text-decoration: underline;
-  text-decoration-color: rgba(179, 157, 219, 0.4);
+  text-decoration-color: rgba(var(--dbc-purple-rgb), 0.4);
   /* Reset the <button> defaults so this reads as the same inline text
      link as everywhere else on the card, not a boxed control. */
   background: none;
@@ -4317,7 +4332,7 @@ h3 { color: var(--dbc-teal); }
   width: min(380px, 90vw);
   padding: 0.9em 1em 1em;
   border-radius: 10px;
-  border: 1px solid rgba(179, 157, 219, 0.3);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   background-color: #1c1a22;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
   text-align: left;
@@ -4358,7 +4373,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-calc-popover-actions button {
   background: none;
-  border: 1px solid rgba(179, 157, 219, 0.35);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
   border-radius: 999px;
   padding: 0.3em 0.9em;
   font: inherit;
@@ -4370,8 +4385,8 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-calc-popover-actions button:hover {
   color: var(--dbc-pink);
-  border-color: rgba(238, 131, 171, 0.5);
-  background-color: rgba(238, 131, 171, 0.08);
+  border-color: rgba(var(--dbc-pink-rgb), 0.5);
+  background-color: rgba(var(--dbc-pink-rgb), 0.08);
 }
 .md-typeset .ap-calc-popover-msg {
   font-size: 0.78em;
@@ -4442,7 +4457,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .tabbed-set > .tabbed-labels > label:hover {
   opacity: 0.9;
-  color: #ffb3cf;
+  color: var(--dbc-pink-bright);
 }
 /* Material's sliding accent bar (.tabbed-labels::before) - the shared
    element that animates between tabs - stays, that's "the tab underline"
@@ -4502,8 +4517,8 @@ h3 { color: var(--dbc-teal); }
   margin: 1.4em 0 0.6em;
 }
 .md-typeset .dps-showcase-frame {
-  border: 1px solid rgba(179, 157, 219, 0.28);
-  background-color: rgba(179, 157, 219, 0.045);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
   border-radius: 10px;
   padding: 1.4em 1.6em 1.5em;
 }
@@ -4546,7 +4561,7 @@ h3 { color: var(--dbc-teal); }
   /* Same thin ring the gem/skill icons wear elsewhere on the page
      (.gem-item-icon, .skill-card-icon) - without it this was the one
      icon spot left bare next to every other icon treatment on the site. */
-  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.28);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.28);
 }
 .md-typeset .dps-chart-label-text {
   font-size: 1.02em;
@@ -4563,7 +4578,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .dps-chart-track {
   height: 7px;
   border-radius: 999px;
-  background-color: rgba(77, 182, 172, 0.15);
+  background-color: rgba(var(--dbc-teal-rgb), 0.15);
   overflow: hidden;
 }
 .md-typeset .dps-chart-fill {
@@ -4700,8 +4715,8 @@ h3 { color: var(--dbc-teal); }
   font-weight: 600;
   padding: 0.4em 0.95em;
   border-radius: 999px;
-  border: 1px solid rgba(179, 157, 219, 0.35);
-  background-color: rgba(179, 157, 219, 0.08);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
+  background-color: rgba(var(--dbc-purple-rgb), 0.08);
   color: var(--md-default-fg-color--light);
   text-decoration: none !important;
 }
@@ -4777,8 +4792,8 @@ h3 { color: var(--dbc-teal); }
   background: linear-gradient(
     180deg,
     transparent,
-    rgba(179, 157, 219, 0.28) 12%,
-    rgba(179, 157, 219, 0.28) 88%,
+    rgba(var(--dbc-purple-rgb), 0.28) 12%,
+    rgba(var(--dbc-purple-rgb), 0.28) 88%,
     transparent
   );
 }
@@ -4798,7 +4813,7 @@ h3 { color: var(--dbc-teal); }
   height: 10px;
   border-radius: 2.5px;
   background-color: var(--md-default-bg-color);
-  border: 1.5px solid rgba(179, 157, 219, 0.4);
+  border: 1.5px solid rgba(var(--dbc-purple-rgb), 0.4);
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 /* Label sits to the left. Originally just text with a soft shadow for
@@ -4837,7 +4852,7 @@ h3 { color: var(--dbc-teal); }
   max-width: 13em;
   padding: 0.32em 0.75em;
   border-radius: 999px;
-  border: 1px solid rgba(179, 157, 219, 0.35);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
   background-color: rgba(20, 20, 24, 0.82);
   backdrop-filter: blur(4px);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
@@ -4865,15 +4880,15 @@ h3 { color: var(--dbc-teal); }
   background-color: var(--dbc-pink);
   border-color: var(--dbc-pink);
   transform: scaleY(1.3);
-  box-shadow: 0 0 7px 1px rgba(238, 131, 171, 0.65);
+  box-shadow: 0 0 7px 1px rgba(var(--dbc-pink-rgb), 0.65);
 }
 .section-tracker-item:hover .section-tracker-label,
 .section-tracker-item:focus-visible .section-tracker-label {
-  border-color: rgba(238, 131, 171, 0.4);
+  border-color: rgba(var(--dbc-pink-rgb), 0.4);
 }
 .section-tracker-item.is-active .section-tracker-label {
-  color: #ffb3cf;
-  border-color: rgba(238, 131, 171, 0.55);
+  color: var(--dbc-pink-bright);
+  border-color: rgba(var(--dbc-pink-rgb), 0.55);
 }
 
 /* ---------- 333 Blitz title tiger: click-to-rain easter egg ---------- */
@@ -4965,7 +4980,7 @@ body.page-333-blitz input[type="text"] {
      any card's ResizeObserver firing (i.e. a toggle open/close) - the
      transition here is what makes that reflow glide instead of pop. */
   transition: transform 0.22s ease, width 0.22s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-  border: 1px solid rgba(179, 157, 219, 0.28);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
   border-radius: 8px;
   /* Lavender-matched tint (not a neutral white one) so it reads purple by
      default even outside a .setup-panel, and layers WITH the panel's own
@@ -4973,7 +4988,7 @@ body.page-333-blitz input[type="text"] {
      it back toward gray - the previous rgba(255,255,255,...) version was
      doing exactly that, which is why cards read flat/colorless even
      inside a lavender-tinted panel. */
-  background-color: rgba(179, 157, 219, 0.045);
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
   margin: 0;
   font-size: 1em; /* override the .admonition/details 1em rule's inherited context so nested text below can size relative to this, not the page default */
   /* Lets .skill-card-main below query THIS card's own rendered width
@@ -5112,7 +5127,7 @@ body.page-333-blitz input[type="text"] {
   object-fit: contain;
   border-radius: 8px;
   flex-shrink: 0;
-  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.28);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.28);
 }
 /* Chips (runes+tripods) sit to the right of the name on one row, same
    place they've always been - NOT stacked below it. A previous pass
@@ -5270,14 +5285,14 @@ body.page-333-blitz input[type="text"] {
   border-color: rgba(102, 187, 106, 0.4);
 }
 .md-typeset .rune-chip.rune-blue {
-  background-color: rgba(100, 181, 246, 0.14);
+  background-color: rgba(var(--dbc-blue-rgb), 0.14);
   color: var(--dbc-blue);
-  border-color: rgba(100, 181, 246, 0.4);
+  border-color: rgba(var(--dbc-blue-rgb), 0.4);
 }
 .md-typeset .rune-chip.rune-legendary {
-  background-color: rgba(240, 168, 104, 0.16);
+  background-color: rgba(var(--dbc-orange-rgb), 0.16);
   color: var(--dbc-orange);
-  border-color: rgba(240, 168, 104, 0.45);
+  border-color: rgba(var(--dbc-orange-rgb), 0.45);
 }
 .md-typeset .rune-chip.rune-epic {
   background-color: rgba(199, 125, 255, 0.16);
@@ -5406,15 +5421,15 @@ body.page-333-blitz input[type="text"] {
      stronger 0.3 border) previously made this the one component on the
      site that looked like a separate skin instead of a variant of the
      same card. */
-  border: 1px solid rgba(244, 143, 177, 0.22);
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.22);
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.02);
   transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .md-typeset .ark-core-item:hover {
-  border-color: rgba(244, 143, 177, 0.45);
+  border-color: rgba(var(--dbc-rose-rgb), 0.45);
   background-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.15), 0 0 10px rgba(244, 143, 177, 0.22);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.15), 0 0 10px rgba(var(--dbc-rose-rgb), 0.22);
 }
 .md-typeset .ark-core-icon {
   height: 38px;
@@ -5422,7 +5437,7 @@ body.page-333-blitz input[type="text"] {
   flex: 0 0 auto;
   object-fit: contain;
   border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.45), 0 0 8px rgba(244, 143, 177, 0.3);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.45), 0 0 8px rgba(var(--dbc-rose-rgb), 0.3);
 }
 .md-typeset .ark-core-info {
   /* Name and dots row share this column's left edge - no centering on
@@ -5469,7 +5484,7 @@ body.page-333-blitz input[type="text"] {
    icon glow. */
 .md-typeset .ark-core-dot-on {
   background-color: var(--dbc-orange);
-  box-shadow: 0 0 4px rgba(240, 168, 104, 0.75);
+  box-shadow: 0 0 4px rgba(var(--dbc-orange-rgb), 0.75);
 }
 .md-typeset .ark-core-point-label {
   font-size: 0.56rem;
@@ -5547,27 +5562,27 @@ body.page-333-blitz input[type="text"] {
      viewport media query is the wrong signal to key off of. */
   container-type: inline-size;
 }
-.md-typeset .ark-passive-col[data-column="evolution"] { border-color: rgba(240, 168, 104, 0.22); }
-.md-typeset .ark-passive-col[data-column="enlightenment"] { border-color: rgba(179, 157, 219, 0.22); }
-.md-typeset .ark-passive-col[data-column="leap"] { border-color: rgba(77, 182, 172, 0.22); }
+.md-typeset .ark-passive-col[data-column="evolution"] { border-color: rgba(var(--dbc-orange-rgb), 0.22); }
+.md-typeset .ark-passive-col[data-column="enlightenment"] { border-color: rgba(var(--dbc-purple-rgb), 0.22); }
+.md-typeset .ark-passive-col[data-column="leap"] { border-color: rgba(var(--dbc-teal-rgb), 0.22); }
 /* Same hover treatment as .ark-core-item below it (border brightens,
    background lifts slightly, accent-colored glow) so the two widget
    types read as one family of cards rather than the passives side being
    static while the cores side reacts. */
 .md-typeset .ark-passive-col[data-column="evolution"]:hover {
-  border-color: rgba(240, 168, 104, 0.5);
+  border-color: rgba(var(--dbc-orange-rgb), 0.5);
   background-color: rgba(255, 255, 255, 0.04);
-  box-shadow: 0 0 0 1px rgba(240, 168, 104, 0.15), 0 0 10px rgba(240, 168, 104, 0.2);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-orange-rgb), 0.15), 0 0 10px rgba(var(--dbc-orange-rgb), 0.2);
 }
 .md-typeset .ark-passive-col[data-column="enlightenment"]:hover {
-  border-color: rgba(179, 157, 219, 0.5);
+  border-color: rgba(var(--dbc-purple-rgb), 0.5);
   background-color: rgba(255, 255, 255, 0.04);
-  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.15), 0 0 10px rgba(179, 157, 219, 0.2);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.15), 0 0 10px rgba(var(--dbc-purple-rgb), 0.2);
 }
 .md-typeset .ark-passive-col[data-column="leap"]:hover {
-  border-color: rgba(77, 182, 172, 0.5);
+  border-color: rgba(var(--dbc-teal-rgb), 0.5);
   background-color: rgba(255, 255, 255, 0.04);
-  box-shadow: 0 0 0 1px rgba(77, 182, 172, 0.15), 0 0 10px rgba(77, 182, 172, 0.2);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-teal-rgb), 0.15), 0 0 10px rgba(var(--dbc-teal-rgb), 0.2);
 }
 .md-typeset .ark-passive-col-header {
   display: flex;
@@ -5741,13 +5756,13 @@ body.page-333-blitz input[type="text"] {
   background-color: rgba(255, 255, 255, 0.04);
 }
 .md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-node-icon {
-  box-shadow: 0 0 0 1px rgba(240, 168, 104, 0.45), 0 0 6px rgba(240, 168, 104, 0.25);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-orange-rgb), 0.45), 0 0 6px rgba(var(--dbc-orange-rgb), 0.25);
 }
 .md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-node-icon {
-  box-shadow: 0 0 0 1px rgba(179, 157, 219, 0.45), 0 0 6px rgba(179, 157, 219, 0.25);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.45), 0 0 6px rgba(var(--dbc-purple-rgb), 0.25);
 }
 .md-typeset .ark-passive-col[data-column="leap"] .ark-passive-node-icon {
-  box-shadow: 0 0 0 1px rgba(77, 182, 172, 0.45), 0 0 6px rgba(77, 182, 172, 0.25);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-teal-rgb), 0.45), 0 0 6px rgba(var(--dbc-teal-rgb), 0.25);
 }
 .md-typeset .ark-passive-node-name {
   font-size: 0.85em;
@@ -5787,15 +5802,15 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-node-level[data-maxed="true"] {
   color: var(--dbc-orange);
-  background-color: rgba(240, 168, 104, 0.14);
+  background-color: rgba(var(--dbc-orange-rgb), 0.14);
 }
 .md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-node-level[data-maxed="true"] {
   color: var(--dbc-purple);
-  background-color: rgba(179, 157, 219, 0.14);
+  background-color: rgba(var(--dbc-purple-rgb), 0.14);
 }
 .md-typeset .ark-passive-col[data-column="leap"] .ark-passive-node-level[data-maxed="true"] {
   color: var(--dbc-teal);
-  background-color: rgba(77, 182, 172, 0.14);
+  background-color: rgba(var(--dbc-teal-rgb), 0.14);
 }
 
 /* Compact variant - a single Ark Passive column pasted as a supplementary
@@ -5895,12 +5910,12 @@ body.page-333-blitz input[type="text"] {
   margin: 0.9em 0 1.2em;
 }
 .md-typeset .setup-panel[data-accent="pink"] {
-  border: 1px solid rgba(244, 143, 177, 0.3);
-  background-color: rgba(244, 143, 177, 0.045);
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.3);
+  background-color: rgba(var(--dbc-rose-rgb), 0.045);
 }
 .md-typeset .setup-panel[data-accent="lavender"] {
-  border: 1px solid rgba(179, 157, 219, 0.3);
-  background-color: rgba(179, 157, 219, 0.045);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
 }
 /* "neutral" - for Ark Setup specifically, now that it holds the Ark
    Passive tree's own three tinted column cards plus the pink-accented
@@ -6079,23 +6094,23 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .setup-note[data-kind="tip"] .setup-note-tag {
   color: var(--dbc-teal);
-  background-color: rgba(77, 182, 172, 0.14);
-  border-color: rgba(77, 182, 172, 0.4);
+  background-color: rgba(var(--dbc-teal-rgb), 0.14);
+  border-color: rgba(var(--dbc-teal-rgb), 0.4);
 }
 .md-typeset .setup-note[data-kind="note"] .setup-note-tag {
   color: var(--dbc-purple);
-  background-color: rgba(179, 157, 219, 0.16);
-  border-color: rgba(179, 157, 219, 0.4);
+  background-color: rgba(var(--dbc-purple-rgb), 0.16);
+  border-color: rgba(var(--dbc-purple-rgb), 0.4);
 }
 .md-typeset .setup-note[data-kind="example"] .setup-note-tag {
   color: var(--dbc-gold);
-  background-color: rgba(230, 180, 34, 0.14);
-  border-color: rgba(230, 180, 34, 0.4);
+  background-color: rgba(var(--dbc-gold-rgb), 0.14);
+  border-color: rgba(var(--dbc-gold-rgb), 0.4);
 }
 .md-typeset .setup-note[data-kind="danger"] .setup-note-tag {
   color: var(--dbc-pink);
-  background-color: rgba(244, 143, 177, 0.14);
-  border-color: rgba(244, 143, 177, 0.4);
+  background-color: rgba(var(--dbc-rose-rgb), 0.14);
+  border-color: rgba(var(--dbc-rose-rgb), 0.4);
 }
 /* Disclosure arrow - a real span (like .skill-card-arrow) rather than a
    reused pseudo-element, so it doesn't fight the Material icon-removal
@@ -6168,8 +6183,8 @@ body.page-333-blitz input[type="text"] {
    items and 4 items both look intentional rather than stretched) </div>
    </div> */
 .md-typeset .food-required {
-  border: 1px solid rgba(244, 143, 177, 0.35);
-  background-color: rgba(244, 143, 177, 0.055);
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.35);
+  background-color: rgba(var(--dbc-rose-rgb), 0.055);
   border-radius: 10px;
   padding: 1em 1.2em 1.1em;
   margin: 1em 0 1.5em;
@@ -6206,9 +6221,9 @@ body.page-333-blitz input[type="text"] {
   transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .md-typeset .food-option:hover {
-  border-color: rgba(244, 143, 177, 0.45);
+  border-color: rgba(var(--dbc-rose-rgb), 0.45);
   background-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.15), 0 0 10px rgba(244, 143, 177, 0.22);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.15), 0 0 10px rgba(var(--dbc-rose-rgb), 0.22);
 }
 /* 22px - down from the old 40px vertical-card icon, sized to sit inline
    in a pill next to the name instead of being the item's main visual. */
@@ -6218,7 +6233,7 @@ body.page-333-blitz input[type="text"] {
   width: 22px;
   object-fit: contain;
   border-radius: 6px;
-  box-shadow: 0 0 0 1px rgba(244, 143, 177, 0.4), 0 0 6px rgba(244, 143, 177, 0.25);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.4), 0 0 6px rgba(var(--dbc-rose-rgb), 0.25);
 }
 .md-typeset .food-option p {
   margin: 0;

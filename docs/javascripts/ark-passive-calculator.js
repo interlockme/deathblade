@@ -1419,13 +1419,6 @@
     }
   }
 
-  function copyToClipboard(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      return navigator.clipboard.writeText(text);
-    }
-    return Promise.reject(new Error("Clipboard API unavailable"));
-  }
-
   function downloadJson(filename, text) {
     const blob = new Blob([text], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -1656,7 +1649,7 @@
         if (copyBtn) {
           copyBtn.addEventListener("click", () => {
             const text = popoverEl.querySelector(".ap-calc-popover-textarea").value;
-            copyToClipboard(text)
+            window.SiteUtils.copyToClipboard(text)
               .then(() => showPopoverMessage(popoverEl, "Copied to clipboard.", false))
               .catch(() => showPopoverMessage(popoverEl, "Couldn't access the clipboard - select the text above and copy manually.", true));
           });

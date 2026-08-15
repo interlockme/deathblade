@@ -220,25 +220,6 @@
   // one. Starts empty every load.
 
   // ----- Copy button (same pattern as build-compare.js's share button) -----
-  function copyToClipboard(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      return navigator.clipboard.writeText(text);
-    }
-    var temp = document.createElement("textarea");
-    temp.value = text;
-    temp.style.position = "fixed";
-    temp.style.opacity = "0";
-    document.body.appendChild(temp);
-    temp.select();
-    try {
-      document.execCommand("copy");
-    } catch (e) {
-      /* nothing more we can do - the button's own catch handles feedback */
-    }
-    document.body.removeChild(temp);
-    return Promise.resolve();
-  }
-
   function initCopyButton(root) {
     var copyBtn = root.querySelector(".bid-calc-copy-btn");
     var resultValue = root.querySelector(".bid-calc-result-value");
@@ -258,7 +239,7 @@
     copyBtn.addEventListener("click", function () {
       var raw = resultValue.dataset.rawBid;
       if (!raw) return;
-      copyToClipboard(raw)
+      window.SiteUtils.copyToClipboard(raw)
         .then(function () {
           clearTimeout(resetTimer);
           copyBtn.innerHTML = CHECK_ICON;
@@ -278,15 +259,9 @@
   // result gets re-grouped too, instead of landing back in the box as a
   // plain digit string.
   function clampOnBlur(input, min, max, root, formatted) {
-    if (!input) return;
-    input.addEventListener("blur", function () {
-      var raw = formatted ? parseNumber(input.value) : parseFloat(input.value);
-      if (!isFinite(raw)) return;
-      var clamped = Math.min(max, Math.max(min, raw));
-      if (clamped !== raw) {
-        input.value = formatted ? clamped.toLocaleString("en-US") : clamped;
-        update(root);
-      }
+    window.SiteUtils.clampOnBlur(input, min, max, function () { update(root); }, {
+      parse: formatted ? parseNumber : parseFloat,
+      format: formatted ? function (n) { return n.toLocaleString("en-US"); } : function (n) { return n; },
     });
   }
 

@@ -15,7 +15,7 @@
 - No need to hold Counter, it charges up to two stacks.
 - Very high gem efficiency, Surge is nearly all of your DPS.
 - Accessible from zero Ark Grid cores with minor adjustments.
-- Must constantly balance Surge back attack rate with Surge CPM.
+- Must constantly balance Surge back-attack rate with Surge CPM.
 
 </div>
 <!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Exposure, Speed (0-10).

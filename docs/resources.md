@@ -26,7 +26,7 @@
 
 === "111 (Void Skip)"
 
-    *Alternative to Standard RE — KR guide available in Useful Links below.*
+    *Alternative to Standard RE, KR guide available in Useful Links below.*
 
     ```
     FB388C4F19F70DE5311D21E59D93BE5D1B9935691AB3B6F2457D466875600C7A581AE3DFA172017D17440BEC09FB7A05BEE420C68F6788139A428497A91B802E

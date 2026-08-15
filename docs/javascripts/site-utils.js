@@ -86,6 +86,62 @@
 
 (function () {
   window.SiteUtils = {
+    // Clamp a number input's value to [min, max] on blur, reformatting it
+    // and re-running the caller's update function if the raw value needed
+    // clamping. Was copy-pasted near-identically into cpm-calculator.js
+    // and bid-calculator.js before this - both had the same "catch fat-
+    // finger/pasted-garbage entries on blur rather than block typing
+    // mid-keystroke" guardrail, just with different formatting needs.
+    //
+    // parse:  function(rawString) -> number. Defaults to parseFloat.
+    //         Pass bid-calculator's comma-aware parseNumber here for
+    //         formatted/thousands-separator fields.
+    // format: function(clampedNumber) -> string to write back into the
+    //         input. Defaults to String(n). Pass e.g.
+    //         (n) => n.toFixed(decimals) or (n) => n.toLocaleString("en-US").
+    // onClamp: called (with no args) only when clamping actually changed
+    //          the value - the caller's own re-render/update hook.
+    clampOnBlur: function (input, min, max, onClamp, opts) {
+      if (!input) return;
+      opts = opts || {};
+      var parse = opts.parse || parseFloat;
+      var format = opts.format || function (n) { return String(n); };
+      input.addEventListener("blur", function () {
+        var raw = parse(input.value);
+        if (!isFinite(raw)) return; // empty/invalid - caller's own render already shows a placeholder
+        var clamped = Math.min(max, Math.max(min, raw));
+        if (clamped !== raw) {
+          input.value = format(clamped);
+          if (onClamp) onClamp();
+        }
+      });
+    },
+
+    // Copy text to the clipboard, with a textarea/execCommand fallback for
+    // contexts where navigator.clipboard is unavailable (older WebViews,
+    // non-HTTPS). Was duplicated in bid-calculator.js (with the fallback)
+    // and ark-passive-calculator.js (without it, so its copy button
+    // silently did nothing on those contexts) - centralized here so both
+    // widgets get the same, more robust behavior.
+    copyToClipboard: function (text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+      var temp = document.createElement("textarea");
+      temp.value = text;
+      temp.style.position = "fixed";
+      temp.style.opacity = "0";
+      document.body.appendChild(temp);
+      temp.select();
+      try {
+        document.execCommand("copy");
+      } catch (e) {
+        /* nothing more we can do - the caller's own catch handles feedback */
+      }
+      document.body.removeChild(temp);
+      return Promise.resolve();
+    },
+
     // Create an element, optionally set its className and textContent.
     el: function (tag, className, text) {
       var e = document.createElement(tag);

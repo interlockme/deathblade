@@ -13,7 +13,7 @@
 
 - Uses Blitz Rush as two fast casts (BTB combo) via a skill reset.
 - High gem efficiency, Surge and Blitz Rush are most of your DPS.
-- Must balance Surge, Blitz Rush, and Deathly Slash back attack rate with Surge CPM.
+- Must balance Surge, Blitz Rush, and Deathly Slash back-attack rate with Surge CPM.
 
 </div>
 <!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Exposure, Speed (0-10).

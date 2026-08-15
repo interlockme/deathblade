@@ -292,15 +292,8 @@
   // already >= a low max). :out-of-range styling (see extra.css) gives a
   // live visual cue before blur actually corrects the value.
   function clampOnBlur(input, min, max, decimals, row) {
-    if (!input) return;
-    input.addEventListener("blur", () => {
-      const raw = parseFloat(input.value);
-      if (!isFinite(raw)) return; // empty/invalid - updateRow already shows "—"
-      const clamped = Math.min(max, Math.max(min, raw));
-      if (clamped !== raw) {
-        input.value = clamped.toFixed(decimals);
-        updateRow(row);
-      }
+    window.SiteUtils.clampOnBlur(input, min, max, () => updateRow(row), {
+      format: (n) => n.toFixed(decimals),
     });
   }
 

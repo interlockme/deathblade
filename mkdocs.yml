@@ -30,14 +30,14 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=9
+  - stylesheets/extra.css?v=11
 
 extra_javascript:
-  - javascripts/site-utils.js?v=3
+  - javascripts/site-utils.js?v=4
   - javascripts/extra.js?v=2
-  - javascripts/cpm-calculator.js?v=3
-  - javascripts/bid-calculator.js?v=3
-  - javascripts/ark-passive-calculator.js?v=3
+  - javascripts/cpm-calculator.js?v=4
+  - javascripts/bid-calculator.js?v=4
+  - javascripts/ark-passive-calculator.js?v=4
   - javascripts/build-data.js?v=3
   - javascripts/build-stats-badge.js?v=1
   - javascripts/skill-data.js?v=2
