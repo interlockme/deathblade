@@ -19,7 +19,7 @@ If you're genuinely lost, upload the .zip of this entire project to claude on fr
 ## Local preview
 
 ```
-pip install "mkdocs-material[imaging]"
+pip install mkdocs-material
 mkdocs serve
 ```
 `localhost:8000`. Probably don't need this if you're already using the VS Code Mkdocs preview extension.

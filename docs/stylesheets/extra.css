@@ -164,6 +164,51 @@ html {
   background-color: var(--dbc-header-footer-bg) !important;
 }
 
+/* ---------- Search modal: same two Material defaults, same fix ---------- */
+/* The "N matching documents" meta strip at the top of each result group
+   uses the same generic light "lifted surface" overlay as the nav titles
+   above - matched to the same chrome surface for the same reason. */
+.md-search-result__meta {
+  background-color: var(--dbc-header-footer-bg);
+}
+/* The "N more on this page" expand link inside a result uses the same
+   --md-typeset-a-color blue fallback as the nav links above (its hover/
+   focus state already correctly goes pink via --md-accent-fg-color - only
+   the resting color was left on the generic blue). Given a plain
+   secondary-nav-style link rather than a "you are here" indicator, this
+   one gets the neutral/pink-on-hover treatment (matching .md-footer-nav__link)
+   rather than the nav's purple "current location" treatment. */
+.md-search-result__more > summary > div {
+  color: var(--md-default-fg-color);
+}
+
+/* ---------- Remaining --md-typeset-a-color blue-fallback spots ---------- */
+/* Same root cause as the nav/search fixes above (no natural hue for the
+   "black" primary preset), caught here preemptively rather than after the
+   fact - neither pattern is used in any current content or JS-rendered
+   widget, but both are one-line, so fixed now rather than left to bite
+   later. Plain neutral text with pink-on-hover, matching the treatment
+   given to the search "N more" link and footer nav links above (not the
+   nav's purple "current location" treatment, since neither is a location
+   indicator). */
+.md-typeset a code {
+  color: inherit;
+}
+.md-typeset .footnote-backref {
+  color: var(--md-default-fg-color);
+}
+.md-typeset .footnote-backref:hover {
+  color: var(--dbc-pink);
+}
+
+/* Instant-navigation top-of-page progress sliver - Material defaults this
+   to plain white, which reads as an unstyled Material default against the
+   pastel palette everywhere else, even though it's only a sub-second flash
+   during page transitions. */
+.md-progress {
+  background-color: var(--dbc-pink);
+}
+
 h1, h2, h3 {
   font-family: "Poppins", sans-serif;
 }
