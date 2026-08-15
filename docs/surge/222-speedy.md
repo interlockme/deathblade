@@ -53,8 +53,6 @@
     ```
     DCDFB3E872FB4DD3E910EFA0CAE35A3D30CDFB850D8280939B84BD32CBC8AA21D5F83501E60BDC9F1689AD68BA7FF12C867FFD1A6ED480726DE7CA09B38FEEA9
     ```
-    ??? note "🐆 vs 🐯"
-        ![222 vs 333](../assets/leopardvstiger.png){ loading=lazy }
 
 ## Ark Setup
 
@@ -205,7 +203,8 @@
 ]
 </script>
 </div>
-
+??? note "🐆 vs 🐯"
+    ![222 vs 333](../assets/leopardvstiger.png){ loading=lazy }
 </details>
 
 </div>
