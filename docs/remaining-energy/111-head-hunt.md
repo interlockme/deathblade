@@ -251,7 +251,7 @@
     *From zero/partial orbs:*
     { .lead }
 
-    - Cycle **1** if <span class="skill-chip">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span> is available, otherwise start from <span class="skill-chip">![](../assets/shared/icon-maelstrom.png)Maelstrom</span> + Cycle **2**.
+    - Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
 
 === "Recovery"
 
