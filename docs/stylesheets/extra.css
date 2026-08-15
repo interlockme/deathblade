@@ -1125,13 +1125,15 @@ h3 { color: var(--dbc-teal); }
   border-right: 2px solid #cf99c7;
   transform: rotate(45deg);
   opacity: 0.75;
-  /* Nudge the glyph itself left within the track - `left` (not part of
-     the rotate transform above) so it doesn't touch .arrow's own width/
-     margins, which are what actually position the skill boxes on either
-     side. Purely a visual recenter: the chevron sat visually closer to
-     the box on its right than the one on its left. */
+  /* Nudge the glyph itself left and up within the track - `left`/`top`
+     (not part of the rotate transform above) so it doesn't touch
+     .arrow's own width/margins, which are what actually position the
+     skill boxes on either side. Purely a visual recenter: the chevron
+     sat visually closer to the box on its right than its left, and a
+     bit low of the skill boxes' vertical center. */
   position: relative;
   left: -2px;
+  top: -4px;
 }
 
 /* Order-interchangeable variant, take 2: the first attempt (two
@@ -1164,23 +1166,29 @@ h3 { color: var(--dbc-teal); }
      rotate 45deg = pointing right). Comes first in the column, so it's
      the top one - same left-nudge direction as the normal .arrow
      chevron, and for the same reason (`left`, not the rotate transform,
-     so the track/margins that position the skill boxes stay put). */
+     so the track/margins that position the skill boxes stay put). Same
+     -4px `top` as .arrow::before too, to bring the whole pair up level
+     with the skill boxes' vertical center. */
   border-top: 2px solid #cf99c7;
   border-right: 2px solid #cf99c7;
   transform: rotate(45deg);
   position: relative;
   left: -2px;
+  top: -4px;
 }
 .md-typeset .rotation-line .arrow-swap::after {
   /* Mirror of the above (border-bottom + border-left, same rotation) =
      pointing left, stacked below the forward one. Nudged the opposite
      way (right) so the pair stays visually centered as a unit instead
-     of both drifting the same direction. */
+     of both drifting the same direction; same -4px `top` as ::before so
+     the pair moves up together rather than compressing toward each
+     other. */
   border-bottom: 2px solid #cf99c7;
   border-left: 2px solid #cf99c7;
   transform: rotate(45deg);
   position: relative;
   left: 2px;
+  top: -4px;
 }
 
 /* ---------- Situational/skippable rotation step ---------- */

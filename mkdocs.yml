@@ -30,7 +30,7 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=7
+  - stylesheets/extra.css?v=8
 
 extra_javascript:
   - javascripts/site-utils.js?v=3
@@ -49,7 +49,7 @@ extra_javascript:
   - javascripts/ark-passive-tree.js?v=4
   - javascripts/gem-priority.js?v=4
   - javascripts/pentagon-badge.js?v=3
-  - javascripts/rotation-line.js?v=2
+  - javascripts/rotation-line.js?v=3
   - javascripts/rotation-practice.js?v=3
   - javascripts/dps-chart.js?v=4
   - javascripts/gem-dps-tooltip.js?v=5
