@@ -1060,10 +1060,24 @@ h3 { color: var(--dbc-teal); }
    separates an icon from its name; the arrow in between is its own item
    too, so both kinds of item carry the same margin (rather than relying
    on flex `gap`, which some in-app/embedded renderers don't support on
-   flex containers) - keeping wrapped rows from touching everywhere. */
+   flex containers) - keeping wrapped rows from touching everywhere.
+   .rotation-suffix (the "etc." after a trailing arrow) shares this same
+   margin rule rather than getting its own: with align-items: center on
+   .rotation-line, and margin-top: 0 on every item, an item's vertical
+   center within the line only depends on its own margin-bottom (its
+   content height cancels out of the math) - so matching .skill's
+   margin-bottom here is what makes .rotation-suffix's text land
+   vertically centered with the skill boxes with no extra nudging
+   needed. (.arrow needs its own explicit top/left nudge instead of
+   relying on this, because font-size: 0 on .arrow - see below - zeroes
+   out its 0.6em margin-bottom too, same as it zeroes the text.) */
 .md-typeset .rotation-line .skill,
-.md-typeset .rotation-line .arrow {
+.md-typeset .rotation-line .arrow,
+.md-typeset .rotation-line .rotation-suffix {
   margin: 0 2px 0.6em;
+}
+.md-typeset .rotation-line .rotation-suffix {
+  color: inherit;
 }
 .md-typeset .rotation-line .skill {
   display: inline-flex;

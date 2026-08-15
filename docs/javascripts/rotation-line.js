@@ -164,7 +164,9 @@
     });
     if (suffix) {
       frag.appendChild(buildArrow());
-      frag.appendChild(document.createTextNode("\u00A0" + suffix));
+      var suffixSpan = el("span", "rotation-suffix");
+      suffixSpan.textContent = suffix;
+      frag.appendChild(suffixSpan);
     }
     line.appendChild(frag);
     line._rotationRawData = raw;
