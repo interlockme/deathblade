@@ -46,7 +46,7 @@
       axisLabels: ["Difficulty", "DPS", "Mobility", "Recovery", "Speed"],
       // true = lower is better on this axis. All RE axes are higher-is-better.
       invert: [false, false, false, false, false],
-      defaultPair: [0, 1], // 333 (Ceiling) vs 313 (High Floor)
+      defaultPair: [0, 2], // 333 (Ceiling) vs 111 (Head Hunt)
       builds: [
         {
           id: "333-ceiling",
