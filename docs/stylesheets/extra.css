@@ -49,6 +49,10 @@
   --dbc-green-rgb: 102, 187, 106;
   --dbc-violet: #c77dff;       /* rune-chip "epic" tier, .skill-card border/hover glow */
   --dbc-violet-rgb: 199, 125, 255;
+  --dbc-header-footer-bg: #1d1d20; /* matches the rendered color of a lavender
+    .setup-panel note (rgba(--dbc-purple-rgb, 0.045) over the page bg) - picked
+    to make the header/tabs bar and footer read as the same "surface" as those
+    notes instead of their own separate near-black shade */
 }
 
 [data-md-color-scheme="slate"] {
@@ -67,7 +71,7 @@
    code blocks, footer, tables, etc. that use --md-hue for other purposes. */
 [data-md-color-primary="black"] .md-header,
 [data-md-color-primary="black"] .md-tabs {
-  background-color: #1b1c1d !important; /* subtly lighter than the page bg, same neutral hue */
+  background-color: var(--dbc-header-footer-bg) !important; /* matches the lavender setup-note surface, see --dbc-header-footer-bg */
 }
 
 .md-header {
@@ -108,7 +112,7 @@ html {
    no content and rendered as an empty strip in Material's default
    blue-indigo hue, which is why it was hidden outright before. */
 .md-footer {
-  background-color: #1b1c1d; /* same neutral shade as the header/tabs bar */
+  background-color: var(--dbc-header-footer-bg); /* matches the lavender setup-note surface, see --dbc-header-footer-bg */
 }
 .md-footer-nav__link {
   color: var(--md-default-fg-color);
@@ -118,6 +122,50 @@ html {
 }
 .md-footer-meta {
   background-color: var(--md-default-bg-color); /* page bg, so the generator-credit row (empty, generator: false) doesn't add a visible second stripe */
+}
+
+/* ---------- Nav (mobile drawer + desktop TOC/sidebar): de-genericize ---------- */
+/* Material has no natural hue to derive a link/accent color from for the
+   "black" primary preset, so it silently falls back to a generic blue
+   (#5e8bde) for --md-typeset-a-color. That variable drives TWO separate
+   compiled rules, both needing an override:
+   - .md-nav__link--active - the exact current page
+   - .md-nav__item--active > .md-nav__link - the ancestor section link
+     (e.g. "Remaining Energy" stays highlighted while viewing any page
+     nested under it, not just its own index page) - easy to miss since
+     it's a different rule/class than the exact-page case above, and is
+     the "sometimes it still shows blue" case.
+   Hover already lands on the site's pink via Material's own
+   --md-accent-fg-color hookup, so active/current is set to the site's
+   purple instead (same var as h2 headings/Evolution accent) - keeps
+   "hovering" and "this is where you are" visually distinct rather than
+   two shades of the same pink.
+   !important: the compiled selector for the code-child case
+   (".md-nav__item .md-nav__link--active code") has higher specificity
+   than a plain ".md-nav__link--active code" override would, and
+   ".md-nav__item--active > .md-nav__link" is a two-class compiled rule
+   Material may re-declare elsewhere. */
+.md-nav__link--active,
+.md-nav__link--active code,
+.md-nav__item--active > .md-nav__link {
+  color: var(--dbc-purple) !important;
+}
+
+/* Material gives every label-based nav title a generic background -
+   nested titles (e.g. "Remaining Energy"/"Surge" once drilled into on
+   the mobile drawer) get a light overlay meant to read as a "lifted"
+   surface against Material's own default dark scheme, and the drawer's
+   own root title (the "Deathblade" logo header) gets --md-primary-fg-color,
+   which for the "black" preset resolves to yet a third, unreused dark
+   shade (#14151a) - neither the page background nor the header/footer
+   chrome color. Both cases matched to that same header/footer surface
+   instead, so every title bar in the nav reads as one consistent chrome
+   surface rather than three different near-black shades.
+   !important: the drawer's own compiled rule (".md-nav__title[for=__drawer]")
+   matches this selector's specificity exactly, and empirically still wins
+   without it despite extra.css loading last. */
+.md-nav__title[for] {
+  background-color: var(--dbc-header-footer-bg) !important;
 }
 
 h1, h2, h3 {
