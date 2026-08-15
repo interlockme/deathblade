@@ -2567,8 +2567,10 @@ h3 { color: var(--dbc-teal); }
    sitting side by side. .gearing-cards swaps both to the same neutral
    lavender every other reference component on the site uses instead
    (matches .cpm-calc/.skills-table's border+tint), and turns off the
-   hover lift/shadow those RE/Surge option cards get - nothing happens on
-   click here, so a hover-pop would imply interactivity that isn't there.
+   hover lift/shadow those RE/Surge option cards get - a whole-card
+   hover-pop would suggest the card itself does something, when the only
+   actual interaction is the click-to-zoom on the table image (see
+   .zoomable-image below), not the sticker beside it or the card frame.
    nth-child(1)/(2) selectors (not a blanket > li rule) so this reliably
    outweighs the base pink/teal rule by specificity regardless of source
    order in the file, rather than depending on being declared later.
@@ -6026,6 +6028,64 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .setup-note + .setup-note {
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
+/* Same root cause as .rotation-line's/.gem-item's stray-<p> fixes above,
+   one level worse: when a .setup-panel/.setup-notes/.setup-note block sits
+   inside indented content (a tabbed block, an admonition), md_in_html's
+   raw-HTML-block detector never sees these <div>/<details> tags start at
+   column 0 (they only reach column 0 after the tab/admonition processor
+   dedents them, which happens after md_in_html has already scanned), so it
+   treats them as inline text and wraps them in <p> like any other line.
+   Browsers then can't put a <div> or <details> inside a <p> (invalid HTML),
+   so they auto-close the <p> right before it - which leaves a genuinely
+   empty <p></p> behind (the tag opened, immediately hit the block element,
+   and closed with nothing in between). Every boundary between two such
+   tags (setup-panel's opening divs, setup-notes' start, each setup-note's
+   start, the gap after </summary>, the end of each </details>/</div>)
+   spawns one of these, and each one still carries .md-typeset p's real
+   margin - stacking into the extra top/bottom padding seen on any
+   setup-note nested this way (e.g. the Recovery tab's video tip, 222-
+   speedy's Beast Mode alt). Unlike .rotation-line (pure widget markup, no
+   real prose, so a blanket `p { display: contents }` was safe), a
+   setup-note's body can contain genuine paragraph text, so this can't
+   reuse .rotation-line's blanket `p { display: contents }` - it's scoped
+   to :empty specifically, so a real content <p> is never touched, only
+   these accidental zero-content ones disappear. Scoped globally (not just
+   inside .setup-panel/.setup-notes/.setup-note) because the auto-close
+   also strands one of these as a preceding/following *sibling* of the
+   whole .setup-panel block itself (the tag opens, immediately hits
+   .setup-panel's own opening <div>, and closes) - a descendant-only
+   selector would miss that one and leave the gap above/below the card. A
+   genuinely empty <p> never carries meaning anywhere on the site, so
+   removing it globally is safe rather than chasing every container (tab,
+   admonition, list item, ...) that can trigger this. */
+.md-typeset p:empty {
+  display: none;
+}
+/* Side effect of the fix above: a .rotation-line/.cycle-card that's the
+   very first thing inside a tab (nothing above it - e.g. "Opener Cycle"
+   tabs) always had one of these auto-closed empty <p>s immediately
+   before it too, for the exact same md_in_html reason. It was empty, but
+   it wasn't invisible - it still rendered the browser's default <p> top
+   margin (~1em), which collapsed with the box's own smaller margin-top
+   and read as "a bit of breathing room under the tab bar". Hiding the
+   stray p above removed that spacer along with the ones it was meant to
+   remove, leaving the box almost flush against the tab labels. Restore
+   just that margin, scoped narrowly to this exact pattern (an empty p
+   directly followed by the box, inside a tab) so nothing else moves.
+
+   A standalone .rotation-line (not inside a .cycle-card) is also, at
+   runtime, wrapped by rotation-practice.js in a zero-margin
+   .rotation-practice-float div (see that section below) - that wrapper
+   becomes the actual element sitting next to the empty p in the live
+   DOM, so it needs its own arm of this selector; the plain .rotation-line
+   arm still matters as the no-JS/pre-hydration fallback. .cycle-card
+   never gets that wrapper (its practice toggle joins the card header
+   instead), so it only needs the one selector. */
+.md-typeset .tabbed-block > p:empty + .rotation-line,
+.md-typeset .tabbed-block > p:empty + .rotation-practice-float,
+.md-typeset .tabbed-block > p:empty + .cycle-card {
+  margin-top: 1em;
+}
 /* Material's `.md-typeset details:focus-within` (specificity 0,2,1) sets
    a glowing blue `box-shadow: 0 0 0 .2rem #448aff1a` ring on the whole
    element the instant a descendant (i.e. its own summary, right after a
@@ -6154,6 +6214,35 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .setup-note > :last-child {
   margin-bottom: 0;
 }
+/* An image dropped straight into a setup-note body (222-speedy's 🐆 vs 🐯
+   comparison, 333-blitz's "why male models" reveal) rendered as a bare,
+   full-width <img> with square corners - looked like a random png pasted
+   in next to every other bordered/rounded component on the page. Same
+   flat-card language as .dps-showcase-frame/.gearing-cards img elsewhere
+   (thin purple-tinted border, rounded corners) plus a soft drop shadow
+   for a little depth, since unlike those it's not already sitting inside
+   its own bordered frame div - the border has to live on the image
+   itself. Capped width + centering keeps a portrait screenshot from
+   blowing up to the note's full text width and reads more like an
+   intentionally placed image than a dumped attachment. Class is generic
+   (not meme-specific) so any future image embedded in a setup-note body
+   picks up the same treatment for free. */
+.md-typeset .setup-note img.setup-note-image {
+  display: block;
+  width: 100%;
+  max-width: min(420px, 100%);
+  /* No bottom margin here - .setup-note's own 0.55em bottom padding
+     already supplies that gap (same as it does for a plain text note),
+     so adding a bottom margin on top of it stacked with the top margin
+     unevenly: the image sat visibly closer to its own title than to the
+     card's bottom edge (measured ~7.5px top vs ~11.8px bottom). Top still
+     needs its own margin since nothing else provides that gap - the
+     summary has margin: 0. */
+  margin: 0.5em auto 0;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
 
 /* ==========================================================================
    Food/consumable requirement callout — Essentials page
@@ -6253,4 +6342,78 @@ body.page-333-blitz input[type="text"] {
   font-weight: 600;
   color: var(--dbc-lavender);
   white-space: nowrap;
+}
+
+/* ---------- Click-to-zoom lightbox for standalone content images ---------- */
+/* TL;DR flowcharts (tldr-333/313.png), memes (blitz-meme.png,
+   leopardvstiger.png), and the gearing-values screenshot (gearing-1.png)
+   all get dropped into the page at a width meant to fit the column, which
+   is too small to actually read the fine text/numbers in them. Rather
+   than send the reader to a separate raw-image page (a full navigation
+   away from the guide) or embed them any bigger (blows out the column
+   for everyone who doesn't need to zoom), a click expands the same image
+   into a full-viewport overlay - see javascripts/image-lightbox.js. Opt
+   in per-image with `{ .zoomable-image }` rather than making every <img>
+   on the site clickable (inline skill icons, ap-icons, etc. shouldn't be). */
+.md-typeset img.zoomable-image {
+  cursor: zoom-in;
+}
+.image-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4vh 4vw;
+  background-color: rgba(10, 9, 11, 0.88);
+  cursor: zoom-out;
+  /* Kept in the DOM permanently once built (see the JS) rather than
+     added/removed - opacity + pointer-events off is enough to make it
+     invisible and non-interactive while closed, and skips the churn of
+     rebuilding it on every open. */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.image-lightbox-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.image-lightbox-overlay img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  cursor: zoom-out;
+}
+/* Matches .rotation-practice-toggle's pill-button language (same dark
+   fill, purple-tinted border, same site-wide "floating control" look)
+   rather than inventing a new button style just for this one case. */
+.image-lightbox-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.4rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
+  background-color: #1c1c1f;
+  color: #cbb9e8;
+  border-radius: 999px;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.image-lightbox-close:hover {
+  border-color: rgba(var(--dbc-purple-rgb), 0.75);
+  background-color: #232327;
 }

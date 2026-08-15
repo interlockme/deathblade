@@ -30,8 +30,18 @@
 
 ## Skill Codes
 
-!!! danger "Before importing"
-    Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="danger" open markdown>
+<summary><span class="setup-note-tag">Warn</span>Before Importing<span class="setup-note-arrow"></span></summary>
+
+Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+
+</details>
+
+</div>
+</div>
 
 === "313 High Floor ★"
 
@@ -298,8 +308,18 @@
 
 === "Recovery"
 
-    !!! example ""
-        Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
+    <div class="setup-panel" data-accent="lavender" markdown>
+    <div class="setup-notes" markdown>
+
+    <details class="setup-note" data-kind="tip" open markdown>
+    <summary><span class="setup-note-tag">Tip</span>Recovery Video<span class="setup-note-arrow"></span></summary>
+
+    Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
+
+    </details>
+
+    </div>
+    </div>
 
     - 313 plays similarly, just Turning Slash → Fatal Wave instead of FTF.
     - Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> when a little short on orbs, just cast if unsure.
@@ -308,7 +328,7 @@
     - Use Maelstrom + Fatal Wave earlier if waiting on main orb generation skills.
 
 === "TL;DR:"
-    ![313 TL;DR flowchart](../assets/tldr-313.png){ loading=lazy }
+    ![313 TL;DR flowchart](../assets/tldr-313.png){ .zoomable-image loading=lazy }
 
 ## DPS Spread
 

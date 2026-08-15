@@ -30,7 +30,7 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=11
+  - stylesheets/extra.css?v=12
 
 extra_javascript:
   - javascripts/site-utils.js?v=4
@@ -55,6 +55,7 @@ extra_javascript:
   - javascripts/gem-dps-tooltip.js?v=5
   - javascripts/build-compare.js?v=3
   - javascripts/last-updated.js?v=3
+  - javascripts/image-lightbox.js?v=1
 
 extra:
   generator: false

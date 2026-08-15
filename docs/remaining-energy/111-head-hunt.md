@@ -30,8 +30,18 @@
 
 ## Skill Codes
 
-!!! danger "Before importing"
-    Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="danger" open markdown>
+<summary><span class="setup-note-tag">Warn</span>Before Importing<span class="setup-note-arrow"></span></summary>
+
+Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+
+</details>
+
+</div>
+</div>
 
 === "111 Head Hunt"
 
@@ -251,8 +261,18 @@
 
 === "Recovery"
 
-    !!! example ""
-        Watch this 54-minute [111 recovery video](https://www.youtube.com/watch?v=z8KE3HG_ggg) or consider an easier build.
+    <div class="setup-panel" data-accent="lavender" markdown>
+    <div class="setup-notes" markdown>
+
+    <details class="setup-note" data-kind="tip" open markdown>
+    <summary><span class="setup-note-tag">Tip</span>Recovery Video<span class="setup-note-arrow"></span></summary>
+
+    Watch this 54-minute [111 recovery video](https://www.youtube.com/watch?v=z8KE3HG_ggg) or consider an easier build.
+
+    </details>
+
+    </div>
+    </div>
 
     - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
 

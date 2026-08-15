@@ -700,8 +700,8 @@
 
 <div class="grid cards gearing-cards" style="grid-template-columns: 1fr 3fr;" markdown>
 
-- ![Gearing sticker](assets/shared/gearing-sticker.png)
-- ![Gearing values table 1](assets/shared/gearing-1.png)
+- ![Gearing sticker](assets/shared/gearing-sticker.png){ .zoomable-image loading=lazy }
+- ![Gearing values table 1](assets/shared/gearing-1.png){ .zoomable-image loading=lazy }
 
 </div>
 

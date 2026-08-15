@@ -35,13 +35,33 @@
 </div>
 </div>
 
-??? danger "But why male models? 🐯"
-    ![333 Blitz meme](../assets/blitz-meme.png){ loading=lazy }
+<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="note" markdown>
+<summary><span class="setup-note-tag">Note</span>But why male models? 🐯<span class="setup-note-arrow"></span></summary>
+
+![333 Blitz meme](../assets/blitz-meme.png){ .setup-note-image .zoomable-image loading=lazy }
+
+</details>
+
+</div>
+</div>
 
 ## Skill Codes
 
-!!! danger "Before importing"
-    Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="danger" open markdown>
+<summary><span class="setup-note-tag">Warn</span>Before Importing<span class="setup-note-arrow"></span></summary>
+
+Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+
+</details>
+
+</div>
+</div>
 
 === "333 Blitz"
 

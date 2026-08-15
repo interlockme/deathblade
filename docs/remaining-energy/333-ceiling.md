@@ -32,8 +32,18 @@
 
 ## Skill Codes
 
-!!! danger "Before importing"
-    Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="danger" open markdown>
+<summary><span class="setup-note-tag">Warn</span>Before Importing<span class="setup-note-arrow"></span></summary>
+
+Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+
+</details>
+
+</div>
+</div>
 
 === "333 Ceiling ★"
 
@@ -359,8 +369,18 @@
 
 === "Recovery"
 
-    !!! example ""
-        Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
+    <div class="setup-panel" data-accent="lavender" markdown>
+    <div class="setup-notes" markdown>
+
+    <details class="setup-note" data-kind="tip" open markdown>
+    <summary><span class="setup-note-tag">Tip</span>Recovery Video<span class="setup-note-arrow"></span></summary>
+
+    Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
+
+    </details>
+
+    </div>
+    </div>
 
     - Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> when a little short on orbs, just cast if unsure.
     - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
@@ -369,7 +389,7 @@
     - Hold Deathly Slash until the next Cycle **1** if it's out of sync. DPS loss, but easier.
 
 === "TL;DR:"
-    ![333 TL;DR flowchart](../assets/tldr-333.png){ loading=lazy }
+    ![333 TL;DR flowchart](../assets/tldr-333.png){ .zoomable-image loading=lazy }
 
 ## DPS Spread
 

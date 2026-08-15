@@ -37,8 +37,18 @@
 
 ## Skill Codes
 
-!!! danger "Before importing"
-    Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="danger" open markdown>
+<summary><span class="setup-note-tag">Warn</span>Before Importing<span class="setup-note-arrow"></span></summary>
+
+Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+
+</details>
+
+</div>
+</div>
 
 === "222 Speedy ★"
 
@@ -203,8 +213,14 @@
 ]
 </script>
 </div>
-??? note "🐆 vs 🐯"
-    ![222 vs 333](../assets/leopardvstiger.png){ loading=lazy }
+
+<details class="setup-note" data-kind="note" markdown>
+<summary><span class="setup-note-tag">Note</span>🐆 vs 🐯<span class="setup-note-arrow"></span></summary>
+
+![222 vs 333](../assets/leopardvstiger.png){ .setup-note-image .zoomable-image loading=lazy }
+
+</details>
+
 </details>
 
 </div>
@@ -286,26 +302,36 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
     - You don't strictly have to precast Wind Cut before Death Trance for this build.
         - If you Surged right after Deathly Slash in the previous cycle, it might be smoother to skip the precast.
 
-    ??? note "Beast Mode"
-        Alternate between these two cycles:
+    <div class="setup-panel" data-accent="lavender" markdown>
+    <div class="setup-notes" markdown>
 
-        <div class="cycle-card" markdown>
-        <div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Surprise Skip</span></div>
-        <div class="rotation-line" markdown>
-        <script type="application/json">
-        ["windcut", "deathtrance", "surpriseattack","maelstrom", "windcut", "upperslash", "turningslash", "bladedance", "deathlyslash", "surge"]
-        </script>
-        </div>
-        </div>
+    <details class="setup-note" data-kind="example" markdown>
+    <summary><span class="setup-note-tag">Alt</span>Beast Mode<span class="setup-note-arrow"></span></summary>
 
-        <div class="cycle-card" markdown>
-        <div class="cycle-card-header"><span class="cycle-num cycle-num-2">2</span><span class="cycle-title">Wind Cut Skip</span></div>
-        <div class="rotation-line" markdown>
-        <script type="application/json">
-        ["surpriseattack", "deathtrance", "windcut","maelstrom", "surpriseattack", "upperslash", "turningslash", "bladedance", "deathlyslash", "surge"]
-        </script>
-        </div>
-        </div>
+    Alternate between these two cycles:
+
+    <div class="cycle-card" markdown>
+    <div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Surprise Skip</span></div>
+    <div class="rotation-line" markdown>
+    <script type="application/json">
+    ["windcut", "deathtrance", "surpriseattack","maelstrom", "windcut", "upperslash", "turningslash", "bladedance", "deathlyslash", "surge"]
+    </script>
+    </div>
+    </div>
+
+    <div class="cycle-card" markdown>
+    <div class="cycle-card-header"><span class="cycle-num cycle-num-2">2</span><span class="cycle-title">Wind Cut Skip</span></div>
+    <div class="rotation-line" markdown>
+    <script type="application/json">
+    ["surpriseattack", "deathtrance", "windcut","maelstrom", "surpriseattack", "upperslash", "turningslash", "bladedance", "deathlyslash", "surge"]
+    </script>
+    </div>
+    </div>
+
+    </details>
+
+    </div>
+    </div>
 
 *From zero orbs:*
 { .lead }

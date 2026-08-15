@@ -31,15 +31,35 @@
 </div>
 </div>
 
-!!! info ""
-    Since this is a beginner legacy build, this guide strays slightly from the norm to offer a smoother experience without deep min-maxing. For instance, you won't need mana food or stimulants to enjoy the gameplay.
+<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-notes" markdown>
 
-    *New to Deathblade entirely? [Surge](../surge/essentials.md) is generally more beginner-friendly and outperforms RE Standard.*
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span>About This Build<span class="setup-note-arrow"></span></summary>
+
+Since this is a beginner legacy build, this guide strays slightly from the norm to offer a smoother experience without deep min-maxing. For instance, you won't need mana food or stimulants to enjoy the gameplay.
+
+</details>
+
+</div>
+</div>
+
+*New to Deathblade entirely? [Surge](../surge/essentials.md) is generally more beginner-friendly and outperforms RE Standard.*
 
 ## Skill Codes
 
-!!! danger "Before importing"
-    Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="danger" open markdown>
+<summary><span class="setup-note-tag">Warn</span>Before Importing<span class="setup-note-arrow"></span></summary>
+
+Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive" and "Skill" to be safe. For [Gems](#gems), follow the guide.
+
+</details>
+
+</div>
+</div>
 
 === "Standard"
 
