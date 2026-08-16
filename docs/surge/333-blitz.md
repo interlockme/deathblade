@@ -207,11 +207,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
+- You can use the Quick Prep tripod on Blade Dance at lower gem levels.
 - Earth Explosion tripod on Earth Cleaver is up to personal preference.
-    - Increased cast speed and extra stack, lowered mobility and damage.
+    - Increased cast speed, but greatly lowers mobility and damage.
 - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
-- You can use the Quick Prep tripod on Blade Dance as a safety net.
-- Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer it.
+- Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer.
 
 </details>
 

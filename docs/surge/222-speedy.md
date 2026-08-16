@@ -206,9 +206,9 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
 - Earth Explosion tripod on Earth Cleaver is up to personal preference.
-    - Increased cast speed and extra stack, lowered mobility and damage.
+    - Increased cast speed, but greatly lowers mobility and damage.
 - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
-- Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer it.
+- Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer.
 - You can replace Spincutter or Dark Axel for literally any skill you prefer.
 
 </details>
@@ -217,9 +217,9 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Alt</span>Upper Slash<span class="setup-note-arrow"></span></summary>
 
 - You can gain more comfort at a DPS loss by replacing Spincutter or Dark Axel for Upper Slash.
-- Upper Slash is a push immune skill that generates 5 stacks and allows you to skip Earth Cleaver casts.
-- Replace both Earth Cleaver gems for Upper Slash CD and any other gem you prefer.
-- Optionally, replace Earth Cleaver entirely for Lv 1 Head Hunt and max Surprise Attack.
+- Upper Slash is a push immune skill that generates 5 stacks and lets you hold counter for utility.
+- Replace both Earth Cleaver gems for Upper Slash CD (important) and Dark Axel or Spincutter CD.
+- Optionally, replace Earth Cleaver entirely for Lv 1-7 Head Hunt and max Surprise Attack/Maelstrom.
 
 <div class="skill-setup" data-family="surge" markdown>
 <script type="application/json">
@@ -259,20 +259,21 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     "surge",
     "bladedance",
     { "id": "earthcleaver", "alts": [
-      { "id": "upperslash", "note": "Optional in the Upper Slash build." }
+      { "id": "darkaxel", "note": "Optional CD in the Upper Slash build." },
+      { "id": "spincutter", "note": "Optional CD in the Upper Slash build." }
     ] },
     "turningslash",
     { "id": "windcut", "alts": [
-      { "id": "darkaxel", "note": "Swap this to Dark Axel CD if you prefer." }
+      { "id": "darkaxel", "note": "Optional CD in the regular build." }
     ] }
   ] },
   { "col": "cd", "label": "Cooldown", "items": [
     "windcut",
     "surpriseattack",
-    "bladedance",
     "turningslash",
+    "bladedance",
     { "id": "earthcleaver", "alts": [
-      { "id": "upperslash", "note": "Required in the Upper Slash build." }
+      { "id": "upperslash", "note": "Required in the Upper Slash build. This becomes the third priority in this column." }
     ] },
     "maelstrom"
   ] }
