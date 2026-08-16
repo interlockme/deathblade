@@ -1,3 +1,8 @@
+// FORK GUIDE: ENGINE - reusable as-is for any class. Renders whatever's in
+// build-data.js/skill-data.js/skill-names.js/ap-node-names.js; no code
+// changes needed here, just point your build/essentials pages' JSON blocks
+// at your own data.
+//
 // Renders the "## Ark Setup" section's 3 Order Cores (Sun/Moon/Star) as a
 // small native widget instead of a static ordercores-*.png screenshot.
 // Deliberately only covers the 3 ORDER cores (the red/orange-trimmed ones

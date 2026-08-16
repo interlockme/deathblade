@@ -1,3 +1,8 @@
+// FORK GUIDE: ENGINE - reusable as-is for any class. Renders whatever's in
+// build-data.js/skill-data.js/skill-names.js/ap-node-names.js; no code
+// changes needed here, just point your build/essentials pages' JSON blocks
+// at your own data.
+//
 // Unified build comparison card, sits under each family's "## Build
 // Comparison" heading on essentials.md. Replaces what used to be a static
 // markdown table PLUS a separate pick-two-and-overlay widget below it with

@@ -1,3 +1,8 @@
+// FORK GUIDE: ENGINE - reusable as-is for any class. Renders whatever's in
+// build-data.js/skill-data.js/skill-names.js/ap-node-names.js; no code
+// changes needed here, just point your build/essentials pages' JSON blocks
+// at your own data.
+//
 // Renders each build page's "## Skill Setup" section from a compact JSON
 // blob instead of a static skillsetup-*.png screenshot. Tag pills + the
 // short descriptive note in a card's expanded body come from skill-data.js

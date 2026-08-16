@@ -1,3 +1,6 @@
+// FORK GUIDE: INFRA - generic site plumbing, no class-specific content.
+// Keep as-is.
+//
 // Small shared DOM helpers used by the native widget scripts
 // (ark-core-badge.js, ark-passive-tree.js, essentials-table.js,
 // skill-setup.js, dps-chart.js, etc).

@@ -1,3 +1,8 @@
+// FORK GUIDE: ENGINE - reusable as-is for any class. Renders whatever's in
+// build-data.js/skill-data.js/skill-names.js/ap-node-names.js; no code
+// changes needed here, just point your build/essentials pages' JSON blocks
+// at your own data.
+//
 // Renders the "## Ark Setup" section's Ark Passive tree (Evolution /
 // Enlightenment / Leap) as a native widget instead of a static
 // argrid-tree*.png screenshot of the full in-game grid.

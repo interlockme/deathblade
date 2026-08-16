@@ -78,6 +78,11 @@ Atk/Move Speed Feast
 
 ## Build Comparison
 
+<!-- This table and its two-build overlay picker are entirely driven by
+     javascripts/build-data.js (window.DB_BUILD_DATA) - nothing to edit here.
+     Go there to change a build's numbers, its short compare-table blurb, or
+     whether it's eligible for the overlay picker. -->
+
 <div class="build-compare" data-family="re"></div>
 
 ## Engravings
@@ -220,6 +225,12 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 - Join lobbies closer to your region or avoid builds with very tight orb generation.
 
 ## Remaining Energy Skills
+
+<!-- Per-row id/name/lines (small italic value lines like "4201 meter") -
+     full schema is in javascripts/essentials-table.js's "EASY EDIT GUIDE"
+     comment. Tags and Notes columns are NOT authored here: they come from
+     skill-data.js, so this table and every build page's Skill Setup card
+     stay in sync automatically - edit a tag/note there, not here. -->
 
 <div class="skills-table" data-family="re" markdown>
 <script type="application/json">

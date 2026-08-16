@@ -1,3 +1,9 @@
+// FORK GUIDE: DATA, but read this first - some node ids below (crit,
+// specialization, keensense, etc.) are account-wide nodes shared by every
+// class in-game and can stay as-is; others (remainingenergy,
+// surgeenhancement, orbcirculation, etc.) are Deathblade's own identity
+// nodes and must be replaced with your class's.
+//
 // SINGLE SOURCE OF TRUTH for an Ark Passive node id's display name and
 // icon, used by ark-passive-tree.js so a build's "## Ark Setup" JSON can
 // author nodes as a bare id (e.g. "keensense") instead of repeating

@@ -1,3 +1,9 @@
+// FORK GUIDE: INFRA - mostly generic site plumbing, keep as-is, EXCEPT the
+// 333 Blitz title-tiger easter egg (~line 198 on, gated behind a hardcoded
+// /surge/333-blitz/ path check) - that's a one-off tied to this repo's own
+// meme page. Harmless dead code if left in for another class; delete it if
+// you'd rather not carry it over.
+//
 /* Deathblade guide enhancements:
    - external links open in a new tab (so clicking a calculator/YouTube
      link doesn't navigate you away from the guide)

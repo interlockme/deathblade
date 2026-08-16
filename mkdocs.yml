@@ -32,6 +32,30 @@ theme:
 extra_css:
   - stylesheets/extra.css?v=13
 
+# Load order matters: several widgets read a shared data file
+# (build-data.js/skill-data.js/skill-names.js/ap-node-names.js) or the
+# shared site-utils.js helpers, which must already exist on window
+# before they run. Each widget's own file-top comment says what it
+# needs loaded first if you're moving things around; rough shape below:
+#   1. site-utils.js first - shared DOM helpers every widget below uses
+#   2. extra.js, cpm-calculator.js, bid-calculator.js,
+#      ark-passive-calculator.js - standalone, no cross-file deps
+#   3. data files: build-data.js, skill-data.js, skill-names.js,
+#      ap-node-names.js
+#   4. renderer widgets that read those data files: build-stats-badge.js,
+#      skill-setup.js, essentials-table.js, ark-core-badge.js,
+#      ark-passive-tree.js, gem-priority.js, pentagon-badge.js,
+#      rotation-line.js, dps-chart.js, build-compare.js, last-updated.js,
+#      image-lightbox.js
+#   5. widgets that read the DOM step 4 just built: rotation-practice.js
+#      (after rotation-line.js), gem-dps-tooltip.js (after gem-priority.js
+#      AND dps-chart.js)
+#
+# Forking for another class? Every file above has its own "FORK GUIDE:"
+# comment at the very top - DATA (rewrite the whole file), ENGINE/INFRA
+# (reusable as-is), or DEATHBLADE-SPECIFIC (delete or rewrite from
+# scratch). See README.md's "Forking this for your own spin" section
+# for the full breakdown.
 extra_javascript:
   - javascripts/site-utils.js?v=4
   - javascripts/extra.js?v=2

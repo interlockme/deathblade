@@ -1,3 +1,6 @@
+// FORK GUIDE: INFRA - generic site plumbing, no class-specific content.
+// Keep as-is.
+//
 // Raid auction bid calculator.
 //
 // How a Lost Ark loot auction actually pays out (this is the whole model,

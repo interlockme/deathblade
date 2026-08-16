@@ -1,3 +1,6 @@
+// FORK GUIDE: INFRA - generic site plumbing, no class-specific content.
+// Keep as-is.
+//
 // Click-to-zoom lightbox for standalone content images - TL;DR flowcharts,
 // memes, gearing-value screenshots. These are meant to be read/appreciated
 // at full size, unlike the small inline skill/stat icons peppered through

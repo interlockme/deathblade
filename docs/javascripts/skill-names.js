@@ -1,3 +1,7 @@
+// FORK GUIDE: DATA - every entry here is a Deathblade skill name/id. Replace
+// the whole map with your class's own skills; nothing else in this file
+// needs to change.
+//
 // SINGLE SOURCE OF TRUTH for a skill id's display name, used by
 // rotation-line.js so rotation sequences can be authored as a bare list
 // of ids (e.g. "turningslash") instead of repeating "Turning Slash" and

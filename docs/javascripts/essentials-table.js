@@ -1,3 +1,8 @@
+// FORK GUIDE: ENGINE - reusable as-is for any class. Renders whatever's in
+// build-data.js/skill-data.js/skill-names.js/ap-node-names.js; no code
+// changes needed here, just point your build/essentials pages' JSON blocks
+// at your own data.
+//
 // Renders each family's "## <Family> Skills" reference table on
 // essentials.md from a compact per-row JSON blob (icon id, name, and any
 // small italic value lines like "4201 meter"), joined at render time with

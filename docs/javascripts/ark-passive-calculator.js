@@ -1,3 +1,10 @@
+// FORK GUIDE: DEATHBLADE-SPECIFIC - hardcoded to Deathblade's own Ark
+// Passive keystones/formulas (see deathbladeSpecMultiplier below, and this
+// file's own "for Deathblade" header line). Don't try to reuse this via
+// data edits: delete it (and its <div class="ap-calc"> usage + its
+// mkdocs.yml extra_javascript entry) or rewrite the math from scratch for
+// your class's own keystones.
+//
 // Ark Passive node comparison calculator for Deathblade.
 //
 // Grid compares the three Keystone PAIRS (Critical+Master / Critical+Pulverize

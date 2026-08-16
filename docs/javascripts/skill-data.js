@@ -1,3 +1,7 @@
+// FORK GUIDE: DATA - every entry here is a Deathblade skill's tags/notes.
+// Replace per-skill entries with your class's own; the re/surge split is
+// this site's two build families, rename/restructure to match yours.
+//
 // SINGLE SOURCE OF TRUTH for the tag pills + short "what it does" note
 // shown inside a skill-card's expanded body on every build page's Skill
 // Setup section (see skill-setup.js, the renderer that reads this).

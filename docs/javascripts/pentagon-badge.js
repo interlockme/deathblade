@@ -1,3 +1,8 @@
+// FORK GUIDE: ENGINE - reusable as-is for any class. Renders whatever's in
+// build-data.js/skill-data.js/skill-names.js/ap-node-names.js; no code
+// changes needed here, just point your build/essentials pages' JSON blocks
+// at your own data.
+//
 // Build-profile pentagon badge, drawn next to .build-card on build pages.
 //
 // EASY EDIT GUIDE (read this before touching a build's numbers):

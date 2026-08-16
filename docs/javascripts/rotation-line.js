@@ -1,3 +1,8 @@
+// FORK GUIDE: ENGINE - reusable as-is for any class. Renders whatever's in
+// build-data.js/skill-data.js/skill-names.js/ap-node-names.js; no code
+// changes needed here, just point your build/essentials pages' JSON blocks
+// at your own data.
+//
 // Renders every ".rotation-line" from a compact JSON step list instead
 // of requiring the icon+span+arrow markup to be handwritten in full on
 // every single line. Same instinct as skill-setup.js/essentials-table.js:

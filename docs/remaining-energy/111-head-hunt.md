@@ -3,6 +3,12 @@
 <div class="build-card-row" markdown>
 <div class="build-card" data-updated="2026-08-07" markdown>
 
+<!-- Difficulty/Trixion/Playstyle stats above, AND the pentagon badge below,
+     both read from javascripts/build-data.js (window.DB_BUILD_DATA) - there is
+     nothing to hand-edit in either div itself. Find this build by its
+     data-build id there and edit pentagon/difficulty/trixion/bestFor/etc.;
+     the stat row, the pentagon badge, and the essentials.md comparison table
+     all update together from that one place. -->
 <div class="build-stats" data-build="111-head-hunt" data-family="re"></div>
 
 **Best For:**{: .best-for } Players who want maximum skill expression and speed.
@@ -14,11 +20,6 @@
 - Similar rotation to Fatal Wave builds, but lower orb generation and fewer recovery options.
 
 </div>
-<!-- Build profile pentagon. Order: Difficulty, DPS, Mobility, Recovery, Speed (0-10).
-     - DPS 8.5 follows the strict -0.5-per-rank pattern below 333 Ceiling
-       (9), consistent with the rest of the RE family.
-     - Mobility 5 is standard across all RE builds.
-     - Recovery/Speed are this build's own read - edit freely. -->
 <div class="pentagon-badge" data-build="111-head-hunt" data-family="re" markdown>
 <div class="pentagon-badge-title">Build Profile</div>
 <div class="pentagon-svg-mount"></div>
@@ -29,6 +30,11 @@
 </div>
 
 ## Skill Codes
+
+<!-- Paste the exported skill-code string (from the in-game loadout share
+     feature) into the fenced code block below. Each `=== "Tab Name"` block is
+     a separate tab holding its own code + optional italic note above it -
+     copy that pattern to add another import option (e.g. an easier variant). -->
 
 <div class="setup-panel" data-accent="lavender" markdown>
 <div class="setup-notes" markdown>
@@ -50,6 +56,14 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     ```
 
 ## Ark Setup
+
+<!-- ark-passives / ark-cores JSON below use the site-wide node/core id
+     vocabulary - full schema (node ids, tier shape, points) is documented in
+     javascripts/ark-passive-tree.js and ark-core-badge.js's "EASY EDIT GUIDE"
+     comments. A nested "Alt" details block (e.g. an easier/optional variant)
+     can carry its own compact ark-passives/skill-setup pair for that
+     alternative - copy the existing pattern rather than editing the main
+     tree in place. -->
 
 <div class="setup-panel" data-accent="lavender" markdown>
 
@@ -139,6 +153,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 ## Skill Setup
 
+<!-- Full skill-setup schema (id/level/tripods/rune/subtitle/picks) is in
+     javascripts/skill-setup.js's "EASY EDIT GUIDE" comment. Names, icons, and
+     tags resolve automatically by id from skill-data.js - only add "name" to
+     override the display text for a genuine one-off case. -->
+
 <div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="skill-setup" data-family="re" markdown>
@@ -183,6 +202,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 ## Gems
 
+<!-- Ranked skill-id lists per column (dmg/cd), top = highest priority.
+     Full schema, including the expandable "alts" form for a swappable
+     alternative, is in javascripts/gem-priority.js's "EASY EDIT GUIDE"
+     comment. -->
+
 <div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="gem-priority" markdown>
@@ -202,6 +226,12 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 </div>
 
 ## Rotation
+
+<!-- Each `.rotation-line` is a compact JSON step list of skill ids in
+     order - names/icons resolve automatically, same id vocabulary as Skill
+     Setup and Gems above. Full schema (situational steps, swapNext,
+     cycleRef, trailing suffix, etc.) is in javascripts/rotation-line.js's
+     "EASY EDIT GUIDE" comment. -->
 
 === "Cycles"
 
@@ -277,6 +307,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
 
 ## DPS Spread
+
+<!-- data-labels / data-values / data-ids are three parallel comma-separated
+     lists, ordered highest % first - update after a fresh Trixion recording
+     or a balance pass. Full schema is in javascripts/dps-chart.js's
+     "EASY EDIT GUIDE" comment. -->
 
 <p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
 

@@ -1,3 +1,9 @@
+// FORK GUIDE: DATA - every build entry (pentagon stats, accent colors,
+// bestFor blurbs) is one of Deathblade's own builds. Replace the re/surge
+// families and their builds arrays with your class's own lineup; the
+// axisLabels/invert/axisNote fields let you define your own 5th axis
+// (this site uses Recovery for RE, Exposure for Surge).
+//
 // SINGLE SOURCE OF TRUTH for build pentagon/compare stats. Both
 // pentagon-badge.js (the badge on each build's own page) and
 // build-compare.js (the overview table + overlay picker on essentials.md)

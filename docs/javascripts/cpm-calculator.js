@@ -1,3 +1,10 @@
+// FORK GUIDE: DEATHBLADE-SPECIFIC - the BUILDS map below is Deathblade's
+// own Trixion CPM/multiplier constants, derived from a Deathblade-specific
+// spreadsheet, and the formulas assume Deathblade's orb/Surge identity
+// mechanic. Delete this file (and its markdown usage + mkdocs.yml entry)
+// unless your class also has a CPM-style identity meter worth modeling
+// the same way.
+//
 // Personal CPM / back-attack multiplier calculator.
 //
 // Mirrors the "계산기" (Calculator) sheet from the CPM spreadsheet - a

@@ -1,3 +1,8 @@
+// FORK GUIDE: ENGINE - reusable as-is for any class. Renders whatever's in
+// build-data.js/skill-data.js/skill-names.js/ap-node-names.js; no code
+// changes needed here, just point your build/essentials pages' JSON blocks
+// at your own data.
+//
 // Adds a native hover tooltip to each Damage-column gem card showing
 // that skill's damage share, reusing the numbers already authored for
 // the "## Trixion DPS" chart further down the same page (see

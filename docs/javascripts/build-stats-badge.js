@@ -1,3 +1,8 @@
+// FORK GUIDE: ENGINE - reusable as-is for any class. Renders whatever's in
+// build-data.js/skill-data.js/skill-names.js/ap-node-names.js; no code
+// changes needed here, just point your build/essentials pages' JSON blocks
+// at your own data.
+//
 // Renders the Difficulty/Trixion/Playstyle stat cards at the top of each
 // build page from window.DB_BUILD_DATA - the SAME single source of truth
 // pentagon-badge.js and build-compare.js already read. Before this file,
