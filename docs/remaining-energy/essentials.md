@@ -124,7 +124,6 @@ Atk/Move Speed Feast
 </div>
 </details>
 
-<!-- TODO: replace with the real Cursed Doll tradeoff copy (crit rate needs, downside details) -->
 <details class="engraving-card" data-accent="cursed" open markdown>
 <summary>
 <span class="engraving-card-name">Cursed Doll</span>

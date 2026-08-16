@@ -237,6 +237,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
+- Orb Control tripod on Fatal Wave is **not viable** and you should not use it for any reason.
 - You can bring Head Hunt down to Lv 1 and Void Strike up to Lv 14 for +0.4% DPS and lower mana use.
     - However, Lv 7 is more practical and makes recovery much easier and faster. ★
     - At Lv 7, Magick Control tripod can help solve mana issues if you don't need the CDR.
@@ -249,7 +250,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 - Wealth rune on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
 - It won't cycle as smoothly, but the reduced stress and urgency may suit some people.
-- Consider playing Surge instead of this or any 333 build with Fatal Wave Orb Control tripod.
+- Honestly, don't play this; 333 with OC 5, 313, or literally any Surge build will perform better.
 
 <div class="skill-setup" data-family="re" markdown>
 <script type="application/json">

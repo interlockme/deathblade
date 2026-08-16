@@ -33,7 +33,7 @@
 //     recommended   - true adds the small star next to the name
 //     compareEnabled - false keeps a build in the compare table's overview
 //                      rows but out of the two-build picker (no pentagon
-//                      data to overlay, e.g. Standard)
+//                      data to overlay)
 //
 //   RE and Surge are never compared against each other - RE's fifth axis
 //   is Recovery (higher is better), Surge's is Exposure (lower is

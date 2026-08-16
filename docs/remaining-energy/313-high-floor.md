@@ -227,7 +227,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 </details>
 
 <details class="setup-note" data-kind="danger" markdown>
-<summary><span class="setup-note-tag">Warn</span> Balance Patch<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Warn</span>Balance Patch<span class="setup-note-arrow"></span></summary>
 
 - Swift Fingers **may** become the default 1st row tripod for Blitz Rush.
     - ~2% DPS loss but CPM and playability increases may make up for it.
