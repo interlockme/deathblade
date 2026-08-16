@@ -198,7 +198,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
 - Use Legendary Purify on Spincutter if needed.
-- Use Legendary Bleed on Surprise Attack if you prefer it.
+- Use Epic Rage on Turning Slash if using RC + MI.
+- Use Legendary Bleed on Surprise Attack if not using RC or MI.
 
 </details>
 

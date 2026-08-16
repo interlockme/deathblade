@@ -304,7 +304,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
     </script>
     </div>
 
-    - Basically recast Maelstrom as it expires, some optimal cast spots are suggested.
+    - Basically recast Maelstrom as it expires, but some optimal cast spots are suggested.
     - Use your judgment. Not every skill needs the Maelstrom buff, so prioritize Surge.
     - Consider skipping Maelstrom to conserve a stack if you received a Rage buff.
     </details>
