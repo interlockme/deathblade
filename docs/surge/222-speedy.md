@@ -316,9 +316,6 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
 
 === "Upper Slash"
 
-    *Main cycle for the Upper Slash skill setup.*
-    { .lead }
-
     <div class="rotation-line" markdown>
     <script type="application/json">
     ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "upperslash", "turningslash", "bladedance", "deathlyslash", "surpriseattack", "surge"]
@@ -335,7 +332,7 @@ Apply damage synergy if needed, then use the main cycle and repeat it relentless
     <details class="setup-note" data-kind="example" markdown>
     <summary><span class="setup-note-tag">Alt</span>Beast Mode<span class="setup-note-arrow"></span></summary>
 
-    Alternate between these two cycles:
+    Alternate between these two cycles to sweat for ceiling:
 
     <div class="cycle-card" markdown>
     <div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Surprise Skip</span></div>

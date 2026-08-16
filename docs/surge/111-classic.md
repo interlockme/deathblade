@@ -204,10 +204,10 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
+- You can use the Quick Prep tripod on Blade Dance at lower gem levels.
 - Earth Explosion tripod on Earth Cleaver is up to personal preference.
-    - Increased cast speed and extra stack, lowered mobility and damage.
+    - Increased cast speed, but greatly lowers mobility and damage.
 - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
-- You can use the Quick Prep tripod on Blade Dance as a safety net.
 - Dark Axel (1-1-2 tripods) can be used instead of Spincutter if you prefer it.
 
 </details>
@@ -234,12 +234,12 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
   { "col": "cd", "label": "Cooldown", "items": [
     "windcut",
     "blitzrush",
-    "maelstrom",
     { "id": "bladedance", "alts": [
       { "id": "earthcleaver", "note": "Use Earth Cleaver instead of Blade Dance pre-Ark Grid; set Quick Prep tripod on Blade Dance to compensate." }
     ] },
-    "turningslash",
-    "surpriseattack"
+    "maelstrom",
+    "surpriseattack",
+    "turningslash"
   ] }
 ]
 </script>
@@ -266,7 +266,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 *From 3 orbs:*
 { .lead }
 
-=== "Opener/Breaking Moon Cycle"
+=== "Breaking Moon Cycle"
 
     <div class="rotation-line" markdown>
     <script type="application/json">
@@ -275,7 +275,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
     </script>
     </div>
 
-    - If you already have a Maelstrom (or Rage) buff of 3 seconds or more, consider skipping it.
+    - If you already have a Maelstrom (or Rage) buff of 3 seconds or more, consider skipping it to conserve a stack.
 
 === "Main Cycle"
 
@@ -287,21 +287,30 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
     </script>
     </div>
 
+    - The second Surprise Attack can often be skipped with surplus stacks and expected raid downtime.
     - Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge (Raid Captain).
 
-=== "Main Cycle (RC+MI)"
+    <div class="setup-panel" data-accent="lavender" markdown>
+    <div class="setup-notes" markdown>
 
-    *Alternate main cycle meant to try-hard RC+MI efficiency.*
-    { .lead }
+    <details class="setup-note" data-kind="example" markdown>
+    <summary><span class="setup-note-tag">Alt</span>Raid Captain + Mass Increase<span class="setup-note-arrow"></span></summary>
+
+    Alternate main cycle meant to try-hard engraving efficiency in raids:
 
     <div class="rotation-line" markdown>
     <script type="application/json">
-    ["maelstrom", "windcut", "deathtrance", "surpriseattack", "windcut", "earthcleaver", "turningslash", "maelstrom", "bladedance", "blitzrush", "surpriseattack", "surge"]
+    [{ "id": "maelstrom", "situational": true }, "windcut", "deathtrance", "surpriseattack", "windcut", "earthcleaver", "turningslash", { "id": "maelstrom", "situational": true }, "bladedance", "blitzrush", "surpriseattack", "surge"]
     </script>
     </div>
 
+    - Basically recast Maelstrom as it expires, some optimal cast spots are suggested.
     - Use your judgment. Not every skill needs the Maelstrom buff, so prioritize Surge.
-    - Consider skipping Maelstrom to conserve a stack for later use if you received a Rage buff.
+    - Consider skipping Maelstrom to conserve a stack if you received a Rage buff.
+    </details>
+
+    </div>
+    </div>
 
 === "Awakening Cycle"
 
