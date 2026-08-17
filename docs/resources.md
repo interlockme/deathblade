@@ -506,7 +506,7 @@
 <div class="cpm-calc-row" data-build="333-re">
 <div class="cpm-calc-row-header">
 <span class="cpm-calc-row-title">333 (Ceiling)</span>
-<span class="cpm-calc-row-meta">Trixion CPM 15.122 — Remaining Energy</span>
+<span class="cpm-calc-row-meta">Trixion CPM 15.122 · Remaining Energy</span>
 </div>
 <div class="cpm-calc-body">
 <div class="cpm-calc-inputs">
@@ -547,7 +547,7 @@
 <div class="cpm-calc-row" data-build="111-surge">
 <div class="cpm-calc-row-header">
 <span class="cpm-calc-row-title">111 (Classic)</span>
-<span class="cpm-calc-row-meta">Trixion CPM 10.952 — Surge</span>
+<span class="cpm-calc-row-meta">Trixion CPM 10.952 · Surge</span>
 </div>
 <div class="cpm-calc-body">
 <div class="cpm-calc-inputs">
@@ -588,7 +588,7 @@
 <div class="cpm-calc-row" data-build="222-surge">
 <div class="cpm-calc-row-header">
 <span class="cpm-calc-row-title">222 (Speedy)</span>
-<span class="cpm-calc-row-meta">Trixion CPM 9.756 — Surge</span>
+<span class="cpm-calc-row-meta">Trixion CPM 9.756 · Surge</span>
 </div>
 <div class="cpm-calc-body">
 <div class="cpm-calc-inputs">
