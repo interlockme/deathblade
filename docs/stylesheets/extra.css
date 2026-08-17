@@ -53,6 +53,41 @@
     .setup-panel note (rgba(--dbc-purple-rgb, 0.045) over the page bg) - picked
     to make the header/tabs bar and footer read as the same "surface" as those
     notes instead of their own separate near-black shade */
+
+  /* Colors below were previously repeated as raw hex literals at 2-6
+     separate call sites each (found during a full-file audit) instead of
+     being named here like every other reused color on the site. No
+     rendered pixel changes from naming them - same values, just one
+     source of truth now instead of N copies that could drift apart. */
+  --dbc-note-border: #8b80a8;      /* "note" admonition border - the one admonition
+    type without a dedicated accent color of its own (unlike tip/warning/danger/
+    example/info, which each border+tint off an existing --dbc-* accent) */
+  --dbc-note-bg: #201d29;          /* "note" admonition + its title bar background */
+  --dbc-tip-bg: #182422;           /* "tip" admonition + its title bar background, pairs with --dbc-teal */
+  --dbc-gold-dark: #26210f;        /* dark gold tint - "warning" admonition bg, the
+    2nd Pre-Ark Grid option card, and .page-banner-warning, pairs with --dbc-gold */
+  --dbc-danger-bg: #271717;        /* "danger" admonition + its title bar background, pairs with --dbc-red */
+  --dbc-example-bg: #161f28;       /* "example" admonition + its title bar background, pairs with --dbc-blue */
+  --dbc-rose-dark: #241a20;        /* dark rose tint - "info" admonition bg, the 1st
+    .grid.cards/.prearc-cards option card, a rank-1 gem badge's on-fill text, and
+    cycle-num-1's on-fill text, pairs with --dbc-rose */
+  --dbc-teal-dark: #0a1f1c;        /* darkest teal tint - on-fill text for a rank-1
+    Cooldown gem badge and cycle-num-2, pairs with --dbc-teal (see also
+    --dbc-teal-card-bg below, a different/lighter teal-family tint) */
+  --dbc-teal-card-bg: #16221f;     /* the 2nd .grid.cards option card and 3rd
+    .prearc-cards option card background, pairs with --dbc-teal */
+  --dbc-surface-muted: #1d1d21;    /* plain-table row background + the 1st/2nd
+    gearing-value cards - a muted dark surface with no accent color tie-in */
+  --dbc-gem-name-muted: #d8d2de;   /* rank-2 gem item name text + an alt-gem's bolded name */
+  --dbc-chip-surface: #1c1c1f;     /* background shared by the build-compare share-link
+    tooltip and the image-lightbox close button, both bordered in --dbc-purple */
+  --dbc-chip-text: #cbb9e8;        /* text color paired with --dbc-chip-surface above */
+  --dbc-chip-surface-hover: #232327; /* hover background for those same two --dbc-purple-bordered controls */
+  --dbc-muted-text: #7a7580;       /* faint gray label text - a "no diff" build-compare
+    note, an engraving loadout hint, and an Ark Passive tier's point count */
+  --dbc-muted-text-alt: #8a849a;   /* placeholder-style input text, shared by the CPM and bid calculators' "muted" fields */
+  --dbc-muted-text-soft: #9c96a8;  /* soft gray label text, shared by an Ark Passive calc popover filename and a stat badge */
+  --dbc-rose-text-soft: #f4c9d9;   /* soft pink text - an engraving food chip label and a loadout note's bolded text */
 }
 
 [data-md-color-scheme="slate"] {
@@ -213,7 +248,16 @@ h1, h2, h3 {
   font-family: "Poppins", sans-serif;
 }
 
-h1 { color: #e64a89; }
+/* .md-typeset h1 (not bare h1) - Material's own .md-typeset h1 rule sets
+   color: var(--md-default-fg-color--light) at specificity (0,1,1), which
+   silently beat a bare `h1 { color: ... }` selector's (0,0,1) regardless
+   of source order. That meant this color never actually rendered - every
+   h1 on the site was showing Material's default light-gray instead of
+   pink, undetected because nothing looked "broken", just muted. Uses
+   --dbc-pink (the site's actual accent color, already on links/borders/
+   the difficulty bar everywhere else) rather than the orphaned #e64a89
+   this rule used to carry, which matched nothing else on the site. */
+.md-typeset h1 { color: var(--dbc-pink); }
 h2 { color: var(--dbc-purple); } /* muted lavender, used sparingly as an accent, not a fill color */
 h3 { color: var(--dbc-teal); }
 
@@ -350,11 +394,11 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .admonition.note,
 .md-typeset details.note {
   border-color: #8b80a8;
-  background-color: #201d29;
+  background-color: var(--dbc-note-bg);
 }
 .md-typeset .note > .admonition-title,
 .md-typeset .note > summary {
-  background-color: #201d29;
+  background-color: var(--dbc-note-bg);
   color: var(--dbc-lavender);
 }
 .md-typeset .note > .admonition-title::before,
@@ -365,11 +409,11 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .admonition.tip,
 .md-typeset details.tip {
   border-color: var(--dbc-teal);
-  background-color: #182422;
+  background-color: var(--dbc-tip-bg);
 }
 .md-typeset .tip > .admonition-title,
 .md-typeset .tip > summary {
-  background-color: #182422;
+  background-color: var(--dbc-tip-bg);
   color: var(--dbc-teal);
 }
 .md-typeset .tip > .admonition-title::before,
@@ -380,11 +424,11 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .admonition.warning,
 .md-typeset details.warning {
   border-color: var(--dbc-gold);
-  background-color: #26210f;
+  background-color: var(--dbc-gold-dark);
 }
 .md-typeset .warning > .admonition-title,
 .md-typeset .warning > summary {
-  background-color: #26210f;
+  background-color: var(--dbc-gold-dark);
   color: var(--dbc-gold);
 }
 .md-typeset .warning > .admonition-title::before,
@@ -395,11 +439,11 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .admonition.danger,
 .md-typeset details.danger {
   border-color: var(--dbc-red);
-  background-color: #271717;
+  background-color: var(--dbc-danger-bg);
 }
 .md-typeset .danger > .admonition-title,
 .md-typeset .danger > summary {
-  background-color: #271717;
+  background-color: var(--dbc-danger-bg);
   color: var(--dbc-red);
 }
 .md-typeset .danger > .admonition-title::before,
@@ -410,11 +454,11 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .admonition.example,
 .md-typeset details.example {
   border-color: var(--dbc-blue);
-  background-color: #161f28;
+  background-color: var(--dbc-example-bg);
 }
 .md-typeset .example > .admonition-title,
 .md-typeset .example > summary {
-  background-color: #161f28;
+  background-color: var(--dbc-example-bg);
   color: var(--dbc-blue);
 }
 .md-typeset .example > .admonition-title::before,
@@ -430,11 +474,11 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .admonition.info,
 .md-typeset details.info {
   border-color: var(--dbc-rose);
-  background-color: #241a20;
+  background-color: var(--dbc-rose-dark);
 }
 .md-typeset .info > .admonition-title,
 .md-typeset .info > summary {
-  background-color: #241a20;
+  background-color: var(--dbc-rose-dark);
   color: var(--dbc-rose);
 }
 .md-typeset .info > .admonition-title::before,
@@ -501,7 +545,7 @@ h3 { color: var(--dbc-teal); }
      [header] - the same tint .skills-table/.food-alt-table use - produce
      against the page's #161718 background, just hardcoded so they no
      longer depend on what's underneath. */
-  background-color: #1d1d21;
+  background-color: var(--dbc-surface-muted);
 }
 .md-typeset table:not([class]) th {
   background-color: #29272f;
@@ -971,7 +1015,7 @@ h3 { color: var(--dbc-teal); }
 /* Rank 2 - a clear step up from the floor, still short of rank 1. */
 .md-typeset .gem-col-dmg .gem-item[data-rank="2"] .gem-item-rank { background-color: rgba(var(--dbc-rose-rgb), 0.18); color: #eab3c6; }
 .md-typeset .gem-col-cd .gem-item[data-rank="2"] .gem-item-rank { background-color: rgba(var(--dbc-teal-rgb), 0.18); color: #a4d9d0; }
-.md-typeset .gem-item[data-rank="2"] .gem-item-name { color: #d8d2de; }
+.md-typeset .gem-item[data-rank="2"] .gem-item-name { color: var(--dbc-gem-name-muted); }
 
 /* Rank 1 - the unambiguous default. Full accent color plus a soft
    tinted row background, never a size change (a bigger rank-1 row
@@ -984,8 +1028,8 @@ h3 { color: var(--dbc-teal); }
   background: linear-gradient(90deg, rgba(var(--dbc-teal-rgb), 0.14), rgba(var(--dbc-teal-rgb), 0.04));
   border-color: rgba(var(--dbc-teal-rgb), 0.55);
 }
-.md-typeset .gem-col-dmg .gem-item[data-rank="1"] .gem-item-rank { background-color: var(--dbc-rose); color: #241a20; }
-.md-typeset .gem-col-cd .gem-item[data-rank="1"] .gem-item-rank { background-color: var(--dbc-teal); color: #0a1f1c; }
+.md-typeset .gem-col-dmg .gem-item[data-rank="1"] .gem-item-rank { background-color: var(--dbc-rose); color: var(--dbc-rose-dark); }
+.md-typeset .gem-col-cd .gem-item[data-rank="1"] .gem-item-rank { background-color: var(--dbc-teal); color: var(--dbc-teal-dark); }
 .md-typeset .gem-item[data-rank="1"] .gem-item-name {
   font-weight: 600;
   color: #f0e6ea;
@@ -1110,7 +1154,7 @@ h3 { color: var(--dbc-teal); }
   margin: 0;
 }
 .md-typeset .gem-alt strong {
-  color: #d8d2de;
+  color: var(--dbc-gem-name-muted);
 }
 /* Small inline icon in front of an alt gem's name - same ring treatment
    as .gem-item-icon so it reads as the same decoration family, but sized
@@ -1396,11 +1440,11 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .cycle-num-1 {
   background-color: var(--dbc-rose);
-  color: #241a20;
+  color: var(--dbc-rose-dark);
 }
 .md-typeset .cycle-num-2 {
   background-color: var(--dbc-teal);
-  color: #0a1f1c;
+  color: var(--dbc-teal-dark);
 }
 .md-typeset .cycle-title {
   color: var(--md-default-fg-color);
@@ -1441,8 +1485,8 @@ h3 { color: var(--dbc-teal); }
   right: 0.5em;
   z-index: 3;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
-  background-color: #1c1c1f;
-  color: #cbb9e8;
+  background-color: var(--dbc-chip-surface);
+  color: var(--dbc-chip-text);
   border-radius: 999px;
   font-size: 0.68em;
   font-family: inherit;
@@ -1454,7 +1498,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .rotation-practice-toggle:hover {
   border-color: rgba(var(--dbc-purple-rgb), 0.75);
-  background-color: #232327;
+  background-color: var(--dbc-chip-surface-hover);
 }
 /* Inside a cycle-card header, the toggle is an ordinary flex item (not
    absolutely positioned) pinned to the row's far right - the header's
@@ -2201,7 +2245,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .build-compare-diffcard-none {
   font-size: 0.78em;
-  color: #7a7580;
+  color: var(--dbc-muted-text);
   font-style: italic;
 }
 .md-typeset .build-compare-diffcard-empty {
@@ -2219,11 +2263,11 @@ h3 { color: var(--dbc-teal); }
   transform: translateY(-2px);
 }
 .md-typeset .grid.cards > ul > li:nth-child(1) {
-  background-color: #241a20;
+  background-color: var(--dbc-rose-dark);
   border-color: var(--dbc-rose);
 }
 .md-typeset .grid.cards > ul > li:nth-child(2) {
-  background-color: #16221f;
+  background-color: var(--dbc-teal-card-bg);
   border-color: var(--dbc-teal);
 }
 
@@ -2391,7 +2435,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .engraving-chip-food {
   border-color: rgba(var(--dbc-rose-rgb), 0.45);
   background-color: rgba(var(--dbc-rose-rgb), 0.09);
-  color: #f4c9d9;
+  color: var(--dbc-rose-text-soft);
   display: inline-flex;
   vertical-align: middle;
   align-items: center;
@@ -2405,7 +2449,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .engraving-loadout-hint {
   font-size: 0.78em;
-  color: #7a7580;
+  color: var(--dbc-muted-text);
   font-style: italic;
   vertical-align: middle;
 }
@@ -2436,7 +2480,7 @@ h3 { color: var(--dbc-teal); }
   width: 12px;
 }
 .md-typeset .engraving-loadout-note strong {
-  color: #f4c9d9;
+  color: var(--dbc-rose-text-soft);
   font-style: normal;
 }
 
@@ -2637,15 +2681,15 @@ h3 { color: var(--dbc-teal); }
 
 /* ---------- Pre-Ark Grid page option cards ---------- */
 .md-typeset .grid.cards.prearc-cards > ul > li:nth-child(1) {
-  background-color: #241a20;
+  background-color: var(--dbc-rose-dark);
   border-color: var(--dbc-rose);
 }
 .md-typeset .grid.cards.prearc-cards > ul > li:nth-child(2) {
-  background-color: #26210f;
+  background-color: var(--dbc-gold-dark);
   border-color: var(--dbc-gold);
 }
 .md-typeset .grid.cards.prearc-cards > ul > li:nth-child(3) {
-  background-color: #16221f;
+  background-color: var(--dbc-teal-card-bg);
   border-color: var(--dbc-teal);
 }
 
@@ -2677,7 +2721,7 @@ h3 { color: var(--dbc-teal); }
    </div> */
 .md-typeset .grid.cards.gearing-cards > ul > li:nth-child(1),
 .md-typeset .grid.cards.gearing-cards > ul > li:nth-child(2) {
-  background-color: #1d1d21;
+  background-color: var(--dbc-surface-muted);
   border-color: rgba(var(--dbc-purple-rgb), 0.3);
   padding: 0.6em;
 }
@@ -2712,7 +2756,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .page-banner-warning {
   border: 1px solid rgba(var(--dbc-gold-rgb), 0.35);
-  background-color: #26210f;
+  background-color: var(--dbc-gold-dark);
   color: var(--dbc-gold);
 }
 .md-typeset .page-banner-warning::before {
@@ -3047,7 +3091,7 @@ h3 { color: var(--dbc-teal); }
   width: 5em;
   background-color: transparent;
   border: 1px dashed rgba(255, 255, 255, 0.15);
-  color: #8a849a;
+  color: var(--dbc-muted-text-alt);
 }
 .md-typeset .cpm-calc-field-muted input[type="number"]:hover {
   border-color: rgba(255, 255, 255, 0.3);
@@ -3264,7 +3308,7 @@ h3 { color: var(--dbc-teal); }
   width: 5em;
   background-color: transparent;
   border: 1px dashed rgba(255, 255, 255, 0.15);
-  color: #8a849a;
+  color: var(--dbc-muted-text-alt);
 }
 .md-typeset .bid-calc-field-muted input[type="number"]:hover {
   border-color: rgba(255, 255, 255, 0.3);
@@ -4458,7 +4502,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-calc-popover-file {
   font-size: 0.78em;
-  color: #9c96a8;
+  color: var(--dbc-muted-text-soft);
 }
 .md-typeset .ap-calc-popover-actions {
   display: flex;
@@ -5695,7 +5739,7 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .ark-passive-col-points {
   font-size: 0.68rem;
-  color: #7a7580;
+  color: var(--dbc-muted-text);
   font-weight: 600;
 }
 .md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-col-title { color: var(--dbc-orange); }
@@ -5889,7 +5933,7 @@ body.page-333-blitz input[type="text"] {
   border-radius: 999px;
   white-space: nowrap;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #9c96a8;
+  color: var(--dbc-muted-text-soft);
   background-color: rgba(255, 255, 255, 0.03);
 }
 .md-typeset .ark-passive-node-level[data-maxed="true"] {
@@ -6512,8 +6556,8 @@ body.page-333-blitz input[type="text"] {
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
-  background-color: #1c1c1f;
-  color: #cbb9e8;
+  background-color: var(--dbc-chip-surface);
+  color: var(--dbc-chip-text);
   border-radius: 999px;
   font-size: 1rem;
   line-height: 1;
@@ -6523,5 +6567,5 @@ body.page-333-blitz input[type="text"] {
 }
 .image-lightbox-close:hover {
   border-color: rgba(var(--dbc-purple-rgb), 0.75);
-  background-color: #232327;
+  background-color: var(--dbc-chip-surface-hover);
 }

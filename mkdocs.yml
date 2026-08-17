@@ -30,7 +30,7 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=13
+  - stylesheets/extra.css?v=14
 
 # Load order matters: several widgets read a shared data file
 # (build-data.js/skill-data.js/skill-names.js/ap-node-names.js) or the
@@ -86,7 +86,16 @@ extra:
 
 plugins:
   - search
-  - privacy
+  - privacy:
+      # Material's bundled JS always contains a reference to Mermaid's CDN
+      # url (it's how Material lazy-loads Mermaid when a diagram is found
+      # on a page), and the privacy plugin eagerly self-hosts every
+      # external asset it finds referenced in the build, including that
+      # one - even though this site has zero Mermaid diagrams anywhere in
+      # docs/. Without this exclusion, every deploy downloads and bundles
+      # an unused copy of Mermaid.js for nothing.
+      assets_exclude:
+        - "*mermaid*"
 
 markdown_extensions:
   - admonition
