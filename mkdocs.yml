@@ -30,7 +30,7 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=14
+  - stylesheets/extra.css?v=15
 
 # Load order matters: several widgets read a shared data file
 # (build-data.js/skill-data.js/skill-names.js/ap-node-names.js) or the
@@ -57,7 +57,7 @@ extra_css:
 # scratch). See README.md's "Forking this for your own spin" section
 # for the full breakdown.
 extra_javascript:
-  - javascripts/site-utils.js?v=4
+  - javascripts/site-utils.js?v=5
   - javascripts/extra.js?v=2
   - javascripts/cpm-calculator.js?v=4
   - javascripts/bid-calculator.js?v=4
@@ -72,12 +72,12 @@ extra_javascript:
   - javascripts/ap-node-names.js?v=1
   - javascripts/ark-passive-tree.js?v=4
   - javascripts/gem-priority.js?v=4
-  - javascripts/pentagon-badge.js?v=3
+  - javascripts/pentagon-badge.js?v=4
   - javascripts/rotation-line.js?v=3
   - javascripts/rotation-practice.js?v=3
   - javascripts/dps-chart.js?v=4
   - javascripts/gem-dps-tooltip.js?v=5
-  - javascripts/build-compare.js?v=3
+  - javascripts/build-compare.js?v=4
   - javascripts/last-updated.js?v=3
   - javascripts/image-lightbox.js?v=1
 

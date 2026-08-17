@@ -63,24 +63,13 @@
     return SITE_ROOT + FAMILY_FOLDER[family] + "/" + build.id + "/";
   }
 
-  function toPoint(cx, cy, angleDeg, r) {
-    var a = (angleDeg * Math.PI) / 180;
-    return [cx + r * Math.sin(a), cy - r * Math.cos(a)];
-  }
-  function pointsToAttr(pts) {
-    return pts.map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" ");
-  }
-  function svgEl(tag, attrs) {
-    var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
-    for (var key in attrs) {
-      if (Object.prototype.hasOwnProperty.call(attrs, key)) el.setAttribute(key, attrs[key]);
-    }
-    return el;
-  }
-  function fmt1(n) {
-    var r = Math.round(n * 10) / 10;
-    return r % 1 === 0 ? r.toFixed(0) : r.toFixed(1);
-  }
+  // toPoint/pointsToAttr/svgEl/fmt1 used to be defined locally here -
+  // now shared with pentagon-badge.js via SiteUtils.pentagonPoint/
+  // pentagonPointsToAttr/svgEl/formatStat (see site-utils.js for why).
+  var toPoint = window.SiteUtils.pentagonPoint;
+  var pointsToAttr = window.SiteUtils.pentagonPointsToAttr;
+  var svgEl = window.SiteUtils.svgEl;
+  var fmt1 = window.SiteUtils.formatStat;
 
   // ---------- Overview table (this IS the old markdown table, just
   // generated from the same data array the picker below reads instead

@@ -52,29 +52,13 @@
 
 (function () {
   var TAU = Math.PI * 2;
-
-  function toPoint(cx, cy, angleDeg, r) {
-    var a = (angleDeg * Math.PI) / 180;
-    return [cx + r * Math.sin(a), cy - r * Math.cos(a)];
-  }
-
-  function fmt(n) {
-    return Math.round(n * 10) / 10;
-  }
-
-  function pointsToAttr(pts) {
-    return pts.map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" ");
-  }
-
-  function svgEl(tag, attrs) {
-    var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
-    for (var key in attrs) {
-      if (Object.prototype.hasOwnProperty.call(attrs, key)) {
-        el.setAttribute(key, attrs[key]);
-      }
-    }
-    return el;
-  }
+  // toPoint/fmt/pointsToAttr/svgEl used to be defined locally here -
+  // now shared with build-compare.js via SiteUtils.pentagonPoint/
+  // formatStat/pentagonPointsToAttr/svgEl (see site-utils.js for why).
+  var toPoint = window.SiteUtils.pentagonPoint;
+  var fmt = window.SiteUtils.formatStat;
+  var pointsToAttr = window.SiteUtils.pentagonPointsToAttr;
+  var svgEl = window.SiteUtils.svgEl;
 
   function buildPentagonSvg(values, labels, accent, tooltipNote) {
     var cx = 100, cy = 98, rMax = 60;

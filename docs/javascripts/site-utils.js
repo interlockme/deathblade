@@ -153,6 +153,45 @@
       return e;
     },
 
+    // Create an SVG element in the correct namespace and set its
+    // attributes. Was copy-pasted identically into pentagon-badge.js and
+    // build-compare.js (both render the same pentagon-shaped stat
+    // graphic, just in different contexts - a per-build badge vs. a
+    // two-build overlay comparison) before being centralized here.
+    svgEl: function (tag, attrs) {
+      var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      for (var key in attrs) {
+        if (Object.prototype.hasOwnProperty.call(attrs, key)) el.setAttribute(key, attrs[key]);
+      }
+      return el;
+    },
+
+    // Convert a (center, angle, radius) polar coordinate into an [x, y]
+    // pixel pair, angle measured clockwise from straight up (matches how
+    // pentagon-badge.js/build-compare.js lay out their 5 axes starting
+    // at the top). Same pentagon-graphic dedup as svgEl above.
+    pentagonPoint: function (cx, cy, angleDeg, r) {
+      var a = (angleDeg * Math.PI) / 180;
+      return [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+    },
+
+    // Turn an array of [x, y] pairs (e.g. from pentagonPoint above) into
+    // an SVG points="..." attribute string. Same pentagon-graphic dedup
+    // as svgEl above.
+    pentagonPointsToAttr: function (pts) {
+      return pts.map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" ");
+    },
+
+    // Round a 0-10 pentagon stat to at most 1 decimal, dropping a
+    // trailing ".0" so whole numbers read as "8" instead of "8.0" -
+    // same rounding/display rule as dps-chart.js's own fmtPct, just
+    // without the trailing "%". Same pentagon-graphic dedup as svgEl
+    // above.
+    formatStat: function (n) {
+      var r = Math.round(n * 10) / 10;
+      return r % 1 === 0 ? r.toFixed(0) : r.toFixed(1);
+    },
+
     // Hide a broken/missing icon <img> instead of showing the browser's
     // default alt-text placeholder. mode "visibility" (default) keeps the
     // icon's layout box in place; mode "display" collapses it entirely.
