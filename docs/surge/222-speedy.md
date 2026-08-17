@@ -21,7 +21,7 @@
 - Highest mobility of all Deathblade builds by far.
 - Counter is used in rotation, you must hold it when necessary.
 - Very high gem efficiency, Surge and Deathly Slash are nearly all of your DPS.
-- Must constantly balance Surge and Deathly Slash back-attack rate with Surge CPM.
+- Must constantly balance Surge and Deathly Slash back attack rate with Surge CPM.
 
 </div>
 <div class="pentagon-badge" data-build="222-speedy" data-family="surge" markdown>

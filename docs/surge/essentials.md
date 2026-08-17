@@ -222,7 +222,7 @@ Knowing roughly how many stacks each skill generates is important for adapting y
 
 ### Combat Performance
 
-**Surge Casts Per Minute (CPM)** and back-attack rate are useful measures of how efficiently you cycle Surge.
+**Surge Casts Per Minute (CPM)** and back attack rate are useful measures of how efficiently you cycle Surge.
 
 Only compare CPM between the **same encounter and build**, as boss uptime and mechanics heavily affect it.
 
