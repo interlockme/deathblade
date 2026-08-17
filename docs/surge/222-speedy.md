@@ -282,6 +282,17 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 </script>
 </div>
 
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span>Gem Requirements<span class="setup-note-arrow"></span></summary>
+
+- To reach its ceiling, this build requires higher level cooldown gems than the others.
+
+</details>
+
+</div>
+
 </div>
 
 ## Rotation
