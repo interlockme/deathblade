@@ -643,10 +643,12 @@
 <span class="bid-calc-field-label">Raid Size</span>
 <label class="bid-calc-radio-label"><input type="radio" name="bid-raid-size" class="bid-raid-size" value="4"> 4</label>
 <label class="bid-calc-radio-label"><input type="radio" name="bid-raid-size" class="bid-raid-size" value="8" checked> 8</label>
+<label class="bid-calc-radio-label"><input type="radio" name="bid-raid-size" class="bid-raid-size" value="16"> 16</label>
+<label class="bid-calc-radio-label"><input type="radio" name="bid-raid-size" class="bid-raid-size" value="custom"> Custom</label>
 </div>
-<div class="bid-calc-field-row bid-calc-field-muted">
-<label class="bid-calc-field-label" for="bid-market-fee">Market Fee %</label>
-<input type="number" id="bid-market-fee" class="bid-market-fee" min="0" max="20" step="0.5" value="5">
+<div class="bid-calc-field-row bid-calc-custom-raid-size-row" hidden>
+<label class="bid-calc-field-label" for="bid-custom-raid-size">Custom Raid Size</label>
+<input type="number" inputmode="numeric" id="bid-custom-raid-size" class="bid-custom-raid-size" min="2" step="1" placeholder="e.g. 6">
 </div>
 </div>
 

@@ -3,92 +3,89 @@
 //
 // Raid auction bid calculator.
 //
-// How a Lost Ark loot auction actually pays out (this is the whole model,
-// there's no hidden mechanic beyond it): the winner keeps the item and
-// pays their bid in gold; that gold is NOT returned to the winner, it's
-// split evenly across every OTHER party member. So:
-//   winner's profit      = netSellValue - bid
-//   each other member's profit = bid / (raidSize - 1)
-// netSellValue is the market price after the Auction House's cut (5% by
-// default - see MARKET_FEE_DEFAULT below).
+// Credit: the fee-on-bid model and the generalized Profit & Punish solver
+// below were worked out by cross-checking Lost Ark's own patch notes
+// against Lost Ark Stuff's Bid Calculator (https://lostarkstuff.vercel.app/bid-calculator),
+// whose own bundled source ships unminified. Our markup, styling, and
+// integration into this site are independent - only the underlying
+// formulas are shared.
 //
-// Outbidding raises the current bid by a fixed 10% (RAISE_FACTOR below),
-// not a flat gold amount - confirmed against reference screenshots (every
-// "Next Bidder" bid was exactly currentBid x 1.10, across all three
-// Intents).
+// How a Lost Ark loot auction actually pays out (this is the whole model,
+// there's no hidden mechanic beyond it):
+//   - The winner keeps the item and pays their bid in gold.
+//   - That gold is NOT returned to the winner - the loot-auction system
+//     takes its own cut (MARKET_FEE_PCT below) off the FULL bid before
+//     splitting what's left evenly across every OTHER party member. This
+//     is the fee's "full-bid application" - an earlier version of this
+//     file (and, it turns out, of the game itself) only taxed the item's
+//     eventual resale, not the bid on its way to teammates. That's no
+//     longer how it works:
+//       each other member's profit = (bid * (1 - fee)) / (raidSize - 1)
+//   - Separately, if the winner resells the item on the Auction House,
+//     that sale eats the same cut (Lost Ark uses one AH fee rate for
+//     both mechanics, confirmed against a reference calculator's own
+//     bundled source - see below):
+//       winner's profit = (marketPrice * (1 - fee)) - bid
+//   - Outbidding raises the current bid by a fixed 10% (RAISE_FACTOR
+//     below), not a flat gold amount.
+//
+// Fee is no longer user-adjustable - it's fixed at MARKET_FEE_PCT. The
+// 0-20% field this file used to expose has been removed: matching a
+// reference calculator's own rebuild, which dropped the same field.
 //
 // The three Intents pick a bid off that same model:
 //   - Equal Profit: the bid where the winner's profit and each other
-//     member's cut come out identical. Solve netValue - B = B/(n-1) for B:
-//       B = netValue * (n-1) / n
+//     member's cut come out identical. Solve netValue - B = B*FEE/(n-1)
+//     for B (netValue = marketPrice * FEE):
+//       B = marketPrice * FEE / (1 + FEE/(n-1))
+//     EQUAL_RATIO(n) below is that multiplier.
 //   - Max Profit: the bid where, IF someone outbids you at the standard
 //     10% raise, their resulting bid lands exactly on the Equal Profit
 //     bid above - i.e. being outbid on Max Profit just turns the auction
 //     into the Equal Profit scenario for whoever wins instead of you.
 //       B = equalBid / RAISE_FACTOR
-//     Reference data shows this specific bid gets rounded UP to the
-//     nearest 10 gold (75,568.18 -> 75,570) - Equal Profit and the Next
-//     Bidder figures elsewhere just round to the nearest gold, so this
-//     nearest-10 rounding looks specific to Max Profit's own bid.
-//   - Profit & Punish Next Bidder: sits between Max Profit and Equal
-//     Profit - enough profit to be worthwhile, while (per the game's own
-//     tooltip) making it a losing move for a rival to outbid you instead
-//     of letting you win.
-//     Confirmed against a reference calculator's own bundled JS (shipped
-//     unminified, variable-name-mangled but otherwise readable): this bid
-//     is NOT derived from any formula - it's a hardcoded constant times
-//     market price:
-//       raid 4: bid = round(price * 0.695)
-//       raid 8: bid = round(price * 0.78)
-//     Checked whether 0.695/0.78 reduce to any clean function of Equal
-//     Profit's and Max Profit's own ratios (midpoint, consistent
-//     interpolation fraction, anything) - they don't (0.73 of the way
-//     from Max to Equal for raid 4, 0.32 of the way for raid 8, no
-//     relation between those two numbers). Read: someone picked these by
-//     feel, not by formula, so there's nothing to solve here - just
-//     match the numbers. See PUNISH_RATIOS below for how that's adapted
-//     for our fee-configurable version (the reference has no fee field -
-//     0.95 is baked directly into every one of its constants).
-//
-// Max Profit vs. that reference calculator - SOLVED, not just closely
-// matched. Its own source (same bundle referenced above) shows Equal
-// Profit and Max Profit are computed exactly the way this file computes
-// them - netValue*(n-1)/n, and that divided by 1.1 - just pre-computed
-// into a hardcoded constant and rounded to 4 decimal places before
-// shipping, instead of computed live:
-//   equal, raid 4: exact 0.7125          -> hardcoded 0.7125 (no loss)
-//   equal, raid 8: exact 0.83125         -> hardcoded 0.83125 (no loss)
-//   max,   raid 4: exact 0.64772727...   -> hardcoded 0.6477
-//   max,   raid 8: exact 0.75568181...   -> hardcoded 0.7557
-// That 4-decimal truncation on the Max Profit constant is the entire
-// source of the ~0.002-0.02% gap chased earlier in this file's history -
-// not an iterative solver, not a different formula, just a rounded
-// magic number. Their bid = round(rawMarketPrice * thatConstant); this
-// file's netValue/(equalBid)/RAISE_FACTOR algebra reproduces the exact
-// (untruncated) value, which is strictly more precise, so it's kept
-// as-is rather than switched to their rounded constant.
+//     An earlier version of this file rounded Max Profit UP to the
+//     nearest 10 gold, matching a reference calculator's old behavior.
+//     That reference has since dropped the nearest-10 rounding - Max
+//     Profit is now rounded to the nearest gold like everything else, so
+//     this file follows suit.
+//   - Profit & Punish Next Bidder: the LOWEST bid where a rational rival
+//     outbidding you at the mandatory +10% raise ends up with a profit
+//     at least PUNISH_MARGIN (15%) below what they'd have gotten as your
+//     party-share cut instead - or at least 1 gold worse off, whichever
+//     is bigger - so outbidding you is a losing move for them.
+//     An earlier version of this file hardcoded this as a magic ratio of
+//     market price per raid size (0.695 for 4-player, 0.78 for 8-player),
+//     lifted from a reference calculator that only supported those fixed
+//     sizes. That reference has since been rebuilt to solve this properly
+//     for ANY raid size >= 2 (confirmed against its own updated,
+//     still-unminified source) - punishBid() below ports that same
+//     solve: start from an algebraic estimate, then walk to the exact
+//     integer gold value that satisfies the margin condition (rounding
+//     on both the bid and the rival's raised bid means the estimate can
+//     land a gold or two off in either direction, so there's no clean
+//     closed form).
 (function () {
-  var MARKET_FEE_DEFAULT = 5; // percent, standard AH cut
-  var MARKET_PRICE_MIN = 0;
-  var MARKET_PRICE_MAX = 10000000;
-  var MARKET_FEE_MIN = 0;
-  var MARKET_FEE_MAX = 20;
+  var MARKET_FEE_PCT = 5; // fixed AH / loot-auction cut - no longer user-adjustable
+  var FEE = 1 - MARKET_FEE_PCT / 100;
   var RAISE_FACTOR = 1.1; // minimum outbid = current bid x 1.10
+  var PUNISH_MARGIN = 0.15; // Profit & Punish's target: rival nets >=15% less than your party share
 
-  // The reference's exact hardcoded constants (0.695, 0.78) are ratios of
-  // raw market price, baked against its fixed 5% fee. Dividing out that
-  // 0.95 gives the ratio of netValue instead, so this scales correctly
-  // when someone changes Market Fee % away from the default - at the
-  // default 5% fee this reproduces the reference number exactly; at any
-  // other fee it's our own extrapolation, since the reference has no fee
-  // field to check against.
-  var PUNISH_RATIOS = {
-    4: 0.695 / 0.95,
-    8: 0.78 / 0.95,
-  };
+  var MARKET_PRICE_MIN = 0;
+  var MARKET_PRICE_MAX = 1000000000000; // matches the reference calculator's raised cap
+  var RAID_SIZE_MIN = 2;
+
+  // Avoids the -0 that Math.round can hand back for tiny negative inputs
+  // (e.g. a rival profit that nets out to exactly zero through floating
+  // point). "-0" .toLocaleString()s to "0" anyway, but keeping raw
+  // numbers clean avoids surprises anywhere they get compared directly.
+  function round(n) {
+    var r = Math.round(n);
+    return Object.is(r, -0) ? 0 : r;
+  }
 
   function fmt(n) {
-    return Math.round(n).toLocaleString("en-US");
+    return round(n).toLocaleString("en-US");
   }
 
   // ----- Market price input: comma-grouped as you type -----
@@ -124,28 +121,79 @@
     input.setSelectionRange(pos, pos);
   }
 
-  function computeBid(netValue, raidSize, intent) {
-    var equalBid = (netValue * (raidSize - 1)) / raidSize;
+  function nextBidFor(bid) {
+    return round(bid * RAISE_FACTOR);
+  }
+
+  // Each OTHER party member's cut if `bid` wins - the fee applies to the
+  // full bid now, not just to the item's eventual resale (see header).
+  function partyShareFor(bid, raidSize) {
+    return round((bid * FEE) / (raidSize - 1));
+  }
+
+  // Equal Profit's price->bid ratio for a given raid size (see header
+  // comment for the algebra it's solved from).
+  function equalRatio(raidSize) {
+    return FEE / (1 + FEE / (raidSize - 1));
+  }
+
+  // Profit & Punish: lowest bid satisfying the margin condition. See
+  // header comment for why this walks to an exact value instead of using
+  // a closed form.
+  function punishBid(marketPrice, raidSize) {
+    if (marketPrice <= 0) return 0;
+
+    var netValue = marketPrice * FEE;
+    var perMemberFactor = FEE / (raidSize - 1);
+    var estimate = netValue / (RAISE_FACTOR + perMemberFactor * (1 - PUNISH_MARGIN));
+    var bid = round(estimate);
+
+    function satisfies(b) {
+      var yourPartyShare = partyShareFor(b, raidSize);
+      var rivalProfit = round(netValue - nextBidFor(b));
+      return yourPartyShare - rivalProfit >= Math.max(1, yourPartyShare * PUNISH_MARGIN);
+    }
+
+    while (bid > 0 && satisfies(bid - 1)) bid--;
+    while (!satisfies(bid)) bid++;
+    return bid;
+  }
+
+  function computeBid(marketPrice, raidSize, intent) {
     if (intent === "max") {
-      var maxBidRaw = equalBid / RAISE_FACTOR;
-      return Math.ceil(maxBidRaw / 10) * 10;
+      return round((marketPrice * equalRatio(raidSize)) / RAISE_FACTOR);
     }
     if (intent === "punish") {
-      var punishRatio = PUNISH_RATIOS[raidSize];
-      // Defensive fallback for any raid size without a confirmed ratio -
-      // should only run if PUNISH_RATIOS falls out of sync with the
-      // raid-size options actually offered in the UI.
-      if (punishRatio === undefined) return Math.round(equalBid);
-      return Math.round(netValue * punishRatio);
+      return punishBid(marketPrice, raidSize);
     }
-    return Math.round(equalBid);
+    return round(marketPrice * equalRatio(raidSize));
+  }
+
+  // ----- Raid size: presets + Custom -----
+  // Returns null (rather than throwing or silently clamping) when the
+  // Custom field is selected but doesn't hold a usable number yet -
+  // update() treats that the same as an invalid price: blank out the
+  // results instead of computing off garbage.
+  function readRaidSize(root) {
+    var checked = root.querySelector('input[name="bid-raid-size"]:checked');
+    if (!checked) return 8;
+    if (checked.value !== "custom") return parseInt(checked.value, 10);
+
+    var customInput = root.querySelector(".bid-custom-raid-size");
+    var n = customInput ? parseInt(customInput.value, 10) : NaN;
+    return isFinite(n) && n >= RAID_SIZE_MIN ? n : null;
+  }
+
+  function updateCustomRaidSizeVisibility(root) {
+    var checked = root.querySelector('input[name="bid-raid-size"]:checked');
+    var row = root.querySelector(".bid-calc-custom-raid-size-row");
+    if (row) row.hidden = !checked || checked.value !== "custom";
   }
 
   function update(root) {
     var priceInput = root.querySelector(".bid-market-price");
-    var feeInput = root.querySelector(".bid-market-fee");
-    var raidSizeInput = root.querySelector('input[name="bid-raid-size"]:checked');
     var intentInput = root.querySelector('input[name="bid-intent"]:checked');
+    var customRaidInput = root.querySelector(".bid-custom-raid-size");
 
     var resultValue = root.querySelector(".bid-calc-result-value");
     var copyBtn = root.querySelector(".bid-calc-copy-btn");
@@ -158,9 +206,7 @@
     var nextParty = root.querySelector(".bid-calc-next-party");
 
     var price = parseNumber(priceInput.value);
-    var feeRaw = parseFloat(feeInput.value);
-    var fee = isFinite(feeRaw) && feeRaw >= MARKET_FEE_MIN && feeRaw <= MARKET_FEE_MAX ? feeRaw : MARKET_FEE_DEFAULT;
-    var raidSize = raidSizeInput ? parseInt(raidSizeInput.value, 10) : 8;
+    var raidSize = readRaidSize(root);
     var intent = intentInput ? intentInput.value : "equal";
 
     var priceValid = isFinite(price) && price > MARKET_PRICE_MIN && price <= MARKET_PRICE_MAX;
@@ -170,9 +216,15 @@
     // same priceValid check.
     priceInput.classList.toggle("bid-calc-input-invalid", priceInput.value !== "" && !priceValid);
 
-    var table = root.querySelector(".bid-calc-table");
+    var raidSizeValid = raidSize !== null;
+    if (customRaidInput) {
+      customRaidInput.classList.toggle("bid-calc-input-invalid", customRaidInput.value !== "" && !raidSizeValid);
+    }
 
-    if (!priceValid) {
+    var table = root.querySelector(".bid-calc-table");
+    var valid = priceValid && raidSizeValid;
+
+    if (!valid) {
       resultValue.textContent = "—";
       resultValue.classList.add("bid-calc-result-empty");
       table.classList.add("bid-calc-table-empty");
@@ -187,22 +239,22 @@
     resultValue.classList.remove("bid-calc-result-empty");
     table.classList.remove("bid-calc-table-empty");
 
-    var netValue = price * (1 - fee / 100);
-    var bid = computeBid(netValue, raidSize, intent);
+    var netValue = price * FEE;
+    var bid = computeBid(price, raidSize, intent);
     var yourProfitVal = netValue - bid;
-    var partyShareVal = bid / (raidSize - 1);
+    var partyShareVal = partyShareFor(bid, raidSize);
 
     resultValue.textContent = fmt(bid) + "g";
-    resultValue.dataset.rawBid = String(Math.round(bid));
+    resultValue.dataset.rawBid = String(round(bid));
     if (copyBtn) copyBtn.disabled = false;
 
     youBid.textContent = fmt(bid) + "g";
     youProfit.textContent = fmt(yourProfitVal) + "g";
     youParty.textContent = fmt(partyShareVal) + "g";
 
-    var rivalBid = Math.round(bid * RAISE_FACTOR);
+    var rivalBid = nextBidFor(bid);
     var rivalProfitVal = netValue - rivalBid;
-    var rivalPartyShareVal = rivalBid / (raidSize - 1);
+    var rivalPartyShareVal = partyShareFor(rivalBid, raidSize);
 
     nextBid.textContent = fmt(rivalBid) + "g";
     nextProfit.textContent = fmt(rivalProfitVal) + "g";
@@ -283,16 +335,24 @@
     initCopyButton(root);
 
     var priceInput = root.querySelector(".bid-market-price");
+    var customRaidInput = root.querySelector(".bid-custom-raid-size");
 
     root.querySelectorAll("input").forEach(function (input) {
       input.addEventListener("input", function () {
         if (input === priceInput) formatPriceInput(input);
+        if (input.name === "bid-raid-size") updateCustomRaidSizeVisibility(root);
         update(root);
       });
     });
 
+    updateCustomRaidSizeVisibility(root);
     clampOnBlur(priceInput, MARKET_PRICE_MIN, MARKET_PRICE_MAX, root, true);
-    clampOnBlur(root.querySelector(".bid-market-fee"), MARKET_FEE_MIN, MARKET_FEE_MAX, root);
+    if (customRaidInput) {
+      // No upper bound - any raid size 2 or more is a valid, if unusual,
+      // input (Lost Ark's own raids top out well below anything a person
+      // would plausibly type here, so there's nothing meaningful to cap).
+      clampOnBlur(customRaidInput, RAID_SIZE_MIN, Infinity, root, false);
+    }
 
     update(root);
   }

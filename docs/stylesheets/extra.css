@@ -3297,28 +3297,6 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .bid-calc-field-row input.bid-market-price.bid-calc-input-invalid {
   border-color: var(--dbc-red);
 }
-/* Market Fee mirrors .cpm-calc-field-muted's "leave this alone unless you
-   know why you're touching it" treatment - almost always the default 5%
-   AH cut, but editable since it's occasionally been different for certain
-   items/events. */
-.md-typeset .bid-calc-field-muted .bid-calc-field-label {
-  color: var(--dbc-slate);
-}
-.md-typeset .bid-calc-field-muted input[type="number"] {
-  width: 5em;
-  background-color: transparent;
-  border: 1px dashed rgba(255, 255, 255, 0.15);
-  color: var(--dbc-muted-text-alt);
-}
-.md-typeset .bid-calc-field-muted input[type="number"]:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-  color: var(--dbc-lilac);
-}
-.md-typeset .bid-calc-field-muted input[type="number"]:focus {
-  border-color: var(--dbc-purple);
-  border-style: solid;
-  color: var(--md-default-fg-color);
-}
 /* Raid Size / Intent pickers - same real-radio-inputs approach as
    .ap-brace-spec-toggle (mutual exclusivity native to the browser rather
    than JS-enforced), lavender accent-color to match the rest of the card. */
