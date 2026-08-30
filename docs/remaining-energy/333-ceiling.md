@@ -198,9 +198,9 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Alt</span>NA/EU 333 Standard<span class="setup-note-arrow"></span></summary>
 
 - Alternative that aims to keep a similar playstyle to Standard RE, with Spincutter and excess meter.
-    - It's an improvement over Standard RE, but playstyle is incompatible with modern RE and falls short in DPS. 
+    - It's an improvement over Standard RE, but playstyle is incompatible with modern RE and falls short in DPS.
     - Recommended if you cannot perform well with any other build or prefer the familiar legacy gameplay.
-    - Its guide and all relevant information is maintained [here](https://docs.google.com/document/d/1vs1YC_7adaYwtfN9cHO3x2KuMPq6GcKRlGo5vnsN4Lk/edit) and not hosted nor supported on this site.
+    - Its guide and all relevant information are maintained [here](https://docs.google.com/document/d/1vs1YC_7adaYwtfN9cHO3x2KuMPq6GcKRlGo5vnsN4Lk/edit) and neither hosted nor supported on this site.
 
 </details>
 
