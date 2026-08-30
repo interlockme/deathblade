@@ -30,7 +30,7 @@ Atk/Move Speed Feast
 <details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Note</span>Purchase at Peyto Island<span class="setup-note-arrow"></span></summary>
 
-- Alternatively, eat ![](../assets/shared/icon-skewers.png){: .food-option-icon } ![](../assets/shared/icon-steak.png){: .food-option-icon } ![](../assets/shared/icon-azena.png){: .food-option-icon } mana food and use a Legendary Bleed/Poison rune on Maelstrom.
+- Alternatively, use ![](../assets/shared/icon-skewers.png){: .food-option-icon } ![](../assets/shared/icon-steak.png){: .food-option-icon } ![](../assets/shared/icon-azena.png){: .food-option-icon } mana food and equip a Legendary Bleed/Poison rune on Maelstrom.
 
 </details>
 
