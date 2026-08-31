@@ -191,15 +191,17 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
 - Use Legendary Purify on Head Hunt if needed.
-- Use Legendary Bleed or Vision on Surprise Attack if you don't use RC or MI engravings.
-    - Bleed is about 0.75% DPS in exchange for no Rage buff uptime.
-    - Equip Vision and give the Bleed to Maelstrom if you use mana food.
+- Use Legendary Bleed on Maelstrom if you don't experience mana issues.
+    - Bleed is about 0.75% DPS in exchange for playing skillfully or using mana food.
+- Use Legendary Vision on Surprise Attack if you don't use RC or MI engravings.
+    - Give Head Hunt the next best leftover Galewind or Vision rune.
 
 </details>
 
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
+- You can bring Head Hunt down to Lv 1 for lower mana use.
 - Earth Cleaver can be used instead of Head Hunt if you prefer.
 - You can replace Dark Axel for Spincutter if you find it more useful.
 - You can use Wide Attack tripod on Surprise Attack if your uptime with Turning Slash is good.

@@ -179,6 +179,8 @@ Pair with Cursed Doll if you're just starting out.
 
 </div>
 
+<span class="engraving-loadout-hint">Note: Cursed Doll is fine if you're stuck with it. Lean into Bleed/Poison runes, use mana food and pair with KBW to make the most of it.</span>
+
 </div>
 
 ## Gameplay
