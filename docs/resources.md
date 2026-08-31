@@ -506,7 +506,7 @@
 <div class="cpm-calc-row" data-build="333-re">
 <div class="cpm-calc-row-header">
 <span class="cpm-calc-row-title">333 (Ceiling)</span>
-<span class="cpm-calc-row-meta">Trixion CPM 15.122 · Remaining Energy</span>
+<span class="cpm-calc-row-meta">Trixion CPM 15 · Remaining Energy</span>
 </div>
 <div class="cpm-calc-body">
 <div class="cpm-calc-inputs">

@@ -33,7 +33,7 @@
 
 (function () {
   const BUILDS = {
-    "333-re": { trixionCPM: 15.122, baseMultiplier: 1.2 },
+    "333-re": { trixionCPM: 15, baseMultiplier: 1.2 },
     "111-surge": { trixionCPM: 10.952, baseMultiplier: 1.23 },
     "222-surge": { trixionCPM: 10.084, baseMultiplier: 1.25 },
   };
@@ -43,7 +43,7 @@
   const RATIO_TO_RATE_CONST = 1.35975;
 
   // Input guardrails. No real build's Raid CPM comes remotely close to 20
-  // (the highest Trixion CPM among BUILDS above is ~15.1, and real raid
+  // (the highest Trixion CPM among BUILDS above is 15, and real raid
   // CPM is always below the Trixion-parse ceiling per the Final Multiplier
   // comment below) - 20 is a generous ceiling that only catches fat-finger/
   // pasted-garbage entries, not a real reading. Base Multiplier is a

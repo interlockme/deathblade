@@ -59,7 +59,7 @@ extra_css:
 extra_javascript:
   - javascripts/site-utils.js?v=5
   - javascripts/extra.js?v=2
-  - javascripts/cpm-calculator.js?v=5
+  - javascripts/cpm-calculator.js?v=6
   - javascripts/bid-calculator.js?v=4
   - javascripts/ark-passive-calculator.js?v=4
   - javascripts/build-data.js?v=4
