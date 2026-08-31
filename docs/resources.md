@@ -588,7 +588,7 @@
 <div class="cpm-calc-row" data-build="222-surge">
 <div class="cpm-calc-row-header">
 <span class="cpm-calc-row-title">222 (Speedy)</span>
-<span class="cpm-calc-row-meta">Trixion CPM 9.756 · Surge</span>
+<span class="cpm-calc-row-meta">Trixion CPM 10.084 · Surge</span>
 </div>
 <div class="cpm-calc-body">
 <div class="cpm-calc-inputs">

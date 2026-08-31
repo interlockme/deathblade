@@ -245,6 +245,7 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
   { "id": "surge", "name": "Surge" },
   { "id": "bladedance", "name": "Blade Dance", "lines": ["up to 9 stacks"] },
   { "id": "blitzrush", "name": "Blitz Rush", "lines": ["up to 7 stacks", "or 1 (333)"] },
+  { "id": "headhunt", "name": "Head Hunt", "lines": ["up to 2 stacks"] },
   { "id": "earthcleaver", "name": "Earth Cleaver", "lines": ["2 to 3 stacks"] },
   { "id": "spincutter", "name": "Spincutter", "lines": ["2 stacks", "per cast"] },
   { "id": "turningslash", "name": "Turning Slash", "lines": ["up to 5 stacks"] },

@@ -67,7 +67,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 === "333 Blitz"
 
     ```
-    99BD58624912EBBA0541BB2C16E16B2414D9FA6C556F53629FEB8DE2EA19F8A88692799FB7847B4E33257BC8D5A3480A36B6DE069816AB3CC2DEAC0F7570A7EF
+    11B831CEAE79C01924EB6CC424D1B22A2079A4E7E9C890255317EA3E47347FCB0692F007FB2EAE9C66A610B68FA04D141E320165FEF5D3674C32FBDB94249C4A
     ```
 
 ## Ark Setup
@@ -113,11 +113,10 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
         { "id": "orbcompression", "level": 3, "max": 3 }
       ] },
       { "label": "Tier 3", "nodes": [
-        { "id": "orbcontrol", "level": 1, "max": 5 },
+        { "id": "orbcontrol", "level": 2, "max": 5 },
         { "id": "limitbreakenl", "level": 3, "max": 3 }
       ] },
       { "label": "Tier 4", "nodes": [
-        { "id": "chaosinfusion", "level": 1, "max": 5 },
         { "id": "chaoticpower", "level": 3, "max": 3 }
       ] }
     ] },
@@ -201,6 +200,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 - Use Legendary Purify on Spincutter if needed.
 - Use Legendary Bleed or Poison instead of Rage if you don't use RC or MI engravings.
+    - Each one is about 0.75% DPS in exchange for lower or no Rage buff uptime.
+    - Give the Bleed/Poison to Maelstrom and Turning Slash if you use mana food.
 
 </details>
 
@@ -255,30 +256,32 @@ There's an optimal skill order, but you have flexibility when facing downtime or
 
 Spincutter is your main mobility skill and backup stack builder. Use it to guarantee back attacks on your major skills.
 
-Apply damage synergy if needed, then use the main cycle and repeat it as best you can.
+Apply damage synergy if needed, then repeat the rotation cycle as best you can.
 
 *From 3 orbs:*
 { .lead }
 
-=== "Main Cycle"
 
-    <div class="rotation-line" markdown>
-    <script type="application/json">
-    ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "earthcleaver", "bladedance", "deathlyslash", "blitzrush", "turningslash", "blitzrush",
-     { "id": "surpriseattack", "situational": true },
-     "surge"]
-    </script>
-    </div>
+<div class="rotation-line" markdown>
+<script type="application/json">
+["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "earthcleaver", "bladedance", "deathlyslash", "blitzrush", "turningslash", "blitzrush",
+{ "id": "surpriseattack", "situational": true },
+"surge"]
+</script>
+</div>
 
-    - Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge.
+1. Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge.
 
-=== "Awakening Cycle"
+<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-notes" markdown>
 
-    <div class="rotation-line" markdown>
-    <script type="application/json">
-    ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "bladeassault", "deathlyslash", "turningslash", "blitzrush", "surge"]
-    </script>
-    </div>
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Alt</span>🐯 Mode (Optional)<span class="setup-note-arrow"></span></summary>
+![tiger mode](../assets/tigermode.png){ .setup-note-image .zoomable-image loading=lazy }
+</details>
+
+</div>
+</div>
 
 *From zero orbs:*
 { .lead }

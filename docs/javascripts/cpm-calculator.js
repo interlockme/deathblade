@@ -35,7 +35,7 @@
   const BUILDS = {
     "333-re": { trixionCPM: 15.122, baseMultiplier: 1.2 },
     "111-surge": { trixionCPM: 10.952, baseMultiplier: 1.23 },
-    "222-surge": { trixionCPM: 9.756, baseMultiplier: 1.22 },
+    "222-surge": { trixionCPM: 10.084, baseMultiplier: 1.25 },
   };
 
   const E_BACK = 3.5405624914;

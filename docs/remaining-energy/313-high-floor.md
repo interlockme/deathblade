@@ -327,14 +327,14 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     </script>
     </div>
 
-    - <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle **2** if it's available.
-    - It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
+    1. <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle **2** if it's available.
+    2. It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs:*
     { .lead }
 
-    - Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
-    - Prioritize Turning Slash earlier for synergy and Deathly Slash last for Adrenaline/RE buff.
+    1. Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
+    2. Prioritize Turning Slash earlier for synergy and Deathly Slash last for Adrenaline/RE buff.
 
 === "Recovery"
 
@@ -351,11 +351,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     </div>
     </div>
 
-    - 313 plays similarly, just Turning Slash → Fatal Wave instead of FTF.
-    - Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> when a little short on orbs, just cast if unsure.
-    - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
-    - Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> instead of <span class="skill-chip">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span> for a cycle to recover stacks if they run out.
-    - Use Maelstrom + Fatal Wave earlier if waiting on main orb generation skills.
+    1. 313 plays similarly, just Turning Slash → Fatal Wave instead of FTF.
+    2. Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> when a little short on orbs, just cast if unsure.
+    3. Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
+    4. Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> instead of <span class="skill-chip">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span> for a cycle to recover stacks if they run out.
+    5. Use Maelstrom + Fatal Wave earlier if waiting on main orb generation skills.
 
 === "TL;DR:"
     ![313 TL;DR flowchart](../assets/tldr-313.png){ .zoomable-image loading=lazy }

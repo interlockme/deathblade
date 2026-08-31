@@ -1446,6 +1446,10 @@ h3 { color: var(--dbc-teal); }
   background-color: var(--dbc-teal);
   color: var(--dbc-teal-dark);
 }
+.md-typeset .cycle-num-3 {
+  background-color: var(--dbc-gold);
+  color: var(--dbc-gold-dark);
+}
 .md-typeset .cycle-title {
   color: var(--md-default-fg-color);
   font-weight: 700;

@@ -253,16 +253,16 @@ The opener stacks Adrenaline and applies synergies efficiently as you build up t
 </script>
 </div>
 
-- <span class="skill-chip">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span> is only available every other rotation, just keep going if it's on cooldown.
-- Use <span class="skill-chip">![](../assets/shared/icon-spincutter.png)Spincutter</span> during downtime to reposition, or hold it to dodge upcoming attacks.
-- Use <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> for damage, or hold it for Hyper Awakening or a clutch recovery.
-- The rotation is bottle-necked entirely by Soul Absorber's cooldown, it is what it is.
+1. <span class="skill-chip">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span> is only available every other rotation, just keep going if it's on cooldown.
+2. Use <span class="skill-chip">![](../assets/shared/icon-spincutter.png)Spincutter</span> during downtime to reposition, or hold it to dodge upcoming attacks.
+3. Use <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> for damage, or hold it for Hyper Awakening or a clutch recovery.
+4. The rotation is bottle-necked entirely by Soul Absorber's cooldown, it is what it is.
     - You can skip Earth Cleaver if Soul Absorber's off cooldown already.
 
 *Recovery:*
 { .lead }
 
-- Use spare Twin Shadows or Maelstrom stacks to recover if it'll help you reach 3 orbs.
+1. Use spare Twin Shadows or Maelstrom stacks to recover if it'll help you reach 3 orbs.
     - If not, just AFK or Surge with 2 orbs and AFK. Welcome to Standard Remaining Energy.
 
 ## DPS Spread

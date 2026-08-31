@@ -9,7 +9,7 @@
 //
 // Keyed flatly by id, NOT split into re/surge like DB_SKILL_DATA in
 // skill-data.js - several ids (turningslash, maelstrom, deathlyslash,
-// surge, bladeassault, blitzrush, earthcleaver, spincutter) are shared
+// surge, bladeassault, blitzrush, earthcleaver, spincutter, headhunt) are shared
 // skills that mean the exact same name/icon in both families, so one
 // flat map avoids maintaining two copies of the same string. Same id
 // convention as everywhere else: matches icon-<id>.png in
@@ -23,7 +23,6 @@
     voidstrike: "Void Strike",
     twinshadows: "Twin Shadows",
     soulabsorber: "Soul Absorber",
-    headhunt: "Head Hunt",
     deathsentence: "Death Sentence",
     fatalwave: "Fatal Wave",
 
@@ -45,6 +44,7 @@
     bladeassault: "Blade Assault",
     blitzrush: "Blitz Rush",
     earthcleaver: "Earth Cleaver",
+    headhunt: "Head Hunt",
     spincutter: "Spincutter",
   };
 })();

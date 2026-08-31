@@ -398,14 +398,14 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     </script>
     </div>
 
-    - <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> + <span class="skill-chip">![](../assets/shared/icon-fatalwave.png)![](../assets/shared/icon-turningslash.png)![](../assets/shared/icon-fatalwave.png)FTF</span> is interchangeable with Cycle **2** if it's available.
-    - It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
+    1. <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> + <span class="skill-chip">![](../assets/shared/icon-fatalwave.png)![](../assets/shared/icon-turningslash.png)![](../assets/shared/icon-fatalwave.png)FTF</span> is interchangeable with Cycle **2** if it's available.
+    2. It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs:*
     { .lead }
 
-    - Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
-    - Prioritize the FTF combo earlier for better party synergy uptime.
+    1. Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
+    2. Prioritize the FTF combo earlier for better party synergy uptime.
 
 === "Recovery"
 
@@ -422,11 +422,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     </div>
     </div>
 
-    - Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> when a little short on orbs, just cast if unsure.
-    - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
-    - Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> instead of <span class="skill-chip">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span> for a cycle to recover stacks if they run out.
-    - Use Maelstrom + FTF combo earlier if waiting on main orb generation skills.
-    - Hold Deathly Slash until the next Cycle **1** if it's out of sync. DPS loss, but easier.
+    1. Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> when a little short on orbs, just cast if unsure.
+    2. Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
+    3. Use <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span> instead of <span class="skill-chip">![](../assets/shared/icon-twinshadows.png)Twin Shadows</span> for a cycle to recover stacks if they run out.
+    4. Use Maelstrom + FTF combo earlier if waiting on main orb generation skills.
+    5. Hold Deathly Slash until the next Cycle **1** if it's out of sync. DPS loss, but easier.
 
 === "TL;DR:"
     ![333 TL;DR flowchart](../assets/tldr-333.png){ .zoomable-image loading=lazy }

@@ -113,6 +113,10 @@
         tags: [["dmg", "DAMAGE"]],
         note: "Filler that's also a skill reset and core skill for \uD83D\uDC2F.",
       },
+      headhunt: {
+        tags: [["util", "COUNTER"], ["warn", "NO PARA IMMUNE"]],
+        note: "Fast counter with micro-mobility.",
+      },
       earthcleaver: {
         tags: [["dmg", "DAMAGE"], ["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NO PARA IMMUNE"]],
         note: "Charges up to two stacks for \uD83E\uDD81.",

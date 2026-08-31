@@ -281,13 +281,13 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     </script>
     </div>
 
-    - <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle **2** if it's available.
-    - It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
+    1. <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle **2** if it's available.
+    2. It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs:*
     { .lead }
 
-    - Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
+    1. Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
 
 === "Recovery"
 
@@ -304,7 +304,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     </div>
     </div>
 
-    - Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
+    1. Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
 
 ## DPS Spread
 

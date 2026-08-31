@@ -198,13 +198,15 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 - Use Legendary Purify on Spincutter if needed.
 - Use Legendary Bleed or Poison instead of Rage if you don't use RC or MI engravings.
+    - Each one is about 0.75% DPS in exchange for lower or no Rage buff uptime.
+    - Give the Bleed/Poison to Maelstrom and Turning Slash if you use mana food.
 
 </details>
 
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
-- You can use the Quick Prep tripod on Blade Dance at lower gem levels.
+- You can keep the Quick Prep tripod on Blade Dance at lower gem levels.
 - Earth Explosion tripod on Earth Cleaver is up to personal preference.
     - Increased cast speed, but greatly lowers mobility and damage.
 - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
@@ -257,68 +259,61 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 There's an optimal skill order, but you have flexibility when facing downtime or weaving in mobility skills.
 
-Spincutter is your main mobility skill and backup stack builder. Use it to guarantee a back attack on Surge.
+Breaking Moon grants 60 stacks on hit and empowers your next Surge with +60% Critical Damage.
 
-Breaking Moon grants 60 stacks on hit and empowers your next Surge.
+Spincutter is your mobility skill and backup stack builder. Use it to guarantee a back attack on Surge.
 
 Use the Breaking Moon cycle whenever it's available, then repeat the main cycle whenever it's not.
 
 *From 3 orbs:*
 { .lead }
+<div class="cycle-card" markdown>
+<div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Breaking Moon Cycle</span></div>
+<div class="rotation-line" markdown>
+<script type="application/json">
+[{ "icons": ["turningslash", "surpriseattack"], "situational": "synergy/adrenaline" }, "windcut", "deathtrance", "maelstrom", "surpriseattack", "breakingmoon", "surge"]
+</script>
+</div>
+</div>
 
-=== "Breaking Moon Cycle"
+1. If you already have a Maelstrom buff of 3 seconds or more, consider skipping it to conserve a stack.
 
-    <div class="rotation-line" markdown>
-    <script type="application/json">
-    [{ "icons": ["turningslash", "surpriseattack"], "situational": "synergy/adrenaline" },
-     "windcut", "deathtrance", "maelstrom", "surpriseattack", "breakingmoon", "surge"]
-    </script>
-    </div>
+<div class="cycle-card" markdown>
+<div class="cycle-card-header"><span class="cycle-num cycle-num-2">2</span><span class="cycle-title">Main Repeating Cycle</span></div>
+<div class="rotation-line" markdown>
+<script type="application/json">
+["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "earthcleaver", "turningslash", "bladedance", "blitzrush", { "id": "surpriseattack", "situational": true }, "surge"]
+</script>
+</div>
+</div>
 
-    - If you already have a Maelstrom (or Rage) buff of 3 seconds or more, consider skipping it to conserve a stack.
+1. The final Surprise Attack can often be skipped with surplus stacks and expected raid downtime.
+2. Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge (Raid Captain).
 
-=== "Main Cycle"
+<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-notes" markdown>
 
-    <div class="rotation-line" markdown>
-    <script type="application/json">
-    ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "earthcleaver", "turningslash", "bladedance", "blitzrush",
-     { "id": "surpriseattack", "situational": true },
-     "surge"]
-    </script>
-    </div>
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Alt</span>Lion Mode (Optional)<span class="setup-note-arrow"></span></summary>
 
-    - The second Surprise Attack can often be skipped with surplus stacks and expected raid downtime.
-    - Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge (Raid Captain).
+Alternate main cycle meant to try-hard Raid Captain and Mass Increase efficiency in raids:
 
-    <div class="setup-panel" data-accent="lavender" markdown>
-    <div class="setup-notes" markdown>
+<div class="cycle-card" markdown>
+<div class="cycle-card-header"><span class="cycle-num cycle-num-2">2</span><span class="cycle-title">Main Repeating Cycle</span></div>
+<div class="rotation-line" markdown>
+<script type="application/json">
+[{ "id": "maelstrom", "situational": true }, "windcut", "deathtrance", "surpriseattack", "windcut", "earthcleaver", "turningslash", { "id": "maelstrom", "situational": true }, "bladedance", "blitzrush", "surpriseattack", "surge"]
+</script>
+</div>
+</div>
 
-    <details class="setup-note" data-kind="example" markdown>
-    <summary><span class="setup-note-tag">Alt</span>Raid Captain + Mass Increase<span class="setup-note-arrow"></span></summary>
+1. Just recast Maelstrom as it expires, but some optimal cast spots are suggested.
+2. Use your judgment. Not every skill needs the Maelstrom buff, so prioritize Surge.
+3. Consider skipping Maelstrom to conserve a stack if you received a Rage buff.
+</details>
 
-    Alternate main cycle meant to try-hard engraving efficiency in raids:
-
-    <div class="rotation-line" markdown>
-    <script type="application/json">
-    [{ "id": "maelstrom", "situational": true }, "windcut", "deathtrance", "surpriseattack", "windcut", "earthcleaver", "turningslash", { "id": "maelstrom", "situational": true }, "bladedance", "blitzrush", "surpriseattack", "surge"]
-    </script>
-    </div>
-
-    - Basically recast Maelstrom as it expires, but some optimal cast spots are suggested.
-    - Use your judgment. Not every skill needs the Maelstrom buff, so prioritize Surge.
-    - Consider skipping Maelstrom to conserve a stack if you received a Rage buff.
-    </details>
-
-    </div>
-    </div>
-
-=== "Awakening Cycle"
-
-    <div class="rotation-line" markdown>
-    <script type="application/json">
-    ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "turningslash", "bladedance", "bladeassault", "surge"]
-    </script>
-    </div>
+</div>
+</div>
 
 *From zero orbs:*
 { .lead }

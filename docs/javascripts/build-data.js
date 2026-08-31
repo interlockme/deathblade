@@ -137,7 +137,7 @@
           accent: "#4db6ac",
           pentagon: [7, 9, 10, 7.5, 8],
           difficulty: 7,
-          trixion: 1.22,
+          trixion: 1.25,
           trixionConfirmed: true,
           playstyle: "Max Mobility",
           bestFor: "\uD83D\uDC06 Simple uptime focus",
