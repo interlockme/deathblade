@@ -188,10 +188,10 @@ Pair with Cursed Doll if you're just starting out.
 ### Identity
 
 - Orb Generation: Normal skills generate Death Orbs when they hit.
-- Death Trance: Press [Z] with 1+ orbs to enter Death Trance.
+- Death Trance: Press (Z) with 1+ orbs to enter Death Trance.
 - Stack Generation: Skills generate Surge stacks while in Death Trance.
 - Stack Cap: You can hold up to 80 stacks.
-- Surge: Press [Z] to consume 60 stacks. Extra stacks roll over to the next cycle.
+- Surge: Press (Z) to consume 60 stacks. Extra stacks roll over to the next cycle.
 - Stack Requirement: Surge must be cast with 40+ stacks to refund all 3 Death Orbs.
 
 ### Death Trance Buffs
