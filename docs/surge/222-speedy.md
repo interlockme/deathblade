@@ -320,9 +320,10 @@ Alternate between these two cycles as needed for ceiling DPS:
 </div>
 </div>
 
-1. Rotating **2>3>2>3** is ideal, but based on boss patterns, variations like **2>3>3>2** or **2>2>3>3** are valid.
+1. Cycle **2** offers safety by leaving Surprise Attack as a situational backup; Cycle **3** offers higher CPM.
+2. Rotating **2>3>2>3** is ideal, but based on boss patterns, variations like **2>3>3>2** or **2>2>3>3** are valid.
     - Recover stacks with Wind Cut or Surprise Attack, decide your next cycle based on which one is available.
-2. You can skip Cycle **1** or **3**'s final Surprise Attack if you're at 48-49 stacks before Deathly Slash if needed.
+3. You can skip Cycle **1** or **3**'s final Surprise Attack if you're at 48-49 stacks before Deathly Slash if needed.
 </details>
 
 </div>
