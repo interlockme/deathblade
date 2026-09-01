@@ -239,7 +239,7 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 <div class="skills-table" data-family="surge" markdown>
 <script type="application/json">
 [
-  { "id": "windcut", "name": "Wind Cut", "lines": ["up to 8-9 stacks"] },
+  { "id": "windcut", "name": "Wind Cut", "lines": ["up to 7-9 stacks"] },
   { "id": "deathtrance", "name": "Death Trance" },
   { "id": "maelstrom", "name": "Maelstrom", "lines": ["up to 7 stacks"] },
   { "id": "surpriseattack", "name": "Surprise Attack", "lines": ["up to 7 stacks"] },
