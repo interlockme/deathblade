@@ -194,7 +194,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 - Use Legendary Bleed on Maelstrom if you don't experience mana issues.
     - Bleed is about 0.75% DPS in exchange for playing skillfully or using mana food.
 - Use Legendary Vision on Surprise Attack if you don't use RC or MI engravings.
-    - Give Head Hunt the next best leftover Galewind or Vision rune.
+    - Increases chance of getting an extra stack on Surprise Attack precast.
+    - Give Head Hunt the next best Galewind or Vision rune that's available.
 
 </details>
 
