@@ -143,7 +143,7 @@
       },
       upperslash: {
         tags: [["immune", "PUSH IMMUNE"]],
-        note: "Alternative comfort skill for \uD83D\uDC06.",
+        note: "Core utility skill for \uD83D\uDC06.",
       },
       fallstar: {
         tags: [["immune", "PUSH IMMUNE"]],
