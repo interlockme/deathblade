@@ -327,7 +327,7 @@ Alternate between these two cycles as needed for ceiling DPS:
       - Recover stacks with Wind Cut or Surprise Attack, decide your next cycle based on which one is available.
 3. You can skip a Surprise Attack finisher whenever you're at 49+ stacks before Deathly Slash.
       - Same for 40+ stacks before Blade Dance, 30+ stacks before Upper Slash, etc.
-      - If you have 6+ stacks at the moment you activate Death Arts, you can skip it.
+      - If you have 7+ stacks at the moment you activate Death Arts, you can skip it.
       - Be mindful of missed Maelstrom/Wind Cut hits from boss patterns and movement.
 
 It helps to think of everything within <span class="skill-chip">![](../assets/shared/icon-deathtrance.png)Death Trance</span> and <span class="skill-chip">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span> as 53 stacks, and the Wind Cut Precast or Surprise Attack finisher as flexible options that give you the 7+ stacks needed to complete a 60+ stack Surge.
