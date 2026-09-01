@@ -325,18 +325,19 @@ Alternate between these two cycles as needed for ceiling DPS:
 1. Cycle **2** offers safety by leaving Surprise Attack as a recovery option; Cycle **3** offers higher CPM.
 2. Rotating **2>3>2>3** is ideal, but based on boss patterns, variations like **2>3>3>2** or **2>2>3>3** are valid.
       - Recover stacks with Wind Cut or Surprise Attack, decide your next cycle based on which one is available.
-3. You can skip a Surprise Attack finisher whenever you're at 48+ stacks before Deathly Slash.
-      - Same for 39+ stacks before Blade Dance, 29+ stacks before Upper Slash, etc.
+3. You can skip a Surprise Attack finisher whenever you're at 49+ stacks before Deathly Slash.
+      - Same for 40+ stacks before Blade Dance, 30+ stacks before Upper Slash, etc.
       - If you have 6+ stacks at the moment you activate Death Arts, you can skip it.
       - Be mindful of missed Maelstrom/Wind Cut hits from boss patterns and movement.
 
-It helps to think of everything within <span class="skill-chip">![](../assets/shared/icon-deathtrance.png)Death Trance</span> and <span class="skill-chip">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span> as 54 stacks, and the Wind Cut Precast or Surprise Attack finisher as flexible options that give you the 6+ stacks needed to complete a 60+ stack Surge.
+It helps to think of everything within <span class="skill-chip">![](../assets/shared/icon-deathtrance.png)Death Trance</span> and <span class="skill-chip">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span> as 53 stacks, and the Wind Cut Precast or Surprise Attack finisher as flexible options that give you the 7+ stacks needed to complete a 60+ stack Surge.
 </details>
 
 </div>
 </div>
 
-*Note: Depending on latency or ability to skill queue, your Wind Cut precast may not reliably give 8 stacks.*
+1. Depending on attack speed/latency, your Wind Cut precast may give 7 stacks instead of 8.
+2. With lower Attack Speed (Mass Increase), Deathly Slash may sometimes grant 12 stacks instead of 11.
 
 *From zero orbs:*
 { .lead }

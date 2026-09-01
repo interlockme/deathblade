@@ -252,7 +252,7 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
   { "id": "spincutter", "name": "Spincutter", "lines": ["2 stacks", "per cast"] },
   { "id": "turningslash", "name": "Turning Slash", "lines": ["up to 5 stacks"] },
   { "id": "bladeassault", "name": "Blade Assault", "lines": ["up to 20 stacks"] },
-  { "id": "deathlyslash", "name": "Deathly Slash", "lines": ["up to 8-12 stacks"] },
+  { "id": "deathlyslash", "name": "Deathly Slash", "lines": ["up to 11-12 stacks"] },
   { "id": "darkaxel", "name": "Dark Axel", "lines": ["2 to 3 stacks"] },
   { "id": "upperslash", "name": "Upper Slash", "lines": ["up to 5 stacks"] },
   { "id": "fallstar", "name": "Fallstar", "lines": ["up to 8 stacks"] }
