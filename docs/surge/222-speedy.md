@@ -338,7 +338,10 @@ It helps to think of everything within <span class="skill-chip">![](../assets/sh
 </div>
 
 1. Depending on attack speed/latency, your Wind Cut precast may give 7 stacks instead of 8.
-2. With lower Attack Speed (Mass Increase), Deathly Slash may sometimes grant 12 stacks instead of 11.
+2. With lower Attack Speed (Mass Increase), Deathly Slash may grant 12 stacks instead of 11.
+3. It's better to cast a ~59 stack Surge if the alternative is waiting more than 1.5 seconds.
+4. Delaying Deathly Slash + Surge by more than 1.75 seconds to ensure a back attack is a DPS loss.
+5. Delaying *only* Surge by more than 1 second to ensure a back attack is also a DPS loss.
 
 *From zero orbs:*
 { .lead }
