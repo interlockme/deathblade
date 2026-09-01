@@ -720,4 +720,5 @@
 | [Fatal Wave Dump](https://docs.google.com/document/d/1vs1YC_7adaYwtfN9cHO3x2KuMPq6GcKRlGo5vnsN4Lk/edit) | *For 333 Standard (spincutter) NA build* |
 | [Maxroll](https://maxroll.gg/lost-ark) | *Resources for beginners* |
 | [Inven RE Guide](https://www.inven.co.kr/board/lostark/5497/140080) | *Korean guide for 333, 111 HH and Void Skip* |
-| [Inven 313 Guide](https://www.inven.co.kr/board/lostark/5497/171285) | *Korean guide for 313* |
+| [Inven 313 Guide](https://www.inven.co.kr/board/lostark/5497/171285) | *Korean guide for 313 RE* |
+| [Inven 222 Guide](https://www.inven.co.kr/board/lostark/5497/175796) | *Korean guide for 222 Surge* |
