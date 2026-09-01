@@ -238,7 +238,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     "turningslash",
     "windcut",
     { "id": "surpriseattack", "alts": [
-      { "id": "darkaxel", "note": "Use Dark Axel CD instead if you prefer." }
+      { "id": "darkaxel", "note": "Use Dark Axel CD instead if you prefer, or even another character's Lv 10 gem... it doesn't matter." }
     ] }
   ] },
   { "col": "cd", "label": "Cooldown", "items": [
