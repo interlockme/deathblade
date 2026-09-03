@@ -1877,7 +1877,7 @@
       const chaosAttack = GEAR_AP_CHAOS_STAR_TABLE[inputs.gearApChaosStar] || { pct: 0, flat: 0 };
       if (chaosAttack.pct || chaosAttack.flat) {
         const pctText = chaosAttack.pct ? chaosAttack.pct.toFixed(2) + "%" : "0%";
-        const flatText = chaosAttack.flat ? chaosAttack.flat.toLocaleString() + " AP" : "0 AP";
+        const flatText = chaosAttack.flat ? chaosAttack.flat.toString() + " AP" : "0 AP";
         chaosAttackSpan.textContent = "(" + pctText + " + " + flatText + ")";
       } else {
         chaosAttackSpan.textContent = "";
