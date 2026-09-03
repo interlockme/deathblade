@@ -216,8 +216,8 @@
       <select id="ap-necklace" class="ap-necklace">
         <option value="None">None</option>
         <option value="Low">Low</option>
-        <option value="Mid" selected>Mid</option>
-        <option value="High">High</option>
+        <option value="Mid">Mid</option>
+        <option value="High" selected>High</option>
       </select>
     </div>
     <div class="ap-calc-field-row ap-calc-field-row-pair">
@@ -240,7 +240,7 @@
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-astrogem-lv">Astrogem Level</label>
       <span class="ap-value-display" data-for="ap-astrogem-lv"></span>
-      <input type="number" id="ap-astrogem-lv" class="ap-astrogem-lv" min="0" max="100" step="1" value="56">
+      <input type="number" id="ap-astrogem-lv" class="ap-astrogem-lv" min="0" max="100" step="1" value="59">
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-sh-pet">Stronghold Pet</label>
@@ -493,7 +493,7 @@
         </div>
         <div class="ap-calc-field-row">
           <label class="ap-calc-field-label" for="ap-gear-main-stat">Main Stat (STR/DEX/INT)</label>
-          <input type="number" id="ap-gear-main-stat" class="ap-gear-main-stat ap-gear-input-wide" min="0" max="2000000" step="1" value="828668">
+          <input type="number" id="ap-gear-main-stat" class="ap-gear-main-stat ap-gear-input-wide" min="0" max="2000000" step="1" value="854918">
         </div>
         <div class="ap-calc-field-row">
           <label class="ap-calc-field-label" for="ap-gear-main-stat-pct" title="Stronghold Pet (+1%) + Skin bonuses: Legendary +2% each (up to +8%) and Epic +1% each (up to +4%). Affects only the flat Main Stat granted by lines below, not your Main Stat stat itself.">Main Stat %</label>
@@ -584,7 +584,7 @@
         <div class="ap-calc-field-row">
           <label class="ap-calc-field-label" for="ap-gear-ap-astrogem-lv" >Astrogem Atk. Power Level</label>
           <span class="ap-value-display" data-for="ap-gear-ap-astrogem-lv"></span>
-          <input type="number" id="ap-gear-ap-astrogem-lv" class="ap-gear-ap-astrogem-lv" min="0" max="100" step="1" value="56">
+          <input type="number" id="ap-gear-ap-astrogem-lv" class="ap-gear-ap-astrogem-lv" min="0" max="100" step="1" value="35">
         </div>
         <div class="ap-calc-field-row ap-gear-ap-select-row">
           <label class="ap-calc-field-label" for="ap-adrenaline-stone" title="A fixed 0.9% per stack, assuming the full 6 stacks, plus this stone's own bonus (Lv.1 +0.48% / Lv.2 +0.60% / Lv.3 +0.83% / Lv.4 +0.95% per stack).">Ability Stone: Adrenaline</label>
