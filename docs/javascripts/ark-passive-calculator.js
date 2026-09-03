@@ -376,26 +376,21 @@
   // single "% value" for it to contribute to this sum.
   const GEAR_AP_ATROPINE_FULL = 30;
 
-  // Support's Drops of Ether engraving drops two different orbs - Strength
-  // Orb (Attack Power, folded in here) and Flash Orb (Crit Rate, folded
-  // into critRateTotal instead) - both scaled by the SAME "Ether
-  // effectiveness" bonus, which is why that bonus is a single shared
-  // constant rather than two separate ones. Sourced from the engraving's
-  // own tooltip: Relic grade at max level gives +16.00% Ether
-  // effectiveness, and a Lv.2 Ability Stone adds another +15.00% - the
-  // tooltip's own "Final Applied Effect" line confirms these ADD (16+15 =
-  // 31.00% enhanced), not multiply. Like SUPPORT_AP_BUFF_COEFFICIENT
-  // above, this is calibrated to one assumed reference support engraving/
-  // stone combo rather than derived from the reader's own inputs, since
-  // it depends on the SUPPORT's build, not theirs.
+  // Support's Drops of Ether engraving's Strength Orb (Attack Power,
+  // folded in here). Sourced from the engraving's own tooltip: Relic
+  // grade at max level gives +16.00% Ether effectiveness, and a Lv.2
+  // Ability Stone adds another +15.00% - the tooltip's own "Final Applied
+  // Effect" line confirms these ADD (16+15 = 31.00% enhanced), not
+  // multiply. Like SUPPORT_AP_BUFF_COEFFICIENT above, this is calibrated
+  // to one assumed reference support engraving/stone combo rather than
+  // derived from the reader's own inputs, since it depends on the
+  // SUPPORT's build, not theirs.
   const SUPPORT_ETHER_EFFECTIVENESS = 0.31;
-  // Base orb values before the Ether effectiveness bonus above - Strength
-  // Orb's +10% Attack Power, Flash Orb's +15% Crit Rate (both per the
-  // engraving's Base Effect tooltip, Relic grade).
+  // Base orb value before the Ether effectiveness bonus above - Strength
+  // Orb's +10% Attack Power (per the engraving's Base Effect tooltip,
+  // Relic grade).
   const STRENGTH_ORB_BASE_AP = 10;
-  const FLASH_ORB_BASE_CRIT_RATE = 0.15;
   const STRENGTH_ORB_FULL_AP = STRENGTH_ORB_BASE_AP * (1 + SUPPORT_ETHER_EFFECTIVENESS);
-  const FLASH_ORB_FULL_CRIT_RATE = FLASH_ORB_BASE_CRIT_RATE * (1 + SUPPORT_ETHER_EFFECTIVENESS);
 
   function gearAttackPowerPercentTotal(inputs) {
     return (
@@ -630,14 +625,6 @@
       backAttackRate: Math.max(0, Math.min(100, getNumber(root, ".ap-back-attack-rate", 90))),
 
       yearning: getCheckbox(root, ".ap-yearning", true),
-      // Support's Flash Orb (Drops of Ether) - same "% of the fight it's
-      // up" pattern as Adrenaline/Back-Attack Rate above, see
-      // FLASH_ORB_FULL_CRIT_RATE's own comment for the assumed
-      // engraving/stone combo baked into the full-uptime value. Only
-      // meaningful while a Support is actually in the party - gated off
-      // .ap-yearning the same way Support AP Buff Uptime already is (see
-      // enforceGearSupportUptimeGate). Defaults to 0 (not used).
-      flashOrbUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-flash-orb-uptime", 0))),
       evoKarmaRank: parseInt(getSelect(root, ".ap-evo-karma", "6"), 10) || 6,
 
       demonDmgPct: Math.max(0, Math.min(15, getNumber(root, ".ap-brace-demon-dmg", 7))),
@@ -845,10 +832,7 @@
     const n = inputs.critSyn1 ? 0.1 : 0;
     const o = inputs.critSyn2 ? 0.1 : 0;
     const p = (inputs.backAttackRate / 100) * 0.1;
-    // Support's Flash Orb (Drops of Ether) - see FLASH_ORB_FULL_CRIT_RATE's
-    // own comment for the Ether-effectiveness assumption baked into it.
-    const q = (inputs.flashOrbUptime / 100) * FLASH_ORB_FULL_CRIT_RATE;
-    return c + d + e + f + g + h + i + k + n + o + p + q;
+    return c + d + e + f + g + h + i + k + n + o + p;
   }
 
   function evoDmgTotal(keenSenseLv, limitBreakLv, shared) {
@@ -1904,7 +1888,6 @@
     // e.g. 20% uptime reads as "(6.00%)", matching the field's own tooltip.
     setDisplay("#ap-gear-atropine-uptime", ((inputs.gearAtropineUptime / 100) * GEAR_AP_ATROPINE_FULL) / 100);
     setDisplay("#ap-gear-strength-orb-uptime", ((inputs.gearStrengthOrbUptime / 100) * STRENGTH_ORB_FULL_AP) / 100);
-    setDisplay("#ap-flash-orb-uptime", (inputs.flashOrbUptime / 100) * FLASH_ORB_FULL_CRIT_RATE);
     // Running total, shown even at 0% (unlike the other displays above,
     // which stay blank at 0) so it always reads as "here's your current
     // total" rather than looking broken/empty with nothing selected yet.
@@ -2427,19 +2410,17 @@
     });
   }
 
-  // Support AP Buff Uptime, Strength Orb Uptime, and Flash Orb Uptime all
-  // only mean anything while Support is actually part of the setup -
-  // gated on .ap-yearning ("Support: Passionate Dance" up in Party &
-  // Positioning) being CHECKED, not on whether it's disabled. Being
-  // disabled-but-checked (hit the 3-synergy limit above while already on)
-  // still means Support is active, so these fields should stay enabled
-  // in that case - only an unchecked .ap-yearning turns them off. Strength
-  // Orb and Flash Orb are both Support's Drops of Ether engraving, same
-  // "no Support, no orb" dependency as the AP buff.
+  // Support AP Buff Uptime and Strength Orb Uptime both only mean
+  // anything while Support is actually part of the setup - gated on
+  // .ap-yearning ("Support: Passionate Dance" up in Party & Positioning)
+  // being CHECKED, not on whether it's disabled. Being disabled-but-checked
+  // (hit the 3-synergy limit above while already on) still means Support
+  // is active, so these fields should stay enabled in that case - only an
+  // unchecked .ap-yearning turns them off.
   function enforceGearSupportUptimeGate(root) {
     const yearningEl = root.querySelector(".ap-yearning");
     if (!yearningEl) return;
-    [".ap-gear-support-uptime", ".ap-gear-strength-orb-uptime", ".ap-flash-orb-uptime"].forEach((selector) => {
+    [".ap-gear-support-uptime", ".ap-gear-strength-orb-uptime"].forEach((selector) => {
       const el = root.querySelector(selector);
       if (el) el.disabled = !yearningEl.checked;
     });

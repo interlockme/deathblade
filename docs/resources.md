@@ -323,11 +323,6 @@
       <span class="ap-value-display" data-for="ap-yearning"></span>
       <input type="checkbox" id="ap-yearning" class="ap-yearning" checked>
     </div>
-    <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-flash-orb-uptime" title="+15% Crit Rate, scaled by the Support's Drops of Ether engraving.">Support: Flash Orb Uptime</label>
-      <span class="ap-value-display" data-for="ap-flash-orb-uptime"></span>
-      <input type="number" id="ap-flash-orb-uptime" class="ap-flash-orb-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="0">
-    </div>
     <div class="ap-calc-field-row ap-calc-field-row-range ap-calc-field-row-range--inline">
       <label class="ap-calc-field-label" for="ap-back-attack-rate">Back-Attack Rate</label>
       <div class="ap-calc-range-line">
