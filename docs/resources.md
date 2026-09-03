@@ -464,7 +464,7 @@
          field-row layout was dropped in favor of that. -->
     <div class="ap-gear-cards">
       <div class="ap-gear-card ap-gear-card--basics">
-        <p class="ap-gear-card-title">Weapon Power / Main Stat</p>
+        <p class="ap-gear-card-title">Weapon Power / Main Stat / Base AP %</p>
         <div class="ap-calc-field-row">
           <label class="ap-calc-field-label" for="ap-gear-wp">Weapon Power</label>
           <input type="number" id="ap-gear-wp" class="ap-gear-wp ap-gear-input-wide" min="0" max="1000000" step="1" value="259216">
@@ -535,7 +535,7 @@
            weight inside a card titled "sources". It sits in the card on
            the left instead, alongside Weapon Power/Main Stat/etc. -->
       <div class="ap-gear-card ap-gear-card--ap-sources ap-gear-ap-section">
-        <p class="ap-gear-card-title ap-gear-ap-sources-heading">Attack Power % sources <span class="ap-value-display ap-gear-ap-total-display" data-for="ap-gear-ap-total"></span></p>
+        <p class="ap-gear-card-title ap-gear-ap-sources-heading">Attack Power %<span class="ap-value-display ap-gear-ap-total-display" data-for="ap-gear-ap-total"></span></p>
         <div class="ap-calc-field-row ap-calc-field-row-pair">
           <label class="ap-calc-field-label" >Earrings</label>
           <div class="ap-calc-pair">
@@ -643,7 +643,7 @@
       <div class="ap-brace-spec-toggle">
         <span class="ap-calc-field-label">Spec Scaling</span>
         <label class="ap-brace-radio-label">
-          <input type="radio" name="ap-brace-deathblade-spec" id="ap-brace-spec-re" class="ap-brace-spec-re" checked>
+          <input type="radio" name="ap-brace-deathblade-spec" id="ap-brace-spec-re" checked>
           RE
         </label>
         <label class="ap-brace-radio-label">
@@ -997,17 +997,6 @@
 </table>
 
 <p class="bid-calc-footnote">Party Profit is each other member's cut if that row wins. Next Bidder needs a +10% raise to outbid you.</p>
-
-</div>
-
-## Gearing Values
-
-*Late game examples including support buffs. Fill [Arsonistic's calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) with your own stats for accuracy.*
-
-<div class="grid cards gearing-cards" style="grid-template-columns: 1fr 3fr;" markdown>
-
-- ![Gearing sticker](assets/shared/gearing-sticker.png){ .zoomable-image loading=lazy }
-- ![Gearing values table 1](assets/shared/gearing-1.png){ .zoomable-image loading=lazy }
 
 </div>
 

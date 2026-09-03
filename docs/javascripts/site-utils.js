@@ -104,6 +104,19 @@
     //         (n) => n.toFixed(decimals) or (n) => n.toLocaleString("en-US").
     // onClamp: called (with no args) only when clamping actually changed
     //          the value - the caller's own re-render/update hook.
+    // emptyValue: OPT-IN, omitted by default. When the field is empty or
+    //         the browser couldn't parse it as a number at all (e.g. a
+    //         pasted letter), the base behavior (no emptyValue given) is
+    //         to leave the field alone - correct for CPM/bid-calculator's
+    //         fields, which have no universally-right fallback number and
+    //         intentionally show their own "-"/empty result state instead
+    //         of silently assuming a value the reader never entered. Pass
+    //         emptyValue (a number, or a function returning one - e.g.
+    //         () => input.defaultValue) for fields where blank truly
+    //         means broken rather than "not entered yet", e.g. one of
+    //         many inputs feeding an always-on live total that has to
+    //         show SOME number - see ark-passive-calculator.js's Gearing
+    //         fields for that case.
     clampOnBlur: function (input, min, max, onClamp, opts) {
       if (!input) return;
       opts = opts || {};
@@ -111,7 +124,13 @@
       var format = opts.format || function (n) { return String(n); };
       input.addEventListener("blur", function () {
         var raw = parse(input.value);
-        if (!isFinite(raw)) return; // empty/invalid - caller's own render already shows a placeholder
+        if (!isFinite(raw)) {
+          if (opts.emptyValue === undefined) return; // no fallback configured - caller's own render already shows a placeholder
+          var fallback = typeof opts.emptyValue === "function" ? opts.emptyValue() : opts.emptyValue;
+          input.value = fallback;
+          if (onClamp) onClamp();
+          return;
+        }
         var clamped = Math.min(max, Math.max(min, raw));
         if (clamped !== raw) {
           input.value = format(clamped);

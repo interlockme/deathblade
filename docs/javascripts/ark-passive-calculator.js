@@ -79,7 +79,6 @@
   // Merged Stable Atk table: "Grade|Points" -> value
   const STABLE_ATK_TABLE = {
     "None|0P": 0,
-    "Epic|0P": 0,
     "Legend|14P": 0.007,
     "Relic|14P": 0.007,
     "Relic|17P": 0.021,
@@ -2466,34 +2465,22 @@
       // Damage %, Bracelet Crit Stat Equipped, and the Gearing fields),
       // but that only guards the math - it left the field itself still
       // showing whatever the reader typed, so a stray extra digit could
-      // sit there looking accepted. This snaps the displayed value back
-      // into range on blur too (same pattern as the CPM calculator's Raid
-      // CPM/Base Multiplier fields), generic over every number input here
-      // rather than listing each field, since they all already carry
-      // min/max attrs in the markup.
+      // sit there looking accepted. SiteUtils.clampOnBlur (site-utils.js)
+      // snaps the displayed value back into range on blur too, generic
+      // over every number input here rather than listing each field,
+      // since they all already carry min/max attrs in the markup - same
+      // helper the CPM/bid calculators use for their own fields. This
+      // additionally passes emptyValue (opt-in on that shared helper,
+      // added for this file specifically): unlike a CPM/price field,
+      // where blank correctly means "not entered yet, show '—'", every
+      // field here feeds an always-on live grid that has to show SOME
+      // number, so blank/unparseable snaps back to the field's authored
+      // default instead of being left broken.
       root.querySelectorAll('input[type="number"]').forEach((el) => {
-        el.addEventListener("blur", () => {
-          const raw = parseFloat(el.value);
-          if (!isFinite(raw)) {
-            // Empty, or something the browser couldn't parse as a number
-            // at all (e.g. a pasted letter) - snap back to the field's
-            // authored default instead of leaving it blank. readInputs()
-            // would silently fall back to this same default for the
-            // math either way; this just keeps the field from looking
-            // broken while it does.
-            el.value = el.defaultValue;
-            scheduleUpdate();
-            return;
-          }
-          const min = el.min !== "" ? parseFloat(el.min) : null;
-          const max = el.max !== "" ? parseFloat(el.max) : null;
-          let clamped = raw;
-          if (min !== null) clamped = Math.max(min, clamped);
-          if (max !== null) clamped = Math.min(max, clamped);
-          if (clamped !== raw) {
-            el.value = String(clamped);
-            scheduleUpdate();
-          }
+        const min = el.min !== "" ? parseFloat(el.min) : -Infinity;
+        const max = el.max !== "" ? parseFloat(el.max) : Infinity;
+        window.SiteUtils.clampOnBlur(el, min, max, scheduleUpdate, {
+          emptyValue: () => el.defaultValue,
         });
       });
       const resetEl = root.querySelector(".ap-calc-reset");
