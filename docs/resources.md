@@ -452,15 +452,26 @@
     <span class="ap-gear-optional-badge" title="Not part of your Ark Passive setup above. Only used by the Bracelet, Accessory, and Ark Grid comparisons below - skip this if you're not using those.">Optional</span>
   </summary>
   <div class="ap-brace-compare-inputs">
-    <!-- Two smaller cards side by side (like the Ark Passive grid's own
-         Crit Rate/Crit Damage/etc. category cards above), rather than one
-         wide loose strip - the old single-row layout spread 6-15 fields
-         across the full box width with big gaps between them, which read
-         as cluttered/sparse at the same time instead of organized. Each
-         card gets its own title + border-left accent (same visual
-         language as .ap-calc-group) and stacks its own fields in a single
-         column - see the .ap-gear-card rules for why the old chip-style
-         field-row layout was dropped in favor of that. -->
+    <!-- Two cards side by side, same visual language as the Ark Passive
+         grid's own Crit Rate/Crit Damage/etc. category cards above
+         (.ap-calc-group inside .ap-calc-gear) - title + border-left
+         accent, fields stacked in a single column inside each card (see
+         the .ap-gear-card rules for why the old chip-style field-row
+         layout was dropped in favor of that). The side-by-side placement
+         itself used to be a plain 2-column grid with its own fixed
+         collapse-to-1-column breakpoint, PLUS a second fixed breakpoint
+         on each card to un-squeeze its pair rows and long label/select
+         rows once narrow - two independently hand-picked numbers that
+         didn't line up, so there was a band of widths where 2-up was
+         still active but neither card had reached its own comfortable
+         width yet, and fields visibly jumped between inline/stacked
+         resizing through it (the same kind of threshold mismatch
+         flagged in skill-setup.js's MASONRY_MIN_WIDTH note). Replaced
+         with a single auto-fit grid (see .ap-gear-cards below) that
+         only ever gives a card its minmax() minimum or more - so a card
+         can never be squeezed narrower than its own content needs in
+         the first place, and the "drop to 1 column" case falls out of
+         that same rule instead of a second breakpoint to keep in sync. -->
     <div class="ap-gear-cards">
       <div class="ap-gear-card ap-gear-card--basics">
         <p class="ap-gear-card-title">Weapon Power / Main Stat / Misc</p>

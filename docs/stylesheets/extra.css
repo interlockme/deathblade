@@ -4305,12 +4305,6 @@ h3 { color: var(--dbc-teal); }
   border-radius: 6px;
   background: none;
   overflow: visible;
-  /* Needed for the @container query on .ap-gear-ap-select-row further
-     down - those rows (Chaos Core: Attack, Ability Stone: Adrenaline)
-     pair a longer label with a longer select than the rest of this
-     box's fields, and overflowed/clipped the select at narrow (mobile)
-     widths without somewhere to stack onto two lines instead. */
-  container-type: inline-size;
 }
 .md-typeset .ap-gear-inputs:not([open]) {
   opacity: 1;
@@ -4413,42 +4407,55 @@ h3 { color: var(--dbc-teal); }
   border-bottom: none;
 }
 /* Gearing's two cards (Weapon Power/Main Stat, and Attack Power %
-   sources) side by side - each is its own small bordered card (see
-   .ap-gear-card below), same visual language as the Ark Passive grid's
-   own Crit Rate/Crit Damage/etc. category cards above, rather than one
-   wide strip where a loose horizontal spread of unrelated fields read as
-   cluttered. Two explicit columns (not auto-fit) since there are always
-   exactly two cards here; falls back to one column below in the
-   @container query once the whole Gearing box gets too narrow for two
-   side-by-side cards to stay legible. */
+   sources) stacked full-width, one after another - same visual language
+   AND same single-column layout as the Ark Passive grid's own Crit Rate/
+   Crit Damage/etc. category cards above (.ap-calc-group inside
+   .ap-calc-gear), rather than a 2-column grid. A 2-column version of this
+   used to exist and needed its own container-query breakpoints (to
+   un-squeeze pair rows and long label/select rows once each card was
+   squeezed to half the box's width) that didn't line up with the grid's
+   own collapse-to-1-column breakpoint (a fixed 560px on the outer grid,
+   independent of the fixed 380px on each card) - so there was a wide
+   band of container widths where 2-up was still active but neither card
+   had reached its own comfortable width yet, and fields would visibly
+   jump between inline/stacked right as you resized through it. Rather
+   than replacing that with a second hand-picked pair of breakpoints,
+   auto-fit below ties both decisions to the SAME number: it only ever
+   gives a card less than minmax()'s minimum, so a card can't reach a
+   "too narrow for its own content" state under this box's control at
+   all - the moment two columns would both dip below that width, the
+   whole grid drops to a single full-width column instead, matching
+   exactly the "single column, never squeezed" situation each card's
+   fields are already laid out for below (same field-row/pair/select
+   rules as the Crit Rate/Crit Damage/etc. cards, no per-card breakpoint
+   needed anywhere in this file). 400px is comfortably above both cards'
+   actual min-content width (~392px, set by the Base AP% row's paired
+   Gem input + "Ability Stone Base AP %" checkbox label, the widest
+   single row in either card) - verified by screenshotting both cards
+   across a full container-width sweep with no fallback rules active at
+   all: no wrapped labels, no clipped selects, at any width in either the
+   2-up or 1-up state. */
 .md-typeset .ap-gear-cards {
   /* .ap-brace-compare-inputs (this element's parent) is itself
      display:flex, so without an explicit width/flex-basis this grid
      child was shrinking to its min-content width instead of filling the
-     row - a 1fr/1fr grid track with no definite width to divide up
-     collapses each column toward its narrowest content instead of an
-     even split, which is what was producing the tiny/overlapping cards.
-     flex: 1 1 100% makes it claim the full row like a normal block
-     child would. */
+     row - a grid track with no definite width to divide up collapses
+     toward its narrowest content instead of an even split, which is
+     what was producing the tiny/overlapping cards. flex: 1 1 100% makes
+     it claim the full row like a normal block child would. */
   flex: 1 1 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.8em;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 0.9em;
+  align-content: start;
   align-items: start;
 }
-@container (max-width: 560px) {
-  .md-typeset .ap-gear-cards {
-    grid-template-columns: 1fr;
-  }
-}
-/* Each card gets its own container context (rather than relying on the
-   outer .ap-gear-inputs container further up) so the long-label/long-
-   select rows below respond to THIS card's own rendered width, not the
-   whole Gearing box's width - the two cards can each cross that
-   breakpoint at a different point once they're no longer always the same
-   width as the full box. */
+/* No container-type here (there used to be one, for a per-card narrow-
+   mode breakpoint) - .ap-gear-cards' auto-fit above already keeps a
+   card from ever getting narrower than its own content needs (see that
+   rule's comment), so there's no "squeezed card" state left for a query
+   on this element to respond to. */
 .md-typeset .ap-gear-card {
-  container-type: inline-size;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-left: 3px solid var(--ap-gear-card-accent, rgba(255, 255, 255, 0.15));
   border-radius: 8px;
@@ -4552,39 +4559,14 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* Chaos Core: Attack, Ability Stone: Adrenaline, and Ability Stone AP
-   Debuff: longer label + longer select than this card's other fields
-   (which all fit fine at the same widths - these three just have more
-   content). Stack label above control once the CARD itself (each
-   .ap-gear-card sets its own container-type: inline-size above, so this
-   responds to that individual card's width, not the whole Gearing box)
-   gets narrow enough that the pair no longer fits on one line, instead
-   of letting the select run past the edge uncontained. */
-@container (max-width: 380px) {
-  .md-typeset .ap-gear-ap-select-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.3em;
-  }
-  .md-typeset .ap-gear-ap-select-row select {
-    width: 100%;
-    max-width: 220px;
-  }
-  /* Base AP%'s own pair row (Gem input + Ability Stone checkbox) hits
-     the same too-narrow squeeze as the rows above, just via a
-     different pair of controls - a card's own border/padding leaves it
-     less room than the plain page rows have, so this needs its own
-     stacking fallback rather than relying on the generic pair styling
-     further up. */
-  .md-typeset .ap-gear-inputs .ap-calc-field-row-pair {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.3em;
-  }
-  .md-typeset .ap-gear-inputs .ap-calc-field-row-pair .ap-calc-pair {
-    width: 100%;
-    justify-content: flex-start;
-  }
-}
+   Debuff have a longer label + longer select than this card's other
+   fields, and Base AP%'s own pair row (Gem input + Ability Stone
+   checkbox) is a similar shape - but with each card now guaranteed at
+   least .ap-gear-cards' 400px auto-fit floor (see that rule above,
+   picked specifically because it clears this row's own min-content
+   width), these fit on one line the same way the Crit Rate/Crit
+   Damage/etc. cards' own pair rows do at full width, with no narrow-mode
+   stacking fallback needed here. */
 .md-typeset .ap-brace-compare-table {
   width: 100%;
   border-collapse: collapse;
