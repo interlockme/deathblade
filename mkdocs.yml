@@ -61,7 +61,7 @@ extra_javascript:
   - javascripts/extra.js?v=2
   - javascripts/cpm-calculator.js?v=6
   - javascripts/bid-calculator.js?v=4
-  - javascripts/ark-passive-calculator.js?v=7
+  - javascripts/ark-passive-calculator.js?v=8
   - javascripts/build-data.js?v=4
   - javascripts/build-stats-badge.js?v=1
   - javascripts/skill-data.js?v=3

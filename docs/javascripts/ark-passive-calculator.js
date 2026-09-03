@@ -228,7 +228,7 @@
   //     inputs, since it depends on the support's engraving/ArkGrid
   //     choices rather than WP/MainStat
   const SUPPORT_WP_BUMP = 0.05;
-  const SUPPORT_AP_BUFF_COEFFICIENT = 0.352;
+  const SUPPORT_AP_BUFF_COEFFICIENT = 0.4;
 
   function gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff) {
     // FLOOR wraps the *entire* bracket, including the final *PercentAP
