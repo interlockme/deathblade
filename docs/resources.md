@@ -633,7 +633,7 @@
     <p class="ap-brace-compare-intro">Candidate bracelet lines, valued as if each were the only line on your bracelet, against your Best Setup above.</p>
     <div class="ap-brace-compare-inputs">
       <div class="ap-calc-field-row">
-        <label class="ap-calc-field-label" for="ap-brace-demon-dmg">Demon Dmg %</label>
+        <label class="ap-calc-field-label" for="ap-brace-demon-dmg">Card Demon Dmg %</label>
         <input type="number" id="ap-brace-demon-dmg" class="ap-brace-demon-dmg" min="0" max="15" step="0.1" value="7">
       </div>
       <div class="ap-calc-field-row">
