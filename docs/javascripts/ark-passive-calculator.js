@@ -1657,7 +1657,7 @@
             high: wpDeltaGain(ACC_FLAT_WP_TABLE.High),
           },
           {
-            label: ["STR/DEX/INT +", ...trip("1935", "2083", "2679")],
+            label: ["Quality STR/DEX/INT +", ...trip("1935", "2083", "2679")],
             low: statDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.Low),
             mid: statDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.Mid),
             high: statDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.High),

@@ -450,7 +450,7 @@
 <details class="ap-gear-inputs">
   <summary>
     <span class="ap-gear-title">Character Data</span>
-    <span class="ap-gear-optional-badge" title="Not part of your Ark Passive setup above. Only used by the Bracelet, Accessory, and Ark Grid comparisons below - skip this if you're not using those.">Optional, feeds sections below</span>
+    <span class="ap-gear-optional-badge" title="Not part of your Ark Passive setup above. Only used by the Bracelet, Accessory, and Ark Grid comparisons below - skip this if you're not using those.">Optional</span>
   </summary>
   <div class="ap-brace-compare-inputs">
     <!-- Two smaller cards side by side (like the Ark Passive grid's own
@@ -464,7 +464,7 @@
          field-row layout was dropped in favor of that. -->
     <div class="ap-gear-cards">
       <div class="ap-gear-card ap-gear-card--basics">
-        <p class="ap-gear-card-title">Weapon Power / Main Stat / Base AP %</p>
+        <p class="ap-gear-card-title">Weapon Power / Main Stat / Misc</p>
         <div class="ap-calc-field-row">
           <label class="ap-calc-field-label" for="ap-gear-wp">Weapon Power</label>
           <input type="number" id="ap-gear-wp" class="ap-gear-wp ap-gear-input-wide" min="0" max="1000000" step="1" value="259216">
@@ -500,10 +500,10 @@
           <input type="number" id="ap-gear-main-stat-pct" class="ap-gear-main-stat-pct ap-gear-input-narrow" min="0" max="15" step="0.1" value="9">
         </div>
         <div class="ap-calc-field-row ap-calc-field-row-pair">
-          <label class="ap-calc-field-label" title="The SUM of every socketed gem's Base AP% bonus (Lv.7 +0.6% / Lv.8 +0.8% / Lv.9 +1% / Lv.10 +1.2% each), and whether your Ability Stone has a bonus (+1.5% flat).">Base AP %</label>
+          <label class="ap-calc-field-label" title="The SUM of every socketed gem's Base AP% bonus (Lv.7 +0.6% / Lv.8 +0.8% / Lv.9 +1% / Lv.10 +1.2% each), and whether your Ability Stone has a bonus (+1.5% flat).">Gem Base AP %</label>
           <div class="ap-calc-pair">
-            <input type="number" id="ap-gear-gem-base-ap" class="ap-gear-gem-base-ap ap-gear-input-narrow" min="0" max="50" step="0.1" value="13.2" title="Gem Base AP % - the SUM across all your socketed gems.">
-            <label class="ap-calc-pair-check" title="Ability Stone Base AP % - check if your stone rolled a 9/7, 10/6, or better (+1.5% flat).">
+            <input type="number" id="ap-gear-gem-base-ap" class="ap-gear-gem-base-ap ap-gear-input-narrow" min="0" max="13.2" step="0.1" value="13.2" title="Gem Base AP % - the SUM across all your socketed gems.">
+            <label class="ap-calc-pair-check" title="Ability Stone Base AP % - check if your stone has a bonus (+1.5% flat).">
               <input type="checkbox" id="ap-gear-ability-stone-base-ap" class="ap-gear-ability-stone-base-ap" checked>
               <span class="ap-calc-pair-check-label">Ability Stone</span>
             </label>
