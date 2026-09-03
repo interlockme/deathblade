@@ -45,6 +45,16 @@
 // "2nd line" bracelet fields assume yes. If a bracelet can only ever have
 // one line of a given stat type, those two fields double-count and should
 // be removed instead.
+//
+// The Bracelet Line Comparison's 5 Weapon Power / Attack Power rows
+// (STR/DEX/INT, Weapon Power, and the 3 hybrid on-hit/periodic/HP-gated
+// WP lines) are a separate calculation layer from the rest of this file -
+// they don't touch the Ark Passive keystone grid at all, instead scaling
+// straight off the new .ap-gear-* Gearing inputs (Weapon Power, Main
+// Stat, Base AP%, Flat AP, Attack Power%). See the constants block below
+// (SUPPORT_WP_BUMP onward) and computeBraceletComparison's own comment
+// for the methodology, including the equally-geared-support
+// approximation behind Support AP Buff Uptime.
 
 (function () {
   "use strict";
@@ -133,6 +143,258 @@
   const BACK_DMG_TABLE = { Low: 0.025, Mid: 0.03, High: 0.035 };
   const BACK_ATTACK_DPS_SHARE = 0.97; // assumed % of DPS that lands as a Back Attack
   const DEMON_DMG_ADD = 0.025; // the "& Dmg vs Demon/Archdemon +2.5%" tag's fixed Additional Dmg component
+
+  // ----- Accessory Line Comparison lookup tables -----
+  // Sourced from Arsonistic's "Acc" sheet (Acc!C2:E10), same methodology
+  // as the Bracelet tables above - each a fresh candidate line valued in
+  // isolation, not a live per-piece tracker. Necklace/Rings reuse the
+  // same normalization approach as their Bracelet counterparts (Add Dmg
+  // divided by addDmgBaseline; Crit Rate/Dmg run through critLikeGain);
+  // Earrings reuse the shared Gearing inputs' gearApTotal machinery, same
+  // as the Bracelet section's 5 WP/AP rows. Deliberately its own tables
+  // rather than reusing NECKLACE_ADD_TABLE/RING_DMG_TABLE above where
+  // values are close but not identical (those two track this site's
+  // "your actual equipped piece" baseline figures, tuned separately) -
+  // RING_RATE_TABLE is the one exception, its Acc!C6:E6 values are an
+  // exact match, so that one IS reused as-is below.
+  const ACC_NECKLACE_ADD_TABLE = { Low: 0.007, Mid: 0.016, High: 0.026 };
+  const ACC_NECKLACE_OUT_TABLE = { Low: 0.0055, Mid: 0.012, High: 0.02 };
+  const ACC_EARRING_AP_TABLE = { Low: 0.004, Mid: 0.0095, High: 0.0155 };
+  const ACC_EARRING_WP_TABLE = { Low: 0.008, Mid: 0.018, High: 0.03 };
+  const ACC_FLAT_AP_TABLE = { Low: 80, Mid: 195, High: 390 };
+  const ACC_FLAT_WP_TABLE = { Low: 195, Mid: 480, High: 960 };
+  const ACC_QUALITY_MAIN_STAT_TABLE = { Low: 1935, Mid: 2083, High: 2679 };
+  // Ring Crit Damage's own magnitude (Acc!O7:Q7) - close to but not
+  // identical to RING_DMG_TABLE above (that one's tuned for this site's
+  // "your actual equipped ring" tracked baseline elsewhere; this is the
+  // sheet's own stated Bonus figure for the comparison candidate). Ring
+  // Crit Rate has no equivalent new table - RING_RATE_TABLE above is an
+  // exact match to Acc!O6:Q6, so that one's reused as-is.
+  const ACC_RING_DMG_TABLE = { Low: 0.011, Mid: 0.024, High: 0.04 };
+
+  // ----- Gearing (Weapon Power / Attack Power) constants -----
+  // Sourced from Arsonistic's "Brace"/"Acc" sheets. Attack Power there is:
+  //   AP = FLOOR(SQRT(WP * MainStat / 6) * BaseAP + FlatAP + SupAPBuff) * PercentAP
+  // WP, MainStat, BaseAP%, FlatAP, and Attack Power% (PercentAP) are all
+  // read from the .ap-gear-* inputs (see resources.md) - real personalized
+  // stats/sums the player reads off their own character panel, same as
+  // the sheet's own Calc tab expects. Main Stat % (below) used to be
+  // hardcoded here as STAT_GRANT_QUALITY_BONUS on the mistaken read that
+  // Brace!Q6/Acc!M10 carried no source-list documentation, unlike Weapon
+  // Power% - they do (Legendary Pet Ranch +1%, Legendary Skins +2%
+  // each up to 4, Epic Skins +1% each up to 4), it's just recorded as a
+  // cell NOTE rather than a visible cell value, easy to miss reading the
+  // sheet's raw cell contents. Exposed as its own input now, same
+  // treatment as Weapon Power % - see .ap-gear-main-stat-pct.
+
+  // On-hit Weapon Power stacking line (Brace row 8, "max 6x"): fixed
+  // assumption of 5 of a possible 6 stacks on average, matching the
+  // sheet's own default (Brace!Q8) - same "fixed default instead of a
+  // live input" simplification already used for STAGGER_DPS_SHARE /
+  // BACK_ATTACK_DPS_SHARE above. The line's own Atk/Move Speed component
+  // is dropped entirely: it only pays off below the 140% AS/MS cap, and
+  // the existing "Attack & Move Speed +4/5/6%" bracelet line above is
+  // already left out of this table for the same at-cap reason.
+  const ONHIT_WP_STACK_ASSUMPTION = 5;
+
+  // Periodic Weapon Power line (Brace row 9, "30s CD, max 30x"): fixed
+  // fight-length assumption (sheet's own default, Brace!Q9) used to
+  // average the cooldown-gated stacks over a fight - see Brace!P9's
+  // comment on the accumulation math this mirrors.
+  const PERIODIC_WP_FIGHT_MINUTES = 10;
+  function periodicWpAvgBonus(fightMinutes, perStackValue) {
+    const capped = Math.min(14.5, fightMinutes);
+    return ((capped * (capped + 0.5)) + Math.max(0, fightMinutes - 14.5) * 30) / fightMinutes * perStackValue;
+  }
+
+  // HP-gated Weapon Power line (Brace row 10, ">50% HP"): fixed buff
+  // uptime assumption (sheet's own default, Brace!Q10).
+  const HP_GATED_WP_UPTIME = 0.99;
+
+  // Equally-geared support's Attack Power buff (SupAPBuff in Arsonistic's
+  // "SupCalc" sheet) - approximated rather than modeling a second full
+  // character's engravings/ArkGrid/Brand/Identity kit, since none of the
+  // Brace/Acc/ArkGrid formulas reach for anything from the support's kit
+  // except this one number. Assumes a support geared to the SAME
+  // investment tier as your own Gearing inputs below - not a fixed
+  // "well-geared"/BiS assumption, an EQUALLY-geared one that scales with
+  // whatever you enter - carrying:
+  //   - the same Main Stat as you
+  //   - SUPPORT_WP_BUMP more Weapon Power (supports itemize WP harder -
+  //     e.g. always taking 3% WP earrings over substats you might skip)
+  //   - the same Base AP% multiplier as you
+  //   - a fixed AP-buff-tier coefficient, calibrated against Arsonistic's
+  //     own reference support profile (Awakening engraving + ArkGrid AP
+  //     nodes) - this is the one piece that can't scale off your own
+  //     inputs, since it depends on the support's engraving/ArkGrid
+  //     choices rather than WP/MainStat
+  const SUPPORT_WP_BUMP = 0.05;
+  const SUPPORT_AP_BUFF_COEFFICIENT = 0.352;
+
+  function gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff) {
+    // FLOOR wraps the *entire* bracket, including the final *PercentAP
+    // multiply (confirmed against Brace!C6's exact formula) - not just the
+    // sqrt/FlatAP/SupAPBuff sum before it. Doesn't change these rows' %
+    // gain in any way you'd actually see (PercentAP is a common scalar on
+    // both sides of the ratio either way, so it washes out almost
+    // entirely regardless of where FLOOR sits - see the comment on
+    // percentApMult below), but it's the actual formula, and getting the
+    // order right matters for anything built on this helper later that
+    // needs a real AP total rather than just a ratio.
+    return Math.floor((Math.sqrt((wp * mainStat) / 6) * baseApMult + flatAp + supApBuff) * percentApMult);
+  }
+
+  function supportApBuff(inputs, wp, mainStat, baseApMult) {
+    if (!inputs.gearSupport) return 0;
+    const supWp = wp * (1 + SUPPORT_WP_BUMP);
+    return Math.sqrt((supWp * mainStat) / 6) * baseApMult * SUPPORT_AP_BUFF_COEFFICIENT * (inputs.gearSupportUptime / 100);
+  }
+
+  // Adrenaline engraving's own Attack Power component - separate from the
+  // Crit Rate component already modeled above via ADRENALINE_TABLE/
+  // adrenalineUptime. Fixed at 0.9% AP per stack regardless of node
+  // count, assuming the full 6 stacks (see adrenalineApFraction below for
+  // why this is NOT time-weighted by Adrenaline Uptime); the Ability
+  // Stone adds its own per-stack bonus on top (source: the stone's own
+  // tooltip, Lv.1-4). Goes to 0 whenever Adrenaline is set to "Not Used" -
+  // matching the in-game reality that skipping the engraving loses both
+  // halves together. Deliberately kept OUT of the manual "Attack Power %"
+  // field (and its tooltip's source list) so the two can never be
+  // double-counted; this is added on top of gearAttackPowerPercentTotal
+  // instead, same as Atropine.
+  const ADRENALINE_AP_PER_STACK = 0.009;
+  const ADRENALINE_STACKS = 6;
+  const ADRENALINE_STONE_AP_TABLE = { "0 Lv.": 0, "1 Lv.": 0.0048, "2 Lv.": 0.006, "3 Lv.": 0.0083, "4 Lv.": 0.0095 };
+
+  // Attack Power isn't gated the same way the Crit Rate side is (full 6
+  // stacks or nothing) - every stack from 1-6 contributes its own share,
+  // and there's no way to directly observe average stack count in-game.
+  // A first pass tried deriving an estimated average stack count from the
+  // Crit Rate side's Adrenaline Uptime slider (linear from half stacks at
+  // 0% up to full stacks at 100%), but that's not a real relationship -
+  // 0% Crit uptime means near-0% actual uptime on the buff, not "half
+  // stacks on average", so it overstated Attack Power at low uptime
+  // rather than approximating it. Simplest correct fix: don't link the
+  // two at all. This always assumes full 6 stacks whenever Adrenaline is
+  // used, same as the sheet's own reference build; Adrenaline Uptime only
+  // affects the Crit Rate side above.
+  function adrenalineApFraction(inputs) {
+    if (inputs.adrenaline === "Not Used") return 0;
+    const stoneAp = ADRENALINE_STONE_AP_TABLE[inputs.adrenalineStone] || 0;
+    return ADRENALINE_STACKS * (ADRENALINE_AP_PER_STACK + stoneAp);
+  }
+
+  // Attack Power %'s individual sources (see Calc!P7's own source-list
+  // comment on the reference sheet, which this mirrors term for term).
+  // Astrogem doesn't get its own input: it reuses the existing Astrogem
+  // Level field from the Ark Passive section above (same investment,
+  // same 0-100 scale) rather than asking for the same number twice,
+  // scaled linearly up to the reference sheet's "up to 4.4%" ceiling -
+  // the sheet doesn't give a separate per-level formula for this half
+  // of Astrogem's payout, so this treats it as proportional to the
+  // Damage% half it does give a formula for.
+  // Earrings: two independent slots (you equip two at once), same
+  // "pair of dropdowns" pattern as the Rings/Bracelet groups above -
+  // see GEAR_AP_EARRING_TABLE's own two lookups in
+  // gearAttackPowerPercentTotal below. No live-value span needed on
+  // either, same reasoning as those pairs' own CSS comment: the option
+  // text already shows the exact percentage.
+  const GEAR_AP_EARRING_TABLE = { "None": 0, "Low": 0.4, "Mid": 0.95, "High": 1.55 };
+  const GEAR_AP_KAZEROS = 2;
+  const GEAR_AP_GUARDIAN = 3;
+  // Chaos Core: Attack, keyed the same "Grade|Points" way as
+  // STABLE_ATK_TABLE above, and sourced the same way (Arsonistic's
+  // sheet + the item's own in-game tooltip at each investment tier -
+  // see the two Chaos Star Core: Attack tooltip screenshots this table
+  // was built from). Each entry carries BOTH of the core's payouts -
+  // pct (Atk. Power %) and flat (Flat AP) - since a single dropdown
+  // selection determines both at once; gearFlatAp (the manual Flat AP
+  // input) now covers ONLY accessories, with this core's own flat
+  // contribution added in automatically wherever flatAp is computed
+  // (see the two gearApTotal call sites below) rather than asking the
+  // reader to hand-add it into that field themselves.
+  // "Any|10P" covers the flat-only stage (10 Points, both grades give
+  // the same +900 with no % yet, so grade doesn't matter until 14P).
+  // 14P/17P+ values are cumulative totals at each tier, matching how
+  // the core's own tooltip lists each breakpoint as additive. Ancient
+  // 20P's pct (2.68%) and flat (3600) both match this table's own
+  // prior single fixed constant/default exactly, which is what this
+  // table replaces.
+  const GEAR_AP_CHAOS_STAR_TABLE = {
+    "None|0P": { pct: 0, flat: 0 },
+    "Any|10P": { pct: 0, flat: 900 },
+    "Relic|14P": { pct: 0.55, flat: 900 },
+    "Relic|17P": { pct: 1.65, flat: 2700 },
+    "Relic|18P": { pct: 1.81, flat: 2700 },
+    "Relic|19P": { pct: 1.97, flat: 2700 },
+    "Relic|20P": { pct: 2.13, flat: 2700 },
+    "Ancient|14P": { pct: 0.55, flat: 900 },
+    "Ancient|17P": { pct: 2.2, flat: 3600 },
+    "Ancient|18P": { pct: 2.36, flat: 3600 },
+    "Ancient|19P": { pct: 2.52, flat: 3600 },
+    "Ancient|20P": { pct: 2.68, flat: 3600 },
+  };
+  function gearChaosStarPct(combined) {
+    return (GEAR_AP_CHAOS_STAR_TABLE[combined] || {}).pct || 0;
+  }
+  function gearChaosStarFlat(combined) {
+    return (GEAR_AP_CHAOS_STAR_TABLE[combined] || {}).flat || 0;
+  }
+  const GEAR_AP_ASTROGEM_MAX = 4.4;
+
+  // Astrogem Atk. Power Level is its OWN field (.ap-gear-ap-astrogem-lv),
+  // separate from the Additional Damage group's Astrogem Level
+  // (.ap-astrogem-lv) above - same source item, but Astrogem's Damage%
+  // and Atk. Power% payouts are independently levelable, not two views
+  // of one number. Used to reuse the Additional Damage field directly,
+  // which silently forced the two to always match.
+  function gearAstrogemApPercent(inputs) {
+    return (inputs.gearAstrogemLv / 100) * GEAR_AP_ASTROGEM_MAX;
+  }
+
+  // Atropine's own AP contribution (time-averaged, see
+  // GEAR_AP_ATROPINE_FULL/gearAtropineUptime below) and Adrenaline's own
+  // AP contribution (adrenalineApFraction, see that function's own
+  // comment) both fold straight into this total now - they're genuine
+  // Attack Power % sources like everything else here, only ever kept as
+  // separate terms for implementation convenience (each has its own
+  // toggle/table elsewhere), not because they're conceptually different
+  // from Kazeros/Guardian/etc. Support is NOT included here despite
+  // living in the same visual box below - it buffs Attack Power through
+  // a completely different mechanism (a flat AP amount folded into
+  // supportApBuff, pre-multiplied by percentApMult rather than being
+  // part of it - see supportApBuff's own comment), so there's no
+  // single "% value" for it to contribute to this sum.
+  const GEAR_AP_ATROPINE_FULL = 30;
+  function gearAttackPowerPercentTotal(inputs) {
+    return (
+      (GEAR_AP_EARRING_TABLE[inputs.gearApEarring1] || 0) +
+      (GEAR_AP_EARRING_TABLE[inputs.gearApEarring2] || 0) +
+      (inputs.gearApKazeros ? GEAR_AP_KAZEROS : 0) +
+      (inputs.gearApGuardian ? GEAR_AP_GUARDIAN : 0) +
+      gearChaosStarPct(inputs.gearApChaosStar) +
+      gearAstrogemApPercent(inputs) +
+      inputs.gearApOther +
+      (inputs.gearAtropineUptime / 100) * GEAR_AP_ATROPINE_FULL +
+      adrenalineApFraction(inputs) * 100
+    );
+  }
+
+  // ----- Base AP % (Gearing) -----
+  // Gem Base AP % is the SUM across every gem you have socketed, not
+  // one gem's level - e.g. eleven Lv.10 gems (+1.2% each) is 13.2%, not
+  // 1.2%. Free-typed rather than a dropdown for exactly that reason:
+  // the number of gems you have varies by how much gear you've
+  // socketed, so there's no fixed enumerable set of totals to offer as
+  // options the way there is for a single gem's own level. The Ability
+  // Stone's +1.5% (from a 9/7, 10/6, or better roll) stays a separate
+  // checkbox since it's genuinely binary - you either have that roll or
+  // you don't.
+  const ABILITY_STONE_BASE_AP_BONUS = 1.5;
+
+  function gearBaseApPercentTotal(inputs) {
+    return inputs.gearGemBaseAp + (inputs.gearAbilityStoneBaseAp ? ABILITY_STONE_BASE_AP_BONUS : 0);
+  }
 
   // ----- Spec +80/100/120 (Deathblade only) -----
   // Ported from the sheet's per-class Spec DPS-multiplier model
@@ -243,6 +505,9 @@
   // Crit Hit Damage Synergy 1/2, and the Passionate Dance support toggle) -
   // realistically only 3 of these 5 are ever active on the same pull, so at
   // most 3 may be checked at once (see enforcePartyCheckboxLimit below).
+  // Gearing's Support AP Buff Uptime field isn't a checkbox at all (it's a
+  // number input, gated by enforceGearSupportUptimeGate off .ap-yearning
+  // directly), so it doesn't need its own entry here.
   const PARTY_CHECKBOX_LIMIT_SELECTORS = [
     ".ap-crit-syn1",
     ".ap-crit-syn2",
@@ -295,6 +560,7 @@
 
       adrenaline: getSelect(root, ".ap-adrenaline", "4 Nodes"),
       adrenalineUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-adrenaline-uptime", 100))),
+      adrenalineStone: getSelect(root, ".ap-adrenaline-stone", "0 Lv."),
       kbw: getSelect(root, ".ap-kbw", "4 Nodes"),
       kbwStone: getSelect(root, ".ap-kbw-stone", "0 Lv."),
 
@@ -316,6 +582,76 @@
       demonDmgPct: Math.max(0, Math.min(15, getNumber(root, ".ap-brace-demon-dmg", 7))),
       braceCritStatEquipped: Math.max(60, Math.min(120, getNumber(root, ".ap-brace-crit-stat-equipped", 60))),
       braceSurgeSpec: getCheckbox(root, ".ap-brace-spec-surge", false),
+
+      // Gearing (Weapon Power / Attack Power) - feeds only the 5
+      // WP/AP bracelet lines below, entirely separate from the Ark
+      // Passive grid above. See the constants block above this function.
+      // Upper bounds (1M WP, 2M Main Stat, 6K Flat AP) are sanity caps,
+      // not real game limits - just enough headroom to keep a stray typo
+      // from producing an absurd on-page number.
+      gearWp: Math.max(0, Math.min(1000000, getNumber(root, ".ap-gear-wp", 259216))),
+      gearWpPercent: Math.max(0, Math.min(20, getNumber(root, ".ap-gear-wp-pct", 6.6))),
+      gearMainStat: Math.max(0, Math.min(2000000, getNumber(root, ".ap-gear-main-stat", 828668))),
+      // % bonus to Main Stat GRANTED by Bracelet/Accessory "STR/DEX/INT"
+      // candidate lines only, not to the stat entered above - same role
+      // as Weapon Power % below, just for Main Stat. Sourced from
+      // Legendary Pet Ranch (+1%) and costume set bonuses (Legendary
+      // Skins +2% each up to 4, Epic Skins +1% each up to 4) - see the
+      // constants block near the top of this file for where this used to
+      // be a hardcoded constant. Default (9%) matches that constant's old
+      // value: Pet Ranch + 4 Legendary Skins.
+      gearMainStatPercent: Math.max(0, Math.min(15, getNumber(root, ".ap-gear-main-stat-pct", 9))),
+      // Base AP % - split into its two separate sources (Gem total,
+      // Ability Stone bonus) - see gearBaseApPercentTotal above for how
+      // they're combined. Gem Base AP % is a free-typed SUM across all
+      // your gems, not one gem's level (see that function's own
+      // comment) - sanity-capped at 50 (well above any real total) to
+      // catch a stray typo without pretending there's a real game-side
+      // ceiling here.
+      gearGemBaseAp: Math.max(0, Math.min(50, getNumber(root, ".ap-gear-gem-base-ap", 13.2))),
+      gearAbilityStoneBaseAp: getCheckbox(root, ".ap-gear-ability-stone-base-ap", true),
+      // Flat AP now covers accessories ONLY - Chaos Core: Attack's own
+      // flat contribution is looked up automatically from the dropdown
+      // below (gearChaosStarFlat) and added in wherever flatAp is used,
+      // instead of being hand-added into this field. Default (390)
+      // reflects a High-tier accessory roll rather than the old
+      // default's Chaos Core figure.
+      gearFlatAp: Math.max(0, Math.min(2000, getNumber(root, ".ap-gear-flat-ap", 390))),
+      // Attack Power % used to be one hand-summed field (mirroring the
+      // reference sheet's own Calc!N7, itself a hand-typed sum its
+      // author computed once and pasted in). Split into its individual
+      // sources instead - see gearAttackPowerPercentTotal below for how
+      // they're combined - so nobody has to add these up by hand anymore.
+      gearApEarring1: getSelect(root, ".ap-gear-ap-earring1", "High"),
+      gearApEarring2: getSelect(root, ".ap-gear-ap-earring2", "High"),
+      gearApKazeros: getCheckbox(root, ".ap-gear-ap-kazeros", false),
+      gearApGuardian: getCheckbox(root, ".ap-gear-ap-guardian", false),
+      gearApChaosStar: getSelect(root, ".ap-gear-ap-chaos-star", "None|0P"),
+      // Astrogem Atk. Power Level - independent of the Additional
+      // Damage group's Astrogem Level field above, see
+      // gearAstrogemApPercent's own comment.
+      gearAstrogemLv: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-ap-astrogem-lv", 56))),
+      // Catch-all for anything not individually listed (the reference
+      // sheet's own comment ends its source list with "some in-raid
+      // buffs", too variable/situational to enumerate) - defaults to 0
+      // rather than baking in an assumed value nobody can see. Ceiling
+      // raised 10 -> 50.
+      gearApOther: Math.max(0, Math.min(50, getNumber(root, ".ap-gear-ap-other", 0))),
+      // % of the fight Atropine is actually active, not a plain on/off -
+      // see gearAttackPowerPercentTotal's own comment for how this
+      // averages into the running Attack Power % total. Defaults to 0
+      // (not used), same as the old checkbox's unchecked default.
+      gearAtropineUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-atropine-uptime", 0))),
+      // No longer its own checkbox - whether Support's AP buff applies at
+      // all is decided entirely by the Party & Positioning group's
+      // "Support: Passionate Dance" toggle (.ap-yearning); reading that
+      // directly means there's only one real checkbox for this fact
+      // instead of two kept in sync.
+      gearSupport: getCheckbox(root, ".ap-yearning", true),
+      // Only matters while gearSupport is true (the field itself is
+      // disabled in the UI otherwise, see enforceGearSupportUptimeGate).
+      // Scales the SIZE of the buff, not whether it applies.
+      gearSupportUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-support-uptime", 98))),
     };
   }
 
@@ -900,6 +1236,102 @@
       });
     }
 
+    // ----- Weapon Power / Attack Power lines (Brace!C6:E10) -----
+    // Structurally different from every row above: those all feed into
+    // effCrit/onCrit/evo/add and get compared against baselineMult (the
+    // Ark Passive grid's own multiplier). These 5 instead scale a
+    // completely separate multiplicative layer - Attack Power - computed
+    // straight from the Gearing inputs (see the constants block near the
+    // top of this file), independent of which keystone/split wins the
+    // grid above. No flip check needed for the same reason Back Attack
+    // Damage above doesn't have one: this layer can't touch effCrit/
+    // onCrit/evo/add at all.
+    {
+      const wp = inputs.gearWp;
+      const mainStat = inputs.gearMainStat;
+      const baseApMult = 1 + gearBaseApPercentTotal(inputs) / 100;
+      // Flat AP = accessories (the manual field) + Chaos Core: Attack's
+      // own flat contribution, looked up from its dropdown - see that
+      // table's own comment.
+      const flatAp = inputs.gearFlatAp + gearChaosStarFlat(inputs.gearApChaosStar);
+      // Atropine and Adrenaline's own AP contribution are folded into
+      // gearAttackPowerPercentTotal itself now - see that function's
+      // own comment for why.
+      const percentApMult = 1 + gearAttackPowerPercentTotal(inputs) / 100;
+      const wpPercentMult = 1 + inputs.gearWpPercent / 100;
+      const mainStatPercentMult = 1 + inputs.gearMainStatPercent / 100;
+      const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
+      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+
+      // Require real WP and Main Stat values, not just a nonzero
+      // baseline - Flat AP alone can make baselineAp > 0 even while one
+      // of them is blank/0 (e.g. mid-edit), which would otherwise let
+      // these 5 rows render off a nonsensical partial state.
+      if (wp > 0 && mainStat > 0 && baselineAp > 0) {
+        const statGain = (delta) =>
+          gearApTotal(wp, mainStat + delta * mainStatPercentMult, baseApMult, flatAp, percentApMult, supApBuff) /
+            baselineAp -
+          1;
+        const wpGain = (deltaWp) =>
+          gearApTotal(wp + deltaWp * wpPercentMult, mainStat, baseApMult, flatAp, percentApMult, supApBuff) / baselineAp - 1;
+
+        rows.push({
+          label: ["STR/DEX/INT +", ...trip("12000", "14000", "16000")],
+          low: statGain(12000),
+          mid: statGain(14000),
+          high: statGain(16000),
+        });
+        rows.push({
+          label: ["Weapon Power +", ...trip("7200", "8100", "9000")],
+          low: wpGain(7200),
+          mid: wpGain(8100),
+          high: wpGain(9000),
+        });
+        rows.push({
+          label: [
+            "On hit, Weapon Power +",
+            ...trip("1160", "1320", "1480"),
+            ", Atk/Move Speed +",
+            { tier: "fixed", text: "1" },
+            "% for 10s (max 6x)",
+          ],
+          note:
+            "Assumes " +
+            ONHIT_WP_STACK_ASSUMPTION +
+            " of 6 max stacks on average. Atk/Move Speed part is ignored.",
+          low: wpGain(1160 * ONHIT_WP_STACK_ASSUMPTION),
+          mid: wpGain(1320 * ONHIT_WP_STACK_ASSUMPTION),
+          high: wpGain(1480 * ONHIT_WP_STACK_ASSUMPTION),
+        });
+        rows.push({
+          label: [
+            "Weapon Power +",
+            ...trip("6900", "7800", "8700"),
+            " & on hit, +",
+            ...trip("130", "140", "150"),
+            " (30s CD, max 30x)",
+          ],
+          note: "Assumes a " + PERIODIC_WP_FIGHT_MINUTES + "-minute fight duration.",
+          low: wpGain(6900 + periodicWpAvgBonus(PERIODIC_WP_FIGHT_MINUTES, 130)),
+          mid: wpGain(7800 + periodicWpAvgBonus(PERIODIC_WP_FIGHT_MINUTES, 140)),
+          high: wpGain(8700 + periodicWpAvgBonus(PERIODIC_WP_FIGHT_MINUTES, 150)),
+        });
+        rows.push({
+          label: [
+            "Weapon Power +",
+            ...trip("7200", "8100", "9000"),
+            " & >50% HP: on hit, +",
+            ...trip("2000", "2200", "2400"),
+            " for 5s",
+          ],
+          note: "Assumes " + (HP_GATED_WP_UPTIME * 100).toFixed(0) + "% buff uptime.",
+          low: wpGain(7200 + 2000 * HP_GATED_WP_UPTIME),
+          mid: wpGain(8100 + 2200 * HP_GATED_WP_UPTIME),
+          high: wpGain(9000 + 2400 * HP_GATED_WP_UPTIME),
+        });
+      }
+    }
+
     rows.sort((a, b) => b.mid - a.mid);
 
     // The Archdemon line's displayed Mid value already assumes you're
@@ -918,6 +1350,280 @@
     }
 
     return rows;
+  }
+
+  // ----- Accessory Line Comparison -----
+  // Same idea as computeBraceletComparison above ("of the lines I have
+  // data for, which is worth the most"), split into 3 slot-shaped panels
+  // (Necklace / Earrings / Rings) plus a 4th "Any Accessory Slot" group
+  // for the sheet's 3 universal lines.
+  //
+  // Matches the Bracelet panel's own methodology exactly (a previous pass
+  // deliberately diverged from this - "valued as an addition on top of
+  // your full actual current gear" - which double-counts whatever your
+  // real currently-equipped necklace/rings already contribute, silently
+  // undervaluing every candidate through the same diminishing-returns
+  // math a stacked calculation always hits; reverted to the Bracelet
+  // precedent below): Necklace and Rings each get baselined against your
+  // Best Setup with THAT slot's own tracked field(s) zeroed first
+  // (.ap-necklace / .ap-ring1-rate+dmg/.ap-ring2-rate+dmg - the same
+  // fields that feed the overall DPS calc elsewhere in this file), then
+  // a candidate tier is valued as if it were that slot's only line,
+  // exactly like every Bracelet row's critLikeGain. Only that one slot's
+  // fields get zeroed per panel - Necklace's baseline keeps your actual
+  // current rings, and vice versa, since those are unrelated real stats.
+  //
+  // Earrings and "Any Accessory Slot" need none of this: they run off
+  // the Gearing inputs (Weapon Power/Main Stat/Attack Power% etc.)
+  // directly, which are meant to be your true totals already - there's
+  // no separate "current earring" tracked field to double-count, same as
+  // the Bracelet panel's own 5 WP/AP rows.
+  //
+  // Combo columns (LL/ML/MM/HL/HM/HH) reproduce the sheet's own
+  // asymmetric 6-column layout for a slot's 2 possible lines rolled
+  // together on the same piece (or, for Rings, your pair of pieces) -
+  // see comboSix() below for the exact derivation. "Any Accessory Slot"
+  // intentionally has none, same as the sheet's own note: those 3 lines
+  // can land on any of 5 pieces, so a full combo set would be enormous
+  // without being any more decision-relevant.
+  function computeAccessoryComparison(inputs) {
+    const gridResult = computeGridAndSummary(inputs);
+    const best = gridResult.best;
+    if (!best) return { necklace: [], earrings: [], rings: [], universal: [] };
+    const { keenSense, limitBreak } = best.split;
+    const pair = best.keystone;
+
+    function trip(low, mid, high) {
+      return [
+        { tier: "low", text: low },
+        "/",
+        { tier: "mid", text: mid },
+        "/",
+        { tier: "high", text: high },
+      ];
+    }
+
+    // Sheet's own asymmetric 6-column combo layout (Acc!F:K) for 2 lines
+    // (a, b) rolled on the same piece/pair. LL/MM/HH are symmetric - the
+    // same value regardless of which line's tier is named first - so the
+    // sheet computes them once and shows them only under the FIRST line's
+    // row; ML/HL/HM aren't symmetric (a Low + b Mid != a Mid + b Low), so
+    // each line gets its own version and the first line's row keeps the
+    // "this line's own tier is the bigger one" reading (M/H) while the
+    // second's row keeps the "this line's own tier is the smaller one"
+    // reading (L) - matching Acc!G2 vs Acc!G3's own differing formulas.
+    // {a,b} are each {low,mid,high} candidate fraction triples.
+    function comboSix(a, b) {
+      return {
+        first: {
+          LL: (1 + a.low) * (1 + b.low) - 1,
+          ML: (1 + b.low) * (1 + a.mid) - 1,
+          MM: (1 + a.mid) * (1 + b.mid) - 1,
+          HL: (1 + b.low) * (1 + a.high) - 1,
+          HM: (1 + b.mid) * (1 + a.high) - 1,
+          HH: (1 + a.high) * (1 + b.high) - 1,
+        },
+        second: {
+          ML: (1 + a.low) * (1 + b.mid) - 1,
+          HL: (1 + a.low) * (1 + b.high) - 1,
+          HM: (1 + a.mid) * (1 + b.high) - 1,
+        },
+      };
+    }
+
+    // ----- Necklace: zero out ONLY .ap-necklace's own tracked tier -----
+    const necklaceNB = Object.assign({}, inputs, { necklace: "None" });
+    const sharedNecklaceNB = computeShared(necklaceNB);
+    const addDmgBaselineNecklaceNB =
+      pair.indexOf("master") !== -1 ? sharedNecklaceNB.addDmgMaster : sharedNecklaceNB.addDmgBase;
+    const necklaceAdd = {
+      low: ACC_NECKLACE_ADD_TABLE.Low / (1 + addDmgBaselineNecklaceNB),
+      mid: ACC_NECKLACE_ADD_TABLE.Mid / (1 + addDmgBaselineNecklaceNB),
+      high: ACC_NECKLACE_ADD_TABLE.High / (1 + addDmgBaselineNecklaceNB),
+    };
+    // Outgoing Damage isn't tracked as a current-gear field anywhere in
+    // this file (no ".ap-necklace-out" input exists to zero) - a pure
+    // standalone multiplier with nothing to double-count, same treatment
+    // as the Bracelet panel's own standalone Outgoing Damage line.
+    const necklaceOut = { low: ACC_NECKLACE_OUT_TABLE.Low, mid: ACC_NECKLACE_OUT_TABLE.Mid, high: ACC_NECKLACE_OUT_TABLE.High };
+    const necklaceCombos = comboSix(necklaceAdd, necklaceOut);
+    const necklace = [
+      {
+        label: ["Additional Damage +", ...trip("0.7", "1.6", "2.6"), "%"],
+        ...necklaceAdd,
+        combos: necklaceCombos.first,
+      },
+      {
+        label: ["Outgoing Damage +", ...trip("0.55", "1.2", "2"), "%"],
+        ...necklaceOut,
+        combos: necklaceCombos.second,
+      },
+    ];
+
+    // ----- Rings: zero BOTH ring slots for the baseline (mirrors the
+    // Bracelet panel zeroing braceletRate + braceletRate2 together) -----
+    const ringsNB = Object.assign({}, inputs, {
+      ring1Rate: "None",
+      ring1Dmg: "None",
+      ring2Rate: "None",
+      ring2Dmg: "None",
+    });
+    const sharedRingsNB = computeShared(ringsNB);
+    const baselineMultRingsNB = combinedMultiplier(ringsNB, sharedRingsNB, keenSense, limitBreak, pair);
+    // Crit Rate: RING_RATE_TABLE is an exact match to the sheet's own
+    // candidate figures (see that table's comment above), so this can
+    // swap ring1Rate straight to a tier name - identical shape to the
+    // Bracelet panel's critLikeGain.
+    function ringRateGain(tier) {
+      const cloned = Object.assign({}, ringsNB, { ring1Rate: tier });
+      const shared = computeShared(cloned);
+      const mult = combinedMultiplier(cloned, shared, keenSense, limitBreak, pair);
+      return mult / baselineMultRingsNB - 1;
+    }
+    // Crit Damage: ACC_RING_DMG_TABLE's candidate figures differ slightly
+    // from what a real equipped ring contributes via RING_DMG_TABLE (see
+    // ACC_RING_DMG_TABLE's own comment) - swapping ring1Dmg to a tier
+    // name would silently pull the wrong table, so this adds the
+    // candidate's own magnitude as a manual critDmgTotal delta on top of
+    // the already-stripped baseline instead.
+    function ringDmgGain(dmgPct) {
+      if (!dmgPct) return 0;
+      const shared = Object.assign({}, sharedRingsNB, { critDmgTotal: sharedRingsNB.critDmgTotal + dmgPct });
+      const mult = combinedMultiplier(ringsNB, shared, keenSense, limitBreak, pair);
+      return mult / baselineMultRingsNB - 1;
+    }
+    const ringRate = {
+      low: ringRateGain("Low"),
+      mid: ringRateGain("Mid"),
+      high: ringRateGain("High"),
+    };
+    const ringDmg = {
+      low: ringDmgGain(ACC_RING_DMG_TABLE.Low),
+      mid: ringDmgGain(ACC_RING_DMG_TABLE.Mid),
+      high: ringDmgGain(ACC_RING_DMG_TABLE.High),
+    };
+    const ringCombos = comboSix(ringRate, ringDmg);
+    const rings = [
+      {
+        label: ["Crit Rate +", ...trip("0.4", "0.95", "1.55"), "%"],
+        ...ringRate,
+        combos: ringCombos.first,
+      },
+      {
+        label: ["Crit Damage +", ...trip("1.1", "2.4", "4"), "%"],
+        ...ringDmg,
+        combos: ringCombos.second,
+      },
+    ];
+
+    // ----- Earrings + Any Accessory Slot: share the same Gearing-derived
+    // baseline as the Bracelet panel's 5 WP/AP rows (see that section's
+    // own comment for the gearApTotal/supportApBuff explanation), but -
+    // same as Necklace/Rings above - strip the Gearing section's OWN
+    // earring AP% inputs (gearApEarring1/2) from the baseline first.
+    // Without this, the candidate Earring AP% lines below (Low/Mid/
+    // High, "valued as if each were the only line on that slot") would
+    // be added ON TOP of the 2 earrings' AP% you already entered in
+    // Gearing, double-counting real equipped earrings instead of
+    // evaluating the slot independently. Weapon Power% can't get the
+    // same treatment - Gearing's Weapon Power% field is one freeform
+    // number that already bakes in earrings' WP% + Karma elixir
+    // together with nothing to zero out - so the Weapon Power candidate
+    // lines below still inherit that pre-existing baked-in caveat.
+    let earrings = [];
+    let universal = [];
+    {
+      const earringsNB = Object.assign({}, inputs, { gearApEarring1: "None", gearApEarring2: "None" });
+      const wp = earringsNB.gearWp;
+      const mainStat = earringsNB.gearMainStat;
+      const baseApMult = 1 + gearBaseApPercentTotal(earringsNB) / 100;
+      // Flat AP = accessories (the manual field) + Chaos Core: Attack's
+      // own flat contribution, same as the Bracelet panel's own WP/AP
+      // rows above.
+      const flatAp = earringsNB.gearFlatAp + gearChaosStarFlat(earringsNB.gearApChaosStar);
+      // Atropine and Adrenaline's own AP contribution are folded into
+      // gearAttackPowerPercentTotal itself now - see that function's
+      // own comment for why (this used to double-add both manually on
+      // top of the total here, from before that fold-in existed).
+      const percentApMult = 1 + gearAttackPowerPercentTotal(earringsNB) / 100;
+      const wpPercentMult = 1 + earringsNB.gearWpPercent / 100;
+      const mainStatPercentMult = 1 + earringsNB.gearMainStatPercent / 100;
+      const supApBuff = supportApBuff(earringsNB, wp, mainStat, baseApMult);
+      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+
+      if (wp > 0 && mainStat > 0 && baselineAp > 0) {
+        // Attack Power% is a straight scalar on the whole AP total (see
+        // Acc!C4's own formula, "=O4/PercentAP") - adding percentApMult
+        // by the candidate's own % and re-running gearApTotal captures
+        // that exactly, same pattern as the Bracelet panel's statGain/
+        // wpGain closures.
+        const apPctGain = (deltaPct) =>
+          gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult + deltaPct, supApBuff) / baselineAp - 1;
+        // Weapon Power% raises the WP feeding the sqrt term directly
+        // (Acc!C5), on top of whatever Weapon Power% you've already
+        // entered above - so a delta of X% adds X%/(1+existing WP%) to
+        // your CURRENT (already-%'d) Weapon Power figure, not X% of it
+        // flat, matching the sheet's WP*(1+$M9+delta)/WP*(1+$M9) ratio.
+        const wpPctGain = (deltaPct) =>
+          gearApTotal(wp * (1 + deltaPct / wpPercentMult), mainStat, baseApMult, flatAp, percentApMult, supApBuff) /
+            baselineAp -
+          1;
+        const apDeltaGain = (delta) =>
+          gearApTotal(wp, mainStat, baseApMult, flatAp + delta, percentApMult, supApBuff) / baselineAp - 1;
+        const wpDeltaGain = (delta) =>
+          gearApTotal(wp + delta * wpPercentMult, mainStat, baseApMult, flatAp, percentApMult, supApBuff) / baselineAp - 1;
+        const statDeltaGain = (delta) =>
+          gearApTotal(wp, mainStat + delta * mainStatPercentMult, baseApMult, flatAp, percentApMult, supApBuff) /
+            baselineAp -
+          1;
+
+        const earringAp = {
+          low: apPctGain(ACC_EARRING_AP_TABLE.Low),
+          mid: apPctGain(ACC_EARRING_AP_TABLE.Mid),
+          high: apPctGain(ACC_EARRING_AP_TABLE.High),
+        };
+        const earringWp = {
+          low: wpPctGain(ACC_EARRING_WP_TABLE.Low),
+          mid: wpPctGain(ACC_EARRING_WP_TABLE.Mid),
+          high: wpPctGain(ACC_EARRING_WP_TABLE.High),
+        };
+        const earringCombos = comboSix(earringAp, earringWp);
+        earrings = [
+          {
+            label: ["Attack Power +", ...trip("0.4", "0.95", "1.55"), "%"],
+            ...earringAp,
+            combos: earringCombos.first,
+          },
+          {
+            label: ["Weapon Power +", ...trip("0.8", "1.8", "3"), "%"],
+            ...earringWp,
+            combos: earringCombos.second,
+          },
+        ];
+        universal = [
+          {
+            label: ["Attack Power +", ...trip("80", "195", "390")],
+            low: apDeltaGain(ACC_FLAT_AP_TABLE.Low),
+            mid: apDeltaGain(ACC_FLAT_AP_TABLE.Mid),
+            high: apDeltaGain(ACC_FLAT_AP_TABLE.High),
+          },
+          {
+            label: ["Weapon Power +", ...trip("195", "480", "960")],
+            low: wpDeltaGain(ACC_FLAT_WP_TABLE.Low),
+            mid: wpDeltaGain(ACC_FLAT_WP_TABLE.Mid),
+            high: wpDeltaGain(ACC_FLAT_WP_TABLE.High),
+          },
+          {
+            label: ["STR/DEX/INT +", ...trip("1935", "2083", "2679")],
+            low: statDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.Low),
+            mid: statDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.Mid),
+            high: statDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.High),
+          },
+        ];
+      }
+    }
+
+    return { necklace, earrings, rings, universal };
   }
 
   // ----- Format helper -----
@@ -976,11 +1682,18 @@
       spanWep.textContent = "(" + pct.toFixed(2) + "%)";
     }
 
-    // Astrogem
+    // Astrogem (Additional Damage)
     const astrogemDmg = roundDown(inputs.astrogemLv * 8.0834, 0) / 10000;
     const spanAstro = root.querySelector('.ap-value-display[data-for="ap-astrogem-lv"]');
     if (spanAstro) {
       spanAstro.textContent = formatPct(astrogemDmg);
+    }
+
+    // Astrogem (Gearing's own Atk. Power Level - independent field, see
+    // gearAstrogemApPercent's comment)
+    const spanGearAstro = root.querySelector('.ap-value-display[data-for="ap-gear-ap-astrogem-lv"]');
+    if (spanGearAstro) {
+      spanGearAstro.textContent = formatPct(gearAstrogemApPercent(inputs) / 100);
     }
 
     // Other displays
@@ -1000,8 +1713,32 @@
     setDisplay("#ap-stable-atk", stableAtkValue(inputs.stableAtk));
 
     setDisplay("#ap-adrenaline", (ADRENALINE_TABLE[inputs.adrenaline] || 0) * (inputs.adrenalineUptime / 100));
+    setDisplay("#ap-adrenaline-stone", adrenalineApFraction(inputs));
     setDisplay("#ap-kbw", KBW_TABLE[inputs.kbw] || 0);
     setDisplay("#ap-kbw-stone", KBW_STONE_TABLE[inputs.kbwStone] || 0);
+
+    // Attack Power % sources (all defined in percentage-POINT units, so
+    // divided by 100 here for setDisplay's fraction-expecting formatPct -
+    // gearAttackPowerPercentTotal keeps them in point units since that's
+    // what percentApMult itself divides by 100, same as the old single
+    // field did).
+    // Earrings (paired, like Rings/Bracelet above) have no live-value
+    // span - their option text already shows the exact percentage, same
+    // as those pairs.
+    setDisplay("#ap-gear-ap-kazeros", inputs.gearApKazeros ? GEAR_AP_KAZEROS / 100 : 0);
+    setDisplay("#ap-gear-ap-guardian", inputs.gearApGuardian ? GEAR_AP_GUARDIAN / 100 : 0);
+    setDisplay("#ap-gear-ap-chaos-star", gearChaosStarPct(inputs.gearApChaosStar) / 100);
+    // Atropine Uptime's readout shows the time-averaged effective %
+    // (uptime * the full 30% while active), not the uptime number itself -
+    // e.g. 20% uptime reads as "(6.00%)", matching the field's own tooltip.
+    setDisplay("#ap-gear-atropine-uptime", ((inputs.gearAtropineUptime / 100) * GEAR_AP_ATROPINE_FULL) / 100);
+    // Running total, shown even at 0% (unlike the other displays above,
+    // which stay blank at 0) so it always reads as "here's your current
+    // total" rather than looking broken/empty with nothing selected yet.
+    const gearApTotalSpan = root.querySelector('.ap-value-display[data-for="ap-gear-ap-total"]');
+    if (gearApTotalSpan) {
+      gearApTotalSpan.textContent = "(" + gearAttackPowerPercentTotal(inputs).toFixed(2) + "%)";
+    }
 
     setDisplay("#ap-crit-syn1", inputs.critSyn1 ? 0.1 : 0);
     setDisplay("#ap-crit-syn2", inputs.critSyn2 ? 0.1 : 0);
@@ -1099,15 +1836,13 @@
     }
   }
 
-  // ----- Bracelet Line Comparison rendering -----
-  // Renders into a <tbody> as a compact table (Line | Low | Mid | High)
-  // instead of the old stacked-card layout - one <tr> per line instead of a
-  // bordered card each, and full-width now that the section lives outside
-  // the sticky .ap-calc-live column (see resources.md), so this reads as a
-  // glance-able table rather than a scroll of cards.
-  function renderBraceletComparison(root, rows) {
-    const container = root.querySelector(".ap-brace-compare-rows");
-    const footnote = root.querySelector(".ap-brace-compare-flip-note");
+  // ----- Comparison table rendering (shared by Bracelet + Accessories) -----
+  // Renders `rows` into a <tbody> as a compact table (Line | Low | Mid |
+  // High) - one <tr> per line, full-width. Originally Bracelet-only; kept
+  // generic (takes elements directly rather than querying `.ap-brace-*`
+  // itself) so the Accessory panels below can reuse it for their own,
+  // smaller <tbody>s without a flip-footnote of their own.
+  function renderComparisonRows(container, footnote, rows) {
     if (!container) return;
 
     container.innerHTML = "";
@@ -1186,6 +1921,24 @@
         tr.appendChild(td);
       });
 
+      // Combo columns (LL/ML/MM/HL/HM/HH) - only present on Accessory
+      // rows that pair with a sibling line on the same piece (see
+      // comboSix() in computeAccessoryComparison). A key can be present
+      // in the LOOKUP but still undefined for this particular row (the
+      // second line of a pair has no LL/MM/HH of its own - see that
+      // function's comment) - rendered as a plain dash rather than 0%,
+      // since "0% gain" and "not shown for this row" mean different
+      // things here.
+      if (row.combos) {
+        ["LL", "ML", "MM", "HL", "HM", "HH"].forEach((key) => {
+          const td = document.createElement("td");
+          td.className = "ap-brace-tier-val ap-acc-combo-val";
+          const val = row.combos[key];
+          td.textContent = val === undefined ? "\u2013" : formatPctBare(val);
+          tr.appendChild(td);
+        });
+      }
+
       // The Archdemon line's displayed values only pay off against a
       // Demon/Archdemon target - greyed out here so they read as
       // situational rather than a plain, always-on gain like every other
@@ -1198,6 +1951,31 @@
     if (footnote) {
       footnote.style.display = anyFlip ? "" : "none";
     }
+  }
+
+  function renderBraceletComparison(root, rows) {
+    renderComparisonRows(root.querySelector(".ap-brace-compare-rows"), root.querySelector(".ap-brace-compare-flip-note"), rows);
+  }
+
+  // ----- Accessory Line Comparison rendering -----
+  // One call per panel (Necklace/Earrings/Rings/Universal) into that
+  // panel's own <tbody> - no flip-footnote, since none of these rows can
+  // change the grid's best split/keystone (same reasoning as the Bracelet
+  // panel's own WP/AP rows). A panel with 0 rows (Earrings/Universal
+  // before Weapon Power and Main Stat are filled in) hides its own
+  // wrapping .ap-acc-panel entirely rather than showing an empty table.
+  function renderAccessoryComparison(root, groups) {
+    [
+      ["necklace", ".ap-acc-necklace-rows", ".ap-acc-necklace-panel"],
+      ["earrings", ".ap-acc-earrings-rows", ".ap-acc-earrings-panel"],
+      ["rings", ".ap-acc-rings-rows", ".ap-acc-rings-panel"],
+      ["universal", ".ap-acc-universal-rows", ".ap-acc-universal-panel"],
+    ].forEach(([key, rowsSelector, panelSelector]) => {
+      const rows = groups[key] || [];
+      const panel = root.querySelector(panelSelector);
+      if (panel) panel.style.display = rows.length ? "" : "none";
+      renderComparisonRows(root.querySelector(rowsSelector), null, rows);
+    });
   }
 
   // ----- Local storage persistence -----
@@ -1476,14 +2254,30 @@
     });
   }
 
+  // Support AP Buff Uptime (Gearing) only means anything while Support is
+  // actually part of the setup - gated on .ap-yearning ("Support:
+  // Passionate Dance" up in Party & Positioning) being CHECKED, not on
+  // whether it's disabled. Being disabled-but-checked (hit the 3-synergy
+  // limit above while already on) still means Support is active, so the
+  // uptime field should stay enabled in that case - only an unchecked
+  // .ap-yearning turns this field off.
+  function enforceGearSupportUptimeGate(root) {
+    const yearningEl = root.querySelector(".ap-yearning");
+    const supportUptimeEl = root.querySelector(".ap-gear-support-uptime");
+    if (!yearningEl || !supportUptimeEl) return;
+    supportUptimeEl.disabled = !yearningEl.checked;
+  }
+
   function update(root) {
     enforcePartyCheckboxLimit(root);
     enforceKbwStoneDependency(root);
+    enforceGearSupportUptimeGate(root);
     const inputs = readInputs(root);
     const result = computeGridAndSummary(inputs);
     renderGrid(root, result);
     updateInputDisplays(root, inputs);
     renderBraceletComparison(root, computeBraceletComparison(inputs));
+    renderAccessoryComparison(root, computeAccessoryComparison(inputs));
 
     // Every range slider (Back-Attack Rate, Adrenaline Uptime, ...) shows
     // its live value as "N%" next to it - handled generically here so
@@ -1573,22 +2367,41 @@
       });
 
       root.querySelectorAll("input, select").forEach((el) => {
-        el.addEventListener("input", scheduleUpdate);
+        // Weapon Power / Main Stat / Flat AP get typed digit-by-digit as
+        // large numbers - recalculating on every keystroke means the
+        // brief intermediate values (e.g. "2", then "25", then "259" on
+        // the way to "259216") flash wildly wrong % gains before the
+        // reader finishes typing. These three wait for "change" (blur,
+        // or Enter) instead - everything else still updates live.
+        if (!el.matches(".ap-gear-wp, .ap-gear-main-stat, .ap-gear-flat-ap")) {
+          el.addEventListener("input", scheduleUpdate);
+        }
         el.addEventListener("change", scheduleUpdate);
       });
       // readInputs() already clamps every number field to its min/max when
       // computing (Crit Stat, Weapon Quality, Astrogem Level, Demon
-      // Damage %, Bracelet Crit Stat Equipped), but that only guards the
-      // math - it left the field itself still showing whatever the reader
-      // typed, so a stray extra digit could sit there looking accepted.
-      // This snaps the displayed value back into range on blur too (same
-      // pattern as the CPM calculator's Raid CPM/Base Multiplier fields),
-      // generic over every number input here rather than listing each
-      // field, since they all already carry min/max attrs in the markup.
+      // Damage %, Bracelet Crit Stat Equipped, and the Gearing fields),
+      // but that only guards the math - it left the field itself still
+      // showing whatever the reader typed, so a stray extra digit could
+      // sit there looking accepted. This snaps the displayed value back
+      // into range on blur too (same pattern as the CPM calculator's Raid
+      // CPM/Base Multiplier fields), generic over every number input here
+      // rather than listing each field, since they all already carry
+      // min/max attrs in the markup.
       root.querySelectorAll('input[type="number"]').forEach((el) => {
         el.addEventListener("blur", () => {
           const raw = parseFloat(el.value);
-          if (!isFinite(raw)) return; // empty/invalid - readInputs() falls back to its default
+          if (!isFinite(raw)) {
+            // Empty, or something the browser couldn't parse as a number
+            // at all (e.g. a pasted letter) - snap back to the field's
+            // authored default instead of leaving it blank. readInputs()
+            // would silently fall back to this same default for the
+            // math either way; this just keeps the field from looking
+            // broken while it does.
+            el.value = el.defaultValue;
+            scheduleUpdate();
+            return;
+          }
           const min = el.min !== "" ? parseFloat(el.min) : null;
           const max = el.max !== "" ? parseFloat(el.max) : null;
           let clamped = raw;
@@ -1731,7 +2544,13 @@
   // through init()'s own querySelectorAll first.
   window.SiteUtils.registerRenderer(".ap-calc", initApCalcRoot);
 
-  window.__arkPassiveCalc = { computeGridAndSummary, computeBraceletComparison, EVOLUTION_SPLITS, COMBINED_KEYSTONES };
+  window.__arkPassiveCalc = {
+    computeGridAndSummary,
+    computeBraceletComparison,
+    computeAccessoryComparison,
+    EVOLUTION_SPLITS,
+    COMBINED_KEYSTONES,
+  };
 })();
 
 // ---------------------------------------------------------------------

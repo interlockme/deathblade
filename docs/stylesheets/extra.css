@@ -3792,6 +3792,16 @@ h3 { color: var(--dbc-teal); }
   flex: 0 1 auto;
   padding: 0.3em 0.5em;
 }
+/* Same shrink-guard as the select rule above, for paired number inputs
+   (Gem Base AP%) - the generic number-input rule further down sets
+   min-width:0 so free-typed values can size to content, which let this
+   input collapse toward 0 inside the flex row since its sibling
+   (the Ability Stone checkbox label) has white-space:nowrap and won't
+   shrink to compensate. */
+.md-typeset .ap-calc-pair input[type="number"] {
+  min-width: 5em;
+  flex: 0 1 auto;
+}
 /* Checkbox variant (Crit Hit Damage's Bracelet 1/2 toggles) - each is a
    <label> so clicking the "1 (1.50%)" text also toggles its checkbox. */
 .md-typeset .ap-calc-pair-checks {
@@ -4046,7 +4056,8 @@ h3 { color: var(--dbc-teal); }
    .ap-calc-results (the Top Combinations box) - rather than one of the
    category accent colors (pink/teal/orange/blue), since this section isn't
    tied to any one of those categories the way the gear cards above are. */
-.md-typeset .ap-brace-compare {
+.md-typeset .ap-brace-compare,
+.md-typeset .ap-acc-compare {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   margin: 1em 0 0;
@@ -4071,16 +4082,20 @@ h3 { color: var(--dbc-teal); }
    using Material's values. The block below now resets every property
    Material's default icon rule sets, not just the ones the triangle needs,
    so there's nothing left for it to leak through. */
-.md-typeset .ap-brace-compare summary::after {
+.md-typeset .ap-brace-compare summary::after,
+.md-typeset .ap-acc-compare summary::after {
   display: none !important;
 }
-.md-typeset .ap-brace-compare summary::-webkit-details-marker {
+.md-typeset .ap-brace-compare summary::-webkit-details-marker,
+.md-typeset .ap-acc-compare summary::-webkit-details-marker {
   display: none;
 }
-.md-typeset .ap-brace-compare summary::marker {
+.md-typeset .ap-brace-compare summary::marker,
+.md-typeset .ap-acc-compare summary::marker {
   content: "";
 }
-.md-typeset .ap-brace-compare summary {
+.md-typeset .ap-brace-compare summary,
+.md-typeset .ap-acc-compare summary {
   display: flex;
   align-items: center;
   gap: 0.6em;
@@ -4099,7 +4114,8 @@ h3 { color: var(--dbc-teal); }
      .setup-note fixes already cover elsewhere - just missed here. */
   background: none;
 }
-.md-typeset .ap-brace-compare summary::before {
+.md-typeset .ap-brace-compare summary::before,
+.md-typeset .ap-acc-compare summary::before {
   content: "";
   display: inline-block;
   position: static;
@@ -4116,10 +4132,20 @@ h3 { color: var(--dbc-teal); }
   border-right: none;
   transition: transform 0.15s ease;
 }
-.md-typeset .ap-brace-compare[open] summary::before {
+/* Direct-child combinator kept even though .ap-gear-inputs now lives as
+   its own top-level <details> rather than nested inside this one (it used
+   to be nested here, and a descendant selector matching its <summary>
+   caused a real bug - the chevron rotated whenever this OUTER panel was
+   open regardless of the inner one's own state). No longer load-bearing
+   against that specific bug now that they're siblings, but scoping to `>`
+   is still the correct, defensive choice for a summary::before rule like
+   this - no reason to widen it back to a descendant selector. */
+.md-typeset .ap-brace-compare[open] > summary::before,
+.md-typeset .ap-acc-compare[open] > summary::before {
   transform: rotate(90deg);
 }
-.md-typeset .ap-brace-compare[open] summary {
+.md-typeset .ap-brace-compare[open] summary,
+.md-typeset .ap-acc-compare[open] summary {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .md-typeset .ap-brace-compare-body {
@@ -4129,6 +4155,70 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.9em;
   color: var(--dbc-lavender);
   margin: 0 0 0.7em;
+}
+/* Accessory Line Comparison's 4 slot panels (Necklace/Earrings/Rings/Any
+   Accessory Slot) - each just a small heading plus its own
+   .ap-brace-compare-table, stacked with a bit of breathing room between.
+   display: none is toggled per-panel in JS when that panel's row list is
+   empty (Earrings/Universal before Weapon Power/Main Stat are filled in),
+   same guard the Bracelet section's own WP/AP rows already use. */
+.md-typeset .ap-acc-panel {
+  margin: 0 0 1.1em;
+}
+.md-typeset .ap-acc-panel:last-of-type {
+  margin-bottom: 0;
+}
+.md-typeset .ap-acc-panel-title {
+  font-size: 0.78em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dbc-lilac);
+  margin: 0 0 0.35em;
+  opacity: 0.85;
+}
+/* Necklace/Earrings/Rings grow to 10 columns (Label + Low/Mid/High + 6
+   combo columns) - too many to fit at mobile widths without crushing the
+   Low/Mid/High figures the same way a plain width:100% table would.
+   Horizontal scroll on just this table, not the whole page, keeps the
+   figures readable at their natural size; min-width on the table forces
+   the scrollbar to appear instead of the browser shrinking columns to
+   fit. */
+.md-typeset .ap-acc-table-scroll {
+  overflow-x: auto;
+}
+.md-typeset .ap-acc-combo-table {
+  min-width: 640px;
+}
+/* Combo headers used to be plain slate text; the two letters now carry
+   their own Low/Mid/High tier colors (reusing .ap-brace-label-low/mid/
+   high - see the comment by those below) so LL/ML/MM/HL/HM/HH read at a
+   glance as "this row's tier + the paired line's tier" instead of
+   needing the intro paragraph to explain it every time. Kept a bit
+   smaller/lighter than Low/Mid/High's own column headers so the eye
+   still lands there first - these are still secondary/derived columns,
+   just no longer colorless ones. */
+.md-typeset .ap-acc-th-combo {
+  font-size: 0.92em;
+  opacity: 0.85;
+}
+.md-typeset .ap-acc-th-combo span {
+  font-weight: inherit;
+}
+/* Combo values read as secondary/derived information (this row's own
+   line combined with the panel's OTHER line) rather than a first-class
+   figure like Low/Mid/High - dimmed and slightly smaller so the eye
+   still lands on Low/Mid/High first. */
+.md-typeset .ap-acc-combo-val {
+  color: var(--dbc-slate);
+  font-size: 0.92em;
+}
+.md-typeset .ap-acc-combo-skip-note {
+  font-size: 0.78em;
+  color: var(--dbc-slate);
+  opacity: 0.8;
+  margin: 0.5em 0 0;
+  font-style: italic;
 }
 /* RE/Surge Deathblade picker for the Spec +80/100/120 line - real radio
    inputs (not JS-enforced checkboxes) so mutual exclusivity is native
@@ -4172,9 +4262,335 @@ h3 { color: var(--dbc-teal); }
   padding-bottom: 0.7em;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
 }
+/* Visual break between the Ark Passive setup above and the gear-
+   comparison tools below (see resources.md's own comment on the
+   .ap-section-divider markup for why this exists at all - a plain
+   horizontal rule didn't read as a SECTION break). Line-label-line
+   layout via two auto-growing flex pseudo-elements flanking the label,
+   rather than a background-image line-through-text trick, so the line
+   thickness/color stays a normal border property instead of baked into
+   an image. Purple accent matches h2 headings (--dbc-purple) - this is
+   a bigger structural break than any single .ap-calc-group's own
+   category accent color, so it intentionally doesn't reuse pink/teal/
+   orange/sky. */
+.md-typeset .ap-section-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  margin: 1.8em 0 1.3em;
+}
+.md-typeset .ap-section-divider::before,
+.md-typeset .ap-section-divider::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: rgba(var(--dbc-purple-rgb), 0.35);
+}
+.md-typeset .ap-section-divider-label {
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--dbc-purple);
+  white-space: nowrap;
+}
+/* Gearing inputs (Weapon Power / Attack Power) - a top-level <details>,
+   collapsed by default, shared by Bracelet Line Comparison below it (and
+   eventually Accessories / Ark Grid) rather than owned by any one of
+   them. Used to live nested one level inside Bracelet Line Comparison's
+   own <details>; kept this compact bordered-box treatment instead of the
+   sitewide admonition-style <details> look (heavy padding/border,
+   dimmed-when-closed opacity) even after promoting it to top-level, since
+   it reads as a small shared input strip rather than its own full
+   section - same motivation as .gem-item-expandable above, but a plain
+   title instead of that class's icon-grid layout. */
+.md-typeset .ap-gear-inputs {
+  margin: 0.8em 0;
+  padding: 0;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.25);
+  border-radius: 6px;
+  background: none;
+  overflow: visible;
+  /* Needed for the @container query on .ap-gear-ap-select-row further
+     down - those rows (Chaos Core: Attack, Ability Stone: Adrenaline)
+     pair a longer label with a longer select than the rest of this
+     box's fields, and overflowed/clipped the select at narrow (mobile)
+     widths without somewhere to stack onto two lines instead. */
+  container-type: inline-size;
+}
+.md-typeset .ap-gear-inputs:not([open]) {
+  opacity: 1;
+}
+/* Same double-marker bug .ap-brace-compare's own comment documents above
+   (search this file for "Two earlier attempts both left something
+   floating"): Material draws its own default admonition icon on a bare
+   <details>'s summary via a masked ::before (plus, in some Material
+   versions, a stray ::after), separately from the browser's native
+   <li>-style disclosure triangle. Hiding only the native marker
+   (::-webkit-details-marker / ::marker) and then adding a fresh ::before
+   glyph on top - which is what this rule used to do - left Material's own
+   icon still rendering underneath/beside it, i.e. two chevrons. Fix is
+   the same one already proven on .ap-brace-compare: fully reset every
+   property Material's default icon sets (not just add new content), and
+   explicitly kill ::after too. */
+.md-typeset .ap-gear-inputs > summary::after {
+  display: none !important;
+}
+.md-typeset .ap-gear-inputs > summary::-webkit-details-marker {
+  display: none;
+}
+.md-typeset .ap-gear-inputs > summary::marker {
+  content: "";
+}
+.md-typeset .ap-gear-inputs > summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4em 0.6em;
+  padding: 0.55em 0.85em;
+  margin: 0;
+  background: none;
+  border-radius: 0;
+  color: var(--dbc-lilac);
+  font-size: 0.85em;
+  cursor: pointer;
+  list-style: none;
+}
+/* Own flex item (rather than a bare text node) so it can wrap onto
+   multiple lines at its own natural width instead of being squeezed into
+   a slim leftover column next to the badge - that squeeze is what made
+   the title wrap into a near-vertical ransom note on mobile before this
+   was split out. min-width: 0 is required for a flex item to actually
+   shrink/wrap instead of enforcing its content's intrinsic width. */
+.md-typeset .ap-gear-title {
+  flex: 1 1 12em;
+  min-width: 0;
+}
+.md-typeset .ap-gear-inputs > summary::before {
+  content: "";
+  display: inline-block;
+  position: static;
+  flex-shrink: 0;
+  width: 0;
+  height: 0;
+  background: none;
+  background-color: transparent;
+  mask-image: none;
+  -webkit-mask-image: none;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 5px solid var(--dbc-lilac);
+  border-right: none;
+  transition: transform 0.15s ease;
+}
+.md-typeset .ap-gear-inputs[open] > summary::before {
+  transform: rotate(90deg);
+}
+/* Small always-visible pill signalling this whole section is optional and
+   scoped to the comparisons below - sits in the summary so it's visible
+   even while collapsed, not just in a hover tooltip, since a reader
+   skimming past a collapsed <details> never triggers hover at all.
+   margin-left: auto pushes it to the row's far end since the summary is
+   already display:flex. Muted/neutral (not the amber caveat color) since
+   this isn't a warning, just a scope note. */
+.md-typeset .ap-gear-optional-badge {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 0.15em 0.55em;
+  border-radius: 3px;
+  background: rgba(var(--dbc-lavender-rgb), 0.1);
+  border: 1px solid rgba(var(--dbc-lavender-rgb), 0.4);
+  color: var(--dbc-lavender);
+  font-size: 0.68em;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: help;
+}
+.md-typeset .ap-gear-inputs > .ap-brace-compare-inputs {
+  margin: 0;
+  /* padding-top was 0, so the first input row (Weapon Power / Weapon
+     Power % / Main Stat) sat right under the summary heading with no
+     breathing room, reading as overlapping it. */
+  padding: 0.5em 0.85em 0.7em;
+  border-bottom: none;
+}
+/* Gearing's two cards (Weapon Power/Main Stat, and Attack Power %
+   sources) side by side - each is its own small bordered card (see
+   .ap-gear-card below), same visual language as the Ark Passive grid's
+   own Crit Rate/Crit Damage/etc. category cards above, rather than one
+   wide strip where a loose horizontal spread of unrelated fields read as
+   cluttered. Two explicit columns (not auto-fit) since there are always
+   exactly two cards here; falls back to one column below in the
+   @container query once the whole Gearing box gets too narrow for two
+   side-by-side cards to stay legible. */
+.md-typeset .ap-gear-cards {
+  /* .ap-brace-compare-inputs (this element's parent) is itself
+     display:flex, so without an explicit width/flex-basis this grid
+     child was shrinking to its min-content width instead of filling the
+     row - a 1fr/1fr grid track with no definite width to divide up
+     collapses each column toward its narrowest content instead of an
+     even split, which is what was producing the tiny/overlapping cards.
+     flex: 1 1 100% makes it claim the full row like a normal block
+     child would. */
+  flex: 1 1 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8em;
+  align-items: start;
+}
+@container (max-width: 560px) {
+  .md-typeset .ap-gear-cards {
+    grid-template-columns: 1fr;
+  }
+}
+/* Each card gets its own container context (rather than relying on the
+   outer .ap-gear-inputs container further up) so the long-label/long-
+   select rows below respond to THIS card's own rendered width, not the
+   whole Gearing box's width - the two cards can each cross that
+   breakpoint at a different point once they're no longer always the same
+   width as the full box. */
+.md-typeset .ap-gear-card {
+  container-type: inline-size;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-left: 3px solid var(--ap-gear-card-accent, rgba(255, 255, 255, 0.15));
+  border-radius: 8px;
+  padding: 0.6em 0.75em 0.7em;
+  background: none;
+}
+.md-typeset .ap-gear-card--basics { --ap-gear-card-accent: var(--dbc-purple); }
+.md-typeset .ap-gear-card--ap-sources { --ap-gear-card-accent: var(--dbc-lavender); }
+/* Same title treatment as .ap-calc-group-title above, so these two cards
+   read as the same kind of thing as the Ark Passive grid's own category
+   cards rather than a visually distinct sub-widget. */
+.md-typeset .ap-gear-card-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ap-gear-card-accent, var(--dbc-lavender));
+  font-weight: 700;
+  margin: 0 0 0.55em;
+}
+/* Every field row inside a Gearing card stacks as its own full-width
+   line (label pushed left, control pushed to the row's far edge) instead
+   of the old chip layout (each row sized to its own content, several per
+   line) - the old chip rows made sense spread across one wide box, but
+   packed into a card roughly half that width they just wrapped
+   awkwardly, and stacking now matches the Ark Passive cards' own
+   single-column look exactly, which was the actual goal here.
+   .ap-brace-compare-inputs .ap-calc-field-row further down still sets
+   the old chip flex:0 0 auto - that rule also needs to keep working
+   as-is for Bracelet Line Comparison's own (non-card) use of
+   .ap-brace-compare-inputs, so this can't just override it by source
+   order. Prefixing with .ap-gear-inputs (a real ancestor: .ap-gear-inputs
+   > .ap-brace-compare-inputs > .ap-gear-cards > .ap-gear-card) gives 3
+   classes of specificity against that rule's 2, so this wins regardless
+   of where either rule sits in the file, while leaving Bracelet Line
+   Comparison's rows (not inside a .ap-gear-card) untouched. */
+.md-typeset .ap-gear-inputs .ap-gear-card .ap-calc-field-row {
+  flex: 1 1 100%;
+  margin-bottom: 0.5em;
+}
+.md-typeset .ap-gear-inputs .ap-gear-card .ap-calc-field-row:last-child {
+  margin-bottom: 0;
+}
+.md-typeset .ap-gear-inputs .ap-gear-card .ap-calc-field-row .ap-calc-field-label {
+  flex: 1;
+}
+/* Weapon Power / Main Stat are typed as large raw numbers (6-7 digits) -
+   the shared 5.5em field width above clips them, so these two get more
+   room. Needs to at least match ".ap-calc-field-row input[type='number']"'s
+   specificity above to actually win over its width:5.5em. */
+.md-typeset .ap-calc-field-row input[type="number"].ap-gear-input-wide {
+  width: 8.5em;
+}
+/* Weapon Power%, Base AP%, Flat AP, and Attack Power% top out at 5-6
+   characters (e.g. "13.96", "6000") - the shared 5.5em default (sized for
+   fields like Demon Dmg%'s "100") left them looking oversized for such
+   short values, especially with the native spinner arrows eating part of
+   that width. */
+.md-typeset .ap-calc-field-row input[type="number"].ap-gear-input-narrow {
+  width: 5em;
+}
 .md-typeset .ap-brace-compare-inputs .ap-calc-field-row {
   flex: 0 0 auto;
   margin-bottom: 0;
+}
+/* Attack Power % sources card no longer carries its own background tint
+   (used to be its own visually distinct nested box inside one wide
+   Gearing strip) - now it's one of the two side-by-side .ap-gear-card
+   cards (see .ap-gear-card above for the shared border/padding/title)
+   and leaves .ap-gear-card's own background: none alone, so both cards
+   read as the same kind of thing side by side, distinguished only by
+   their title/border accent color like the Ark Passive grid's own
+   category cards are. */
+/* Several rows here (Kazeros/Guardian Raid Contribution, Chaos Core:
+   Attack at "None") carry a .ap-value-display span between label and
+   control that setDisplay() in the JS leaves as an empty string
+   whenever the field's current contribution is 0 - see setDisplay's own
+   comment in the JS. The generic .ap-value-display rule still reserves
+   that span's full min-width: 4.5em even with no text in it, which
+   would otherwise leave a dead gap between label and control on those
+   rows. Collapsing it out of the layout entirely while empty closes
+   that gap; it reappears normally the moment the field actually has a
+   value to show. */
+.md-typeset .ap-gear-ap-section .ap-value-display:empty {
+  display: none;
+}
+/* The title row also carries the running total badge on its right edge -
+   .ap-gear-card-title's shared text styling (uppercase/size/color/
+   margin) still applies via that class on the same element, this just
+   adds the flex layout needed to push the total to the far edge. */
+.md-typeset .ap-gear-ap-sources-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6em;
+}
+.md-typeset .ap-gear-ap-total-display {
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 700;
+  color: var(--dbc-lilac);
+}
+
+/* Chaos Core: Attack, Ability Stone: Adrenaline, and Ability Stone AP
+   Debuff: longer label + longer select than this card's other fields
+   (which all fit fine at the same widths - these three just have more
+   content). Stack label above control once the CARD itself (each
+   .ap-gear-card sets its own container-type: inline-size above, so this
+   responds to that individual card's width, not the whole Gearing box)
+   gets narrow enough that the pair no longer fits on one line, instead
+   of letting the select run past the edge uncontained. */
+@container (max-width: 380px) {
+  .md-typeset .ap-gear-ap-select-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3em;
+  }
+  .md-typeset .ap-gear-ap-select-row select {
+    width: 100%;
+    max-width: 220px;
+  }
+  /* Base AP%'s own pair row (Gem input + Ability Stone checkbox) hits
+     the same too-narrow squeeze as the rows above, just via a
+     different pair of controls - a card's own border/padding leaves it
+     less room than the plain page rows have, so this needs its own
+     stacking fallback rather than relying on the generic pair styling
+     further up. */
+  .md-typeset .ap-gear-inputs .ap-calc-field-row-pair {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3em;
+  }
+  .md-typeset .ap-gear-inputs .ap-calc-field-row-pair .ap-calc-pair {
+    width: 100%;
+    justify-content: flex-start;
+  }
 }
 .md-typeset .ap-brace-compare-table {
   width: 100%;

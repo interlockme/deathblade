@@ -420,6 +420,179 @@
 
 </div> <!-- end ap-calc-layout -->
 
+<!-- Visual break between the Ark Passive setup above (feeds the grid/
+     summary in .ap-calc-live) and the gear-comparison tools below
+     (Gearing inputs + Bracelet/Accessory Line Comparison) - these read as
+     one continuous block of cards otherwise, with nothing signaling that
+     everything past this point is a different mode of the calculator
+     (per-item "is this piece worth using" questions, not the "what's my
+     best Ark Passive setup" question above). A plain horizontal rule
+     wasn't enough to read as a SECTION break rather than just another
+     rule between cards, so this pairs the line with a label. -->
+<div class="ap-section-divider">
+  <span class="ap-section-divider-label">Gear Comparisons</span>
+</div>
+
+<!-- Gearing: shared Weapon Power / Attack Power inputs, read straight off
+     your character panel. Lives as its OWN top-level section (not nested
+     inside Bracelet Line Comparison below) because it's not
+     bracelet-specific - it's the shared input set for all three
+     "value my actual gear pieces" panels (Bracelet, and eventually
+     Accessories / Ark Grid), each computed independently in the JS but
+     all reading these same fields. Collapsed by default, same as before -
+     most readers using the panels below are only here for the Ark
+     Passive setup above and don't need this expanded. Base AP% still
+     folds together its few small sources rather than tracking each one
+     separately (hover the label for the full source list); Attack
+     Power% used to work the same way but is now split into individual
+     source fields below instead, so the running total is derived
+     rather than hand-typed. -->
+<details class="ap-gear-inputs">
+  <summary>
+    <span class="ap-gear-title">Character Data</span>
+    <span class="ap-gear-optional-badge" title="Not part of your Ark Passive setup above. Only used by the Bracelet, Accessory, and Ark Grid comparisons below - skip this if you're not using those.">Optional, feeds sections below</span>
+  </summary>
+  <div class="ap-brace-compare-inputs">
+    <!-- Two smaller cards side by side (like the Ark Passive grid's own
+         Crit Rate/Crit Damage/etc. category cards above), rather than one
+         wide loose strip - the old single-row layout spread 6-15 fields
+         across the full box width with big gaps between them, which read
+         as cluttered/sparse at the same time instead of organized. Each
+         card gets its own title + border-left accent (same visual
+         language as .ap-calc-group) and stacks its own fields in a single
+         column - see the .ap-gear-card rules for why the old chip-style
+         field-row layout was dropped in favor of that. -->
+    <div class="ap-gear-cards">
+      <div class="ap-gear-card ap-gear-card--basics">
+        <p class="ap-gear-card-title">Weapon Power / Main Stat</p>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-wp">Weapon Power</label>
+          <input type="number" id="ap-gear-wp" class="ap-gear-wp ap-gear-input-wide" min="0" max="1000000" step="1" value="259216">
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-wp-pct" title="Earrings x2 (+0.8% / 1.8% / 3% each) + Karma elixir (up to +3%). Affects only the flat Weapon Power granted by lines below, not your Weapon Power stat itself.">Weapon Power %</label>
+          <input type="number" id="ap-gear-wp-pct" class="ap-gear-wp-pct ap-gear-input-narrow" min="0" max="20" step="0.1" value="6.6">
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-main-stat">Main Stat (STR/DEX/INT)</label>
+          <input type="number" id="ap-gear-main-stat" class="ap-gear-main-stat ap-gear-input-wide" min="0" max="2000000" step="1" value="828668">
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-main-stat-pct" title="Stronghold Pet (+1%) + Skin bonuses: Legendary +2% each (up to +8%) and Epic +1% each (up to +4%). Affects only the flat Main Stat granted by lines below, not your Main Stat stat itself.">Main Stat %</label>
+          <input type="number" id="ap-gear-main-stat-pct" class="ap-gear-main-stat-pct ap-gear-input-narrow" min="0" max="15" step="0.1" value="9">
+        </div>
+        <div class="ap-calc-field-row ap-calc-field-row-pair">
+          <label class="ap-calc-field-label" title="The SUM of every socketed gem's Base AP% bonus (Lv.7 +0.6% / Lv.8 +0.8% / Lv.9 +1% / Lv.10 +1.2% each), and whether your Ability Stone has a bonus (+1.5% flat).">Base AP %</label>
+          <div class="ap-calc-pair">
+            <input type="number" id="ap-gear-gem-base-ap" class="ap-gear-gem-base-ap ap-gear-input-narrow" min="0" max="50" step="0.1" value="13.2" title="Gem Base AP % - the SUM across all your socketed gems.">
+            <label class="ap-calc-pair-check" title="Ability Stone Base AP % - check if your stone rolled a 9/7, 10/6, or better (+1.5% flat).">
+              <input type="checkbox" id="ap-gear-ability-stone-base-ap" class="ap-gear-ability-stone-base-ap" checked>
+              <span class="ap-calc-pair-check-label">Ability Stone</span>
+            </label>
+          </div>
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-flat-ap" title="Low +80 / Mid +195 / High +390.">Accessory Flat AP Bonuses</label>
+          <input type="number" id="ap-gear-flat-ap" class="ap-gear-flat-ap ap-gear-input-narrow" min="0" max="2000" step="1" value="0">
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-support-uptime" title="Assumes an equally-geared support providing their AP buff: same Main Stat as you, 5% more Weapon Power.">Support AP Buff Uptime</label>
+          <input type="number" id="ap-gear-support-uptime" class="ap-gear-support-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="98">
+        </div>
+      </div>
+
+      <!-- Attack Power % sources: every field that folds into the running
+           Attack Power % total lives in this one card - Ability Stone:
+           Adrenaline and Atropine included, since they used to sit in a
+           separate area below purely as a leftover from how each was
+           implemented (its own toggle/table), not a real conceptual
+           difference from Kazeros/Guardian/etc (see
+           gearAttackPowerPercentTotal's own comment in the JS for how they
+           fold in). Support is deliberately NOT in this card: it buffs
+           Attack Power through a completely different mechanism (a flat
+           AP-equivalent amount derived from your own Weapon Power/Main
+           Stat, added before the Attack Power % multiply rather than being
+           a term inside it - see supportApBuff's own comment in the JS),
+           so it has no "% value" to contribute here and would just be dead
+           weight inside a card titled "sources". It sits in the card on
+           the left instead, alongside Weapon Power/Main Stat/etc. -->
+      <div class="ap-gear-card ap-gear-card--ap-sources ap-gear-ap-section">
+        <p class="ap-gear-card-title ap-gear-ap-sources-heading">Attack Power % sources <span class="ap-value-display ap-gear-ap-total-display" data-for="ap-gear-ap-total"></span></p>
+        <div class="ap-calc-field-row ap-calc-field-row-pair">
+          <label class="ap-calc-field-label" >Earrings</label>
+          <div class="ap-calc-pair">
+            <select id="ap-gear-ap-earring1" class="ap-gear-ap-earring1">
+              <option value="None">None</option>
+              <option value="Low">0.4%</option>
+              <option value="Mid">0.95%</option>
+              <option value="High" selected>1.55%</option>
+            </select>
+            <select id="ap-gear-ap-earring2" class="ap-gear-ap-earring2">
+              <option value="None">None</option>
+              <option value="Low">0.4%</option>
+              <option value="Mid">0.95%</option>
+              <option value="High" selected>1.55%</option>
+            </select>
+          </div>
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-ap-kazeros" title="Kazeros Raid Contribution buff, +2% Attack Power.">Kazeros Raid Contribution</label>
+          <span class="ap-value-display" data-for="ap-gear-ap-kazeros"></span>
+          <input type="checkbox" id="ap-gear-ap-kazeros" class="ap-gear-ap-kazeros">
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-ap-guardian" title="Guardian Raid Contribution buff, +3% Attack Power.">Guardian Raid Contribution</label>
+          <span class="ap-value-display" data-for="ap-gear-ap-guardian"></span>
+          <input type="checkbox" id="ap-gear-ap-guardian" class="ap-gear-ap-guardian">
+        </div>
+        <div class="ap-calc-field-row ap-gear-ap-select-row">
+          <label class="ap-calc-field-label" for="ap-gear-ap-chaos-star" title="Chaos Core: Attack's Atk. Power % AND Flat AP, both at once.">Chaos Core: Attack</label>
+          <span class="ap-value-display" data-for="ap-gear-ap-chaos-star"></span>
+          <select id="ap-gear-ap-chaos-star" class="ap-gear-ap-chaos-star">
+            <option value="None|0P">None</option>
+            <option value="Any|10P">10 Points</option>
+            <option value="Relic|14P">Relic 14P</option>
+            <option value="Relic|17P">Relic 17P</option>
+            <option value="Relic|18P">Relic 18P</option>
+            <option value="Relic|19P">Relic 19P</option>
+            <option value="Relic|20P" selected>Relic 20P</option>
+            <option value="Ancient|14P">Ancient 14P</option>
+            <option value="Ancient|17P">Ancient 17P</option>
+            <option value="Ancient|18P">Ancient 18P</option>
+            <option value="Ancient|19P">Ancient 19P</option>
+            <option value="Ancient|20P">Ancient 20P</option>
+          </select>
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-ap-astrogem-lv" >Astrogem Atk. Power Level</label>
+          <span class="ap-value-display" data-for="ap-gear-ap-astrogem-lv"></span>
+          <input type="number" id="ap-gear-ap-astrogem-lv" class="ap-gear-ap-astrogem-lv" min="0" max="100" step="1" value="56">
+        </div>
+        <div class="ap-calc-field-row ap-gear-ap-select-row">
+          <label class="ap-calc-field-label" for="ap-adrenaline-stone" title="A fixed 0.9% per stack, assuming the full 6 stacks, plus this stone's own bonus (Lv.1 +0.48% / Lv.2 +0.60% / Lv.3 +0.83% / Lv.4 +0.95% per stack).">Ability Stone: Adrenaline</label>
+          <span class="ap-value-display" data-for="ap-adrenaline-stone"></span>
+          <select id="ap-adrenaline-stone" class="ap-adrenaline-stone">
+            <option value="0 Lv." selected>Lv. 0</option>
+            <option value="1 Lv.">Lv. 1</option>
+            <option value="2 Lv.">Lv. 2</option>
+            <option value="3 Lv.">Lv. 3</option>
+            <option value="4 Lv.">Lv. 4</option>
+          </select>
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-atropine-uptime" title="Atropine consumable: a flat +30% Attack Power while active.">Atropine Uptime</label>
+          <span class="ap-value-display" data-for="ap-gear-atropine-uptime"></span>
+          <input type="number" id="ap-gear-atropine-uptime" class="ap-gear-atropine-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="0">
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-ap-other" title="Anything not covered above - e.g. a temporary in-raid buff. Don't include AP % from Enlightenment nodes.">Other AP %</label>
+          <input type="number" id="ap-gear-ap-other" class="ap-gear-ap-other ap-gear-input-narrow" min="0" max="50" step="0.01" value="0">
+        </div>
+      </div>
+    </div>
+  </div>
+</details>
+
 <!-- Bracelet Line Comparison: a different question than the grid above -
      "of the bracelet lines I have data for, which is worth the most DPS"
      rather than "what's my best Ark Passive setup". Values are computed
@@ -473,7 +646,120 @@
       <tbody class="ap-brace-compare-rows"></tbody>
     </table>
     <p class="ap-brace-compare-flip-note">&dagger; Equipping this line's Mid tier may change which split/keystone combo is your actual best - worth a re-check.</p>
-    <p class="ap-brace-compare-footer-note">High item levels and support buffs cause flat bonuses (WP/Dex) to scale poorly, adding at best 2% and 1% respectively.</p>
+    <p class="ap-brace-compare-footer-note">Flat Bonus lines use values from the Gearing section and are hidden until Weapon Power and Main Stat are both filled in.</p>
+  </div>
+</details>
+
+<!-- Accessory Line Comparison: same idea and methodology as Bracelet Line
+     Comparison above (see computeAccessoryComparison's own JS comment for
+     the full breakdown), split into the 3 accessory slot shapes plus one
+     "Any Accessory Slot" group for lines any of the 5 pieces can roll.
+     Necklace/Rings value a candidate against your current Necklace/Ring
+     selections above (each panel resets only that slot's own tracked
+     value first); Earrings and Any Accessory Slot instead read the
+     shared Gearing section above, same as Bracelet's own 5 WP/AP rows,
+     and are hidden the same way until Weapon Power/Main Stat are filled
+     in. Each panel is its own compact table so the four slot shapes stay
+     visually distinct instead of one long undifferentiated list. Line
+     Comparison values are computed against your actual current gear as
+     configured elsewhere on this page - not a "slot reset to nothing"
+     baseline (that's a real difference from the Bracelet panel above;
+     see computeAccessoryComparison's own comment for why). Necklace/
+     Earrings/Rings additionally show the sheet's own 6 combo columns
+     (LL/ML/MM/HL/HM/HH) for their pair of lines rolled together; Any
+     Accessory Slot doesn't, matching the sheet's own reasoning (a
+     universal line can land on any of 5 pieces, so a full combo set
+     would be enormous without being any more useful to look at). -->
+<details class="ap-acc-compare">
+  <summary>Accessory Line Comparison</summary>
+  <div class="ap-brace-compare-body">
+    <p class="ap-brace-compare-intro">Candidate accessory lines, valued as if each were the only line on that slot, against your Best Setup above. Combination lines show that row's line paired with the panel's other line, both rolled on the same piece(s).</p>
+
+    <div class="ap-acc-panel ap-acc-necklace-panel">
+      <p class="ap-acc-panel-title">Necklace</p>
+      <div class="ap-acc-table-scroll">
+      <table class="ap-brace-compare-table ap-acc-combo-table">
+        <thead>
+          <tr>
+            <th class="ap-brace-th-label">Line</th>
+            <th class="ap-brace-th-low">Low</th>
+            <th class="ap-brace-th-mid">Mid</th>
+            <th class="ap-brace-th-high">High</th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-low">L</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-mid">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-mid">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-high">H</span></th>
+          </tr>
+        </thead>
+        <tbody class="ap-acc-necklace-rows"></tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="ap-acc-panel ap-acc-earrings-panel">
+      <p class="ap-acc-panel-title">Earrings</p>
+      <div class="ap-acc-table-scroll">
+      <table class="ap-brace-compare-table ap-acc-combo-table">
+        <thead>
+          <tr>
+            <th class="ap-brace-th-label">Line</th>
+            <th class="ap-brace-th-low">Low</th>
+            <th class="ap-brace-th-mid">Mid</th>
+            <th class="ap-brace-th-high">High</th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-low">L</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-mid">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-mid">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-high">H</span></th>
+          </tr>
+        </thead>
+        <tbody class="ap-acc-earrings-rows"></tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="ap-acc-panel ap-acc-rings-panel">
+      <p class="ap-acc-panel-title">Rings</p>
+      <div class="ap-acc-table-scroll">
+      <table class="ap-brace-compare-table ap-acc-combo-table">
+        <thead>
+          <tr>
+            <th class="ap-brace-th-label">Line</th>
+            <th class="ap-brace-th-low">Low</th>
+            <th class="ap-brace-th-mid">Mid</th>
+            <th class="ap-brace-th-high">High</th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-low">L</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-mid">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-mid">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-high">H</span></th>
+          </tr>
+        </thead>
+        <tbody class="ap-acc-rings-rows"></tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="ap-acc-panel ap-acc-universal-panel">
+      <p class="ap-acc-panel-title">Flat Bonuses</p>
+      <table class="ap-brace-compare-table">
+        <thead>
+          <tr>
+            <th class="ap-brace-th-label">Line</th>
+            <th class="ap-brace-th-low">Low</th>
+            <th class="ap-brace-th-mid">Mid</th>
+            <th class="ap-brace-th-high">High</th>
+          </tr>
+        </thead>
+        <tbody class="ap-acc-universal-rows"></tbody>
+      </table>
+    </div>
+
+    <p class="ap-brace-compare-footer-note">Earrings and Flat Bonuses use values from the Gearing section and are hidden until Weapon Power and Main Stat are both filled in.</p>
   </div>
 </details>
 
