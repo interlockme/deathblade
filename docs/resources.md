@@ -212,12 +212,11 @@
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-necklace">Necklace</label>
-      <span class="ap-value-display" data-for="ap-necklace"></span>
       <select id="ap-necklace" class="ap-necklace">
         <option value="None">None</option>
-        <option value="Low">Low</option>
-        <option value="Mid">Mid</option>
-        <option value="High" selected>High</option>
+        <option value="Low">0.70%</option>
+        <option value="Mid">1.60%</option>
+        <option value="High" selected>2.60%</option>
       </select>
     </div>
     <div class="ap-calc-field-row ap-calc-field-row-pair">
@@ -323,6 +322,11 @@
       <label class="ap-calc-field-label" for="ap-yearning">Support: Passionate Dance (Evo Dmg)</label>
       <span class="ap-value-display" data-for="ap-yearning"></span>
       <input type="checkbox" id="ap-yearning" class="ap-yearning" checked>
+    </div>
+    <div class="ap-calc-field-row">
+      <label class="ap-calc-field-label" for="ap-flash-orb-uptime" title="+15% Crit Rate, scaled by the Support's Drops of Ether engraving.">Support: Flash Orb Uptime</label>
+      <span class="ap-value-display" data-for="ap-flash-orb-uptime"></span>
+      <input type="number" id="ap-flash-orb-uptime" class="ap-flash-orb-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="0">
     </div>
     <div class="ap-calc-field-row ap-calc-field-row-range ap-calc-field-row-range--inline">
       <label class="ap-calc-field-label" for="ap-back-attack-rate">Back-Attack Rate</label>
@@ -596,6 +600,11 @@
             <option value="3 Lv.">Lv. 3</option>
             <option value="4 Lv.">Lv. 4</option>
           </select>
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-strength-orb-uptime" title="+10% Attack Power, scaled by the Support's Drops of Ether engraving.">Support: Strength Orb Uptime</label>
+          <span class="ap-value-display" data-for="ap-gear-strength-orb-uptime"></span>
+          <input type="number" id="ap-gear-strength-orb-uptime" class="ap-gear-strength-orb-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="0">
         </div>
         <div class="ap-calc-field-row">
           <label class="ap-calc-field-label" for="ap-gear-atropine-uptime" title="+30% Attack Power for 10s. Usually 0-15% uptime in latest content.">Atropine Uptime</label>

@@ -375,6 +375,28 @@
   // part of it - see supportApBuff's own comment), so there's no
   // single "% value" for it to contribute to this sum.
   const GEAR_AP_ATROPINE_FULL = 30;
+
+  // Support's Drops of Ether engraving drops two different orbs - Strength
+  // Orb (Attack Power, folded in here) and Flash Orb (Crit Rate, folded
+  // into critRateTotal instead) - both scaled by the SAME "Ether
+  // effectiveness" bonus, which is why that bonus is a single shared
+  // constant rather than two separate ones. Sourced from the engraving's
+  // own tooltip: Relic grade at max level gives +16.00% Ether
+  // effectiveness, and a Lv.2 Ability Stone adds another +15.00% - the
+  // tooltip's own "Final Applied Effect" line confirms these ADD (16+15 =
+  // 31.00% enhanced), not multiply. Like SUPPORT_AP_BUFF_COEFFICIENT
+  // above, this is calibrated to one assumed reference support engraving/
+  // stone combo rather than derived from the reader's own inputs, since
+  // it depends on the SUPPORT's build, not theirs.
+  const SUPPORT_ETHER_EFFECTIVENESS = 0.31;
+  // Base orb values before the Ether effectiveness bonus above - Strength
+  // Orb's +10% Attack Power, Flash Orb's +15% Crit Rate (both per the
+  // engraving's Base Effect tooltip, Relic grade).
+  const STRENGTH_ORB_BASE_AP = 10;
+  const FLASH_ORB_BASE_CRIT_RATE = 0.15;
+  const STRENGTH_ORB_FULL_AP = STRENGTH_ORB_BASE_AP * (1 + SUPPORT_ETHER_EFFECTIVENESS);
+  const FLASH_ORB_FULL_CRIT_RATE = FLASH_ORB_BASE_CRIT_RATE * (1 + SUPPORT_ETHER_EFFECTIVENESS);
+
   function gearAttackPowerPercentTotal(inputs) {
     return (
       (GEAR_AP_EARRING_TABLE[inputs.gearApEarring1] || 0) +
@@ -385,6 +407,7 @@
       gearAstrogemApPercent(inputs) +
       inputs.gearApOther +
       (inputs.gearAtropineUptime / 100) * GEAR_AP_ATROPINE_FULL +
+      (inputs.gearStrengthOrbUptime / 100) * STRENGTH_ORB_FULL_AP +
       adrenalineApFraction(inputs) * 100
     );
   }
@@ -607,6 +630,14 @@
       backAttackRate: Math.max(0, Math.min(100, getNumber(root, ".ap-back-attack-rate", 90))),
 
       yearning: getCheckbox(root, ".ap-yearning", true),
+      // Support's Flash Orb (Drops of Ether) - same "% of the fight it's
+      // up" pattern as Adrenaline/Back-Attack Rate above, see
+      // FLASH_ORB_FULL_CRIT_RATE's own comment for the assumed
+      // engraving/stone combo baked into the full-uptime value. Only
+      // meaningful while a Support is actually in the party - gated off
+      // .ap-yearning the same way Support AP Buff Uptime already is (see
+      // enforceGearSupportUptimeGate). Defaults to 0 (not used).
+      flashOrbUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-flash-orb-uptime", 0))),
       evoKarmaRank: parseInt(getSelect(root, ".ap-evo-karma", "6"), 10) || 6,
 
       demonDmgPct: Math.max(0, Math.min(15, getNumber(root, ".ap-brace-demon-dmg", 7))),
@@ -681,6 +712,15 @@
       // averages into the running Attack Power % total. Defaults to 0
       // (not used), same as the old checkbox's unchecked default.
       gearAtropineUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-atropine-uptime", 0))),
+      // Support's Strength Orb (Drops of Ether) - same "% of the fight
+      // it's up" pattern as Atropine Uptime just above, see
+      // STRENGTH_ORB_FULL_AP's own comment for the assumed engraving/
+      // stone combo baked into the full-uptime value. Only meaningful
+      // while a Support is actually in the party - see
+      // enforceGearSupportUptimeGate, which gates this the same way it
+      // already gates Support AP Buff Uptime off .ap-yearning. Defaults
+      // to 0 (not used).
+      gearStrengthOrbUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-strength-orb-uptime", 0))),
       // No longer its own checkbox - whether Support's AP buff applies at
       // all is decided entirely by the Party & Positioning group's
       // "Support: Passionate Dance" toggle (.ap-yearning); reading that
@@ -805,7 +845,10 @@
     const n = inputs.critSyn1 ? 0.1 : 0;
     const o = inputs.critSyn2 ? 0.1 : 0;
     const p = (inputs.backAttackRate / 100) * 0.1;
-    return c + d + e + f + g + h + i + k + n + o + p;
+    // Support's Flash Orb (Drops of Ether) - see FLASH_ORB_FULL_CRIT_RATE's
+    // own comment for the Ether-effectiveness assumption baked into it.
+    const q = (inputs.flashOrbUptime / 100) * FLASH_ORB_FULL_CRIT_RATE;
+    return c + d + e + f + g + h + i + k + n + o + p + q;
   }
 
   function evoDmgTotal(keenSenseLv, limitBreakLv, shared) {
@@ -1643,26 +1686,94 @@
             combos: earringCombos.second,
           },
         ];
-        universal = [
-          {
-            label: ["Attack Power +", ...trip("80", "195", "390")],
-            low: apDeltaGain(ACC_FLAT_AP_TABLE.Low),
-            mid: apDeltaGain(ACC_FLAT_AP_TABLE.Mid),
-            high: apDeltaGain(ACC_FLAT_AP_TABLE.High),
-          },
-          {
-            label: ["Weapon Power +", ...trip("195", "480", "960")],
-            low: wpDeltaGain(ACC_FLAT_WP_TABLE.Low),
-            mid: wpDeltaGain(ACC_FLAT_WP_TABLE.Mid),
-            high: wpDeltaGain(ACC_FLAT_WP_TABLE.High),
-          },
-          {
-            label: ["Quality STR/DEX/INT +", ...trip("1935", "2083", "2679")],
-            low: statDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.Low),
-            mid: statDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.Mid),
-            high: statDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.High),
-          },
-        ];
+        // Universal accessory lines are evaluated on the full current
+        // Gearing state. Unlike the Earring rows above, these lines are
+        // added alongside the equipped earrings rather than replacing them.
+        // This matters for flat WP: existing Earring WP% must multiply the
+        // candidate flat WP, just as Karmic Enlightenment does.
+        const universalWp = inputs.gearWp;
+        const universalMainStat = inputs.gearMainStat;
+        const universalBaseApMult = 1 + gearBaseApPercentTotal(inputs) / 100;
+        const universalFlatAp =
+          inputs.gearFlatAp + gearChaosStarFlat(inputs.gearApChaosStar);
+        const universalPercentApMult =
+          1 + gearAttackPowerPercentTotal(inputs) / 100;
+        const universalWpPercentMult =
+          1 + gearWpPercentTotal(inputs) / 100;
+        const universalMainStatPercentMult =
+          1 + inputs.gearMainStatPercent / 100;
+        const universalSupApBuff = supportApBuff(
+          inputs,
+          universalWp,
+          universalMainStat,
+          universalBaseApMult
+        );
+        const universalBaselineAp = gearApTotal(
+          universalWp,
+          universalMainStat,
+          universalBaseApMult,
+          universalFlatAp,
+          universalPercentApMult,
+          universalSupApBuff
+        );
+
+        if (universalWp > 0 && universalMainStat > 0 && universalBaselineAp > 0) {
+          const universalApDeltaGain = (delta) =>
+            gearApTotal(
+              universalWp,
+              universalMainStat,
+              universalBaseApMult,
+              universalFlatAp + delta,
+              universalPercentApMult,
+              universalSupApBuff
+            ) /
+              universalBaselineAp -
+            1;
+          const universalWpDeltaGain = (delta) =>
+            gearApTotal(
+              universalWp + delta * universalWpPercentMult,
+              universalMainStat,
+              universalBaseApMult,
+              universalFlatAp,
+              universalPercentApMult,
+              universalSupApBuff
+            ) /
+              universalBaselineAp -
+            1;
+          const universalStatDeltaGain = (delta) =>
+            gearApTotal(
+              universalWp,
+              universalMainStat + delta * universalMainStatPercentMult,
+              universalBaseApMult,
+              universalFlatAp,
+              universalPercentApMult,
+              universalSupApBuff
+            ) /
+              universalBaselineAp -
+            1;
+
+          universal = [
+            {
+              label: ["Attack Power +", ...trip("80", "195", "390")],
+              low: universalApDeltaGain(ACC_FLAT_AP_TABLE.Low),
+              mid: universalApDeltaGain(ACC_FLAT_AP_TABLE.Mid),
+              high: universalApDeltaGain(ACC_FLAT_AP_TABLE.High),
+            },
+            {
+              label: ["Weapon Power +", ...trip("195", "480", "960")],
+              low: universalWpDeltaGain(ACC_FLAT_WP_TABLE.Low),
+              mid: universalWpDeltaGain(ACC_FLAT_WP_TABLE.Mid),
+              high: universalWpDeltaGain(ACC_FLAT_WP_TABLE.High),
+            },
+            {
+              label: ["Quality STR/DEX/INT (Max − Min): ", ...trip("1935", "2083", "2679")],
+              low: universalStatDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.Low),
+              mid: universalStatDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.Mid),
+              high: universalStatDeltaGain(ACC_QUALITY_MAIN_STAT_TABLE.High),
+              note: "Maximum Main Stat difference between a minimum-quality and maximum-quality accessory: Ring +1,935, Earring +2,083, Necklace +2,679.",
+            },
+          ];
+        }
       }
     }
 
@@ -1761,6 +1872,17 @@
 
     setDisplay("#ap-flashy-atk", FLASHY_ATK_TABLE[inputs.flashyAtk] || 0);
     setDisplay("#ap-stable-atk", stableAtkValue(inputs.stableAtk));
+    const chaosAttackSpan = root.querySelector('.ap-value-display[data-for="ap-gear-ap-chaos-star"]');
+    if (chaosAttackSpan) {
+      const chaosAttack = GEAR_AP_CHAOS_STAR_TABLE[inputs.gearApChaosStar] || { pct: 0, flat: 0 };
+      if (chaosAttack.pct || chaosAttack.flat) {
+        const pctText = chaosAttack.pct ? chaosAttack.pct.toFixed(2) + "%" : "0%";
+        const flatText = chaosAttack.flat ? chaosAttack.flat.toLocaleString() + " AP" : "0 AP";
+        chaosAttackSpan.textContent = "(" + pctText + " + " + flatText + ")";
+      } else {
+        chaosAttackSpan.textContent = "";
+      }
+    }
 
     setDisplay("#ap-adrenaline", (ADRENALINE_TABLE[inputs.adrenaline] || 0) * (inputs.adrenalineUptime / 100));
     setDisplay("#ap-adrenaline-stone", adrenalineApFraction(inputs));
@@ -1777,11 +1899,12 @@
     // as those pairs.
     setDisplay("#ap-gear-ap-kazeros", inputs.gearApKazeros ? GEAR_AP_KAZEROS / 100 : 0);
     setDisplay("#ap-gear-ap-guardian", inputs.gearApGuardian ? GEAR_AP_GUARDIAN / 100 : 0);
-    setDisplay("#ap-gear-ap-chaos-star", gearChaosStarPct(inputs.gearApChaosStar) / 100);
     // Atropine Uptime's readout shows the time-averaged effective %
     // (uptime * the full 30% while active), not the uptime number itself -
     // e.g. 20% uptime reads as "(6.00%)", matching the field's own tooltip.
     setDisplay("#ap-gear-atropine-uptime", ((inputs.gearAtropineUptime / 100) * GEAR_AP_ATROPINE_FULL) / 100);
+    setDisplay("#ap-gear-strength-orb-uptime", ((inputs.gearStrengthOrbUptime / 100) * STRENGTH_ORB_FULL_AP) / 100);
+    setDisplay("#ap-flash-orb-uptime", (inputs.flashOrbUptime / 100) * FLASH_ORB_FULL_CRIT_RATE);
     // Running total, shown even at 0% (unlike the other displays above,
     // which stay blank at 0) so it always reads as "here's your current
     // total" rather than looking broken/empty with nothing selected yet.
@@ -2304,18 +2427,22 @@
     });
   }
 
-  // Support AP Buff Uptime (Gearing) only means anything while Support is
-  // actually part of the setup - gated on .ap-yearning ("Support:
-  // Passionate Dance" up in Party & Positioning) being CHECKED, not on
-  // whether it's disabled. Being disabled-but-checked (hit the 3-synergy
-  // limit above while already on) still means Support is active, so the
-  // uptime field should stay enabled in that case - only an unchecked
-  // .ap-yearning turns this field off.
+  // Support AP Buff Uptime, Strength Orb Uptime, and Flash Orb Uptime all
+  // only mean anything while Support is actually part of the setup -
+  // gated on .ap-yearning ("Support: Passionate Dance" up in Party &
+  // Positioning) being CHECKED, not on whether it's disabled. Being
+  // disabled-but-checked (hit the 3-synergy limit above while already on)
+  // still means Support is active, so these fields should stay enabled
+  // in that case - only an unchecked .ap-yearning turns them off. Strength
+  // Orb and Flash Orb are both Support's Drops of Ether engraving, same
+  // "no Support, no orb" dependency as the AP buff.
   function enforceGearSupportUptimeGate(root) {
     const yearningEl = root.querySelector(".ap-yearning");
-    const supportUptimeEl = root.querySelector(".ap-gear-support-uptime");
-    if (!yearningEl || !supportUptimeEl) return;
-    supportUptimeEl.disabled = !yearningEl.checked;
+    if (!yearningEl) return;
+    [".ap-gear-support-uptime", ".ap-gear-strength-orb-uptime", ".ap-flash-orb-uptime"].forEach((selector) => {
+      const el = root.querySelector(selector);
+      if (el) el.disabled = !yearningEl.checked;
+    });
   }
 
   function update(root) {
