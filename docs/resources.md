@@ -465,15 +465,6 @@
     <div class="ap-gear-cards">
       <div class="ap-gear-card ap-gear-card--basics">
         <p class="ap-gear-card-title">Weapon Power / Main Stat / Misc</p>
-        <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-wp">Weapon Power</label>
-          <input type="number" id="ap-gear-wp" class="ap-gear-wp ap-gear-input-wide" min="0" max="1000000" step="1" value="259216">
-        </div>
-        <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-wp-karma-lv" title="+0.1% Weapon Power per level, up to Lv.30 (+3%). Affects only the flat Weapon Power granted by lines below, not your Weapon Power stat itself.">Karmic Enlightenment Level</label>
-          <span class="ap-value-display" data-for="ap-gear-wp-karma-lv"></span>
-          <input type="number" id="ap-gear-wp-karma-lv" class="ap-gear-wp-karma-lv ap-gear-input-narrow" min="0" max="30" step="1" value="30">
-        </div>
         <div class="ap-calc-field-row ap-calc-field-row-pair">
           <label class="ap-calc-field-label" title="Affects only the flat Weapon Power granted by lines below, not your Weapon Power stat itself.">Earrings</label>
           <div class="ap-calc-pair">
@@ -492,6 +483,15 @@
           </div>
         </div>
         <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-wp">Weapon Power</label>
+          <input type="number" id="ap-gear-wp" class="ap-gear-wp ap-gear-input-wide" min="0" max="1000000" step="1" value="259216">
+        </div>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-wp-karma-lv" title="+0.1% Weapon Power per level, up to Lv.30 (+3%). Affects only the flat Weapon Power granted by lines below, not your Weapon Power stat itself.">Karmic Enlightenment Level</label>
+          <span class="ap-value-display" data-for="ap-gear-wp-karma-lv"></span>
+          <input type="number" id="ap-gear-wp-karma-lv" class="ap-gear-wp-karma-lv ap-gear-input-narrow" min="0" max="30" step="1" value="30">
+        </div>
+        <div class="ap-calc-field-row">
           <label class="ap-calc-field-label" for="ap-gear-main-stat">Main Stat (STR/DEX/INT)</label>
           <input type="number" id="ap-gear-main-stat" class="ap-gear-main-stat ap-gear-input-wide" min="0" max="2000000" step="1" value="854918">
         </div>
@@ -500,12 +500,12 @@
           <input type="number" id="ap-gear-main-stat-pct" class="ap-gear-main-stat-pct ap-gear-input-narrow" min="0" max="15" step="0.1" value="9">
         </div>
         <div class="ap-calc-field-row ap-calc-field-row-pair">
-          <label class="ap-calc-field-label" title="The SUM of every socketed gem's Base AP% bonus (Lv.7 +0.6% / Lv.8 +0.8% / Lv.9 +1% / Lv.10 +1.2% each), and whether your Ability Stone has a bonus (+1.5% flat).">Gem Base AP %</label>
+          <label class="ap-calc-field-label" title="The SUM of every socketed gem's Base AP% bonus (Lv.7 +0.6% / Lv.8 +0.8% / Lv.9 +1% / Lv.10 +1.2% each).">Gem Base AP %</label>
           <div class="ap-calc-pair">
             <input type="number" id="ap-gear-gem-base-ap" class="ap-gear-gem-base-ap ap-gear-input-narrow" min="0" max="13.2" step="0.1" value="13.2" title="Gem Base AP % - the SUM across all your socketed gems.">
-            <label class="ap-calc-pair-check" title="Ability Stone Base AP % - check if your stone has a bonus (+1.5% flat).">
+            <label class="ap-calc-pair-check" title="Check to add your stone's Base AP % bonus if available (+1.5%).">
+              <span class="ap-calc-pair-check-label">Ability Stone Base AP %</span>
               <input type="checkbox" id="ap-gear-ability-stone-base-ap" class="ap-gear-ability-stone-base-ap" checked>
-              <span class="ap-calc-pair-check-label">Ability Stone</span>
             </label>
           </div>
         </div>
@@ -598,12 +598,12 @@
           </select>
         </div>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-atropine-uptime" title="Atropine consumable: a flat +30% Attack Power while active.">Atropine Uptime</label>
+          <label class="ap-calc-field-label" for="ap-gear-atropine-uptime" title="+30% Attack Power for 10s. Usually 0-15% uptime in latest content.">Atropine Uptime</label>
           <span class="ap-value-display" data-for="ap-gear-atropine-uptime"></span>
           <input type="number" id="ap-gear-atropine-uptime" class="ap-gear-atropine-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="0">
         </div>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-ap-other" title="Anything not covered above - e.g. a temporary in-raid buff. Don't include AP % from Enlightenment nodes.">Other AP %</label>
+          <label class="ap-calc-field-label" for="ap-gear-ap-other" title="Anything not covered above - e.g. a temporary in-raid buff. Don't include AP % from Enlightenment nodes.">Other AP % Bonuses</label>
           <input type="number" id="ap-gear-ap-other" class="ap-gear-ap-other ap-gear-input-narrow" min="0" max="50" step="0.01" value="0">
         </div>
       </div>
