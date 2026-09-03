@@ -470,8 +470,26 @@
           <input type="number" id="ap-gear-wp" class="ap-gear-wp ap-gear-input-wide" min="0" max="1000000" step="1" value="259216">
         </div>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-wp-pct" title="Earrings x2 (+0.8% / 1.8% / 3% each) + Karma elixir (up to +3%). Affects only the flat Weapon Power granted by lines below, not your Weapon Power stat itself.">Weapon Power %</label>
-          <input type="number" id="ap-gear-wp-pct" class="ap-gear-wp-pct ap-gear-input-narrow" min="0" max="20" step="0.1" value="6.6">
+          <label class="ap-calc-field-label" for="ap-gear-wp-karma-lv" title="+0.1% Weapon Power per level, up to Lv.30 (+3%). Affects only the flat Weapon Power granted by lines below, not your Weapon Power stat itself.">Karmic Enlightenment Level</label>
+          <span class="ap-value-display" data-for="ap-gear-wp-karma-lv"></span>
+          <input type="number" id="ap-gear-wp-karma-lv" class="ap-gear-wp-karma-lv ap-gear-input-narrow" min="0" max="30" step="1" value="30">
+        </div>
+        <div class="ap-calc-field-row ap-calc-field-row-pair">
+          <label class="ap-calc-field-label" title="Affects only the flat Weapon Power granted by lines below, not your Weapon Power stat itself.">Earrings</label>
+          <div class="ap-calc-pair">
+            <select id="ap-gear-wp-earring1" class="ap-gear-wp-earring1">
+              <option value="None">None</option>
+              <option value="Low">0.8%</option>
+              <option value="Mid" selected>1.8%</option>
+              <option value="High">3%</option>
+            </select>
+            <select id="ap-gear-wp-earring2" class="ap-gear-wp-earring2">
+              <option value="None">None</option>
+              <option value="Low">0.8%</option>
+              <option value="Mid" selected>1.8%</option>
+              <option value="High">3%</option>
+            </select>
+          </div>
         </div>
         <div class="ap-calc-field-row">
           <label class="ap-calc-field-label" for="ap-gear-main-stat">Main Stat (STR/DEX/INT)</label>

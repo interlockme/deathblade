@@ -300,6 +300,16 @@
   // either, same reasoning as those pairs' own CSS comment: the option
   // text already shows the exact percentage.
   const GEAR_AP_EARRING_TABLE = { "None": 0, "Low": 0.4, "Mid": 0.95, "High": 1.55 };
+  // Weapon Power's own earring table, same "None/Low/Mid/High" shape and
+  // percentage-point units as GEAR_AP_EARRING_TABLE above - see
+  // .ap-gear-wp-earring1/2's own comment in resources.md for why Weapon
+  // Power Earrings is a paired dropdown row now instead of a freeform
+  // number, matching Attack Power's own Earrings row exactly.
+  const GEAR_WP_EARRING_TABLE = { "None": 0, "Low": 0.8, "Mid": 1.8, "High": 3 };
+  // Karmic Enlightenment elixir effect: +0.1% Weapon Power per level, up
+  // to Lv.30 (+3% at max) - same "Level input -> live computed %" pattern
+  // as gearAstrogemApPercent below.
+  const GEAR_WP_KARMA_PER_LEVEL = 0.1;
   const GEAR_AP_KAZEROS = 2;
   const GEAR_AP_GUARDIAN = 3;
   // Chaos Core: Attack, keyed the same "Grade|Points" way as
@@ -394,6 +404,27 @@
 
   function gearBaseApPercentTotal(inputs) {
     return inputs.gearGemBaseAp + (inputs.gearAbilityStoneBaseAp ? ABILITY_STONE_BASE_AP_BONUS : 0);
+  }
+
+  // ----- Weapon Power % (Gearing) -----
+  // Split into its two sources (Karmic Enlightenment, Earrings) for the
+  // same reason Attack Power % above is split into individual fields -
+  // see .ap-gear-wp-earring1/2's own tooltip/comment in resources.md.
+  // The Bracelet panel's 5 WP/AP rows want the FULL total (your real
+  // current gear, same as every other Gearing field); the Accessory
+  // panel's Earrings candidate line wants just the Karmic Enlightenment
+  // portion, with the Earrings portion zeroed out first so the candidate
+  // isn't added on top of the 2 earrings' WP% already counted in the
+  // baseline - see that panel's own comment for the matching treatment
+  // already applied to gearApEarring1/2.
+  function gearWpKarmaPercent(inputs) {
+    return inputs.gearWpKarmaLv * GEAR_WP_KARMA_PER_LEVEL;
+  }
+  function gearWpEarringPercent(inputs) {
+    return (GEAR_WP_EARRING_TABLE[inputs.gearWpEarring1] || 0) + (GEAR_WP_EARRING_TABLE[inputs.gearWpEarring2] || 0);
+  }
+  function gearWpPercentTotal(inputs) {
+    return gearWpKarmaPercent(inputs) + gearWpEarringPercent(inputs);
   }
 
   // ----- Spec +80/100/120 (Deathblade only) -----
@@ -590,7 +621,16 @@
       // not real game limits - just enough headroom to keep a stray typo
       // from producing an absurd on-page number.
       gearWp: Math.max(0, Math.min(1000000, getNumber(root, ".ap-gear-wp", 259216))),
-      gearWpPercent: Math.max(0, Math.min(20, getNumber(root, ".ap-gear-wp-pct", 6.6))),
+      // Weapon Power % used to be one freeform field baking Karma/
+      // Enlightenment together with both earrings' WP% with nothing to
+      // zero out - see gearWpPercentTotal above for why it's now split
+      // into these two sources instead. Karmic Enlightenment is a Level
+      // input (1-30, +0.1%/level) same as Astrogem's Level fields below;
+      // the two Earring dropdowns match Attack Power's own Earrings row
+      // exactly (gearApEarring1/2 below).
+      gearWpKarmaLv: Math.max(0, Math.min(30, getNumber(root, ".ap-gear-wp-karma-lv", 30))),
+      gearWpEarring1: getSelect(root, ".ap-gear-wp-earring1", "Mid"),
+      gearWpEarring2: getSelect(root, ".ap-gear-wp-earring2", "Mid"),
       gearMainStat: Math.max(0, Math.min(2000000, getNumber(root, ".ap-gear-main-stat", 828668))),
       // % bonus to Main Stat GRANTED by Bracelet/Accessory "STR/DEX/INT"
       // candidate lines only, not to the stat entered above - same role
@@ -1258,7 +1298,7 @@
       // gearAttackPowerPercentTotal itself now - see that function's
       // own comment for why.
       const percentApMult = 1 + gearAttackPowerPercentTotal(inputs) / 100;
-      const wpPercentMult = 1 + inputs.gearWpPercent / 100;
+      const wpPercentMult = 1 + gearWpPercentTotal(inputs) / 100;
       const mainStatPercentMult = 1 + inputs.gearMainStatPercent / 100;
       const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
       const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
@@ -1520,20 +1560,24 @@
     // baseline as the Bracelet panel's 5 WP/AP rows (see that section's
     // own comment for the gearApTotal/supportApBuff explanation), but -
     // same as Necklace/Rings above - strip the Gearing section's OWN
-    // earring AP% inputs (gearApEarring1/2) from the baseline first.
-    // Without this, the candidate Earring AP% lines below (Low/Mid/
-    // High, "valued as if each were the only line on that slot") would
-    // be added ON TOP of the 2 earrings' AP% you already entered in
-    // Gearing, double-counting real equipped earrings instead of
-    // evaluating the slot independently. Weapon Power% can't get the
-    // same treatment - Gearing's Weapon Power% field is one freeform
-    // number that already bakes in earrings' WP% + Karma elixir
-    // together with nothing to zero out - so the Weapon Power candidate
-    // lines below still inherit that pre-existing baked-in caveat.
+    // earring inputs from the baseline first: gearApEarring1/2 (Attack
+    // Power%) AND gearWpEarring1/2 (Weapon Power%, a paired dropdown row
+    // now too - see gearWpPercentTotal's own comment). Without this, the
+    // candidate Earring AP%/WP% lines below (Low/Mid/High, "valued as if
+    // each were the only line on that slot") would be added ON TOP of
+    // the 2 earrings' AP%/WP% you already entered in Gearing, double-
+    // counting real equipped earrings instead of evaluating the slot
+    // independently. Karmic Enlightenment is left in the baseline
+    // untouched here, same as it isn't a per-slot field to begin with.
     let earrings = [];
     let universal = [];
     {
-      const earringsNB = Object.assign({}, inputs, { gearApEarring1: "None", gearApEarring2: "None" });
+      const earringsNB = Object.assign({}, inputs, {
+        gearApEarring1: "None",
+        gearApEarring2: "None",
+        gearWpEarring1: "None",
+        gearWpEarring2: "None",
+      });
       const wp = earringsNB.gearWp;
       const mainStat = earringsNB.gearMainStat;
       const baseApMult = 1 + gearBaseApPercentTotal(earringsNB) / 100;
@@ -1546,7 +1590,7 @@
       // own comment for why (this used to double-add both manually on
       // top of the total here, from before that fold-in existed).
       const percentApMult = 1 + gearAttackPowerPercentTotal(earringsNB) / 100;
-      const wpPercentMult = 1 + earringsNB.gearWpPercent / 100;
+      const wpPercentMult = 1 + gearWpPercentTotal(earringsNB) / 100;
       const mainStatPercentMult = 1 + earringsNB.gearMainStatPercent / 100;
       const supApBuff = supportApBuff(earringsNB, wp, mainStat, baseApMult);
       const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
@@ -1694,6 +1738,13 @@
     const spanGearAstro = root.querySelector('.ap-value-display[data-for="ap-gear-ap-astrogem-lv"]');
     if (spanGearAstro) {
       spanGearAstro.textContent = formatPct(gearAstrogemApPercent(inputs) / 100);
+    }
+
+    // Karmic Enlightenment (Weapon Power %'s own Level field, same
+    // pattern as Astrogem above - see gearWpKarmaPercent's comment)
+    const spanGearWpKarma = root.querySelector('.ap-value-display[data-for="ap-gear-wp-karma-lv"]');
+    if (spanGearWpKarma) {
+      spanGearWpKarma.textContent = formatPct(gearWpKarmaPercent(inputs) / 100);
     }
 
     // Other displays
@@ -2302,6 +2353,22 @@
     }
   }
 
+  // Kazeros Raid Contribution and Guardian Raid Contribution are both
+  // "which raid am I in" buffs - you're only ever in one raid at a time,
+  // so only one of these two can actually be active. Checking one un-
+  // checks the other rather than letting both count as active at once,
+  // same idea as normalizeChaosCoreExclusivity above (checkboxes instead
+  // of selects, so there's no "None" value to reset to - just uncheck
+  // the OTHER box directly).
+  function normalizeRaidContributionExclusivity(root) {
+    const kazerosEl = root.querySelector(".ap-gear-ap-kazeros");
+    const guardianEl = root.querySelector(".ap-gear-ap-guardian");
+    if (!kazerosEl || !guardianEl) return;
+    if (kazerosEl.checked && guardianEl.checked) {
+      guardianEl.checked = false;
+    }
+  }
+
   // The Keen Blunt Weapon Ability Stone only does anything while Keen
   // Blunt Weapon itself is actually equipped - if KBW is "Not Used", its
   // stone is locked to "0 Lv." and disabled (dimmed via the CSS rule
@@ -2334,6 +2401,7 @@
       const activeId = getActivePresetId();
       loadInputs(root, activeId);
       normalizeChaosCoreExclusivity(root);
+      normalizeRaidContributionExclusivity(root);
       updatePresetButtonStates(root);
 
       const flashyEl = root.querySelector(".ap-flashy-atk");
@@ -2347,6 +2415,21 @@
         });
         stableEl.addEventListener("change", () => {
           if (stableEl.value !== "None|0P") flashyEl.value = "None";
+        });
+      }
+
+      const kazerosEl = root.querySelector(".ap-gear-ap-kazeros");
+      const guardianEl = root.querySelector(".ap-gear-ap-guardian");
+      if (kazerosEl && guardianEl) {
+        // Same "attached before the generic loop" timing as flashy/
+        // stable above, so the opposing checkbox is already unchecked
+        // by the time that loop's own "change" listener runs update()/
+        // saveInputs() for this element.
+        kazerosEl.addEventListener("change", () => {
+          if (kazerosEl.checked) guardianEl.checked = false;
+        });
+        guardianEl.addEventListener("change", () => {
+          if (guardianEl.checked) kazerosEl.checked = false;
         });
       }
 
