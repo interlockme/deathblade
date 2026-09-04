@@ -653,6 +653,7 @@
       </div>
       <div class="ap-calc-field-row">
         <label class="ap-calc-field-label" for="ap-brace-crit-stat-equipped">Crit Stat from Current Bracelet</label>
+        <span class="ap-brace-info-icon" title="Subtracted from your total Crit Stat to build the no-bracelet baseline, so this comparison doesn't double-count Crit Stat your current bracelet already grants.">i</span>
         <input type="number" id="ap-brace-crit-stat-equipped" class="ap-brace-crit-stat-equipped" min="60" max="120" step="1" value="82">
       </div>
       <div class="ap-brace-spec-toggle">
@@ -698,15 +699,15 @@
     <details class="ap-bvb">
       <summary>Bracelet vs. Bracelet</summary>
       <div class="ap-brace-compare-body">
-        <p class="ap-brace-compare-intro">Compares two full 5-line bracelets against each other and against running none at all. Only as accurate as the Ark Passive setup, Character Data, and Bracelet Line Comparison inputs above are - fill those in first.</p>
+        <p class="ap-brace-compare-intro">Compares two full 5-line bracelets against each other and against running none at all.</p>
 
         <div class="ap-bvb-cards">
           <div class="ap-bvb-card ap-bvb-card-a">
             <p class="ap-gear-card-title ap-bvb-card-title">Bracelet A</p>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label" for="ap-bvb-a-spec">Spec</label>
-              <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's direct damage share on RE - it doesn't capture Trance/cooldown reduction, which is a real part of Spec's value on RE builds." hidden>i</span>
-              <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE builds for CDR purposes." hidden>!</span>
+              <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen." hidden>i</span>
+              <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE for CDR." hidden>!</span>
               <input type="number" id="ap-bvb-a-spec" class="ap-bvb-a-spec" min="60" max="120" step="1" value="100">
             </div>
             <div class="ap-calc-field-row">
@@ -738,7 +739,6 @@
                 <option value="High">High</option>
               </select>
               <input type="number" id="ap-bvb-a-line1-mainstat" class="ap-bvb-a-line1-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
-              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
             </div>
             <div class="ap-bvb-line-row">
               <select id="ap-bvb-a-line2-type" class="ap-bvb-a-line2-type ap-bvb-line-type">
@@ -765,7 +765,6 @@
                 <option value="High">High</option>
               </select>
               <input type="number" id="ap-bvb-a-line2-mainstat" class="ap-bvb-a-line2-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
-              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
             </div>
             <div class="ap-bvb-line-row">
               <select id="ap-bvb-a-line3-type" class="ap-bvb-a-line3-type ap-bvb-line-type">
@@ -792,11 +791,10 @@
                 <option value="High">High</option>
               </select>
               <input type="number" id="ap-bvb-a-line3-mainstat" class="ap-bvb-a-line3-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
-              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
             </div>
             <div class="ap-bvb-results">
               <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-bvb-keystone ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vsnone-wrap"><span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span><span class="ap-bvb-vs-none ap-summary-value">—</span></span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Keystone/Crit Lines</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Spec</span><span class="ap-bvb-spec-val ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-flat ap-summary-value">—</span></div>
@@ -808,8 +806,8 @@
             <p class="ap-gear-card-title ap-bvb-card-title">Bracelet B</p>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label" for="ap-bvb-b-spec">Spec</label>
-              <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's direct damage share on RE - it doesn't capture Trance/cooldown reduction, which is a real part of Spec's value on RE builds." hidden>i</span>
-              <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE builds for CDR purposes." hidden>!</span>
+              <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen." hidden>i</span>
+              <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE for CDR." hidden>!</span>
               <input type="number" id="ap-bvb-b-spec" class="ap-bvb-b-spec" min="60" max="120" step="1" value="80">
             </div>
             <div class="ap-calc-field-row">
@@ -841,7 +839,6 @@
                 <option value="High">High</option>
               </select>
               <input type="number" id="ap-bvb-b-line1-mainstat" class="ap-bvb-b-line1-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
-              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
             </div>
             <div class="ap-bvb-line-row">
               <select id="ap-bvb-b-line2-type" class="ap-bvb-b-line2-type ap-bvb-line-type">
@@ -868,7 +865,6 @@
                 <option value="High">High</option>
               </select>
               <input type="number" id="ap-bvb-b-line2-mainstat" class="ap-bvb-b-line2-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
-              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
             </div>
             <div class="ap-bvb-line-row">
               <select id="ap-bvb-b-line3-type" class="ap-bvb-b-line3-type ap-bvb-line-type">
@@ -895,11 +891,10 @@
                 <option value="High">High</option>
               </select>
               <input type="number" id="ap-bvb-b-line3-mainstat" class="ap-bvb-b-line3-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
-              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
             </div>
             <div class="ap-bvb-results">
               <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-bvb-keystone ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vsnone-wrap"><span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span><span class="ap-bvb-vs-none ap-summary-value">—</span></span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Keystone/Crit Lines</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Spec</span><span class="ap-bvb-spec-val ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-flat ap-summary-value">—</span></div>
@@ -909,11 +904,11 @@
         </div>
 
         <div class="ap-bvb-summary">
-          <p>Running neither: <span class="ap-bvb-no-bracelet-keystone">—</span></p>
-          <p class="ap-bvb-diff">—</p>
+          <p class="ap-bvb-neither">Running neither: <span class="ap-bvb-no-bracelet-keystone">—</span></p>
+          <p class="ap-bvb-diff-wrap"><span class="ap-bvb-diff">—</span></p>
           <p class="ap-brace-compare-flip-note ap-bvb-keystone-note" hidden>Bracelet A and B land on different best keystones - the comparison above already accounts for that, each running its own.</p>
         </div>
-        <p class="ap-brace-compare-footer-note">Uses the same Card Demon Dmg%, Crit Stat from Current Bracelet, and Spec Scaling (RE/Surge) settings as Bracelet Line Comparison above, and the same Character Data inputs for the Weapon Power/Attack Power lines.</p>
+        <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Bracelet Line inputs above are - fill everything in first or else.</p>
       </div>
     </details>
   </div>
@@ -955,10 +950,10 @@
             <th class="ap-brace-th-mid">Mid</th>
             <th class="ap-brace-th-high">High</th>
             <th class="ap-acc-th-combo"><span class="ap-brace-label-low">L</span><span class="ap-brace-label-low">L</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-low">L</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-mid">M</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-low">L</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-mid">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-low">M</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-low">M</span><span class="ap-brace-label-low">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">H</span><span class="ap-brace-label-mid">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">H</span><span class="ap-brace-label-mid">M</span></th>
             <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-high">H</span></th>
           </tr>
         </thead>
@@ -978,10 +973,10 @@
             <th class="ap-brace-th-mid">Mid</th>
             <th class="ap-brace-th-high">High</th>
             <th class="ap-acc-th-combo"><span class="ap-brace-label-low">L</span><span class="ap-brace-label-low">L</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-low">L</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-mid">M</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-low">L</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-mid">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-low">M</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-low">M</span><span class="ap-brace-label-low">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">H</span><span class="ap-brace-label-mid">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">H</span><span class="ap-brace-label-mid">M</span></th>
             <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-high">H</span></th>
           </tr>
         </thead>
@@ -1001,10 +996,10 @@
             <th class="ap-brace-th-mid">Mid</th>
             <th class="ap-brace-th-high">High</th>
             <th class="ap-acc-th-combo"><span class="ap-brace-label-low">L</span><span class="ap-brace-label-low">L</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-low">L</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">M</span><span class="ap-brace-label-mid">M</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-low">L</span></th>
-            <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-mid">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-low">M</span><span class="ap-brace-label-low">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-low">M</span><span class="ap-brace-label-low">M</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">H</span><span class="ap-brace-label-mid">L</span></th>
+            <th class="ap-acc-th-combo"><span class="ap-brace-label-mid">H</span><span class="ap-brace-label-mid">M</span></th>
             <th class="ap-acc-th-combo"><span class="ap-brace-label-high">H</span><span class="ap-brace-label-high">H</span></th>
           </tr>
         </thead>
@@ -1052,10 +1047,29 @@
      within a row via a two-level header (a Points group, then a Relic/
      Ancient sub-header colored the same sky/orange as Low/High
      elsewhere) rather than doubling every row into a separate Relic
-     line and Ancient line. Reuses the Accessory panel's own
+     line and Ancient line. 14 Points gets a single merged column
+     instead of its own Relic/Ancient pair - that grade split doesn't
+     unlock until 17p investment (every lookup table above agrees
+     Relic|14P === Ancient|14P), so showing two identical-reading
+     columns there was pure duplication; see computeArkGridComparison's
+     own points6() comment for the one row (Smoldering's Burn estimate)
+     where they aren't quite bit-identical and why a single Relic-grade
+     value still stands in for both. Reuses the Accessory panel's own
      .ap-acc-table-scroll/.ap-acc-combo-table pattern for the wider-
      than-narrow-viewport table, same reasoning as that panel's combo
-     columns. -->
+     columns.
+
+     Core/14 Points deliberately do NOT use rowspan="2" (tried first,
+     reverted) - a rowspan cell's border-bottom doesn't get a real
+     border-collapse partner on its own far edge, so its bottom line had
+     to be faked with box-shadow instead of a real border. That shadow
+     and its neighbors' real collapsed borders are two different paint
+     paths meeting at the same boundary pixel, which rendered as a
+     visibly brighter seam right where the 14 Points/17 Points columns
+     meet. Real row-2 cells for Core/14 Points (blank filler cells in
+     row 1 just to hold that column's width/height) give every header
+     cell in this table the same real, collapsed border-bottom - one
+     paint path table-wide, so there's nothing left to mismatch. -->
 <details class="ap-arkgrid-compare">
   <summary>Chaos Core Comparison</summary>
   <div class="ap-brace-compare-body">
@@ -1064,14 +1078,14 @@
       <table class="ap-brace-compare-table ap-acc-combo-table ap-arkgrid-table">
         <thead>
           <tr>
-            <th class="ap-brace-th-label" rowspan="2">Core</th>
-            <th class="ap-arkgrid-th-group" colspan="2">14 Points</th>
+            <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
+            <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
             <th class="ap-arkgrid-th-group" colspan="2">17 Points</th>
             <th class="ap-arkgrid-th-group" colspan="2">20 Points</th>
           </tr>
           <tr>
-            <th class="ap-brace-th-low">Relic</th>
-            <th class="ap-brace-th-high">Ancient</th>
+            <th class="ap-brace-th-label">Core</th>
+            <th>14 Points</th>
             <th class="ap-brace-th-low">Relic</th>
             <th class="ap-brace-th-high">Ancient</th>
             <th class="ap-brace-th-low">Relic</th>

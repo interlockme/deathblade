@@ -2224,12 +2224,17 @@
       return mult / baselineMult - 1;
     }
 
-    // Builds one row's 6 Points x Grade cells from a single per-grade
-    // gain function - every Core type below is one call to this.
+    // Builds one row's 5 cells from a single per-grade gain function:
+    // one merged 14 Points cell (Relic/Ancient are the same core
+    // investment before 17p unlocks any grade difference in every table
+    // above except Smoldering's flat-by-grade Burn estimate - see that
+    // table's own comment - so a single Relic-grade value stands in for
+    // both there too, rather than the table carrying two columns that
+    // read as duplicates for 7 of its 8 rows), then the real Relic/
+    // Ancient pair at 17p and 20p where the grades actually diverge.
     function points6(gainFn) {
       return {
-        relic14: gainFn("Relic", "14P"),
-        ancient14: gainFn("Ancient", "14P"),
+        p14: gainFn("Relic", "14P"),
         relic17: gainFn("Relic", "17P"),
         ancient17: gainFn("Ancient", "17P"),
         relic20: gainFn("Relic", "20P"),
@@ -2720,7 +2725,16 @@
   // visible on RE; stronger "recommended 83+ Spec" warning, RE + below
   // 83 only) since those depend on the same inputs this render pass
   // already has in hand.
-  function renderBvbCard(root, prefix, side, isSurgeSpec) {
+  //
+  // rawLines (side.lines from readBvbSide) drives the single "estimated"
+  // cd-note icon beside vs No Bracelet: it used to live inline in
+  // whichever line-row had Damage+CD selected, but that made the type
+  // <select> in that one row shrink to make room for it, so its box was a
+  // visibly different width from the other two rows in the same card.
+  // Anchoring one icon to the results row instead (still only shown when
+  // at least one of the 3 free lines is actually Damage+CD) keeps every
+  // line-row the same width regardless of which line type is picked.
+  function renderBvbCard(root, prefix, side, isSurgeSpec, rawLines) {
     const card = root.querySelector(".ap-bvb-card-" + prefix);
     if (!card) return;
     const set = (selector, text) => {
@@ -2740,19 +2754,29 @@
     const isRE = !isSurgeSpec;
     if (specNote) specNote.hidden = !isRE;
     if (specWarn) specWarn.hidden = !(isRE && specInput && parseFloat(specInput.value) < 83);
+
+    const cdNoteEl = card.querySelector(".ap-bvb-cd-note");
+    if (cdNoteEl) cdNoteEl.hidden = !(rawLines || []).some((line) => line.type === "damage_cd");
   }
 
   function renderBraceletVsBracelet(root, inputs, result) {
-    renderBvbCard(root, "a", result.a, inputs.braceSurgeSpec);
-    renderBvbCard(root, "b", result.b, inputs.braceSurgeSpec);
+    renderBvbCard(root, "a", result.a, inputs.braceSurgeSpec, inputs.bvbA && inputs.bvbA.lines);
+    renderBvbCard(root, "b", result.b, inputs.braceSurgeSpec, inputs.bvbB && inputs.bvbB.lines);
 
     const noneEl = root.querySelector(".ap-bvb-no-bracelet-keystone");
     if (noneEl) noneEl.textContent = result.noBracelet.splitLabel + " + " + result.noBracelet.keystoneLabel;
 
+    // Styled as a "selected" pill (see .ap-bvb-diff in the CSS), same
+    // promoted-answer treatment as the Ark Passive section's own best-combo
+    // row/card - colored in whichever side's own accent (pink for A, teal
+    // for B) actually won, so the pill's color itself says who's ahead.
     const diffEl = root.querySelector(".ap-bvb-diff");
     if (diffEl) {
-      const winner = result.aVsB >= 0 ? "Bracelet A" : "Bracelet B";
+      const aWins = result.aVsB >= 0;
+      const winner = aWins ? "Bracelet A" : "Bracelet B";
       diffEl.textContent = winner + " wins by " + formatBvbPct(Math.abs(result.aVsB));
+      diffEl.classList.toggle("ap-bvb-diff-a", aWins);
+      diffEl.classList.toggle("ap-bvb-diff-b", !aWins);
     }
 
     const keystoneNoteEl = root.querySelector(".ap-bvb-keystone-note");
@@ -2781,13 +2805,13 @@
   }
 
   // ----- ArkGrid (Chaos Core) Comparison rendering -----
-  // Custom renderer, not renderComparisonRows above - each row shows 6
-  // numeric cells (Relic/Ancient x 14/17/20 Points) instead of a single
-  // Low/Mid/High trio, so the shared per-row-single-trio renderer
-  // doesn't fit here. No flip-footnote, same reasoning as
-  // renderAccessoryComparison: none of these rows can change the grid's
-  // best split/keystone, and a small-swing flip check wasn't worth 48
-  // extra bestPairFor() recomputes (6 cells x 8 rows).
+  // Custom renderer, not renderComparisonRows above - each row shows 5
+  // numeric cells (one merged 14 Points cell, then Relic/Ancient x 17/20
+  // Points) instead of a single Low/Mid/High trio, so the shared per-
+  // row-single-trio renderer doesn't fit here. No flip-footnote, same
+  // reasoning as renderAccessoryComparison: none of these rows can
+  // change the grid's best split/keystone, and a small-swing flip check
+  // wasn't worth 40 extra bestPairFor() recomputes (5 cells x 8 rows).
   function renderArkGridComparison(root, rows) {
     const container = root.querySelector(".ap-arkgrid-compare-rows");
     if (!container) return;
@@ -2798,9 +2822,10 @@
       labelTd.className = "ap-brace-row-label";
       labelTd.textContent = row.label;
       tr.appendChild(labelTd);
-      ["relic14", "ancient14", "relic17", "ancient17", "relic20", "ancient20"].forEach((key) => {
+      ["p14", "relic17", "ancient17", "relic20", "ancient20"].forEach((key) => {
         const td = document.createElement("td");
-        td.className = "ap-brace-tier-val ap-arkgrid-tier-val ap-arkgrid-" + (key.indexOf("relic") === 0 ? "relic" : "ancient");
+        const gradeClass = key === "p14" ? "ap-arkgrid-merged" : key.indexOf("relic") === 0 ? "ap-arkgrid-relic" : "ap-arkgrid-ancient";
+        td.className = "ap-brace-tier-val ap-arkgrid-tier-val " + gradeClass;
         td.textContent = formatPctBare(row[key]);
         tr.appendChild(td);
       });
@@ -3105,6 +3130,7 @@
     enforceKbwStoneDependency(root);
     enforceGearSupportUptimeGate(root);
     enforceBvbLineControls(root);
+    enforceBvbLineExclusivity(root);
     const inputs = readInputs(root);
     const result = computeGridAndSummary(inputs);
     renderGrid(root, result);
@@ -3176,24 +3202,49 @@
   // whichever one doesn't match the current type is hidden (and disabled,
   // so a hidden field can't leave a stray out-of-range style or receive
   // focus via Tab), so picking STR/DEX/INT visibly swaps the dropdown for
-  // an input right in place rather than adding a whole new row. Each row
-  // also carries its own "estimated" info icon, shown only for the
-  // Damage+CD line type (same caveat text as that line's row note in
-  // Bracelet Line Comparison above - see that table's "damage_cd" row).
+  // an input right in place rather than adding a whole new row. The
+  // Damage+CD line type's "estimated" caveat icon lives beside the card's
+  // vs No Bracelet result instead of here now (see renderBvbCard) - it
+  // used to sit inline in whichever row had Damage+CD selected, but that
+  // made that one row's type <select> shrink to fit the icon, so its box
+  // read as a different width than the other two rows.
   function enforceBvbLineControls(root) {
     ["a", "b"].forEach((prefix) => {
       [1, 2, 3].forEach((n) => {
         const base = ".ap-bvb-" + prefix + "-line" + n;
         const typeEl = root.querySelector(base + "-type");
         if (!typeEl) return;
-        const row = typeEl.closest(".ap-bvb-line-row");
         const tierEl = root.querySelector(base + "-tier");
         const mainStatEl = root.querySelector(base + "-mainstat");
-        const cdNoteEl = row ? row.querySelector(".ap-bvb-cd-note") : null;
         const isStatMain = typeEl.value === "stat_main";
         if (tierEl) { tierEl.hidden = isStatMain; tierEl.disabled = isStatMain; }
         if (mainStatEl) { mainStatEl.hidden = !isStatMain; mainStatEl.disabled = !isStatMain; }
-        if (cdNoteEl) cdNoteEl.hidden = typeEl.value !== "damage_cd";
+      });
+    });
+  }
+
+  // A real bracelet can only roll one line of any given type - so within
+  // a single side (A or B), once a type is picked in one of the 3 free
+  // line rows, that same option gets disabled (not hidden - it needs to
+  // stay visible so it's clear WHY it's greyed out) in the other 2 rows'
+  // type <select>s. "— Line N: None —" is exempt, since leaving multiple
+  // rows on None is normal (a bracelet doesn't need all 3 rolled), and a
+  // select's own currently-chosen option is always left enabled so it
+  // never locks itself out. Disabling rather than resetting means picking
+  // a duplicate elsewhere just can't be done in the first place, instead
+  // of silently overwriting whatever the other row already had.
+  function enforceBvbLineExclusivity(root) {
+    ["a", "b"].forEach((prefix) => {
+      const typeEls = [1, 2, 3]
+        .map((n) => root.querySelector(".ap-bvb-" + prefix + "-line" + n + "-type"))
+        .filter(Boolean);
+      if (typeEls.length < 2) return;
+      const usedValues = typeEls.map((el) => el.value);
+      typeEls.forEach((typeEl, idx) => {
+        Array.from(typeEl.options).forEach((opt) => {
+          if (opt.value === "none") { opt.disabled = false; return; }
+          opt.disabled = usedValues.some((v, otherIdx) => otherIdx !== idx && v === opt.value);
+        });
       });
     });
   }

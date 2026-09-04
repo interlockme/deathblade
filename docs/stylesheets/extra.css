@@ -3558,8 +3558,18 @@ h3 { color: var(--dbc-teal); }
      and inputs down to the point of illegibility. Each group (Crit Rate,
      Crit Damage, Crit Hit Damage, Additional Damage, ...) reads better
      as its own full-width row regardless of how much horizontal room is
-     available - there's no width at which 2-up was actually the goal. */
-  grid-template-columns: 1fr;
+     available - there's no width at which 2-up was actually the goal.
+     minmax(0, 1fr) rather than a bare 1fr - same reasoning as the BvB
+     card grid further down: a bare 1fr track's default minimum is
+     auto (the widest child's min-content), not 0, so on narrow phone
+     widths the field rows inside .ap-calc-group (label + select side by
+     side) were forcing this whole column - and with it the page - wider
+     than the viewport instead of shrinking to fit. This is what the
+     min-width: 0 on .ap-calc-gear/.ap-calc-live in the max-width: 900px
+     block below is for too; that one stops the flex item itself from
+     refusing to shrink, this one stops the grid track inside it from
+     doing the same thing one level down. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.9em;
   align-content: start;
   /* align-items defaults to stretch, which was forcing every group in a row
@@ -3635,6 +3645,23 @@ h3 { color: var(--dbc-teal); }
   .md-typeset .ap-calc-layout {
     display: flex;
     flex-direction: column;
+    /* The grid rule above sets align-items: start (each column sized to
+       its own content, not stretched - correct for the 2-column grid,
+       where .ap-calc-gear/.ap-calc-live sit side by side and shouldn't
+       match each other's height). That value was leaking straight into
+       this flex layout too, since this block only overrides display/
+       flex-direction. For a single-column flex stack that's the wrong
+       cross-axis behavior: align-items: start makes each column take a
+       shrink-to-fit width (clamped by max-content, not by the actual
+       available space) instead of the full column width, so anything
+       inside wider than the viewport - a long Party & Positioning field
+       label, in particular - just kept its natural width and pushed the
+       card, the column, and the whole page wider instead of wrapping.
+       stretch forces both columns to the real available width so their
+       own content (already fixed to wrap/shrink correctly - see
+       .ap-calc-field-row label.ap-calc-field-label and the minmax(0,1fr)
+       tracks) actually gets a chance to. */
+    align-items: stretch;
   }
   /* Party toggles + grid + summary read before the fill-once gear list on
      small screens, since that's the part worth seeing without scrolling
@@ -3642,6 +3669,24 @@ h3 { color: var(--dbc-teal); }
   .md-typeset .ap-calc-live {
     position: static;
     order: -1;
+  }
+  /* Same bare-track story as the BvB grid fix below (minmax(0,1fr)), just
+     showing up as a flex item instead of a grid track here: switching to
+     flex-direction:column above drops the minmax(260px,1fr)/minmax(300px,
+     1.15fr) tracks that used to cap these, but a flex item's own min-width
+     still defaults to auto (its content's intrinsic min width), not 0. On
+     phone widths that let .ap-calc-gear's field rows (label + select/input
+     side-by-side) force the whole column - and with it the page - wider
+     than the viewport instead of shrinking, since nothing downstream of
+     the flex item was actually asking it to fit. min-width: 0 on both
+     columns lets them shrink to the viewport so each row's own wrapping/
+     ellipsis rules (already correct) can take over. Still needed even
+     with align-items: stretch above - stretch sets the size, min-width:0
+     is what lets that size actually be smaller than the content's default
+     minimum. */
+  .md-typeset .ap-calc-gear,
+  .md-typeset .ap-calc-live {
+    min-width: 0;
   }
 }
 
@@ -3680,7 +3725,20 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-calc-field-row label.ap-calc-field-label {
   font-size: 0.82em;
   color: var(--dbc-lilac);
-  flex: 1;
+  /* flex: 1 1 auto (not the flex:1 shorthand's 1 1 0%) + min-width: 0.
+     flex-basis:0% (what flex:1 sets) resolves as "content" against
+     indefinite space, which is exactly what this label's available
+     space becomes once its column runs out of room on a narrow phone -
+     so instead of wrapping, a long label like "Support: Passionate
+     Dance (Evo Dmg)" was rendering at its full single-line width and
+     forcing the whole row (and the sticky Party & Positioning card,
+     and the whole right-hand column) wider than the viewport. min-
+     width: 0 alone doesn't fix this - it only overrides the *other*
+     flex auto-min-size quirk, not this one. flex-basis: auto sizes
+     from the label's own natural content instead, which wraps
+     correctly once min-width: 0 is also in play. */
+  flex: 1 1 auto;
+  min-width: 0;
 }
 .md-typeset .ap-calc-field-row select,
 .md-typeset .ap-calc-field-row input[type="number"] {
@@ -3965,12 +4023,18 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-calc-stat-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0, 1fr) rather than bare 1fr in both rules below - same bare-
+     track story as .ap-calc-gear and the BvB grid: a bare 1fr's default
+     minimum is its content's min-content, not 0, so on phone widths this
+     grid (and the .ap-calc-live column it lives in) was refusing to
+     shrink below its widest stat card's content instead of fitting the
+     viewport. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 0.8em;
 }
 @media screen and (max-width: 480px) {
   .md-typeset .ap-calc-stat-cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 .md-typeset .ap-stat-card {
@@ -4421,6 +4485,20 @@ h3 { color: var(--dbc-teal); }
      breathing room, reading as overlapping it. */
   padding: 0.5em 0.85em 0.7em;
   border-bottom: none;
+  /* .ap-gear-cards below is a deliberate auto-fit grid with a hard
+     minmax(400px, 1fr) floor per card (see that rule's own comment for
+     why - squeezing either card below its ~392px min-content crushes
+     labels/selects). Nothing was actually honoring that floor on phones
+     narrower than ~400px, though: this div had no width constraint of
+     its own, so the grid just pushed it - and the whole page - wider
+     than the viewport instead. Same fix as .ap-acc-table-scroll further
+     down (a real, pre-existing bug in the same family, not one this
+     session introduced): scroll sideways here instead of overflowing
+     the page. No-op at the other .ap-brace-compare-inputs usage further
+     down (Bracelet Line Comparison's plain field rows), which never has
+     anything wide enough to scroll. */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 /* Gearing's two cards (Weapon Power/Main Stat, and Attack Power %
    sources) stacked full-width, one after another - same visual language
@@ -4621,6 +4699,21 @@ h3 { color: var(--dbc-teal); }
    specificity as that base rule (a bare class selector loses to it). */
 .md-typeset .ap-brace-compare-table th.ap-arkgrid-th-group {
   text-align: center;
+}
+/* Chaos Core Comparison reuses .ap-brace-th-low/-high for its Relic/
+   Ancient sub-headers (matching Low/High's own coloring convention
+   elsewhere), but Relic gets its own red here instead of Low's blue -
+   scoped to just this table so Bracelet/Accessory's actual Low columns
+   elsewhere keep their blue. Ancient keeps the shared High/orange as-is. */
+.md-typeset .ap-arkgrid-table th.ap-brace-th-low {
+  color: var(--dbc-red);
+}
+/* The merged 14 Points column no longer needs the group-header center
+   treatment above - it's just one column (not a 2-column Relic/Ancient
+   spread to center over), so it inherits the base th's right-align and
+   lines up with the right-aligned % figures underneath it. */
+.md-typeset .ap-arkgrid-table th.ap-brace-th-low {
+  color: var(--dbc-red);
 }
 .md-typeset .ap-brace-compare-table td {
   padding: 0.45em 0.6em;
@@ -4857,26 +4950,19 @@ h3 { color: var(--dbc-teal); }
 /* STR/DEX/INT's free-typed 10000-16000 amount takes the Low/Mid/High tier
    dropdown's exact place in the row (see enforceBvbLineControls - only one
    of the two is ever visible at a time), so it reuses that same fixed
-   width rather than the row reflowing when a line switches to/from
-   STR/DEX/INT. A touch wider than the tier select since it needs to fit a
-   5-digit number, and the amber-tinted border marks it as a free-typed
+   width - matched exactly to .ap-bvb-line-tier's 4.6em (rather than the
+   slightly wider 5.4em this used before) so a line's tier/mainstat slot
+   lines up at the same x position across every row regardless of which
+   line type occupies it. The number spinner still fits a 5-digit value
+   fine at this width; the amber-tinted border marks it as a free-typed
    value standing in for a dropdown rather than another plain field. */
 .md-typeset .ap-bvb-line-row .ap-bvb-line-mainstat {
   flex: 0 0 auto;
-  width: 5.4em;
+  width: 4.6em;
   border-color: rgba(224, 169, 64, 0.5);
 }
 .md-typeset .ap-bvb-line-row .ap-bvb-line-mainstat:focus {
   border-color: #e0a940;
-}
-/* Per-row "estimated" note - only the Damage+CD line type gets one (see
-   enforceBvbLineControls), same caveat text as that line's row note in
-   Bracelet Line Comparison's own table above. Reuses .ap-brace-info-icon's
-   look, just anchored at the end of the line-picker row instead of next to
-   a table label. */
-.md-typeset .ap-bvb-line-row .ap-bvb-cd-note {
-  flex: 0 0 auto;
-  margin-left: 0;
 }
 .md-typeset .ap-bvb-results {
   margin-top: 0.7em;
@@ -4891,6 +4977,22 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.9em;
   opacity: 0.75;
 }
+/* Groups the vs No Bracelet value with its "estimated" caveat icon (only
+   shown when one of the 3 free lines is Damage+CD - see renderBvbCard) so
+   the pair reads as one unit sitting at the row's right edge, instead of
+   the icon becoming justify-content: space-between's third participant
+   and landing in the middle of the row on its own. This is also *why* the
+   icon moved here from the line-picker row in the first place: anchored
+   beside a value that's always the same width, it never shifts anything
+   else's layout the way it did living inline in a <select> row. */
+.md-typeset .ap-bvb-vsnone-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+.md-typeset .ap-bvb-vsnone-wrap .ap-bvb-cd-note {
+  margin-left: 0;
+}
 .md-typeset .ap-bvb-summary {
   margin-top: 0.9em;
   text-align: center;
@@ -4898,9 +5000,44 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-bvb-summary p {
   margin: 0.3em 0;
 }
+/* "Running neither" is context for the two cards above (what the fallback
+   keystone would be with no bracelet at all) - useful, but not the
+   takeaway of this whole subsection, so it's pulled down in size/weight
+   to read as a footnote rather than competing with the wins-by verdict
+   right below it. */
+.md-typeset .ap-bvb-neither {
+  font-size: 0.82em;
+  color: var(--dbc-lavender);
+  opacity: 0.8;
+}
+/* The actual verdict - which bracelet wins, and by how much - gets the
+   same "selected answer" treatment as the Ark Passive section's own
+   best-combo row/card (.ap-calc-result-row-best / .ap-stat-card-best):
+   a colored pill instead of plain centered text, so it's the one thing
+   in the whole subsection the eye can't miss. Colored dynamically by JS
+   (.ap-bvb-diff-a / -b) in whichever side's own accent actually won,
+   matching that bracelet's card border (pink for A, teal for B) so the
+   pill's color alone echoes back to the winning card above it. */
 .md-typeset .ap-bvb-diff {
+  display: inline-block;
+  margin-top: 0.15em;
+  padding: 0.35em 1.1em;
+  border-radius: 999px;
   font-weight: 700;
+  font-size: 1.05em;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.04);
   color: var(--dbc-lilac);
+}
+.md-typeset .ap-bvb-diff-a {
+  border-color: rgba(var(--dbc-pink-rgb), 0.5);
+  background-color: rgba(var(--dbc-pink-rgb), 0.1);
+  color: var(--dbc-pink);
+}
+.md-typeset .ap-bvb-diff-b {
+  border-color: rgba(var(--dbc-teal-rgb), 0.5);
+  background-color: rgba(var(--dbc-teal-rgb), 0.1);
+  color: var(--dbc-teal);
 }
 /* Stronger sibling of .ap-brace-info-icon's mild "i" - solid amber fill
    instead of just an outline, so the Spec row's "you're below the
