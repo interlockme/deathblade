@@ -370,6 +370,7 @@
   // the same way - defensive/utility, not DPS - leaving just the damage-
   // relevant half of each modeled below.
   const ARK_SWIFT_CDMG_TABLE = {
+    "None|0P": 0,
     "Relic|14P": 0.014,
     "Relic|17P": 0.042,
     "Relic|18P": 0.0465,
@@ -382,6 +383,7 @@
     "Ancient|20P": 0.0835,
   };
   const ARK_CRUSHING_CRATE_TABLE = {
+    "None|0P": 0,
     "Relic|14P": 0.0065,
     "Relic|17P": 0.0195,
     "Relic|18P": 0.0216,
@@ -441,12 +443,18 @@
   // Chaos Core: Weapon - Weapon Power's own counterpart to
   // GEAR_AP_CHAOS_STAR_TABLE (Chaos Core: Attack) above, same shape and
   // same source (the core's own in-game tooltip at each investment
-  // tier). Unlike Chaos Core: Attack, this one has no existing "current
-  // gear" field feeding it into the Gearing section's own totals - it's
-  // only ever used as an ArkGrid candidate, valued as an addition on top
-  // of your real current Weapon Power, same as the Bracelet panel's own
-  // flat-WP-granting rows.
+  // tier). Attack and Weapon are the SAME Chaos Core slot in-game
+  // (mutually exclusive - equipping one means you don't have the
+  // other), tracked via its own .ap-gear-weapon-core field (see
+  // readInputs' gearWeaponCore) with the same mutual-reset wiring
+  // flashyAtk/stableAtk get. "None|0P" (0/0) added on top of the raw
+  // tooltip data so a reader with neither core equipped has a real
+  // option to select, matching GEAR_AP_CHAOS_STAR_TABLE's own "None|0P"
+  // entry. No "10 Points" flat-only stage is modeled here (unlike Chaos
+  // Core: Attack's "Any|10P") - no reference figure for Weapon's payout
+  // at that tier was available; add one if you have it.
   const ARK_WEAPON_CORE_TABLE = {
+    "None|0P": { pct: 0, flat: 0 },
     "Relic|14P": { pct: 0.75, flat: 1300 },
     "Relic|17P": { pct: 2.25, flat: 3900 },
     "Relic|18P": { pct: 2.48, flat: 3900 },
@@ -753,6 +761,13 @@
 
       flashyAtk: getSelect(root, ".ap-flashy-atk", "Ancient 17P"),
       stableAtk: getSelect(root, ".ap-stable-atk", "None|0P"),
+      // Chaos Core: Swift - Crit Dmg only (see ARK_SWIFT_CDMG_TABLE's own
+      // comment for why only that half is modeled). Same "current gear"
+      // tracked-field treatment as Flashy/Stable just above, and the same
+      // equipment-slot exclusivity with them - Flashy, Stable, and Swift
+      // are three options for the SAME Chaos Core slot, so only one can
+      // ever be a real tier at once (see normalizeChaosCoreExclusivity).
+      swiftCore: getSelect(root, ".ap-swift-core", "None|0P"),
 
       critSyn1: getCheckbox(root, ".ap-crit-syn1", false),
       critSyn2: getCheckbox(root, ".ap-crit-syn2", false),
@@ -825,6 +840,13 @@
       gearApKazeros: getCheckbox(root, ".ap-gear-ap-kazeros", false),
       gearApGuardian: getCheckbox(root, ".ap-gear-ap-guardian", false),
       gearApChaosStar: getSelect(root, ".ap-gear-ap-chaos-star", "Relic|20P"),
+      // Chaos Core: Weapon - the same physical Chaos Core slot as
+      // gearApChaosStar above (mutually exclusive, see that field's own
+      // comment and ARK_WEAPON_CORE_TABLE's). Defaults to "None|0P"
+      // rather than mirroring gearApChaosStar's real-tier default,
+      // since both defaulting to a real tier at once would contradict
+      // the exclusivity this field exists to enforce.
+      gearWeaponCore: getSelect(root, ".ap-gear-weapon-core", "None|0P"),
       // Astrogem Atk. Power Level - independent of the Additional
       // Damage group's Astrogem Level field above, see
       // gearAstrogemApPercent's own comment.
@@ -859,14 +881,14 @@
       // disabled in the UI otherwise, see enforceGearSupportUptimeGate).
       // Scales the SIZE of the buff, not whether it applies.
       gearSupportUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-support-uptime", 98))),
-      // Internal-only, never DOM-read or shown in any UI - a hook for
-      // computeArkGridComparison to feed a candidate Chaos Core's Crit
-      // Rate/Crit Dmg contribution through the SAME tested critRateTotal/
-      // computeShared math every other Crit Rate/Crit Dmg source already
-      // goes through, instead of duplicating that formula. Always 0 for
-      // the real inputs object; only ever set on a throwaway clone.
-      arkGridCritRate: 0,
-      arkGridCritDmg: 0,
+      // Chaos Core: Crushing - Crit Rate only (see ARK_CRUSHING_CRATE_TABLE's
+      // own comment). A DIFFERENT Chaos Core slot from Flashy/Stable/Swift
+      // above, so no exclusivity wiring against those. In-game it's
+      // actually mutually exclusive with Absorbing/Smoldering instead, but
+      // neither of those has a tracked "current gear" field of its own to
+      // enforce that against (see computeArkGridComparison's own comment
+      // on that pair) - nothing to wire until one does.
+      crushingCore: getSelect(root, ".ap-crushing-core", "None|0P"),
     };
   }
 
@@ -886,7 +908,7 @@
       (KBW_TABLE[inputs.kbw] || 0) +
       (KBW_STONE_TABLE[inputs.kbwStone] || 0) +
       STRIKE_CRIT_DMG +
-      (inputs.arkGridCritDmg || 0);
+      (ARK_SWIFT_CDMG_TABLE[inputs.swiftCore] || 0);
 
     // Base on-crit damage - each Crit Hit Damage Synergy toggle adds 8%
     // multiplicatively, same mechanism, independent sources (e.g. party
@@ -982,7 +1004,7 @@
     const n = inputs.critSyn1 ? 0.1 : 0;
     const o = inputs.critSyn2 ? 0.1 : 0;
     const p = (inputs.backAttackRate / 100) * 0.1;
-    return c + d + e + f + g + h + i + k + n + o + p + (inputs.arkGridCritRate || 0);
+    return c + d + e + f + g + h + i + k + n + o + p + (ARK_CRUSHING_CRATE_TABLE[inputs.crushingCore] || 0);
   }
 
   function evoDmgTotal(keenSenseLv, limitBreakLv, shared) {
@@ -2156,13 +2178,14 @@
   // ----- ArkGrid (Chaos Core) Comparison -----
   // Same "of the Cores I have data for, which is worth the most DPS"
   // question as Bracelet/Accessory above, but needs no inputs of its
-  // own: 3 of its 9 effect types (Chaos Core: Flashy/Stable/Attack)
-  // already have "current gear" tracking elsewhere on this page -
-  // flashyAtk/stableAtk feed the main grid directly, gearApChaosStar
-  // feeds the Gearing section - so their candidates are valued by
-  // zeroing those SAME existing fields first, exactly like Bracelet
-  // zeroes its own tracked fields before valuing a candidate. The other
-  // 5 included types (Swift/Crushing/Smoldering/Absorbing/Weapon) have
+  // own: 6 of its 9 effect types (Chaos Core: Flashy/Stable/Swift/
+  // Attack/Weapon/Crushing) already have "current gear" tracking
+  // elsewhere on this page - flashyAtk/stableAtk/swiftCore feed the
+  // main grid directly, gearApChaosStar/gearWeaponCore/crushingCore
+  // feed the Gearing section and main grid respectively - so their
+  // candidates are valued by zeroing those SAME existing fields first,
+  // exactly like Bracelet zeroes its own tracked fields before valuing
+  // a candidate. The other 2 included types (Smoldering/Absorbing) have
   // no existing field to double-count against, so their candidates are
   // valued as a straight addition on top of your current totals - the
   // same treatment the Bracelet panel's own 5 WP/AP rows already give
@@ -2193,8 +2216,35 @@
     const arkNB = Object.assign({}, inputs, {
       flashyAtk: "None",
       stableAtk: "None|0P",
+      swiftCore: "None|0P",
       gearApChaosStar: "None|0P",
+      gearWeaponCore: "None|0P",
+      crushingCore: "None|0P",
     });
+    // Chaos Core: Attack's own AP/flat-AP contribution zeroes cleanly
+    // above (it's a separate term added on top of raw stats - see
+    // gearApTotal's flatAp/percentApMult params). A currently-equipped
+    // Chaos Core: WEAPON is different: its WP/WP% is baked directly
+    // into whatever the reader typed into Weapon Power, so there's no
+    // separate term to zero - it has to be reverse-derived out of
+    // gearWp instead, using the exact inverse of the fold-in formula
+    // the Chaos Core: Weapon row below uses to add a NEW candidate core
+    // (newWp = wp*(1+pct/wpPercentMult) + flat*wpPercentMult):
+    //   coreless_wp = (wp - flat*wpPercentMult) / (1 + pct/100/wpPercentMult)
+    // Without this, a reader who actually runs Weapon Core today would
+    // see an inflated "switch to Chaos Core: Attack" gain, since the
+    // baseline would still silently include the Weapon Core WP they'd
+    // actually be giving up. Clamped at 0 in case of an inconsistent
+    // manual edit (e.g. a Weapon Core tier picked with too little
+    // Weapon Power entered to have plausibly included it).
+    const currentWeaponCore = ARK_WEAPON_CORE_TABLE[inputs.gearWeaponCore] || { pct: 0, flat: 0 };
+    if (currentWeaponCore.pct || currentWeaponCore.flat) {
+      const wpPercentMultNB = 1 + gearWpPercentTotal(arkNB) / 100;
+      arkNB.gearWp = Math.max(
+        0,
+        (arkNB.gearWp - currentWeaponCore.flat * wpPercentMultNB) / (1 + currentWeaponCore.pct / 100 / wpPercentMultNB)
+      );
+    }
     const sharedNB = computeShared(arkNB);
     const baselineMult = combinedMultiplier(arkNB, sharedNB, keenSense, limitBreak, pair);
     const addDmgBaseline = pair.indexOf("master") !== -1 ? sharedNB.addDmgMaster : sharedNB.addDmgBase;
@@ -2203,10 +2253,9 @@
     // interact with the grid non-linearly (crit rate's cap, Master's
     // +7% headroom, etc.), so - same as every Bracelet Crit Rate/Crit
     // Dmg row - these go through a full combinedMultiplier recompute
-    // rather than a closed-form shortcut. Swift/Crushing have no field
-    // of their own to set, so they go through the arkGridCritDmg/
-    // arkGridCritRate passthrough fields instead (see readInputs' own
-    // comment on those two).
+    // rather than a closed-form shortcut. Swift/Crushing each have their
+    // own tracked field now (swiftCore/crushingCore, zeroed in arkNB
+    // above), same as Flashy/Stable.
     function critLikeGain(mutateFn) {
       const cloned = Object.assign({}, arkNB);
       mutateFn(cloned);
@@ -2260,19 +2309,18 @@
       ...points6((grade, pts) => STABLE_ATK_TABLE[grade + "|" + pts] / (1 + addDmgBaseline)),
     });
 
-    // Chaos Core: Swift - Crit Dmg only (Attack Speed excluded). No
-    // existing field, so routed through the arkGridCritDmg passthrough.
+    // Chaos Core: Swift - Crit Dmg only (Attack Speed excluded). Own
+    // tracked field (zeroed in arkNB above), same treatment as Flashy.
     rows.push({
       label: "Chaos Core: Swift - Crit Dmg",
-      ...points6((grade, pts) => critLikeGain((c) => { c.arkGridCritDmg = ARK_SWIFT_CDMG_TABLE[grade + "|" + pts]; })),
+      ...points6((grade, pts) => critLikeGain((c) => { c.swiftCore = grade + "|" + pts; })),
     });
 
     // Chaos Core: Crushing - Crit Rate only (Weapon Power Cooldown
-    // reduction excluded). No existing field, routed through the
-    // arkGridCritRate passthrough.
+    // reduction excluded). Own tracked field (zeroed in arkNB above).
     rows.push({
       label: "Chaos Core: Crushing - Crit Rate",
-      ...points6((grade, pts) => critLikeGain((c) => { c.arkGridCritRate = ARK_CRUSHING_CRATE_TABLE[grade + "|" + pts]; })),
+      ...points6((grade, pts) => critLikeGain((c) => { c.crushingCore = grade + "|" + pts; })),
     });
 
     // Chaos Core: Smoldering - Boss Dmg (untracked elsewhere, a flat
@@ -2297,12 +2345,11 @@
 
     // ----- Chaos Core: Attack / Weapon - reuse the same gearApTotal
     // machinery as the Bracelet panel's own 5 WP/AP rows, computed once
-    // from arkNB (which already excludes your current Chaos Core:
-    // Attack via the zeroed gearApChaosStar - Chaos Core: Weapon has no
-    // existing field to exclude in the first place, so this baseline
-    // doubles as its "no Weapon Core" baseline too, with nothing further
-    // to zero). Requires real Weapon Power/Main Stat, same guard the
-    // Bracelet panel's own WP/AP rows use. -----
+    // from arkNB (which already excludes both your current Chaos Core:
+    // Attack, via the zeroed gearApChaosStar, and your current Chaos
+    // Core: Weapon, via the reverse-derived gearWp above - see that
+    // block's own comment). Requires real Weapon Power/Main Stat, same
+    // guard the Bracelet panel's own WP/AP rows use. -----
     {
       const wp = arkNB.gearWp;
       const mainStat = arkNB.gearMainStat;
@@ -2448,6 +2495,8 @@
 
     setDisplay("#ap-flashy-atk", FLASHY_ATK_TABLE[inputs.flashyAtk] || 0);
     setDisplay("#ap-stable-atk", stableAtkValue(inputs.stableAtk));
+    setDisplay("#ap-swift-core", ARK_SWIFT_CDMG_TABLE[inputs.swiftCore] || 0);
+    setDisplay("#ap-crushing-core", ARK_CRUSHING_CRATE_TABLE[inputs.crushingCore] || 0);
     const chaosAttackSpan = root.querySelector('.ap-value-display[data-for="ap-gear-ap-chaos-star"]');
     if (chaosAttackSpan) {
       const chaosAttack = GEAR_AP_CHAOS_STAR_TABLE[inputs.gearApChaosStar] || { pct: 0, flat: 0 };
@@ -2457,6 +2506,17 @@
         chaosAttackSpan.textContent = "(" + pctText + " + " + flatText + ")";
       } else {
         chaosAttackSpan.textContent = "";
+      }
+    }
+    const weaponCoreSpan = root.querySelector('.ap-value-display[data-for="ap-gear-weapon-core"]');
+    if (weaponCoreSpan) {
+      const weaponCore = ARK_WEAPON_CORE_TABLE[inputs.gearWeaponCore] || { pct: 0, flat: 0 };
+      if (weaponCore.pct || weaponCore.flat) {
+        const pctText = weaponCore.pct ? weaponCore.pct.toFixed(2) + "%" : "0%";
+        const flatText = weaponCore.flat ? weaponCore.flat.toString() + " WP" : "0 WP";
+        weaponCoreSpan.textContent = "(" + pctText + " + " + flatText + ")";
+      } else {
+        weaponCoreSpan.textContent = "";
       }
     }
 
@@ -2962,6 +3022,7 @@
     loadInputs(root, newId);
     setActivePresetId(newId);
     normalizeChaosCoreExclusivity(root);
+    normalizeWeaponCoreExclusivity(root);
     updatePresetButtonStates(root);
     update(root);
   }
@@ -3081,6 +3142,7 @@
     resetFieldsToDefaults(root);
     applyFieldData(root, data);
     normalizeChaosCoreExclusivity(root);
+    normalizeWeaponCoreExclusivity(root);
     saveInputs(root, activeId);
     update(root);
     showPopoverMessage(popoverEl, "Imported into Preset " + activeId + ".", false);
@@ -3141,16 +3203,40 @@
     });
   }
 
-  // Chaos Core: Flashy Attack and Chaos Core: Stable Attack are both the
-  // same Chaos Core equipment slot, so only one can ever actually be
-  // equipped - picking a real option in one resets the other back to
-  // "None" rather than letting both count as active at once.
+  // Chaos Core: Flashy Attack, Chaos Core: Stable Attack, and Chaos
+  // Core: Swift are all the same Chaos Core equipment slot, so only one
+  // can ever actually be equipped - picking a real option in one resets
+  // the other two back to "None" rather than letting more than one
+  // count as active at once. Priority when normalizing a possibly-stale
+  // set (load/preset-switch/import, where more than one could already
+  // be non-None): Stable wins over Flashy, which wins over Swift - the
+  // same Stable-over-Flashy priority this function always had, just
+  // extended one level further now that a third option shares the slot.
   function normalizeChaosCoreExclusivity(root) {
     const flashyEl = root.querySelector(".ap-flashy-atk");
     const stableEl = root.querySelector(".ap-stable-atk");
-    if (!flashyEl || !stableEl) return;
-    if (flashyEl.value !== "None" && stableEl.value !== "None|0P") {
+    const swiftEl = root.querySelector(".ap-swift-core");
+    if (!flashyEl || !stableEl || !swiftEl) return;
+    if (stableEl.value !== "None|0P") {
       flashyEl.value = "None";
+      swiftEl.value = "None|0P";
+    } else if (flashyEl.value !== "None") {
+      swiftEl.value = "None|0P";
+    }
+  }
+
+  // Same idea as normalizeChaosCoreExclusivity above, for the OTHER
+  // Chaos Core slot: Attack and Weapon can't both be real tiers on a
+  // loaded/imported setup either. Called wherever normalizeChaosCore
+  // Exclusivity is (init, preset switch, import) rather than only via
+  // the live change-listener pair, so a stale/hand-edited export with
+  // both set can't slip past.
+  function normalizeWeaponCoreExclusivity(root) {
+    const chaosStarEl = root.querySelector(".ap-gear-ap-chaos-star");
+    const weaponCoreEl = root.querySelector(".ap-gear-weapon-core");
+    if (!chaosStarEl || !weaponCoreEl) return;
+    if (chaosStarEl.value !== "None|0P" && weaponCoreEl.value !== "None|0P") {
+      weaponCoreEl.value = "None|0P";
     }
   }
 
@@ -3258,20 +3344,49 @@
       const activeId = getActivePresetId();
       loadInputs(root, activeId);
       normalizeChaosCoreExclusivity(root);
+      normalizeWeaponCoreExclusivity(root);
       normalizeRaidContributionExclusivity(root);
       updatePresetButtonStates(root);
 
       const flashyEl = root.querySelector(".ap-flashy-atk");
       const stableEl = root.querySelector(".ap-stable-atk");
-      if (flashyEl && stableEl) {
+      const swiftEl = root.querySelector(".ap-swift-core");
+      if (flashyEl && stableEl && swiftEl) {
         // Attached before the generic input/select loop below, so the
-        // opposing select is already reset by the time that loop's own
+        // opposing selects are already reset by the time that loop's own
         // "change" listener runs update()/saveInputs() for this element.
         flashyEl.addEventListener("change", () => {
-          if (flashyEl.value !== "None") stableEl.value = "None|0P";
+          if (flashyEl.value !== "None") {
+            stableEl.value = "None|0P";
+            swiftEl.value = "None|0P";
+          }
         });
         stableEl.addEventListener("change", () => {
-          if (stableEl.value !== "None|0P") flashyEl.value = "None";
+          if (stableEl.value !== "None|0P") {
+            flashyEl.value = "None";
+            swiftEl.value = "None|0P";
+          }
+        });
+        swiftEl.addEventListener("change", () => {
+          if (swiftEl.value !== "None|0P") {
+            flashyEl.value = "None";
+            stableEl.value = "None|0P";
+          }
+        });
+      }
+
+      const chaosStarEl = root.querySelector(".ap-gear-ap-chaos-star");
+      const weaponCoreEl = root.querySelector(".ap-gear-weapon-core");
+      if (chaosStarEl && weaponCoreEl) {
+        // Same "attached before the generic loop" timing as flashy/
+        // stable above - Chaos Core: Attack and Chaos Core: Weapon are
+        // the same equipment slot, so only one can ever be a real tier
+        // at once.
+        chaosStarEl.addEventListener("change", () => {
+          if (chaosStarEl.value !== "None|0P") weaponCoreEl.value = "None|0P";
+        });
+        weaponCoreEl.addEventListener("change", () => {
+          if (weaponCoreEl.value !== "None|0P") chaosStarEl.value = "None|0P";
         });
       }
 

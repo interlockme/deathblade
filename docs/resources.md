@@ -90,6 +90,23 @@
       </div>
     </div>
     <div class="ap-calc-field-row">
+      <label class="ap-calc-field-label" for="ap-crushing-core" title="Chaos Core: Crushing's Crit Rate. A different Chaos Core slot from Flashy/Stable/Swift (Crit Hit Damage / Crit Damage cards), so picking a tier here doesn't reset those. In-game it's actually mutually exclusive with Absorbing/Smoldering instead, but neither of those has a tracked field here to enforce that against.">Chaos Core: Crushing</label>
+      <span class="ap-value-display" data-for="ap-crushing-core"></span>
+      <select id="ap-crushing-core" class="ap-crushing-core">
+        <option value="None|0P" selected>None</option>
+        <option value="Relic|14P">Relic 14P</option>
+        <option value="Relic|17P">Relic 17P</option>
+        <option value="Relic|18P">Relic 18P</option>
+        <option value="Relic|19P">Relic 19P</option>
+        <option value="Relic|20P">Relic 20P</option>
+        <option value="Ancient|14P">Ancient 14P</option>
+        <option value="Ancient|17P">Ancient 17P</option>
+        <option value="Ancient|18P">Ancient 18P</option>
+        <option value="Ancient|19P">Ancient 19P</option>
+        <option value="Ancient|20P">Ancient 20P</option>
+      </select>
+    </div>
+    <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-adrenaline">Adrenaline</label>
       <span class="ap-value-display" data-for="ap-adrenaline"></span>
       <select id="ap-adrenaline" class="ap-adrenaline">
@@ -146,6 +163,23 @@
           <option value="High">10.00%</option>
         </select>
       </div>
+    </div>
+    <div class="ap-calc-field-row">
+      <label class="ap-calc-field-label" for="ap-swift-core" title="Chaos Core: Swift's Crit Dmg. Mutually exclusive with Chaos Core: Flashy Attack and Chaos Core: Stable Attack in the Crit Hit Damage card below - only one Chaos Core equips at a time, so picking a real tier here resets those back to None, and vice versa.">Chaos Core: Swift</label>
+      <span class="ap-value-display" data-for="ap-swift-core"></span>
+      <select id="ap-swift-core" class="ap-swift-core">
+        <option value="None|0P" selected>None</option>
+        <option value="Relic|14P">Relic 14P</option>
+        <option value="Relic|17P">Relic 17P</option>
+        <option value="Relic|18P">Relic 18P</option>
+        <option value="Relic|19P">Relic 19P</option>
+        <option value="Relic|20P">Relic 20P</option>
+        <option value="Ancient|14P">Ancient 14P</option>
+        <option value="Ancient|17P">Ancient 17P</option>
+        <option value="Ancient|18P">Ancient 18P</option>
+        <option value="Ancient|19P">Ancient 19P</option>
+        <option value="Ancient|20P">Ancient 20P</option>
+      </select>
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-kbw">Keen Blunt Weapon</label>
@@ -500,6 +534,23 @@
           <label class="ap-calc-field-label" for="ap-gear-wp-karma-lv" title="+0.1% Weapon Power per level, up to Lv.30 (+3%). Affects only the flat Weapon Power granted by lines below, not your Weapon Power stat itself.">Karmic Enlightenment Level</label>
           <span class="ap-value-display" data-for="ap-gear-wp-karma-lv"></span>
           <input type="number" id="ap-gear-wp-karma-lv" class="ap-gear-wp-karma-lv ap-gear-input-narrow" min="0" max="30" step="1" value="30">
+        </div>
+        <div class="ap-calc-field-row ap-gear-ap-select-row">
+          <label class="ap-calc-field-label" for="ap-gear-weapon-core" title="Chaos Core: Weapon's Weapon Power % AND Flat WP, both at once. Mutually exclusive with Chaos Core: Attack below - only one Chaos Core equips at a time, so picking a real tier here resets that one back to None, and vice versa.">Chaos Core: Weapon</label>
+          <span class="ap-value-display" data-for="ap-gear-weapon-core"></span>
+          <select id="ap-gear-weapon-core" class="ap-gear-weapon-core">
+            <option value="None|0P" selected>None</option>
+            <option value="Relic|14P">Relic 14P</option>
+            <option value="Relic|17P">Relic 17P</option>
+            <option value="Relic|18P">Relic 18P</option>
+            <option value="Relic|19P">Relic 19P</option>
+            <option value="Relic|20P">Relic 20P</option>
+            <option value="Ancient|14P">Ancient 14P</option>
+            <option value="Ancient|17P">Ancient 17P</option>
+            <option value="Ancient|18P">Ancient 18P</option>
+            <option value="Ancient|19P">Ancient 19P</option>
+            <option value="Ancient|20P">Ancient 20P</option>
+          </select>
         </div>
         <div class="ap-calc-field-row">
           <label class="ap-calc-field-label" for="ap-gear-main-stat">Main Stat (STR/DEX/INT)</label>
