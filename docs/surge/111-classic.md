@@ -56,7 +56,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 === "111 Classic ★"
 
     ```
-    9AFBA682E2AF248EC0357C6139AB39F73603D1F3583597559FDEB47ED7A071ABD2AE255CB2FF481D09EA6BDF6F653639ADCFB1F1EF01FB11A79379A36DE56B4A
+    C3F04234FA32C1729EEDFABA2234BC6B08F047143CF6F3611F2A0C9CC2A608B1E56A5A154C449B6B9BD35AFC0B3E9E3F269BE4AF161CF8CC14B26539511518B5
     ```
 
 === "Pre-Ark Grid"
@@ -64,7 +64,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     *Adds Earth Cleaver CD and uses Blade Dance's Quick Prep tripod to accommodate a lack of Ark Grid.<br>If you're a beginner, swap Raid Captain for Cursed Doll until you're more experienced.*
 
     ```
-    265B124DF8BC69A1937EB6F6DFD9E786F5710527349FFEE44D63AC2FF95F4F719F55127DDD2C326A7B608BEDF91520DB6EB86D2368CD03C3485FD5D50C3250E6
+    6E22435EC38A3B36B27F6EE93801A0ADC45A582A1D8C1F6C3B8D7052A57696552DA526A2AAE1EB722ED1F929BE107E3749DAB4E7C0737BCC237D520B3D040A34
     ```
 
 ## Ark Setup
@@ -149,6 +149,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Tip</span>Ark Passive<span class="setup-note-arrow"></span></summary>
 
 - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes.
+- In some cases (low Specialization, +CD% bracelet) Release Potential 4 + Instant Spell 2 may be preferred.
+    - This setting increases mana costs, may require the use of mana food instead of wine.
 
 </details>
 
@@ -180,7 +182,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
   {"id": "spincutter", "level": 10, "tripods": [3, 3, 1], "rune": {"tier": "epic", "name": "Galewind"}},
   {"id": "bladedance", "level": 14, "tripods": [1, 2, 2], "rune": {"tier": "epic", "name": "Galewind"}},
   {"id": "earthcleaver", "level": 14, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Vision"}},
-  {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "epic", "name": "Rage"}},
+  {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "legendary", "name": "Poison"}},
   {"id": "maelstrom", "level": 10, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
   {"id": "blitzrush", "level": 14, "tripods": [1, 1, 2], "rune": {"tier": "legendary", "name": "Galewind"}},
   {"id": "deathtrance", "subtitle": "Identity"},
@@ -197,9 +199,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
 - Use Legendary Purify on Spincutter if needed.
-- Use Legendary Bleed or Poison instead of Rage if you don't use RC or MI engravings.
-    - Each one is about 0.75% DPS in exchange for lower or no Rage buff uptime.
-    - Give the Bleed/Poison to Maelstrom and Turning Slash if you use mana food.
+- Use Legendary Bleed on Maelstrom if you use mana food instead of wine.
 
 </details>
 
@@ -282,7 +282,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 <div class="cycle-card-header"><span class="cycle-num cycle-num-2">2</span><span class="cycle-title">Main Repeating Cycle</span></div>
 <div class="rotation-line" markdown>
 <script type="application/json">
-["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "earthcleaver", "turningslash", "bladedance", "blitzrush", { "id": "surpriseattack", "situational": true }, "surge"]
+["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "earthcleaver", "turningslash", "bladedance", "blitzrush", "surpriseattack", "surge"]
 </script>
 </div>
 </div>
