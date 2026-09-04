@@ -174,7 +174,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
   {"id": "upperslash", "level": 14, "tripods": [2, 3, 2], "rune": {"tier": "legendary", "name": "Galewind"}},
   {"id": "bladedance", "level": 14, "tripods": [1, 1, 2], "rune": {"tier": "epic", "name": "Galewind"}},
   {"id": "darkaxel", "level": 10, "tripods": [1, 1, 2], "rune": {"tier": "epic", "name": "Galewind"}},
-  {"id": "headhunt", "level": 5, "tripods": [1], "rune": {"tier": "legendary", "name": "Vision"}},
+  {"id": "headhunt", "level": 4, "tripods": [1], "rune": {"tier": "legendary", "name": "Vision"}},
   {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "legendary", "name": "Poison"}},
   {"id": "maelstrom", "level": 13, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
   {"id": "deathtrance", "subtitle": "Identity"},
