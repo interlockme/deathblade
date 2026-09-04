@@ -701,6 +701,26 @@
     return !!el.checked;
   }
 
+  // Reads one side (A or B) of the Bracelet vs. Bracelet inputs into the
+  // { spec, critStat, lines } shape computeSingleBracelet expects. Each
+  // line carries both `tier` (Low/Mid/High, used by every line type except
+  // STR/DEX/INT) and `mainStat` (a direct 10000-16000 amount, used only
+  // when type is "stat_main") - see enforceBvbLineControls for why
+  // STR/DEX/INT gets a free-typed number instead of a tier dropdown, and
+  // computeSingleBracelet for where mainStat actually gets consumed.
+  function readBvbSide(root, prefix) {
+    const base = ".ap-bvb-" + prefix + "-";
+    return {
+      spec: Math.max(60, Math.min(120, getNumber(root, base + "spec", 80))),
+      critStat: Math.max(60, Math.min(120, getNumber(root, base + "crit", 80))),
+      lines: [1, 2, 3].map((n) => ({
+        type: getSelect(root, base + "line" + n + "-type", "none"),
+        tier: getSelect(root, base + "line" + n + "-tier", "Mid"),
+        mainStat: Math.max(10000, Math.min(16000, getNumber(root, base + "line" + n + "-mainstat", 14000))),
+      })),
+    };
+  }
+
   function readInputs(root) {
     return {
       critStat: Math.max(0, Math.min(750, getNumber(root, ".ap-crit-stat", 658))),
@@ -746,6 +766,11 @@
       demonDmgPct: Math.max(0, Math.min(15, getNumber(root, ".ap-brace-demon-dmg", 7))),
       braceCritStatEquipped: Math.max(60, Math.min(120, getNumber(root, ".ap-brace-crit-stat-equipped", 60))),
       braceSurgeSpec: getCheckbox(root, ".ap-brace-spec-surge", false),
+
+      // Bracelet vs. Bracelet: two full 5-line candidate bracelets, read
+      // separately - see readBvbSide/computeBraceletVsBracelet above.
+      bvbA: readBvbSide(root, "a"),
+      bvbB: readBvbSide(root, "b"),
 
       // Gearing (Weapon Power / Attack Power) - feeds only the 5
       // WP/AP bracelet lines below, entirely separate from the Ark
@@ -1193,25 +1218,22 @@
   //     Surge Deathblade use structurally different formulas (see
   //     SPEC_BASE and friends above) picked by the radio pair living
   //     alongside Demon Dmg % / Crit Stat in .ap-brace-compare-inputs.
-  function computeBraceletComparison(inputs) {
-    const gridResult = computeGridAndSummary(inputs);
-    const best = gridResult.best;
-    if (!best) return [];
-    const { keenSense, limitBreak } = best.split;
-    const pair = best.keystone;
-
-    // Baseline: your actual Best Setup, but with every bracelet-sourced
-    // Crit Rate/Crit Dmg/Additional Dmg field reset to None first -
-    // including critRateDual/critDmgDual, since those two checkboxes ARE
-    // the bracelet Crit Rate/Crit Dmg lines' own +1.5% Crit Hit Dmg
-    // synergy (see the "Crit Hit Damage -> Bracelet" checkboxes in the
-    // HTML) - leaving them at the user's real state here would silently
-    // keep crediting a bonus this baseline is supposed to be excluding.
-    // Also strips the crit stat your CURRENT bracelet's own substat roll
-    // contributes to the 658-style Crit Stat total (see .ap-brace-crit-stat-
-    // equipped) - without this, the Crit Stat +80/100/120 candidate below
-    // would silently double-count whatever your equipped bracelet already
-    // grants, the same double-counting bug the dual checkboxes had before.
+  // Baseline: your actual Best Setup, but with every bracelet-sourced
+  // Crit Rate/Crit Dmg/Additional Dmg field reset to None first -
+  // including critRateDual/critDmgDual, since those two checkboxes ARE
+  // the bracelet Crit Rate/Crit Dmg lines' own +1.5% Crit Hit Dmg
+  // synergy (see the "Crit Hit Damage -> Bracelet" checkboxes in the
+  // HTML) - leaving them at the user's real state here would silently
+  // keep crediting a bonus this baseline is supposed to be excluding.
+  // Also strips the crit stat your CURRENT bracelet's own substat roll
+  // contributes to the 658-style Crit Stat total (see .ap-brace-crit-stat-
+  // equipped) - without this, the Crit Stat +80/100/120 candidate below
+  // would silently double-count whatever your equipped bracelet already
+  // grants, the same double-counting bug the dual checkboxes had before.
+  // Shared by computeBraceletComparison (one line at a time, against the
+  // page's real Best Setup) and computeBraceletVsBracelet below (a whole
+  // bracelet at a time, against each bracelet's OWN best keystone).
+  function zeroedBraceletInputs(inputs) {
     const inputsNB = Object.assign({}, inputs, {
       braceletRate: "None",
       braceletDmg: "None",
@@ -1223,7 +1245,36 @@
       critDmgDual: false,
       critStat: Math.max(0, inputs.critStat - inputs.braceCritStatEquipped),
     });
-    const sharedNB = computeShared(inputsNB);
+    return { inputsNB, sharedNB: computeShared(inputsNB) };
+  }
+
+  // Searches all 9 split+keystone grid cells for candidateInputs and
+  // returns the winning cell's full descriptor (multiplier + which pair/
+  // split won it) - the same search computeGridAndSummary's own best-
+  // setup logic does, factored out so computeBraceletVsBracelet can run it
+  // per-candidate-bracelet instead of assuming every bracelet shares the
+  // reader's real Best Setup keystone (two bracelets with different Crit
+  // Rate/Dmg/Stat lines can genuinely prefer different keystones).
+  function bestComboFor(candidateInputs) {
+    const shared = computeShared(candidateInputs);
+    let best = null;
+    EVOLUTION_SPLITS.forEach((split) => {
+      COMBINED_KEYSTONES.forEach((pair) => {
+        const mult = combinedMultiplier(candidateInputs, shared, split.keenSense, split.limitBreak, pair);
+        if (!best || mult > best.mult) best = { mult, pair, split };
+      });
+    });
+    return best;
+  }
+
+  function computeBraceletComparison(inputs) {
+    const gridResult = computeGridAndSummary(inputs);
+    const best = gridResult.best;
+    if (!best) return [];
+    const { keenSense, limitBreak } = best.split;
+    const pair = best.keystone;
+
+    const { inputsNB, sharedNB } = zeroedBraceletInputs(inputs);
     const baselineMult = combinedMultiplier(inputsNB, sharedNB, keenSense, limitBreak, pair);
     // The Additional Damage candidates' denominator has to match whatever
     // "add" combinedMultiplier actually used for the winning pair - Master
@@ -1541,6 +1592,228 @@
     }
 
     return rows;
+  }
+
+  // ----- Bracelet vs. Bracelet -----
+  //
+  // A different question again from computeBraceletComparison above: not
+  // "which single candidate line is worth the most", but "if I actually
+  // equipped this WHOLE bracelet (5 real lines), what's my total DPS, and
+  // which keystone should I even be running with it". A real Deathblade
+  // bracelet's first two lines are always the flat Specialization and
+  // Critical substats (60-120 each); the other three are free picks from
+  // the same affix pool computeBraceletComparison already values one at a
+  // time - BRACELET_LINE_TYPES below reuses that exact catalog, minus
+  // Spec/Crit Stat themselves since those are the two guaranteed lines
+  // here instead of free picks.
+  //
+  // Combining multiple lines at once isn't just "multiply together the
+  // isolated % gains computeBraceletComparison reports for each line" -
+  // that would double-count wherever two lines interact. Instead, each of
+  // the 4 layers below is combined the way it actually behaves:
+  //   - Crit Rate % / Crit Dmg % (with or without their Crit Hit Dmg dual
+  //     variant) and the raw Crit Stat line are all applied together onto
+  //     one cloned inputs object, then run through the exact 9-cell search
+  //     computeGridAndSummary itself uses (bestComboFor) - so the reported
+  //     "Best Keystone" for a bracelet is genuinely re-derived for that
+  //     bracelet's own stats, not assumed to match the reader's real gear
+  //     or the OTHER bracelet being compared against it.
+  //   - Spec is its own damage-share layer (see computeBraceletComparison's
+  //     Spec row above) that never touches the grid at all, so it's simply
+  //     multiplied in afterward using the same specGainPerPoint machinery.
+  //   - Outgoing/Stagger/Damage+CD/Back Attack/Additional Damage lines are
+  //     already flat, grid-independent fractions in computeBraceletComparison
+  //     (see that function's own comment) - multiplied together here the
+  //     same way, just with as many as were actually picked instead of one
+  //     at a time. Additional Damage's denominator (addDmgBaseline) is
+  //     recomputed against THIS bracelet's own winning keystone, not the
+  //     reader's real Best Setup, since Master keystones change it.
+  //   - The 5 Weapon Power/Attack Power lines scale the same separate
+  //     gearApTotal() layer computeBraceletComparison's own WP rows use,
+  //     entirely independent of the keystone grid - their deltas are just
+  //     summed before computing one ratio.
+  // All four layers are then multiplied together for that bracelet's total
+  // DPS gain vs running no bracelet at all - and each bracelet gets its own
+  // independently-searched "no bracelet" reference point removed, they're
+  // both compared against the SAME no-bracelet baseline (also its own
+  // bestComboFor search, since even that may not match the reader's real
+  // Best Setup once the current bracelet's own lines are stripped out).
+  const BRACELET_LINE_TYPES = {
+    crit_rate_dual: { kind: "grid", field: "braceletRate", dual: "critRateDual" },
+    crit_rate: { kind: "grid", field: "braceletRate", dual: null },
+    crit_dmg_dual: { kind: "grid", field: "braceletDmg", dual: "critDmgDual" },
+    crit_dmg: { kind: "grid", field: "braceletDmg", dual: null },
+    damage_cd: { kind: "flat" },
+    outgoing_stagger: { kind: "flat" },
+    outgoing: { kind: "flat" },
+    add_a: { kind: "flat" },
+    add_b: { kind: "flat" },
+    back_attack: { kind: "flat" },
+    stat_main: { kind: "wp" },
+    wp_flat: { kind: "wp" },
+    wp_onhit: { kind: "wp" },
+    wp_periodic: { kind: "wp" },
+    wp_hpgated: { kind: "wp" },
+  };
+
+  // Values one flat, grid-independent line at the given tier - mirrors the
+  // matching row's formula in computeBraceletComparison above exactly (see
+  // that function for the full derivation of each).
+  function braceletFlatLineGain(typeId, tier, ctx) {
+    switch (typeId) {
+      case "damage_cd":
+        return (ctx.surge ? DAMAGE_CD_SURGE_TABLE : DAMAGE_CD_TABLE)[tier] || 0;
+      case "outgoing_stagger":
+        return (OUTGOING_DMG_TABLE[tier] || 0) + (STAGGER_DMG_TABLE[tier] || 0) * STAGGER_DPS_SHARE;
+      case "outgoing":
+        return OUTGOING_DMG_TABLE[tier] || 0;
+      case "add_a":
+        return (BRACELET_ADD_A_TABLE[tier] || 0) / (1 + ctx.addDmgBaseline);
+      case "add_b":
+        return ((BRACELET_ADD_B_TABLE[tier] || 0) / (1 + ctx.addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + ctx.demonDmgPct) + 1) - 1;
+      case "back_attack":
+        return (BACK_DMG_TABLE[tier] || 0) * BACK_ATTACK_DPS_SHARE;
+      default:
+        return 0;
+    }
+  }
+
+  // Returns { wp, mainStat } deltas for one of the 5 WP/AP lines at the
+  // given tier - same source tables/assumptions as computeBraceletComparison's
+  // own WP block above. STR/DEX/INT ("stat_main") is handled separately in
+  // computeSingleBracelet instead of here, since unlike the other four it's
+  // a direct free-typed amount (10000-16000) rather than a Low/Mid/High
+  // tier - real bracelet rolls land on values Low/Mid/High can't represent
+  // exactly, so that line gets its own number input (see enforceBvbLineControls).
+  function braceletWpLineDelta(typeId, tier) {
+    if (typeId === "wp_flat") return { wp: { Low: 7200, Mid: 8100, High: 9000 }[tier] || 0, mainStat: 0 };
+    if (typeId === "wp_onhit") {
+      return { wp: ({ Low: 1160, Mid: 1320, High: 1480 }[tier] || 0) * ONHIT_WP_STACK_ASSUMPTION, mainStat: 0 };
+    }
+    if (typeId === "wp_periodic") {
+      const base = { Low: 6900, Mid: 7800, High: 8700 }[tier] || 0;
+      const perStack = { Low: 130, Mid: 140, High: 150 }[tier] || 0;
+      return { wp: base + periodicWpAvgBonus(PERIODIC_WP_FIGHT_MINUTES, perStack), mainStat: 0 };
+    }
+    if (typeId === "wp_hpgated") {
+      const base = { Low: 7200, Mid: 8100, High: 9000 }[tier] || 0;
+      const onHit = { Low: 2000, Mid: 2200, High: 2400 }[tier] || 0;
+      return { wp: base + onHit * HP_GATED_WP_UPTIME, mainStat: 0 };
+    }
+    return { wp: 0, mainStat: 0 };
+  }
+
+  // Computes one full bracelet's total DPS multiplier vs running no
+  // bracelet at all - see the methodology comment above BRACELET_LINE_TYPES.
+  // `side` is { spec, critStat, lines: [{type, tier}, ...] } as read from
+  // the Bracelet vs. Bracelet inputs (readBvbSide below).
+  function computeSingleBracelet(inputsNB, sharedNB, noBraceletMult, inputs, side) {
+    const cloned = Object.assign({}, inputsNB);
+    cloned.critStat = inputsNB.critStat + Math.max(0, side.critStat || 0);
+
+    let rateSlot = 0;
+    let dmgSlot = 0;
+    let critRateDualFlag = false;
+    let critDmgDualFlag = false;
+    const flatLines = [];
+    let wpDeltaTotal = 0;
+    let mainStatDeltaTotal = 0;
+    let hasWpLine = false;
+
+    (side.lines || []).forEach((line) => {
+      const def = line && BRACELET_LINE_TYPES[line.type];
+      if (!def) return;
+      const tier = line.tier === "Low" || line.tier === "High" ? line.tier : "Mid";
+      if (def.kind === "grid") {
+        if (def.field === "braceletRate") {
+          if (rateSlot === 0) { cloned.braceletRate = tier; rateSlot = 1; } else { cloned.braceletRate2 = tier; }
+          if (def.dual) critRateDualFlag = true;
+        } else {
+          if (dmgSlot === 0) { cloned.braceletDmg = tier; dmgSlot = 1; } else { cloned.braceletDmg2 = tier; }
+          if (def.dual) critDmgDualFlag = true;
+        }
+      } else if (def.kind === "flat") {
+        flatLines.push({ type: line.type, tier });
+      } else if (def.kind === "wp") {
+        hasWpLine = true;
+        if (line.type === "stat_main") {
+          // Direct free-typed amount, not a tier lookup - see
+          // braceletWpLineDelta's comment for why.
+          mainStatDeltaTotal += Math.max(10000, Math.min(16000, line.mainStat || 14000));
+        } else {
+          const delta = braceletWpLineDelta(line.type, tier);
+          wpDeltaTotal += delta.wp;
+          mainStatDeltaTotal += delta.mainStat;
+        }
+      }
+    });
+    cloned.critRateDual = critRateDualFlag;
+    cloned.critDmgDual = critDmgDualFlag;
+
+    const combo = bestComboFor(cloned);
+    const gridRatio = combo.mult / noBraceletMult;
+
+    const isSurge = !!inputs.braceSurgeSpec;
+    const specCfg = isSurge ? SURGE_DEATHBLADE_SPEC : RE_DEATHBLADE_SPEC;
+    const specK = specGainPerPoint(deathbladeSpecMultiplier, specCfg.share, specCfg.awakeningShare);
+    const specGain = specK * Math.max(0, side.spec || 0);
+
+    const addDmgBaseline = combo.pair.indexOf("master") !== -1 ? sharedNB.addDmgMaster : sharedNB.addDmgBase;
+    const demonDmgPct = inputs.demonDmgPct / 100;
+    let flatMult = 1;
+    flatLines.forEach((sel) => {
+      flatMult *= 1 + braceletFlatLineGain(sel.type, sel.tier, { surge: isSurge, addDmgBaseline, demonDmgPct });
+    });
+
+    // Same "separate multiplicative layer off the Gearing inputs" approach
+    // as computeBraceletComparison's own WP rows - see that block's comment
+    // for gearApTotal()'s methodology. Left at 1 (no-op) whenever no WP/AP
+    // line was picked, or the Character Data inputs aren't filled in yet.
+    let wpRatio = 1;
+    if (hasWpLine) {
+      const wp = inputs.gearWp;
+      const mainStat = inputs.gearMainStat;
+      const baseApMult = 1 + gearBaseApPercentTotal(inputs) / 100;
+      const flatAp = inputs.gearFlatAp + gearChaosStarFlat(inputs.gearApChaosStar);
+      const percentApMult = 1 + gearAttackPowerPercentTotal(inputs) / 100;
+      const wpPercentMult = 1 + gearWpPercentTotal(inputs) / 100;
+      const mainStatPercentMult = 1 + inputs.gearMainStatPercent / 100;
+      const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
+      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+      if (wp > 0 && mainStat > 0 && baselineAp > 0) {
+        const newAp = gearApTotal(
+          wp + wpDeltaTotal * wpPercentMult,
+          mainStat + mainStatDeltaTotal * mainStatPercentMult,
+          baseApMult, flatAp, percentApMult, supApBuff
+        );
+        wpRatio = newAp / baselineAp;
+      }
+    }
+
+    return {
+      totalMult: gridRatio * (1 + specGain) * flatMult * wpRatio,
+      gridRatio,
+      specGain,
+      flatMult,
+      wpRatio,
+      keystoneLabel: KEYSTONE_LABELS[combo.pair],
+      splitLabel: combo.split.label,
+      comboKey: combo.pair + "|" + combo.split.key,
+    };
+  }
+
+  function computeBraceletVsBracelet(inputs) {
+    const { inputsNB, sharedNB } = zeroedBraceletInputs(inputs);
+    const noBraceletBest = bestComboFor(inputsNB);
+    const a = computeSingleBracelet(inputsNB, sharedNB, noBraceletBest.mult, inputs, inputs.bvbA || {});
+    const b = computeSingleBracelet(inputsNB, sharedNB, noBraceletBest.mult, inputs, inputs.bvbB || {});
+    return {
+      noBracelet: { keystoneLabel: KEYSTONE_LABELS[noBraceletBest.pair], splitLabel: noBraceletBest.split.label },
+      a,
+      b,
+      aVsB: a.totalMult / b.totalMult - 1,
+      keystonesDiffer: a.comboKey !== b.comboKey,
+    };
   }
 
   // ----- Accessory Line Comparison -----
@@ -2436,6 +2709,56 @@
     renderComparisonRows(root.querySelector(".ap-brace-compare-rows"), root.querySelector(".ap-brace-compare-flip-note"), rows);
   }
 
+  function formatBvbPct(x) {
+    return (x >= 0 ? "+" : "") + (x * 100).toFixed(2) + "%";
+  }
+
+  // ----- Bracelet vs. Bracelet rendering -----
+  // One card per side, filled from computeSingleBracelet's own result
+  // shape - see computeBraceletVsBracelet above. Also toggles the Spec
+  // field's two hover-icon warnings (mild "damage-only" note, always
+  // visible on RE; stronger "recommended 83+ Spec" warning, RE + below
+  // 83 only) since those depend on the same inputs this render pass
+  // already has in hand.
+  function renderBvbCard(root, prefix, side, isSurgeSpec) {
+    const card = root.querySelector(".ap-bvb-card-" + prefix);
+    if (!card) return;
+    const set = (selector, text) => {
+      const el = card.querySelector(selector);
+      if (el) el.textContent = text;
+    };
+    set(".ap-bvb-keystone", side.splitLabel + " + " + side.keystoneLabel);
+    set(".ap-bvb-vs-none", formatBvbPct(side.totalMult - 1));
+    set(".ap-bvb-grid", formatBvbPct(side.gridRatio - 1));
+    set(".ap-bvb-spec-val", formatBvbPct(side.specGain));
+    set(".ap-bvb-flat", formatBvbPct(side.flatMult - 1));
+    set(".ap-bvb-wp", formatBvbPct(side.wpRatio - 1));
+
+    const specInput = root.querySelector(".ap-bvb-" + prefix + "-spec");
+    const specNote = card.querySelector(".ap-bvb-spec-note");
+    const specWarn = card.querySelector(".ap-bvb-spec-warn");
+    const isRE = !isSurgeSpec;
+    if (specNote) specNote.hidden = !isRE;
+    if (specWarn) specWarn.hidden = !(isRE && specInput && parseFloat(specInput.value) < 83);
+  }
+
+  function renderBraceletVsBracelet(root, inputs, result) {
+    renderBvbCard(root, "a", result.a, inputs.braceSurgeSpec);
+    renderBvbCard(root, "b", result.b, inputs.braceSurgeSpec);
+
+    const noneEl = root.querySelector(".ap-bvb-no-bracelet-keystone");
+    if (noneEl) noneEl.textContent = result.noBracelet.splitLabel + " + " + result.noBracelet.keystoneLabel;
+
+    const diffEl = root.querySelector(".ap-bvb-diff");
+    if (diffEl) {
+      const winner = result.aVsB >= 0 ? "Bracelet A" : "Bracelet B";
+      diffEl.textContent = winner + " wins by " + formatBvbPct(Math.abs(result.aVsB));
+    }
+
+    const keystoneNoteEl = root.querySelector(".ap-bvb-keystone-note");
+    if (keystoneNoteEl) keystoneNoteEl.hidden = !result.keystonesDiffer;
+  }
+
   // ----- Accessory Line Comparison rendering -----
   // One call per panel (Necklace/Earrings/Rings/Universal) into that
   // panel's own <tbody> - no flip-footnote, since none of these rows can
@@ -2781,11 +3104,13 @@
     enforcePartyCheckboxLimit(root);
     enforceKbwStoneDependency(root);
     enforceGearSupportUptimeGate(root);
+    enforceBvbLineControls(root);
     const inputs = readInputs(root);
     const result = computeGridAndSummary(inputs);
     renderGrid(root, result);
     updateInputDisplays(root, inputs);
     renderBraceletComparison(root, computeBraceletComparison(inputs));
+    renderBraceletVsBracelet(root, inputs, computeBraceletVsBracelet(inputs));
     renderAccessoryComparison(root, computeAccessoryComparison(inputs));
     renderArkGridComparison(root, computeArkGridComparison(inputs));
 
@@ -2840,6 +3165,37 @@
     const kbwUnused = kbwEl.value === "Not Used";
     if (kbwUnused) stoneEl.value = "0 Lv.";
     stoneEl.disabled = kbwUnused;
+  }
+
+  // Bracelet vs. Bracelet's 6 free-line rows (3 per side) each pair a type
+  // <select> with either a Low/Mid/High tier <select> or, for STR/DEX/INT
+  // only, a direct 10000-16000 number input in its place - real STR/DEX/INT
+  // rolls land on values a 3-tier dropdown can't represent, so that one
+  // line type gets a free-typed field instead. Rather than two permanently
+  // visible controls, the tier dropdown IS the STR/DEX/INT input's slot:
+  // whichever one doesn't match the current type is hidden (and disabled,
+  // so a hidden field can't leave a stray out-of-range style or receive
+  // focus via Tab), so picking STR/DEX/INT visibly swaps the dropdown for
+  // an input right in place rather than adding a whole new row. Each row
+  // also carries its own "estimated" info icon, shown only for the
+  // Damage+CD line type (same caveat text as that line's row note in
+  // Bracelet Line Comparison above - see that table's "damage_cd" row).
+  function enforceBvbLineControls(root) {
+    ["a", "b"].forEach((prefix) => {
+      [1, 2, 3].forEach((n) => {
+        const base = ".ap-bvb-" + prefix + "-line" + n;
+        const typeEl = root.querySelector(base + "-type");
+        if (!typeEl) return;
+        const row = typeEl.closest(".ap-bvb-line-row");
+        const tierEl = root.querySelector(base + "-tier");
+        const mainStatEl = root.querySelector(base + "-mainstat");
+        const cdNoteEl = row ? row.querySelector(".ap-bvb-cd-note") : null;
+        const isStatMain = typeEl.value === "stat_main";
+        if (tierEl) { tierEl.hidden = isStatMain; tierEl.disabled = isStatMain; }
+        if (mainStatEl) { mainStatEl.hidden = !isStatMain; mainStatEl.disabled = !isStatMain; }
+        if (cdNoteEl) cdNoteEl.hidden = typeEl.value !== "damage_cd";
+      });
+    });
   }
 
   // ----- Initialisation -----
@@ -3077,6 +3433,7 @@
   window.__arkPassiveCalc = {
     computeGridAndSummary,
     computeBraceletComparison,
+    computeBraceletVsBracelet,
     computeAccessoryComparison,
     EVOLUTION_SPLITS,
     COMBINED_KEYSTONES,

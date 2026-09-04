@@ -680,6 +680,242 @@
     </table>
     <p class="ap-brace-compare-flip-note">&dagger; Equipping this line's Mid tier may change which split/keystone combo is your actual best - worth a re-check.</p>
     <p class="ap-brace-compare-footer-note">Flat Bonus lines use values from the Gearing section and are hidden until Weapon Power and Main Stat are both filled in.</p>
+
+    <!-- Bracelet vs. Bracelet: compares two WHOLE candidate bracelets (5
+         real lines each - the two guaranteed Spec/Crit substats plus 3
+         free picks from the same line pool the table above values one at a
+         time) against each other and against running no bracelet at all,
+         including each bracelet's own best keystone (which can genuinely
+         differ between two bracelets - see computeBraceletVsBracelet's own
+         comment in the JS). Nested INSIDE Bracelet Line Comparison
+         (collapsed by default, at the bottom) rather than its own
+         top-level section, since it's really just a "combine several of
+         the rows above at once, twice, and compare" extension of the same
+         tool, not a separate question - and it's only as accurate as
+         Ark Passive setup, Character Data, and this table's own inputs
+         above are filled out, which is why it reads as a continuation of
+         them rather than something you'd reach for on its own. -->
+    <details class="ap-bvb">
+      <summary>Bracelet vs. Bracelet</summary>
+      <div class="ap-brace-compare-body">
+        <p class="ap-brace-compare-intro">Compares two full 5-line bracelets against each other and against running none at all. Only as accurate as the Ark Passive setup, Character Data, and Bracelet Line Comparison inputs above are - fill those in first.</p>
+
+        <div class="ap-bvb-cards">
+          <div class="ap-bvb-card ap-bvb-card-a">
+            <p class="ap-gear-card-title ap-bvb-card-title">Bracelet A</p>
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label" for="ap-bvb-a-spec">Spec</label>
+              <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's direct damage share on RE - it doesn't capture Trance/cooldown reduction, which is a real part of Spec's value on RE builds." hidden>i</span>
+              <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE builds for CDR purposes." hidden>!</span>
+              <input type="number" id="ap-bvb-a-spec" class="ap-bvb-a-spec" min="60" max="120" step="1" value="100">
+            </div>
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label" for="ap-bvb-a-crit">Crit Stat</label>
+              <input type="number" id="ap-bvb-a-crit" class="ap-bvb-a-crit" min="60" max="120" step="1" value="80">
+            </div>
+            <div class="ap-bvb-line-row">
+              <select id="ap-bvb-a-line1-type" class="ap-bvb-a-line1-type ap-bvb-line-type">
+                <option value="none">— Line 3: None —</option>
+                <option value="crit_rate_dual" selected>Crit Rate % &amp; Crit Hit Dmg %</option>
+                <option value="crit_rate">Crit Rate %</option>
+                <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
+                <option value="crit_dmg">Crit Damage %</option>
+                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
+                <option value="outgoing">Outgoing Damage %</option>
+                <option value="add_a">Additional Damage %</option>
+                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
+                <option value="back_attack">Back Attack Damage %</option>
+                <option value="stat_main">STR/DEX/INT</option>
+                <option value="wp_flat">Weapon Power</option>
+                <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
+                <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
+                <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
+              </select>
+              <select id="ap-bvb-a-line1-tier" class="ap-bvb-a-line1-tier ap-bvb-line-tier">
+                <option value="Low">Low</option>
+                <option value="Mid" selected>Mid</option>
+                <option value="High">High</option>
+              </select>
+              <input type="number" id="ap-bvb-a-line1-mainstat" class="ap-bvb-a-line1-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
+            </div>
+            <div class="ap-bvb-line-row">
+              <select id="ap-bvb-a-line2-type" class="ap-bvb-a-line2-type ap-bvb-line-type">
+                <option value="none">— Line 4: None —</option>
+                <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
+                <option value="crit_rate">Crit Rate %</option>
+                <option value="crit_dmg_dual" selected>Crit Damage % &amp; Crit Hit Dmg %</option>
+                <option value="crit_dmg">Crit Damage %</option>
+                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
+                <option value="outgoing">Outgoing Damage %</option>
+                <option value="add_a">Additional Damage %</option>
+                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
+                <option value="back_attack">Back Attack Damage %</option>
+                <option value="stat_main">STR/DEX/INT</option>
+                <option value="wp_flat">Weapon Power</option>
+                <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
+                <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
+                <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
+              </select>
+              <select id="ap-bvb-a-line2-tier" class="ap-bvb-a-line2-tier ap-bvb-line-tier">
+                <option value="Low">Low</option>
+                <option value="Mid" selected>Mid</option>
+                <option value="High">High</option>
+              </select>
+              <input type="number" id="ap-bvb-a-line2-mainstat" class="ap-bvb-a-line2-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
+            </div>
+            <div class="ap-bvb-line-row">
+              <select id="ap-bvb-a-line3-type" class="ap-bvb-a-line3-type ap-bvb-line-type">
+                <option value="none">— Line 5: None —</option>
+                <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
+                <option value="crit_rate">Crit Rate %</option>
+                <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
+                <option value="crit_dmg">Crit Damage %</option>
+                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
+                <option value="outgoing">Outgoing Damage %</option>
+                <option value="add_a" selected>Additional Damage %</option>
+                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
+                <option value="back_attack">Back Attack Damage %</option>
+                <option value="stat_main">STR/DEX/INT</option>
+                <option value="wp_flat">Weapon Power</option>
+                <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
+                <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
+                <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
+              </select>
+              <select id="ap-bvb-a-line3-tier" class="ap-bvb-a-line3-tier ap-bvb-line-tier">
+                <option value="Low">Low</option>
+                <option value="Mid" selected>Mid</option>
+                <option value="High">High</option>
+              </select>
+              <input type="number" id="ap-bvb-a-line3-mainstat" class="ap-bvb-a-line3-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
+            </div>
+            <div class="ap-bvb-results">
+              <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-bvb-keystone ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Keystone/Crit Lines</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Spec</span><span class="ap-bvb-spec-val ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-flat ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">WP/AP Lines</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
+            </div>
+          </div>
+
+          <div class="ap-bvb-card ap-bvb-card-b">
+            <p class="ap-gear-card-title ap-bvb-card-title">Bracelet B</p>
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label" for="ap-bvb-b-spec">Spec</label>
+              <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's direct damage share on RE - it doesn't capture Trance/cooldown reduction, which is a real part of Spec's value on RE builds." hidden>i</span>
+              <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE builds for CDR purposes." hidden>!</span>
+              <input type="number" id="ap-bvb-b-spec" class="ap-bvb-b-spec" min="60" max="120" step="1" value="80">
+            </div>
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label" for="ap-bvb-b-crit">Crit Stat</label>
+              <input type="number" id="ap-bvb-b-crit" class="ap-bvb-b-crit" min="60" max="120" step="1" value="100">
+            </div>
+            <div class="ap-bvb-line-row">
+              <select id="ap-bvb-b-line1-type" class="ap-bvb-b-line1-type ap-bvb-line-type">
+                <option value="none">— Line 3: None —</option>
+                <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
+                <option value="crit_rate" selected>Crit Rate %</option>
+                <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
+                <option value="crit_dmg">Crit Damage %</option>
+                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
+                <option value="outgoing">Outgoing Damage %</option>
+                <option value="add_a">Additional Damage %</option>
+                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
+                <option value="back_attack">Back Attack Damage %</option>
+                <option value="stat_main">STR/DEX/INT</option>
+                <option value="wp_flat">Weapon Power</option>
+                <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
+                <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
+                <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
+              </select>
+              <select id="ap-bvb-b-line1-tier" class="ap-bvb-b-line1-tier ap-bvb-line-tier">
+                <option value="Low">Low</option>
+                <option value="Mid" selected>Mid</option>
+                <option value="High">High</option>
+              </select>
+              <input type="number" id="ap-bvb-b-line1-mainstat" class="ap-bvb-b-line1-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
+            </div>
+            <div class="ap-bvb-line-row">
+              <select id="ap-bvb-b-line2-type" class="ap-bvb-b-line2-type ap-bvb-line-type">
+                <option value="none">— Line 4: None —</option>
+                <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
+                <option value="crit_rate">Crit Rate %</option>
+                <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
+                <option value="crit_dmg" selected>Crit Damage %</option>
+                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
+                <option value="outgoing">Outgoing Damage %</option>
+                <option value="add_a">Additional Damage %</option>
+                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
+                <option value="back_attack">Back Attack Damage %</option>
+                <option value="stat_main">STR/DEX/INT</option>
+                <option value="wp_flat">Weapon Power</option>
+                <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
+                <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
+                <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
+              </select>
+              <select id="ap-bvb-b-line2-tier" class="ap-bvb-b-line2-tier ap-bvb-line-tier">
+                <option value="Low">Low</option>
+                <option value="Mid" selected>Mid</option>
+                <option value="High">High</option>
+              </select>
+              <input type="number" id="ap-bvb-b-line2-mainstat" class="ap-bvb-b-line2-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
+            </div>
+            <div class="ap-bvb-line-row">
+              <select id="ap-bvb-b-line3-type" class="ap-bvb-b-line3-type ap-bvb-line-type">
+                <option value="none">— Line 5: None —</option>
+                <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
+                <option value="crit_rate">Crit Rate %</option>
+                <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
+                <option value="crit_dmg">Crit Damage %</option>
+                <option value="damage_cd" selected>Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
+                <option value="outgoing">Outgoing Damage %</option>
+                <option value="add_a">Additional Damage %</option>
+                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
+                <option value="back_attack">Back Attack Damage %</option>
+                <option value="stat_main">STR/DEX/INT</option>
+                <option value="wp_flat">Weapon Power</option>
+                <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
+                <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
+                <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
+              </select>
+              <select id="ap-bvb-b-line3-tier" class="ap-bvb-b-line3-tier ap-bvb-line-tier">
+                <option value="Low">Low</option>
+                <option value="Mid" selected>Mid</option>
+                <option value="High">High</option>
+              </select>
+              <input type="number" id="ap-bvb-b-line3-mainstat" class="ap-bvb-b-line3-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span>
+            </div>
+            <div class="ap-bvb-results">
+              <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-bvb-keystone ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Keystone/Crit Lines</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Spec</span><span class="ap-bvb-spec-val ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-flat ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">WP/AP Lines</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ap-bvb-summary">
+          <p>Running neither: <span class="ap-bvb-no-bracelet-keystone">—</span></p>
+          <p class="ap-bvb-diff">—</p>
+          <p class="ap-brace-compare-flip-note ap-bvb-keystone-note" hidden>Bracelet A and B land on different best keystones - the comparison above already accounts for that, each running its own.</p>
+        </div>
+        <p class="ap-brace-compare-footer-note">Uses the same Card Demon Dmg%, Crit Stat from Current Bracelet, and Spec Scaling (RE/Surge) settings as Bracelet Line Comparison above, and the same Character Data inputs for the Weapon Power/Attack Power lines.</p>
+      </div>
+    </details>
   </div>
 </details>
 

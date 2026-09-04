@@ -4058,7 +4058,8 @@ h3 { color: var(--dbc-teal); }
    tied to any one of those categories the way the gear cards above are. */
 .md-typeset .ap-brace-compare,
 .md-typeset .ap-acc-compare,
-.md-typeset .ap-arkgrid-compare {
+.md-typeset .ap-arkgrid-compare,
+.md-typeset .ap-bvb {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   margin: 1em 0 0;
@@ -4085,22 +4086,26 @@ h3 { color: var(--dbc-teal); }
    so there's nothing left for it to leak through. */
 .md-typeset .ap-brace-compare summary::after,
 .md-typeset .ap-acc-compare summary::after,
-.md-typeset .ap-arkgrid-compare summary::after {
+.md-typeset .ap-arkgrid-compare summary::after,
+.md-typeset .ap-bvb summary::after {
   display: none !important;
 }
 .md-typeset .ap-brace-compare summary::-webkit-details-marker,
 .md-typeset .ap-acc-compare summary::-webkit-details-marker,
-.md-typeset .ap-arkgrid-compare summary::-webkit-details-marker {
+.md-typeset .ap-arkgrid-compare summary::-webkit-details-marker,
+.md-typeset .ap-bvb summary::-webkit-details-marker {
   display: none;
 }
 .md-typeset .ap-brace-compare summary::marker,
 .md-typeset .ap-acc-compare summary::marker,
-.md-typeset .ap-arkgrid-compare summary::marker {
+.md-typeset .ap-arkgrid-compare summary::marker,
+.md-typeset .ap-bvb summary::marker {
   content: "";
 }
 .md-typeset .ap-brace-compare summary,
 .md-typeset .ap-acc-compare summary,
-.md-typeset .ap-arkgrid-compare summary {
+.md-typeset .ap-arkgrid-compare summary,
+.md-typeset .ap-bvb summary {
   display: flex;
   align-items: center;
   gap: 0.6em;
@@ -4121,7 +4126,8 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-brace-compare summary::before,
 .md-typeset .ap-acc-compare summary::before,
-.md-typeset .ap-arkgrid-compare summary::before {
+.md-typeset .ap-arkgrid-compare summary::before,
+.md-typeset .ap-bvb summary::before {
   content: "";
   display: inline-block;
   position: static;
@@ -4148,12 +4154,14 @@ h3 { color: var(--dbc-teal); }
    this - no reason to widen it back to a descendant selector. */
 .md-typeset .ap-brace-compare[open] > summary::before,
 .md-typeset .ap-acc-compare[open] > summary::before,
-.md-typeset .ap-arkgrid-compare[open] > summary::before {
+.md-typeset .ap-arkgrid-compare[open] > summary::before,
+.md-typeset .ap-bvb[open] > summary::before {
   transform: rotate(90deg);
 }
 .md-typeset .ap-brace-compare[open] summary,
 .md-typeset .ap-acc-compare[open] summary,
-.md-typeset .ap-arkgrid-compare[open] summary {
+.md-typeset .ap-arkgrid-compare[open] summary,
+.md-typeset .ap-bvb[open] summary {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .md-typeset .ap-brace-compare-body {
@@ -4685,6 +4693,17 @@ h3 { color: var(--dbc-teal); }
   border-color: var(--dbc-lavender);
   color: var(--dbc-lilac);
 }
+/* Every one of these icons is shown/hidden dynamically via the `hidden`
+   attribute (Spec's RE-only note, Spec's <83 warning, BvB's per-row
+   Damage+CD note) - but the class rule's own `display: inline-flex` above
+   has higher specificity than the UA stylesheet's bare `[hidden] { display:
+   none }`, so without this override `hidden` is silently ignored and the
+   icon shows unconditionally regardless of what JS sets it to. Bumping
+   `[hidden]` back to `display: none` here (same specificity class as the
+   rule it's overriding) restores the toggle. */
+.md-typeset .ap-brace-info-icon[hidden] {
+  display: none;
+}
 /* Small always-visible tag flagging that a row's number is damage-share
    only (currently the Spec row, for both RE and Surge - neither model has
    a CDR term anymore). Sized to sit inline with the label text without
@@ -4773,6 +4792,158 @@ h3 { color: var(--dbc-teal); }
   .md-typeset .ap-brace-compare-table th,
   .md-typeset .ap-brace-compare-table td {
     padding: 0.35em 0.4em;
+  }
+}
+
+/* ---- Bracelet vs. Bracelet: nested <details> at the bottom of Bracelet
+   Line Comparison (see resources.md's own comment on .ap-bvb for why it's
+   nested rather than a top-level section). .ap-bvb itself (border/radius/
+   margin + the disclosure-triangle summary treatment) piggybacks on
+   .ap-brace-compare's own shared rules above - see that selector list -
+   and its body div reuses .ap-brace-compare-body/-intro directly (both
+   already bare, non-scoped classes) instead of duplicating that padding/
+   intro styling here. Only the extra top margin below (nested one level
+   deeper than a top-level panel, so it wants a bit more than the 1em
+   every top-level panel uses) is unique to it.
+
+   The two bracelet panels borrow the Ark Passive grid's own "bordered
+   card, accent-colored left edge, title + stacked field rows" look
+   (.ap-gear-card) rather than inventing a third card style - Bracelet A
+   gets the pink accent, Bracelet B teal, so the two stay visually
+   distinct through every input/result row without needing an "A"/"B"
+   label repeated everywhere. */
+.md-typeset .ap-bvb {
+  margin-top: 1.4em;
+}
+.md-typeset .ap-bvb-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.9em;
+  align-items: start;
+}
+.md-typeset .ap-bvb-card {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-left: 3px solid var(--ap-bvb-accent, rgba(255, 255, 255, 0.15));
+  border-radius: 8px;
+  padding: 0.6em 0.75em 0.7em;
+}
+.md-typeset .ap-bvb-card-a { --ap-bvb-accent: var(--dbc-pink); }
+.md-typeset .ap-bvb-card-b { --ap-bvb-accent: var(--dbc-teal); }
+.md-typeset .ap-bvb-card-title {
+  color: var(--ap-bvb-accent);
+}
+.md-typeset .ap-bvb-card .ap-calc-field-row {
+  margin-bottom: 0.5em;
+}
+/* Each free line is its own row: a type <select> that gets whatever room
+   it needs plus a fixed-width Low/Mid/High tier <select> beside it -
+   matches the "one control claims the row, a second narrow one rides
+   alongside" shape the Bracelet group's own paired dropdowns above use
+   (.ap-calc-pair), just without that class's baggage (it assumes exactly
+   two same-width selects, not one wide + one narrow). */
+.md-typeset .ap-bvb-line-row {
+  display: flex;
+  gap: 0.4em;
+  margin-bottom: 0.5em;
+}
+.md-typeset .ap-bvb-line-row .ap-bvb-line-type {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.md-typeset .ap-bvb-line-row .ap-bvb-line-tier {
+  flex: 0 0 auto;
+  width: 4.6em;
+}
+/* STR/DEX/INT's free-typed 10000-16000 amount takes the Low/Mid/High tier
+   dropdown's exact place in the row (see enforceBvbLineControls - only one
+   of the two is ever visible at a time), so it reuses that same fixed
+   width rather than the row reflowing when a line switches to/from
+   STR/DEX/INT. A touch wider than the tier select since it needs to fit a
+   5-digit number, and the amber-tinted border marks it as a free-typed
+   value standing in for a dropdown rather than another plain field. */
+.md-typeset .ap-bvb-line-row .ap-bvb-line-mainstat {
+  flex: 0 0 auto;
+  width: 5.4em;
+  border-color: rgba(224, 169, 64, 0.5);
+}
+.md-typeset .ap-bvb-line-row .ap-bvb-line-mainstat:focus {
+  border-color: #e0a940;
+}
+/* Per-row "estimated" note - only the Damage+CD line type gets one (see
+   enforceBvbLineControls), same caveat text as that line's row note in
+   Bracelet Line Comparison's own table above. Reuses .ap-brace-info-icon's
+   look, just anchored at the end of the line-picker row instead of next to
+   a table label. */
+.md-typeset .ap-bvb-line-row .ap-bvb-cd-note {
+  flex: 0 0 auto;
+  margin-left: 0;
+}
+.md-typeset .ap-bvb-results {
+  margin-top: 0.7em;
+  padding-top: 0.6em;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+/* The four contributing layers (Keystone/Crit, Spec, Other Lines, WP/AP)
+   are real numbers but secondary to the headline "vs No Bracelet" row -
+   dimmed and slightly smaller so the card reads as one clear answer with
+   its math available on closer look, not five equally-weighted rows. */
+.md-typeset .ap-bvb-breakdown-row {
+  font-size: 0.9em;
+  opacity: 0.75;
+}
+.md-typeset .ap-bvb-summary {
+  margin-top: 0.9em;
+  text-align: center;
+}
+.md-typeset .ap-bvb-summary p {
+  margin: 0.3em 0;
+}
+.md-typeset .ap-bvb-diff {
+  font-weight: 700;
+  color: var(--dbc-lilac);
+}
+/* Stronger sibling of .ap-brace-info-icon's mild "i" - solid amber fill
+   instead of just an outline, so the Spec row's "you're below the
+   recommended CDR floor" warning reads as a step up in urgency from the
+   plain informational note beside it, without going all the way to
+   .dbc-red (this is a recommendation, not an error state). */
+.md-typeset .ap-brace-warn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  height: 1.2em;
+  margin-left: 0.3em;
+  border-radius: 50%;
+  background: rgba(224, 169, 64, 0.85);
+  color: #1a1410;
+  font-size: 0.8em;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+  vertical-align: middle;
+}
+.md-typeset .ap-brace-warn-icon:hover {
+  background: #e0a940;
+}
+/* Same `[hidden]` specificity fix as .ap-brace-info-icon above - without
+   it this warning shows unconditionally regardless of the </83 check. */
+.md-typeset .ap-brace-warn-icon[hidden] {
+  display: none;
+}
+/* Pre-existing "grid blowout" bug this session's verification pass turned
+   up, unrelated to the new mainstat/cd-note controls above: a bare `1fr`
+   track's default minimum is `auto` (content-based), not 0, so with these
+   dropdowns' longer option text (e.g. "Weapon Power + Periodic On-Hit")
+   the single-column track - and the card inside it - was stretching past
+   the actual viewport instead of respecting the .ap-bvb-line-type/-tier
+   children's own `min-width: 0`. `minmax(0, 1fr)` is the standard fix:
+   it gives the track an explicit 0 floor so those children's min-width:0
+   can actually take effect and the row shrinks/clips instead of
+   overflowing. */
+@media screen and (max-width: 480px) {
+  .md-typeset .ap-bvb-cards {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
