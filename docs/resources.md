@@ -796,6 +796,59 @@
   </div>
 </details>
 
+<!-- ArkGrid (Chaos Core) Comparison: same idea and methodology as
+     Bracelet Line Comparison above - see computeArkGridComparison's own
+     JS comment for the full breakdown. Deliberately needs no inputs of
+     its own: Chaos Core: Flashy/Stable/Attack already have "current
+     gear" tracking elsewhere on this page (the Flashy Atk/Stable Atk
+     fields above, and Chaos Core: Attack in the Gearing section), so
+     their candidates are valued against THOSE fields zeroed out first,
+     exactly like Bracelet zeroes its own tracked fields; the rest
+     (Swift/Crushing/Smoldering/Absorbing/Weapon) have no existing field
+     to double-count against, so they're valued as a straight addition
+     on top of your current totals instead, same as Bracelet's own 5
+     WP/AP rows. Chaos Core: Speed and each type's non-damage half (DR,
+     Attack Speed, WP Cooldown, Healing) are excluded entirely - not DPS,
+     same precedent as the Bracelet panel's own on-hit Atk/Move Speed
+     line.
+
+     One row per Core TYPE (8 rows, not 16) - Relic/Ancient are columns
+     within a row via a two-level header (a Points group, then a Relic/
+     Ancient sub-header colored the same sky/orange as Low/High
+     elsewhere) rather than doubling every row into a separate Relic
+     line and Ancient line. Reuses the Accessory panel's own
+     .ap-acc-table-scroll/.ap-acc-combo-table pattern for the wider-
+     than-narrow-viewport table, same reasoning as that panel's combo
+     columns. -->
+<details class="ap-arkgrid-compare">
+  <summary>Chaos Core Comparison</summary>
+  <div class="ap-brace-compare-body">
+    <p class="ap-brace-compare-intro">Candidate Chaos Cores, valued as if each were the only equipped one, against your Best Setup above.</p>
+    <div class="ap-acc-table-scroll">
+      <table class="ap-brace-compare-table ap-acc-combo-table ap-arkgrid-table">
+        <thead>
+          <tr>
+            <th class="ap-brace-th-label" rowspan="2">Core</th>
+            <th class="ap-arkgrid-th-group" colspan="2">14 Points</th>
+            <th class="ap-arkgrid-th-group" colspan="2">17 Points</th>
+            <th class="ap-arkgrid-th-group" colspan="2">20 Points</th>
+          </tr>
+          <tr>
+            <th class="ap-brace-th-low">Relic</th>
+            <th class="ap-brace-th-high">Ancient</th>
+            <th class="ap-brace-th-low">Relic</th>
+            <th class="ap-brace-th-high">Ancient</th>
+            <th class="ap-brace-th-low">Relic</th>
+            <th class="ap-brace-th-high">Ancient</th>
+          </tr>
+        </thead>
+        <tbody class="ap-arkgrid-compare-rows"></tbody>
+      </table>
+    </div>
+    <p class="ap-brace-compare-footer-note">Attack/Weapon cores use values from the Gearing section and are hidden until Weapon Power and Main Stat are both filled in.</p>
+  </div>
+</details>
+
 </div> <!-- end ap-calc -->
 
 ## CPM Calculator

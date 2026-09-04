@@ -349,6 +349,122 @@
   function gearChaosStarFlat(combined) {
     return (GEAR_AP_CHAOS_STAR_TABLE[combined] || {}).flat || 0;
   }
+
+  // ----- ArkGrid (Chaos Core) Line Comparison lookup tables -----
+  // Every Chaos Core effect type unlocks progressively as its own Points
+  // investment (10/14/17/18/19/20) increases - a stat at 14p, a bigger
+  // version (or a second stat) at 17p, then three more small increments
+  // at 18/19/20p. Ancient roughly doubles Relic's 17p+ numbers; both
+  // grades agree below that. Every table below is cumulative TOTALS at
+  // each Points level (not per-tier deltas), same shape as
+  // GEAR_AP_CHAOS_STAR_TABLE/STABLE_ATK_TABLE above - verified this
+  // cumulative model reproduces those two tables' own values exactly
+  // before building the rest of these the same way. Source: ArkGrid!Z:AI
+  // on the reference sheet (each type's own row, Relic/Ancient columns).
+  //
+  // Chaos Core: Speed is excluded entirely (Attack/Move Speed only helps
+  // below a cap this build assumes is already met, same precedent as the
+  // Bracelet panel's own on-hit Atk/Move Speed line). Each other type's
+  // non-damage half (Stable's DR, Swift's Attack Speed, Crushing's
+  // Weapon Power Cooldown reduction, Absorbing's Healing) is excluded
+  // the same way - defensive/utility, not DPS - leaving just the damage-
+  // relevant half of each modeled below.
+  const ARK_SWIFT_CDMG_TABLE = {
+    "Relic|14P": 0.014,
+    "Relic|17P": 0.042,
+    "Relic|18P": 0.0465,
+    "Relic|19P": 0.051,
+    "Relic|20P": 0.0555,
+    "Ancient|14P": 0.014,
+    "Ancient|17P": 0.07,
+    "Ancient|18P": 0.0745,
+    "Ancient|19P": 0.079,
+    "Ancient|20P": 0.0835,
+  };
+  const ARK_CRUSHING_CRATE_TABLE = {
+    "Relic|14P": 0.0065,
+    "Relic|17P": 0.0195,
+    "Relic|18P": 0.0216,
+    "Relic|19P": 0.0237,
+    "Relic|20P": 0.0258,
+    "Ancient|14P": 0.0065,
+    "Ancient|17P": 0.0325,
+    "Ancient|18P": 0.0346,
+    "Ancient|19P": 0.0367,
+    "Ancient|20P": 0.0388,
+  };
+  // Flashy's Dmg% half - separate from FLASHY_ATK_TABLE above, which
+  // only covers its Crit Hit Damage half (see that table's own comment).
+  const ARK_FLASHY_DMG_TABLE = {
+    "Relic|14P": 0.005,
+    "Relic|17P": 0.015,
+    "Relic|18P": 0.0166,
+    "Relic|19P": 0.0182,
+    "Relic|20P": 0.0198,
+    "Ancient|14P": 0.005,
+    "Ancient|17P": 0.02,
+    "Ancient|18P": 0.0216,
+    "Ancient|19P": 0.0232,
+    "Ancient|20P": 0.0248,
+  };
+  const ARK_SMOLDERING_BOSSDMG_TABLE = {
+    "Relic|14P": 0.005,
+    "Relic|17P": 0.015,
+    "Relic|18P": 0.0166,
+    "Relic|19P": 0.0182,
+    "Relic|20P": 0.0198,
+    "Ancient|14P": 0.005,
+    "Ancient|17P": 0.025,
+    "Ancient|18P": 0.0266,
+    "Ancient|19P": 0.0282,
+    "Ancient|20P": 0.0298,
+  };
+  // Smoldering's Burn tick damage, unlike its Boss Damage half above,
+  // isn't Points-gated on the reference sheet (it scales off weapon
+  // damage, not Core investment) - and its own formula there is relative
+  // to Bleed uptime rather than a direct %DPS figure, which doesn't
+  // translate cleanly into this calculator's own methodology. Modeled
+  // instead as a flat, grade-only %DPS estimate.
+  const ARK_SMOLDERING_BURN_TABLE = { Relic: 0.005, Ancient: 0.0075 };
+  const ARK_ABSORBING_DMG_TABLE = {
+    "Relic|14P": 0.005,
+    "Relic|17P": 0.015,
+    "Relic|18P": 0.0166,
+    "Relic|19P": 0.0182,
+    "Relic|20P": 0.0198,
+    "Ancient|14P": 0.005,
+    "Ancient|17P": 0.025,
+    "Ancient|18P": 0.0266,
+    "Ancient|19P": 0.0282,
+    "Ancient|20P": 0.0298,
+  };
+  // Chaos Core: Weapon - Weapon Power's own counterpart to
+  // GEAR_AP_CHAOS_STAR_TABLE (Chaos Core: Attack) above, same shape and
+  // same source (the core's own in-game tooltip at each investment
+  // tier). Unlike Chaos Core: Attack, this one has no existing "current
+  // gear" field feeding it into the Gearing section's own totals - it's
+  // only ever used as an ArkGrid candidate, valued as an addition on top
+  // of your real current Weapon Power, same as the Bracelet panel's own
+  // flat-WP-granting rows.
+  const ARK_WEAPON_CORE_TABLE = {
+    "Relic|14P": { pct: 0.75, flat: 1300 },
+    "Relic|17P": { pct: 2.25, flat: 3900 },
+    "Relic|18P": { pct: 2.48, flat: 3900 },
+    "Relic|19P": { pct: 2.71, flat: 3900 },
+    "Relic|20P": { pct: 2.94, flat: 3900 },
+    "Ancient|14P": { pct: 0.75, flat: 1300 },
+    "Ancient|17P": { pct: 3.0, flat: 5200 },
+    "Ancient|18P": { pct: 3.23, flat: 5200 },
+    "Ancient|19P": { pct: 3.46, flat: 5200 },
+    "Ancient|20P": { pct: 3.69, flat: 5200 },
+  };
+  function arkWeaponCorePct(combined) {
+    return (ARK_WEAPON_CORE_TABLE[combined] || {}).pct || 0;
+  }
+  function arkWeaponCoreFlat(combined) {
+    return (ARK_WEAPON_CORE_TABLE[combined] || {}).flat || 0;
+  }
+
   const GEAR_AP_ASTROGEM_MAX = 4.4;
 
   // Astrogem Atk. Power Level is its OWN field (.ap-gear-ap-astrogem-lv),
@@ -718,6 +834,14 @@
       // disabled in the UI otherwise, see enforceGearSupportUptimeGate).
       // Scales the SIZE of the buff, not whether it applies.
       gearSupportUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-support-uptime", 98))),
+      // Internal-only, never DOM-read or shown in any UI - a hook for
+      // computeArkGridComparison to feed a candidate Chaos Core's Crit
+      // Rate/Crit Dmg contribution through the SAME tested critRateTotal/
+      // computeShared math every other Crit Rate/Crit Dmg source already
+      // goes through, instead of duplicating that formula. Always 0 for
+      // the real inputs object; only ever set on a throwaway clone.
+      arkGridCritRate: 0,
+      arkGridCritDmg: 0,
     };
   }
 
@@ -736,7 +860,8 @@
       (BRACELET_DMG_TABLE[inputs.braceletDmg2] || 0) +
       (KBW_TABLE[inputs.kbw] || 0) +
       (KBW_STONE_TABLE[inputs.kbwStone] || 0) +
-      STRIKE_CRIT_DMG;
+      STRIKE_CRIT_DMG +
+      (inputs.arkGridCritDmg || 0);
 
     // Base on-crit damage - each Crit Hit Damage Synergy toggle adds 8%
     // multiplicatively, same mechanism, independent sources (e.g. party
@@ -832,7 +957,7 @@
     const n = inputs.critSyn1 ? 0.1 : 0;
     const o = inputs.critSyn2 ? 0.1 : 0;
     const p = (inputs.backAttackRate / 100) * 0.1;
-    return c + d + e + f + g + h + i + k + n + o + p;
+    return c + d + e + f + g + h + i + k + n + o + p + (inputs.arkGridCritRate || 0);
   }
 
   function evoDmgTotal(keenSenseLv, limitBreakLv, shared) {
@@ -1764,6 +1889,204 @@
     return { necklace, earrings, rings, universal };
   }
 
+  // ----- ArkGrid (Chaos Core) Comparison -----
+  // Same "of the Cores I have data for, which is worth the most DPS"
+  // question as Bracelet/Accessory above, but needs no inputs of its
+  // own: 3 of its 9 effect types (Chaos Core: Flashy/Stable/Attack)
+  // already have "current gear" tracking elsewhere on this page -
+  // flashyAtk/stableAtk feed the main grid directly, gearApChaosStar
+  // feeds the Gearing section - so their candidates are valued by
+  // zeroing those SAME existing fields first, exactly like Bracelet
+  // zeroes its own tracked fields before valuing a candidate. The other
+  // 5 included types (Swift/Crushing/Smoldering/Absorbing/Weapon) have
+  // no existing field to double-count against, so their candidates are
+  // valued as a straight addition on top of your current totals - the
+  // same treatment the Bracelet panel's own 5 WP/AP rows already give
+  // any source that isn't separately tracked as "current gear". Chaos
+  // Core: Speed is excluded (see the lookup tables' own comment above
+  // computeShared for why, alongside every type's non-damage half).
+  //
+  // One row per Core TYPE (not one per type+grade) - Relic and Ancient
+  // are columns within that row, not separate rows, so the table stays
+  // at 8 rows instead of 16 and Points (14/17/20, this panel's actual
+  // comparison axis) reads as the table's real structure instead of
+  // being relabeled Low/Mid/High the way Bracelet/Accessory's tier
+  // lookups are. See renderArkGridComparison for the two-level header
+  // that keeps Relic vs Ancient unambiguous without doubling every row.
+  function computeArkGridComparison(inputs) {
+    const gridResult = computeGridAndSummary(inputs);
+    const best = gridResult.best;
+    if (!best) return [];
+    const { keenSense, limitBreak } = best.split;
+    const pair = best.keystone;
+
+    // Zeroes ONLY the 3 ArkGrid-tracked current-state fields - every
+    // other field (bracelet, rings, Gearing, etc.) stays at its real
+    // current value, since those aren't part of what this panel
+    // isolates. Safe to reuse as the shared base for every row below
+    // (including Weapon/Swift/Crushing/Smoldering/Absorbing, which
+    // don't touch any of these 3 fields at all).
+    const arkNB = Object.assign({}, inputs, {
+      flashyAtk: "None",
+      stableAtk: "None|0P",
+      gearApChaosStar: "None|0P",
+    });
+    const sharedNB = computeShared(arkNB);
+    const baselineMult = combinedMultiplier(arkNB, sharedNB, keenSense, limitBreak, pair);
+    const addDmgBaseline = pair.indexOf("master") !== -1 ? sharedNB.addDmgMaster : sharedNB.addDmgBase;
+
+    // Crit Hit Dmg (Flashy)/Crit Dmg (Swift)/Crit Rate (Crushing) all
+    // interact with the grid non-linearly (crit rate's cap, Master's
+    // +7% headroom, etc.), so - same as every Bracelet Crit Rate/Crit
+    // Dmg row - these go through a full combinedMultiplier recompute
+    // rather than a closed-form shortcut. Swift/Crushing have no field
+    // of their own to set, so they go through the arkGridCritDmg/
+    // arkGridCritRate passthrough fields instead (see readInputs' own
+    // comment on those two).
+    function critLikeGain(mutateFn) {
+      const cloned = Object.assign({}, arkNB);
+      mutateFn(cloned);
+      const shared = computeShared(cloned);
+      const mult = combinedMultiplier(cloned, shared, keenSense, limitBreak, pair);
+      return mult / baselineMult - 1;
+    }
+
+    // Builds one row's 6 Points x Grade cells from a single per-grade
+    // gain function - every Core type below is one call to this.
+    function points6(gainFn) {
+      return {
+        relic14: gainFn("Relic", "14P"),
+        ancient14: gainFn("Ancient", "14P"),
+        relic17: gainFn("Relic", "17P"),
+        ancient17: gainFn("Ancient", "17P"),
+        relic20: gainFn("Relic", "20P"),
+        ancient20: gainFn("Ancient", "20P"),
+      };
+    }
+
+    const rows = [];
+
+    // Chaos Core: Flashy - Crit Hit Dmg (own tracked field, zeroed
+    // above) combined with Dmg% (untracked elsewhere, a flat addition -
+    // see ARK_FLASHY_DMG_TABLE's own comment). Crit Hit Dmg only moves
+    // at 10p and 17p (nothing changes at 14p or 18-20p), so the 14p
+    // columns reuse the 10p figure and 20p reuses 17p's.
+    rows.push({
+      label: "Chaos Core: Flashy - Crit Hit Dmg & Dmg%",
+      ...points6((grade, pts) => {
+        const chitKey = pts === "14P" ? "Epic-Leg 10P" : grade + " 17P";
+        const chit = critLikeGain((c) => { c.flashyAtk = chitKey; });
+        const dmg = ARK_FLASHY_DMG_TABLE[grade + "|" + pts];
+        return (1 + chit) * (1 + dmg) - 1;
+      }),
+    });
+
+    // Chaos Core: Stable - Additional Dmg only (DR excluded). Reuses
+    // STABLE_ATK_TABLE directly (already the exact cumulative totals
+    // this needs, since it's the same field the main grid already
+    // tracks), divided by the Stable-free baseline the same way every
+    // Bracelet Additional Damage row divides by addDmgBaseline.
+    rows.push({
+      label: "Chaos Core: Stable - Additional Dmg",
+      ...points6((grade, pts) => STABLE_ATK_TABLE[grade + "|" + pts] / (1 + addDmgBaseline)),
+    });
+
+    // Chaos Core: Swift - Crit Dmg only (Attack Speed excluded). No
+    // existing field, so routed through the arkGridCritDmg passthrough.
+    rows.push({
+      label: "Chaos Core: Swift - Crit Dmg",
+      ...points6((grade, pts) => critLikeGain((c) => { c.arkGridCritDmg = ARK_SWIFT_CDMG_TABLE[grade + "|" + pts]; })),
+    });
+
+    // Chaos Core: Crushing - Crit Rate only (Weapon Power Cooldown
+    // reduction excluded). No existing field, routed through the
+    // arkGridCritRate passthrough.
+    rows.push({
+      label: "Chaos Core: Crushing - Crit Rate",
+      ...points6((grade, pts) => critLikeGain((c) => { c.arkGridCritRate = ARK_CRUSHING_CRATE_TABLE[grade + "|" + pts]; })),
+    });
+
+    // Chaos Core: Smoldering - Boss Dmg (untracked elsewhere, a flat
+    // addition) combined with Burn (see ARK_SMOLDERING_BURN_TABLE's own
+    // comment for why that half is a fixed grade-only estimate rather
+    // than Points-scaled).
+    rows.push({
+      label: "Chaos Core: Smoldering - Boss Dmg & Burn",
+      ...points6((grade, pts) => {
+        const bossDmg = ARK_SMOLDERING_BOSSDMG_TABLE[grade + "|" + pts];
+        const burn = ARK_SMOLDERING_BURN_TABLE[grade];
+        return (1 + bossDmg) * (1 + burn) - 1;
+      }),
+    });
+
+    // Chaos Core: Absorbing - Dmg only (Healing excluded). Untracked
+    // elsewhere, so a flat addition same as Smoldering's Boss Dmg half.
+    rows.push({
+      label: "Chaos Core: Absorbing - Dmg",
+      ...points6((grade, pts) => ARK_ABSORBING_DMG_TABLE[grade + "|" + pts]),
+    });
+
+    // ----- Chaos Core: Attack / Weapon - reuse the same gearApTotal
+    // machinery as the Bracelet panel's own 5 WP/AP rows, computed once
+    // from arkNB (which already excludes your current Chaos Core:
+    // Attack via the zeroed gearApChaosStar - Chaos Core: Weapon has no
+    // existing field to exclude in the first place, so this baseline
+    // doubles as its "no Weapon Core" baseline too, with nothing further
+    // to zero). Requires real Weapon Power/Main Stat, same guard the
+    // Bracelet panel's own WP/AP rows use. -----
+    {
+      const wp = arkNB.gearWp;
+      const mainStat = arkNB.gearMainStat;
+      const baseApMult = 1 + gearBaseApPercentTotal(arkNB) / 100;
+      const flatAp = arkNB.gearFlatAp + gearChaosStarFlat(arkNB.gearApChaosStar);
+      const percentApMult = 1 + gearAttackPowerPercentTotal(arkNB) / 100;
+      const wpPercentMult = 1 + gearWpPercentTotal(arkNB) / 100;
+      const supApBuff = supportApBuff(arkNB, wp, mainStat, baseApMult);
+      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+
+      if (wp > 0 && mainStat > 0 && baselineAp > 0) {
+        // Chaos Core: Attack grants flat AP and AP% simultaneously -
+        // gearApTotal takes both directly as parameters, no folding
+        // trick needed (unlike Weapon below).
+        rows.push({
+          label: "Chaos Core: Attack - Flat AP & AP%",
+          ...points6((grade, pts) => {
+            const t = GEAR_AP_CHAOS_STAR_TABLE[grade + "|" + pts] || { pct: 0, flat: 0 };
+            return (
+              gearApTotal(wp, mainStat, baseApMult, flatAp + t.flat, percentApMult + t.pct / 100, supApBuff) /
+                baselineAp -
+              1
+            );
+          }),
+        });
+
+        // Chaos Core: Weapon grants flat WP and WP% simultaneously -
+        // WP% isn't a gearApTotal parameter (it's folded into wp itself
+        // before this function ever sees it), so both halves use the
+        // same two folding tricks the Accessory panel's own Earring WP%
+        // and the Bracelet panel's own flat-WP rows each use
+        // individually, combined: the existing wp scales up by the new
+        // %, and the new flat amount scales up by the existing % (both
+        // get the same treatment a real equipped Weapon Core's payout
+        // would).
+        rows.push({
+          label: "Chaos Core: Weapon - Flat WP & WP%",
+          ...points6((grade, pts) => {
+            const t = ARK_WEAPON_CORE_TABLE[grade + "|" + pts] || { pct: 0, flat: 0 };
+            const newWp = wp * (1 + t.pct / 100 / wpPercentMult) + t.flat * wpPercentMult;
+            return gearApTotal(newWp, mainStat, baseApMult, flatAp, percentApMult, supApBuff) / baselineAp - 1;
+          }),
+        });
+      }
+    }
+
+    // Sorted by Ancient 17p - a reasonable "typical serious investment"
+    // reference point, same role Mid (17p) played in the old Low/Mid/
+    // High-per-grade layout's own sort.
+    rows.sort((a, b) => b.ancient17 - a.ancient17);
+    return rows;
+  }
+
   // ----- Format helper -----
   // Always 2 decimals - consistent across every field tag rather than
   // switching precision based on magnitude.
@@ -2134,6 +2457,34 @@
     });
   }
 
+  // ----- ArkGrid (Chaos Core) Comparison rendering -----
+  // Custom renderer, not renderComparisonRows above - each row shows 6
+  // numeric cells (Relic/Ancient x 14/17/20 Points) instead of a single
+  // Low/Mid/High trio, so the shared per-row-single-trio renderer
+  // doesn't fit here. No flip-footnote, same reasoning as
+  // renderAccessoryComparison: none of these rows can change the grid's
+  // best split/keystone, and a small-swing flip check wasn't worth 48
+  // extra bestPairFor() recomputes (6 cells x 8 rows).
+  function renderArkGridComparison(root, rows) {
+    const container = root.querySelector(".ap-arkgrid-compare-rows");
+    if (!container) return;
+    container.innerHTML = "";
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+      const labelTd = document.createElement("td");
+      labelTd.className = "ap-brace-row-label";
+      labelTd.textContent = row.label;
+      tr.appendChild(labelTd);
+      ["relic14", "ancient14", "relic17", "ancient17", "relic20", "ancient20"].forEach((key) => {
+        const td = document.createElement("td");
+        td.className = "ap-brace-tier-val ap-arkgrid-tier-val ap-arkgrid-" + (key.indexOf("relic") === 0 ? "relic" : "ancient");
+        td.textContent = formatPctBare(row[key]);
+        tr.appendChild(td);
+      });
+      container.appendChild(tr);
+    });
+  }
+
   // ----- Local storage persistence -----
   // Saves every field's current value under one key so a reader filling
   // this out doesn't have to redo it on every reload. Best-effort: some
@@ -2436,6 +2787,7 @@
     updateInputDisplays(root, inputs);
     renderBraceletComparison(root, computeBraceletComparison(inputs));
     renderAccessoryComparison(root, computeAccessoryComparison(inputs));
+    renderArkGridComparison(root, computeArkGridComparison(inputs));
 
     // Every range slider (Back-Attack Rate, Adrenaline Uptime, ...) shows
     // its live value as "N%" next to it - handled generically here so
