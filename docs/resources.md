@@ -772,7 +772,7 @@
                 <option value="crit_rate">Crit Rate %</option>
                 <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a">Additional Damage %</option>
@@ -798,7 +798,7 @@
                 <option value="crit_rate">Crit Rate %</option>
                 <option value="crit_dmg_dual" selected>Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a">Additional Damage %</option>
@@ -824,7 +824,7 @@
                 <option value="crit_rate">Crit Rate %</option>
                 <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a" selected>Additional Damage %</option>
@@ -872,7 +872,7 @@
                 <option value="crit_rate" selected>Crit Rate %</option>
                 <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a">Additional Damage %</option>
@@ -898,7 +898,7 @@
                 <option value="crit_rate">Crit Rate %</option>
                 <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg" selected>Crit Damage %</option>
-                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a">Additional Damage %</option>
@@ -924,7 +924,7 @@
                 <option value="crit_rate">Crit Rate %</option>
                 <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd" selected>Outgoing Dmg % &amp; Cooldown -2%</option>
+                <option value="damage_cd" selected>Outgoing Dmg % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a">Additional Damage %</option>
