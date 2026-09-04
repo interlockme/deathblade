@@ -119,7 +119,7 @@
       </select>
     </div>
     <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-adrenaline-uptime">Adrenaline Uptime</label>
+      <label class="ap-calc-field-label" for="ap-adrenaline-uptime">Adrenaline Uptime %</label>
       <input type="number" id="ap-adrenaline-uptime" class="ap-adrenaline-uptime" min="0" max="100" step="1" value="100">
     </div>
   </div>
@@ -355,7 +355,7 @@
       <input type="checkbox" id="ap-yearning" class="ap-yearning" checked>
     </div>
     <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-back-attack-rate">Back Attack Rate (Crit Rate)</label>
+      <label class="ap-calc-field-label" for="ap-back-attack-rate">Back Attack Rate % (Crit Rate)</label>
       <input type="number" id="ap-back-attack-rate" class="ap-back-attack-rate" min="0" max="100" step="1" value="90">
     </div>
   </div>
@@ -569,7 +569,7 @@
           <input type="number" id="ap-gear-flat-ap" class="ap-gear-flat-ap ap-gear-input-narrow" min="0" max="2000" step="1" value="0">
         </div>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-support-uptime" title="Assumes an equally-geared support providing their AP buff.">Support AP Buff Uptime</label>
+          <label class="ap-calc-field-label" for="ap-gear-support-uptime" title="Assumes an equally-geared support providing their AP buff.">Support AP Buff Uptime %</label>
           <input type="number" id="ap-gear-support-uptime" class="ap-gear-support-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="98">
         </div>
       </div>
@@ -653,12 +653,12 @@
           </select>
         </div>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-strength-orb-uptime" title="+10% Attack Power, scaled by the Support's Drops of Ether engraving.">Support: Strength Orb Uptime</label>
+          <label class="ap-calc-field-label" for="ap-gear-strength-orb-uptime" title="+10% Attack Power, scaled by the Support's Drops of Ether engraving.">Support: Strength Orb Uptime %</label>
           <span class="ap-value-display" data-for="ap-gear-strength-orb-uptime"></span>
           <input type="number" id="ap-gear-strength-orb-uptime" class="ap-gear-strength-orb-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="0">
         </div>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-atropine-uptime" title="+30% Attack Power for 10s. Usually 0-15% uptime in latest content.">Atropine Uptime</label>
+          <label class="ap-calc-field-label" for="ap-gear-atropine-uptime" title="+30% Attack Power for 10s. Usually 0-15% uptime in latest content.">Atropine Uptime %</label>
           <span class="ap-value-display" data-for="ap-gear-atropine-uptime"></span>
           <input type="number" id="ap-gear-atropine-uptime" class="ap-gear-atropine-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="0">
         </div>
@@ -750,7 +750,7 @@
           <div class="ap-bvb-card ap-bvb-card-a">
             <p class="ap-gear-card-title ap-bvb-card-title">Bracelet A</p>
             <div class="ap-calc-field-row">
-              <label class="ap-calc-field-label" for="ap-bvb-a-spec">Spec</label>
+              <label class="ap-calc-field-label" for="ap-bvb-a-spec">Spec Stat</label>
               <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen." hidden>i</span>
               <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE for CDR." hidden>!</span>
               <input type="number" id="ap-bvb-a-spec" class="ap-bvb-a-spec" min="60" max="120" step="1" value="100">
@@ -839,10 +839,10 @@
             </div>
             <div class="ap-bvb-results">
               <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-bvb-keystone ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vsnone-wrap"><span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span><span class="ap-bvb-vs-none ap-summary-value">—</span></span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Keystone/Crit Lines</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Spec</span><span class="ap-bvb-spec-val ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-flat ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Spec Stat</span><span class="ap-bvb-spec-val ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-other-wrap"><label class="ap-bvb-inline-check ap-bvb-a-demons-wrap" title="Include the vs Demon/Archdemon portion of the Additional Damage &amp; vs Demon/Archdemon line - unchecked values only its Additional Damage portion." hidden><input type="checkbox" id="ap-bvb-a-demons" class="ap-bvb-a-demons"> vs Demons</label><label class="ap-bvb-inline-check ap-bvb-a-cdest-wrap" title="Estimate the +2% Cooldown line's penalty into its value - unchecked uses its raw stated Outgoing Damage % instead." hidden><input type="checkbox" id="ap-bvb-a-cdest" class="ap-bvb-a-cdest" checked> +CD Estimate</label><span class="ap-bvb-flat ap-summary-value">—</span></span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">WP/AP Lines</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
             </div>
           </div>
@@ -850,7 +850,7 @@
           <div class="ap-bvb-card ap-bvb-card-b">
             <p class="ap-gear-card-title ap-bvb-card-title">Bracelet B</p>
             <div class="ap-calc-field-row">
-              <label class="ap-calc-field-label" for="ap-bvb-b-spec">Spec</label>
+              <label class="ap-calc-field-label" for="ap-bvb-b-spec">Spec Stat</label>
               <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen." hidden>i</span>
               <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE for CDR." hidden>!</span>
               <input type="number" id="ap-bvb-b-spec" class="ap-bvb-b-spec" min="60" max="120" step="1" value="80">
@@ -939,10 +939,10 @@
             </div>
             <div class="ap-bvb-results">
               <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-bvb-keystone ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vsnone-wrap"><span class="ap-brace-info-icon ap-bvb-cd-note" title="Estimated damage accounts for +CDR% penalty." hidden>i</span><span class="ap-bvb-vs-none ap-summary-value">—</span></span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Keystone/Crit Lines</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Spec</span><span class="ap-bvb-spec-val ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-flat ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Spec Stat</span><span class="ap-bvb-spec-val ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-other-wrap"><label class="ap-bvb-inline-check ap-bvb-b-demons-wrap" title="Include the vs Demon/Archdemon portion of the Additional Damage &amp; vs Demon/Archdemon line - unchecked values only its Additional Damage portion." hidden><input type="checkbox" id="ap-bvb-b-demons" class="ap-bvb-b-demons"> vs Demons</label><label class="ap-bvb-inline-check ap-bvb-b-cdest-wrap" title="Estimate the +2% Cooldown line's penalty into its value - unchecked uses its raw stated Outgoing Damage % instead." hidden><input type="checkbox" id="ap-bvb-b-cdest" class="ap-bvb-b-cdest" checked> +CD Estimate</label><span class="ap-bvb-flat ap-summary-value">—</span></span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">WP/AP Lines</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
             </div>
           </div>

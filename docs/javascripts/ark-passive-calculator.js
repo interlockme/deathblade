@@ -540,24 +540,38 @@
   }
 
   // ----- Weapon Power % (Gearing) -----
-  // Split into its two sources (Karmic Enlightenment, Earrings) for the
-  // same reason Attack Power % above is split into individual fields -
-  // see .ap-gear-wp-earring1/2's own tooltip/comment in resources.md.
-  // The Bracelet panel's 5 WP/AP rows want the FULL total (your real
-  // current gear, same as every other Gearing field); the Accessory
-  // panel's Earrings candidate line wants just the Karmic Enlightenment
-  // portion, with the Earrings portion zeroed out first so the candidate
-  // isn't added on top of the 2 earrings' WP% already counted in the
-  // baseline - see that panel's own comment for the matching treatment
-  // already applied to gearApEarring1/2.
+  // Split into its three sources (Karmic Enlightenment, Earrings, Chaos
+  // Core: Weapon) for the same reason Attack Power % above is split into
+  // individual fields - see .ap-gear-wp-earring1/2's own tooltip/comment
+  // in resources.md. The Bracelet panel's 5 WP/AP rows want the FULL
+  // total (your real current gear, same as every other Gearing field);
+  // the Accessory panel's Earrings candidate line wants just the Karmic
+  // Enlightenment + Chaos Core: Weapon portion, with the Earrings portion
+  // zeroed out first so the candidate isn't added on top of the 2
+  // earrings' WP% already counted in the baseline - see that panel's own
+  // comment for the matching treatment already applied to gearApEarring1/2.
   function gearWpKarmaPercent(inputs) {
     return inputs.gearWpKarmaLv * GEAR_WP_KARMA_PER_LEVEL;
   }
   function gearWpEarringPercent(inputs) {
     return (GEAR_WP_EARRING_TABLE[inputs.gearWpEarring1] || 0) + (GEAR_WP_EARRING_TABLE[inputs.gearWpEarring2] || 0);
   }
+  // Chaos Core: Weapon's WP% half - folded into the running WP% total
+  // alongside Karma/Earrings, same treatment as any other %-based WP
+  // source, so a candidate flat-WP line/bonus correctly compounds with it
+  // the same way it already compounds with Karma/Earrings. Its FLAT half
+  // stays OUT of this total on purpose: unlike this %, which needs to be
+  // known on its own to correctly scale a NEW delta, the flat amount is
+  // already sitting inside whatever real Weapon Power you typed (same as
+  // any other flat WP source on your gear - nothing to separately add).
+  // The only place the flat half is needed on its own is
+  // computeArkGridComparison's reverse-derivation of a coreless baseline,
+  // which reads ARK_WEAPON_CORE_TABLE directly rather than through here.
+  function gearWeaponCorePercent(inputs) {
+    return (ARK_WEAPON_CORE_TABLE[inputs.gearWeaponCore] || {}).pct || 0;
+  }
   function gearWpPercentTotal(inputs) {
-    return gearWpKarmaPercent(inputs) + gearWpEarringPercent(inputs);
+    return gearWpKarmaPercent(inputs) + gearWpEarringPercent(inputs) + gearWeaponCorePercent(inputs);
   }
 
   // ----- Spec +80/100/120 (Deathblade only) -----
@@ -707,12 +721,16 @@
   }
 
   // Reads one side (A or B) of the Bracelet vs. Bracelet inputs into the
-  // { spec, critStat, lines } shape computeSingleBracelet expects. Each
-  // line carries both `tier` (Low/Mid/High, used by every line type except
-  // STR/DEX/INT) and `mainStat` (a direct 10000-16000 amount, used only
-  // when type is "stat_main") - see enforceBvbLineControls for why
+  // { spec, critStat, lines, demons, cdEstimate } shape computeSingleBracelet
+  // expects. Each line carries both `tier` (Low/Mid/High, used by every line
+  // type except STR/DEX/INT) and `mainStat` (a direct 10000-16000 amount,
+  // used only when type is "stat_main") - see enforceBvbLineControls for why
   // STR/DEX/INT gets a free-typed number instead of a tier dropdown, and
   // computeSingleBracelet for where mainStat actually gets consumed.
+  // `demons`/`cdEstimate` are per-SIDE, not per-line, since only one of a
+  // side's 3 free lines can ever be add_b (or damage_cd) at once - see
+  // enforceBvbLineExclusivity - so one checkbox each covers the whole side.
+  // See braceletFlatLineGain's own comment for what each toggles.
   function readBvbSide(root, prefix) {
     const base = ".ap-bvb-" + prefix + "-";
     return {
@@ -723,6 +741,8 @@
         tier: getSelect(root, base + "line" + n + "-tier", "Mid"),
         mainStat: Math.max(10000, Math.min(16000, getNumber(root, base + "line" + n + "-mainstat", 14000))),
       })),
+      demons: getCheckbox(root, base + "demons", false),
+      cdEstimate: getCheckbox(root, base + "cdest", true),
     };
   }
 
@@ -1438,10 +1458,21 @@
       {
         id: "addB",
         label: ["Additional Damage +", ...trip("2.5", "3", "3.5"), "% & Dmg vs Demon/Archdemon +", { tier: "fixed", text: "2.5" }, "%"],
-        note: "Compare to Additional Damage line for value vs regular foes.",
+        note:
+          "Displayed value assumes a Demon/Archdemon target, which most boss fights aren't. Additional Damage portion alone: " +
+          formatPctBare(BRACELET_ADD_B_TABLE.Low / (1 + addDmgBaseline)) + "/" +
+          formatPctBare(BRACELET_ADD_B_TABLE.Mid / (1 + addDmgBaseline)) + "/" +
+          formatPctBare(BRACELET_ADD_B_TABLE.High / (1 + addDmgBaseline)) + ".",
         low: (BRACELET_ADD_B_TABLE.Low / (1 + addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + demonDmgPct) + 1) - 1,
         mid: (BRACELET_ADD_B_TABLE.Mid / (1 + addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + demonDmgPct) + 1) - 1,
         high: (BRACELET_ADD_B_TABLE.High / (1 + addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + demonDmgPct) + 1) - 1,
+        // Sorts by its Additional-Damage-only portion (ignoring the
+        // situational vs Demon/Archdemon bonus above), not by the full
+        // displayed Mid value the rest of this sort otherwise uses - see
+        // the sort call below. Keeps it from reading as a strictly better
+        // pick than the plain Additional Damage line by default, without
+        // the old hard-coded "always sort directly below addA" special case.
+        sortKey: BRACELET_ADD_B_TABLE.Mid / (1 + addDmgBaseline),
         flipsBest: checkFlip((c) => { c.braceletAddB = "Mid"; }),
       },
       {
@@ -1472,7 +1503,7 @@
       const k = specGainPerPoint(deathbladeSpecMultiplier, cfg.share, cfg.awakeningShare);
       rows.push({
         id: "spec",
-        label: ["Spec +", ...trip("80", "100", "120")],
+        label: ["Spec Stat +", ...trip("80", "100", "120")],
         low: k * 80,
         mid: k * 100,
         high: k * 120,
@@ -1584,22 +1615,13 @@
       }
     }
 
-    rows.sort((a, b) => b.mid - a.mid);
-
-    // The Archdemon line's displayed Mid value already assumes you're
-    // fighting a Demon/Archdemon target, which most boss fights aren't -
-    // so a pure numeric sort tends to rank it above the plain Additional
-    // Damage line it's really just a variant of, plus a demon-only bonus
-    // that often doesn't apply. Force it to always sort directly below
-    // that line instead, every time, so it doesn't read as a strictly
-    // better pick by default.
-    const addBIdx = rows.findIndex((r) => r.id === "addB");
-    const addAIdx = rows.findIndex((r) => r.id === "addA");
-    if (addBIdx !== -1 && addAIdx !== -1) {
-      const [addBRow] = rows.splice(addBIdx, 1);
-      const insertAt = rows.findIndex((r) => r.id === "addA") + 1;
-      rows.splice(insertAt, 0, addBRow);
-    }
+    // Sorts by each row's own sortKey when it has one (currently only
+    // addB - see that row's comment), falling back to the displayed Mid
+    // value otherwise. Lets addB rank by its guaranteed Additional Damage
+    // portion instead of the situational Demon/Archdemon-inflated number
+    // actually shown, without a hard-coded "always sort directly below
+    // addA" special case.
+    rows.sort((a, b) => (b.sortKey !== undefined ? b.sortKey : b.mid) - (a.sortKey !== undefined ? a.sortKey : a.mid));
 
     return rows;
   }
@@ -1668,10 +1690,24 @@
 
   // Values one flat, grid-independent line at the given tier - mirrors the
   // matching row's formula in computeBraceletComparison above exactly (see
-  // that function for the full derivation of each).
+  // that function for the full derivation of each), except for two spots
+  // where Bracelet vs. Bracelet's own per-side checkboxes (ctx.cdEstimate,
+  // ctx.demons) let the reader opt out of an assumption computeBraceletComparison
+  // always applies:
+  //   - damage_cd: ctx.cdEstimate defaults to true (checked) and picks the
+  //     usual CDR-penalty-adjusted table; unchecked skips the penalty
+  //     entirely and uses the tag's raw stated 4.5/5/5.5% instead
+  //     (DAMAGE_CD_RAW_TABLE - class-independent, since it's just the
+  //     line's literal value with no estimate layered on).
+  //   - add_b: ctx.demons defaults to false (unchecked) and values ONLY
+  //     the Additional Damage half, same treatment computeBraceletComparison's
+  //     own addB row now always uses (see that row's comment); checked
+  //     adds the vs Demon/Archdemon half back in via the same compounding
+  //     this used to always do unconditionally.
   function braceletFlatLineGain(typeId, tier, ctx) {
     switch (typeId) {
       case "damage_cd":
+        if (ctx.cdEstimate === false) return DAMAGE_CD_RAW_TABLE[tier] || 0;
         return (ctx.surge ? DAMAGE_CD_SURGE_TABLE : DAMAGE_CD_TABLE)[tier] || 0;
       case "outgoing_stagger":
         return (OUTGOING_DMG_TABLE[tier] || 0) + (STAGGER_DMG_TABLE[tier] || 0) * STAGGER_DPS_SHARE;
@@ -1680,7 +1716,10 @@
       case "add_a":
         return (BRACELET_ADD_A_TABLE[tier] || 0) / (1 + ctx.addDmgBaseline);
       case "add_b":
-        return ((BRACELET_ADD_B_TABLE[tier] || 0) / (1 + ctx.addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + ctx.demonDmgPct) + 1) - 1;
+        if (ctx.demons) {
+          return ((BRACELET_ADD_B_TABLE[tier] || 0) / (1 + ctx.addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + ctx.demonDmgPct) + 1) - 1;
+        }
+        return (BRACELET_ADD_B_TABLE[tier] || 0) / (1 + ctx.addDmgBaseline);
       case "back_attack":
         return (BACK_DMG_TABLE[tier] || 0) * BACK_ATTACK_DPS_SHARE;
       default:
@@ -1772,7 +1811,13 @@
     const demonDmgPct = inputs.demonDmgPct / 100;
     let flatMult = 1;
     flatLines.forEach((sel) => {
-      flatMult *= 1 + braceletFlatLineGain(sel.type, sel.tier, { surge: isSurge, addDmgBaseline, demonDmgPct });
+      flatMult *= 1 + braceletFlatLineGain(sel.type, sel.tier, {
+        surge: isSurge,
+        addDmgBaseline,
+        demonDmgPct,
+        demons: side.demons,
+        cdEstimate: side.cdEstimate,
+      });
     });
 
     // Same "separate multiplicative layer off the Gearing inputs" approach
@@ -2724,7 +2769,8 @@
       // The Archdemon line's displayed values only pay off against a
       // Demon/Archdemon target - greyed out here so they read as
       // situational rather than a plain, always-on gain like every other
-      // row's numbers.
+      // row's numbers (its hover note gives the Additional-Damage-only
+      // equivalent for a direct, non-situational comparison).
       if (row.id === "addB") tr.classList.add("ap-brace-row-situational");
 
       container.appendChild(tr);
@@ -2751,15 +2797,12 @@
   // 83 only) since those depend on the same inputs this render pass
   // already has in hand.
   //
-  // rawLines (side.lines from readBvbSide) drives the single "estimated"
-  // cd-note icon beside vs No Bracelet: it used to live inline in
-  // whichever line-row had Damage+CD selected, but that made the type
-  // <select> in that one row shrink to make room for it, so its box was a
-  // visibly different width from the other two rows in the same card.
-  // Anchoring one icon to the results row instead (still only shown when
-  // at least one of the 3 free lines is actually Damage+CD) keeps every
-  // line-row the same width regardless of which line type is picked.
-  function renderBvbCard(root, prefix, side, isSurgeSpec, rawLines) {
+  // The "estimated" cd-note that used to sit beside vs No Bracelet is
+  // gone - now that CD Estimate is a real per-side checkbox (see
+  // enforceBvbLineControls), its own hover tooltip already explains the
+  // assumption, so a second icon repeating the same thing elsewhere was
+  // redundant.
+  function renderBvbCard(root, prefix, side, isSurgeSpec) {
     const card = root.querySelector(".ap-bvb-card-" + prefix);
     if (!card) return;
     const set = (selector, text) => {
@@ -2779,15 +2822,12 @@
     const isRE = !isSurgeSpec;
     if (specNote) specNote.hidden = !isRE;
     if (specWarn) specWarn.hidden = !(isRE && specInput && parseFloat(specInput.value) < 83);
-
-    const cdNoteEl = card.querySelector(".ap-bvb-cd-note");
-    if (cdNoteEl) cdNoteEl.hidden = !(rawLines || []).some((line) => line.type === "damage_cd");
   }
 
   function renderBraceletVsBracelet(root, inputs, result) {
     const bvbIsSurge = braceSpecConfig(inputs).isSurge;
-    renderBvbCard(root, "a", result.a, bvbIsSurge, inputs.bvbA && inputs.bvbA.lines);
-    renderBvbCard(root, "b", result.b, bvbIsSurge, inputs.bvbB && inputs.bvbB.lines);
+    renderBvbCard(root, "a", result.a, bvbIsSurge);
+    renderBvbCard(root, "b", result.b, bvbIsSurge);
 
     const noneEl = root.querySelector(".ap-bvb-no-bracelet-keystone");
     if (noneEl) noneEl.textContent = result.noBracelet.splitLabel + " + " + result.noBracelet.keystoneLabel;
@@ -3260,8 +3300,18 @@
   // used to sit inline in whichever row had Damage+CD selected, but that
   // made that one row's type <select> shrink to fit the icon, so its box
   // read as a different width than the other two rows.
+  // Also toggles the two per-side "Other Lines" checkboxes (vs Demons,
+  // CD Estimate - see braceletFlatLineGain's own comment for what each
+  // does) on/off alongside each line row's tier/mainstat swap: each only
+  // makes sense - and only shows - while its matching line type (add_b,
+  // damage_cd) is actually picked in one of that side's 3 free lines. Both
+  // are per-SIDE rather than per-line since a real bracelet can only roll
+  // one of either type at once (enforceBvbLineExclusivity), so one checkbox
+  // each covers whichever of the 3 rows currently holds that type.
   function enforceBvbLineControls(root) {
     ["a", "b"].forEach((prefix) => {
+      let hasAddB = false;
+      let hasDamageCd = false;
       [1, 2, 3].forEach((n) => {
         const base = ".ap-bvb-" + prefix + "-line" + n;
         const typeEl = root.querySelector(base + "-type");
@@ -3271,7 +3321,17 @@
         const isStatMain = typeEl.value === "stat_main";
         if (tierEl) { tierEl.hidden = isStatMain; tierEl.disabled = isStatMain; }
         if (mainStatEl) { mainStatEl.hidden = !isStatMain; mainStatEl.disabled = !isStatMain; }
+        if (typeEl.value === "add_b") hasAddB = true;
+        if (typeEl.value === "damage_cd") hasDamageCd = true;
       });
+      const demonsWrap = root.querySelector(".ap-bvb-" + prefix + "-demons-wrap");
+      const demonsEl = root.querySelector(".ap-bvb-" + prefix + "-demons");
+      if (demonsWrap) demonsWrap.hidden = !hasAddB;
+      if (demonsEl) demonsEl.disabled = !hasAddB;
+      const cdestWrap = root.querySelector(".ap-bvb-" + prefix + "-cdest-wrap");
+      const cdestEl = root.querySelector(".ap-bvb-" + prefix + "-cdest");
+      if (cdestWrap) cdestWrap.hidden = !hasDamageCd;
+      if (cdestEl) cdestEl.disabled = !hasDamageCd;
     });
   }
 

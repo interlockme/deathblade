@@ -4798,7 +4798,8 @@ h3 { color: var(--dbc-teal); }
 }
 /* Archdemon line's Low/Mid/High values only pay off vs a Demon/Archdemon
    target - dimmed so they read as situational at a glance, rather than a
-   plain always-on gain like every other row's numbers. */
+   plain always-on gain like every other row's numbers. Its hover note
+   gives the Additional-Damage-only equivalent for a direct comparison. */
 .md-typeset .ap-brace-row-situational .ap-brace-tier-val {
   color: var(--dbc-slate);
 }
@@ -4918,21 +4919,43 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.9em;
   opacity: 0.75;
 }
-/* Groups the vs No Bracelet value with its "estimated" caveat icon (only
-   shown when one of the 3 free lines is Damage+CD - see renderBvbCard) so
-   the pair reads as one unit sitting at the row's right edge, instead of
-   the icon becoming justify-content: space-between's third participant
-   and landing in the middle of the row on its own. This is also *why* the
-   icon moved here from the line-picker row in the first place: anchored
-   beside a value that's always the same width, it never shifts anything
-   else's layout the way it did living inline in a <select> row. */
-.md-typeset .ap-bvb-vsnone-wrap {
+/* "Other Lines" groups its two per-side checkboxes (vs Demons, CD
+   Estimate - see enforceBvbLineControls/braceletFlatLineGain) with the
+   row's value at its right edge, instead of a checkbox becoming
+   justify-content: space-between's third participant and landing in the
+   middle of the row on its own. Each checkbox is only shown while its
+   matching line type is actually picked in one of the 3 free lines, so
+   this wrap can hold 0, 1, or both at once - gap collapses on its own via
+   flex when a hidden label contributes nothing. */
+.md-typeset .ap-bvb-other-wrap {
   display: inline-flex;
   align-items: center;
-  gap: 0.35em;
+  gap: 0.6em;
 }
-.md-typeset .ap-bvb-vsnone-wrap .ap-bvb-cd-note {
-  margin-left: 0;
+.md-typeset .ap-bvb-inline-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  font-size: 0.82em;
+  color: var(--dbc-lilac);
+  cursor: pointer;
+  white-space: nowrap;
+}
+/* The `display: inline-flex` above ties in specificity with the browser's
+   own `[hidden] { display: none }` default (both a single class/attribute
+   selector), so without this the later author rule would win the cascade
+   and the label would stay visible even while actually hidden - toggled
+   by enforceBvbLineControls whenever its matching line type (add_b/
+   damage_cd) isn't currently picked in one of the 3 free lines. */
+.md-typeset .ap-bvb-inline-check[hidden] {
+  display: none;
+}
+.md-typeset .ap-bvb-inline-check input[type="checkbox"] {
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  accent-color: var(--dbc-lavender);
+  cursor: pointer;
 }
 .md-typeset .ap-bvb-summary {
   margin-top: 0.9em;
