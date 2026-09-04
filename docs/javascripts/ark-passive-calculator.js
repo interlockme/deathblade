@@ -2499,6 +2499,14 @@
       spanAstro.textContent = formatPct(astrogemDmg);
     }
 
+    // Gem Base AP % - shows the combined total (gem sum + the Ability
+    // Stone's +1.5% when that checkbox is on) rather than just echoing
+    // the typed-in gem value back, so checking/unchecking the stone box
+    // is reflected here immediately (e.g. 13.2 + 1.5 -> "14.70%") - see
+    // gearBaseApPercentTotal's own comment for why the stone is a
+    // separate additive term instead of folded into the typed field.
+    setDisplay("#ap-gear-gem-base-ap", gearBaseApPercentTotal(inputs) / 100);
+
     // Astrogem (Gearing's own Atk. Power Level - independent field, see
     // gearAstrogemApPercent's comment)
     const spanGearAstro = root.querySelector('.ap-value-display[data-for="ap-gear-ap-astrogem-lv"]');

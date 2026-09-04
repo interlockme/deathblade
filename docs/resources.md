@@ -555,11 +555,12 @@
           <input type="number" id="ap-gear-main-stat-pct" class="ap-gear-main-stat-pct ap-gear-input-narrow" min="0" max="15" step="0.1" value="9">
         </div>
         <div class="ap-calc-field-row ap-calc-field-row-pair">
-          <label class="ap-calc-field-label" title="The SUM of every socketed gem's Base AP% bonus (Lv.7 +0.6% / Lv.8 +0.8% / Lv.9 +1% / Lv.10 +1.2% each).">Gem Base AP %</label>
-          <div class="ap-calc-pair">
+          <label class="ap-calc-field-label ap-gear-gem-base-ap-label" title="The SUM of every socketed gem's Base AP% bonus (Lv.7 +0.6% / Lv.8 +0.8% / Lv.9 +1% / Lv.10 +1.2% each).">Gem Base AP %</label>
+          <div class="ap-calc-pair ap-gear-gem-base-ap-pair">
+            <span class="ap-value-display" data-for="ap-gear-gem-base-ap"></span>
             <input type="number" id="ap-gear-gem-base-ap" class="ap-gear-gem-base-ap ap-gear-input-narrow" min="0" max="13.2" step="0.1" value="13.2" title="Gem Base AP % - the SUM across all your socketed gems.">
             <label class="ap-calc-pair-check" title="Check to add your stone's Base AP % bonus if available (+1.5%).">
-              <span class="ap-calc-pair-check-label">Ability Stone Base AP %</span>
+              <span class="ap-calc-pair-check-label">Ability Stone</span>
               <input type="checkbox" id="ap-gear-ability-stone-base-ap" class="ap-gear-ability-stone-base-ap" checked>
             </label>
           </div>

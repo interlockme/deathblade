@@ -3844,6 +3844,25 @@ h3 { color: var(--dbc-teal); }
   align-items: center;
   gap: 0.6em;
 }
+/* Gem Base AP % only: this pair added a third, fixed-width child (the
+   live combined-total .ap-value-display) ahead of the input, and that
+   plus the Ability Stone checkbox's own nowrap label no longer fit on
+   one line at this card's width - none of them shrink to compensate
+   (see the two shrink-guard comments above), so the excess overflowed
+   past this container's own left edge and overlapped the row's main
+   label instead of clipping harmlessly on the right. Scoped to this one
+   pair (rather than the shared .ap-calc-pair rule above) since Rings/
+   Bracelet/Earrings already fit on one line without it - turning on
+   wrap there too just made those wrap unnecessarily. */
+/* Gem Base AP % pair wraps to two lines if its content (the live
+   combined-total display + input + Ability Stone checkbox) doesn't
+   fit on one - see .ap-gear-gem-base-ap-label further below for why
+   that's normally enough room and this is just a fallback for
+   narrower widths. */
+.md-typeset .ap-gear-gem-base-ap-pair {
+  flex-wrap: wrap;
+  row-gap: 0.3em;
+}
 .md-typeset .ap-calc-pair select {
   width: auto;
   min-width: 5em;
@@ -4561,6 +4580,20 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-gear-inputs .ap-gear-card .ap-calc-field-row .ap-calc-field-label {
   flex: 1;
+}
+/* Gem Base AP % only: the rule above splits every field-row 50/50
+   between label and control, which Earrings/etc. have plenty of room
+   to spare under but this row doesn't once the live combined-total
+   display (.ap-value-display) sits ahead of the input too - even after
+   shortening the Ability Stone checkbox's own label, that plus the
+   input needs more than half the row. Sized to content instead, same
+   as .ap-calc-field-row-pair's own label rule elsewhere originally
+   intended. Same specificity as the rule above (both 5 classes via the
+   same ancestor chain), so this has to come after it in the file to
+   win the tiebreak - keep it directly below if either rule moves. */
+.md-typeset .ap-gear-inputs .ap-gear-card .ap-calc-field-row .ap-gear-gem-base-ap-label {
+  flex: 0 1 auto;
+  white-space: nowrap;
 }
 /* Weapon Power / Main Stat are typed as large raw numbers (6-7 digits) -
    the shared 5.5em field width above clips them, so these two get more
