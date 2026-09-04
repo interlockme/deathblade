@@ -118,12 +118,9 @@
         <option value="4 Nodes" selected>4 Nodes</option>
       </select>
     </div>
-    <div class="ap-calc-field-row ap-calc-field-row-range ap-calc-field-row-range--inline">
+    <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-adrenaline-uptime">Adrenaline Uptime</label>
-      <div class="ap-calc-range-line">
-        <input type="range" id="ap-adrenaline-uptime" class="ap-adrenaline-uptime" min="0" max="100" step="1" value="100">
-        <span class="ap-calc-range-value">100%</span>
-      </div>
+      <input type="number" id="ap-adrenaline-uptime" class="ap-adrenaline-uptime" min="0" max="100" step="1" value="100">
     </div>
   </div>
 
@@ -357,12 +354,9 @@
       <span class="ap-value-display" data-for="ap-yearning"></span>
       <input type="checkbox" id="ap-yearning" class="ap-yearning" checked>
     </div>
-    <div class="ap-calc-field-row ap-calc-field-row-range ap-calc-field-row-range--inline">
-      <label class="ap-calc-field-label" for="ap-back-attack-rate">Back-Attack Rate</label>
-      <div class="ap-calc-range-line">
-        <input type="range" id="ap-back-attack-rate" class="ap-back-attack-rate" min="0" max="100" step="1" value="90">
-        <span class="ap-calc-range-value">90%</span>
-      </div>
+    <div class="ap-calc-field-row">
+      <label class="ap-calc-field-label" for="ap-back-attack-rate">Back Attack Rate (Crit Rate)</label>
+      <input type="number" id="ap-back-attack-rate" class="ap-back-attack-rate" min="0" max="100" step="1" value="90">
     </div>
   </div>
 
@@ -575,7 +569,7 @@
           <input type="number" id="ap-gear-flat-ap" class="ap-gear-flat-ap ap-gear-input-narrow" min="0" max="2000" step="1" value="0">
         </div>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-support-uptime" title="Assumes an equally-geared support providing their AP buff: same Main Stat as you, 5% more Weapon Power.">Support AP Buff Uptime</label>
+          <label class="ap-calc-field-label" for="ap-gear-support-uptime" title="Assumes an equally-geared support providing their AP buff.">Support AP Buff Uptime</label>
           <input type="number" id="ap-gear-support-uptime" class="ap-gear-support-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="98">
         </div>
       </div>
@@ -703,20 +697,20 @@
         <input type="number" id="ap-brace-demon-dmg" class="ap-brace-demon-dmg" min="0" max="15" step="0.1" value="7">
       </div>
       <div class="ap-calc-field-row">
-        <label class="ap-calc-field-label" for="ap-brace-crit-stat-equipped">Crit Stat from Current Bracelet</label>
+        <label class="ap-calc-field-label" for="ap-brace-crit-stat-equipped">Current Bracelet's Crit Stat</label>
         <span class="ap-brace-info-icon" title="Subtracted from your total Crit Stat to build the no-bracelet baseline, so this comparison doesn't double-count Crit Stat your current bracelet already grants.">i</span>
         <input type="number" id="ap-brace-crit-stat-equipped" class="ap-brace-crit-stat-equipped" min="60" max="120" step="1" value="82">
       </div>
-      <div class="ap-brace-spec-toggle">
-        <span class="ap-calc-field-label">Spec Scaling</span>
-        <label class="ap-brace-radio-label">
-          <input type="radio" name="ap-brace-deathblade-spec" id="ap-brace-spec-re" checked>
-          RE
-        </label>
-        <label class="ap-brace-radio-label">
-          <input type="radio" name="ap-brace-deathblade-spec" id="ap-brace-spec-surge" class="ap-brace-spec-surge">
-          Surge
-        </label>
+      <div class="ap-calc-field-row">
+        <label class="ap-calc-field-label" for="ap-brace-spec-build">Spec Scaling</label>
+        <select id="ap-brace-spec-build" class="ap-brace-spec-build">
+          <option value="re-111">RE 111</option>
+          <option value="re-313">RE 313</option>
+          <option value="re-333" selected>RE 333</option>
+          <option value="surge-111">Surge 111</option>
+          <option value="surge-222">Surge 222</option>
+          <option value="surge-333">Surge 333</option>
+        </select>
       </div>
     </div>
     <table class="ap-brace-compare-table">

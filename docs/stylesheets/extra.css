@@ -3301,9 +3301,9 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .bid-calc-field-row input.bid-market-price.bid-calc-input-invalid {
   border-color: var(--dbc-red);
 }
-/* Raid Size / Intent pickers - same real-radio-inputs approach as
-   .ap-brace-spec-toggle (mutual exclusivity native to the browser rather
-   than JS-enforced), lavender accent-color to match the rest of the card. */
+/* Raid Size / Intent pickers - real radio inputs (mutual exclusivity
+   native to the browser rather than JS-enforced), lavender accent-color
+   to match the rest of the card. */
 .md-typeset .bid-calc-toggle,
 .md-typeset .bid-calc-intent {
   display: flex;
@@ -4293,39 +4293,6 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-slate);
   font-size: 0.92em;
 }
-/* RE/Surge Deathblade picker for the Spec +80/100/120 line - real radio
-   inputs (not JS-enforced checkboxes) so mutual exclusivity is native
-   rather than something this code has to police. Lives inside
-   .ap-brace-compare-inputs as a third flex item alongside the Demon Dmg %
-   and Crit Stat fields (rather than its own stacked row above them) to
-   keep the section from eating extra vertical space. */
-.md-typeset .ap-brace-spec-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.7em;
-  flex: 0 0 auto;
-  margin: 0;
-}
-.md-typeset .ap-brace-spec-toggle .ap-calc-field-label {
-  margin: 0;
-  font-size: 0.82em;
-  color: var(--dbc-lilac);
-}
-.md-typeset .ap-brace-radio-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;
-  font-size: 0.82em;
-  color: var(--dbc-lilac);
-  cursor: pointer;
-}
-.md-typeset .ap-brace-radio-label input[type="radio"] {
-  width: 1em;
-  height: 1em;
-  margin: 0;
-  accent-color: var(--dbc-lavender);
-  cursor: pointer;
-}
 .md-typeset .ap-brace-compare-inputs {
   display: flex;
   flex-wrap: wrap;
@@ -4822,32 +4789,6 @@ h3 { color: var(--dbc-teal); }
   vertical-align: middle;
   white-space: nowrap;
   cursor: help;
-}
-/* Per-build hover tags (111/313 for RE, 222/333 for Surge) sitting next to
-   the Spec row's label - same compact sizing as .ap-brace-label-caveat so
-   a row with both the dmg-only tag and two build tags still doesn't grow
-   taller than any other row. Neutral color instead of the caveat's amber
-   since these aren't warnings, just alternate figures on hover. */
-.md-typeset .ap-brace-build-tag {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 0.35em;
-  padding: 0.02em 0.35em;
-  border-radius: 3px;
-  background: rgba(var(--dbc-lavender-rgb), 0.12);
-  border: 1px solid rgba(var(--dbc-lavender-rgb), 0.5);
-  color: var(--dbc-lavender);
-  font-size: 0.62em;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  vertical-align: middle;
-  white-space: nowrap;
-  cursor: help;
-}
-.md-typeset .ap-brace-build-tag:hover {
-  border-color: var(--dbc-lavender);
-  color: var(--dbc-lilac);
 }
 .md-typeset .ap-brace-tier-val {
   font-weight: 400;

@@ -219,15 +219,15 @@
   // "well-geared"/BiS assumption, an EQUALLY-geared one that scales with
   // whatever you enter - carrying:
   //   - the same Main Stat as you
-  //   - SUPPORT_WP_BUMP more Weapon Power (supports itemize WP harder -
-  //     e.g. always taking 3% WP earrings over substats you might skip)
+  //   - the same Weapon Power as you (no assumed WP bump over your own
+  //     entered value - previously assumed supports itemize WP 5% harder
+  //     than you, dropped as an unfounded assumption)
   //   - the same Base AP% multiplier as you
   //   - a fixed AP-buff-tier coefficient, calibrated against Arsonistic's
   //     own reference support profile (Awakening engraving + ArkGrid AP
   //     nodes) - this is the one piece that can't scale off your own
   //     inputs, since it depends on the support's engraving/ArkGrid
   //     choices rather than WP/MainStat
-  const SUPPORT_WP_BUMP = 0.05;
   const SUPPORT_AP_BUFF_COEFFICIENT = 0.4;
 
   function gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff) {
@@ -245,8 +245,7 @@
 
   function supportApBuff(inputs, wp, mainStat, baseApMult) {
     if (!inputs.gearSupport) return 0;
-    const supWp = wp * (1 + SUPPORT_WP_BUMP);
-    return Math.sqrt((supWp * mainStat) / 6) * baseApMult * SUPPORT_AP_BUFF_COEFFICIENT * (inputs.gearSupportUptime / 100);
+    return Math.sqrt((wp * mainStat) / 6) * baseApMult * SUPPORT_AP_BUFF_COEFFICIENT * (inputs.gearSupportUptime / 100);
   }
 
   // Adrenaline engraving's own Attack Power component - separate from the
@@ -466,13 +465,6 @@
     "Ancient|19P": { pct: 3.46, flat: 5200 },
     "Ancient|20P": { pct: 3.69, flat: 5200 },
   };
-  function arkWeaponCorePct(combined) {
-    return (ARK_WEAPON_CORE_TABLE[combined] || {}).pct || 0;
-  }
-  function arkWeaponCoreFlat(combined) {
-    return (ARK_WEAPON_CORE_TABLE[combined] || {}).flat || 0;
-  }
-
   const GEAR_AP_ASTROGEM_MAX = 4.4;
 
   // Astrogem Atk. Power Level is its OWN field (.ap-gear-ap-astrogem-lv),
@@ -610,27 +602,32 @@
   const SPEC_REF = 1855; // reference Spec the share percentages are anchored to
   const SPEC_SKILL_COEFFICIENT = 0.86;
   const AWAKENING_COEFFICIENT = 0.1528;
-  // `builds` replaces the old single altShare/altLabel pair with one entry
-  // per named build variant, each rendered as its own small hover tag on
-  // the Spec row (see renderBraceletComparison) instead of one shared "i"
-  // icon - so 111 and 313 (RE) / 222 and 333 (Surge) are each independently
-  // hoverable rather than lumped into one combined note.
-  const RE_DEATHBLADE_SPEC = {
-    share: 0.17,
-    awakeningShare: 0.015,
-    builds: [
-      { tag: "111", share: 0.20 },
-      { tag: "313", share: 0.20 },
-    ],
+  // awakeningShare is per-CLASS, not per-build: it's the Awakening skill's
+  // own share of total DPS (see the big comment above
+  // deathbladeSpecMultiplier), which doesn't vary between e.g. RE 111 and
+  // RE 313 the way the namesake skill's own share does.
+  const RE_AWAKENING_SHARE = 0.015;
+  const SURGE_AWAKENING_SHARE = 0.01;
+  // One entry per selectable build - the Spec Scaling dropdown (Bracelet
+  // section) picks one of these six directly, and its own `share` drives
+  // the Spec +80/100/120 row (and the Bracelet vs. Bracelet Spec input)
+  // straight from the dropdown. Used to be a 2-way RE/Surge radio backed
+  // by one class-level `share` (RE 333/Surge 111's own figures, before
+  // this dropdown existed to name them) plus a `builds` list of the other
+  // named variants shown only as small hover tags next to the row - now
+  // that every build is directly selectable, that split is gone and every
+  // build's share lives here on equal footing.
+  const BRACE_SPEC_BUILDS = {
+    "re-111": { label: "RE 111", isSurge: false, share: 0.20, awakeningShare: RE_AWAKENING_SHARE },
+    "re-313": { label: "RE 313", isSurge: false, share: 0.20, awakeningShare: RE_AWAKENING_SHARE },
+    "re-333": { label: "RE 333", isSurge: false, share: 0.17, awakeningShare: RE_AWAKENING_SHARE },
+    "surge-111": { label: "Surge 111", isSurge: true, share: 0.75, awakeningShare: SURGE_AWAKENING_SHARE },
+    "surge-222": { label: "Surge 222", isSurge: true, share: 0.50, awakeningShare: SURGE_AWAKENING_SHARE },
+    "surge-333": { label: "Surge 333", isSurge: true, share: 0.45, awakeningShare: SURGE_AWAKENING_SHARE },
   };
-  const SURGE_DEATHBLADE_SPEC = {
-    share: 0.75,
-    awakeningShare: 0.01,
-    builds: [
-      { tag: "222", share: 0.50 },
-      { tag: "333", share: 0.45 },
-    ],
-  };
+  function braceSpecConfig(inputs) {
+    return BRACE_SPEC_BUILDS[inputs.braceSpecBuild] || BRACE_SPEC_BUILDS["re-333"];
+  }
 
   // RE and Surge use the identical formula now that the CDR-driven term
   // (Trance getting reset more often as Spec goes up) has been dropped -
@@ -780,7 +777,7 @@
 
       demonDmgPct: Math.max(0, Math.min(15, getNumber(root, ".ap-brace-demon-dmg", 7))),
       braceCritStatEquipped: Math.max(60, Math.min(120, getNumber(root, ".ap-brace-crit-stat-equipped", 82))),
-      braceSurgeSpec: getCheckbox(root, ".ap-brace-spec-surge", false),
+      braceSpecBuild: getSelect(root, ".ap-brace-spec-build", "re-333"),
 
       // Bracelet vs. Bracelet: two full 5-line candidate bracelets, read
       // separately - see readBvbSide/computeBraceletVsBracelet above.
@@ -1419,10 +1416,11 @@
         note: "Estimated damage accounts for +CDR% penalty.",
         // Surge uses the temporary flat -1 override (see
         // DAMAGE_CD_SURGE_TABLE above) instead of the divided-by-penalty
-        // figures RE still uses.
-        low: inputs.braceSurgeSpec ? DAMAGE_CD_SURGE_TABLE.Low : DAMAGE_CD_TABLE.Low,
-        mid: inputs.braceSurgeSpec ? DAMAGE_CD_SURGE_TABLE.Mid : DAMAGE_CD_TABLE.Mid,
-        high: inputs.braceSurgeSpec ? DAMAGE_CD_SURGE_TABLE.High : DAMAGE_CD_TABLE.High,
+        // figures RE still uses. isSurge comes from the selected build's
+        // CLASS (any Surge 111/222/333 pick), not the specific build.
+        low: braceSpecConfig(inputs).isSurge ? DAMAGE_CD_SURGE_TABLE.Low : DAMAGE_CD_TABLE.Low,
+        mid: braceSpecConfig(inputs).isSurge ? DAMAGE_CD_SURGE_TABLE.Mid : DAMAGE_CD_TABLE.Mid,
+        high: braceSpecConfig(inputs).isSurge ? DAMAGE_CD_SURGE_TABLE.High : DAMAGE_CD_TABLE.High,
       },
       {
         label: ["Outgoing Damage +", ...trip("2", "2.5", "3"), "% & Damage to Staggered +", ...trip("4", "4.5", "5"), "%"],
@@ -1465,36 +1463,26 @@
 
     // Spec +80/100/120: RE and Surge Deathblade share the same formula
     // (see the constants/helper above), differing by damage share and
-    // Awakening share - picked by the little radio pair sharing the
-    // Demon Dmg % / Crit Stat inputs row rather than mixed into the rest
-    // of the crit-focused inputs.
+    // Awakening share - both picked directly by the Spec Scaling dropdown
+    // sharing the Demon Dmg % / Crit Stat inputs row (one of the 6 named
+    // builds in BRACE_SPEC_BUILDS) rather than mixed into the rest of the
+    // crit-focused inputs.
     {
-      const isSurge = !!inputs.braceSurgeSpec;
-      const cfg = isSurge ? SURGE_DEATHBLADE_SPEC : RE_DEATHBLADE_SPEC;
+      const cfg = braceSpecConfig(inputs);
       const k = specGainPerPoint(deathbladeSpecMultiplier, cfg.share, cfg.awakeningShare);
-      // One small hover tag per named build variant (111/313 for RE,
-      // 222/333 for Surge), each independently showing that build's own
-      // tier values on hover rather than one shared note/icon for all of
-      // them.
-      const buildTags = cfg.builds.map((b) => {
-        const bk = specGainPerPoint(deathbladeSpecMultiplier, b.share, cfg.awakeningShare);
-        const tiers = [80, 100, 120].map((v) => formatPctBare(bk * v)).join("/");
-        return { tag: b.tag, tooltip: b.tag + " build (" + (b.share * 100).toFixed(0) + "% share): " + tiers };
-      });
       rows.push({
         id: "spec",
         label: ["Spec +", ...trip("80", "100", "120")],
         low: k * 80,
         mid: k * 100,
         high: k * 120,
-        buildTags,
         // Both RE and Surge are now pure damage-share models (the CDR
         // term is gone entirely, not just for RE) - so this line only
-        // reflects each build's direct damage share and misses whatever
-        // Spec does outside raw DPS (e.g. cooldown/meter effects) for
-        // either class. Shown as a small always-visible tag with the
-        // explanation in its hover tooltip rather than a permanent note
-        // block under the table.
+        // reflects the selected build's direct damage share and misses
+        // whatever Spec does outside raw DPS (e.g. cooldown/meter
+        // effects) for either class. Shown as a small always-visible tag
+        // with the explanation in its hover tooltip rather than a
+        // permanent note block under the table.
         specDmgOnly: true,
         specDmgOnlyNote: "This line only reflects direct damage share from Spec - it doesn't capture any non-damage effects Spec offers.",
       });
@@ -1775,8 +1763,8 @@
     const combo = bestComboFor(cloned);
     const gridRatio = combo.mult / noBraceletMult;
 
-    const isSurge = !!inputs.braceSurgeSpec;
-    const specCfg = isSurge ? SURGE_DEATHBLADE_SPEC : RE_DEATHBLADE_SPEC;
+    const specCfg = braceSpecConfig(inputs);
+    const isSurge = specCfg.isSurge;
     const specK = specGainPerPoint(deathbladeSpecMultiplier, specCfg.share, specCfg.awakeningShare);
     const specGain = specK * Math.max(0, side.spec || 0);
 
@@ -2692,20 +2680,6 @@
         badge.setAttribute("aria-label", row.specDmgOnlyNote);
         labelTd.appendChild(badge);
       }
-      if (row.buildTags) {
-        // One compact hover tag per named build variant (111/313 for RE,
-        // 222/333 for Surge) - each shows that specific build's own
-        // tier values in its tooltip.
-        row.buildTags.forEach((b) => {
-          const tag = document.createElement("span");
-          tag.className = "ap-brace-build-tag";
-          tag.textContent = b.tag;
-          tag.title = b.tooltip;
-          tag.setAttribute("role", "img");
-          tag.setAttribute("aria-label", b.tooltip);
-          labelTd.appendChild(tag);
-        });
-      }
       if (row.note) {
         // Caveat text moves into a hover tooltip (native `title`) instead
         // of a permanent line under the label - keeps every row to one
@@ -2811,8 +2785,9 @@
   }
 
   function renderBraceletVsBracelet(root, inputs, result) {
-    renderBvbCard(root, "a", result.a, inputs.braceSurgeSpec, inputs.bvbA && inputs.bvbA.lines);
-    renderBvbCard(root, "b", result.b, inputs.braceSurgeSpec, inputs.bvbB && inputs.bvbB.lines);
+    const bvbIsSurge = braceSpecConfig(inputs).isSurge;
+    renderBvbCard(root, "a", result.a, bvbIsSurge, inputs.bvbA && inputs.bvbA.lines);
+    renderBvbCard(root, "b", result.b, bvbIsSurge, inputs.bvbB && inputs.bvbB.lines);
 
     const noneEl = root.querySelector(".ap-bvb-no-bracelet-keystone");
     if (noneEl) noneEl.textContent = result.noBracelet.splitLabel + " + " + result.noBracelet.keystoneLabel;
