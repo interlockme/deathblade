@@ -725,7 +725,7 @@
     return {
       critStat: Math.max(0, Math.min(750, getNumber(root, ".ap-crit-stat", 658))),
       weaponQuality: Math.max(0, Math.min(100, getNumber(root, ".ap-weapon-quality", 100))),
-      astrogemLv: Math.max(0, Math.min(100, getNumber(root, ".ap-astrogem-lv", 56))),
+      astrogemLv: Math.max(0, Math.min(100, getNumber(root, ".ap-astrogem-lv", 59))),
 
       ring1Rate: getSelect(root, ".ap-ring1-rate", "Mid"),
       ring1Dmg: getSelect(root, ".ap-ring1-dmg", "High"),
@@ -739,7 +739,7 @@
       braceletAddA: getSelect(root, ".ap-bracelet-addA", "None"),
       braceletAddB: getSelect(root, ".ap-bracelet-addB", "None"),
 
-      necklace: getSelect(root, ".ap-necklace", "Mid"),
+      necklace: getSelect(root, ".ap-necklace", "High"),
       shPet: getSelect(root, ".ap-sh-pet", "High"),
 
       adrenaline: getSelect(root, ".ap-adrenaline", "4 Nodes"),
@@ -764,7 +764,7 @@
       evoKarmaRank: parseInt(getSelect(root, ".ap-evo-karma", "6"), 10) || 6,
 
       demonDmgPct: Math.max(0, Math.min(15, getNumber(root, ".ap-brace-demon-dmg", 7))),
-      braceCritStatEquipped: Math.max(60, Math.min(120, getNumber(root, ".ap-brace-crit-stat-equipped", 60))),
+      braceCritStatEquipped: Math.max(60, Math.min(120, getNumber(root, ".ap-brace-crit-stat-equipped", 82))),
       braceSurgeSpec: getCheckbox(root, ".ap-brace-spec-surge", false),
 
       // Bracelet vs. Bracelet: two full 5-line candidate bracelets, read
@@ -789,7 +789,7 @@
       gearWpKarmaLv: Math.max(0, Math.min(30, getNumber(root, ".ap-gear-wp-karma-lv", 30))),
       gearWpEarring1: getSelect(root, ".ap-gear-wp-earring1", "Mid"),
       gearWpEarring2: getSelect(root, ".ap-gear-wp-earring2", "Mid"),
-      gearMainStat: Math.max(0, Math.min(2000000, getNumber(root, ".ap-gear-main-stat", 828668))),
+      gearMainStat: Math.max(0, Math.min(2000000, getNumber(root, ".ap-gear-main-stat", 854918))),
       // % bonus to Main Stat GRANTED by Bracelet/Accessory "STR/DEX/INT"
       // candidate lines only, not to the stat entered above - same role
       // as Weapon Power % below, just for Main Stat. Sourced from
@@ -814,7 +814,7 @@
       // instead of being hand-added into this field. Default (390)
       // reflects a High-tier accessory roll rather than the old
       // default's Chaos Core figure.
-      gearFlatAp: Math.max(0, Math.min(2000, getNumber(root, ".ap-gear-flat-ap", 390))),
+      gearFlatAp: Math.max(0, Math.min(2000, getNumber(root, ".ap-gear-flat-ap", 0))),
       // Attack Power % used to be one hand-summed field (mirroring the
       // reference sheet's own Calc!N7, itself a hand-typed sum its
       // author computed once and pasted in). Split into its individual
@@ -824,11 +824,11 @@
       gearApEarring2: getSelect(root, ".ap-gear-ap-earring2", "High"),
       gearApKazeros: getCheckbox(root, ".ap-gear-ap-kazeros", false),
       gearApGuardian: getCheckbox(root, ".ap-gear-ap-guardian", false),
-      gearApChaosStar: getSelect(root, ".ap-gear-ap-chaos-star", "None|0P"),
+      gearApChaosStar: getSelect(root, ".ap-gear-ap-chaos-star", "Relic|20P"),
       // Astrogem Atk. Power Level - independent of the Additional
       // Damage group's Astrogem Level field above, see
       // gearAstrogemApPercent's own comment.
-      gearAstrogemLv: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-ap-astrogem-lv", 56))),
+      gearAstrogemLv: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-ap-astrogem-lv", 35))),
       // Catch-all for anything not individually listed (the reference
       // sheet's own comment ends its source list with "some in-raid
       // buffs", too variable/situational to enumerate) - defaults to 0
@@ -2036,15 +2036,6 @@
           gearApTotal(wp * (1 + deltaPct / wpPercentMult), mainStat, baseApMult, flatAp, percentApMult, supApBuff) /
             baselineAp -
           1;
-        const apDeltaGain = (delta) =>
-          gearApTotal(wp, mainStat, baseApMult, flatAp + delta, percentApMult, supApBuff) / baselineAp - 1;
-        const wpDeltaGain = (delta) =>
-          gearApTotal(wp + delta * wpPercentMult, mainStat, baseApMult, flatAp, percentApMult, supApBuff) / baselineAp - 1;
-        const statDeltaGain = (delta) =>
-          gearApTotal(wp, mainStat + delta * mainStatPercentMult, baseApMult, flatAp, percentApMult, supApBuff) /
-            baselineAp -
-          1;
-
         const earringAp = {
           low: apPctGain(ACC_EARRING_AP_TABLE.Low),
           mid: apPctGain(ACC_EARRING_AP_TABLE.Mid),
