@@ -752,8 +752,8 @@
             <p class="ap-gear-card-title ap-bvb-card-title">Bracelet A</p>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label" for="ap-bvb-a-spec">Spec Stat</label>
-              <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen." hidden>i</span>
               <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE for CDR." hidden>!</span>
+              <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen." hidden>i</span>
               <input type="number" id="ap-bvb-a-spec" class="ap-bvb-a-spec" min="60" max="120" step="1" value="100">
             </div>
             <div class="ap-calc-field-row">
@@ -852,8 +852,8 @@
             <p class="ap-gear-card-title ap-bvb-card-title">Bracelet B</p>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label" for="ap-bvb-b-spec">Spec Stat</label>
-              <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen." hidden>i</span>
               <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE for CDR." hidden>!</span>
+              <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen." hidden>i</span>
               <input type="number" id="ap-bvb-b-spec" class="ap-bvb-b-spec" min="60" max="120" step="1" value="80">
             </div>
             <div class="ap-calc-field-row">

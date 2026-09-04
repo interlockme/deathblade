@@ -2701,8 +2701,7 @@
       const tr = document.createElement("tr");
       if (row.flipsBest) anyFlip = true;
 
-      const labelTd = document.createElement("td");
-      labelTd.className = "ap-brace-row-label";
+      const labelTd = window.SiteUtils.el("td", "ap-brace-row-label");
       // row.label is an array of plain strings and colored-token objects
       // (see trip() above) rather than one flat string, so the Low/Mid/
       // High figures embedded in the label itself can be colored - the
@@ -2713,9 +2712,7 @@
           labelTd.appendChild(document.createTextNode(part));
           return;
         }
-        const span = document.createElement("span");
-        span.className = part.downside ? "ap-brace-label-downside" : "ap-brace-label-" + part.tier;
-        span.textContent = part.text;
+        const span = window.SiteUtils.el("span", part.downside ? "ap-brace-label-downside" : "ap-brace-label-" + part.tier, part.text);
         labelTd.appendChild(span);
       });
       if (row.flipsBest) {
@@ -2725,9 +2722,7 @@
         // Small always-visible tag (not a permanent note block) so the
         // row stays one line tall - the explanation lives in this badge's
         // own hover tooltip instead of a paragraph under the table.
-        const badge = document.createElement("span");
-        badge.className = "ap-brace-label-caveat";
-        badge.textContent = "dmg only";
+        const badge = window.SiteUtils.el("span", "ap-brace-label-caveat", "dmg only");
         badge.title = row.specDmgOnlyNote;
         badge.setAttribute("role", "img");
         badge.setAttribute("aria-label", row.specDmgOnlyNote);
@@ -2739,9 +2734,7 @@
         // line instead of the label wrapping vertically for a caveat most
         // readers only need once. The little "i" badge is what tells a
         // reader there's something to hover in the first place.
-        const infoEl = document.createElement("span");
-        infoEl.className = "ap-brace-info-icon";
-        infoEl.textContent = "i";
+        const infoEl = window.SiteUtils.el("span", "ap-brace-info-icon", "i");
         infoEl.title = row.note;
         infoEl.setAttribute("role", "img");
         infoEl.setAttribute("aria-label", row.note);
@@ -2750,9 +2743,7 @@
       tr.appendChild(labelTd);
 
       ["low", "mid", "high"].forEach((tier) => {
-        const td = document.createElement("td");
-        td.className = "ap-brace-tier-val";
-        td.textContent = formatPctBare(row[tier]);
+        const td = window.SiteUtils.el("td", "ap-brace-tier-val", formatPctBare(row[tier]));
         tr.appendChild(td);
       });
 
@@ -2766,10 +2757,8 @@
       // things here.
       if (row.combos) {
         ["LL", "ML", "MM", "HL", "HM", "HH"].forEach((key) => {
-          const td = document.createElement("td");
-          td.className = "ap-brace-tier-val ap-acc-combo-val";
           const val = row.combos[key];
-          td.textContent = val === undefined ? "\u2013" : formatPctBare(val);
+          const td = window.SiteUtils.el("td", "ap-brace-tier-val ap-acc-combo-val", val === undefined ? "\u2013" : formatPctBare(val));
           tr.appendChild(td);
         });
       }
@@ -2800,16 +2789,22 @@
   // ----- Bracelet vs. Bracelet rendering -----
   // One card per side, filled from computeSingleBracelet's own result
   // shape - see computeBraceletVsBracelet above. Also toggles the Spec
-  // field's two hover-icon warnings (mild "damage-only" note, always
-  // visible on RE; stronger "recommended 83+ Spec" warning, RE + below
-  // 83 only) since those depend on the same inputs this render pass
-  // already has in hand.
+  // field's two hover-icon warnings (mild "damage-only" note, shown on
+  // both RE and Surge with per-spec wording; stronger "recommended 83+
+  // Spec" warning, RE + below 83 only) since those depend on the same
+  // inputs this render pass already has in hand.
   //
   // The "estimated" cd-note that used to sit beside vs No Bracelet is
   // gone - now that CD Estimate is a real per-side checkbox (see
   // enforceBvbLineControls), its own hover tooltip already explains the
   // assumption, so a second icon repeating the same thing elsewhere was
   // redundant.
+  const SPEC_NOTE_TEXT_RE = "This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen.";
+  // Surge has no orb mechanic to omit in the first place - only CDR is
+  // left uncaptured here, so the RE wording's "or orb gen" half is
+  // dropped rather than carried over as a dead phrase for a mechanic
+  // Surge doesn't have.
+  const SPEC_NOTE_TEXT_SURGE = "This only reflects Spec's damage share on Surge - it doesn't capture CDR.";
   function renderBvbCard(root, prefix, side, isSurgeSpec) {
     const card = root.querySelector(".ap-bvb-card-" + prefix);
     if (!card) return;
@@ -2828,7 +2823,14 @@
     const specNote = card.querySelector(".ap-bvb-spec-note");
     const specWarn = card.querySelector(".ap-bvb-spec-warn");
     const isRE = !isSurgeSpec;
-    if (specNote) specNote.hidden = !isRE;
+    // Shown for both specs now (RE and Surge each get their own wording,
+    // set on every render since which spec is active can change) - the
+    // 83+ CDR recommendation beside it stays RE-only, Surge has no such
+    // floor to recommend.
+    if (specNote) {
+      specNote.hidden = false;
+      specNote.title = isRE ? SPEC_NOTE_TEXT_RE : SPEC_NOTE_TEXT_SURGE;
+    }
     if (specWarn) specWarn.hidden = !(isRE && specInput && parseFloat(specInput.value) < 83);
   }
 
@@ -2892,15 +2894,11 @@
     container.innerHTML = "";
     rows.forEach((row) => {
       const tr = document.createElement("tr");
-      const labelTd = document.createElement("td");
-      labelTd.className = "ap-brace-row-label";
-      labelTd.textContent = row.label;
+      const labelTd = window.SiteUtils.el("td", "ap-brace-row-label", row.label);
       tr.appendChild(labelTd);
       ["p14", "relic17", "ancient17", "relic20", "ancient20"].forEach((key) => {
-        const td = document.createElement("td");
         const gradeClass = key === "p14" ? "ap-arkgrid-merged" : key.indexOf("relic") === 0 ? "ap-arkgrid-relic" : "ap-arkgrid-ancient";
-        td.className = "ap-brace-tier-val ap-arkgrid-tier-val " + gradeClass;
-        td.textContent = formatPctBare(row[key]);
+        const td = window.SiteUtils.el("td", "ap-brace-tier-val ap-arkgrid-tier-val " + gradeClass, formatPctBare(row[key]));
         tr.appendChild(td);
       });
       container.appendChild(tr);
@@ -3046,6 +3044,7 @@
     setActivePresetId(newId);
     normalizeChaosCoreExclusivity(root);
     normalizeWeaponCoreExclusivity(root);
+    normalizeRaidContributionExclusivity(root);
     updatePresetButtonStates(root);
     update(root);
   }
@@ -3166,6 +3165,7 @@
     applyFieldData(root, data);
     normalizeChaosCoreExclusivity(root);
     normalizeWeaponCoreExclusivity(root);
+    normalizeRaidContributionExclusivity(root);
     saveInputs(root, activeId);
     update(root);
     showPopoverMessage(popoverEl, "Imported into Preset " + activeId + ".", false);
@@ -3215,15 +3215,6 @@
     renderBraceletVsBracelet(root, inputs, computeBraceletVsBracelet(inputs));
     renderAccessoryComparison(root, computeAccessoryComparison(inputs));
     renderArkGridComparison(root, computeArkGridComparison(inputs));
-
-    // Every range slider (Back-Attack Rate, Adrenaline Uptime, ...) shows
-    // its live value as "N%" next to it - handled generically here so
-    // adding another slider later doesn't need a new hardcoded lookup.
-    root.querySelectorAll(".ap-calc-range-line").forEach((line) => {
-      const rangeEl = line.querySelector('input[type="range"]');
-      const valueEl = line.querySelector(".ap-calc-range-value");
-      if (rangeEl && valueEl) valueEl.textContent = rangeEl.value + "%";
-    });
   }
 
   // Chaos Core: Flashy Attack, Chaos Core: Stable Attack, and Chaos
