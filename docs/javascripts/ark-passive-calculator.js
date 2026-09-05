@@ -140,7 +140,7 @@
   const STAGGER_DMG_TABLE = { Low: 0.04, Mid: 0.045, High: 0.05 };
   const STAGGER_DPS_SHARE = 0.05; // assumed % of a fight's DPS that happens during Stagger - matches the sheet's own default
   const BACK_DMG_TABLE = { Low: 0.025, Mid: 0.03, High: 0.035 };
-  const BACK_ATTACK_DPS_SHARE = 0.97; // assumed % of DPS that lands as a Back Attack
+  const BACK_ATTACK_DPS_SHARE = 0.95; // assumed % of DPS that lands as a Back Attack
   const DEMON_DMG_ADD = 0.025; // the "& Dmg vs Demon/Archdemon +2.5%" tag's fixed Additional Dmg component
 
   // ----- Accessory Line Comparison lookup tables -----
@@ -1243,7 +1243,7 @@
   //   - Outgoing Dmg + Damage to Staggered: sheet takes a live "% of DPS
   //     during Stagger" input; fixed at 5% here (the sheet's own default).
   //   - Back Attack Damage: sheet derives this from a per-skill Front/Back DPS
-  //     breakdown specific to your class's skill build; fixed at 97% of
+  //     breakdown specific to your class's skill build; fixed at 95% of
   //     DPS coming from a Back Attack skil instead. Front Damage and
   //     Non-positional Dmg need that same per-skill breakdown with no
   //     comparable fixed-% stand-in, so they're left out entirely rather
@@ -2439,6 +2439,490 @@
   // ----- Format helper -----
   // Always 2 decimals - consistent across every field tag rather than
   // switching precision based on magnitude.
+  // ----- Engraving Comparison -----
+  //
+  // The Ark Passive keystone grid above already accounts for Adrenaline and
+  // Keen Blunt Weapon (both live inside computeShared via inputs.adrenaline/
+  // adrenalineStone/kbw/kbwStone) - this section adds the 5 remaining
+  // Deathblade-relevant engravings the grid doesn't track at all (Grudge,
+  // Ambush Master, Cursed Doll, Mass Increase, Raid Captain), then searches
+  // for Deathblade's actual competing-slot decision: RE only ever swaps ONE
+  // slot (Keen Blunt Weapon vs Cursed Doll) - Raid Captain is assumed to
+  // always fill RE's other flex slot, since RE reliably reaches the Move
+  // Speed cap and doesn't realistically trade it away. Surge has no such
+  // fixed slot, so it searches every 2-of-N combination of the whole
+  // competing pool instead (Mass Increase opt-in, see below). Every
+  // candidate is run back through bestComboFor() - the same per-candidate
+  // keystone/split search Bracelet vs. Bracelet already uses - since a
+  // different competing pool can genuinely change which keystone/split wins.
+  //
+  // Sourced from Arsonistic's "Engr+Stone" sheet, matching the reference
+  // screenshot cell-for-cell (see the constants below for the couple of
+  // rows needing an actual mechanic instead of a straight lookup). Level
+  // labels reuse the "0 Nodes".."4 Nodes" scheme Adrenaline/Keen Blunt
+  // Weapon already use above - the sheet's own L4/R1-R4 columns are the
+  // same 5 tiers, just labeled for book grade instead of node count. 0
+  // Nodes = L4 (Legendary-only), 4 Nodes = R4 (maxed) - same "start
+  // maxed" default as Adrenaline/KBW.
+  const ENGRAVING_STONE_OPTIONS = ["1 Lv.", "2 Lv.", "3 Lv.", "4 Lv."];
+
+  const GRUDGE_TABLE = { "0 Nodes": 0.18, "1 Nodes": 0.1875, "2 Nodes": 0.195, "3 Nodes": 0.2025, "4 Nodes": 0.21 };
+  const GRUDGE_STONE_TABLE = { "0 Lv.": 0, "1 Lv.": 0.03, "2 Lv.": 0.0375, "3 Lv.": 0.0525, "4 Lv.": 0.06 };
+  const CURSED_DOLL_TABLE = { "0 Nodes": 0.14, "1 Nodes": 0.1475, "2 Nodes": 0.155, "3 Nodes": 0.1625, "4 Nodes": 0.17 };
+  const CURSED_DOLL_STONE_TABLE = { "0 Lv.": 0, "1 Lv.": 0.03, "2 Lv.": 0.0375, "3 Lv.": 0.0525, "4 Lv.": 0.06 };
+  const MASS_INCREASE_TABLE = { "0 Nodes": 0.16, "1 Nodes": 0.1675, "2 Nodes": 0.175, "3 Nodes": 0.1825, "4 Nodes": 0.19 };
+  const MASS_INCREASE_STONE_TABLE = { "0 Lv.": 0, "1 Lv.": 0.03, "2 Lv.": 0.0375, "3 Lv.": 0.0525, "4 Lv.": 0.06 };
+
+  // Ambush Master: the flat Back Attack Damage half is +15% regardless of
+  // book investment (the sheet's L4-R4 columns for this row are all
+  // identical, 0.15) - gated by BOTH how much of your DPS comes from a
+  // back-attack-classified skill (BACK_ATTACK_DPS_SHARE, the same 95%
+  // constant the Bracelet panel's own Back Attack Damage row already
+  // uses) AND the Ark Passive section's own Back Attack Rate input (the %
+  // chance a back-attack skill actually lands from behind) - Ambush
+  // Master's tooltip requires the hit to actually connect as a back
+  // attack, not merely come from a back-attack-capable skill, so unlike
+  // the Bracelet row both factors apply here. The secondary Type2 "Dmg"
+  // column scales with book investment like a mini Grudge and applies
+  // regardless of position (a generic Dmg%, not BackDmg) - confirmed by
+  // its distinct "Dmg" type tag in the sheet.
+  const AMBUSH_MASTER_BACK_DMG = 0.15;
+  const AMBUSH_MASTER_SECONDARY_TABLE = { "0 Nodes": 0.048, "1 Nodes": 0.055, "2 Nodes": 0.062, "3 Nodes": 0.069, "4 Nodes": 0.076 };
+  const AMBUSH_MASTER_STONE_TABLE = { "0 Lv.": 0, "1 Lv.": 0.027, "2 Lv.": 0.034, "3 Lv.": 0.047, "4 Lv.": 0.054 };
+
+  // Raid Captain: the sheet's MSpdDmg values are the bonus AT the 140%
+  // Move Speed cap. Scales linearly with Move Speed from 0% bonus at
+  // exactly 100% up to the full tabled value at 140%+ (clamped) - e.g.
+  // 48% table value * (140-100)/100 = 19.2% at the cap. The Ability
+  // Stone shares the same MSpdDmg type as the base engraving, so it's
+  // assumed to scale the same way rather than apply as a flat add.
+  const RAID_CAPTAIN_TABLE = { "0 Nodes": 0.40, "1 Nodes": 0.42, "2 Nodes": 0.44, "3 Nodes": 0.46, "4 Nodes": 0.48 };
+  const RAID_CAPTAIN_STONE_TABLE = { "0 Lv.": 0, "1 Lv.": 0.075, "2 Lv.": 0.094, "3 Lv.": 0.132, "4 Lv.": 0.15 };
+  const RAID_CAPTAIN_BASE_MOVE_SPEED = 106.32;
+  const RAID_CAPTAIN_CLASS_MOVE_SPEED = { re: 12, surge: 10 };
+  // Passionate Dance (support), the Maelstrom debuff/uptime, and Rage Rune
+  // on Surprise Attack each grant the SAME numeric bonus to both Move
+  // Speed and Attack Speed at once - not two separate effects that happen
+  // to share a name. Named generically (not "_MOVE_SPEED") and reused by
+  // both raidCaptainMoveSpeed (below) and surgeEffectiveAttackSpeed
+  // (Attack Speed section further down) so the two tracks can never drift
+  // out of sync with each other.
+  const SUPPORT_SPEED_BONUS = 9; // Passionate Dance - reused live from .ap-yearning above.
+  const MAELSTROM_SPEED_BONUS = 12.8;
+  const RAID_CAPTAIN_WINE_MOVE_SPEED = 3; // Vernese Wine - Surge only, Move Speed only (see surgeEffectiveAttackSpeed's own comment for why it has no Attack Speed counterpart here).
+  // Rage Rune on Surprise Attack (Surge only): 16% chance per cast of +16%
+  // Move Speed AND +16% Attack Speed for 6s (the one proc grants both at
+  // once). The buff usually covers close to a full rotation once it
+  // procs, but not guaranteed to - on the rare rotation where it falls
+  // off before the last skill (a 75% DPS-share hit even when it did
+  // proc), the real uptime is a little lower than "procced = full
+  // rotation" would suggest. Modeled here as a flat expected-value add
+  // (chance * value) rather than a tracked uptime like Maelstrom's, since
+  // there's no per-rotation cast-count input to weight it against - the
+  // rare early-fall-off case is treated as noise around that average
+  // rather than something worth its own input. Toggled on by default
+  // since the rune itself is assumed taken.
+  const RAGE_RUNE_PROC_CHANCE = 0.16;
+  const RAGE_RUNE_SPEED_BONUS = 16;
+  const RAID_CAPTAIN_MOVE_SPEED_CAP = 140;
+  // Mana Food's flat Dmg from unlocking the Bleed rune on Maelstrom - not
+  // gated on Raid Captain or any other engraving (any loadout running
+  // Mana Food gets it), so it's its own row in the contribution table
+  // (see manaFoodContributionGain/computeEngravingComparison) rather than
+  // folded into raidCaptainGain the way it used to be. Stacks
+  // multiplicatively on top of Mana Food's own Main Stat AP ratio below,
+  // same "AP ratio x flat Dmg layer" shape adrenalineContributionGain
+  // already uses.
+  const MANA_FOOD_BLEED_DMG = 0.0075;
+
+  function raidCaptainMoveSpeed(engrInputs, yearning) {
+    let ms = RAID_CAPTAIN_BASE_MOVE_SPEED + (RAID_CAPTAIN_CLASS_MOVE_SPEED[engrInputs.spec] || 0);
+    if (yearning) ms += SUPPORT_SPEED_BONUS;
+    ms += MAELSTROM_SPEED_BONUS * (engrInputs.maelstromUptime / 100);
+    if (engrInputs.spec === "surge" && engrInputs.rageRune) ms += RAGE_RUNE_PROC_CHANCE * RAGE_RUNE_SPEED_BONUS;
+    if (engrInputs.spec === "surge" && engrInputs.wine && !engrInputs.manaFood) ms += RAID_CAPTAIN_WINE_MOVE_SPEED;
+    return Math.min(ms, RAID_CAPTAIN_MOVE_SPEED_CAP);
+  }
+
+  function raidCaptainMoveSpeedFraction(engrInputs, yearning) {
+    const ms = raidCaptainMoveSpeed(engrInputs, yearning);
+    return Math.max(0, Math.min(RAID_CAPTAIN_MOVE_SPEED_CAP, ms) - 100) / 100;
+  }
+
+  // Isolated Main Stat AP ratio for Mana Food - mainStatAmount is whichever
+  // of the two Mana Food tiers (6000 or 12000, see engrInputs.manaFoodAmount)
+  // the reader picked - reusing the exact same gearApTotal inputs/shape as
+  // the Gearing section's own "STR/DEX/INT +12000/14000/16000" Bracelet
+  // line (see that row above) - requires real Weapon Power/Main Stat like
+  // every other AP-based row on the page, else it's a silent no-op (ratio
+  // 1) rather than a nonsensical partial-state number. The Bleed rune's
+  // flat +0.75% Dmg rides on top multiplicatively, not gated on any of
+  // that.
+  function manaFoodGain(inputs, mainStatAmount) {
+    const wp = inputs.gearWp;
+    const mainStat = inputs.gearMainStat;
+    let statRatio = 1;
+    if (wp > 0 && mainStat > 0) {
+      const baseApMult = 1 + gearBaseApPercentTotal(inputs) / 100;
+      const flatAp = inputs.gearFlatAp + gearChaosStarFlat(inputs.gearApChaosStar);
+      const percentApMult = 1 + gearAttackPowerPercentTotal(inputs) / 100;
+      const mainStatPercentMult = 1 + inputs.gearMainStatPercent / 100;
+      const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
+      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+      if (baselineAp > 0) {
+        const newAp = gearApTotal(
+          wp,
+          mainStat + mainStatAmount * mainStatPercentMult,
+          baseApMult,
+          flatAp,
+          percentApMult,
+          supApBuff
+        );
+        statRatio = newAp / baselineAp;
+      }
+    }
+    return statRatio * (1 + MANA_FOOD_BLEED_DMG) - 1;
+  }
+
+  // Mana Food's own isolated contribution-table row - 0 unless Surge (RE
+  // hides the Wine/Mana Food choice entirely, see renderEngravingComparison)
+  // and the Mana Food checkbox is actually on. Independent of which 2
+  // engravings are running, unlike raidCaptainGain above.
+  function manaFoodContributionGain(engrInputs, inputs) {
+    if (engrInputs.spec !== "surge" || !engrInputs.manaFood) return 0;
+    return manaFoodGain(inputs, engrInputs.manaFoodAmount);
+  }
+
+  // Which of Wine/Mana Food is currently better to eat, and by how much -
+  // both scenarios otherwise share the same Maelstrom uptime/Rage Rune/
+  // Passionate Dance/spec, only the Wine-vs-Mana-Food choice itself
+  // flips. Positive = Mana Food ahead, negative = Wine ahead. Surge only
+  // (RE never sees either option), null when not applicable. This is a
+  // "what should I eat" comparison, not the contribution table's Raid
+  // Captain row, so it still weighs Mana Food's own stat/Bleed edge
+  // (manaFoodGain) alongside the Move Speed difference.
+  function raidCaptainWineVsManaFood(engrInputs, inputs) {
+    if (engrInputs.spec !== "surge") return null;
+    const rcBase = (RAID_CAPTAIN_TABLE[engrInputs.rcLevel] || 0) + (RAID_CAPTAIN_STONE_TABLE[engravingStoneLevel("rc", engrInputs)] || 0);
+    const wineFrac = raidCaptainMoveSpeedFraction(Object.assign({}, engrInputs, { wine: true, manaFood: false }), inputs.yearning);
+    const foodFrac = raidCaptainMoveSpeedFraction(Object.assign({}, engrInputs, { wine: false, manaFood: true }), inputs.yearning);
+    const wineMult = 1 + rcBase * wineFrac;
+    const foodMult = (1 + rcBase * foodFrac) * (1 + manaFoodGain(inputs, engrInputs.manaFoodAmount));
+    return foodMult / wineMult - 1;
+  }
+
+  // ----- Attack Speed (display only) -----
+  // Mass Increase is the only engraving on this whole page whose Attack
+  // Speed matters at all (its own -10% drawback, called out in the page
+  // banner as unmodeled in the DPS search above) - RE never runs Mass
+  // Increase, so RE has no use for an Attack Speed readout at all (see
+  // renderEngravingComparison, which hides this whole readout outside
+  // Surge). Purely informational: nothing here feeds back into any DPS
+  // number on the page, so unlike raidCaptainMoveSpeed this has no
+  // "Fraction" counterpart and nothing multiplies against it.
+  const BASE_ATTACK_SPEED = 106.32; // Same base value the sheet gives Move Speed - not a typo, just how the base stat lines up for this class.
+  const SURGE_IDENTITY_ATTACK_SPEED = 20; // Surge's own Identity gauge, always on for Surge - not a togglable source.
+  const EALYN_ATTACK_SPEED = 3; // Ealyn's Blessing - Surge-only alternative to Vernese Wine/Mana Food (see the 3-way exclusivity listener below). Attack Speed only - no Move Speed counterpart, unlike Wine.
+  const MASS_INCREASE_ATTACK_SPEED_PENALTY = 10;
+  const SURGE_ATTACK_SPEED_CAP = 140; // Same 140% AS/MS cap Raid Captain's Move Speed uses (RAID_CAPTAIN_MOVE_SPEED_CAP above) - Attack Speed shares the identical class cap, just tracked separately since nothing here multiplies against it.
+
+  function surgeEffectiveAttackSpeed(engrInputs, yearning) {
+    let atk = BASE_ATTACK_SPEED + SURGE_IDENTITY_ATTACK_SPEED;
+    atk += MAELSTROM_SPEED_BONUS * (engrInputs.maelstromUptime / 100);
+    if (yearning) atk += SUPPORT_SPEED_BONUS;
+    if (engrInputs.rageRune) atk += RAGE_RUNE_PROC_CHANCE * RAGE_RUNE_SPEED_BONUS;
+    if (engrInputs.ealynsBlessing) atk += EALYN_ATTACK_SPEED;
+    // Mass Increase's drawback only actually applies to a reader who's
+    // running (or considering) Mass Increase - miOptIn is this section's
+    // own "include Mass Increase in the best-combo search" checkbox, the
+    // closest thing here to "am I looking at a Mass Increase loadout".
+    if (engrInputs.miOptIn) atk -= MASS_INCREASE_ATTACK_SPEED_PENALTY;
+    return Math.min(atk, SURGE_ATTACK_SPEED_CAP);
+  }
+
+  // Resolves which Ability Stone level (if any) applies to a given
+  // engraving key within the Engraving Comparison section only - either of
+  // the section's 2 isolated stone slots (see readEngravingInputs), or
+  // "0 Lv." (no stone) otherwise. Deliberately never falls back to the
+  // live tracked Ability Stone selects (Adrenaline/KBW) - this section is
+  // a self-contained sandbox, so its own math only ever reads its own
+  // isolated fields, never the real tracked ones above.
+  function engravingStoneLevel(key, engrInputs) {
+    if (engrInputs.stone1Target === key) return engrInputs.stone1Level;
+    if (engrInputs.stone2Target === key) return engrInputs.stone2Level;
+    return "0 Lv.";
+  }
+
+  // Each of these 5 engravings' own contribution is a flat, independent
+  // multiplicative layer with nothing else on the page - so unlike a Crit
+  // Rate/Dmg candidate (which has to be run back through the full
+  // effCrit/keystone formula), its own isolated "fraction of DPS you'd
+  // lose without it" IS exactly its own raw fraction with no approximation
+  // and no dependency on what else is active: mult = M*(1+g) vs M, ratio =
+  // (1+g), gain = g. Ambush Master and Raid Captain just fold multiple
+  // sources (BackDmg+secondary+stone, or level+stone scaled by Move Speed)
+  // into that one flat fraction before returning it.
+  function grudgeGain(engrInputs) {
+    return (GRUDGE_TABLE[engrInputs.grudgeLevel] || 0) + (GRUDGE_STONE_TABLE[engravingStoneLevel("grudge", engrInputs)] || 0);
+  }
+  function cursedDollGain(engrInputs) {
+    return (CURSED_DOLL_TABLE[engrInputs.cdLevel] || 0) + (CURSED_DOLL_STONE_TABLE[engravingStoneLevel("cd", engrInputs)] || 0);
+  }
+  function massIncreaseGain(engrInputs) {
+    return (MASS_INCREASE_TABLE[engrInputs.miLevel] || 0) + (MASS_INCREASE_STONE_TABLE[engravingStoneLevel("mi", engrInputs)] || 0);
+  }
+  function ambushMasterGain(engrInputs, inputs) {
+    // Matches the sheet's own formula shape: the flat BackDmg half and the
+    // book-level Dmg% half (+ its Ability Stone, same "Dmg" bucket) are two
+    // separate multiplicative layers - (1+backDmg)*(1+secondary+stone)-1 -
+    // not a straight sum. Sheet reference: Engr+Stone!C7 =
+    // (1+IF(ASS,backSkillShare,1)*FA/BA*H7)*(1+T7)-1; H7/T7 are this row's
+    // BackDmg (0.15) and Type2 Dmg (0.048-0.076) columns respectively.
+    const backShare = BACK_ATTACK_DPS_SHARE * (inputs.backAttackRate / 100);
+    const backDmg = AMBUSH_MASTER_BACK_DMG * backShare;
+    const dmgBucket = (AMBUSH_MASTER_SECONDARY_TABLE[engrInputs.ambushLevel] || 0)
+      + (AMBUSH_MASTER_STONE_TABLE[engravingStoneLevel("ambush", engrInputs)] || 0);
+    return (1 + backDmg) * (1 + dmgBucket) - 1;
+  }
+  function raidCaptainGain(engrInputs, inputs) {
+    const frac = raidCaptainMoveSpeedFraction(engrInputs, inputs.yearning);
+    const base = (RAID_CAPTAIN_TABLE[engrInputs.rcLevel] || 0) + (RAID_CAPTAIN_STONE_TABLE[engravingStoneLevel("rc", engrInputs)] || 0);
+    return base * frac;
+  }
+
+  // Adrenaline's isolated contribution, combining BOTH multiplicative axes
+  // it actually feeds: the Crit Rate side (inside combinedMultiplier, via
+  // critRateTotal) and the Attack Power % side (inside gearApTotal, via
+  // gearAttackPowerPercentTotal -> adrenalineApFraction) - see
+  // computeSingleBracelet's own totalMult for the same "grid ratio * AP
+  // ratio" combination pattern this mirrors. The AP side only turns on
+  // once Gearing's Weapon Power/Main Stat are actually filled in
+  // (gearApTotal's usual gate) - a silent no-op (ratio 1) otherwise, same
+  // convention as every other AP-based candidate on the page.
+  //
+  // Base AP%'s own Ability Stone checkbox (.ap-gear-ability-stone-base-ap,
+  // "a 9/7, 10/6, or better roll") is deliberately NOT read here - this
+  // section already models exactly which 2 engravings hold your ability
+  // stone and at what level via its own isolated stone slots, so reusing
+  // the checkbox's generic assumption on top would double up. Instead,
+  // both slots being assigned to a real engraving at 2+ Lv. (a rough
+  // stand-in for "5+ nodes each side") grants the same flat +1.5% the
+  // checkbox would, added the same "additive to Gem Base AP%" way this
+  // page already does it - and applied identically on BOTH sides of the
+  // ratio below, so it can only ever be a wash for this one row, never a
+  // source of bias.
+  function engravingStoneImpliesBaseAp(engrInputs) {
+    const decent = (target, lv) => target !== "None" && (lv === "2 Lv." || lv === "3 Lv." || lv === "4 Lv.");
+    return decent(engrInputs.stone1Target, engrInputs.stone1Level) && decent(engrInputs.stone2Target, engrInputs.stone2Level);
+  }
+
+  function adrenalineContributionGain(inputs, engrInputs, best) {
+    const { keenSense, limitBreak } = best.split;
+    const pair = best.keystone;
+    // "full" reuses `inputs` for everything EXCEPT adrenaline/adrenalineStone,
+    // which are overridden with this section's own isolated Node level (see
+    // readEngravingInputs) and isolated Stone slot (engravingStoneLevel) -
+    // never the live tracked Ark Passive value, so tweaking Adrenaline's
+    // level here can't drift from what's actually equipped above.
+    const full = Object.assign({}, inputs, {
+      adrenaline: engrInputs.adrenalineLevel,
+      adrenalineStone: engravingStoneLevel("adrenaline", engrInputs),
+    });
+    const shared = computeShared(full);
+    const fullMult = combinedMultiplier(full, shared, keenSense, limitBreak, pair);
+    const off = Object.assign({}, full, { adrenaline: "Not Used", adrenalineStone: "0 Lv." });
+    const offShared = computeShared(off);
+    const baselineMult = combinedMultiplier(off, offShared, keenSense, limitBreak, pair);
+    const gridRatio = baselineMult > 0 ? fullMult / baselineMult : 1;
+
+    let apRatio = 1;
+    const wp = full.gearWp;
+    const mainStat = full.gearMainStat;
+    if (wp > 0 && mainStat > 0) {
+      const baseApBonus = engravingStoneImpliesBaseAp(engrInputs) ? ABILITY_STONE_BASE_AP_BONUS : 0;
+      const baseApMult = 1 + (full.gearGemBaseAp + baseApBonus) / 100;
+      const flatAp = full.gearFlatAp + gearChaosStarFlat(full.gearApChaosStar);
+      const onPctMult = 1 + gearAttackPowerPercentTotal(full) / 100;
+      const offPctMult = 1 + gearAttackPowerPercentTotal(off) / 100;
+      const supApBuff = supportApBuff(full, wp, mainStat, baseApMult);
+      const fullAp = gearApTotal(wp, mainStat, baseApMult, flatAp, onPctMult, supApBuff);
+      const baseAp = gearApTotal(wp, mainStat, baseApMult, flatAp, offPctMult, supApBuff);
+      if (baseAp > 0) apRatio = fullAp / baseAp;
+    }
+    return gridRatio * apRatio - 1;
+  }
+
+  // Builds the candidateInputs clone bestComboFor() searches for one
+  // competing-pool combination. Both Adrenaline and Keen Blunt Weapon's
+  // Node level are overridden from this section's own isolated selectors
+  // (never the live tracked value - see readEngravingInputs) so the
+  // keystone/split search this section runs always reflects what's
+  // actually configured here. Keen Blunt Weapon is further zeroed to
+  // "Not Used" (its own existing off-state) whenever this candidate's pool
+  // doesn't include it - exactly like zeroedBraceletInputs zeroes a
+  // bracelet's own tracked fields - so the two mutually exclusive slot
+  // options never double-count. Either engraving's Ability Stone level is
+  // likewise this section's own isolated value (0 Lv. unless one of the 2
+  // stone slots targets it), never the live tracked Stone select.
+  function engravingCandidateInputs(inputs, engrInputs, flags) {
+    const cloned = Object.assign({}, inputs);
+    cloned.adrenaline = engrInputs.adrenalineLevel;
+    cloned.adrenalineStone = engravingStoneLevel("adrenaline", engrInputs);
+    if (!flags.includeKbw) {
+      cloned.kbw = "Not Used";
+      cloned.kbwStone = "0 Lv.";
+    } else {
+      cloned.kbw = engrInputs.kbwLevel;
+      cloned.kbwStone = engravingStoneLevel("kbw", engrInputs);
+    }
+    return cloned;
+  }
+
+  function engravingCandidateMultiplier(engrInputs, inputs, flags) {
+    let mult = 1;
+    mult *= 1 + grudgeGain(engrInputs, inputs);
+    mult *= 1 + ambushMasterGain(engrInputs, inputs);
+    if (flags.includeRC) mult *= 1 + raidCaptainGain(engrInputs, inputs);
+    if (flags.includeCD) mult *= 1 + cursedDollGain(engrInputs, inputs);
+    if (flags.includeMI) mult *= 1 + massIncreaseGain(engrInputs, inputs);
+    return mult;
+  }
+
+  function computeEngravingCandidate(inputs, engrInputs, flags) {
+    const candidateInputs = engravingCandidateInputs(inputs, engrInputs, flags);
+    const combo = bestComboFor(candidateInputs);
+    const flatMult = engravingCandidateMultiplier(engrInputs, candidateInputs, flags);
+    return { flags, combo, flatMult, totalMult: combo.mult * flatMult };
+  }
+
+  function engravingComboLabel(flags) {
+    const parts = [];
+    if (flags.includeRC) parts.push("Raid Captain");
+    if (flags.includeKbw) parts.push("Keen Blunt Weapon");
+    if (flags.includeCD) parts.push("Cursed Doll");
+    if (flags.includeMI) parts.push("Mass Increase");
+    return parts.join(" + ") || "(none)";
+  }
+
+  // readInputs() above stays untouched by this section on purpose - every
+  // field read here is either isolated (no id, so nothing new gets saved/
+  // exported - see the HTML) or already covered live via `inputs` itself
+  // (backAttackRate, yearning, adrenaline*, kbw*).
+  function readEngravingInputs(root) {
+    return {
+      spec: getSelect(root, ".ap-engr-spec:checked", "re"),
+      grudgeLevel: getSelect(root, ".ap-engr-grudge-level", "4 Nodes"),
+      ambushLevel: getSelect(root, ".ap-engr-ambush-level", "4 Nodes"),
+      adrenalineLevel: getSelect(root, ".ap-engr-adrenaline-level", "4 Nodes"),
+      kbwLevel: getSelect(root, ".ap-engr-kbw-level", "4 Nodes"),
+      rcLevel: getSelect(root, ".ap-engr-rc-level", "4 Nodes"),
+      cdLevel: getSelect(root, ".ap-engr-cd-level", "4 Nodes"),
+      miLevel: getSelect(root, ".ap-engr-mi-level", "4 Nodes"),
+      miOptIn: getCheckbox(root, ".ap-engr-mi-optin", false),
+      maelstromUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-engr-maelstrom-uptime", 85))),
+      rageRune: getCheckbox(root, ".ap-engr-rage-rune", true),
+      wine: getCheckbox(root, ".ap-engr-wine", true),
+      manaFood: getCheckbox(root, ".ap-engr-manafood", false),
+      manaFoodAmount: getNumber(root, ".ap-engr-manafood-amount", 12000),
+      ealynsBlessing: getCheckbox(root, ".ap-engr-ealyn", false),
+      stone1Target: getSelect(root, ".ap-engr-stone1-target", "None"),
+      stone1Level: getSelect(root, ".ap-engr-stone1-level", "0 Lv."),
+      stone2Target: getSelect(root, ".ap-engr-stone2-target", "None"),
+      stone2Level: getSelect(root, ".ap-engr-stone2-level", "0 Lv."),
+    };
+  }
+
+  // Keen Blunt Weapon's isolated contribution, reusing the exact same
+  // closed-form kbwEngravingGainPct/marginalCritDmgGainPct methodology
+  // computeGridAndSummary's own bestStats.kbwGain/kbwStoneGain use (so the
+  // two can never disagree when nothing here is overridden) - EXCEPT the
+  // Node level comes from this section's own isolated selector
+  // (engrInputs.kbwLevel), never the live tracked value, and the Ability
+  // Stone half comes solely from this section's own isolated stone slots
+  // (engravingStoneLevel) - "0 Lv." if neither targets Keen Blunt Weapon,
+  // never a fallback to the live tracked Stone select. A plain ratio
+  // (combinedMultiplier with/without) can't be reused here instead, since
+  // it would silently drop KBW_EV_MALUS - that malus only ever gets
+  // applied inside kbwEngravingGainPct's own closed form, never inside
+  // the shared combinedMultiplier grid formula itself.
+  function kbwContributionGain(engrInputs, best, bestStats, shared) {
+    const kbwValue = KBW_TABLE[engrInputs.kbwLevel] || 0;
+    const kbwStoneValue = KBW_STONE_TABLE[engravingStoneLevel("kbw", engrInputs)] || 0;
+    const onCrit = bestStats.onCritDmg / 100;
+    const gainPct =
+      kbwEngravingGainPct(best.effCrit, onCrit, shared.critDmgTotal, kbwValue) +
+      marginalCritDmgGainPct(best.effCrit, onCrit, shared.critDmgTotal, kbwStoneValue);
+    return gainPct / 100;
+  }
+
+  function computeEngravingComparison(inputs, engrInputs) {
+    const gridResult = computeGridAndSummary(inputs);
+    const best = gridResult.best;
+    if (!best) return null;
+    const shared = computeShared(inputs);
+
+    // Raid Captain competes for its slot on both specs now - RE used to
+    // force includeRC: true into every candidate (only KBW vs CD actually
+    // competed), but RE has the same 2-competing-slot structure Surge
+    // does, so RC belongs in the same pool-of-2-combinations search
+    // rather than being pinned on. Mass Increase stays Surge-only (its
+    // -10% Attack Speed drawback isn't modeled - see the page banner -
+    // so it's never added to RE's pool regardless of miOptIn).
+    const pool = ["rc", "kbw", "cd"];
+    if (engrInputs.spec !== "re" && engrInputs.miOptIn) pool.push("mi");
+    const candidateFlagSets = [];
+    for (let i = 0; i < pool.length; i++) {
+      for (let j = i + 1; j < pool.length; j++) {
+        candidateFlagSets.push({
+          includeRC: pool[i] === "rc" || pool[j] === "rc",
+          includeKbw: pool[i] === "kbw" || pool[j] === "kbw",
+          includeCD: pool[i] === "cd" || pool[j] === "cd",
+          includeMI: pool[i] === "mi" || pool[j] === "mi",
+        });
+      }
+    }
+
+    const candidates = candidateFlagSets
+      .map((flags) => computeEngravingCandidate(inputs, engrInputs, flags))
+      .sort((a, b) => b.totalMult - a.totalMult);
+    const winner = candidates[0];
+    const runnerUp = candidates[1] || null;
+
+    const rows = [
+      { label: "Grudge", gain: grudgeGain(engrInputs, inputs) },
+      { label: "Ambush Master", gain: ambushMasterGain(engrInputs, inputs) },
+      { label: "Adrenaline", gain: adrenalineContributionGain(inputs, engrInputs, best) },
+      { label: "Raid Captain", gain: raidCaptainGain(engrInputs, inputs) },
+      { label: "Keen Blunt Weapon", gain: kbwContributionGain(engrInputs, best, gridResult.bestStats, shared) },
+      { label: "Cursed Doll", gain: cursedDollGain(engrInputs, inputs) },
+      { label: "Mass Increase", gain: massIncreaseGain(engrInputs, inputs) },
+      {
+        label: "Mana Food",
+        gain: manaFoodContributionGain(engrInputs, inputs),
+        note: "Includes using the Bleed rune on Maelstrom. Not tied to any one engraving - every combo below can run it.",
+      },
+    ];
+
+    const stoneBreakdown = {
+      grudge: ENGRAVING_STONE_OPTIONS.map((lv) => GRUDGE_STONE_TABLE[lv] || 0),
+      ambush: ENGRAVING_STONE_OPTIONS.map((lv) => AMBUSH_MASTER_STONE_TABLE[lv] || 0),
+      rc: ENGRAVING_STONE_OPTIONS.map((lv) => (RAID_CAPTAIN_STONE_TABLE[lv] || 0) * raidCaptainMoveSpeedFraction(engrInputs, inputs.yearning)),
+      cd: ENGRAVING_STONE_OPTIONS.map((lv) => CURSED_DOLL_STONE_TABLE[lv] || 0),
+      mi: ENGRAVING_STONE_OPTIONS.map((lv) => MASS_INCREASE_STONE_TABLE[lv] || 0),
+    };
+
+    return {
+      winner,
+      runnerUp,
+      rows,
+      stoneBreakdown,
+      moveSpeed: raidCaptainMoveSpeed(engrInputs, inputs.yearning),
+      attackSpeed: engrInputs.spec === "surge" ? surgeEffectiveAttackSpeed(engrInputs, inputs.yearning) : null,
+      wineVsManaFood: raidCaptainWineVsManaFood(engrInputs, inputs),
+      spec: engrInputs.spec,
+    };
+  }
+
   function formatPct(val) {
     if (!val) return "(0%)";
     return "(" + (val * 100).toFixed(2) + "%)";
@@ -2905,6 +3389,111 @@
     });
   }
 
+  // ----- Engraving Comparison rendering -----
+  // Contribution rows are a single value per engraving (not a Low/Mid/
+  // High trio), so this doesn't reuse renderComparisonRows - closer to
+  // renderArkGridComparison's own bespoke-shape renderer just above.
+  function renderEngravingComparison(root, result, engrInputs) {
+    const isSurge = engrInputs.spec === "surge";
+    const rageRuneRow = root.querySelector(".ap-engr-rage-rune-row");
+    if (rageRuneRow) rageRuneRow.style.display = isSurge ? "" : "none";
+    const wineRow = root.querySelector(".ap-engr-wine-row");
+    if (wineRow) wineRow.style.display = isSurge ? "" : "none";
+    const manaFoodRow = root.querySelector(".ap-engr-manafood-row");
+    if (manaFoodRow) manaFoodRow.style.display = isSurge ? "" : "none";
+    const ealynRow = root.querySelector(".ap-engr-ealyn-row");
+    if (ealynRow) ealynRow.style.display = isSurge ? "" : "none";
+    const miRow = root.querySelector(".ap-engr-mi-row");
+    if (miRow) miRow.classList.toggle("ap-engr-mi-row-disabled", !isSurge);
+
+    if (!result) return;
+
+    const msEl = root.querySelector(".ap-engr-ms-readout");
+    if (msEl) {
+      msEl.textContent = "Effective Move Speed: " + result.moveSpeed.toFixed(2) + "% (140% cap)";
+    }
+
+    // Attack Speed is Surge-only display (see surgeEffectiveAttackSpeed's
+    // own comment - RE never runs Mass Increase, so it has no use for
+    // this readout at all), unlike the Move Speed readout just above,
+    // which both specs use since Raid Captain's own Move Speed calc
+    // always applies.
+    const atkEl = root.querySelector(".ap-engr-atk-readout");
+    if (atkEl) {
+      if (!isSurge || result.attackSpeed === null) {
+        atkEl.style.display = "none";
+      } else {
+        atkEl.style.display = "";
+        let text = "Effective Attack Speed: " + result.attackSpeed.toFixed(2) + "% (140% cap)";
+        if (engrInputs.miOptIn) text += " (includes Mass Increase's -10% drawback)";
+        atkEl.textContent = text;
+      }
+    }
+
+    const foodNoteEl = root.querySelector(".ap-engr-manafood-note");
+    if (foodNoteEl) {
+      if (!isSurge || result.wineVsManaFood === null) {
+        foodNoteEl.style.display = "none";
+      } else {
+        foodNoteEl.style.display = "";
+        const pct = result.wineVsManaFood * 100;
+        const winner = pct >= 0 ? "Mana Food" : "Vernese Wine";
+        foodNoteEl.textContent =
+          "For Raid Captain, " + winner + " is currently the better pick by " + Math.abs(pct).toFixed(2) + "%.";
+      }
+    }
+
+    const rowsContainer = root.querySelector(".ap-engr-contrib-rows");
+    if (rowsContainer) {
+      rowsContainer.innerHTML = "";
+      const stoneKeyByLabel = { Grudge: "grudge", "Ambush Master": "ambush", "Raid Captain": "rc", "Cursed Doll": "cd", "Mass Increase": "mi" };
+      result.rows.forEach((row) => {
+        const tr = document.createElement("tr");
+        tr.appendChild(window.SiteUtils.el("td", "ap-brace-row-label", row.label + (row.note ? " †" : "")));
+        tr.appendChild(window.SiteUtils.el("td", "ap-brace-tier-val", formatPctBare(row.gain)));
+        const stoneKey = stoneKeyByLabel[row.label];
+        const levels = stoneKey ? result.stoneBreakdown[stoneKey] : null;
+        for (let i = 0; i < 4; i++) {
+          tr.appendChild(window.SiteUtils.el("td", "ap-brace-tier-val ap-engr-stone-col", levels ? formatPctBare(levels[i]) : "—"));
+        }
+        rowsContainer.appendChild(tr);
+        if (row.note) {
+          const noteTr = document.createElement("tr");
+          const noteTd = window.SiteUtils.el("td", "ap-engr-row-note", "† " + row.note);
+          noteTd.colSpan = 6;
+          noteTr.appendChild(noteTd);
+          rowsContainer.appendChild(noteTr);
+        }
+      });
+    }
+
+    function fillCard(prefix, candidate) {
+      const comboEl = root.querySelector("." + prefix + "-combo");
+      const keystoneEl = root.querySelector("." + prefix + "-keystone");
+      if (!candidate) {
+        if (comboEl) comboEl.textContent = "—";
+        if (keystoneEl) keystoneEl.textContent = "—";
+        return;
+      }
+      if (comboEl) comboEl.textContent = engravingComboLabel(candidate.flags);
+      if (keystoneEl) {
+        keystoneEl.textContent = KEYSTONE_LABELS[candidate.combo.pair] + " / " + candidate.combo.split.label;
+      }
+    }
+    fillCard("ap-engr-best", result.winner);
+    fillCard("ap-engr-runnerup", result.runnerUp);
+
+    const vsEl = root.querySelector(".ap-engr-best-vs-runnerup");
+    if (vsEl) {
+      if (result.winner && result.runnerUp) {
+        const diff = (result.winner.totalMult / result.runnerUp.totalMult - 1) * 100;
+        vsEl.textContent = "+" + diff.toFixed(2) + "%";
+      } else {
+        vsEl.textContent = "—";
+      }
+    }
+  }
+
   // ----- Local storage persistence -----
   // Saves every field's current value under one key so a reader filling
   // this out doesn't have to redo it on every reload. Best-effort: some
@@ -3207,6 +3796,7 @@
     enforceGearSupportUptimeGate(root);
     enforceBvbLineControls(root);
     enforceBvbLineExclusivity(root);
+    enforceEngravingStoneExclusivity(root);
     const inputs = readInputs(root);
     const result = computeGridAndSummary(inputs);
     renderGrid(root, result);
@@ -3215,6 +3805,8 @@
     renderBraceletVsBracelet(root, inputs, computeBraceletVsBracelet(inputs));
     renderAccessoryComparison(root, computeAccessoryComparison(inputs));
     renderArkGridComparison(root, computeArkGridComparison(inputs));
+    const engrInputs = readEngravingInputs(root);
+    renderEngravingComparison(root, computeEngravingComparison(inputs, engrInputs), engrInputs);
   }
 
   // Chaos Core: Flashy Attack, Chaos Core: Stable Attack, and Chaos
@@ -3282,6 +3874,26 @@
     const kbwUnused = kbwEl.value === "Not Used";
     if (kbwUnused) stoneEl.value = "0 Lv.";
     stoneEl.disabled = kbwUnused;
+  }
+
+  // Only 2 Ability Stone slots exist in-game, so the Engraving Comparison
+  // section's own 2 isolated slots can't both target the same engraving -
+  // picking one slot's target equal to the other's resets the OTHER back
+  // to "None", same "reset the other one instead of blocking the option"
+  // pattern normalizeChaosCoreExclusivity uses above. Also disables each
+  // slot's level select while its target is "None", matching
+  // enforceKbwStoneDependency's own disabled-while-unused treatment.
+  function enforceEngravingStoneExclusivity(root) {
+    const t1 = root.querySelector(".ap-engr-stone1-target");
+    const l1 = root.querySelector(".ap-engr-stone1-level");
+    const t2 = root.querySelector(".ap-engr-stone2-target");
+    const l2 = root.querySelector(".ap-engr-stone2-level");
+    if (!t1 || !l1 || !t2 || !l2) return;
+    if (t1.value !== "None" && t1.value === t2.value) t2.value = "None";
+    if (t1.value === "None") l1.value = "0 Lv.";
+    if (t2.value === "None") l2.value = "0 Lv.";
+    l1.disabled = t1.value === "None";
+    l2.disabled = t2.value === "None";
   }
 
   // Bracelet vs. Bracelet's 6 free-line rows (3 per side) each pair a type
@@ -3438,6 +4050,30 @@
           if (guardianEl.checked) kazerosEl.checked = false;
         });
       }
+
+      // Vernese Wine, Mana Food, and Ealyn's Blessing are a 3-way
+      // mutually exclusive set of Surge consumable choices - Wine feeds
+      // Raid Captain's isolated Move Speed calc (see raidCaptainMoveSpeed),
+      // Mana Food feeds its own contribution-table row (manaFoodGain),
+      // and Ealyn's Blessing feeds the Attack Speed readout
+      // (surgeEffectiveAttackSpeed) - only one is ever actually eaten at
+      // once. Same "dedicated listeners, checking one unchecks the
+      // others" shape as Kazeros/Guardian just above, since (unlike the 2
+      // Ability Stone slots) there's no natural "primary" side to fall
+      // back on for a plain update()-driven resolver.
+      const wineEl = root.querySelector(".ap-engr-wine");
+      const manaFoodEl = root.querySelector(".ap-engr-manafood");
+      const ealynEl = root.querySelector(".ap-engr-ealyn");
+      const speedChoiceEls = [wineEl, manaFoodEl, ealynEl].filter(Boolean);
+      speedChoiceEls.forEach((el) => {
+        el.addEventListener("change", () => {
+          if (el.checked) {
+            speedChoiceEls.forEach((other) => {
+              if (other !== el) other.checked = false;
+            });
+          }
+        });
+      });
 
       // Coalesced to at most one recompute+render+save per animation
       // frame, shared across every field in this root. Range sliders fire
