@@ -954,7 +954,7 @@
           <p class="ap-bvb-diff-wrap"><span class="ap-bvb-diff">—</span></p>
           <p class="ap-brace-compare-flip-note ap-bvb-keystone-note" hidden>Bracelet A and B land on different best keystones - the comparison above already accounts for that, each running its own.</p>
         </div>
-        <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Bracelet Line inputs above are - fill everything in first or else.</p>
+        <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Bracelet inputs above are - fill everything in first or else.</p>
       </div>
     </details>
   </div>
