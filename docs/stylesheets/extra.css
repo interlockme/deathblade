@@ -59,16 +59,9 @@
      being named here like every other reused color on the site. No
      rendered pixel changes from naming them - same values, just one
      source of truth now instead of N copies that could drift apart. */
-  --dbc-note-border: #8b80a8;      /* "note" admonition border - the one admonition
-    type without a dedicated accent color of its own (unlike tip/warning/danger/
-    example/info, which each border+tint off an existing --dbc-* accent) */
-  --dbc-note-bg: #201d29;          /* "note" admonition + its title bar background */
-  --dbc-tip-bg: #182422;           /* "tip" admonition + its title bar background, pairs with --dbc-teal */
-  --dbc-gold-dark: #26210f;        /* dark gold tint - "warning" admonition bg, the
+  --dbc-gold-dark: #26210f;        /* dark gold tint - the
     2nd Pre-Ark Grid option card, and .page-banner-warning, pairs with --dbc-gold */
-  --dbc-danger-bg: #271717;        /* "danger" admonition + its title bar background, pairs with --dbc-red */
-  --dbc-example-bg: #161f28;       /* "example" admonition + its title bar background, pairs with --dbc-blue */
-  --dbc-rose-dark: #241a20;        /* dark rose tint - "info" admonition bg, the 1st
+  --dbc-rose-dark: #241a20;        /* dark rose tint - the 1st
     .grid.cards/.prearc-cards option card, a rank-1 gem badge's on-fill text, and
     cycle-num-1's on-fill text, pairs with --dbc-rose */
   --dbc-teal-dark: #0a1f1c;        /* darkest teal tint - on-fill text for a rank-1
@@ -375,120 +368,6 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .admonition > :last-child,
 .md-typeset details > :last-child {
   margin-bottom: 0;
-}
-
-/* Type colors below. Two bugs fixed here at once:
-   1) Material's own border/bg rule is `.md-typeset .admonition.X,
-      .md-typeset details.X` (3 class selectors) - our old rules were only
-      `.md-typeset .X` (2 classes), so despite loading after Material's
-      CSS, lower specificity meant Material's default note/tip/warning/
-      danger/example colors were winning outright (verified via computed
-      style: .danger was rendering Material's #ff1744, not our var(--dbc-red)).
-      Matching that selector shape here is what actually applies the site
-      palette instead of just looking close to it in a screenshot.
-   2) Only `.admonition-title` (the `!!!` case) was ever targeted, so a
-      `??? type "..."` collapsible (which renders `<summary>`, not
-      `.admonition-title`) silently kept Material's icon/title color even
-      when the border/bg above happened to match. Every rule below now
-      covers both. */
-.md-typeset .admonition.note,
-.md-typeset details.note {
-  border-color: #8b80a8;
-  background-color: var(--dbc-note-bg);
-}
-.md-typeset .note > .admonition-title,
-.md-typeset .note > summary {
-  background-color: var(--dbc-note-bg);
-  color: var(--dbc-lavender);
-}
-.md-typeset .note > .admonition-title::before,
-.md-typeset .note > summary::before {
-  background-color: var(--dbc-lavender);
-}
-
-.md-typeset .admonition.tip,
-.md-typeset details.tip {
-  border-color: var(--dbc-teal);
-  background-color: var(--dbc-tip-bg);
-}
-.md-typeset .tip > .admonition-title,
-.md-typeset .tip > summary {
-  background-color: var(--dbc-tip-bg);
-  color: var(--dbc-teal);
-}
-.md-typeset .tip > .admonition-title::before,
-.md-typeset .tip > summary::before {
-  background-color: var(--dbc-teal);
-}
-
-.md-typeset .admonition.warning,
-.md-typeset details.warning {
-  border-color: var(--dbc-gold);
-  background-color: var(--dbc-gold-dark);
-}
-.md-typeset .warning > .admonition-title,
-.md-typeset .warning > summary {
-  background-color: var(--dbc-gold-dark);
-  color: var(--dbc-gold);
-}
-.md-typeset .warning > .admonition-title::before,
-.md-typeset .warning > summary::before {
-  background-color: var(--dbc-gold);
-}
-
-.md-typeset .admonition.danger,
-.md-typeset details.danger {
-  border-color: var(--dbc-red);
-  background-color: var(--dbc-danger-bg);
-}
-.md-typeset .danger > .admonition-title,
-.md-typeset .danger > summary {
-  background-color: var(--dbc-danger-bg);
-  color: var(--dbc-red);
-}
-.md-typeset .danger > .admonition-title::before,
-.md-typeset .danger > summary::before {
-  background-color: var(--dbc-red);
-}
-
-.md-typeset .admonition.example,
-.md-typeset details.example {
-  border-color: var(--dbc-blue);
-  background-color: var(--dbc-example-bg);
-}
-.md-typeset .example > .admonition-title,
-.md-typeset .example > summary {
-  background-color: var(--dbc-example-bg);
-  color: var(--dbc-blue);
-}
-.md-typeset .example > .admonition-title::before,
-.md-typeset .example > summary::before {
-  background-color: var(--dbc-blue);
-}
-
-/* "info" had no override at all and fell through to Material's stock
-   admonition cyan (#00b8d4) - the one generic callout left on the
-   site's own pink/teal/lavender/gold palette. Reuses the same pink/
-   #241a20 pairing as .grid.cards' first card and .prearc-cards' first
-   card rather than introducing yet another unrelated hue. */
-.md-typeset .admonition.info,
-.md-typeset details.info {
-  border-color: var(--dbc-rose);
-  background-color: var(--dbc-rose-dark);
-}
-.md-typeset .info > .admonition-title,
-.md-typeset .info > summary {
-  background-color: var(--dbc-rose-dark);
-  color: var(--dbc-rose);
-}
-.md-typeset .info > .admonition-title::before,
-.md-typeset .info > summary::before {
-  background-color: var(--dbc-rose);
-}
-
-/* A table or list immediately followed by related notes: group visually */
-.md-typeset .admonition table:not([class]) {
-  margin: 0.6em 0;
 }
 
 /* ---------- Skill-code blocks (Ark Passive/Skill import strings) ---------- */
@@ -2695,49 +2574,6 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .grid.cards.prearc-cards > ul > li:nth-child(3) {
   background-color: var(--dbc-teal-card-bg);
   border-color: var(--dbc-teal);
-}
-
-/* ---------- Gearing Values reference images ---------- */
-/* Two screenshots (sticker legend, values table) dropped straight into a
-   .grid.cards pair for the side-by-side layout - but without a modifier
-   they'd inherit the base .grid.cards nth-child(1)/(2) pink/teal pair,
-   which is the RE/Surge choice coding from the homepage cards above (see
-   .prearc-cards for the same idea done as a three-way split) - a
-   meaningful pairing there, coincidental and misleading here since these
-   two panels aren't a choice between anything, just two reference images
-   sitting side by side. .gearing-cards swaps both to the same neutral
-   lavender every other reference component on the site uses instead
-   (matches .cpm-calc/.skills-table's border+tint), and turns off the
-   hover lift/shadow those RE/Surge option cards get - a whole-card
-   hover-pop would suggest the card itself does something, when the only
-   actual interaction is the click-to-zoom on the table image (see
-   .zoomable-image below), not the sticker beside it or the card frame.
-   nth-child(1)/(2) selectors (not a blanket > li rule) so this reliably
-   outweighs the base pink/teal rule by specificity regardless of source
-   order in the file, rather than depending on being declared later.
-   Padding + the image's own border-radius give the screenshot breathing
-   room inside the card frame instead of bleeding flush to its rounded
-   corners. Usage - just keep swapping the two image lines, no other
-   markup needed:
-   <div class="grid cards gearing-cards" style="grid-template-columns: 1fr 3fr;" markdown>
-   - ![](sticker.png)
-   - ![](table.png)
-   </div> */
-.md-typeset .grid.cards.gearing-cards > ul > li:nth-child(1),
-.md-typeset .grid.cards.gearing-cards > ul > li:nth-child(2) {
-  background-color: var(--dbc-surface-muted);
-  border-color: rgba(var(--dbc-purple-rgb), 0.3);
-  padding: 0.6em;
-}
-.md-typeset .grid.cards.gearing-cards > ul > li:hover {
-  transform: none;
-  box-shadow: none;
-  border-color: rgba(var(--dbc-purple-rgb), 0.5);
-}
-.md-typeset .grid.cards.gearing-cards img {
-  display: block;
-  width: 100%;
-  border-radius: 8px;
 }
 
 /* ---------- Page-level availability banner ---------- */
@@ -7015,7 +6851,7 @@ body.page-333-blitz input[type="text"] {
    comparison, 333-blitz's "why male models" reveal) rendered as a bare,
    full-width <img> with square corners - looked like a random png pasted
    in next to every other bordered/rounded component on the page. Same
-   flat-card language as .dps-showcase-frame/.gearing-cards img elsewhere
+   flat-card language as .dps-showcase-frame img elsewhere
    (thin purple-tinted border, rounded corners) plus a soft drop shadow
    for a little depth, since unlike those it's not already sitting inside
    its own bordered frame div - the border has to live on the image

@@ -504,7 +504,7 @@
       <div class="ap-gear-card ap-gear-card--basics">
         <p class="ap-gear-card-title">Weapon Power / Main Stat / Misc</p>
         <div class="ap-calc-field-row ap-calc-field-row-pair">
-          <label class="ap-calc-field-label" title="Affects only the flat Weapon Power granted by lines below, not your Weapon Power stat itself.">Earrings</label>
+          <label class="ap-calc-field-label" title="Affects only the flat Weapon Power granted by lines below, not your Weapon Power itself.">Earrings</label>
           <div class="ap-calc-pair">
             <select id="ap-gear-wp-earring1" class="ap-gear-wp-earring1">
               <option value="None">None</option>
@@ -525,7 +525,7 @@
           <input type="number" id="ap-gear-wp" class="ap-gear-wp ap-gear-input-wide" min="0" max="1000000" step="1" value="259216">
         </div>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-wp-karma-lv" title="+0.1% Weapon Power per level, up to Lv.30 (+3%). Affects only the flat Weapon Power granted by lines below, not your Weapon Power stat itself.">Karmic Enlightenment Level</label>
+          <label class="ap-calc-field-label" for="ap-gear-wp-karma-lv" title="+0.1% Weapon Power per level, up to Lv.30 (+3%). Affects only the flat Weapon Power granted by lines below, not your Weapon Power itself.">Karmic Enlightenment Level</label>
           <span class="ap-value-display" data-for="ap-gear-wp-karma-lv"></span>
           <input type="number" id="ap-gear-wp-karma-lv" class="ap-gear-wp-karma-lv ap-gear-input-narrow" min="0" max="30" step="1" value="30">
         </div>
@@ -551,7 +551,7 @@
           <input type="number" id="ap-gear-main-stat" class="ap-gear-main-stat ap-gear-input-wide" min="0" max="2000000" step="1" value="854918">
         </div>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-main-stat-pct" title="Stronghold Pet (+1%) + Skin bonuses: Legendary +2% each (up to +8%) and Epic +1% each (up to +4%). Affects only the flat Main Stat granted by lines below, not your Main Stat stat itself.">Main Stat %</label>
+          <label class="ap-calc-field-label" for="ap-gear-main-stat-pct" title="Stronghold Pet (+1%) + Skin bonuses: Legendary +2% each (up to +8%) and Epic +1% each (up to +4%). Affects only the flat Main Stat granted by lines below, not your Main Stat itself.">Main Stat %</label>
           <input type="number" id="ap-gear-main-stat-pct" class="ap-gear-main-stat-pct ap-gear-input-narrow" min="0" max="15" step="0.1" value="9">
         </div>
         <div class="ap-calc-field-row ap-calc-field-row-pair">
@@ -767,7 +767,7 @@
                 <option value="crit_rate">Crit Rate %</option>
                 <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown +2%</option>
+                <option value="damage_cd">Outgoing Damage % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a">Additional Damage %</option>
@@ -793,7 +793,7 @@
                 <option value="crit_rate">Crit Rate %</option>
                 <option value="crit_dmg_dual" selected>Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown +2%</option>
+                <option value="damage_cd">Outgoing Damage % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a">Additional Damage %</option>
@@ -819,7 +819,7 @@
                 <option value="crit_rate">Crit Rate %</option>
                 <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown +2%</option>
+                <option value="damage_cd">Outgoing Damage % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a" selected>Additional Damage %</option>
@@ -867,7 +867,7 @@
                 <option value="crit_rate" selected>Crit Rate %</option>
                 <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown +2%</option>
+                <option value="damage_cd">Outgoing Damage % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a">Additional Damage %</option>
@@ -893,7 +893,7 @@
                 <option value="crit_rate">Crit Rate %</option>
                 <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg" selected>Crit Damage %</option>
-                <option value="damage_cd">Outgoing Dmg % &amp; Cooldown +2%</option>
+                <option value="damage_cd">Outgoing Damage % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a">Additional Damage %</option>
@@ -919,7 +919,7 @@
                 <option value="crit_rate">Crit Rate %</option>
                 <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
                 <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd" selected>Outgoing Dmg % &amp; Cooldown +2%</option>
+                <option value="damage_cd" selected>Outgoing Damage % &amp; Cooldown +2%</option>
                 <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
                 <option value="outgoing">Outgoing Damage %</option>
                 <option value="add_a">Additional Damage %</option>

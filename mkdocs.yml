@@ -30,7 +30,7 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=22
+  - stylesheets/extra.css?v=23
 
 # Load order matters: several widgets read a shared data file
 # (build-data.js/skill-data.js/skill-names.js/ap-node-names.js) or the
@@ -98,8 +98,6 @@ plugins:
         - "*mermaid*"
 
 markdown_extensions:
-  - admonition
-  - pymdownx.details
   - pymdownx.superfences
   - tables
   - attr_list
