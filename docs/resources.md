@@ -90,7 +90,7 @@
       </div>
     </div>
     <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-crushing-core" title="Chaos Core: Crushing's Crit Rate. A different Chaos Core slot from Flashy/Stable/Swift (Crit Hit Damage / Crit Damage cards), so picking a tier here doesn't reset those. In-game it's actually mutually exclusive with Absorbing/Smoldering instead, but neither of those has a tracked field here to enforce that against.">Chaos Core: Crushing</label>
+      <label class="ap-calc-field-label" for="ap-crushing-core">Chaos Core: Crushing</label>
       <span class="ap-value-display" data-for="ap-crushing-core"></span>
       <select id="ap-crushing-core" class="ap-crushing-core">
         <option value="None|0P" selected>None</option>
@@ -162,7 +162,7 @@
       </div>
     </div>
     <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-swift-core" title="Chaos Core: Swift's Crit Dmg. Mutually exclusive with Chaos Core: Flashy Attack and Chaos Core: Stable Attack in the Crit Hit Damage card below - only one Chaos Core equips at a time, so picking a real tier here resets those back to None, and vice versa.">Chaos Core: Swift</label>
+      <label class="ap-calc-field-label" for="ap-swift-core">Chaos Core: Swift</label>
       <span class="ap-value-display" data-for="ap-swift-core"></span>
       <select id="ap-swift-core" class="ap-swift-core">
         <option value="None|0P" selected>None</option>
@@ -477,7 +477,7 @@
 <details class="ap-gear-inputs">
   <summary>
     <span class="ap-gear-title">Character Data</span>
-    <span class="ap-gear-optional-badge" title="Not part of your Ark Passive setup above. Only used by the Bracelet, Accessory, and Ark Grid comparisons below - skip this if you're not using those.">Optional</span>
+    <span class="ap-gear-optional-badge" title="Not part of your Ark Passive setup above. Only used by the Bracelet, Accessory, and Chaos Core comparisons below - skip this if you're not using those.">Optional</span>
   </summary>
   <div class="ap-brace-compare-inputs">
     <!-- Two cards side by side, same visual language as the Ark Passive
@@ -530,7 +530,7 @@
           <input type="number" id="ap-gear-wp-karma-lv" class="ap-gear-wp-karma-lv ap-gear-input-narrow" min="0" max="30" step="1" value="30">
         </div>
         <div class="ap-calc-field-row ap-gear-ap-select-row">
-          <label class="ap-calc-field-label" for="ap-gear-weapon-core" title="Chaos Core: Weapon's Weapon Power % AND Flat WP, both at once. Mutually exclusive with Chaos Core: Attack below - only one Chaos Core equips at a time, so picking a real tier here resets that one back to None, and vice versa.">Chaos Core: Weapon</label>
+          <label class="ap-calc-field-label" for="ap-gear-weapon-core" title="Chaos Core: Weapon's Weapon Power % AND Flat WP, both at once.">Chaos Core: Weapon</label>
           <span class="ap-value-display" data-for="ap-gear-weapon-core"></span>
           <select id="ap-gear-weapon-core" class="ap-gear-weapon-core">
             <option value="None|0P" selected>None</option>
@@ -551,7 +551,7 @@
           <input type="number" id="ap-gear-main-stat" class="ap-gear-main-stat ap-gear-input-wide" min="0" max="2000000" step="1" value="854918">
         </div>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-main-stat-pct" title="Stronghold Pet (+1%) + Skin bonuses: Legendary +2% each (up to +8%) and Epic +1% each (up to +4%). Affects only the flat Main Stat granted by lines below, not your Main Stat itself.">Main Stat %</label>
+          <label class="ap-calc-field-label" for="ap-gear-main-stat-pct" title="Stronghold Pet (+1%) + Skins: Legendary +2% each and Epic +1% each. Affects only the flat Main Stat granted by lines below, not your Main Stat itself.">Main Stat %</label>
           <input type="number" id="ap-gear-main-stat-pct" class="ap-gear-main-stat-pct ap-gear-input-narrow" min="0" max="15" step="0.1" value="9">
         </div>
         <div class="ap-calc-field-row ap-calc-field-row-pair">
@@ -689,7 +689,7 @@
      room to breathe horizontally instead of pushing that column's height
      around. -->
 <details class="ap-brace-compare">
-  <summary>Bracelet Line Comparison</summary>
+  <summary>Bracelet Comparison</summary>
   <div class="ap-brace-compare-body">
     <p class="ap-brace-compare-intro">Candidate bracelet lines, valued as if each were the only line on your bracelet, against your Best Setup above.</p>
     <div class="ap-brace-compare-inputs">
@@ -742,7 +742,7 @@
          Ark Passive setup, Character Data, and this table's own inputs
          above are filled out, which is why it reads as a continuation of
          them rather than something you'd reach for on its own. -->
-    <details class="ap-bvb">
+    <details class="ap-bvb" open>
       <summary>Bracelet vs. Bracelet</summary>
       <div class="ap-brace-compare-body">
         <p class="ap-brace-compare-intro">Compares two full 5-line bracelets against each other and against running none at all.</p>
@@ -981,7 +981,7 @@
      universal line can land on any of 5 pieces, so a full combo set
      would be enormous without being any more useful to look at). -->
 <details class="ap-acc-compare">
-  <summary>Accessory Line Comparison</summary>
+  <summary>Accessory Comparison</summary>
   <div class="ap-brace-compare-body">
     <p class="ap-brace-compare-intro">Candidate accessory lines, valued as if each were the only line on that slot, against your Best Setup above. Combination lines show that row's line paired with the panel's other line, both rolled on the same piece(s).</p>
 
