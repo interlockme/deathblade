@@ -3930,6 +3930,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-acc-compare,
 .md-typeset .ap-arkgrid-compare,
 .md-typeset .ap-bvb,
+.md-typeset .ap-esvs,
 .md-typeset .ap-engr-compare {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
@@ -3959,6 +3960,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-acc-compare summary::after,
 .md-typeset .ap-arkgrid-compare summary::after,
 .md-typeset .ap-bvb summary::after,
+.md-typeset .ap-esvs summary::after,
 .md-typeset .ap-engr-compare summary::after {
   display: none !important;
 }
@@ -3966,6 +3968,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-acc-compare summary::-webkit-details-marker,
 .md-typeset .ap-arkgrid-compare summary::-webkit-details-marker,
 .md-typeset .ap-bvb summary::-webkit-details-marker,
+.md-typeset .ap-esvs summary::-webkit-details-marker,
 .md-typeset .ap-engr-compare summary::-webkit-details-marker {
   display: none;
 }
@@ -3973,6 +3976,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-acc-compare summary::marker,
 .md-typeset .ap-arkgrid-compare summary::marker,
 .md-typeset .ap-bvb summary::marker,
+.md-typeset .ap-esvs summary::marker,
 .md-typeset .ap-engr-compare summary::marker {
   content: "";
 }
@@ -3980,6 +3984,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-acc-compare summary,
 .md-typeset .ap-arkgrid-compare summary,
 .md-typeset .ap-bvb summary,
+.md-typeset .ap-esvs summary,
 .md-typeset .ap-engr-compare summary {
   display: flex;
   align-items: center;
@@ -4003,6 +4008,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-acc-compare summary::before,
 .md-typeset .ap-arkgrid-compare summary::before,
 .md-typeset .ap-bvb summary::before,
+.md-typeset .ap-esvs summary::before,
 .md-typeset .ap-engr-compare summary::before {
   content: "";
   display: inline-block;
@@ -4032,6 +4038,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-acc-compare[open] > summary::before,
 .md-typeset .ap-arkgrid-compare[open] > summary::before,
 .md-typeset .ap-bvb[open] > summary::before,
+.md-typeset .ap-esvs[open] > summary::before,
 .md-typeset .ap-engr-compare[open] > summary::before {
   transform: rotate(90deg);
 }
@@ -4039,6 +4046,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-acc-compare[open] summary,
 .md-typeset .ap-arkgrid-compare[open] summary,
 .md-typeset .ap-bvb[open] summary,
+.md-typeset .ap-esvs[open] summary,
 .md-typeset .ap-engr-compare[open] summary {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -4892,6 +4900,101 @@ h3 { color: var(--dbc-teal); }
    overflowing. */
 @media screen and (max-width: 480px) {
   .md-typeset .ap-bvb-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Setup A vs. Setup B: nested <details> at the bottom of Engraving
+   Comparison, same "named-config counterpart to a best-combo search"
+   relationship Bracelet vs. Bracelet has to Bracelet Comparison just
+   above - see resources.md's own comment on .ap-esvs for why it's
+   nested there instead of a top-level section, and the JS's own
+   enforceEngravingSvsSlotExclusivity comment for why this can't just
+   reuse .ap-bvb-*'s classes despite wanting an identical look. .ap-esvs
+   itself (border/radius/chevron) is registered into the shared
+   .ap-brace-compare/.ap-bvb selector lists above rather than repeated
+   here. Setup A gets the pink accent, Setup B teal - same A=pink/B=teal
+   convention Bracelet vs. Bracelet uses, so the two stay visually
+   distinct without an "A"/"B" label repeated on every row. Field rows
+   inside each card are plain .ap-calc-field-row (label + one or two
+   selects) - unlike Bracelet vs. Bracelet's free-typed STR/DEX/INT line,
+   nothing here needs a bespoke row shape, so there's no .ap-esvs
+   counterpart to .ap-bvb-line-row. */
+.md-typeset .ap-esvs {
+  margin-top: 1.4em;
+}
+.md-typeset .ap-esvs-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.9em;
+  align-items: start;
+}
+.md-typeset .ap-esvs-card {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-left: 3px solid var(--ap-esvs-accent, rgba(255, 255, 255, 0.15));
+  border-radius: 8px;
+  padding: 0.6em 0.75em 0.7em;
+}
+.md-typeset .ap-esvs-card-a { --ap-esvs-accent: var(--dbc-pink); }
+.md-typeset .ap-esvs-card-b { --ap-esvs-accent: var(--dbc-teal); }
+.md-typeset .ap-esvs-card-title {
+  color: var(--ap-esvs-accent);
+}
+.md-typeset .ap-esvs-card .ap-calc-field-row {
+  margin-bottom: 0.5em;
+}
+.md-typeset .ap-esvs-results {
+  margin-top: 0.7em;
+  padding-top: 0.6em;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.md-typeset .ap-esvs-summary {
+  margin-top: 0.9em;
+  text-align: center;
+}
+.md-typeset .ap-esvs-summary p {
+  margin: 0.3em 0;
+}
+/* "Running neither" is context for the two cards above, not the
+   takeaway of this whole subsection - same dimmed-footnote treatment
+   .ap-bvb-neither gives its own equivalent row. */
+.md-typeset .ap-esvs-neither {
+  font-size: 0.82em;
+  color: var(--dbc-lavender);
+  opacity: 0.8;
+}
+/* The actual verdict - which setup wins, and by how much - gets the same
+   "selected answer" pill treatment as .ap-bvb-diff. Colored dynamically
+   by JS (.ap-esvs-diff-a / -b) in whichever side's own accent actually
+   won, matching that setup's card border. */
+.md-typeset .ap-esvs-diff {
+  display: inline-block;
+  margin-top: 0.15em;
+  padding: 0.35em 1.1em;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1.05em;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--dbc-lilac);
+}
+.md-typeset .ap-esvs-diff-a {
+  border-color: rgba(var(--dbc-pink-rgb), 0.5);
+  background-color: rgba(var(--dbc-pink-rgb), 0.1);
+  color: var(--dbc-pink);
+}
+.md-typeset .ap-esvs-diff-b {
+  border-color: rgba(var(--dbc-teal-rgb), 0.5);
+  background-color: rgba(var(--dbc-teal-rgb), 0.1);
+  color: var(--dbc-teal);
+}
+/* Same minmax(0,1fr) grid-blowout fix .ap-bvb-cards needs below 480px -
+   see that rule's own comment for the full explanation (a bare 1fr
+   track's default minimum is content-based, not 0, so long option text
+   like "Keen Blunt Weapon" can stretch the single-column track past the
+   viewport without it). */
+@media screen and (max-width: 480px) {
+  .md-typeset .ap-esvs-cards {
     grid-template-columns: minmax(0, 1fr);
   }
 }
