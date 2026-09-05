@@ -195,7 +195,7 @@ Pair with Cursed Doll if you're just starting out.
 - Surge: Press (Z) to consume 60 stacks. Extra stacks roll over to the next cycle.
 - Stack Requirement: Surge must be cast with 40+ stacks to refund all 3 Death Orbs.
 
-### Death Trance Buffs
+### Identity Buffs
 
 - 10/15/20% Attack Speed.
 - 10% Move Speed.

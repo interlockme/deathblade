@@ -267,6 +267,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 
 *From 3 orbs:*
 { .lead }
+
 <div class="cycle-card" markdown>
 <div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Breaking Moon Cycle</span></div>
 <div class="rotation-line" markdown>

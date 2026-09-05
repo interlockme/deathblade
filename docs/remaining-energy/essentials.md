@@ -183,6 +183,7 @@ Lower values are fine, but may experience some downtime.
 ## Gameplay
 
 ### Identity
+
 - Orb Generation: Skills generate Death Orbs when they hit.
 - Surge: Press (Z) with 1+ orbs to consume them and activate the skill.
 - 3 Orbs: Aim to always Surge with 3 orbs for the strongest buffs and cooldown reduction.
@@ -208,8 +209,6 @@ Remaining Energy is a continuous cycle:
 Generate Orbs → 3 Orbs → Surge → Repeat.
 
 Prioritize consistent uptime and good use of Maelstrom's buffs over back attacks. Use Surge to reposition.
-
-
 
 ### Combat Performance
 

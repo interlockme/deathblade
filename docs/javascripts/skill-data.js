@@ -73,7 +73,7 @@
       },
       spincutter: {
         tags: [["util", "MOBILITY"]],
-        note: "Can be cast up to 2 times at lv 4.",
+        note: "Can be cast up to 2 times at Lv 4.",
       },
       deathsentence: {
         tags: [["dmg", "DAMAGE"], ["util", "STAGGER"], ["util", "MOBILITY"]],

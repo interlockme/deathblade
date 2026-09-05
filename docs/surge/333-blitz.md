@@ -261,7 +261,6 @@ Apply damage synergy if needed, then repeat the rotation cycle as best you can.
 *From 3 orbs:*
 { .lead }
 
-
 <div class="rotation-line" markdown>
 <script type="application/json">
 ["windcut", "deathtrance", "maelstrom", "surpriseattack", "windcut", "earthcleaver", "bladedance", "deathlyslash", "blitzrush", "turningslash", "blitzrush",
