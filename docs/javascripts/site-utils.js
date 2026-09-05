@@ -211,6 +211,17 @@
       return r % 1 === 0 ? r.toFixed(0) : r.toFixed(1);
     },
 
+    // Same rounding rule as formatStat above, with a trailing "%" - e.g.
+    // 34 -> "34%", 33.5 -> "33.5%". Was defined identically (byte-for-
+    // byte, including the comment explaining the rounding) in both
+    // dps-chart.js and gem-dps-tooltip.js before being centralized here;
+    // formatStat's own comment used to point at dps-chart.js's copy as
+    // the "same rule minus the %" reference, which is now circular -
+    // this is that copy, just parameterized.
+    formatPct: function (n) {
+      return window.SiteUtils.formatStat(n) + "%";
+    },
+
     // Hide a broken/missing icon <img> instead of showing the browser's
     // default alt-text placeholder. mode "visibility" (default) keeps the
     // icon's layout box in place; mode "display" collapses it entirely.

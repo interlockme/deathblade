@@ -69,12 +69,7 @@
   // can't just be a hardcoded relative path.
   var SITE_ROOT = window.SiteUtils.detectSiteRoot("dps-chart.js");
 
-  function fmtPct(n) {
-    // Trim to at most 1 decimal, but drop a trailing ".0" so whole
-    // numbers read as "34%" instead of "34.0%".
-    var r = Math.round(n * 10) / 10;
-    return (r % 1 === 0 ? r.toFixed(0) : r.toFixed(1)) + "%";
-  }
+  var fmtPct = window.SiteUtils.formatPct; // moved to site-utils.js - was identical to gem-dps-tooltip.js's own copy
 
   function iconSlug(label) {
     return label.toLowerCase().replace(/[^a-z0-9]/g, "");

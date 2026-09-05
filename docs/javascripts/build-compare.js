@@ -364,25 +364,7 @@
     window.history.replaceState(null, "", shareUrlFor(idA, idB));
   }
 
-  function copyToClipboard(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      return navigator.clipboard.writeText(text);
-    }
-    // Fallback for browsers/contexts without the async Clipboard API.
-    var temp = document.createElement("textarea");
-    temp.value = text;
-    temp.style.position = "fixed";
-    temp.style.opacity = "0";
-    document.body.appendChild(temp);
-    temp.select();
-    try {
-      document.execCommand("copy");
-    } catch (e) {
-      // Nothing more we can do - the button's own catch handles user feedback.
-    }
-    document.body.removeChild(temp);
-    return Promise.resolve();
-  }
+  var copyToClipboard = window.SiteUtils.copyToClipboard; // was a local duplicate of the site-utils.js helper, textarea fallback and all
 
   function renderWidget(container, family) {
     var data = window.DB_BUILD_DATA && window.DB_BUILD_DATA[family];

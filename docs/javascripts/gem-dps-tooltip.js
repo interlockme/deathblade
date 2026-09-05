@@ -23,12 +23,7 @@
 // recorded split) is just left without a tooltip.
 
 (function () {
-  function fmtPct(n) {
-    // Same rounding as dps-chart.js's fmtPct - trims to at most 1
-    // decimal, drops a trailing ".0" so whole numbers read as "34%".
-    var r = Math.round(n * 10) / 10;
-    return (r % 1 === 0 ? r.toFixed(0) : r.toFixed(1)) + "%";
-  }
+  var fmtPct = window.SiteUtils.formatPct; // moved to site-utils.js - was identical to dps-chart.js's own copy
 
   function buildShareMap(chart) {
     var values = (chart.getAttribute("data-values") || "")
