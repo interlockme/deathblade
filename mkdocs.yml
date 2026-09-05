@@ -57,7 +57,7 @@ extra_css:
 # scratch). See README.md's "Forking this for your own spin" section
 # for the full breakdown.
 extra_javascript:
-  - javascripts/site-utils.js?v=6
+  - javascripts/site-utils.js?v=7
   - javascripts/extra.js?v=2
   - javascripts/cpm-calculator.js?v=6
   - javascripts/bid-calculator.js?v=4
@@ -75,9 +75,9 @@ extra_javascript:
   - javascripts/pentagon-badge.js?v=4
   - javascripts/rotation-line.js?v=3
   - javascripts/rotation-practice.js?v=3
-  - javascripts/dps-chart.js?v=4
-  - javascripts/gem-dps-tooltip.js?v=5
-  - javascripts/build-compare.js?v=4
+  - javascripts/dps-chart.js?v=5
+  - javascripts/gem-dps-tooltip.js?v=6
+  - javascripts/build-compare.js?v=5
   - javascripts/last-updated.js?v=3
   - javascripts/image-lightbox.js?v=1
 
