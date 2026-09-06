@@ -996,15 +996,31 @@
   // it grants. That EV hit applies to the WHOLE post-KBW damage total, not
   // just KBW's own slice of it, so it can't be folded into
   // marginalCritDmgGainPct's generic contribution/withoutTerm shape - the
-  // malus has to land on withTerm before taking the ratio. The KBW Ability
-  // Stone carries no such downside of its own, so it keeps using the plain
-  // marginalCritDmgGainPct above.
+  // malus has to land on withTerm before taking the ratio.
+  //
+  // Takes the engraving's own Crit Dmg value AND its Ability Stone's Crit
+  // Dmg value together (stone value optional/0 for callers that only want
+  // the engraving alone, e.g. the Base/Best Setup cards when no stone is
+  // slotted) and removes BOTH from critDmgTotal in a single joint
+  // with/without ratio, rather than computing "engraving alone" and "stone
+  // alone" as two separate ratios against the same full critDmgTotal and
+  // summing the two percentages. That summing approach used to live here
+  // and in kbwContributionGain - it looks reasonable (both are "% you'd
+  // lose if removed" fractions) but critDmgTotal's contribution to the
+  // final multiplier is affine, not linear through the origin, so two
+  // marginals computed against the SAME full baseline understate the
+  // combined effect of removing both at once (each one's "without" term
+  // still has the other's value cushioning it). Removing both together
+  // here, in one ratio, is the correct joint counterfactual and is what
+  // actually matches the source spreadsheet's own combined (compounded,
+  // not summed) Relic Engraving + Lv.4 Stone figure for Keen Blunt Weapon.
   const KBW_EV_MALUS = 0.98;
-  function kbwEngravingGainPct(effCrit, onCrit, critDmgTotal, kbwValue) {
-    if (!kbwValue) return 0;
-    const contribution = effCrit * (1 + onCrit) * kbwValue;
-    const withoutTerm = (1 - effCrit) + effCrit * (1 + onCrit) * (critDmgTotal - kbwValue);
-    const withTermAdjusted = (withoutTerm + contribution) * KBW_EV_MALUS;
+  function kbwEngravingGainPct(effCrit, onCrit, critDmgTotal, kbwValue, kbwStoneValue) {
+    const totalValue = kbwValue + (kbwStoneValue || 0);
+    if (!totalValue) return 0;
+    const withTerm = (1 - effCrit) + effCrit * (1 + onCrit) * critDmgTotal;
+    const withTermAdjusted = withTerm * KBW_EV_MALUS;
+    const withoutTerm = (1 - effCrit) + effCrit * (1 + onCrit) * (critDmgTotal - totalValue);
     if (withoutTerm <= 0) return 0;
     return (withTermAdjusted / withoutTerm - 1) * 100;
   }
@@ -1173,8 +1189,7 @@
       addDmg: shared.addDmgBase * 100,
       kbwUsed,
       kbwStoneUsed,
-      kbwGain: kbwEngravingGainPct(baseEffCrit, shared.onCritDmgBase, shared.critDmgTotal, kbwValue),
-      kbwStoneGain: marginalCritDmgGainPct(baseEffCrit, shared.onCritDmgBase, shared.critDmgTotal, kbwStoneValue),
+      kbwGain: kbwEngravingGainPct(baseEffCrit, shared.onCritDmgBase, shared.critDmgTotal, kbwValue, kbwStoneValue),
     };
 
     // Best Setup stats (only things affected by nodes)
@@ -1228,8 +1243,7 @@
       // the no-keystone baseline ones.
       bestStats.kbwUsed = kbwUsed;
       bestStats.kbwStoneUsed = kbwStoneUsed;
-      bestStats.kbwGain = kbwEngravingGainPct(best.effCrit, bestStats.onCritDmg / 100, shared.critDmgTotal, kbwValue);
-      bestStats.kbwStoneGain = marginalCritDmgGainPct(best.effCrit, bestStats.onCritDmg / 100, shared.critDmgTotal, kbwStoneValue);
+      bestStats.kbwGain = kbwEngravingGainPct(best.effCrit, bestStats.onCritDmg / 100, shared.critDmgTotal, kbwValue, kbwStoneValue);
     }
 
     return { cells, best, baseStats, bestStats };
@@ -3102,10 +3116,10 @@
   }
 
   // Keen Blunt Weapon's isolated contribution, reusing the exact same
-  // closed-form kbwEngravingGainPct/marginalCritDmgGainPct methodology
-  // computeGridAndSummary's own bestStats.kbwGain/kbwStoneGain use (so the
-  // two can never disagree when nothing here is overridden) - EXCEPT the
-  // Node level comes from this section's own isolated selector
+  // closed-form kbwEngravingGainPct methodology computeGridAndSummary's
+  // own bestStats.kbwGain uses (so the two can never disagree when nothing
+  // here is overridden) - EXCEPT the Node level comes from this section's
+  // own isolated selector
   // (engrInputs.kbwLevel), never the live tracked value, and the Ability
   // Stone half comes solely from this section's own isolated stone slots
   // (engravingStoneLevel) - "0 Lv." if neither targets Keen Blunt Weapon,
@@ -3149,9 +3163,13 @@
     const kbwValue = KBW_TABLE[engrInputs.kbwLevel] || 0;
     const kbwStoneValue = KBW_STONE_TABLE[engravingStoneLevel("kbw", engrInputs)] || 0;
     const onCrit = bestStats.onCritDmg / 100;
-    const gainPct =
-      kbwEngravingGainPct(best.effCrit, onCrit, shared.critDmgTotal, kbwValue) +
-      marginalCritDmgGainPct(best.effCrit, onCrit, shared.critDmgTotal, kbwStoneValue);
+    // Engraving + Ability Stone removed jointly in one ratio (see
+    // kbwEngravingGainPct's own comment) - summing two marginals computed
+    // separately against the same full critDmgTotal understates the
+    // combined DPS Contribution shown in this row, to the point it could
+    // read lower than a flatly-additive engraving like Cursed Doll despite
+    // Keen Blunt Weapon's larger raw Crit Dmg values.
+    const gainPct = kbwEngravingGainPct(best.effCrit, onCrit, shared.critDmgTotal, kbwValue, kbwStoneValue);
     return gainPct / 100;
   }
 
@@ -3465,14 +3483,14 @@
       // separate rows here - folded into one combined "KBW Dmg" row now
       // that the Engraving Comparison section (below) already breaks the
       // stone's own isolated value out on its own, making a second stone
-      // row here redundant. Same additive combination kbwContributionGain
-      // already uses for this pair (kbwEngravingGainPct + marginalCritDmgGainPct
-      // are both "% you'd lose if removed" fractions of the same base, so
-      // they sum cleanly), just shown as one number instead of two.
+      // row here redundant. kbwGain already computes engraving+stone
+      // jointly (see kbwEngravingGainPct's own comment for why that has to
+      // be one combined ratio rather than two summed marginals), so this
+      // just displays that single number.
       const kbwRow = root.querySelector(".ap-stat-card-row--kbw-base");
       const kbwEl = root.querySelector(".ap-summary-base-kbw");
       if (kbwRow) kbwRow.classList.toggle("ap-stat-card-row--hidden", !base.kbwUsed && !base.kbwStoneUsed);
-      if (kbwEl) kbwEl.textContent = "+" + (base.kbwGain + base.kbwStoneGain).toFixed(2) + "%";
+      if (kbwEl) kbwEl.textContent = "+" + base.kbwGain.toFixed(2) + "%";
     }
 
     // Best Setup line (no Crit Dmg)
@@ -3499,7 +3517,7 @@
       const kbwRow = root.querySelector(".ap-stat-card-row--kbw-best");
       const kbwEl = root.querySelector(".ap-summary-best-kbw");
       if (kbwRow) kbwRow.classList.toggle("ap-stat-card-row--hidden", !best.kbwUsed && !best.kbwStoneUsed);
-      if (kbwEl) kbwEl.textContent = "+" + (best.kbwGain + best.kbwStoneGain).toFixed(2) + "%";
+      if (kbwEl) kbwEl.textContent = "+" + best.kbwGain.toFixed(2) + "%";
     }
   }
 

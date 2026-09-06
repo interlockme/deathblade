@@ -4484,11 +4484,14 @@ h3 { color: var(--dbc-teal); }
    own justify-content: space-between in place, which put the label
    flush left and the whole pair flush right - closer than before, but
    still two things pinned to opposite edges rather than one unit.
-   Reader wanted the label AND the pair centered together as a single
-   group, so this overrides space-between with a plain centered flex
-   row instead - label, gap, pair, all sitting in the middle. */
+   Centering the label+pair as one group (a later pass) read as floating
+   in the middle of the row with no anchor - reader wanted it pinned to
+   the right instead, in line with every other field row's control
+   (.ap-calc-field-row's own space-between already pushes controls to
+   the right edge, just with the label pinned left rather than riding
+   along next to it) - so flex-end instead of center, same gap. */
 .md-typeset .ap-engr-stone-row {
-  justify-content: center;
+  justify-content: flex-end;
   gap: 1em;
 }
 /* Every field row inside a Gearing card stacks as its own full-width
