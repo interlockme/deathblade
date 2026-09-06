@@ -4605,6 +4605,23 @@ h3 { color: var(--dbc-teal); }
   gap: 0.9em;
   align-content: start;
   align-items: start;
+  /* Character Data's own usage of this grid sits inside a wrapper
+     (.ap-gear-inputs > .ap-brace-compare-inputs, see that rule's own
+     comment) that already turns into a horizontal scroller once the
+     400px-per-card floor above can't fit the viewport - a real,
+     necessary escape hatch given that hard floor is never relaxed.
+     Engraving Comparison's own two cards (Engravings/In-Raid Variables)
+     reuse this exact same grid but sit directly in .ap-brace-compare-body
+     instead, with no such wrapper - so on any phone narrower than the
+     grid's own two-card minimum (~800px) the cards were simply
+     overflowing past the panel's right edge with no way to reach the
+     clipped half at all. Putting the scroll escape hatch on the grid
+     itself instead of relying on an ancestor wrapper fixes that
+     directly and is a no-op for Character Data's usage (that wrapper
+     already scrolls first, so this box itself never overflows within
+     its own bounds there). */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 /* No container-type here (there used to be one, for a per-card narrow-
    mode breakpoint) - .ap-gear-cards' auto-fit above already keeps a
@@ -4776,6 +4793,24 @@ h3 { color: var(--dbc-teal); }
   .md-typeset .ap-engr-stone-row--first .ap-engr-stone-label-group {
     align-self: flex-end;
   }
+  /* Stone 2's row has no separate title to stack against (it's always
+     been just this one label-group, flex-end already anchors it right),
+     so the fallback above did nothing for it - .ap-engr-stone-label-
+     group's own flex-shrink:0 was still holding it to its full un-
+     stacked width (label + target select + level select side by side),
+     and with the row's flex-end pinning that unshrinkable width to the
+     right edge, the overflow ran off past the row's LEFT edge instead -
+     cutting off "Stone 2"'s own label rather than crushing the selects.
+     Stacking the label above its own pair here (both rows now, this
+     selector isn't scoped to --first) gives the group a much narrower
+     natural width - the widest of "Stone 1"/"Stone 2" alone or the pair
+     alone, instead of both side by side - so flex-shrink:0 no longer
+     needs to hold a width wider than the row has to give. */
+  .md-typeset .ap-engr-stone-row .ap-engr-stone-label-group {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3em;
+  }
 }
 /* Stone 1/2's own target (engraving) + level selects grouped into one
    flex pair with a small gap of their own, rather than 3 bare children
@@ -4786,9 +4821,23 @@ h3 { color: var(--dbc-teal); }
    row's far edge instead of reading as "this engraving's own level". */
 .md-typeset .ap-engr-stone-pair {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
   gap: 0.5em;
 }
+/* flex-wrap: wrap above is the narrow-phone half of this fix (paired
+   with .ap-engr-stone-row's own @container fallback stacking the label
+   above this pair): even alone on its own full-width line, the target
+   select's native rendered width follows its WIDEST option ("Keen Blunt
+   Weapon"), not just its current value - on phones under ~340px that's
+   still wider than the row has room for combined with the level select
+   next to it. Wrapping the pair onto 2 lines there keeps both selects
+   at their real, readable width instead of one of them getting pushed
+   off the row's edge again, same reasoning as .ap-esvs-pair's own
+   identical wrap below. justify-content: flex-end keeps a wrapped
+   second line right-aligned like the first, instead of the default
+   flex-start snapping it to the opposite edge from the first line. */
 /* Reader's first pass grouped target+level together but left the row's
    own justify-content: space-between in place, which put the label
    flush left and the whole pair flush right - closer than before, but
@@ -5434,6 +5483,45 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-esvs-card .ap-calc-field-row {
   margin-bottom: 0.5em;
+}
+/* Option 1/2 and Stone 1/2 each pair a label with TWO raw selects (type/
+   target + level), left as 3 bare children of the shared .ap-calc-field-
+   row - unlike the Ability Stone Values section's own identical-shape
+   rows above, which learned this lesson already (see .ap-engr-stone-pair's
+   own comment): with nothing grouping the two selects, .ap-calc-field-
+   row's shared space-between spread all 3 children apart independently,
+   and the label's own flex:1 1 auto + min-width:0 (needed so it can
+   shrink at all) had no floor once both selects' individual min-widths
+   ate the whole row on a narrow phone - measured at literally 0px
+   rendered width in one case, wrapping "Option 1"/"Stone 1" a single
+   letter per line. Grouping the two selects into their own flex unit,
+   same as .ap-engr-stone-pair, is step one - the label still needs the
+   @container fallback below to actually get its width back. */
+.md-typeset .ap-esvs-pair {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.4em;
+  flex-shrink: 0;
+}
+/* Below ~380px (measured against .ap-brace-compare-body's own rendered
+   width, same container-type/reasoning as .ap-engr-stone-row's fallback
+   above) the label and its pair no longer fit one line without crushing
+   the label to nothing - stack the label above its own pair instead,
+   right-aligned to match every other stacked fallback in this file. The
+   pair's own flex-wrap:wrap above is the second half of the fix: even
+   stacked on its own full-width line, a long type/target select (e.g.
+   "Keen Blunt Weapon") plus its level select can still be wider than a
+   narrow phone's card - wrapping the pair onto 2 lines there keeps both
+   selects at their real, readable width instead of clipping either
+   one's text, the same failure mode this whole fix is for. */
+@container (max-width: 380px) {
+  .md-typeset .ap-esvs-card .ap-calc-field-row {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3em;
+  }
 }
 .md-typeset .ap-esvs-results {
   margin-top: 0.7em;
