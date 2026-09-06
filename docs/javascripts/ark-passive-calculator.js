@@ -3241,9 +3241,39 @@
       },
     ];
 
+    // NONE of these 7 rows' stone breakdowns are safe to read as the raw
+    // Ability Stone tooltip value, EVEN the ones (Grudge/Cursed Doll/Mass
+    // Increase/Raid Captain) whose own DPS Contribution row really is a
+    // flat "mult = 1+g, gain = g" layer relative to not having the
+    // engraving at all. That "gain = g, no approximation" math is only
+    // valid when the OTHER side of the ratio is 1 (no engraving equipped
+    // at all) - which is exactly what the DPS Contribution column
+    // compares against. The stone breakdown columns compare something
+    // different: "what does adding JUST this stone level get me, on top
+    // of the Node level I already have equipped" - and Node level and
+    // Stone level for these 4 sit in the exact same additive bucket
+    // (mult = 1 + nodeVal + stoneVal, one combined term, not two
+    // separately-stacked (1+a)*(1+b) layers - see grudgeGain/
+    // cursedDollGain/massIncreaseGain/raidCaptainGain above, all of which
+    // sum node+stone before ever adding the leading 1). Going from 121%
+    // (node only) to 127% (node+Lv.4 stone) is a (1.27/1.21 - 1) = 4.96%
+    // marginal gain, NOT the raw 6-point stone value - the node's own
+    // already-active value in the denominator dilutes it, same shape as
+    // Ambush Master's (1+backDmg) denominator just below. A prior version
+    // of this file validated the raw values by diffing two "gain vs.
+    // nothing" percentages (both measured from a mult=1 baseline) instead
+    // of taking the with/without-stone RATIO - that diff trivially
+    // reproduces the raw table value no matter what, so it could never
+    // have caught this; the ratio check below is what actually confirms
+    // it (matches the DPS Contribution column's own 0-stone vs. 4-stone
+    // ratio, not its point-difference).
+    function flatBucketStoneMarginal(nodeVal, stoneTable) {
+      return ENGRAVING_STONE_OPTIONS.map((lv) => (stoneTable[lv] || 0) / (1 + nodeVal));
+    }
+
     // KBW and Adrenaline's own rows are NOT flat additive layers like the
-    // 5 above (see kbwContributionGain/adrenalineContributionGain) - their
-    // stone's raw tooltip value isn't itself a DPS%, so unlike the 5 raw
+    // 4 above (see kbwContributionGain/adrenalineContributionGain) - their
+    // stone's raw tooltip value isn't itself a DPS%, so unlike the 4 raw
     // tables above, these two run each of the 4 stone levels through the
     // same non-linear formula their own DPS Contribution column already
     // uses for the currently-slotted level, just swept across all 4.
@@ -3251,16 +3281,60 @@
     // engravingIsolatedGridInputs) - this sweep must move with engrInputs'
     // own KBW/Adrenaline node selectors only, never the live Ark Passive
     // section's equipped values.
+    //
+    // Ambush Master's stone sits INSIDE ambushMasterGain's own
+    // (1+backDmg)*(1+secondary+stone)-1 multiplicative shape, so the
+    // stone's isolated marginal (holding the node level's own secondary
+    // value fixed) is stone/(1+secondary) - same "shares a bucket with
+    // something already active" shape as flatBucketStoneMarginal above,
+    // just with the node's own AMBUSH_MASTER_SECONDARY_TABLE value in the
+    // denominator instead of RC/Grudge/CD/MI's own node table - verified
+    // against the DPS Contribution column's own 0-stone vs. 4-stone ratio
+    // (5.02% actual vs. 5.40% raw table at the default 4 Nodes/0.076
+    // secondary).
+    //
+    // Raid Captain's node+stone bucket is scaled by moveSpeedFraction
+    // AFTER the sum (base*frac, not (base*frac) inside its own +1) - the
+    // frac factor is common to numerator and denominator of the ratio
+    // below and does NOT cancel out entirely (it's still weighting how
+    // much the node's own already-active value dilutes the stone's
+    // marginal), so this needs its own version of the ratio rather than
+    // reusing flatBucketStoneMarginal as-is.
     const kbwOnCrit = isolatedBestStats.onCritDmg / 100;
+    // KBW's own isolated sweep must never depend on which Ability Stone
+    // level happens to be actually slotted right now (engravingStoneLevel
+    // above) - each of the 4 columns previews "if this were the ONLY
+    // Ability Stone level applied", not "in addition to whatever's
+    // currently there". isolatedShared.critDmgTotal above already has the
+    // CURRENTLY slotted kbwStone value baked in (from
+    // engravingIsolatedGridInputs), so it has to be subtracted back out
+    // first to get a true 0-stone baseline, then each swept level's own
+    // value added back on top of that same baseline before calling
+    // marginalCritDmgGainPct - otherwise the "without" term it
+    // reconstructs internally silently mismatches whichever level is
+    // actually equipped, and only the column matching the real selection
+    // comes out right (confirmed: with no stone slotted, sweeping the
+    // real selection through 1-4 Lv. visibly drifted every column's
+    // number instead of holding it fixed).
+    const actualKbwStoneValue = KBW_STONE_TABLE[engravingStoneLevel("kbw", engrInputs)] || 0;
+    const kbwBaselineCritDmgTotal = isolatedShared.critDmgTotal - actualKbwStoneValue;
+    const rcFrac = raidCaptainMoveSpeedFraction(engrInputs, inputs.yearning);
+    const rcNodeVal = RAID_CAPTAIN_TABLE[engrInputs.rcLevel] || 0;
     const stoneBreakdown = {
-      grudge: ENGRAVING_STONE_OPTIONS.map((lv) => GRUDGE_STONE_TABLE[lv] || 0),
-      ambush: ENGRAVING_STONE_OPTIONS.map((lv) => AMBUSH_MASTER_STONE_TABLE[lv] || 0),
-      rc: ENGRAVING_STONE_OPTIONS.map((lv) => (RAID_CAPTAIN_STONE_TABLE[lv] || 0) * raidCaptainMoveSpeedFraction(engrInputs, inputs.yearning)),
-      cd: ENGRAVING_STONE_OPTIONS.map((lv) => CURSED_DOLL_STONE_TABLE[lv] || 0),
-      mi: ENGRAVING_STONE_OPTIONS.map((lv) => MASS_INCREASE_STONE_TABLE[lv] || 0),
-      kbw: ENGRAVING_STONE_OPTIONS.map(
-        (lv) => marginalCritDmgGainPct(isolatedBest.effCrit, kbwOnCrit, isolatedShared.critDmgTotal, KBW_STONE_TABLE[lv] || 0) / 100
+      grudge: flatBucketStoneMarginal(GRUDGE_TABLE[engrInputs.grudgeLevel] || 0, GRUDGE_STONE_TABLE),
+      ambush: ENGRAVING_STONE_OPTIONS.map(
+        (lv) => (AMBUSH_MASTER_STONE_TABLE[lv] || 0) / (1 + (AMBUSH_MASTER_SECONDARY_TABLE[engrInputs.ambushLevel] || 0))
       ),
+      rc: ENGRAVING_STONE_OPTIONS.map((lv) => {
+        const stoneVal = RAID_CAPTAIN_STONE_TABLE[lv] || 0;
+        return (stoneVal * rcFrac) / (1 + rcNodeVal * rcFrac);
+      }),
+      cd: flatBucketStoneMarginal(CURSED_DOLL_TABLE[engrInputs.cdLevel] || 0, CURSED_DOLL_STONE_TABLE),
+      mi: flatBucketStoneMarginal(MASS_INCREASE_TABLE[engrInputs.miLevel] || 0, MASS_INCREASE_STONE_TABLE),
+      kbw: ENGRAVING_STONE_OPTIONS.map((lv) => {
+        const testValue = KBW_STONE_TABLE[lv] || 0;
+        return marginalCritDmgGainPct(isolatedBest.effCrit, kbwOnCrit, kbwBaselineCritDmgTotal + testValue, testValue) / 100;
+      }),
       adrenaline: ENGRAVING_STONE_OPTIONS.map((lv) => adrenalineStoneMarginalGain(inputs, engrInputs, lv)),
     };
 
