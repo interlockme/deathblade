@@ -457,7 +457,7 @@
      wasn't enough to read as a SECTION break rather than just another
      rule between cards, so this pairs the line with a label. -->
 <div class="ap-section-divider">
-  <span class="ap-section-divider-label">Gear Comparisons</span>
+  <span class="ap-section-divider-label">Equipment Comparisons</span>
 </div>
 
 <!-- Wraps the 5 top-level <details> below (Character Data, Bracelet/
