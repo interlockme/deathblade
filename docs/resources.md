@@ -1105,7 +1105,7 @@
         </select>
       </div>
       <div class="ap-calc-field-row ap-engr-ealyn-row">
-        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-ealyn"> Ealyn's Blessing (+3% Attack Speed, Surge only, replaces Wine/Mana Food)</label>
+        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-ealyn"> Ealyn's Blessing (+3% Attack Speed)</label>
       </div>
       <p class="ap-brace-compare-footer-note ap-engr-manafood-note">—</p>
       <p class="ap-brace-compare-footer-note ap-engr-ms-readout">Effective Move Speed: —</p>

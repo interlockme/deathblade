@@ -3605,7 +3605,7 @@
 
     const msEl = root.querySelector(".ap-engr-ms-readout");
     if (msEl) {
-      msEl.textContent = "Effective Move Speed: " + result.moveSpeed.toFixed(2) + "% (140% cap)";
+      msEl.textContent = "Move Speed: " + result.moveSpeed.toFixed(2) + "% (140% cap)";
     }
 
     // Attack Speed is Surge-only display (see surgeEffectiveAttackSpeed's
@@ -3619,8 +3619,8 @@
         atkEl.style.display = "none";
       } else {
         atkEl.style.display = "";
-        let text = "Effective Attack Speed: " + result.attackSpeed.toFixed(2) + "% (140% cap)";
-        if (engrInputs.miOptIn) text += " (includes Mass Increase's -10% drawback)";
+        let text = "Attack Speed: " + result.attackSpeed.toFixed(2) + "% (140% cap)";
+        if (engrInputs.miOptIn) text += " (Mass Increase)";
         atkEl.textContent = text;
       }
     }
@@ -3634,7 +3634,7 @@
         const pct = result.wineVsManaFood * 100;
         const winner = pct >= 0 ? "Mana Food" : "Vernese Wine";
         foodNoteEl.textContent =
-          "For Raid Captain, " + winner + " is currently the better pick by " + Math.abs(pct).toFixed(2) + "%.";
+          "For Raid Captain, " + winner + " is currently better by " + Math.abs(pct).toFixed(2) + "%.";
       }
     }
 
