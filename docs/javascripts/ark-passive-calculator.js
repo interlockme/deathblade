@@ -1098,7 +1098,25 @@
     // identity bit-for-bit identical. Crit Syn 1/2 below still do
     // something real - their +10% Crit Rate feeds into effCrit, which
     // genuinely interacts with the Master keystone's crit-rate cap.
-    return ((1 - effCrit) + effCrit * shared.critDmgTotal * (1 + onCrit)) * (1 + evo) * (1 + add);
+    let mult = ((1 - effCrit) + effCrit * shared.critDmgTotal * (1 + onCrit)) * (1 + evo) * (1 + add);
+
+    // Keen Blunt Weapon's -2% EV malus (10% chance / -20% damage downside,
+    // see KBW_EV_MALUS's own comment above) lives here, applied ONCE, at
+    // the root, to every caller of combinedMultiplier - the main grid,
+    // Bracelet/Accessory/Chaos Core Comparison, and the Engraving
+    // Comparison candidate search all call this function, so this is the
+    // single place that guarantees the malus is never missing wherever
+    // KBW's Crit Dmg bonus (folded into shared.critDmgTotal by
+    // computeShared, as a plain malus-free add) is in play. Gated on
+    // inputs.kbw being active rather than a flag, since this function
+    // has no flags parameter and every caller already threads live KBW
+    // state through inputs.kbw (see computeShared/kbwUsed for the same
+    // check used elsewhere). Do NOT also apply this in
+    // engravingCandidateMultiplier - that would double it.
+    const kbwActive = inputs.kbw && inputs.kbw !== "Not Used" && (KBW_TABLE[inputs.kbw] || 0) > 0;
+    if (kbwActive) mult *= KBW_EV_MALUS;
+
+    return mult;
   }
 
   function computeGridAndSummary(inputs) {
@@ -2557,8 +2575,11 @@
   // every other AP-based row on the page, else it's a silent no-op (ratio
   // 1) rather than a nonsensical partial-state number. The Bleed rune's
   // flat +0.75% Dmg rides on top multiplicatively, not gated on any of
-  // that.
-  function manaFoodGain(inputs, mainStatAmount) {
+  // that, EXCEPT for RE: RE has no Bleed-rune-on-Maelstrom interaction at
+  // all (that's a Surge Identity/Maelstrom-specific tech), so its Mana
+  // Food is Main-Stat-only - includeBleed lets manaFoodContributionGain
+  // pass that in per spec instead of duplicating this whole function.
+  function manaFoodGain(inputs, mainStatAmount, includeBleed) {
     const wp = inputs.gearWp;
     const mainStat = inputs.gearMainStat;
     let statRatio = 1;
@@ -2581,16 +2602,21 @@
         statRatio = newAp / baselineAp;
       }
     }
-    return statRatio * (1 + MANA_FOOD_BLEED_DMG) - 1;
+    return statRatio * (1 + (includeBleed ? MANA_FOOD_BLEED_DMG : 0)) - 1;
   }
 
-  // Mana Food's own isolated contribution-table row - 0 unless Surge (RE
-  // hides the Wine/Mana Food choice entirely, see renderEngravingComparison)
-  // and the Mana Food checkbox is actually on. Independent of which 2
-  // engravings are running, unlike raidCaptainGain above.
+  // Mana Food's own isolated contribution-table row. On Surge this feeds
+  // both the Main Stat AP ratio and the Bleed-rune-on-Maelstrom Dmg (see
+  // manaFoodGain). On RE it's Main-Stat-only (no Bleed rune term) AND,
+  // per engravingCandidateMultiplier's own comment, deliberately excluded
+  // from every DPS total on the page - RE readers only get this row as an
+  // informational "here's what that Main Stat is worth in isolation"
+  // number, never folded into Setup A/B, the best-combo search, or
+  // anything else. 0 whenever the Mana Food checkbox itself is off,
+  // regardless of spec.
   function manaFoodContributionGain(engrInputs, inputs) {
-    if (engrInputs.spec !== "surge" || !engrInputs.manaFood) return 0;
-    return manaFoodGain(inputs, engrInputs.manaFoodAmount);
+    if (!engrInputs.manaFood) return 0;
+    return manaFoodGain(inputs, engrInputs.manaFoodAmount, engrInputs.spec === "surge");
   }
 
   // Which of Wine/Mana Food is currently better to eat, and by how much -
@@ -2607,7 +2633,7 @@
     const wineFrac = raidCaptainMoveSpeedFraction(Object.assign({}, engrInputs, { wine: true, manaFood: false }), inputs.yearning);
     const foodFrac = raidCaptainMoveSpeedFraction(Object.assign({}, engrInputs, { wine: false, manaFood: true }), inputs.yearning);
     const wineMult = 1 + rcBase * wineFrac;
-    const foodMult = (1 + rcBase * foodFrac) * (1 + manaFoodGain(inputs, engrInputs.manaFoodAmount));
+    const foodMult = (1 + rcBase * foodFrac) * (1 + manaFoodGain(inputs, engrInputs.manaFoodAmount, true));
     return foodMult / wineMult - 1;
   }
 
@@ -2778,6 +2804,40 @@
     return cloned;
   }
 
+  // Keen Blunt Weapon's -2% EV malus does NOT get layered in here anymore.
+  // It used to (see git history / prior comment here), because
+  // combinedMultiplier's shared grid formula didn't apply it and something
+  // had to. It now DOES get applied at the root, inside combinedMultiplier
+  // itself, gated on inputs.kbw being active (see that function's own
+  // comment) - and bestComboFor(candidateInputs) above already runs
+  // candidateInputs (which engravingCandidateInputs sets .kbw on whenever
+  // flags.includeKbw is true) through combinedMultiplier. So combo.mult
+  // already comes back with the malus baked in whenever this candidate
+  // includes Keen Blunt Weapon. Multiplying it in again here would double
+  // it (0.98*0.98 instead of 0.98) - this function only ever needs to
+  // layer the 4 genuinely flat, malus-free engravings (Grudge and Ambush
+  // Master are always-on, Raid Captain/Cursed Doll/Mass Increase are
+  // flag-gated).
+  //
+  // Mana Food's own Main-Stat+Bleed contribution (manaFoodContributionGain)
+  // deliberately does NOT belong here either, for the same reason the
+  // 0.85 party-synergy scalar got removed from combinedMultiplier (see
+  // that function's own comment): it's a flat bonus applied identically
+  // regardless of which 2 engravings are in flags, so multiplying every
+  // candidate (and "neither") by the same factor cancels out of every
+  // ratio this page actually shows (vsNeither, aVsB, winner/runnerUp) and
+  // never changes sort order - it would be silent dead weight, not a fix.
+  // Food's only REAL lever on any of these numbers is Raid Captain's own
+  // Move Speed conversion (raidCaptainGain, via raidCaptainMoveSpeedFraction
+  // reading engrInputs.wine/manaFood/rageRune) - which already applies
+  // correctly whenever flags.includeRC is true, with no help needed here.
+  // That's also why toggling food only moves "wins by"/"vs No Setup" when
+  // Raid Captain is one of the 2 slots being compared (and asymmetric
+  // between the two sides) - confirmed live: Setup A (Raid Captain + Keen
+  // Blunt Weapon) with Wine read +0.93% over Setup B (no Raid Captain);
+  // switching Setup A to Mana Food dropped that to +0.42%, while Setup B's
+  // own "vs No Setup" didn't move at all, since Mana Food's own damage
+  // never touches this function - only RC's Move Speed swing does.
   function engravingCandidateMultiplier(engrInputs, inputs, flags) {
     let mult = 1;
     mult *= 1 + grudgeGain(engrInputs, inputs);
@@ -2946,10 +3006,19 @@
   // Stone half comes solely from this section's own isolated stone slots
   // (engravingStoneLevel) - "0 Lv." if neither targets Keen Blunt Weapon,
   // never a fallback to the live tracked Stone select. A plain ratio
-  // (combinedMultiplier with/without) can't be reused here instead, since
-  // it would silently drop KBW_EV_MALUS - that malus only ever gets
-  // applied inside kbwEngravingGainPct's own closed form, never inside
-  // the shared combinedMultiplier grid formula itself.
+  // (combinedMultiplier with/without) still can't be reused here instead:
+  // combinedMultiplier now DOES apply KBW_EV_MALUS (gated on the live
+  // inputs.kbw - see its own comment), but that malus is a flat scalar on
+  // the whole multiplier, so it cancels out identically in a with/without
+  // ratio built from the live tracked value and tells us nothing about
+  // this section's isolated selector. kbwEngravingGainPct's own closed
+  // form is what actually threads the malus onto THIS section's
+  // engrInputs.kbwLevel value instead. (The best-combo search below gets
+  // its malus for free now, since bestComboFor's own combinedMultiplier
+  // call already carries it whenever candidateInputs.kbw is active - see
+  // engravingCandidateMultiplier's comment - so this row and that search
+  // stay consistent with each other despite using two different
+  // methodologies to get there.)
   function kbwContributionGain(engrInputs, best, bestStats, shared) {
     const kbwValue = KBW_TABLE[engrInputs.kbwLevel] || 0;
     const kbwStoneValue = KBW_STONE_TABLE[engravingStoneLevel("kbw", engrInputs)] || 0;
@@ -3005,7 +3074,14 @@
       {
         label: "Mana Food",
         gain: manaFoodContributionGain(engrInputs, inputs),
-        note: "Includes using the Bleed rune on Maelstrom. Not tied to any one engraving - every combo below can run it.",
+        // Note (and therefore the dagger next to the row label) is
+        // Surge-only - RE's Mana Food is Main-Stat-only with no Bleed
+        // rune interaction and is excluded from calculations entirely
+        // (see manaFoodContributionGain/engravingCandidateMultiplier), so
+        // there's nothing for a footnote to explain there.
+        note: engrInputs.spec === "surge"
+          ? "Includes using the Bleed rune on Maelstrom. Not tied to any one engraving - every combo below can run it."
+          : null,
       },
     ];
 
@@ -3506,7 +3582,18 @@
     const wineRow = root.querySelector(".ap-engr-wine-row");
     if (wineRow) wineRow.style.display = isSurge ? "" : "none";
     const manaFoodRow = root.querySelector(".ap-engr-manafood-row");
-    if (manaFoodRow) manaFoodRow.style.display = isSurge ? "" : "none";
+    // Mana Food is no longer Surge-exclusive UI - RE gets the same
+    // checkbox/amount select now (see manaFoodContributionGain's own
+    // comment for what it actually does on RE: Main-Stat-only, excluded
+    // from calculations, purely informational). Row itself always shows;
+    // only the label text below changes per spec.
+    if (manaFoodRow) manaFoodRow.style.display = "";
+    const manaFoodLabelEl = root.querySelector(".ap-engr-manafood-label");
+    if (manaFoodLabelEl) {
+      manaFoodLabelEl.textContent = isSurge
+        ? "Mana Food (Surge only, replaces Wine)"
+        : "Mana Food (informational - adds Main Stat only, excluded from DPS calc)";
+    }
     const ealynRow = root.querySelector(".ap-engr-ealyn-row");
     if (ealynRow) ealynRow.style.display = isSurge ? "" : "none";
     const miRow = root.querySelector(".ap-engr-mi-row");

@@ -1097,7 +1097,7 @@
       <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-wine" checked> Vernese Wine (+3% Move Speed, Surge only)</label>
     </div>
     <div class="ap-calc-field-row ap-engr-manafood-row">
-      <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood"> Mana Food (Surge only, replaces Wine)</label>
+      <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood"> <span class="ap-engr-manafood-label">Mana Food (Surge only, replaces Wine)</span></label>
       <select class="ap-engr-manafood-amount">
         <option value="6000">6000 DEX</option>
         <option value="12000" selected>12000 DEX</option>
