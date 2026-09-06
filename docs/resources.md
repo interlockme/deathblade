@@ -992,7 +992,7 @@
 <details class="ap-engr-compare">
   <summary>Engraving Comparison</summary>
   <div class="ap-brace-compare-body">
-    <p class="ap-brace-compare-intro">The competing pool of engravings below is searched for a best combination. Inputs here are isolated to this section.</p>
+    <p class="ap-brace-compare-intro">Competing engravings, searched for the best 2-slot combination. Inputs here are isolated to this section.</p>
 
     <div class="ap-calc-field-row ap-engr-spec-row">
       <label class="ap-calc-field-label">Playstyle</label>
