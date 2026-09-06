@@ -3606,6 +3606,20 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-calc-field-row input[type="number"]:out-of-range {
   border-color: var(--dbc-red);
 }
+/* Mana Food's row pairs a checkbox label with a select (12000 DEX is the
+   widest option) - inside the narrower In-Raid Variables card (paired
+   2-up against Engravings now, not full-width) there's no longer enough
+   row width for both at their natural size, and the select was the one
+   losing that fight: flex-shrink's default (1) let it get squeezed
+   below the width its own text needs, clipping "6000 DEX" against the
+   dropdown arrow. The checkbox label wraps its text across 2 lines just
+   fine at any width (it's inline text, no min-content floor worth
+   preserving), so shrinking is safe to force entirely onto it instead -
+   pinning the select at its natural size keeps its value readable at
+   every card width this grid can produce. */
+.md-typeset .ap-engr-manafood-amount {
+  flex-shrink: 0;
+}
 .md-typeset .ap-calc-field-row input[type="checkbox"] {
   width: 1.1em;
   height: 1.1em;
@@ -4347,54 +4361,42 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-gear-card--basics { --ap-gear-card-accent: var(--dbc-purple); }
 .md-typeset .ap-gear-card--ap-sources { --ap-gear-card-accent: var(--dbc-lavender); }
-/* Engraving Comparison's Core/Competing Pool cards reuse the same
-   .ap-gear-card shell as Character Data's pair above, just with their own
-   accent colors so the two pairs don't read as the same specific cards
-   when scrolling past both sections. */
+/* Engraving Comparison's Engravings (Core + Competing Pool merged) and
+   In-Raid Variables cards reuse the same .ap-gear-card shell as
+   Character Data's pair above, just with their own accent colors so the
+   two pairs don't read as the same specific cards when scrolling past
+   both sections. Core and Competing Pool used to be two separate cards
+   here (teal/gold) - merged into one .ap-gear-card--engr-core card (see
+   .ap-gear-card-subtitle below for how the two sub-groups are still told
+   apart inside it) paired against In-Raid Variables instead, since that
+   pairing groups the section's two real "input" blocks together rather
+   than giving a 3-row always-on list its own full card. Ability Stones
+   below stays a plain .ap-acc-panel-title, not a card - it's a sandbox
+   for trying things out (see this section's opening comment), not
+   another input block worth the same visual weight. */
 .md-typeset .ap-gear-card--engr-core { --ap-gear-card-accent: var(--dbc-teal); }
-.md-typeset .ap-gear-card--engr-competing { --ap-gear-card-accent: var(--dbc-gold); }
-/* In-Raid Variables and Ability Stones used to be bare .ap-acc-panel-title
-   labels with no border/background of their own, sitting directly below
-   the Core/Competing Pool cards above and the DPS Contribution table
-   below - visually they just ran into whatever was adjacent, with only a
-   <p>'s default margin (and no margin at all, once these two became
-   .ap-gear-card divs below) as separation. Promoted to the same
-   .ap-gear-card shell as Core/Competing/Character Data's cards so the
-   whole section reads as one consistent stack of clearly bordered
-   subsections instead of Core/Competing being the only two that look
-   "boxed". Own accent colors (distinct from teal/gold above, and from
-   pink/teal used by the nested Setup A/B cards further down) so all 4
-   top-level cards in this section stay visually distinguishable from
-   each other while scrolling. */
 .md-typeset .ap-gear-card--engr-variables { --ap-gear-card-accent: var(--dbc-purple); }
-.md-typeset .ap-gear-card--engr-stones { --ap-gear-card-accent: var(--dbc-blue); }
-/* Being plain .ap-gear-card divs (no default paragraph margin the old
-   bare <p> titles got for free), these two need their own explicit
-   spacing - both above (separating them from the Core/Competing grid and
-   from each other) and below the second one (separating it from the DPS
-   Contribution table that follows). Same 0.9em rhythm .ap-gear-cards'
-   own grid gap already uses one section up, so the vertical spacing
-   feels consistent scrolling through Core/Competing -> In-Raid Variables
-   -> Ability Stones rather than tightening partway down. */
-.md-typeset .ap-gear-card--engr-variables,
-.md-typeset .ap-gear-card--engr-stones {
-  margin: 0.9em 0 0;
-}
-.md-typeset .ap-gear-card--engr-stones {
-  margin-bottom: 0.9em;
+/* Reader found the colored left-edge stripe (inherited from the shared
+   .ap-gear-card shell) too heavy on these two specifically - overridden
+   back to the same plain 1px/neutral treatment as the other 3 sides so
+   the accent color only shows up in the title text now, not as a border
+   too. Character Data's own .ap-gear-card pair above keeps the stripe;
+   this only touches Engraving Comparison's two cards. */
+.md-typeset .ap-gear-card--engr-core,
+.md-typeset .ap-gear-card--engr-variables {
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
 }
 /* The readouts (Effective Move/Attack Speed, the Wine-vs-Mana-Food note)
-   sit inside the In-Raid Variables card now instead of trailing loose
-   underneath it - same dashed-top-edge treatment as every other
-   .ap-brace-compare-footer-note, just scoped to read as "notes about
-   this card" rather than "notes about the whole section". First one's
-   top border still shows (the checkbox rows above it aren't
+   sit inside the In-Raid Variables card - same dashed-top-edge treatment
+   as every other .ap-brace-compare-footer-note, just scoped to read as
+   "notes about this card" rather than "notes about the whole section".
+   First one's top border still shows (the checkbox rows above it aren't
    footer-notes themselves), last one gets its bottom margin zeroed so it
    doesn't add extra space before the card's own padding closes it out. */
 .md-typeset .ap-gear-card--engr-variables .ap-brace-compare-footer-note:last-child {
   margin-bottom: 0;
 }
-/* Same title treatment as .ap-calc-group-title above, so these two cards
+/* Same title treatment as .ap-calc-group-title above, so these cards
    read as the same kind of thing as the Ark Passive grid's own category
    cards rather than a visually distinct sub-widget. */
 .md-typeset .ap-gear-card-title {
@@ -4404,6 +4406,40 @@ h3 { color: var(--dbc-teal); }
   color: var(--ap-gear-card-accent, var(--dbc-lavender));
   font-weight: 700;
   margin: 0 0 0.55em;
+}
+/* Sub-group label inside a merged card (currently just Core/Competing
+   Pool inside .ap-gear-card--engr-core) - same text treatment as
+   .ap-gear-card-title but a fixed gold accent (Competing Pool's old
+   standalone-card color) rather than the card's own accent, so the two
+   sub-groups read as "different things inside one card" instead of a
+   second copy of the card's own title. Top divider + extra top margin
+   separates it from the previous sub-group's last field row; the one
+   directly after .ap-gear-card-title (Core, the first sub-group) skips
+   both via the adjacent-sibling override below since there's no
+   preceding row to separate from yet. */
+.md-typeset .ap-gear-card-subtitle {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--dbc-gold);
+  font-weight: 700;
+  margin: 0.75em 0 0.55em;
+  padding-top: 0.6em;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.md-typeset .ap-gear-card-title + .ap-gear-card-subtitle {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+/* .ap-acc-panel-title (Ability Stones) directly follows this grid now
+   that In-Raid Variables moved into it instead of sitting below it as
+   its own full-width card - .ap-acc-panel-title itself has no top
+   margin (other uses of it, e.g. Necklace/Earrings/Rings, don't need
+   one), so without this the grid's last card ran straight into the
+   Ability Stones heading with no breathing room. */
+.md-typeset .ap-gear-cards + .ap-acc-panel-title {
+  margin-top: 0.9em;
 }
 /* Every field row inside a Gearing card stacks as its own full-width
    line (label pushed left, control pushed to the row's far edge) instead
@@ -4703,19 +4739,14 @@ h3 { color: var(--dbc-teal); }
   padding-top: 0.7em;
   border-top: 1px dashed rgba(255, 255, 255, 0.08);
 }
-/* Effective Move Speed / Effective Attack Speed sit at the tail of the
-   Engraving Comparison's Move/Attack Speed section, but
-   .ap-brace-compare-footer-note's dashed rule only lives on its TOP edge
-   - with no bottom margin of its own, whichever readout ended up last
-   butted directly against the next .ap-acc-panel-title (Ability Stones,
-   which has no top margin), so it visually read as belonging to Ability
-   Stones instead of Move/Attack Speed. Targeted rather than a generic
-   .ap-acc-panel-title top margin since Effective Attack Speed is hidden
-   for RE (see renderEngravingComparison) - either readout being the
-   last one before Ability Stones now gets the same breathing room. */
-.md-typeset .ap-engr-ms-readout,
-.md-typeset .ap-engr-atk-readout {
-  margin-bottom: 0.9em;
+/* Best Combo/Runner-Up used to have an explanatory note directly above
+   them (removed - reader found it redundant), which incidentally also
+   supplied the only spacing between the DPS Contribution table above
+   and this panel. Replaces that borrowed spacing with a rule of its
+   own, keyed off the table's wrapper rather than a sibling note that no
+   longer exists. */
+.md-typeset .ap-engr-contrib-wrap + .ap-engr-best-panel {
+  margin-top: 0.9em;
 }
 @media screen and (max-width: 600px) {
   .md-typeset .ap-brace-compare-table {
@@ -4761,6 +4792,18 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-bvb-card-a { --ap-bvb-accent: var(--dbc-pink); }
 .md-typeset .ap-bvb-card-b { --ap-bvb-accent: var(--dbc-teal); }
+/* Best Combo vs. Runner-Up (Engraving Comparison's own use of this same
+   .ap-bvb-card shell) used to render identically apart from their title
+   text - no visual cue for which one is the actual answer. Teal +
+   tinted background is the site's own established "promoted answer"
+   language (same treatment as .ap-stat-card-best/.ap-calc-result-row-best
+   elsewhere on this page), so Best Combo gets it here too; Runner-Up
+   stays the plain neutral .ap-bvb-card look, reading as the secondary
+   reference point rather than an equally-weighted alternative. */
+.md-typeset .ap-bvb-card--best {
+  --ap-bvb-accent: var(--dbc-teal);
+  background-color: rgba(var(--dbc-teal-rgb), 0.06);
+}
 .md-typeset .ap-bvb-card-title {
   color: var(--ap-bvb-accent);
 }

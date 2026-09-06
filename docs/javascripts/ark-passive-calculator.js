@@ -3638,6 +3638,14 @@
       }
     }
 
+    // Static aside, not tied to any computed result (unlike the note
+    // above) - 222's own gearing more easily clears the Bleed rune's
+    // stat threshold without Mana Food's help, worth flagging right next
+    // to the checkbox that reader would otherwise assume they need.
+    // Surge-only like the rest of this card's consumable rows.
+    const note222El = root.querySelector(".ap-engr-222-note");
+    if (note222El) note222El.style.display = isSurge ? "" : "none";
+
     const rowsContainer = root.querySelector(".ap-engr-contrib-rows");
     if (rowsContainer) {
       rowsContainer.innerHTML = "";
@@ -4358,6 +4366,27 @@
           }
         });
       });
+
+      // Mana Food's sensible default flips with Playstyle: on RE it's
+      // purely informational (Main-Stat-only, doesn't compete with
+      // anything - see renderEngravingComparison), so defaulting it on
+      // costs nothing and saves the reader a click. On Surge it's one of
+      // 3 competing consumable choices above, so it stays off by default
+      // there like Wine/Ealyn's own untouched defaults - forcing it on
+      // would silently outcompete whichever of those the reader actually
+      // wants the moment they switch specs. Reselecting the SAME
+      // Playstyle radio doesn't fire "change" (browsers only fire it on
+      // an actual value change), so this can't repeatedly stomp a
+      // mid-session manual toggle - only an actual RE<->Surge switch
+      // re-applies the default.
+      const engrSpecEls = Array.from(root.querySelectorAll(".ap-engr-spec"));
+      if (manaFoodEl && engrSpecEls.length) {
+        engrSpecEls.forEach((el) => {
+          el.addEventListener("change", () => {
+            if (el.checked) manaFoodEl.checked = el.value === "re";
+          });
+        });
+      }
 
       // Coalesced to at most one recompute+render+save per animation
       // frame, shared across every field in this root. Range sliders fire

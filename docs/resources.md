@@ -990,21 +990,23 @@
       </span>
     </div>
 
-    <!-- Core and Competing Pool as two side-by-side cards, same visual
+    <!-- Engravings (Core + Competing Pool merged into one card) and
+         In-Raid Variables as the two side-by-side cards, same visual
          language as the Character Data section's Weapon Power/Attack
          Power % cards above (.ap-gear-cards auto-fit grid of
          .ap-gear-card - title + border-left accent, see that section's
          own comment for why auto-fit beats a fixed 2-column grid here
-         too: neither card in this pair is anywhere near that layout's
-         400px min-content floor, so they always sit 2-up down to quite
-         narrow widths, only dropping to 1 column on genuinely tight
-         phones). Was two plain .ap-acc-panel-title sections stacked
-         full-width; grouping them as cards makes the Core-vs-Competing
-         split visually obvious at a glance instead of just a text label
-         between them. -->
+         too). Core and Competing Pool used to be their own separate
+         cards in this grid - reader found that split (one card just for
+         3 always-on rows) less useful than pairing Engravings against
+         In-Raid Variables, the section's other real "inputs" block, so
+         Core/Competing now live in a single card as two labeled
+         sub-groups (.ap-gear-card-subtitle) instead of two bordered
+         boxes. -->
     <div class="ap-gear-cards">
       <div class="ap-gear-card ap-gear-card--engr-core">
-        <p class="ap-gear-card-title">Core (always on)</p>
+        <p class="ap-gear-card-title">Engravings</p>
+        <p class="ap-gear-card-subtitle">Core (always on)</p>
         <div class="ap-calc-field-row">
           <span class="ap-calc-field-label">Grudge</span>
           <select class="ap-engr-grudge-level">
@@ -1035,10 +1037,8 @@
             <option value="4 Nodes" selected>4 Nodes</option>
           </select>
         </div>
-      </div>
 
-      <div class="ap-gear-card ap-gear-card--engr-competing">
-        <p class="ap-gear-card-title">Competing Pool</p>
+        <p class="ap-gear-card-subtitle">Competing Pool</p>
         <div class="ap-calc-field-row">
           <span class="ap-calc-field-label">Raid Captain</span>
           <select class="ap-engr-rc-level">
@@ -1083,10 +1083,9 @@
           <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-mi-optin" checked> Include Mass Increase in comparison <span class="ap-brace-info-icon" title="Surge only. Its -10% Attack Speed drawback isn't modeled here - uncheck this if you'd rather leave it out of the best-combo search.">i</span></label>
         </div>
       </div>
-    </div>
 
-    <div class="ap-gear-card ap-gear-card--engr-variables">
-      <p class="ap-gear-card-title">In-Raid Variables</p>
+      <div class="ap-gear-card ap-gear-card--engr-variables">
+        <p class="ap-gear-card-title">In-Raid Variables</p>
       <div class="ap-calc-field-row">
         <span class="ap-calc-field-label">Maelstrom Uptime</span>
         <input type="number" class="ap-engr-maelstrom-uptime" min="0" max="100" step="1" value="85">
@@ -1098,7 +1097,7 @@
         <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-wine" checked> Vernese Wine (+3% Move Speed)</label>
       </div>
       <div class="ap-calc-field-row ap-engr-manafood-row">
-        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood"> <span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed Rune)</span></label>
+        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed Rune)</span></label>
         <select class="ap-engr-manafood-amount">
           <option value="6000" selected>6000 DEX</option>
           <option value="12000">12000 DEX</option>
@@ -1108,8 +1107,10 @@
         <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-ealyn"> Ealyn's Blessing (+3% Attack Speed)</label>
       </div>
       <p class="ap-brace-compare-footer-note ap-engr-manafood-note">—</p>
+      <p class="ap-brace-compare-footer-note ap-engr-222-note">222 may not need Mana Food to equip the Maelstrom Bleed Rune.</p>
       <p class="ap-brace-compare-footer-note ap-engr-ms-readout">Effective Move Speed: —</p>
       <p class="ap-brace-compare-footer-note ap-engr-atk-readout">Effective Attack Speed: —</p>
+      </div>
     </div>
 
     <p class="ap-acc-panel-title">Ability Stones (isolated - not saved)</p>
@@ -1174,10 +1175,9 @@
         <tbody class="ap-engr-contrib-rows"></tbody>
       </table>
     </div>
-    <p class="ap-brace-compare-footer-note">Each row is this engraving's own isolated share of your total DPS.</p>
 
     <div class="ap-bvb-cards ap-engr-best-panel">
-      <div class="ap-bvb-card">
+      <div class="ap-bvb-card ap-bvb-card--best">
         <p class="ap-gear-card-title ap-bvb-card-title">Best Combo</p>
         <div class="ap-stat-card-row"><span class="ap-summary-label">Combo</span><span class="ap-engr-best-combo ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label">Keystone / Split</span><span class="ap-engr-best-keystone ap-summary-value">—</span></div>
@@ -1204,7 +1204,7 @@
          re-asked), not a standalone question. See
          computeEngravingSetupComparison's own JS comment for the full
          methodology. -->
-    <details class="ap-esvs">
+    <details class="ap-esvs" open>
       <summary>Setup A vs. Setup B</summary>
       <div class="ap-brace-compare-body">
         <p class="ap-brace-compare-intro">Two loadouts, compared against each other. Core Engravings and In-Raid Variables above apply.</p>
