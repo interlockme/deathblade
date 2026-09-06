@@ -2776,7 +2776,15 @@
     // which are overridden with this section's own isolated Node level (see
     // readEngravingInputs) and isolated Stone slot (engravingStoneLevel) -
     // never the live tracked Ark Passive value, so tweaking Adrenaline's
-    // level here can't drift from what's actually equipped above.
+    // level here can't drift from what's actually equipped above. The
+    // caller now passes engravingIsolatedGridInputs' isolatedInputs here
+    // (not the raw top-level inputs), so kbw/kbwStone riding along in
+    // `inputs` are ALSO already this section's own isolated selections -
+    // otherwise Adrenaline's gridRatio below (which depends on
+    // shared.critDmgTotal, and KBW folds a flat add into that) would still
+    // silently track the live Ark Passive section's KBW state the same
+    // way kbwContributionGain used to (see engravingIsolatedGridInputs'
+    // own comment for that bug).
     const full = Object.assign({}, inputs, {
       adrenaline: engrInputs.adrenalineLevel,
       adrenalineStone: engravingStoneLevel("adrenaline", engrInputs),
@@ -2803,6 +2811,36 @@
       if (baseAp > 0) apRatio = fullAp / baseAp;
     }
     return gridRatio * apRatio - 1;
+  }
+
+  // Isolated DPS gain from JUST the Adrenaline Ability Stone at one
+  // specific level, holding the engraving's own Node level fixed (used by
+  // the stone breakdown columns to preview all 4 tiers, not only whichever
+  // one is actually slotted). Unlike the full on/off comparison above,
+  // this never touches gridRatio - the stone only ever feeds the AP axis
+  // (adrenalineApFraction, via gearAttackPowerPercentTotal), never
+  // critRateTotal, so the crit-rate/keystone side of the multiplier is
+  // identical whether the stone is slotted or not and cancels out of the
+  // ratio entirely. That leaves a pure "AP with this stone vs AP with no
+  // stone" comparison, same gearApTotal shape adrenalineContributionGain's
+  // own apRatio block already uses.
+  function adrenalineStoneMarginalGain(inputs, engrInputs, stoneLevel) {
+    if (engrInputs.adrenalineLevel === "Not Used") return 0;
+    const wp = inputs.gearWp;
+    const mainStat = inputs.gearMainStat;
+    if (!(wp > 0 && mainStat > 0)) return 0;
+    const baseApBonus = engravingStoneImpliesBaseAp(engrInputs) ? ABILITY_STONE_BASE_AP_BONUS : 0;
+    const baseApMult = 1 + (inputs.gearGemBaseAp + baseApBonus) / 100;
+    const flatAp = inputs.gearFlatAp + gearChaosStarFlat(inputs.gearApChaosStar);
+    const off = Object.assign({}, inputs, { adrenaline: engrInputs.adrenalineLevel, adrenalineStone: "0 Lv." });
+    const on = Object.assign({}, inputs, { adrenaline: engrInputs.adrenalineLevel, adrenalineStone: stoneLevel });
+    const onPctMult = 1 + gearAttackPowerPercentTotal(on) / 100;
+    const offPctMult = 1 + gearAttackPowerPercentTotal(off) / 100;
+    const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
+    const onAp = gearApTotal(wp, mainStat, baseApMult, flatAp, onPctMult, supApBuff);
+    const offAp = gearApTotal(wp, mainStat, baseApMult, flatAp, offPctMult, supApBuff);
+    if (offAp <= 0) return 0;
+    return onAp / offAp - 1;
   }
 
   // Builds the candidateInputs clone bestComboFor() searches for one
@@ -3085,6 +3123,28 @@
   // engravingCandidateMultiplier's comment - so this row and that search
   // stay consistent with each other despite using two different
   // methodologies to get there.)
+  // Isolated Ark Passive-grid inputs for Keen Blunt Weapon's own row +
+  // stone breakdown ONLY (kbwContributionGain and the kbw entry in
+  // stoneBreakdown below). kbwContributionGain's closed form needs a real
+  // effCrit/onCritDmg/critDmgTotal from a full grid+shared recompute (it's
+  // not a flat fraction like grudgeGain/cursedDollGain/etc. above), but
+  // computeGridAndSummary(inputs)/computeShared(inputs) on the raw,
+  // live-tracked `inputs` bakes in whatever KBW and Adrenaline are
+  // currently equipped in the Ark Passive section above - so toggling
+  // either one up there was silently changing this section's own KBW row
+  // even though nothing in the Engraving section's own selectors moved.
+  // Overriding both here (same fields engravingCandidateInputs overrides
+  // for bestComboFor's candidate search) makes the row depend only on
+  // engrInputs, like every other row on this page.
+  function engravingIsolatedGridInputs(inputs, engrInputs) {
+    return Object.assign({}, inputs, {
+      adrenaline: engrInputs.adrenalineLevel,
+      adrenalineStone: engravingStoneLevel("adrenaline", engrInputs),
+      kbw: engrInputs.kbwLevel,
+      kbwStone: engravingStoneLevel("kbw", engrInputs),
+    });
+  }
+
   function kbwContributionGain(engrInputs, best, bestStats, shared) {
     const kbwValue = KBW_TABLE[engrInputs.kbwLevel] || 0;
     const kbwStoneValue = KBW_STONE_TABLE[engravingStoneLevel("kbw", engrInputs)] || 0;
@@ -3100,6 +3160,17 @@
     const best = gridResult.best;
     if (!best) return null;
     const shared = computeShared(inputs);
+
+    // See engravingIsolatedGridInputs's comment - KBW's own row and stone
+    // breakdown need their own grid+shared recompute, isolated from the
+    // live Ark Passive section's KBW/Adrenaline state, instead of reusing
+    // gridResult/shared/best above (which everything else on this page
+    // still correctly uses, since only KBW's closed form is affected).
+    const isolatedInputs = engravingIsolatedGridInputs(inputs, engrInputs);
+    const isolatedGrid = computeGridAndSummary(isolatedInputs);
+    const isolatedBest = isolatedGrid.best || best;
+    const isolatedBestStats = isolatedGrid.bestStats || gridResult.bestStats;
+    const isolatedShared = computeShared(isolatedInputs);
 
     // Raid Captain competes for its slot on both specs now - RE used to
     // force includeRC: true into every candidate (only KBW vs CD actually
@@ -3132,9 +3203,9 @@
     const rows = [
       { label: "Grudge", gain: grudgeGain(engrInputs, inputs) },
       { label: "Ambush Master", gain: ambushMasterGain(engrInputs, inputs) },
-      { label: "Adrenaline", gain: adrenalineContributionGain(inputs, engrInputs, best) },
+      { label: "Adrenaline", gain: adrenalineContributionGain(isolatedInputs, engrInputs, isolatedBest) },
       { label: "Raid Captain", gain: raidCaptainGain(engrInputs, inputs) },
-      { label: "Keen Blunt Weapon", gain: kbwContributionGain(engrInputs, best, gridResult.bestStats, shared) },
+      { label: "Keen Blunt Weapon", gain: kbwContributionGain(engrInputs, isolatedBest, isolatedBestStats, isolatedShared) },
       { label: "Cursed Doll", gain: cursedDollGain(engrInputs, inputs) },
       { label: "Mass Increase", gain: massIncreaseGain(engrInputs, inputs) },
       { label: "Ability Stone Base AP", gain: abilityStoneBaseApGain(inputs, engrInputs) },
@@ -3152,12 +3223,27 @@
       },
     ];
 
+    // KBW and Adrenaline's own rows are NOT flat additive layers like the
+    // 5 above (see kbwContributionGain/adrenalineContributionGain) - their
+    // stone's raw tooltip value isn't itself a DPS%, so unlike the 5 raw
+    // tables above, these two run each of the 4 stone levels through the
+    // same non-linear formula their own DPS Contribution column already
+    // uses for the currently-slotted level, just swept across all 4.
+    // Isolated the same way as the row above (see
+    // engravingIsolatedGridInputs) - this sweep must move with engrInputs'
+    // own KBW/Adrenaline node selectors only, never the live Ark Passive
+    // section's equipped values.
+    const kbwOnCrit = isolatedBestStats.onCritDmg / 100;
     const stoneBreakdown = {
       grudge: ENGRAVING_STONE_OPTIONS.map((lv) => GRUDGE_STONE_TABLE[lv] || 0),
       ambush: ENGRAVING_STONE_OPTIONS.map((lv) => AMBUSH_MASTER_STONE_TABLE[lv] || 0),
       rc: ENGRAVING_STONE_OPTIONS.map((lv) => (RAID_CAPTAIN_STONE_TABLE[lv] || 0) * raidCaptainMoveSpeedFraction(engrInputs, inputs.yearning)),
       cd: ENGRAVING_STONE_OPTIONS.map((lv) => CURSED_DOLL_STONE_TABLE[lv] || 0),
       mi: ENGRAVING_STONE_OPTIONS.map((lv) => MASS_INCREASE_STONE_TABLE[lv] || 0),
+      kbw: ENGRAVING_STONE_OPTIONS.map(
+        (lv) => marginalCritDmgGainPct(isolatedBest.effCrit, kbwOnCrit, isolatedShared.critDmgTotal, KBW_STONE_TABLE[lv] || 0) / 100
+      ),
+      adrenaline: ENGRAVING_STONE_OPTIONS.map((lv) => adrenalineStoneMarginalGain(inputs, engrInputs, lv)),
     };
 
     return {
@@ -3375,15 +3461,18 @@
       if (evoEl) evoEl.textContent = base.evoDmg.toFixed(2) + "%";
       if (addEl) addEl.textContent = base.addDmg.toFixed(2) + "%";
 
+      // KBW's engraving line and its Ability Stone used to get their own
+      // separate rows here - folded into one combined "KBW Dmg" row now
+      // that the Engraving Comparison section (below) already breaks the
+      // stone's own isolated value out on its own, making a second stone
+      // row here redundant. Same additive combination kbwContributionGain
+      // already uses for this pair (kbwEngravingGainPct + marginalCritDmgGainPct
+      // are both "% you'd lose if removed" fractions of the same base, so
+      // they sum cleanly), just shown as one number instead of two.
       const kbwRow = root.querySelector(".ap-stat-card-row--kbw-base");
       const kbwEl = root.querySelector(".ap-summary-base-kbw");
-      if (kbwRow) kbwRow.classList.toggle("ap-stat-card-row--hidden", !base.kbwUsed);
-      if (kbwEl) kbwEl.textContent = "+" + base.kbwGain.toFixed(2) + "%";
-
-      const kbwStoneRow = root.querySelector(".ap-stat-card-row--kbwstone-base");
-      const kbwStoneEl = root.querySelector(".ap-summary-base-kbwstone");
-      if (kbwStoneRow) kbwStoneRow.classList.toggle("ap-stat-card-row--hidden", !base.kbwStoneUsed);
-      if (kbwStoneEl) kbwStoneEl.textContent = "+" + base.kbwStoneGain.toFixed(2) + "%";
+      if (kbwRow) kbwRow.classList.toggle("ap-stat-card-row--hidden", !base.kbwUsed && !base.kbwStoneUsed);
+      if (kbwEl) kbwEl.textContent = "+" + (base.kbwGain + base.kbwStoneGain).toFixed(2) + "%";
     }
 
     // Best Setup line (no Crit Dmg)
@@ -3406,15 +3495,11 @@
       if (evoEl) evoEl.textContent = best.evoDmg.toFixed(2) + "%";
       if (addEl) addEl.textContent = best.addDmg.toFixed(2) + "%";
 
+      // Same fold as the Base card above - one combined "KBW Dmg" row.
       const kbwRow = root.querySelector(".ap-stat-card-row--kbw-best");
       const kbwEl = root.querySelector(".ap-summary-best-kbw");
-      if (kbwRow) kbwRow.classList.toggle("ap-stat-card-row--hidden", !best.kbwUsed);
-      if (kbwEl) kbwEl.textContent = "+" + best.kbwGain.toFixed(2) + "%";
-
-      const kbwStoneRow = root.querySelector(".ap-stat-card-row--kbwstone-best");
-      const kbwStoneEl = root.querySelector(".ap-summary-best-kbwstone");
-      if (kbwStoneRow) kbwStoneRow.classList.toggle("ap-stat-card-row--hidden", !best.kbwStoneUsed);
-      if (kbwStoneEl) kbwStoneEl.textContent = "+" + best.kbwStoneGain.toFixed(2) + "%";
+      if (kbwRow) kbwRow.classList.toggle("ap-stat-card-row--hidden", !best.kbwUsed && !best.kbwStoneUsed);
+      if (kbwEl) kbwEl.textContent = "+" + (best.kbwGain + best.kbwStoneGain).toFixed(2) + "%";
     }
   }
 
@@ -3716,7 +3801,15 @@
     const rowsContainer = root.querySelector(".ap-engr-contrib-rows");
     if (rowsContainer) {
       rowsContainer.innerHTML = "";
-      const stoneKeyByLabel = { Grudge: "grudge", "Ambush Master": "ambush", "Raid Captain": "rc", "Cursed Doll": "cd", "Mass Increase": "mi" };
+      const stoneKeyByLabel = {
+        Grudge: "grudge",
+        "Ambush Master": "ambush",
+        Adrenaline: "adrenaline",
+        "Raid Captain": "rc",
+        "Keen Blunt Weapon": "kbw",
+        "Cursed Doll": "cd",
+        "Mass Increase": "mi",
+      };
       result.rows.forEach((row) => {
         const tr = document.createElement("tr");
         const labelTd = window.SiteUtils.el("td", "ap-brace-row-label", row.label);
