@@ -1108,13 +1108,19 @@
         <p class="ap-gear-card-title">In-Raid Variables</p>
         <div class="ap-calc-field-row">
           <label class="ap-calc-field-label">Maelstrom Uptime</label>
-          <input type="number" class="ap-engr-maelstrom-uptime" min="0" max="100" step="1" value="85">
+          <input type="number" class="ap-engr-maelstrom-uptime" min="0" max="100" step="1" value="80">
+        </div>
+        <div class="ap-calc-field-row ap-engr-support-av-row">
+          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-support-av"> Support: Artist/Valkyrie (Identity)</label>
         </div>
         <div class="ap-calc-field-row ap-engr-rage-rune-row">
-          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-rage-rune"> Rage Rune on Surprise Attack (Avg.)</label>
+          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-rage-rune" checked> Rage Rune on Surprise Attack (Avg.)</label>
         </div>
         <div class="ap-calc-field-row ap-engr-wine-row">
           <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-wine" checked> Vernese Wine (+3% Move Speed)</label>
+        </div>
+        <div class="ap-calc-field-row ap-engr-ealyn-row">
+          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-ealyn"> Ealyn's Blessing (+3% Attack Speed)</label>
         </div>
         <div class="ap-calc-field-row ap-engr-manafood-row">
           <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed)</span></label>
@@ -1122,9 +1128,6 @@
             <option value="6000" selected>6000 DEX</option>
             <option value="12000">12000 DEX</option>
           </select>
-        </div>
-        <div class="ap-calc-field-row ap-engr-ealyn-row">
-          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-ealyn"> Ealyn's Blessing (+3% Attack Speed)</label>
         </div>
         <p class="ap-brace-compare-footer-note ap-engr-manafood-note">—</p>
         <p class="ap-brace-compare-footer-note ap-engr-222-note">222 may not need Mana Food to equip Maelstrom Bleed.</p>
@@ -1173,25 +1176,27 @@
       </span>
     </div>
     <div class="ap-calc-field-row ap-engr-stone-row">
-      <label class="ap-calc-field-label">Stone 2</label>
-      <span class="ap-engr-stone-pair">
-        <select class="ap-engr-stone2-target">
-          <option value="None" selected>None</option>
-          <option value="grudge">Grudge</option>
-          <option value="ambush">Ambush Master</option>
-          <option value="adrenaline">Adrenaline</option>
-          <option value="kbw">Keen Blunt Weapon</option>
-          <option value="rc">Raid Captain</option>
-          <option value="cd">Cursed Doll</option>
-          <option value="mi">Mass Increase</option>
-        </select>
-        <select class="ap-engr-stone2-level">
-          <option value="0 Lv." selected>0 Lv.</option>
-          <option value="1 Lv.">1 Lv.</option>
-          <option value="2 Lv.">2 Lv.</option>
-          <option value="3 Lv.">3 Lv.</option>
-          <option value="4 Lv.">4 Lv.</option>
-        </select>
+      <span class="ap-engr-stone-label-group">
+        <label class="ap-calc-field-label">Stone 2</label>
+        <span class="ap-engr-stone-pair">
+          <select class="ap-engr-stone2-target">
+            <option value="None" selected>None</option>
+            <option value="grudge">Grudge</option>
+            <option value="ambush">Ambush Master</option>
+            <option value="adrenaline">Adrenaline</option>
+            <option value="kbw">Keen Blunt Weapon</option>
+            <option value="rc">Raid Captain</option>
+            <option value="cd">Cursed Doll</option>
+            <option value="mi">Mass Increase</option>
+          </select>
+          <select class="ap-engr-stone2-level">
+            <option value="0 Lv." selected>0 Lv.</option>
+            <option value="1 Lv.">1 Lv.</option>
+            <option value="2 Lv.">2 Lv.</option>
+            <option value="3 Lv.">3 Lv.</option>
+            <option value="4 Lv.">4 Lv.</option>
+          </select>
+        </span>
       </span>
     </div>
 

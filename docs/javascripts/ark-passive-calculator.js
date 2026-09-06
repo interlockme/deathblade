@@ -59,6 +59,8 @@
 (function () {
   "use strict";
 
+  var SITE_ROOT = window.SiteUtils.detectSiteRoot("ark-passive-calculator.js");
+
   // ----- Lookup tables -----
   const NONE_LOW_MID_HIGH = (none, low, mid, high) => ({ None: none, Low: low, Mid: mid, High: high });
   const RING_RATE_TABLE = NONE_LOW_MID_HIGH(0, 0.004, 0.0095, 0.0155);
@@ -2542,6 +2544,19 @@
   const SUPPORT_SPEED_BONUS = 9; // Passionate Dance - reused live from .ap-yearning above.
   const MAELSTROM_SPEED_BONUS = 12.8;
   const RAID_CAPTAIN_WINE_MOVE_SPEED = 3; // Vernese Wine - Surge only, Move Speed only (see surgeEffectiveAttackSpeed's own comment for why it has no Attack Speed counterpart here).
+  // Support: Artist/Valkyrie - a party-wide Move Speed buff, not a personal
+  // consumable choice, so unlike Wine/Mana Food/Ealyn's Blessing it isn't
+  // part of their 3-way mutually-exclusive set (see that listener's own
+  // comment below) and applies on both RE and Surge alike, same as Rage
+  // Rune just above. Modeled as a flat add at its full value - "100%
+  // uptime" is the assumption baked into the flat number itself, not a
+  // tracked uptime input like Maelstrom's. Only ever a real source while a
+  // Support is actually in the party though (gated on `yearning`, same
+  // "Support: Passionate Dance" checkbox as supportApBuff/gearSupportUptime
+  // above and enforced disabled the same way via
+  // enforceGearSupportUptimeGate), unlike Rage Rune which is a Deathblade-
+  // only source with no such dependency.
+  const SUPPORT_AV_MOVE_SPEED = 8;
   // Rage Rune on Surprise Attack (Surge only): 16% chance per cast of +16%
   // Move Speed AND +16% Attack Speed for 6s (the one proc grants both at
   // once). The buff usually covers close to a full rotation once it
@@ -2572,6 +2587,7 @@
     if (yearning) ms += SUPPORT_SPEED_BONUS;
     ms += MAELSTROM_SPEED_BONUS * (engrInputs.maelstromUptime / 100);
     if (engrInputs.spec === "surge" && engrInputs.rageRune) ms += RAGE_RUNE_PROC_CHANCE * RAGE_RUNE_SPEED_BONUS;
+    if (engrInputs.supportAv && yearning) ms += SUPPORT_AV_MOVE_SPEED;
     if (engrInputs.spec === "surge" && engrInputs.wine && !engrInputs.manaFood) ms += RAID_CAPTAIN_WINE_MOVE_SPEED;
     return Math.min(ms, RAID_CAPTAIN_MOVE_SPEED_CAP);
   }
@@ -2984,8 +3000,9 @@
       cdLevel: getSelect(root, ".ap-engr-cd-level", "4 Nodes"),
       miLevel: getSelect(root, ".ap-engr-mi-level", "4 Nodes"),
       miOptIn: getCheckbox(root, ".ap-engr-mi-optin", true),
-      maelstromUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-engr-maelstrom-uptime", 85))),
+      maelstromUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-engr-maelstrom-uptime", 80))),
       rageRune: getCheckbox(root, ".ap-engr-rage-rune", true),
+      supportAv: getCheckbox(root, ".ap-engr-support-av", false),
       wine: getCheckbox(root, ".ap-engr-wine", true),
       manaFood: getCheckbox(root, ".ap-engr-manafood", false),
       manaFoodAmount: getNumber(root, ".ap-engr-manafood-amount", 6000),
@@ -3868,9 +3885,32 @@
 
     if (!result) return;
 
+    // Both readouts' base stats (RAID_CAPTAIN_BASE_MOVE_SPEED,
+    // BASE_ATTACK_SPEED above) assume the reader is already eating an
+    // Atk/Move Speed feast - the feast icon at the start of each line
+    // flags that assumption inline instead of leaving it as a silent
+    // premise the reader has to already know.
+    function prependFeastIcon(el) {
+      const icon = document.createElement("img");
+      icon.className = "skill-icon ap-engr-feast-icon";
+      icon.src = window.SiteUtils.iconSrc(SITE_ROOT, "icon-feast.png");
+      icon.alt = "Feast";
+      icon.title = "Assumes an Atk/Move Speed feast is active.";
+      icon.loading = "lazy";
+      // "display" mode (not the default visibility:hidden) - a missing
+      // icon should collapse the gap entirely rather than leave a blank
+      // 1em space sitting in front of " Move Speed:"/" Attack Speed:".
+      window.SiteUtils.hideOnError(icon, "display");
+      el.appendChild(icon);
+    }
+
     const msEl = root.querySelector(".ap-engr-ms-readout");
     if (msEl) {
-      msEl.textContent = "Move Speed: " + result.moveSpeed.toFixed(2) + "% (140% cap)";
+      msEl.textContent = "";
+      prependFeastIcon(msEl);
+      msEl.appendChild(
+        document.createTextNode(" Move Speed: " + result.moveSpeed.toFixed(2) + "% (140% cap)")
+      );
     }
 
     // Attack Speed is Surge-only display (see surgeEffectiveAttackSpeed's
@@ -3884,9 +3924,11 @@
         atkEl.style.display = "none";
       } else {
         atkEl.style.display = "";
-        let text = "Attack Speed: " + result.attackSpeed.toFixed(2) + "% (140% cap)";
-        if (engrInputs.miOptIn) text += " (With Mass Increase)";
-        atkEl.textContent = text;
+        atkEl.textContent = "";
+        prependFeastIcon(atkEl);
+        let text = " Attack Speed: " + result.attackSpeed.toFixed(2) + "% (140% cap)";
+        if (engrInputs.miOptIn) text += " (Mass Increase)";
+        atkEl.appendChild(document.createTextNode(text));
       }
     }
 
@@ -4309,11 +4351,15 @@
   // being CHECKED, not on whether it's disabled. Being disabled-but-checked
   // (hit the 3-synergy limit above while already on) still means Support
   // is active, so these fields should stay enabled in that case - only an
-  // unchecked .ap-yearning turns them off.
+  // unchecked .ap-yearning turns them off. Support: Artist/Valkyrie
+  // (Engraving Comparison's own Move Speed checkbox) is the same shape -
+  // a support-only source, not tied to any character-side gear input, but
+  // the reader still shouldn't be able to claim it while Passionate Dance
+  // itself is off, so it rides the same gate as the other two.
   function enforceGearSupportUptimeGate(root) {
     const yearningEl = root.querySelector(".ap-yearning");
     if (!yearningEl) return;
-    [".ap-gear-support-uptime", ".ap-gear-strength-orb-uptime"].forEach((selector) => {
+    [".ap-gear-support-uptime", ".ap-gear-strength-orb-uptime", ".ap-engr-support-av"].forEach((selector) => {
       const el = root.querySelector(selector);
       if (el) el.disabled = !yearningEl.checked;
     });

@@ -4189,7 +4189,7 @@ h3 { color: var(--dbc-teal); }
   align-items: center;
   gap: 0.5em;
   color: var(--dbc-lilac);
-  font-size: 0.92em;
+  font-size: 0.82em;
   cursor: pointer;
 }
 .md-typeset .ap-engr-checkbox-label input[type="checkbox"],
@@ -4198,7 +4198,7 @@ h3 { color: var(--dbc-teal); }
   height: 1em;
   margin: 0;
   flex-shrink: 0;
-  accent-color: var(--dbc-lavender);
+  accent-color: var(--dbc-pink);
   cursor: pointer;
 }
 /* The info icon riding along inside "Include Mass Increase in
@@ -5106,6 +5106,35 @@ h3 { color: var(--dbc-teal); }
   margin: 1.1em 0 0;
   padding-top: 0.7em;
   border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+/* Feast icon prepended (in JS - see renderEngravingComparison's
+   prependFeastIcon) to the Move Speed/Attack Speed readouts above, since
+   both readouts' base stats already assume an Atk/Move Speed feast is
+   active. Overrides the generic .skill-icon margin (0 2px 0 4px) - that
+   4px left margin exists to separate an icon from preceding text, which
+   doesn't apply here since this icon IS the start of the line; a tight
+   right-only gap instead. Sized down from the generic 1.1em to match
+   this row's own 0.8em font-size sibling text (.engraving-loadout-note's
+   fixed-12px approach doesn't fit here since this note isn't a fixed
+   size independent of its parent, so em keeps it proportional if that
+   font-size ever changes) without pushing the line height past what a
+   plain text row already takes.
+   Usage lives in JS only - no markdown/attr_list image on this line. */
+.md-typeset .ap-brace-compare-footer-note img.ap-engr-feast-icon {
+  height: 1em;
+  width: 1em;
+  margin: 0 0.3em 0 0;
+  /* Rose ring + glow, matching the site's established feast/food-icon
+     treatment (.food-option-icon, .engraving-chip-food's own "Pink
+     accent" comment) rather than a generic icon border - readers
+     already associate this color with "food requirement" elsewhere on
+     the site, so it reads as the same signal here. Box-shadow, not a
+     real border, so it doesn't add to the icon's own box or nudge row
+     height. Purple ring (matching .skill-card-icon) was tried first but
+     nearly invisible at this icon's small 1em/inline size - upped to a
+     visible ring + glow instead, matching .food-option-icon's own
+     opacities rather than the fainter 40px-icon ring. */
+  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.55), 0 0 5px rgba(var(--dbc-rose-rgb), 0.4);
 }
 /* Best Combo/Runner-Up used to have an explanatory note directly above
    them (removed - reader found it redundant), which incidentally also
