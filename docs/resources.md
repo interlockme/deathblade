@@ -120,7 +120,7 @@
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-adrenaline-uptime">Adrenaline Uptime %</label>
-      <input type="number" id="ap-adrenaline-uptime" class="ap-adrenaline-uptime" min="0" max="100" step="1" value="100">
+      <input type="number" id="ap-adrenaline-uptime" class="ap-adrenaline-uptime" min="0" max="100" step="1" value="97">
     </div>
   </div>
 
@@ -643,7 +643,7 @@
           <input type="number" id="ap-gear-ap-astrogem-lv" class="ap-gear-ap-astrogem-lv" min="0" max="100" step="1" value="35">
         </div>
         <div class="ap-calc-field-row ap-gear-ap-select-row">
-          <label class="ap-calc-field-label" for="ap-adrenaline-stone" title="A fixed 0.9% per stack, assuming the full 6 stacks, plus this stone's own bonus (Lv.1 +0.48% / Lv.2 +0.60% / Lv.3 +0.83% / Lv.4 +0.95% per stack).">Ability Stone: Adrenaline</label>
+          <label class="ap-calc-field-label" for="ap-adrenaline-stone" title="A fixed 0.9% per stack (assuming the full 6 stacks), scaled by Adrenaline Uptime %, plus this stone's own bonus, same scaling (Lv.1 +0.48% / Lv.2 +0.60% / Lv.3 +0.83% / Lv.4 +0.95% per stack).">Ability Stone: Adrenaline</label>
           <span class="ap-value-display" data-for="ap-adrenaline-stone"></span>
           <select id="ap-adrenaline-stone" class="ap-adrenaline-stone">
             <option value="0 Lv." selected>Lv. 0</option>
@@ -1121,34 +1121,43 @@
       </div>
     </div>
 
-    <!-- This title gets a dashed top border + centered text (via
-         .ap-gear-cards + .ap-acc-panel-title) so it reads as its own
-         section break from the Engravings/In-Raid Variables cards right
-         above it, same dashed-line language as .ap-engr-spec-row's own
-         bottom border above and .ap-gear-card-subtitle inside the card -
-         plain spacing alone (the old margin-top) wasn't a strong enough
-         break on its own. -->
-    <p class="ap-acc-panel-title">Engraving + Ability Stone Values (isolated - not saved)</p>
-    <div class="ap-calc-field-row ap-engr-stone-row">
-      <span class="ap-calc-field-label">Stone 1</span>
-      <span class="ap-engr-stone-pair">
-        <select class="ap-engr-stone1-target">
-          <option value="None" selected>None</option>
-          <option value="grudge">Grudge</option>
-          <option value="ambush">Ambush Master</option>
-          <option value="adrenaline">Adrenaline</option>
-          <option value="kbw">Keen Blunt Weapon</option>
-          <option value="rc">Raid Captain</option>
-          <option value="cd">Cursed Doll</option>
-          <option value="mi">Mass Increase</option>
-        </select>
-        <select class="ap-engr-stone1-level">
-          <option value="0 Lv." selected>0 Lv.</option>
-          <option value="1 Lv.">1 Lv.</option>
-          <option value="2 Lv.">2 Lv.</option>
-          <option value="3 Lv.">3 Lv.</option>
-          <option value="4 Lv.">4 Lv.</option>
-        </select>
+    <!-- The title used to sit on its own centered line above Stone 1
+         (dashed top border via .ap-gear-cards + .ap-acc-panel-title),
+         which cost a whole extra line of vertical space while Stone 1/2's
+         own flex-end alignment (.ap-engr-stone-row below) still left the
+         entire left side of every row after it empty. Folding the title
+         into Stone 1's row instead - as a flex child before the Stone 1
+         label+selects group, with the row's justify-content flipped to
+         space-between just for this row (.ap-engr-stone-row--first) -
+         fills that dead space and removes the separate line in one move.
+         Stone 2's row right below is untouched: plain flex-end, no title.
+         The dashed-line section break moves from the old standalone
+         <p> onto this row itself (.ap-gear-cards + .ap-engr-stone-row--
+         first), since the title is no longer .ap-gear-cards' immediate
+         sibling on its own. -->
+    <div class="ap-calc-field-row ap-engr-stone-row ap-engr-stone-row--first">
+      <p class="ap-acc-panel-title ap-engr-contrib-title">Engraving and Ability Stone Values</p>
+      <span class="ap-engr-stone-label-group">
+        <span class="ap-calc-field-label">Stone 1</span>
+        <span class="ap-engr-stone-pair">
+          <select class="ap-engr-stone1-target">
+            <option value="None" selected>None</option>
+            <option value="grudge">Grudge</option>
+            <option value="ambush">Ambush Master</option>
+            <option value="adrenaline">Adrenaline</option>
+            <option value="kbw">Keen Blunt Weapon</option>
+            <option value="rc">Raid Captain</option>
+            <option value="cd">Cursed Doll</option>
+            <option value="mi">Mass Increase</option>
+          </select>
+          <select class="ap-engr-stone1-level">
+            <option value="0 Lv." selected>0 Lv.</option>
+            <option value="1 Lv.">1 Lv.</option>
+            <option value="2 Lv.">2 Lv.</option>
+            <option value="3 Lv.">3 Lv.</option>
+            <option value="4 Lv.">4 Lv.</option>
+          </select>
+        </span>
       </span>
     </div>
     <div class="ap-calc-field-row ap-engr-stone-row">

@@ -250,36 +250,36 @@
 
   // Adrenaline engraving's own Attack Power component - separate from the
   // Crit Rate component already modeled above via ADRENALINE_TABLE/
-  // adrenalineUptime. Fixed at 0.9% AP per stack regardless of node
-  // count, assuming the full 6 stacks (see adrenalineApFraction below for
-  // why this is NOT time-weighted by Adrenaline Uptime); the Ability
-  // Stone adds its own per-stack bonus on top (source: the stone's own
-  // tooltip, Lv.1-4). Goes to 0 whenever Adrenaline is set to "Not Used" -
-  // matching the in-game reality that skipping the engraving loses both
-  // halves together. Deliberately kept OUT of the manual "Attack Power %"
-  // field (and its tooltip's source list) so the two can never be
-  // double-counted; this is added on top of gearAttackPowerPercentTotal
-  // instead, same as Atropine.
+  // adrenalineUptime. 0.9% AP per stack regardless of node count, assuming
+  // the full 6 stacks; the Ability Stone adds its own per-stack bonus on
+  // top (source: the stone's own tooltip, Lv.1-4). Goes to 0 whenever
+  // Adrenaline is set to "Not Used" - matching the in-game reality that
+  // skipping the engraving loses both halves together. Deliberately kept
+  // OUT of the manual "Attack Power %" field (and its tooltip's source
+  // list) so the two can never be double-counted; this is added on top of
+  // gearAttackPowerPercentTotal instead, same as Atropine.
+  //
+  // Now scaled by the same Adrenaline Uptime % slider as the Crit Rate
+  // side (reader's own request) - this used to deliberately NOT do that
+  // (see git history/prior comment here): a first pass tried deriving an
+  // estimated average stack count from Adrenaline Uptime (linear from
+  // half stacks at 0% up to full stacks at 100%), which was wrong (0%
+  // Crit uptime means near-0% actual uptime on the buff, not "half stacks
+  // on average") and was dropped in favor of always assuming full 6
+  // stacks. That reasoning still holds for "derive stack count from
+  // uptime" - but a plain linear scale of the full-stacks total by
+  // Uptime % isn't that; it's the simpler (and, per the reader, more
+  // useful) assumption that the AP component is only live as often as the
+  // buff itself is, same as every other uptime-gated source on this page
+  // (Atropine, Strength Orb, Maelstrom, etc.).
   const ADRENALINE_AP_PER_STACK = 0.009;
   const ADRENALINE_STACKS = 6;
   const ADRENALINE_STONE_AP_TABLE = { "0 Lv.": 0, "1 Lv.": 0.0048, "2 Lv.": 0.006, "3 Lv.": 0.0083, "4 Lv.": 0.0095 };
 
-  // Attack Power isn't gated the same way the Crit Rate side is (full 6
-  // stacks or nothing) - every stack from 1-6 contributes its own share,
-  // and there's no way to directly observe average stack count in-game.
-  // A first pass tried deriving an estimated average stack count from the
-  // Crit Rate side's Adrenaline Uptime slider (linear from half stacks at
-  // 0% up to full stacks at 100%), but that's not a real relationship -
-  // 0% Crit uptime means near-0% actual uptime on the buff, not "half
-  // stacks on average", so it overstated Attack Power at low uptime
-  // rather than approximating it. Simplest correct fix: don't link the
-  // two at all. This always assumes full 6 stacks whenever Adrenaline is
-  // used, same as the sheet's own reference build; Adrenaline Uptime only
-  // affects the Crit Rate side above.
   function adrenalineApFraction(inputs) {
     if (inputs.adrenaline === "Not Used") return 0;
     const stoneAp = ADRENALINE_STONE_AP_TABLE[inputs.adrenalineStone] || 0;
-    return ADRENALINE_STACKS * (ADRENALINE_AP_PER_STACK + stoneAp);
+    return ADRENALINE_STACKS * (ADRENALINE_AP_PER_STACK + stoneAp) * (inputs.adrenalineUptime / 100);
   }
 
   // Attack Power %'s individual sources (see Calc!P7's own source-list
@@ -768,7 +768,7 @@
       shPet: getSelect(root, ".ap-sh-pet", "High"),
 
       adrenaline: getSelect(root, ".ap-adrenaline", "4 Nodes"),
-      adrenalineUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-adrenaline-uptime", 100))),
+      adrenalineUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-adrenaline-uptime", 97))),
       adrenalineStone: getSelect(root, ".ap-adrenaline-stone", "0 Lv."),
       kbw: getSelect(root, ".ap-kbw", "4 Nodes"),
       kbwStone: getSelect(root, ".ap-kbw-stone", "0 Lv."),
@@ -3221,20 +3221,41 @@
     const rows = [
       { label: "Grudge", gain: grudgeGain(engrInputs, inputs) },
       { label: "Ambush Master", gain: ambushMasterGain(engrInputs, inputs) },
-      { label: "Adrenaline", gain: adrenalineContributionGain(isolatedInputs, engrInputs, isolatedBest) },
+      {
+        label: "Adrenaline",
+        gain: adrenalineContributionGain(isolatedInputs, engrInputs, isolatedBest),
+        // Same inline "i" icon (native `title`, see renderComparisonRows'
+        // own identical .ap-brace-info-icon use above) rather than a
+        // permanent note line - just a quick pointer that this row's AP
+        // half isn't a flat number, it's already following whatever
+        // Adrenaline Uptime % is set to in the Ark Passive section above
+        // (see adrenalineApFraction's own comment for why that's now the
+        // case).
+        note: "Follows Adrenaline Uptime % from the Ark Passive section above.",
+      },
       { label: "Raid Captain", gain: raidCaptainGain(engrInputs, inputs) },
       { label: "Keen Blunt Weapon", gain: kbwContributionGain(engrInputs, isolatedBest, isolatedBestStats, isolatedShared) },
       { label: "Cursed Doll", gain: cursedDollGain(engrInputs, inputs) },
       { label: "Mass Increase", gain: massIncreaseGain(engrInputs, inputs) },
-      { label: "Ability Stone Base AP", gain: abilityStoneBaseApGain(inputs, engrInputs) },
+      {
+        label: "Ability Stone Base AP",
+        gain: abilityStoneBaseApGain(inputs, engrInputs),
+        // Mirrors engravingStoneImpliesBaseAp's own threshold check
+        // (5+ total nodes across BOTH isolated stone slots combined, not
+        // one stone alone - a single stone tops out at Lv.4) - reader
+        // otherwise has no way to tell why this row reads 0% even with a
+        // stone slotted, if the other slot isn't carrying enough to clear
+        // the combined threshold.
+        note: "Only applies once Stone 1 + Stone 2 add up to Lv.5 or higher combined.",
+      },
       {
         label: "Mana Food",
         gain: manaFoodContributionGain(engrInputs, inputs),
-        // Note (and therefore the dagger next to the row label) is
-        // Surge-only - RE's Mana Food is Main-Stat-only with no Bleed
-        // rune interaction and is excluded from calculations entirely
-        // (see manaFoodContributionGain/engravingCandidateMultiplier), so
-        // there's nothing for a footnote to explain there.
+        // Icon (and therefore the note itself) is Surge-only - RE's Mana
+        // Food is Main-Stat-only with no Bleed rune interaction and is
+        // excluded from calculations entirely (see
+        // manaFoodContributionGain/engravingCandidateMultiplier), so
+        // there's nothing for the tooltip to explain there.
         note: engrInputs.spec === "surge"
           ? "Includes using the Bleed rune on Maelstrom. Not tied to any one engraving."
           : null,
@@ -3906,7 +3927,20 @@
         const tr = document.createElement("tr");
         const labelTd = window.SiteUtils.el("td", "ap-brace-row-label", row.label);
         if (row.note) {
-          labelTd.appendChild(window.SiteUtils.el("span", "ap-engr-label-dagger", " †"));
+          // Same .ap-brace-info-icon pattern as renderComparisonRows'
+          // own identical use above (native `title` hover instead of a
+          // permanent note line) - used to be a dagger next to the label
+          // plus a full-width footnote <tr> below with its own colSpan
+          // (see git history), but that cost a whole extra row just for
+          // Mana Food's one Surge-only caveat. Consolidating onto the
+          // same icon the rest of the page already uses means Adrenaline/
+          // Ability Stone Base AP/Mana Food's notes all render the same
+          // way, and none of them cost vertical space unless hovered.
+          const infoIcon = window.SiteUtils.el("span", "ap-brace-info-icon", "i");
+          infoIcon.title = row.note;
+          infoIcon.setAttribute("role", "img");
+          infoIcon.setAttribute("aria-label", row.note);
+          labelTd.appendChild(infoIcon);
         }
         tr.appendChild(labelTd);
         tr.appendChild(window.SiteUtils.el("td", "ap-brace-tier-val", formatPctBare(row.gain)));
@@ -3916,13 +3950,6 @@
           tr.appendChild(window.SiteUtils.el("td", "ap-brace-tier-val ap-engr-stone-col", levels ? formatPctBare(levels[i]) : "—"));
         }
         rowsContainer.appendChild(tr);
-        if (row.note) {
-          const noteTr = document.createElement("tr");
-          const noteTd = window.SiteUtils.el("td", "ap-engr-row-note", "† " + row.note);
-          noteTd.colSpan = 6;
-          noteTr.appendChild(noteTd);
-          rowsContainer.appendChild(noteTr);
-        }
       });
     }
 

@@ -4066,6 +4066,15 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-brace-compare-body {
   padding: 0.7em 0.85em 0.85em;
+  /* Lets Ability Stone DPS Contribution's merged title+Stone-1 row (see
+     .ap-engr-stone-row--first further down) query ITS OWN rendered width
+     for its narrow-width stacked fallback, same reasoning as .bid-calc's
+     own container-type above: the sidebar/TOC coming and going changes
+     this panel's actual available width at a given viewport size, so a
+     viewport media query would be the wrong signal. Shared by every
+     .ap-brace-compare-body use (Bracelet/Accessory/Engraving Comparison
+     alike) but harmless for the ones that don't query it. */
+  container-type: inline-size;
 }
 .md-typeset .ap-brace-compare-intro {
   font-size: 0.9em;
@@ -4443,30 +4452,85 @@ h3 { color: var(--dbc-teal); }
   padding-top: 0.6em;
   border-top: 1px dashed rgba(255, 255, 255, 0.1);
 }
-/* .ap-acc-panel-title (Ability Stones) directly follows this grid now
-   that In-Raid Variables moved into it instead of sitting below it as
-   its own full-width card - .ap-acc-panel-title itself has no top
-   margin (other uses of it, e.g. Necklace/Earrings/Rings, don't need
-   one), so without this the grid's last card ran straight into the
-   Ability Stones heading with no breathing room. Plain margin alone
-   read as "some gap" rather than "a section break" though, so this
-   also gets the same dashed-line language as .ap-engr-spec-row's own
-   bottom border above and .ap-gear-card-subtitle inside the card, plus
-   centered text so the isolated-sandbox heading reads as its own break
-   rather than a left-aligned continuation of the cards' field rows.
-   Padding on both sides of the dashed line (not just top) and a
-   slightly bigger/more-tracked size than the base .ap-acc-panel-title
-   give it room to breathe as its own centered header rather than
-   sitting flush against the border or the Stone 1/2 rows right under
-   it - reader found the plain version too cramped. */
-.md-typeset .ap-gear-cards + .ap-acc-panel-title {
+/* Stone 1's row (the merged title + label + selects, see resources.md's
+   own comment on .ap-engr-stone-row--first) directly follows this grid
+   now that In-Raid Variables moved into it instead of sitting below it
+   as its own full-width card - the row itself has no top margin (like
+   .ap-acc-panel-title's other uses, e.g. Necklace/Earrings/Rings), so
+   without this the grid's last card ran straight into it with no
+   breathing room. Plain margin alone read as "some gap" rather than "a
+   section break" though, so this also gets the same dashed-line
+   language as .ap-engr-spec-row's own bottom border above and
+   .ap-gear-card-subtitle inside the card. This used to sit on the title
+   <p> itself (back when it was .ap-gear-cards' immediate sibling on its
+   own line) - now that the title lives inside Stone 1's row instead,
+   the break moves onto the row. */
+.md-typeset .ap-gear-cards + .ap-engr-stone-row--first {
   margin-top: 0.9em;
-  margin-bottom: 0.6em;
-  padding: 1.1em 0 0.6em;
+  padding-top: 1.1em;
   border-top: 1px dashed rgba(255, 255, 255, 0.1);
-  text-align: center;
+}
+/* Title loses the old standalone-heading treatment (centered text, its
+   own top margin/padding/border, a bumped size to carry a header on its
+   own line) now that it rides along as a flex child in Stone 1's row
+   instead of a full-width block above it - the row above takes over the
+   section-break job, and left-aligned inline text reads better next to
+   the label+selects than centered text would. flex: 1 1 auto + min-
+   width: 0 (same reasoning as .ap-calc-field-row's own label rule) lets
+   it shrink/wrap instead of shoving Stone 1's selects out of the row
+   before the @container fallback below kicks in. */
+.md-typeset .ap-acc-panel-title.ap-engr-contrib-title {
+  margin: 0;
+  padding: 0;
+  border-top: none;
+  text-align: left;
   font-size: 0.84em;
   letter-spacing: 0.06em;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+/* Groups Stone 1's own label + target/level selects into one flex unit
+   riding the row's right edge, same reasoning as .ap-engr-stone-pair
+   grouping target+level below it - without this, the row's own space-
+   between (needed now to push the title left, see .ap-engr-stone-row--
+   first below) would spread title/label/pair across 3 evenly-spaced
+   points instead of "title on the left" vs. "label+pair together on
+   the right". flex-shrink: 0 keeps the controls at their natural width
+   so the title (the one flexible child) is what gives way first. */
+.md-typeset .ap-engr-stone-label-group {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  flex-shrink: 0;
+}
+/* Only Stone 1's row carries the title, so only it needs space-between
+   instead of .ap-engr-stone-row's shared flex-end (Stone 2 right below
+   keeps flex-end as-is, untouched). Two classes (not source order) is
+   what wins this over .ap-engr-stone-row's own flex-end - same
+   reasoning as .ap-gear-inputs .ap-gear-card .ap-calc-field-row's own
+   comment further down. */
+.md-typeset .ap-engr-stone-row.ap-engr-stone-row--first {
+  justify-content: space-between;
+}
+/* Below ~460px the title text plus "Stone 1" plus both selects no
+   longer fit one line without crushing the selects - stack title above
+   controls instead (closer to the row's pre-merge look) rather than let
+   them wrap mid-row into something unreadable. Querying .ap-brace-
+   compare-body's own rendered width (container-type set there) rather
+   than the viewport, per this file's usual reasoning: the sidebar/TOC
+   coming and going shifts this panel's actual width at a given viewport
+   size. align-self: flex-end on the controls keeps them right-aligned
+   even stacked, so Stone 1 still lines up under Stone 2's controls
+   right below it instead of jumping to the left edge. */
+@container (max-width: 460px) {
+  .md-typeset .ap-engr-stone-row.ap-engr-stone-row--first {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4em;
+  }
+  .md-typeset .ap-engr-stone-row--first .ap-engr-stone-label-group {
+    align-self: flex-end;
+  }
 }
 /* Stone 1/2's own target (engraving) + level selects grouped into one
    flex pair with a small gap of their own, rather than 3 bare children
@@ -4774,28 +4838,6 @@ h3 { color: var(--dbc-teal); }
    gives the Additional-Damage-only equivalent for a direct comparison. */
 .md-typeset .ap-brace-row-situational .ap-brace-tier-val {
   color: var(--dbc-slate);
-}
-/* Dagger appended after a row's own label (e.g. "Mana Food †") flagging
-   it has a footnote below - kept subtler/smaller than the label text
-   itself so the eye still lands on the label first, same motivation as
-   .ap-acc-combo-val's dimming elsewhere. Its own <span> (set in JS)
-   rather than plain appended text, so it can be styled independent of
-   row.label. */
-.md-typeset .ap-engr-label-dagger {
-  font-size: 0.75em;
-  color: var(--dbc-slate);
-}
-/* The footnote row itself (e.g. "† Includes using the Bleed rune on
-   Maelstrom...") - full-width colspan row directly under the row it
-   explains. Small/muted/italic like .ap-brace-compare-footer-note
-   below, since this is also an aside rather than a first-class figure,
-   but no border-top/margin of its own: it already sits inside the
-   table's own bordered rows, and .ap-brace-compare-table td's
-   border-bottom above already separates it from its parent row. */
-.md-typeset .ap-engr-row-note {
-  font-size: 0.78em;
-  color: var(--dbc-slate);
-  padding-top: 0.25em;
 }
 .md-typeset .ap-brace-compare-flip-note {
   font-size: 0.78em;
