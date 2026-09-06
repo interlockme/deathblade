@@ -4158,6 +4158,59 @@ h3 { color: var(--dbc-teal); }
   margin-bottom: 0.8em;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
 }
+/* RE/Surge radio pair sits to the right of the Playstyle label on the same
+   row - needs its own gap since the two <label>s have nothing else
+   separating them once .ap-engr-radio-label below stops being plain
+   inline text and becomes a flex item (flex items don't get the
+   whitespace-collapses-to-a-space gap plain inline elements do). */
+.md-typeset .ap-engr-spec-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 1em;
+}
+/* .ap-engr-checkbox-label/.ap-engr-radio-label (Rage Rune/Vernese Wine/
+   Mana Food/Ealyn's Blessing/Include Mass Increase, and the RE/Surge
+   toggle above) never actually had a CSS rule of their own - every other
+   label in this calculator either matches label.ap-calc-field-label (the
+   left-hand field name in a label+control row) or one of the dedicated
+   inline-checkbox classes elsewhere (.ap-calc-pair-check-label,
+   .ap-bvb-inline-check), but these five rows use a third, never-styled
+   pattern: one <label> wrapping BOTH its own checkbox/radio AND the full
+   description text, with no separate control to hand the color/size to.
+   Landing on neither shared rule, they fell through to the browser's
+   plain default text - full brightness, default size, no controlled gap
+   from the checkbox - reading as unstyled next to every properly-lilac
+   label around them. Same color/size treatment as the other inline-check
+   classes now, so all four ways of pairing a checkbox with a label read
+   as the same design language instead of one being the odd one out. */
+.md-typeset .ap-engr-checkbox-label,
+.md-typeset .ap-engr-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  color: var(--dbc-lilac);
+  font-size: 0.92em;
+  cursor: pointer;
+}
+.md-typeset .ap-engr-checkbox-label input[type="checkbox"],
+.md-typeset .ap-engr-radio-label input[type="radio"] {
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--dbc-lavender);
+  cursor: pointer;
+}
+/* The info icon riding along inside "Include Mass Increase in
+   comparisons" would otherwise inherit this label's own gap intended for
+   the checkbox-to-text space, reusing the same 0.5em a second time
+   between text and icon - fractionally wider than every other label's
+   icon spacing (e.g. Current Bracelet's Crit Stat's) elsewhere in this
+   section. Tightened back to that same shared spacing instead of
+   inheriting the checkbox gap by coincidence. */
+.md-typeset .ap-engr-checkbox-label .ap-brace-info-icon {
+  margin-left: -0.15em;
+}
 /* Accessory Line Comparison's 4 slot panels (Necklace/Earrings/Rings/Any
    Accessory Slot) - each just a small heading plus its own
    .ap-brace-compare-table, stacked with a bit of breathing room between.
