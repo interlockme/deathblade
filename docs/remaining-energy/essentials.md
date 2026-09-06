@@ -53,7 +53,7 @@ Atk/Move Speed Feast
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Quick Tips<span class="setup-note-arrow"></span></summary>
 
-- Optimize Ark Passive nodes or compare bracelet lines [here!](../resources.md#ark-passive-calculator)
+- Optimize Ark Passive nodes or compare bracelets/equipment [here!](../resources.md#ark-passive-calculator)
 - All Deathblade builds run a pet with the Specialization stat bonus.
 - Always press the next skill during your current skill's animation (skill queuing).
 - If unsure, select Grudge and Ambush Master as your Ability Stone engravings.
