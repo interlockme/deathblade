@@ -4353,6 +4353,47 @@ h3 { color: var(--dbc-teal); }
    when scrolling past both sections. */
 .md-typeset .ap-gear-card--engr-core { --ap-gear-card-accent: var(--dbc-teal); }
 .md-typeset .ap-gear-card--engr-competing { --ap-gear-card-accent: var(--dbc-gold); }
+/* In-Raid Variables and Ability Stones used to be bare .ap-acc-panel-title
+   labels with no border/background of their own, sitting directly below
+   the Core/Competing Pool cards above and the DPS Contribution table
+   below - visually they just ran into whatever was adjacent, with only a
+   <p>'s default margin (and no margin at all, once these two became
+   .ap-gear-card divs below) as separation. Promoted to the same
+   .ap-gear-card shell as Core/Competing/Character Data's cards so the
+   whole section reads as one consistent stack of clearly bordered
+   subsections instead of Core/Competing being the only two that look
+   "boxed". Own accent colors (distinct from teal/gold above, and from
+   pink/teal used by the nested Setup A/B cards further down) so all 4
+   top-level cards in this section stay visually distinguishable from
+   each other while scrolling. */
+.md-typeset .ap-gear-card--engr-variables { --ap-gear-card-accent: var(--dbc-purple); }
+.md-typeset .ap-gear-card--engr-stones { --ap-gear-card-accent: var(--dbc-blue); }
+/* Being plain .ap-gear-card divs (no default paragraph margin the old
+   bare <p> titles got for free), these two need their own explicit
+   spacing - both above (separating them from the Core/Competing grid and
+   from each other) and below the second one (separating it from the DPS
+   Contribution table that follows). Same 0.9em rhythm .ap-gear-cards'
+   own grid gap already uses one section up, so the vertical spacing
+   feels consistent scrolling through Core/Competing -> In-Raid Variables
+   -> Ability Stones rather than tightening partway down. */
+.md-typeset .ap-gear-card--engr-variables,
+.md-typeset .ap-gear-card--engr-stones {
+  margin: 0.9em 0 0;
+}
+.md-typeset .ap-gear-card--engr-stones {
+  margin-bottom: 0.9em;
+}
+/* The readouts (Effective Move/Attack Speed, the Wine-vs-Mana-Food note)
+   sit inside the In-Raid Variables card now instead of trailing loose
+   underneath it - same dashed-top-edge treatment as every other
+   .ap-brace-compare-footer-note, just scoped to read as "notes about
+   this card" rather than "notes about the whole section". First one's
+   top border still shows (the checkbox rows above it aren't
+   footer-notes themselves), last one gets its bottom margin zeroed so it
+   doesn't add extra space before the card's own padding closes it out. */
+.md-typeset .ap-gear-card--engr-variables .ap-brace-compare-footer-note:last-child {
+  margin-bottom: 0;
+}
 /* Same title treatment as .ap-calc-group-title above, so these two cards
    read as the same kind of thing as the Ark Passive grid's own category
    cards rather than a visually distinct sub-widget. */

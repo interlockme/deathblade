@@ -2878,12 +2878,12 @@
       rcLevel: getSelect(root, ".ap-engr-rc-level", "4 Nodes"),
       cdLevel: getSelect(root, ".ap-engr-cd-level", "4 Nodes"),
       miLevel: getSelect(root, ".ap-engr-mi-level", "4 Nodes"),
-      miOptIn: getCheckbox(root, ".ap-engr-mi-optin", false),
+      miOptIn: getCheckbox(root, ".ap-engr-mi-optin", true),
       maelstromUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-engr-maelstrom-uptime", 85))),
       rageRune: getCheckbox(root, ".ap-engr-rage-rune", true),
       wine: getCheckbox(root, ".ap-engr-wine", true),
       manaFood: getCheckbox(root, ".ap-engr-manafood", false),
-      manaFoodAmount: getNumber(root, ".ap-engr-manafood-amount", 12000),
+      manaFoodAmount: getNumber(root, ".ap-engr-manafood-amount", 6000),
       ealynsBlessing: getCheckbox(root, ".ap-engr-ealyn", false),
       stone1Target: getSelect(root, ".ap-engr-stone1-target", "None"),
       stone1Level: getSelect(root, ".ap-engr-stone1-level", "0 Lv."),
@@ -2971,7 +2971,7 @@
     // either slot - same "isolate exactly what's under test, zero
     // everything else" precedent computeBraceletVsBracelet's own
     // zeroedBraceletInputs sets for "no bracelet at all". Grudge/Ambush/
-    // Adrenaline and Move/Attack Speed stay live from `base` since they
+    // Adrenaline and In-Raid Variables stay live from `base` since they
     // aren't part of what Setup A/B are varying.
     const bareBase = Object.assign({}, base, {
       stone1Target: "None", stone1Level: "0 Lv.",
@@ -3080,7 +3080,7 @@
         // (see manaFoodContributionGain/engravingCandidateMultiplier), so
         // there's nothing for a footnote to explain there.
         note: engrInputs.spec === "surge"
-          ? "Includes using the Bleed rune on Maelstrom. Not tied to any one engraving - every combo below can run it."
+          ? "Includes using the Bleed rune on Maelstrom. Not tied to any one engraving."
           : null,
       },
     ];
@@ -3591,8 +3591,8 @@
     const manaFoodLabelEl = root.querySelector(".ap-engr-manafood-label");
     if (manaFoodLabelEl) {
       manaFoodLabelEl.textContent = isSurge
-        ? "Mana Food (Surge only, replaces Wine)"
-        : "Mana Food (informational - adds Main Stat only, excluded from DPS calc)";
+        ? "Mana Food (+Maelstrom Bleed Rune)"
+        : "Mana Food (Main Stat only)";
     }
     const ealynRow = root.querySelector(".ap-engr-ealyn-row");
     if (ealynRow) ealynRow.style.display = isSurge ? "" : "none";
