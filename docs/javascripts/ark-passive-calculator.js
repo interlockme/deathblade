@@ -3591,7 +3591,7 @@
     const manaFoodLabelEl = root.querySelector(".ap-engr-manafood-label");
     if (manaFoodLabelEl) {
       manaFoodLabelEl.textContent = isSurge
-        ? "Mana Food (+Maelstrom Bleed Rune)"
+        ? "Mana Food (+Maelstrom Bleed)"
         : "Mana Food (Main Stat only)";
     }
     const ealynRow = root.querySelector(".ap-engr-ealyn-row");
@@ -3620,7 +3620,7 @@
       } else {
         atkEl.style.display = "";
         let text = "Attack Speed: " + result.attackSpeed.toFixed(2) + "% (140% cap)";
-        if (engrInputs.miOptIn) text += " (Mass Increase)";
+        if (engrInputs.miOptIn) text += " (With Mass Increase)";
         atkEl.textContent = text;
       }
     }
@@ -3652,7 +3652,11 @@
       const stoneKeyByLabel = { Grudge: "grudge", "Ambush Master": "ambush", "Raid Captain": "rc", "Cursed Doll": "cd", "Mass Increase": "mi" };
       result.rows.forEach((row) => {
         const tr = document.createElement("tr");
-        tr.appendChild(window.SiteUtils.el("td", "ap-brace-row-label", row.label + (row.note ? " †" : "")));
+        const labelTd = window.SiteUtils.el("td", "ap-brace-row-label", row.label);
+        if (row.note) {
+          labelTd.appendChild(window.SiteUtils.el("span", "ap-engr-label-dagger", " †"));
+        }
+        tr.appendChild(labelTd);
         tr.appendChild(window.SiteUtils.el("td", "ap-brace-tier-val", formatPctBare(row.gain)));
         const stoneKey = stoneKeyByLabel[row.label];
         const levels = stoneKey ? result.stoneBreakdown[stoneKey] : null;

@@ -477,7 +477,7 @@
 <details class="ap-gear-inputs">
   <summary>
     <span class="ap-gear-title">Character Data</span>
-    <span class="ap-gear-optional-badge" title="Not part of your Ark Passive setup above. Only used by the Bracelet, Accessory, and Chaos Core comparisons below - skip this if you're not using those.">Optional</span>
+    <span class="ap-gear-optional-badge" title="Not part of your Ark Passive setup above. Only used by the Bracelet, Engraving, Accessory, and Chaos Core sections below - skip this if you're not using them.">Optional</span>
   </summary>
   <div class="ap-brace-compare-inputs">
     <!-- Two cards side by side, same visual language as the Ark Passive
@@ -972,8 +972,8 @@
      silently reusing the live value would mean trying out a different
      level here for one of these two engravings was impossible without
      also editing your real tracked setup above. Their Ability Stone level
-     works the same way: whichever of the 2 isolated Stone Slots below (if
-     either) targets them - never the live tracked Stone select. Every
+     works the same way: whichever of the 2 isolated Stone 1/2 rows below
+     (if either) targets them - never the live tracked Stone select. Every
      field in this section is deliberately given NO id (class only) so
      nothing here is saved/exported/reset-tracked - purely a sandbox for
      trying things out, per the reader's own request. -->
@@ -989,6 +989,11 @@
         <label class="ap-engr-radio-label"><input type="radio" name="ap-engr-spec" class="ap-engr-spec" value="surge"> Surge</label>
       </span>
     </div>
+    <!-- .ap-engr-spec-row gets its own dashed bottom border (same
+         dashed-line language as .ap-brace-compare-inputs/.ap-gear-card-
+         subtitle elsewhere) so Playstyle reads as its own standalone
+         input, set apart from the Engravings/In-Raid Variables cards
+         below rather than blurring into them. -->
 
     <!-- Engravings (Core + Competing Pool merged into one card) and
          In-Raid Variables as the two side-by-side cards, same visual
@@ -1000,13 +1005,16 @@
          cards in this grid - reader found that split (one card just for
          3 always-on rows) less useful than pairing Engravings against
          In-Raid Variables, the section's other real "inputs" block, so
-         Core/Competing now live in a single card as two labeled
-         sub-groups (.ap-gear-card-subtitle) instead of two bordered
-         boxes. -->
+         they were merged into this single card. Core's own
+         ".ap-gear-card-subtitle">Core (always on)" label was later
+         dropped too (reader found a heading for 3 rows that are never
+         anything but on redundant) - Competing Pool is now the only
+         sub-group label left, so it's the only place inside this card
+         where .ap-gear-card-subtitle's dashed top border actually
+         shows. -->
     <div class="ap-gear-cards">
       <div class="ap-gear-card ap-gear-card--engr-core">
         <p class="ap-gear-card-title">Engravings</p>
-        <p class="ap-gear-card-subtitle">Core (always on)</p>
         <div class="ap-calc-field-row">
           <span class="ap-calc-field-label">Grudge</span>
           <select class="ap-engr-grudge-level">
@@ -1080,7 +1088,7 @@
           </select>
         </div>
         <div class="ap-calc-field-row ap-engr-mi-optin-row">
-          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-mi-optin" checked> Include Mass Increase in comparison <span class="ap-brace-info-icon" title="Surge only. Its -10% Attack Speed drawback isn't modeled here - uncheck this if you'd rather leave it out of the best-combo search.">i</span></label>
+          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-mi-optin" checked> Include Mass Increase in comparisons <span class="ap-brace-info-icon" title="Its -10% Attack Speed drawback isn't modeled here - uncheck this if you'd rather leave it out of the best-combo search.">i</span></label>
         </div>
       </div>
 
@@ -1097,7 +1105,7 @@
         <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-wine" checked> Vernese Wine (+3% Move Speed)</label>
       </div>
       <div class="ap-calc-field-row ap-engr-manafood-row">
-        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed Rune)</span></label>
+        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed)</span></label>
         <select class="ap-engr-manafood-amount">
           <option value="6000" selected>6000 DEX</option>
           <option value="12000">12000 DEX</option>
@@ -1107,52 +1115,63 @@
         <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-ealyn"> Ealyn's Blessing (+3% Attack Speed)</label>
       </div>
       <p class="ap-brace-compare-footer-note ap-engr-manafood-note">—</p>
-      <p class="ap-brace-compare-footer-note ap-engr-222-note">222 may not need Mana Food to equip the Maelstrom Bleed Rune.</p>
+      <p class="ap-brace-compare-footer-note ap-engr-222-note">222 may not need Mana Food to equip Maelstrom Bleed.</p>
       <p class="ap-brace-compare-footer-note ap-engr-ms-readout">Effective Move Speed: —</p>
       <p class="ap-brace-compare-footer-note ap-engr-atk-readout">Effective Attack Speed: —</p>
       </div>
     </div>
 
-    <p class="ap-acc-panel-title">Ability Stones (isolated - not saved)</p>
-    <div class="ap-calc-field-row">
-      <span class="ap-calc-field-label">Stone Slot 1</span>
-      <select class="ap-engr-stone1-target">
-        <option value="None" selected>None</option>
-        <option value="grudge">Grudge</option>
-        <option value="ambush">Ambush Master</option>
-        <option value="adrenaline">Adrenaline</option>
-        <option value="kbw">Keen Blunt Weapon</option>
-        <option value="rc">Raid Captain</option>
-        <option value="cd">Cursed Doll</option>
-        <option value="mi">Mass Increase</option>
-      </select>
-      <select class="ap-engr-stone1-level">
-        <option value="0 Lv." selected>0 Lv.</option>
-        <option value="1 Lv.">1 Lv.</option>
-        <option value="2 Lv.">2 Lv.</option>
-        <option value="3 Lv.">3 Lv.</option>
-        <option value="4 Lv.">4 Lv.</option>
-      </select>
+    <!-- This title gets a dashed top border + centered text (via
+         .ap-gear-cards + .ap-acc-panel-title) so it reads as its own
+         section break from the Engravings/In-Raid Variables cards right
+         above it, same dashed-line language as .ap-engr-spec-row's own
+         bottom border above and .ap-gear-card-subtitle inside the card -
+         plain spacing alone (the old margin-top) wasn't a strong enough
+         break on its own. -->
+    <p class="ap-acc-panel-title">Engraving + Ability Stone Values (isolated - not saved)</p>
+    <div class="ap-calc-field-row ap-engr-stone-row">
+      <span class="ap-calc-field-label">Stone 1</span>
+      <span class="ap-engr-stone-pair">
+        <select class="ap-engr-stone1-target">
+          <option value="None" selected>None</option>
+          <option value="grudge">Grudge</option>
+          <option value="ambush">Ambush Master</option>
+          <option value="adrenaline">Adrenaline</option>
+          <option value="kbw">Keen Blunt Weapon</option>
+          <option value="rc">Raid Captain</option>
+          <option value="cd">Cursed Doll</option>
+          <option value="mi">Mass Increase</option>
+        </select>
+        <select class="ap-engr-stone1-level">
+          <option value="0 Lv." selected>0 Lv.</option>
+          <option value="1 Lv.">1 Lv.</option>
+          <option value="2 Lv.">2 Lv.</option>
+          <option value="3 Lv.">3 Lv.</option>
+          <option value="4 Lv.">4 Lv.</option>
+        </select>
+      </span>
     </div>
-    <div class="ap-calc-field-row">
-      <span class="ap-calc-field-label">Stone Slot 2</span>
-      <select class="ap-engr-stone2-target">
-        <option value="None" selected>None</option>
-        <option value="grudge">Grudge</option>
-        <option value="ambush">Ambush Master</option>
-        <option value="adrenaline">Adrenaline</option>
-        <option value="kbw">Keen Blunt Weapon</option>
-        <option value="rc">Raid Captain</option>
-        <option value="cd">Cursed Doll</option>
-        <option value="mi">Mass Increase</option>
-      </select>
-      <select class="ap-engr-stone2-level">
-        <option value="0 Lv." selected>0 Lv.</option>
-        <option value="1 Lv.">1 Lv.</option>
-        <option value="2 Lv.">2 Lv.</option>
-        <option value="3 Lv.">3 Lv.</option>
-        <option value="4 Lv.">4 Lv.</option>
-      </select>
+    <div class="ap-calc-field-row ap-engr-stone-row">
+      <span class="ap-calc-field-label">Stone 2</span>
+      <span class="ap-engr-stone-pair">
+        <select class="ap-engr-stone2-target">
+          <option value="None" selected>None</option>
+          <option value="grudge">Grudge</option>
+          <option value="ambush">Ambush Master</option>
+          <option value="adrenaline">Adrenaline</option>
+          <option value="kbw">Keen Blunt Weapon</option>
+          <option value="rc">Raid Captain</option>
+          <option value="cd">Cursed Doll</option>
+          <option value="mi">Mass Increase</option>
+        </select>
+        <select class="ap-engr-stone2-level">
+          <option value="0 Lv." selected>0 Lv.</option>
+          <option value="1 Lv.">1 Lv.</option>
+          <option value="2 Lv.">2 Lv.</option>
+          <option value="3 Lv.">3 Lv.</option>
+          <option value="4 Lv.">4 Lv.</option>
+        </select>
+      </span>
     </div>
 
     <div class="ap-acc-table-scroll ap-engr-contrib-wrap">
@@ -1189,7 +1208,6 @@
         <div class="ap-stat-card-row"><span class="ap-summary-label">Keystone / Split</span><span class="ap-engr-runnerup-keystone ap-summary-value">—</span></div>
       </div>
     </div>
-    <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Gearing inputs above are - fill everything in first.</p>
 
     <!-- Setup A vs. Setup B: compares two WHOLE named engraving loadouts
          (which 2 competing engravings, their Node levels, and where each
@@ -1378,8 +1396,8 @@
           <p class="ap-esvs-diff-wrap"><span class="ap-esvs-diff">—</span></p>
           <p class="ap-brace-compare-flip-note ap-esvs-keystone-note" hidden>Setup A and B land on different best keystones - the comparison above already accounts for that, each running its own.</p>
         </div>
-        <p class="ap-brace-compare-footer-note">Mass Increase is hidden here on RE, same as the Competing Pool above.</p>
       </div>
+    <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Engraving inputs above are - fill everything in first.</p>
     </details>
   </div>
 </details>

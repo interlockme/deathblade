@@ -4072,6 +4072,17 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-lavender);
   margin: 0 0 0.7em;
 }
+/* Engraving Comparison's Playstyle toggle sits alone above the
+   Engravings/In-Raid Variables cards - same dashed-line break the rest
+   of this section already uses (.ap-gear-card-subtitle's top border,
+   .ap-brace-compare-inputs' bottom border) rather than a new visual
+   language, so Playstyle reads as its own input instead of blurring
+   into the cards below it. */
+.md-typeset .ap-engr-spec-row {
+  padding-bottom: 0.7em;
+  margin-bottom: 0.8em;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
 /* Accessory Line Comparison's 4 slot panels (Necklace/Earrings/Rings/Any
    Accessory Slot) - each just a small heading plus its own
    .ap-brace-compare-table, stacked with a bit of breathing room between.
@@ -4407,16 +4418,21 @@ h3 { color: var(--dbc-teal); }
   font-weight: 700;
   margin: 0 0 0.55em;
 }
-/* Sub-group label inside a merged card (currently just Core/Competing
-   Pool inside .ap-gear-card--engr-core) - same text treatment as
+/* Sub-group label inside a merged card (currently just Competing Pool
+   inside .ap-gear-card--engr-core) - same text treatment as
    .ap-gear-card-title but a fixed gold accent (Competing Pool's old
-   standalone-card color) rather than the card's own accent, so the two
-   sub-groups read as "different things inside one card" instead of a
-   second copy of the card's own title. Top divider + extra top margin
-   separates it from the previous sub-group's last field row; the one
-   directly after .ap-gear-card-title (Core, the first sub-group) skips
-   both via the adjacent-sibling override below since there's no
-   preceding row to separate from yet. */
+   standalone-card color) rather than the card's own accent, so it reads
+   as "a different thing inside this card" instead of a second copy of
+   the card's own title. Top divider + extra top margin separates it
+   from Core's last field row (Adrenaline) above it. Core used to have
+   its own "Core (always on)" .ap-gear-card-subtitle directly under
+   .ap-gear-card-title here too - dropped as redundant (a heading for 3
+   rows that are never anything but on), which also retired the
+   .ap-gear-card-title + .ap-gear-card-subtitle override this rule used
+   to need (it existed only to skip Core's top border/margin, since
+   Core had no preceding row to separate from) - Competing Pool is the
+   only subtitle left and it always has field rows above it, so the
+   dashed top border below now applies unconditionally. */
 .md-typeset .ap-gear-card-subtitle {
   font-size: 0.68rem;
   text-transform: uppercase;
@@ -4427,19 +4443,53 @@ h3 { color: var(--dbc-teal); }
   padding-top: 0.6em;
   border-top: 1px dashed rgba(255, 255, 255, 0.1);
 }
-.md-typeset .ap-gear-card-title + .ap-gear-card-subtitle {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: none;
-}
 /* .ap-acc-panel-title (Ability Stones) directly follows this grid now
    that In-Raid Variables moved into it instead of sitting below it as
    its own full-width card - .ap-acc-panel-title itself has no top
    margin (other uses of it, e.g. Necklace/Earrings/Rings, don't need
    one), so without this the grid's last card ran straight into the
-   Ability Stones heading with no breathing room. */
+   Ability Stones heading with no breathing room. Plain margin alone
+   read as "some gap" rather than "a section break" though, so this
+   also gets the same dashed-line language as .ap-engr-spec-row's own
+   bottom border above and .ap-gear-card-subtitle inside the card, plus
+   centered text so the isolated-sandbox heading reads as its own break
+   rather than a left-aligned continuation of the cards' field rows.
+   Padding on both sides of the dashed line (not just top) and a
+   slightly bigger/more-tracked size than the base .ap-acc-panel-title
+   give it room to breathe as its own centered header rather than
+   sitting flush against the border or the Stone 1/2 rows right under
+   it - reader found the plain version too cramped. */
 .md-typeset .ap-gear-cards + .ap-acc-panel-title {
   margin-top: 0.9em;
+  margin-bottom: 0.6em;
+  padding: 1.1em 0 0.6em;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-size: 0.84em;
+  letter-spacing: 0.06em;
+}
+/* Stone 1/2's own target (engraving) + level selects grouped into one
+   flex pair with a small gap of their own, rather than 3 bare children
+   of the row (label, target select, level select) left to
+   .ap-calc-field-row's shared justify-content: space-between - with 3
+   items that rule spread target and level apart by equal gaps same as
+   the label-to-target gap, so the level select ended up clear at the
+   row's far edge instead of reading as "this engraving's own level". */
+.md-typeset .ap-engr-stone-pair {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+/* Reader's first pass grouped target+level together but left the row's
+   own justify-content: space-between in place, which put the label
+   flush left and the whole pair flush right - closer than before, but
+   still two things pinned to opposite edges rather than one unit.
+   Reader wanted the label AND the pair centered together as a single
+   group, so this overrides space-between with a plain centered flex
+   row instead - label, gap, pair, all sitting in the middle. */
+.md-typeset .ap-engr-stone-row {
+  justify-content: center;
+  gap: 1em;
 }
 /* Every field row inside a Gearing card stacks as its own full-width
    line (label pushed left, control pushed to the row's far edge) instead
@@ -4721,6 +4771,28 @@ h3 { color: var(--dbc-teal); }
    gives the Additional-Damage-only equivalent for a direct comparison. */
 .md-typeset .ap-brace-row-situational .ap-brace-tier-val {
   color: var(--dbc-slate);
+}
+/* Dagger appended after a row's own label (e.g. "Mana Food †") flagging
+   it has a footnote below - kept subtler/smaller than the label text
+   itself so the eye still lands on the label first, same motivation as
+   .ap-acc-combo-val's dimming elsewhere. Its own <span> (set in JS)
+   rather than plain appended text, so it can be styled independent of
+   row.label. */
+.md-typeset .ap-engr-label-dagger {
+  font-size: 0.75em;
+  color: var(--dbc-slate);
+}
+/* The footnote row itself (e.g. "† Includes using the Bleed rune on
+   Maelstrom...") - full-width colspan row directly under the row it
+   explains. Small/muted/italic like .ap-brace-compare-footer-note
+   below, since this is also an aside rather than a first-class figure,
+   but no border-top/margin of its own: it already sits inside the
+   table's own bordered rows, and .ap-brace-compare-table td's
+   border-bottom above already separates it from its parent row. */
+.md-typeset .ap-engr-row-note {
+  font-size: 0.78em;
+  color: var(--dbc-slate);
+  padding-top: 0.25em;
 }
 .md-typeset .ap-brace-compare-flip-note {
   font-size: 0.78em;
