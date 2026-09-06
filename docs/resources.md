@@ -1107,8 +1107,18 @@
       <div class="ap-gear-card ap-gear-card--engr-variables">
         <p class="ap-gear-card-title">In-Raid Variables</p>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label">Maelstrom Uptime</label>
+          <label class="ap-calc-field-label">Maelstrom Uptime %</label>
           <input type="number" class="ap-engr-maelstrom-uptime" min="0" max="100" step="1" value="80">
+        </div>
+        <div class="ap-calc-field-row ap-engr-manafood-row">
+          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed)</span></label>
+          <span class="ap-engr-manafood-select-wrap">
+            <span class="ap-brace-info-icon ap-engr-manafood-icon" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's bonus.">i</span>
+            <select class="ap-engr-manafood-amount">
+              <option value="6000" selected>6000 DEX</option>
+              <option value="12000">12000 DEX</option>
+            </select>
+          </span>
         </div>
         <div class="ap-calc-field-row ap-engr-support-av-row">
           <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-support-av"> Support: Artist/Valkyrie (Identity)</label>
@@ -1122,15 +1132,7 @@
         <div class="ap-calc-field-row ap-engr-ealyn-row">
           <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-ealyn"> Ealyn's Blessing (+3% Attack Speed)</label>
         </div>
-        <div class="ap-calc-field-row ap-engr-manafood-row">
-          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed)</span></label>
-          <select class="ap-engr-manafood-amount">
-            <option value="6000" selected>6000 DEX</option>
-            <option value="12000">12000 DEX</option>
-          </select>
-        </div>
         <p class="ap-brace-compare-footer-note ap-engr-manafood-note">—</p>
-        <p class="ap-brace-compare-footer-note ap-engr-222-note">222 may not need Mana Food to equip Maelstrom Bleed.</p>
         <p class="ap-brace-compare-footer-note ap-engr-ms-readout">Effective Move Speed: —</p>
         <p class="ap-brace-compare-footer-note ap-engr-atk-readout">Effective Attack Speed: —</p>
       </div>

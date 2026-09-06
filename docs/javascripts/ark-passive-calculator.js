@@ -3854,6 +3854,11 @@
   }
 
   // ----- Engraving Comparison rendering -----
+  const MANAFOOD_ICON_BASE_TEXT = "Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's bonus.";
+  // 222's own gearing more easily clears the Bleed rune's stat threshold
+  // without Mana Food's help - worth flagging, but only for the one build
+  // it's actually about, so it's appended rather than said unconditionally.
+  const MANAFOOD_ICON_222_SUFFIX = " 222 may not need Mana Food to equip Maelstrom Bleed.";
   // Contribution rows are a single value per engraving (not a Low/Mid/
   // High trio), so this doesn't reuse renderComparisonRows - closer to
   // renderArkGridComparison's own bespoke-shape renderer just above.
@@ -3945,13 +3950,19 @@
       }
     }
 
-    // Static aside, not tied to any computed result (unlike the note
-    // above) - 222's own gearing more easily clears the Bleed rune's
-    // stat threshold without Mana Food's help, worth flagging right next
-    // to the checkbox that reader would otherwise assume they need.
-    // Surge-only like the rest of this card's consumable rows.
-    const note222El = root.querySelector(".ap-engr-222-note");
-    if (note222El) note222El.style.display = isSurge ? "" : "none";
+    // 222's own caveat used to be its own always-there row below the
+    // checkbox, shown/hidden by isSurge like the rest of this card's
+    // consumable rows - folded into the icon's tooltip instead so a
+    // reader not on 222 doesn't pay for a row that's never relevant to
+    // them. Appended (not swapped in) since the icon's base text - the
+    // Main Stat double-counting caveat - applies to both specs; only the
+    // 222 aside is Surge-only info, not a spec-conditional rewrite of the
+    // base text itself (contrast SPEC_NOTE_TEXT_RE/SURGE above, which
+    // really are two different messages for the same icon).
+    const manaFoodIconEl = root.querySelector(".ap-engr-manafood-icon");
+    if (manaFoodIconEl) {
+      manaFoodIconEl.title = MANAFOOD_ICON_BASE_TEXT + (isSurge ? MANAFOOD_ICON_222_SUFFIX : "");
+    }
 
     const rowsContainer = root.querySelector(".ap-engr-contrib-rows");
     if (rowsContainer) {

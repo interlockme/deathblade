@@ -3620,6 +3620,20 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-engr-manafood-amount {
   flex-shrink: 0;
 }
+/* Wraps the new caveat icon + the select as one unit so the outer row's
+   space-between still only ever sees 2 children (checkbox label, this
+   wrapper) - same shape as before the icon existed. Without the wrapper,
+   a bare 3rd flex child here would eat its own share of space-between's
+   gap and drift away from the select instead of sitting flush against it.
+   flex-shrink: 0 for the same reason as .ap-engr-manafood-amount above -
+   this wrapper is now the thing sitting where that select used to sit
+   directly, so it needs the same protection from being squeezed. */
+.md-typeset .ap-engr-manafood-select-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  flex-shrink: 0;
+}
 .md-typeset .ap-calc-field-row input[type="checkbox"] {
   width: 1.1em;
   height: 1.1em;
