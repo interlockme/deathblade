@@ -4056,6 +4056,29 @@ h3 { color: var(--dbc-teal); }
      "no fill as .ap-calc-results"). Same root cause the .skill-card and
      .setup-note fixes already cover elsewhere - just missed here. */
   background: none;
+  /* Transparent border-bottom reserved here at the SAME width the [open]
+     rule below switches to solid - so opening a section only recolors
+     this line instead of adding a full extra pixel of border that wasn't
+     budgeted for in the closed state's box height. Without this, the
+     summary bar itself grew by 1px the moment you expanded it (the
+     border box gets taller, not just the revealed content below it). */
+  border-bottom: 1px solid transparent;
+}
+/* The sitewide `.md-typeset details:not([open]) > summary` padding-top/
+   bottom rule (0,2,2) outranks the plain summary rule above (0,2,1) on
+   specificity, so on its own that rule would only hold this padding while
+   open and get overridden back down to 0.28rem the moment a section is
+   closed - the title bar then visibly grows the instant you expand it.
+   Re-declaring the same padding on the :not([open]) form matches that
+   specificity (0,3,1) and wins outright, so height never changes between
+   states. Same fix as .skill-card's own :not([open]) rule further down. */
+.md-typeset .ap-brace-compare:not([open]) summary,
+.md-typeset .ap-acc-compare:not([open]) summary,
+.md-typeset .ap-arkgrid-compare:not([open]) summary,
+.md-typeset .ap-bvb:not([open]) summary,
+.md-typeset .ap-esvs:not([open]) summary,
+.md-typeset .ap-engr-compare:not([open]) summary {
+  padding: 0.6em 0.85em;
 }
 .md-typeset .ap-brace-compare summary::before,
 .md-typeset .ap-acc-compare summary::before,
@@ -4101,7 +4124,11 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-bvb[open] summary,
 .md-typeset .ap-esvs[open] summary,
 .md-typeset .ap-engr-compare[open] summary {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  /* Only the color changes on open now - the summary rule above already
+     reserves this same 1px transparent border in the closed state, so no
+     border is being added here, just recolored. Keeps the title bar's
+     height identical between collapsed and expanded. */
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 .md-typeset .ap-brace-compare-body {
   padding: 0.7em 0.85em 0.85em;
@@ -4257,9 +4284,13 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-gear-inputs:focus-within {
   box-shadow: none;
 }
-.md-typeset .ap-gear-inputs:not([open]) {
-  opacity: 1;
-}
+/* Used to force full opacity while collapsed, back when Character Data was
+   its own standalone compact strip and needed to read clearly on its own.
+   Now that it's grouped as a peer of the other 4 rows (all of which just
+   take the generic `details:not([open]) { opacity: 0.8 }` dimming further
+   up), this override made it the one row that stayed bright while
+   collapsed - reading as a mismatched, more prominent row rather than an
+   equal fifth option. Removed so it dims the same as its siblings. */
 /* Same double-marker bug .ap-brace-compare's own comment documents above
    (search this file for "Two earlier attempts both left something
    floating"): Material draws its own default admonition icon on a bare
@@ -4294,6 +4325,20 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.85em;
   cursor: pointer;
   list-style: none;
+  /* Same reservation as the shared .ap-brace-compare/etc summary rule
+     above - a transparent border-bottom at the same width the grouped
+     [open] rule below switches to solid, so expanding Character Data
+     only recolors this line instead of growing the title bar by 1px. */
+  border-bottom: 1px solid transparent;
+}
+/* Same specificity fix as the shared .ap-brace-compare/etc summary rule
+   above: the sitewide `details:not([open]) > summary` rule (0,2,2) would
+   otherwise outrank this plain `.ap-gear-inputs > summary` (0,2,1) and
+   silently shrink the padding while closed, growing the title bar the
+   moment Character Data is expanded. Re-declaring here at (0,3,1) wins
+   outright instead. */
+.md-typeset .ap-gear-inputs:not([open]) > summary {
+  padding: 0.55em 0.85em;
 }
 /* Own flex item (rather than a bare text node) so it can wrap onto
    multiple lines at its own natural width instead of being squeezed into
@@ -4415,7 +4460,9 @@ h3 { color: var(--dbc-teal); }
    only appears while it's grouped with the other 4 rows, matching
    their own open state instead of changing how it looks on its own. */
 .md-typeset .ap-gear-comp-group > .ap-gear-inputs[open] > summary {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  /* Recolors the transparent border .ap-gear-inputs > summary already
+     reserves above instead of adding a new one - see that rule's comment. */
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 /* Rows had no hover feedback at all before - just cursor:pointer - which
    read as flat/dead next to the rest of the site's interactive controls
@@ -4519,7 +4566,13 @@ h3 { color: var(--dbc-teal); }
   background: none;
 }
 .md-typeset .ap-gear-card--basics { --ap-gear-card-accent: var(--dbc-purple); }
-.md-typeset .ap-gear-card--ap-sources { --ap-gear-card-accent: var(--dbc-lavender); }
+/* Was --dbc-lavender - too close to the Weapon Power/Main Stat card's
+   --dbc-purple right next to it (both muted purples at a glance, so the
+   two cards' left-edge stripes and titles barely read as different
+   colors). Swapped to --dbc-sky (the Additional Damage category's own
+   accent elsewhere on the site) for a color that's actually distinct
+   from its neighbor instead of a near-twin. */
+.md-typeset .ap-gear-card--ap-sources { --ap-gear-card-accent: var(--dbc-sky); }
 /* Engraving Comparison's Engravings (Core + Competing Pool merged) and
    In-Raid Variables cards reuse the same .ap-gear-card shell as
    Character Data's pair above, just with their own accent colors so the
@@ -4953,9 +5006,15 @@ h3 { color: var(--dbc-teal); }
   margin-left: 0.5em;
   padding: 0.02em 0.35em;
   border-radius: 3px;
-  background: rgba(224, 169, 64, 0.15);
-  border: 1px solid rgba(224, 169, 64, 0.55);
-  color: #e0a940;
+  /* Was a hardcoded rgba(224, 169, 64, ...)/#e0a940 gold, from before this
+     file's colors were consolidated onto the shared --dbc-* tokens (see
+     the site's --dbc-gold/--dbc-gold-rgb, already used for every other
+     warn/conditional accent) - this badge just never got swept up in that
+     pass, so it silently held its own slightly-off gold instead of the
+     one every other warn-styled element on the site actually uses. */
+  background: rgba(var(--dbc-gold-rgb), 0.15);
+  border: 1px solid rgba(var(--dbc-gold-rgb), 0.55);
+  color: var(--dbc-gold);
   font-size: 0.62em;
   font-weight: 700;
   line-height: 1;
@@ -5097,10 +5156,16 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-bvb-line-row .ap-bvb-line-mainstat {
   flex: 0 0 auto;
   width: 4.6em;
-  border-color: rgba(224, 169, 64, 0.5);
+  /* Was a hardcoded rgba(224, 169, 64, ...) amber, same near-duplicate of
+     --dbc-gold the .ap-brace-label-caveat badge and .ap-brace-warn-icon
+     below both used to carry independently - all three are the site's
+     "warn/conditional" role (--dbc-gold's own documented purpose), so all
+     three now share the actual token instead of three separate
+     hand-picked hexes that only looked the same by coincidence. */
+  border-color: rgba(var(--dbc-gold-rgb), 0.5);
 }
 .md-typeset .ap-bvb-line-row .ap-bvb-line-mainstat:focus {
-  border-color: #e0a940;
+  border-color: var(--dbc-gold);
 }
 .md-typeset .ap-bvb-results {
   margin-top: 0.7em;
@@ -5212,8 +5277,13 @@ h3 { color: var(--dbc-teal); }
   height: 1.2em;
   margin-left: 0.3em;
   border-radius: 50%;
-  background: rgba(224, 169, 64, 0.85);
-  color: #1a1410;
+  /* Same --dbc-gold consolidation as .ap-bvb-line-mainstat's border above -
+     was its own hardcoded rgba(224, 169, 64, ...)/#e0a940 amber. */
+  background: rgba(var(--dbc-gold-rgb), 0.85);
+  /* Paired dark text on a gold fill, same convention as .cycle-num-3
+     (background: var(--dbc-gold); color: var(--dbc-gold-dark)) - was its
+     own one-off #1a1410 instead of the token already meant for this. */
+  color: var(--dbc-gold-dark);
   font-size: 0.8em;
   font-weight: 700;
   line-height: 1;
@@ -5221,7 +5291,7 @@ h3 { color: var(--dbc-teal); }
   vertical-align: middle;
 }
 .md-typeset .ap-brace-warn-icon:hover {
-  background: #e0a940;
+  background: var(--dbc-gold);
 }
 /* Same `[hidden]` specificity fix as .ap-brace-info-icon above - without
    it this warning shows unconditionally regardless of the </83 check. */

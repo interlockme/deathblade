@@ -963,7 +963,7 @@
           <p class="ap-bvb-diff-wrap"><span class="ap-bvb-diff">—</span></p>
           <p class="ap-brace-compare-flip-note ap-bvb-keystone-note" hidden>Bracelet A and B land on different best keystones - the comparison above already accounts for that, each running its own.</p>
         </div>
-        <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Bracelet inputs above are - fill everything in first or else.</p>
+        <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Bracelet inputs above are - fill everything in first.</p>
       </div>
     </details>
   </div>
@@ -995,7 +995,7 @@
     <p class="ap-brace-compare-intro">The competing pool of engravings below is searched for a best combination. Inputs here are isolated to this section.</p>
 
     <div class="ap-calc-field-row ap-engr-spec-row">
-      <span class="ap-calc-field-label">Playstyle</span>
+      <label class="ap-calc-field-label">Playstyle</label>
       <span class="ap-engr-spec-toggle">
         <label class="ap-engr-radio-label"><input type="radio" name="ap-engr-spec" class="ap-engr-spec" value="re" checked> RE</label>
         <label class="ap-engr-radio-label"><input type="radio" name="ap-engr-spec" class="ap-engr-spec" value="surge"> Surge</label>
@@ -1028,7 +1028,7 @@
       <div class="ap-gear-card ap-gear-card--engr-core">
         <p class="ap-gear-card-title">Engravings</p>
         <div class="ap-calc-field-row">
-          <span class="ap-calc-field-label">Grudge</span>
+          <label class="ap-calc-field-label">Grudge</label>
           <select class="ap-engr-grudge-level">
             <option value="0 Nodes">0 Nodes</option>
             <option value="1 Nodes">1 Nodes</option>
@@ -1038,7 +1038,7 @@
           </select>
         </div>
         <div class="ap-calc-field-row">
-          <span class="ap-calc-field-label">Ambush Master</span>
+          <label class="ap-calc-field-label">Ambush Master</label>
           <select class="ap-engr-ambush-level">
             <option value="0 Nodes">0 Nodes</option>
             <option value="1 Nodes">1 Nodes</option>
@@ -1048,7 +1048,7 @@
           </select>
         </div>
         <div class="ap-calc-field-row">
-          <span class="ap-calc-field-label">Adrenaline</span>
+          <label class="ap-calc-field-label">Adrenaline</label>
           <select class="ap-engr-adrenaline-level">
             <option value="0 Nodes">0 Nodes</option>
             <option value="1 Nodes">1 Nodes</option>
@@ -1060,7 +1060,7 @@
 
         <p class="ap-gear-card-subtitle">Competing Pool</p>
         <div class="ap-calc-field-row">
-          <span class="ap-calc-field-label">Raid Captain</span>
+          <label class="ap-calc-field-label">Raid Captain</label>
           <select class="ap-engr-rc-level">
             <option value="0 Nodes">0 Nodes</option>
             <option value="1 Nodes">1 Nodes</option>
@@ -1070,7 +1070,7 @@
           </select>
         </div>
         <div class="ap-calc-field-row">
-          <span class="ap-calc-field-label">Keen Blunt Weapon</span>
+          <label class="ap-calc-field-label">Keen Blunt Weapon</label>
           <select class="ap-engr-kbw-level">
             <option value="0 Nodes">0 Nodes</option>
             <option value="1 Nodes">1 Nodes</option>
@@ -1080,7 +1080,7 @@
           </select>
         </div>
         <div class="ap-calc-field-row">
-          <span class="ap-calc-field-label">Cursed Doll</span>
+          <label class="ap-calc-field-label">Cursed Doll</label>
           <select class="ap-engr-cd-level">
             <option value="0 Nodes">0 Nodes</option>
             <option value="1 Nodes">1 Nodes</option>
@@ -1090,7 +1090,7 @@
           </select>
         </div>
         <div class="ap-calc-field-row ap-engr-mi-row">
-          <span class="ap-calc-field-label">Mass Increase</span>
+          <label class="ap-calc-field-label">Mass Increase</label>
           <select class="ap-engr-mi-level">
             <option value="0 Nodes">0 Nodes</option>
             <option value="1 Nodes">1 Nodes</option>
@@ -1106,30 +1106,30 @@
 
       <div class="ap-gear-card ap-gear-card--engr-variables">
         <p class="ap-gear-card-title">In-Raid Variables</p>
-      <div class="ap-calc-field-row">
-        <span class="ap-calc-field-label">Maelstrom Uptime</span>
-        <input type="number" class="ap-engr-maelstrom-uptime" min="0" max="100" step="1" value="85">
-      </div>
-      <div class="ap-calc-field-row ap-engr-rage-rune-row">
-        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-rage-rune" checked> Rage Rune on Surprise Attack (Average)</label>
-      </div>
-      <div class="ap-calc-field-row ap-engr-wine-row">
-        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-wine" checked> Vernese Wine (+3% Move Speed)</label>
-      </div>
-      <div class="ap-calc-field-row ap-engr-manafood-row">
-        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Mael Bleed)</span></label>
-        <select class="ap-engr-manafood-amount">
-          <option value="6000" selected>6000 DEX</option>
-          <option value="12000">12000 DEX</option>
-        </select>
-      </div>
-      <div class="ap-calc-field-row ap-engr-ealyn-row">
-        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-ealyn"> Ealyn's Blessing (+3% Attack Speed)</label>
-      </div>
-      <p class="ap-brace-compare-footer-note ap-engr-manafood-note">—</p>
-      <p class="ap-brace-compare-footer-note ap-engr-222-note">222 may not need Mana Food to equip Maelstrom Bleed.</p>
-      <p class="ap-brace-compare-footer-note ap-engr-ms-readout">Effective Move Speed: —</p>
-      <p class="ap-brace-compare-footer-note ap-engr-atk-readout">Effective Attack Speed: —</p>
+        <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label">Maelstrom Uptime</label>
+          <input type="number" class="ap-engr-maelstrom-uptime" min="0" max="100" step="1" value="85">
+        </div>
+        <div class="ap-calc-field-row ap-engr-rage-rune-row">
+          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-rage-rune"> Rage Rune on Surprise Attack (Avg.)</label>
+        </div>
+        <div class="ap-calc-field-row ap-engr-wine-row">
+          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-wine" checked> Vernese Wine (+3% Move Speed)</label>
+        </div>
+        <div class="ap-calc-field-row ap-engr-manafood-row">
+          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Mael Bleed)</span></label>
+          <select class="ap-engr-manafood-amount">
+            <option value="6000" selected>6000 DEX</option>
+            <option value="12000">12000 DEX</option>
+          </select>
+        </div>
+        <div class="ap-calc-field-row ap-engr-ealyn-row">
+          <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-ealyn"> Ealyn's Blessing (+3% Attack Speed)</label>
+        </div>
+        <p class="ap-brace-compare-footer-note ap-engr-manafood-note">—</p>
+        <p class="ap-brace-compare-footer-note ap-engr-222-note">222 may not need Mana Food to equip Maelstrom Bleed.</p>
+        <p class="ap-brace-compare-footer-note ap-engr-ms-readout">Effective Move Speed: —</p>
+        <p class="ap-brace-compare-footer-note ap-engr-atk-readout">Effective Attack Speed: —</p>
       </div>
     </div>
 
@@ -1150,7 +1150,7 @@
     <div class="ap-calc-field-row ap-engr-stone-row ap-engr-stone-row--first">
       <p class="ap-acc-panel-title ap-engr-contrib-title">Engraving and Ability Stone Values</p>
       <span class="ap-engr-stone-label-group">
-        <span class="ap-calc-field-label">Stone 1</span>
+        <label class="ap-calc-field-label">Stone 1</label>
         <span class="ap-engr-stone-pair">
           <select class="ap-engr-stone1-target">
             <option value="None" selected>None</option>
@@ -1173,7 +1173,7 @@
       </span>
     </div>
     <div class="ap-calc-field-row ap-engr-stone-row">
-      <span class="ap-calc-field-label">Stone 2</span>
+      <label class="ap-calc-field-label">Stone 2</label>
       <span class="ap-engr-stone-pair">
         <select class="ap-engr-stone2-target">
           <option value="None" selected>None</option>
@@ -1251,7 +1251,7 @@
           <div class="ap-esvs-card ap-esvs-card-a">
             <p class="ap-gear-card-title ap-esvs-card-title">Setup A</p>
             <div class="ap-calc-field-row">
-              <span class="ap-calc-field-label">Option 1</span>
+              <label class="ap-calc-field-label">Option 1</label>
               <select class="ap-esvs-a-slot1-type">
                 <option value="none" selected>None</option>
                 <option value="rc">Raid Captain</option>
@@ -1268,7 +1268,7 @@
               </select>
             </div>
             <div class="ap-calc-field-row">
-              <span class="ap-calc-field-label">Option 2</span>
+              <label class="ap-calc-field-label">Option 2</label>
               <select class="ap-esvs-a-slot2-type">
                 <option value="none" selected>None</option>
                 <option value="rc">Raid Captain</option>
@@ -1285,7 +1285,7 @@
               </select>
             </div>
             <div class="ap-calc-field-row">
-              <span class="ap-calc-field-label">Stone 1</span>
+              <label class="ap-calc-field-label">Stone 1</label>
               <select class="ap-esvs-a-stone1-target">
                 <option value="None" selected>None</option>
                 <option value="grudge">Grudge</option>
@@ -1305,7 +1305,7 @@
               </select>
             </div>
             <div class="ap-calc-field-row">
-              <span class="ap-calc-field-label">Stone 2</span>
+              <label class="ap-calc-field-label">Stone 2</label>
               <select class="ap-esvs-a-stone2-target">
                 <option value="None" selected>None</option>
                 <option value="grudge">Grudge</option>
@@ -1334,7 +1334,7 @@
           <div class="ap-esvs-card ap-esvs-card-b">
             <p class="ap-gear-card-title ap-esvs-card-title">Setup B</p>
             <div class="ap-calc-field-row">
-              <span class="ap-calc-field-label">Option 1</span>
+              <label class="ap-calc-field-label">Option 1</label>
               <select class="ap-esvs-b-slot1-type">
                 <option value="none" selected>None</option>
                 <option value="rc">Raid Captain</option>
@@ -1351,7 +1351,7 @@
               </select>
             </div>
             <div class="ap-calc-field-row">
-              <span class="ap-calc-field-label">Option 2</span>
+              <label class="ap-calc-field-label">Option 2</label>
               <select class="ap-esvs-b-slot2-type">
                 <option value="none" selected>None</option>
                 <option value="rc">Raid Captain</option>
@@ -1368,7 +1368,7 @@
               </select>
             </div>
             <div class="ap-calc-field-row">
-              <span class="ap-calc-field-label">Stone 1</span>
+              <label class="ap-calc-field-label">Stone 1</label>
               <select class="ap-esvs-b-stone1-target">
                 <option value="None" selected>None</option>
                 <option value="grudge">Grudge</option>
@@ -1388,7 +1388,7 @@
               </select>
             </div>
             <div class="ap-calc-field-row">
-              <span class="ap-calc-field-label">Stone 2</span>
+              <label class="ap-calc-field-label">Stone 2</label>
               <select class="ap-esvs-b-stone2-target">
                 <option value="None" selected>None</option>
                 <option value="grudge">Grudge</option>
