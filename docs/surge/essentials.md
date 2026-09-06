@@ -30,7 +30,7 @@ Atk/Move Speed Feast
 <details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Note</span>Purchase at Peyto Island<span class="setup-note-arrow"></span></summary>
 
-- Alternatively, use ![](../assets/shared/icon-skewers.png){: .food-option-icon } ![](../assets/shared/icon-steak.png){: .food-option-icon } ![](../assets/shared/icon-azena.png){: .food-option-icon } mana food and equip a Legendary Bleed/Poison rune on Maelstrom.
+- <strong>Alternatively</strong>, use ![](../assets/shared/icon-skewers.png){: .food-option-icon } ![](../assets/shared/icon-steak.png){: .food-option-icon } ![](../assets/shared/icon-azena.png){: .food-option-icon } mana food and equip a Legendary Bleed/Poison rune on Maelstrom.
 
 </details>
 
@@ -124,7 +124,7 @@ Atk/Move Speed Feast
 </summary>
 <div class="engraving-card-body" markdown>
 
-Pair with Cursed Doll if you're just starting out.
+Pair with Cursed Doll if you're starting out or stuck with it.
 { .food-req }
 
 **Pros:**{: .best-for } A safe default with no drawbacks.
@@ -149,14 +149,14 @@ Pair with Cursed Doll if you're just starting out.
 
 **Pros:**{: .best-for } Highest damage bonus.
 
-**Cons:**{: .tradeoff } Requires Maelstrom management for gameplay rather than damage, which can be a damage loss too.
+**Cons:**{: .tradeoff } Requires Maelstrom management for gameplay rather than damage.
 
 </div>
 </details>
 
 <details class="engraving-card" data-accent="combo" open markdown>
 <summary>
-<span class="engraving-card-name">R.C. + M.I.</span>
+<span class="engraving-card-name">RC + MI 🦁 🐆 🐯</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-ceiling">★ Ceiling</span>
 <span class="engraving-card-badge engraving-card-badge-food">Food Required</span>
@@ -171,16 +171,16 @@ Pair with Cursed Doll if you're just starting out.
 ![](../assets/shared/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing required with Artist or Valkyrie
 { .food-req }
 
-**Pros:**{: .best-for } This is ceiling. Fewer drawbacks for [🐆](222-speedy.md).
+**Pros:**{: .best-for } This is ceiling. Fewer drawbacks for [222](222-speedy.md).
 
-**Cons:**{: .tradeoff } Maelstrom and food shackles x2.
+**Cons:**{: .tradeoff } Doubles up on Maelstrom and food shackles.
 
 </div>
 </details>
 
 </div>
 
-<span class="engraving-loadout-hint">Note: Cursed Doll is fine if you're stuck with it. Lean into Bleed/Poison runes, use mana food and pair with KBW to make the most of it.</span>
+<span class="engraving-loadout-hint">Note: To compare advanced engraving values or get customized recommendations, check out the [Ark Passive Calculator!](../resources.md#ark-passive-calculator)</span>
 
 </div>
 

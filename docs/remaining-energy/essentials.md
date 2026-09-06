@@ -144,6 +144,8 @@ Atk/Move Speed Feast
 
 </div>
 
+<span class="engraving-loadout-hint">Note: To compare advanced engraving values or get customized recommendations, check out the [Ark Passive Calculator!](../resources.md#ark-passive-calculator)</span>
+
 </div>
 
 ## Specialization
