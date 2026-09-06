@@ -486,7 +486,7 @@
 <details class="ap-gear-inputs">
   <summary>
     <span class="ap-gear-title">Character Data</span>
-    <span class="ap-gear-optional-badge" title="Not part of your Ark Passive setup above. Only used by the sections below - skip this if you're not using them.">Optional</span>
+    <span class="ap-gear-optional-badge" title="Only feeds data to the sections below - skip this if you're not using them.">Optional</span>
   </summary>
   <div class="ap-brace-compare-inputs">
     <!-- Two cards side by side, same visual language as the Ark Passive
