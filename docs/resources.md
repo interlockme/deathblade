@@ -460,6 +460,15 @@
   <span class="ap-section-divider-label">Gear Comparisons</span>
 </div>
 
+<!-- Wraps the 5 top-level <details> below (Character Data, Bracelet/
+     Engraving/Accessory/Chaos Core Comparison) into one cohesive panel
+     instead of 5 independently bordered/rounded boxes stacked with gaps
+     between them - see .ap-gear-comp-group in extra.css for the actual
+     styling and why it's done as an override rather than editing each
+     box's own rule. Purely a styling hook; doesn't change any of the
+     JS below, which already targets each <details> by its own class. -->
+<div class="ap-gear-comp-group">
+
 <!-- Gearing: shared Weapon Power / Attack Power inputs, read straight off
      your character panel. Lives as its OWN top-level section (not nested
      inside Bracelet Line Comparison below) because it's not
@@ -477,7 +486,7 @@
 <details class="ap-gear-inputs">
   <summary>
     <span class="ap-gear-title">Character Data</span>
-    <span class="ap-gear-optional-badge" title="Not part of your Ark Passive setup above. Only used by the Bracelet, Engraving, Accessory, and Chaos Core sections below - skip this if you're not using them.">Optional</span>
+    <span class="ap-gear-optional-badge" title="Not part of your Ark Passive setup above. Only used by the sections below - skip this if you're not using them.">Optional</span>
   </summary>
   <div class="ap-brace-compare-inputs">
     <!-- Two cards side by side, same visual language as the Ark Passive
@@ -1600,6 +1609,8 @@
     <p class="ap-brace-compare-footer-note">Attack/Weapon cores use values from the Gearing section and are hidden until Weapon Power and Main Stat are both filled in.</p>
   </div>
 </details>
+
+</div> <!-- end ap-gear-comp-group -->
 
 </div> <!-- end ap-calc -->
 

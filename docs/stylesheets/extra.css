@@ -3939,7 +3939,22 @@ h3 { color: var(--dbc-teal); }
    Styled as a neutral utility panel - same plain border + no fill as
    .ap-calc-results (the Top Combinations box) - rather than one of the
    category accent colors (pink/teal/orange/blue), since this section isn't
-   tied to any one of those categories the way the gear cards above are. */
+   tied to any one of those categories the way the gear cards above are.
+
+   That "no fill" was only ever true by accident, though: none of these 6
+   classes actually set background here, so what rendered was Material's
+   own default `details{background-color:var(--md-admonition-bg-color)}`
+   (bare <details> gets admonition treatment even with no .note/.tip/etc
+   type class - same root cause as the summary/icon fixes elsewhere in
+   this file) - a solid near-black fill that happens to be opaque, unlike
+   the transparent .ap-calc-results div it was supposed to match. Inside
+   .ap-calc's own subtle purple wash (background-color: rgba(purple,
+   0.045)) that opaque fill visibly masked the wash locally, while
+   .ap-gear-inputs (which DOES set background: none further down)
+   correctly let it show through - so grouping all 5 rows together in
+   .ap-gear-comp-group made Character Data read as a different, lighter-
+   tinted panel than its 4 siblings. Explicit background: none below
+   actually delivers the "no fill" the comment above already claimed. */
 .md-typeset .ap-brace-compare,
 .md-typeset .ap-acc-compare,
 .md-typeset .ap-arkgrid-compare,
@@ -3949,6 +3964,30 @@ h3 { color: var(--dbc-teal); }
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   margin: 1em 0 0;
+  background: none;
+}
+/* Material also gives every bare <details> a focus-within ring -
+   `details:focus-within{box-shadow:0 0 0 .2rem #448aff1a}` - meant for
+   its own admonition-style boxes, in Material's default blue regardless
+   of this site's pink/purple palette. Fires on the WHOLE <details>
+   whenever ANY descendant has focus, not just the summary (a checkbox or
+   select clicked inside an open Bracelet/Engraving/Accessory/Chaos Core
+   Comparison triggers it just as much as tabbing to the summary would),
+   so the earlier summary-only :focus-visible fix further down never
+   caught it. Same fix as .ap-gear-inputs's own rule below. */
+.md-typeset .ap-brace-compare,
+.md-typeset .ap-acc-compare,
+.md-typeset .ap-arkgrid-compare,
+.md-typeset .ap-bvb,
+.md-typeset .ap-esvs,
+.md-typeset .ap-engr-compare,
+.md-typeset .ap-brace-compare:focus-within,
+.md-typeset .ap-acc-compare:focus-within,
+.md-typeset .ap-arkgrid-compare:focus-within,
+.md-typeset .ap-bvb:focus-within,
+.md-typeset .ap-esvs:focus-within,
+.md-typeset .ap-engr-compare:focus-within {
+  box-shadow: none;
 }
 /* Material gives every bare <details> (no .note/.tip/etc type class) its
    own default admonition icon on the summary, drawn via a masked ::before
@@ -4209,6 +4248,15 @@ h3 { color: var(--dbc-teal); }
   background: none;
   overflow: visible;
 }
+/* Same Material `details:focus-within{box-shadow:0 0 0 .2rem #448aff1a}`
+   leak the .ap-brace-compare/etc block above documents and fixes -
+   applies here too since this is also a bare <details>, and fires from
+   any input/select focused inside it (Weapon Power, Attack Power %,
+   etc.), not just its own summary. */
+.md-typeset .ap-gear-inputs,
+.md-typeset .ap-gear-inputs:focus-within {
+  box-shadow: none;
+}
 .md-typeset .ap-gear-inputs:not([open]) {
   opacity: 1;
 }
@@ -4322,6 +4370,97 @@ h3 { color: var(--dbc-teal); }
      anything wide enough to scroll. */
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+/* Gear Comparisons group: the 5 boxes above (Character Data, Bracelet/
+   Engraving/Accessory/Chaos Core Comparison) used to each be a fully
+   independent bordered+rounded box with its own margin-top, so the
+   section read as 5 unrelated gray bars stacked with visible gaps
+   between them rather than one family of related "value this gear
+   piece" tools grouped under the Gear Comparisons divider above.
+   Wrapping them in .ap-gear-comp-group (see resources.md) and
+   overriding their individual border/radius/margin down to 0 turns
+   that into a single bordered panel with thin divider lines between
+   rows instead - same accordion-list language as a settings screen,
+   one outer boundary instead of 5. The extra `> details` type selector
+   here gives this just enough specificity to win over both the shared
+   .ap-brace-compare/.ap-acc-compare/.ap-arkgrid-compare/.ap-engr-compare
+   block above AND .ap-gear-inputs's own rule further up, without having
+   to touch either - this only fires for the 5 boxes actually inside the
+   group wrapper, not the nested .ap-bvb/.ap-esvs sub-comparisons that
+   live deeper inside Bracelet/Engraving Comparison's own bodies (those
+   aren't direct children of .ap-gear-comp-group, so they're unaffected
+   and keep their own individual box look). */
+.md-typeset .ap-gear-comp-group {
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
+  border-radius: 8px;
+  overflow: hidden; /* clips each row's now-square corners to the group's rounded ones */
+  margin: 0.8em 0 0;
+}
+.md-typeset .ap-gear-comp-group > details {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+}
+/* Divider between rows instead of each row's own full border - only
+   between adjacent rows, since the group's own outer border already
+   bounds the top of the first row and the bottom of the last. */
+.md-typeset .ap-gear-comp-group > details + details {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+/* Character Data (.ap-gear-inputs) is the one row of the 5 with no
+   [open] border-bottom rule of its own - it never needed one as a
+   standalone box, since its content div's own dashed border-bottom is
+   explicitly turned off (see that rule's comment above). Added here
+   instead of on .ap-gear-inputs directly so the header/body divider
+   only appears while it's grouped with the other 4 rows, matching
+   their own open state instead of changing how it looks on its own. */
+.md-typeset .ap-gear-comp-group > .ap-gear-inputs[open] > summary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+/* Rows had no hover feedback at all before - just cursor:pointer - which
+   read as flat/dead next to the rest of the site's interactive controls
+   (e.g. .gem-item-expandable:hover further up brightens its border on
+   hover). These rows no longer have individual borders to brighten once
+   grouped, so a background tint on the summary instead. */
+.md-typeset .ap-gear-comp-group > details > summary:hover {
+  background: rgba(var(--dbc-purple-rgb), 0.05);
+}
+/* Group's overflow:hidden (needed to clip rows to the outer radius) would
+   otherwise clip a default browser focus ring drawn outside the row's
+   edge - pulled inside with a negative offset instead. Was previously
+   just an outline-offset tweak left on top of the browser/Material
+   default outline, which is `outline: auto` - an unstyled, slightly
+   hazy ring in the theme's pink accent color (mkdocs.yml's `accent:
+   pink`) that doesn't match anything else on the site. Same explicit
+   treatment as .md-typeset a:focus-visible below (2px solid
+   var(--dbc-pink)) for a crisp, on-brand ring instead - just inset
+   rather than outset since that rule's +2px offset would be clipped
+   here. */
+.md-typeset .ap-gear-comp-group > details > summary:focus-visible {
+  outline: 2px solid var(--dbc-pink);
+  outline-offset: -2px;
+}
+/* Character Data (.ap-gear-inputs) used to be styled as its own smaller/
+   lighter thing - narrower gap, smaller font-size, no explicit
+   font-weight, and --dbc-lilac (a near-white lavender) instead of the
+   other 4 rows' --dbc-lavender/700-weight title - because it used to be
+   a standalone compact input strip rather than a peer of the other 4
+   rows. Now that it's grouped with them it read as a mismatched, more
+   prominent row rather than one of 5 equal options. Matching its title
+   to the shared .ap-brace-compare/.ap-acc-compare/.ap-arkgrid-compare/
+   .ap-engr-compare summary rule here (color/size/weight/gap only -
+   flex-wrap stays, still needed to let the Optional badge drop to its
+   own line on narrow widths) lets the "Optional" badge alone carry the
+   "this one's different" signal instead of the title styling doing it
+   too. */
+.md-typeset .ap-gear-comp-group > .ap-gear-inputs > summary {
+  gap: 0.6em;
+  color: var(--dbc-lavender);
+  font-size: 0.92em;
+  font-weight: 700;
+}
+.md-typeset .ap-gear-comp-group > .ap-gear-inputs > summary::before {
+  border-left-color: var(--dbc-lavender);
 }
 /* Gearing's two cards (Weapon Power/Main Stat, and Attack Power %
    sources) stacked full-width, one after another - same visual language
