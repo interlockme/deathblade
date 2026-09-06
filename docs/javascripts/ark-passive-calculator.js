@@ -3963,7 +3963,7 @@
       }
       if (comboEl) comboEl.textContent = engravingComboLabel(candidate.flags);
       if (keystoneEl) {
-        keystoneEl.textContent = KEYSTONE_LABELS[candidate.combo.pair] + " / " + candidate.combo.split.label;
+        keystoneEl.textContent = candidate.combo.split.label + " + " + KEYSTONE_LABELS[candidate.combo.pair];
       }
     }
     fillCard("ap-engr-best", result.winner);
@@ -3995,7 +3995,7 @@
     };
     set(".ap-esvs-" + prefix + "-vs-none", formatBvbPct(side.vsNeither));
     set(".ap-esvs-" + prefix + "-stone-ap", formatBvbPct(side.stoneApGain));
-    set(".ap-esvs-" + prefix + "-keystone", side.splitLabel + " / " + side.keystoneLabel);
+    set(".ap-esvs-" + prefix + "-keystone", side.splitLabel + " + " + side.keystoneLabel);
   }
 
   function renderEngravingSetupComparison(root, result) {
@@ -4004,7 +4004,7 @@
     renderEngravingSvsCard(root, "b", result.b);
 
     const noneEl = root.querySelector(".ap-esvs-no-setup-keystone");
-    if (noneEl) noneEl.textContent = result.neither.splitLabel + " / " + result.neither.keystoneLabel;
+    if (noneEl) noneEl.textContent = result.neither.splitLabel + " + " + result.neither.keystoneLabel;
 
     // Same "selected answer" pill treatment as .ap-bvb-diff, colored in
     // whichever side actually won (pink for A, teal for B) - see that

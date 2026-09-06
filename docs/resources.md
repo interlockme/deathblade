@@ -961,11 +961,14 @@
 </details>
 
 <!-- Engraving Comparison: values Deathblade's 3 always-on core engravings
-     (Grudge, Ambush Master, Adrenaline) plus the 4-engraving competing pool
-     (Raid Captain, Keen Blunt Weapon, Mass Increase, Cursed Doll), and
-     searches for the best competing combination + its own best keystone/
-     split - see computeEngravingComparison's own JS comment for exactly
-     how RE (1 competing slot) vs. Surge (2 competing slots) differ.
+     (Grudge, Ambush Master, Adrenaline) plus a competing pool it searches
+     every 2-slot pairing from: Raid Captain/Keen Blunt Weapon/Cursed Doll
+     for RE, or those 3 plus Mass Increase for Surge (Mass Increase's
+     Attack Speed drawback is Surge-only/unmodeled, so it's never in RE's
+     pool) - both specs pick 2 of their own pool now, see
+     computeEngravingComparison's own JS comment for the pool sizes and
+     history (RE used to force Raid Captain on and only let Keen Blunt
+     Weapon vs. Cursed Doll compete for the other slot).
      Adrenaline and Keen Blunt Weapon each get their OWN isolated Node
      selector here too (same as the other 5) rather than reading the Ark
      Passive section's live tracked value - this section is a sandbox, and
@@ -1208,13 +1211,13 @@
       <div class="ap-bvb-card ap-bvb-card--best">
         <p class="ap-gear-card-title ap-bvb-card-title">Best Combo</p>
         <div class="ap-stat-card-row"><span class="ap-summary-label">Combo</span><span class="ap-engr-best-combo ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label">Keystone / Split</span><span class="ap-engr-best-keystone ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-engr-best-keystone ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label">vs Runner-Up</span><span class="ap-engr-best-vs-runnerup ap-summary-value">—</span></div>
       </div>
       <div class="ap-bvb-card">
         <p class="ap-gear-card-title ap-bvb-card-title">Runner-Up</p>
         <div class="ap-stat-card-row"><span class="ap-summary-label">Combo</span><span class="ap-engr-runnerup-combo ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label">Keystone / Split</span><span class="ap-engr-runnerup-keystone ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-engr-runnerup-keystone ap-summary-value">—</span></div>
       </div>
     </div>
 
@@ -1313,9 +1316,9 @@
               </select>
             </div>
             <div class="ap-esvs-results">
-              <div class="ap-stat-card-row"><span class="ap-summary-label">Keystone / Split</span><span class="ap-esvs-a-keystone ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-esvs-a-keystone ap-summary-value">—</span></div>
               <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Setup</span><span class="ap-esvs-a-vs-none ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row"><span class="ap-summary-label">Ability Stone AP</span><span class="ap-esvs-a-stone-ap ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">Ability Stone Base AP</span><span class="ap-esvs-a-stone-ap ap-summary-value">—</span></div>
             </div>
           </div>
 
@@ -1396,9 +1399,9 @@
               </select>
             </div>
             <div class="ap-esvs-results">
-              <div class="ap-stat-card-row"><span class="ap-summary-label">Keystone / Split</span><span class="ap-esvs-b-keystone ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-esvs-b-keystone ap-summary-value">—</span></div>
               <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Setup</span><span class="ap-esvs-b-vs-none ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row"><span class="ap-summary-label">Ability Stone AP</span><span class="ap-esvs-b-stone-ap ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">Ability Stone Base AP</span><span class="ap-esvs-b-stone-ap ap-summary-value">—</span></div>
             </div>
           </div>
         </div>
