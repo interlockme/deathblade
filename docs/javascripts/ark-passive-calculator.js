@@ -2731,15 +2731,42 @@
   // section already models exactly which 2 engravings hold your ability
   // stone and at what level via its own isolated stone slots, so reusing
   // the checkbox's generic assumption on top would double up. Instead,
-  // both slots being assigned to a real engraving at 2+ Lv. (a rough
-  // stand-in for "5+ nodes each side") grants the same flat +1.5% the
-  // checkbox would, added the same "additive to Gem Base AP%" way this
-  // page already does it - and applied identically on BOTH sides of the
-  // ratio below, so it can only ever be a wash for this one row, never a
-  // source of bias.
+  // this recreates the game's own actual rule: 5+ total Ability Stone
+  // nodes across both stones (Lv. IS the node count for that slot, 0 if
+  // its Stone Slot isn't assigned to a real engraving) grants the same
+  // flat +1.5% the checkbox would, added the same "additive to Gem Base
+  // AP%" way this page already does it. See abilityStoneBaseApGain right
+  // below for where that actually turns into a DPS number - this
+  // function is purely the yes/no threshold check.
   function engravingStoneImpliesBaseAp(engrInputs) {
-    const decent = (target, lv) => target !== "None" && (lv === "2 Lv." || lv === "3 Lv." || lv === "4 Lv.");
-    return decent(engrInputs.stone1Target, engrInputs.stone1Level) && decent(engrInputs.stone2Target, engrInputs.stone2Level);
+    const nodes = (target, level) => (target === "None" ? 0 : parseInt(level, 10) || 0);
+    const total = nodes(engrInputs.stone1Target, engrInputs.stone1Level) + nodes(engrInputs.stone2Target, engrInputs.stone2Level);
+    return total >= 5;
+  }
+
+  // The actual DPS contribution of that +1.5% Base AP - a real "with it
+  // vs without it" AP ratio, using the exact same gearApTotal/
+  // supportApBuff formula every other AP-based row on this page already
+  // uses. NOT a wash the way the same bonus is inside
+  // adrenalineContributionGain: that row compares Adrenaline on vs off
+  // with the SAME baseApMult on both sides (so the bonus cancels out of
+  // that ratio on purpose); this row's whole point IS the presence of
+  // the bonus itself, so it stays in the numerator only. Gated on Weapon
+  // Power/Main Stat being filled in, same convention as every other
+  // AP-based candidate on the page.
+  function abilityStoneBaseApGain(inputs, engrInputs) {
+    const wp = inputs.gearWp;
+    const mainStat = inputs.gearMainStat;
+    if (!(wp > 0 && mainStat > 0)) return 0;
+    if (!engravingStoneImpliesBaseAp(engrInputs)) return 0;
+    const flatAp = inputs.gearFlatAp + gearChaosStarFlat(inputs.gearApChaosStar);
+    const percentApMult = 1 + gearAttackPowerPercentTotal(inputs) / 100;
+    const withMult = 1 + (inputs.gearGemBaseAp + ABILITY_STONE_BASE_AP_BONUS) / 100;
+    const withoutMult = 1 + inputs.gearGemBaseAp / 100;
+    const withAp = gearApTotal(wp, mainStat, withMult, flatAp, percentApMult, supportApBuff(inputs, wp, mainStat, withMult));
+    const withoutAp = gearApTotal(wp, mainStat, withoutMult, flatAp, percentApMult, supportApBuff(inputs, wp, mainStat, withoutMult));
+    if (withoutAp <= 0) return 0;
+    return withAp / withoutAp - 1;
   }
 
   function adrenalineContributionGain(inputs, engrInputs, best) {
@@ -2794,6 +2821,14 @@
     const cloned = Object.assign({}, inputs);
     cloned.adrenaline = engrInputs.adrenalineLevel;
     cloned.adrenalineStone = engravingStoneLevel("adrenaline", engrInputs);
+    // Deliberately NOT setting cloned.gearAbilityStoneBaseAp here -
+    // bestComboFor(candidateInputs) below only ever calls
+    // combinedMultiplier, which never reads that field (it's a Crit
+    // Rate/Crit Dmg/keystone-grid ratio, not an AP one), so setting it
+    // would be silent dead weight. The section's own AP bonus is applied
+    // for real in engravingCandidateMultiplier via abilityStoneBaseApGain
+    // instead, which is what actually touches the totalMult these
+    // candidates get ranked and compared on.
     if (!flags.includeKbw) {
       cloned.kbw = "Not Used";
       cloned.kbwStone = "0 Lv.";
@@ -2838,10 +2873,28 @@
   // switching Setup A to Mana Food dropped that to +0.42%, while Setup B's
   // own "vs No Setup" didn't move at all, since Mana Food's own damage
   // never touches this function - only RC's Move Speed swing does.
+  //
+  // abilityStoneBaseApGain is a different case from Mana Food despite
+  // also reading off `engrInputs`: Mana Food lives on the shared `base`
+  // object every side of a comparison starts from (constant across
+  // neither/Setup A/Setup B, so multiplying it in would be dead weight -
+  // see above), but stone1/2Target/Level get overridden PER SIDE by
+  // engravingSvsMergedInputs and zeroed entirely for "neither" by
+  // computeEngravingSetupComparison's bareBase. So whether this bonus
+  // applies can genuinely differ between neither/Setup A/Setup B (exactly
+  // the 5-vs-4-node case that motivated adding it), and it has to be
+  // multiplied in here for that asymmetry to actually reach
+  // vsNeither/aVsB. For the plain Best Combo/Runner-Up search below,
+  // where engrInputs.stone1/2 are shared and unchanging across every
+  // candidateFlagSets entry, it's a wash on the ranking (same as Mana
+  // Food would be there) but still lands correctly in each candidate's
+  // own totalMult - which is what the "Ability Stone Base AP" row in
+  // computeEngravingComparison's own `rows` reads back out.
   function engravingCandidateMultiplier(engrInputs, inputs, flags) {
     let mult = 1;
     mult *= 1 + grudgeGain(engrInputs, inputs);
     mult *= 1 + ambushMasterGain(engrInputs, inputs);
+    mult *= 1 + abilityStoneBaseApGain(inputs, engrInputs);
     if (flags.includeRC) mult *= 1 + raidCaptainGain(engrInputs, inputs);
     if (flags.includeCD) mult *= 1 + cursedDollGain(engrInputs, inputs);
     if (flags.includeMI) mult *= 1 + massIncreaseGain(engrInputs, inputs);
@@ -2960,9 +3013,15 @@
   // the best-combo search above does (see that function's own comment) -
   // a named setup and a searched candidate are the same computation, just
   // fed a hand-picked flag set instead of one generated by the pool loop.
+  // Also carries the merged engrInputs back out (as .merged) so
+  // computeEngravingSetupComparison can read this side's own isolated
+  // stone status back off it for the Ability Stone AP breakout below,
+  // without needing to re-run engravingSvsMergedInputs a second time.
   function computeEngravingSetup(inputs, base, side) {
     const { merged, flags } = engravingSvsMergedInputs(base, side);
-    return computeEngravingCandidate(inputs, merged, flags);
+    const candidate = computeEngravingCandidate(inputs, merged, flags);
+    candidate.merged = merged;
+    return candidate;
   }
 
   function computeEngravingSetupComparison(inputs, base, svsA, svsB) {
@@ -2982,8 +3041,15 @@
     });
     const a = computeEngravingSetup(inputs, base, svsA);
     const b = computeEngravingSetup(inputs, base, svsB);
+    // Isolated per-side "how much of vsNeither is just the Ability Stone
+    // AP bonus" readout - the reader-facing explanation for why one side
+    // can win even when its own engraving/stone-table rows above look
+    // identical (or worse) than the other's: this is the piece that
+    // wasn't visible anywhere before, despite feeding directly into
+    // vsNeither/aVsB via engravingCandidateMultiplier.
     const sideResult = (r) => ({
       vsNeither: r.totalMult / neither.totalMult - 1,
+      stoneApGain: abilityStoneBaseApGain(inputs, r.merged),
       keystoneLabel: KEYSTONE_LABELS[r.combo.pair],
       splitLabel: r.combo.split.label,
       comboKey: r.combo.pair + "|" + r.combo.split.key,
@@ -3071,6 +3137,7 @@
       { label: "Keen Blunt Weapon", gain: kbwContributionGain(engrInputs, best, gridResult.bestStats, shared) },
       { label: "Cursed Doll", gain: cursedDollGain(engrInputs, inputs) },
       { label: "Mass Increase", gain: massIncreaseGain(engrInputs, inputs) },
+      { label: "Ability Stone Base AP", gain: abilityStoneBaseApGain(inputs, engrInputs) },
       {
         label: "Mana Food",
         gain: manaFoodContributionGain(engrInputs, inputs),
@@ -3715,6 +3782,7 @@
       if (el) el.textContent = text;
     };
     set(".ap-esvs-" + prefix + "-vs-none", formatBvbPct(side.vsNeither));
+    set(".ap-esvs-" + prefix + "-stone-ap", formatBvbPct(side.stoneApGain));
     set(".ap-esvs-" + prefix + "-keystone", side.splitLabel + " / " + side.keystoneLabel);
   }
 

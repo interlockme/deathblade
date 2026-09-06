@@ -1306,6 +1306,7 @@
             <div class="ap-esvs-results">
               <div class="ap-stat-card-row"><span class="ap-summary-label">Keystone / Split</span><span class="ap-esvs-a-keystone ap-summary-value">—</span></div>
               <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Setup</span><span class="ap-esvs-a-vs-none ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">Ability Stone AP</span><span class="ap-esvs-a-stone-ap ap-summary-value">—</span></div>
             </div>
           </div>
 
@@ -1388,6 +1389,7 @@
             <div class="ap-esvs-results">
               <div class="ap-stat-card-row"><span class="ap-summary-label">Keystone / Split</span><span class="ap-esvs-b-keystone ap-summary-value">—</span></div>
               <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Setup</span><span class="ap-esvs-b-vs-none ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row"><span class="ap-summary-label">Ability Stone AP</span><span class="ap-esvs-b-stone-ap ap-summary-value">—</span></div>
             </div>
           </div>
         </div>
