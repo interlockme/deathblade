@@ -1229,11 +1229,17 @@
         <div class="ap-stat-card-row"><span class="ap-summary-label">Combo</span><span class="ap-engr-best-combo ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-engr-best-keystone ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label">vs Runner-Up</span><span class="ap-engr-best-vs-runnerup ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Engraving Bonus</span><span class="ap-engr-best-engr-gain ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Ability Stone Engraving Bonus</span><span class="ap-engr-best-stone-engr-gain ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Ability Stone Base AP</span><span class="ap-engr-best-stone-ap ap-summary-value">—</span></div>
       </div>
       <div class="ap-bvb-card">
         <p class="ap-gear-card-title ap-bvb-card-title">Runner-Up</p>
         <div class="ap-stat-card-row"><span class="ap-summary-label">Combo</span><span class="ap-engr-runnerup-combo ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-engr-runnerup-keystone ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Engraving Bonus</span><span class="ap-engr-runnerup-engr-gain ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Ability Stone Engraving Bonus</span><span class="ap-engr-runnerup-stone-engr-gain ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Ability Stone Base AP</span><span class="ap-engr-runnerup-stone-ap ap-summary-value">—</span></div>
       </div>
     </div>
 
@@ -1334,7 +1340,9 @@
             <div class="ap-esvs-results">
               <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-esvs-a-keystone ap-summary-value">—</span></div>
               <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Setup</span><span class="ap-esvs-a-vs-none ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row"><span class="ap-summary-label">Ability Stone Base AP</span><span class="ap-esvs-a-stone-ap ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Engraving Bonus</span><span class="ap-esvs-a-engr-gain ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Ability Stone Engraving Bonus</span><span class="ap-esvs-a-stone-engr-gain ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Ability Stone Base AP</span><span class="ap-esvs-a-stone-ap ap-summary-value">—</span></div>
             </div>
           </div>
 
@@ -1417,7 +1425,9 @@
             <div class="ap-esvs-results">
               <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-esvs-b-keystone ap-summary-value">—</span></div>
               <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Setup</span><span class="ap-esvs-b-vs-none ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row"><span class="ap-summary-label">Ability Stone Base AP</span><span class="ap-esvs-b-stone-ap ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Engraving Bonus</span><span class="ap-esvs-b-engr-gain ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Ability Stone Engraving Bonus</span><span class="ap-esvs-b-stone-engr-gain ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Ability Stone Base AP</span><span class="ap-esvs-b-stone-ap ap-summary-value">—</span></div>
             </div>
           </div>
         </div>

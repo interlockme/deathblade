@@ -5176,23 +5176,40 @@ h3 { color: var(--dbc-teal); }
   padding-top: 0.7em;
   border-top: 1px dashed rgba(255, 255, 255, 0.08);
 }
-/* Feast icon prepended (in JS - see renderEngravingComparison's
-   prependFeastIcon) to the Move Speed/Attack Speed readouts above, since
-   both readouts' base stats already assume an Atk/Move Speed feast is
-   active. Overrides the generic .skill-icon margin (0 2px 0 4px) - that
-   4px left margin exists to separate an icon from preceding text, which
-   doesn't apply here since this icon IS the start of the line; a tight
-   right-only gap instead. Sized down from the generic 1.1em to match
-   this row's own 0.8em font-size sibling text (.engraving-loadout-note's
-   fixed-12px approach doesn't fit here since this note isn't a fixed
-   size independent of its parent, so em keeps it proportional if that
+/* Feast icon appended (in JS - see renderEngravingComparison's
+   appendFeastIcon) after the Move Speed/Attack Speed readouts above,
+   since both readouts' base stats already assume an Atk/Move Speed
+   feast is active. Overrides the generic .skill-icon margin
+   (0 2px 0 4px) - that 4px left margin (separating the icon from
+   preceding text) is exactly what's wanted here since the icon now
+   trails the text, so only the right-hand 2px half needs trimming, not
+   swapping sides. Sized down from the generic 1.1em to match this row's
+   own 0.8em font-size sibling text (.engraving-loadout-note's fixed-12px
+   approach doesn't fit here since this note isn't a fixed size
+   independent of its parent, so em keeps it proportional if that
    font-size ever changes) without pushing the line height past what a
    plain text row already takes.
    Usage lives in JS only - no markdown/attr_list image on this line. */
 .md-typeset .ap-brace-compare-footer-note img.ap-engr-feast-icon {
   height: 1em;
   width: 1em;
-  margin: 0 0.3em 0 0;
+  margin: 0 0 0 0.3em;
+  /* Overrides the generic .skill-icon vertical-align: text-bottom - that
+     alignment is tuned for an icon sitting BEFORE text (reads fine as a
+     leading bullet there), but looks noticeably low/off-baseline as a
+     TRAILING icon at the end of a plain-text line like this one, with
+     nothing after it to visually anchor against. Middle reads level with
+     the numbers/text preceding it instead. */
+  vertical-align: middle;
+  /* Geometric centering (vertical-align: middle) still reads a hair low
+     here - icon-feast.png's own artwork sits slightly bottom-heavy
+     within its square canvas (its bounding box measured within ~1px of
+     the text's own, so the leftover offset is the asset's visual
+     weight, not a layout bug), most noticeable now that nothing follows
+     the icon to balance it. A small upward nudge compensates without
+     touching the shared icon-feast.png asset itself or any of its other
+     page-wide usages. */
+  transform: translateY(-1.5px);
   /* Rose ring + glow, matching the site's established feast/food-icon
      treatment (.food-option-icon, .engraving-chip-food's own "Pink
      accent" comment) rather than a generic icon border - readers

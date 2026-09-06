@@ -2958,22 +2958,153 @@
   // Food would be there) but still lands correctly in each candidate's
   // own totalMult - which is what the "Ability Stone Base AP" row in
   // computeEngravingComparison's own `rows` reads back out.
+  // Adrenaline's own Ability Stone was missing from this function entirely
+  // until now: unlike Grudge/Ambush/RC/CD/MI's stones (which bump their
+  // engraving's flat Dmg% Node value - a genuine flatMult layer) and
+  // Keen Blunt Weapon's stone (which bumps the crit grid - handled
+  // separately via nodeGridRatio/stoneGridRatio in
+  // engravingCandidateBreakdown below), Adrenaline's Stone only ever adds
+  // AP (ADRENALINE_STONE_AP_TABLE, via adrenalineApFraction ->
+  // gearAttackPowerPercentTotal) - a THIRD axis this function never
+  // touched, so slotting a stone into Adrenaline silently changed nothing
+  // anywhere in this section. adrenalineStoneMarginalGain already exists
+  // and does exactly this on/off AP ratio for the stone-preview table
+  // (see its own comment) - reusing it here with whichever stone is
+  // actually assigned (engravingStoneLevel, "0 Lv." i.e. a no-op gain if
+  // neither slot targets Adrenaline) plugs the same math into the real
+  // totalMult candidates are ranked and compared on. It lands in
+  // "Ability Stone Engraving Bonus" downstream for free: nodeOnlyFlatMult
+  // below reruns this same function with both stone slots forced to
+  // "None", so the gain is 0 there (Adrenaline's own Node level always
+  // stays put - only the Stone marginal moves), leaving the full/node-only
+  // ratio to isolate exactly the stone's contribution like every other
+  // engraving's stone does.
   function engravingCandidateMultiplier(engrInputs, inputs, flags) {
     let mult = 1;
     mult *= 1 + grudgeGain(engrInputs, inputs);
     mult *= 1 + ambushMasterGain(engrInputs, inputs);
     mult *= 1 + abilityStoneBaseApGain(inputs, engrInputs);
+    mult *= 1 + adrenalineStoneMarginalGain(inputs, engrInputs, engravingStoneLevel("adrenaline", engrInputs));
     if (flags.includeRC) mult *= 1 + raidCaptainGain(engrInputs, inputs);
     if (flags.includeCD) mult *= 1 + cursedDollGain(engrInputs, inputs);
     if (flags.includeMI) mult *= 1 + massIncreaseGain(engrInputs, inputs);
     return mult;
   }
 
-  function computeEngravingCandidate(inputs, engrInputs, flags) {
+  // Splits a candidate's totalMult into the 3 sources that actually feed
+  // it, the same "headline number, then here's what it's made of" shape
+  // computeBraceletComparison's Keystone/Crit+Spec+Other+WP/AP breakdown
+  // already gives Bracelet vs. Bracelet - Best Combo/Runner-Up and Setup
+  // A/B only ever surfaced the single vsRunnerUp/vsNeither/stoneApGain
+  // numbers before this, with no way to tell how much of that total was
+  // the engravings' own Node levels vs. the Ability Stone's marginal bump
+  // to those same Nodes vs. the Stone's separate flat AP layer.
+  //
+  // A 4th "Keystone/Crit" row (mirroring Bracelet vs. Bracelet's own grid
+  // ratio row) was tried first and pulled back out: Keen Blunt Weapon and
+  // Adrenaline both feed the crit grid (bestComboFor) rather than
+  // flatMult, so a naive combo.mult/neither.combo.mult ratio silently
+  // swept BOTH of their Node and Ability Stone contributions into that
+  // one generic bucket instead of "Engraving Bonus"/"Ability Stone
+  // Engraving Bonus" - the exact miscategorization this function now
+  // avoids. Once KBW/Adrenaline's own grid contribution is pulled out
+  // (nodeGridRatio/stoneGridRatio below) and folded into the same 2
+  // buckets the flat-layer engravings already use, nothing is left that
+  // varies the crit grid on this page - a standalone "Keystone/Crit"
+  // residual would read 0.00% on every candidate, always. The grid ratio
+  // telescopes cleanly regardless (gNodeOnly/G0 * gFull/gNodeOnly =
+  // gFull/G0 is exact algebra, not an approximation - see the `neither`
+  // block below), so nothing is lost by dropping it, only the
+  // misattribution is fixed.
+  //
+  // "Engraving Bonus" and the grid's own node-only ratio are BOTH taken
+  // relative to the `neither` baseline (no competing engraving, no Stone
+  // in either slot - same bareBase computeEngravingSetupComparison
+  // already builds), not as this candidate's own raw nodeOnlyMult/grid
+  // value - those raw numbers are the WHOLE gear/grid multiplier stack
+  // (several hundred percent), so showing them bare would dwarf every
+  // other row. Dividing by `neither`'s own flatMult/combo.mult first
+  // (same normalization renderBvbCard's gridRatio already applies via
+  // combo.mult/noBraceletMult) leaves only the part that actually varies
+  // with this candidate's own flags/stone - a small number in the same
+  // range as the other row, and the 3 rows together multiply back out to
+  // this candidate's true vsNeither ratio exactly (see the algebra in
+  // this function's own derivation, checked against renderEngravingSvsCard's
+  // Setup A/B live readout: Setup A/B and Best Combo/Runner-Up both
+  // reconstruct their headline % from these 3 rows with no leftover).
+  // `neither` is undefined only when this IS the neither candidate being
+  // built (see computeEngravingComparison/computeEngravingSetupComparison
+  // below) - its own breakdown is never read, so the ratio=1 fallback
+  // below is harmless.
+  //
+  // "Engraving Bonus" (nodeOnlyMult) reruns engravingCandidateMultiplier
+  // with both isolated Stone slots zeroed - same technique `neither`
+  // itself is built with - which incidentally also zeroes
+  // abilityStoneBaseApGain for free (it requires 5+ combined Stone nodes,
+  // impossible with both slots at "None"), so nodeOnlyMult is a clean
+  // Node-only multiplier with nothing else riding along in it, and
+  // `neither`'s own flatMult IS its nodeOnlyMult already for the exact
+  // same reason - no separate lookup needed for the denominator. The
+  // grid's own node-only value (gNodeOnly, KBW/Adrenaline Node level with
+  // both Stones forced to "0 Lv.") gets the same "vs. neither's own grid
+  // value" ratio treatment, then multiplies into this same bucket.
+  //
+  // "Ability Stone Engraving Bonus" isolates just the marginal lift those
+  // same engravings get from their Stone slot on top of their own Node
+  // level (flatMult with the separate Base AP layer divided back out,
+  // over that Node-only baseline) - NOT the Stone's flat Base AP bonus,
+  // which is its own row right after it and would otherwise be silently
+  // double-counted into this one. The grid side's own Stone marginal
+  // (gFull/gNodeOnly, KBW/Adrenaline's actual Stone level vs. their own
+  // Node-only baseline) multiplies into this same bucket - both are
+  // already genuine with/without-stone marginals on their own terms, so
+  // neither needs the `neither`-relative treatment the Engraving Bonus
+  // row above does.
+  function engravingCandidateBreakdown(candidateInputs, engrInputs, flags, combo, flatMult, neither) {
+    const stoneBaseApMult = 1 + abilityStoneBaseApGain(candidateInputs, engrInputs);
+    const nodeOnlyEngrInputs = Object.assign({}, engrInputs, {
+      stone1Target: "None", stone1Level: "0 Lv.",
+      stone2Target: "None", stone2Level: "0 Lv.",
+    });
+    const nodeOnlyFlatMult = engravingCandidateMultiplier(nodeOnlyEngrInputs, candidateInputs, flags);
+    const stoneEngravingFlatMult = (flatMult / stoneBaseApMult) / nodeOnlyFlatMult;
+
+    // Keen Blunt Weapon and Adrenaline's own Node/Stone split, done on the
+    // grid itself (bestComboFor) rather than a closed-form gain function -
+    // holding every other grid input (gear crit stats, the other one of
+    // this pair) fixed and only swapping kbwStone/adrenalineStone to "0
+    // Lv." isolates exactly their own Stone's marginal, the same "hold
+    // everything else fixed, swap one thing" approach flatBucketStoneMarginal
+    // above uses for the other 5 engravings' stone columns.
+    let nodeGridRatio = 1;
+    let stoneGridRatio = 1;
+    if (neither) {
+      const nodeOnlyGridInputs = Object.assign({}, candidateInputs, {
+        kbwStone: "0 Lv.",
+        adrenalineStone: "0 Lv.",
+      });
+      const gNodeOnly = bestComboFor(nodeOnlyGridInputs).mult;
+      nodeGridRatio = gNodeOnly / neither.combo.mult;
+      stoneGridRatio = combo.mult / gNodeOnly;
+    }
+
+    const engravingRatio = neither ? nodeGridRatio * (nodeOnlyFlatMult / neither.flatMult) : 1;
+    const stoneEngravingRatio = stoneGridRatio * stoneEngravingFlatMult;
+    return {
+      engravingGain: engravingRatio - 1,
+      stoneEngravingGain: stoneEngravingRatio - 1,
+      stoneBaseApGain: stoneBaseApMult - 1,
+    };
+  }
+
+  // `neither` is only passed once a real baseline candidate exists (see
+  // above) - omit it when computing that baseline candidate itself.
+  function computeEngravingCandidate(inputs, engrInputs, flags, neither) {
     const candidateInputs = engravingCandidateInputs(inputs, engrInputs, flags);
     const combo = bestComboFor(candidateInputs);
     const flatMult = engravingCandidateMultiplier(engrInputs, candidateInputs, flags);
-    return { flags, combo, flatMult, totalMult: combo.mult * flatMult };
+    const breakdown = engravingCandidateBreakdown(candidateInputs, engrInputs, flags, combo, flatMult, neither);
+    return { flags, combo, flatMult, totalMult: combo.mult * flatMult, breakdown };
   }
 
   function engravingComboLabel(flags) {
@@ -3086,9 +3217,9 @@
   // computeEngravingSetupComparison can read this side's own isolated
   // stone status back off it for the Ability Stone AP breakout below,
   // without needing to re-run engravingSvsMergedInputs a second time.
-  function computeEngravingSetup(inputs, base, side) {
+  function computeEngravingSetup(inputs, base, side, neither) {
     const { merged, flags } = engravingSvsMergedInputs(base, side);
-    const candidate = computeEngravingCandidate(inputs, merged, flags);
+    const candidate = computeEngravingCandidate(inputs, merged, flags, neither);
     candidate.merged = merged;
     return candidate;
   }
@@ -3108,8 +3239,8 @@
     const neither = computeEngravingCandidate(inputs, bareBase, {
       includeRC: false, includeKbw: false, includeCD: false, includeMI: false,
     });
-    const a = computeEngravingSetup(inputs, base, svsA);
-    const b = computeEngravingSetup(inputs, base, svsB);
+    const a = computeEngravingSetup(inputs, base, svsA, neither);
+    const b = computeEngravingSetup(inputs, base, svsB, neither);
     // Isolated per-side "how much of vsNeither is just the Ability Stone
     // AP bonus" readout - the reader-facing explanation for why one side
     // can win even when its own engraving/stone-table rows above look
@@ -3122,6 +3253,12 @@
       keystoneLabel: KEYSTONE_LABELS[r.combo.pair],
       splitLabel: r.combo.split.label,
       comboKey: r.combo.pair + "|" + r.combo.split.key,
+      // breakdown already carries its own stoneBaseApGain (computed the
+      // same way, off r.merged via computeEngravingCandidate) - the
+      // standalone stoneApGain field above predates it and stays for the
+      // existing renderEngravingSvsCard callers, kept in sync since both
+      // ultimately call the same abilityStoneBaseApGain helper.
+      breakdown: r.breakdown,
     });
     return {
       neither: { keystoneLabel: KEYSTONE_LABELS[neither.combo.pair], splitLabel: neither.combo.split.label },
@@ -3229,8 +3366,21 @@
       }
     }
 
+    // Same "no competing engraving, no Stone in either slot" baseline
+    // computeEngravingSetupComparison's own bareBase/neither builds below -
+    // used here purely to normalize the Best Combo/Runner-Up cards' own
+    // Engraving Bonus breakdown row (see engravingCandidateBreakdown's
+    // comment), not shown as its own "vs No Setup" card the way Setup
+    // A/B's neither is.
+    const bareEngrInputs = Object.assign({}, engrInputs, {
+      stone1Target: "None", stone1Level: "0 Lv.",
+      stone2Target: "None", stone2Level: "0 Lv.",
+    });
+    const neitherCandidate = computeEngravingCandidate(inputs, bareEngrInputs, {
+      includeRC: false, includeKbw: false, includeCD: false, includeMI: false,
+    });
     const candidates = candidateFlagSets
-      .map((flags) => computeEngravingCandidate(inputs, engrInputs, flags))
+      .map((flags) => computeEngravingCandidate(inputs, engrInputs, flags, neitherCandidate))
       .sort((a, b) => b.totalMult - a.totalMult);
     const winner = candidates[0];
     const runnerUp = candidates[1] || null;
@@ -3892,10 +4042,13 @@
 
     // Both readouts' base stats (RAID_CAPTAIN_BASE_MOVE_SPEED,
     // BASE_ATTACK_SPEED above) assume the reader is already eating an
-    // Atk/Move Speed feast - the feast icon at the start of each line
-    // flags that assumption inline instead of leaving it as a silent
-    // premise the reader has to already know.
-    function prependFeastIcon(el) {
+    // Atk/Move Speed feast - the feast icon at the end of each line flags
+    // that assumption inline instead of leaving it as a silent premise
+    // the reader has to already know. Sits after the text (not before)
+    // so the line reads as plain text first, with the icon as a trailing
+    // annotation rather than competing with "Move Speed"/"Attack Speed"
+    // for the reader's first glance.
+    function appendFeastIcon(el) {
       const icon = document.createElement("img");
       icon.className = "skill-icon ap-engr-feast-icon";
       icon.src = window.SiteUtils.iconSrc(SITE_ROOT, "icon-feast.png");
@@ -3904,18 +4057,15 @@
       icon.loading = "lazy";
       // "display" mode (not the default visibility:hidden) - a missing
       // icon should collapse the gap entirely rather than leave a blank
-      // 1em space sitting in front of " Move Speed:"/" Attack Speed:".
+      // 1em space sitting after "Move Speed: ..."/"Attack Speed: ...".
       window.SiteUtils.hideOnError(icon, "display");
       el.appendChild(icon);
     }
 
     const msEl = root.querySelector(".ap-engr-ms-readout");
     if (msEl) {
-      msEl.textContent = "";
-      prependFeastIcon(msEl);
-      msEl.appendChild(
-        document.createTextNode(" Move Speed: " + result.moveSpeed.toFixed(2) + "% (140% cap)")
-      );
+      msEl.textContent = "Move Speed: " + result.moveSpeed.toFixed(2) + "% (140% cap) ";
+      appendFeastIcon(msEl);
     }
 
     // Attack Speed is Surge-only display (see surgeEffectiveAttackSpeed's
@@ -3929,11 +4079,10 @@
         atkEl.style.display = "none";
       } else {
         atkEl.style.display = "";
-        atkEl.textContent = "";
-        prependFeastIcon(atkEl);
-        let text = " Attack Speed: " + result.attackSpeed.toFixed(2) + "% (140% cap)";
+        let text = "Attack Speed: " + result.attackSpeed.toFixed(2) + "% (140% cap)";
         if (engrInputs.miOptIn) text += " (Mass Increase)";
-        atkEl.appendChild(document.createTextNode(text));
+        atkEl.textContent = text + " ";
+        appendFeastIcon(atkEl);
       }
     }
 
@@ -4009,15 +4158,31 @@
     function fillCard(prefix, candidate) {
       const comboEl = root.querySelector("." + prefix + "-combo");
       const keystoneEl = root.querySelector("." + prefix + "-keystone");
+      // Same 3-row breakdown Setup A/B's renderEngravingSvsCard sets below
+      // (Engraving Bonus, Ability Stone Engraving Bonus, Ability Stone
+      // Base AP) - see engravingCandidateBreakdown's own comment for what
+      // each isolates, and why there's no separate "Keystone/Crit" row
+      // here (KBW/Adrenaline's own grid contribution is already folded
+      // into the two Stone-aware buckets, not left as a residual). "—" on
+      // a missing candidate (no Runner-Up when only one candidate exists)
+      // matches comboEl/keystoneEl's own fallback just below.
+      const set = (cls, text) => {
+        const el = root.querySelector("." + prefix + "-" + cls);
+        if (el) el.textContent = text;
+      };
       if (!candidate) {
         if (comboEl) comboEl.textContent = "—";
         if (keystoneEl) keystoneEl.textContent = "—";
+        ["engr-gain", "stone-engr-gain", "stone-ap"].forEach((cls) => set(cls, "—"));
         return;
       }
       if (comboEl) comboEl.textContent = engravingComboLabel(candidate.flags);
       if (keystoneEl) {
         keystoneEl.textContent = candidate.combo.split.label + " + " + KEYSTONE_LABELS[candidate.combo.pair];
       }
+      set("engr-gain", formatBvbPct(candidate.breakdown.engravingGain));
+      set("stone-engr-gain", formatBvbPct(candidate.breakdown.stoneEngravingGain));
+      set("stone-ap", formatBvbPct(candidate.breakdown.stoneBaseApGain));
     }
     fillCard("ap-engr-best", result.winner);
     fillCard("ap-engr-runnerup", result.runnerUp);
@@ -4047,8 +4212,15 @@
       if (el) el.textContent = text;
     };
     set(".ap-esvs-" + prefix + "-vs-none", formatBvbPct(side.vsNeither));
-    set(".ap-esvs-" + prefix + "-stone-ap", formatBvbPct(side.stoneApGain));
     set(".ap-esvs-" + prefix + "-keystone", side.splitLabel + " + " + side.keystoneLabel);
+    // Same 3-row breakdown as Best Combo/Runner-Up's fillCard (see
+    // engravingCandidateBreakdown's own comment) - "Ability Stone Base AP"
+    // moves into this group too now (was previously the only breakdown
+    // row this card had, sitting right under vs No Setup on its own). No
+    // separate "Keystone/Crit" row - see fillCard's own comment for why.
+    set(".ap-esvs-" + prefix + "-engr-gain", formatBvbPct(side.breakdown.engravingGain));
+    set(".ap-esvs-" + prefix + "-stone-engr-gain", formatBvbPct(side.breakdown.stoneEngravingGain));
+    set(".ap-esvs-" + prefix + "-stone-ap", formatBvbPct(side.breakdown.stoneBaseApGain));
   }
 
   function renderEngravingSetupComparison(root, result) {
