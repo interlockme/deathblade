@@ -8,9 +8,9 @@
 <div class="food-options" markdown>
 
 <div class="food-option" markdown>
-![](../assets/shared/icon-skewers.png){: .food-option-icon }
+![](../assets/shared/icon-striploin.png){: .food-option-icon }
 
-Chewy Grilled Skewers
+Striploin Steak Meal
 </div>
 
 <div class="food-option" markdown>

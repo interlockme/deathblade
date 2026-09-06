@@ -3,7 +3,7 @@
 <div class="setup-panel" data-accent="pink" markdown>
 <div class="setup-notes" markdown>
 
-<p class="food-required-lead">Atk/Move Speed food and feast is <strong>recommended</strong> to play Surge optimally.</p>
+<p class="food-required-lead">Atk/Move Speed food and feast is <strong>recommended</strong> to play Surge optimally. Food is sold at Peyto Island.</p>
 
 <div class="food-options" markdown>
 
@@ -27,10 +27,10 @@ Atk/Move Speed Feast
 
 </div>
 
-<details class="setup-note" data-kind="note" open markdown>
-<summary><span class="setup-note-tag">Note</span>Purchase at Peyto Island<span class="setup-note-arrow"></span></summary>
+<details class="setup-note" data-kind="example" open markdown>
+<summary><span class="setup-note-tag">alt</span>Mana Food + Maelstrom Bleed<span class="setup-note-arrow"></span></summary>
 
-- <strong>Alternatively</strong>, use ![](../assets/shared/icon-skewers.png){: .food-option-icon } ![](../assets/shared/icon-steak.png){: .food-option-icon } ![](../assets/shared/icon-azena.png){: .food-option-icon } mana food and equip a Legendary Bleed/Poison rune on Maelstrom.
+- Alternatively, use ![](../assets/shared/icon-striploin.png){: .food-option-icon } ![](../assets/shared/icon-steak.png){: .food-option-icon } ![](../assets/shared/icon-azena.png){: .food-option-icon } mana food + ![](../assets/shared/icon-feast.png){: .food-option-icon } feast and equip Legendary Bleed rune on Maelstrom.
 
 </details>
 
