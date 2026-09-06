@@ -1117,7 +1117,7 @@
         <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-wine" checked> Vernese Wine (+3% Move Speed)</label>
       </div>
       <div class="ap-calc-field-row ap-engr-manafood-row">
-        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed)</span></label>
+        <label class="ap-engr-checkbox-label"><input type="checkbox" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Mael Bleed)</span></label>
         <select class="ap-engr-manafood-amount">
           <option value="6000" selected>6000 DEX</option>
           <option value="12000">12000 DEX</option>

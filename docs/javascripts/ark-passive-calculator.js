@@ -3856,7 +3856,7 @@
     const manaFoodLabelEl = root.querySelector(".ap-engr-manafood-label");
     if (manaFoodLabelEl) {
       manaFoodLabelEl.textContent = isSurge
-        ? "Mana Food (+Maelstrom Bleed)"
+        ? "Mana Food (+Mael Bleed)"
         : "Mana Food (Main Stat only)";
     }
     const ealynRow = root.querySelector(".ap-engr-ealyn-row");
