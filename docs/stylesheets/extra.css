@@ -3666,7 +3666,13 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-calc-pair select {
   width: auto;
-  min-width: 5em;
+  /* 5em matched these options' raw text width (e.g. "0.95%", "10.00%")
+     almost exactly, which left no room for the native dropdown arrow -
+     at narrow widths, where the row has no slack to grow beyond this
+     floor, the arrow rendered on top of the last character instead of
+     beside it. 5.8em is sized off the widest real option in these pairs
+     ("10.00%") plus the arrow, confirmed by screenshot at 340-480px. */
+  min-width: 5.8em;
   flex: 0 1 auto;
   padding: 0.3em 0.5em;
 }
