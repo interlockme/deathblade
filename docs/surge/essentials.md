@@ -3,7 +3,7 @@
 <div class="setup-panel" data-accent="pink" markdown>
 <div class="setup-notes" markdown>
 
-<p class="food-required-lead">Atk/Move Speed food and feast is <strong>recommended</strong> to play Surge optimally. Food is sold at Peyto Island.</p>
+<p class="food-required-lead">Atk/Move Speed food and feast is <strong>highly advised</strong> to play Surge optimally. Food is sold at Peyto Island.</p>
 
 <div class="food-options" markdown>
 
@@ -97,13 +97,13 @@ Atk/Move Speed Feast
 <span class="engraving-card-name">Raid Captain</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-top">★ Recommended</span>
-<span class="engraving-card-badge engraving-card-badge-food">Food Required</span>
+<span class="engraving-card-badge engraving-card-badge-food">Food Advised</span>
 </span>
 <span class="engraving-card-arrow"></span>
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/shared/icon-vernesewine.png){: .skill-icon } Vernese Wine required
+![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/shared/icon-vernesewine.png){: .skill-icon } Vernese Wine advised
 { .food-req }
 
 **Pros:**{: .best-for } Highest damage bonus.
@@ -138,13 +138,13 @@ Pair with Cursed Doll if you're starting out or stuck with it.
 <summary>
 <span class="engraving-card-name">Mass Increase</span>
 <span class="engraving-card-badges" markdown>
-<span class="engraving-card-badge engraving-card-badge-food">Food Required</span>
+<span class="engraving-card-badge engraving-card-badge-food">Food Advised</span>
 </span>
 <span class="engraving-card-arrow"></span>
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/shared/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing required
+![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/shared/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing advised
 { .food-req }
 
 **Pros:**{: .best-for } Highest damage bonus.
@@ -159,16 +159,16 @@ Pair with Cursed Doll if you're starting out or stuck with it.
 <span class="engraving-card-name">RC + MI 🦁 🐆 🐯</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-ceiling">★ Ceiling</span>
-<span class="engraving-card-badge engraving-card-badge-food">Food Required</span>
+<span class="engraving-card-badge engraving-card-badge-food">Food Advised</span>
 </span>
 <span class="engraving-card-arrow"></span>
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/shared/icon-vernesewine.png){: .skill-icon } Vernese Wine required with Bard or Paladin
+![](../assets/shared/icon-vernesewine.png){: .skill-icon } Vernese Wine advised with Bard or Paladin
 { .food-req }
 
-![](../assets/shared/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing required with Artist or Valkyrie
+![](../assets/shared/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing advised with Artist or Valkyrie
 { .food-req }
 
 **Pros:**{: .best-for } This is ceiling. Fewer drawbacks for [222](222-speedy.md).

@@ -34,7 +34,7 @@
 
 ## Ark Passive Calculator
 
-*Finds the optimal Evolution nodes for your deathblade and team setup. See spreadsheet [1](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) or [2](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) for verification.*
+*Finds the optimal setup for your deathblade and party composition. See spreadsheets [1](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) or [2](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) for verification.*
 
 <div class="ap-calc">
 
@@ -1465,7 +1465,7 @@
 <details class="ap-acc-compare">
   <summary>Accessory Comparison</summary>
   <div class="ap-brace-compare-body">
-    <p class="ap-brace-compare-intro">Candidate accessory lines, valued as if each were the only line on that slot, against your Best Setup above. Combination lines show that row's line paired with the panel's other line, both rolled on the same piece(s).</p>
+    <p class="ap-brace-compare-intro">Candidate accessory lines, valued as if each were the only line on that slot, against your Best Setup above.</p>
 
     <div class="ap-acc-panel ap-acc-necklace-panel">
       <p class="ap-acc-panel-title">Necklace</p>
