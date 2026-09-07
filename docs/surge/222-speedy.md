@@ -291,7 +291,7 @@ Use the Opener cycle and either loop it forever (easy) or continue on to the adv
 <div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Opener/Overstack Cycle - 68 Stacks</span></div>
 <div class="rotation-line" markdown>
 <script type="application/json">
-["windcut", "deathtrance", "surpriseattack", "maelstrom", "windcut", "upperslash", "turningslash", "bladedance", "deathlyslash", "surpriseattack", "surge"]
+["windcut", "deathtrance", { "id": "surpriseattack", "swapNext": true }, "maelstrom", "windcut", "upperslash", "turningslash", "bladedance", "deathlyslash", "surpriseattack", "surge"]
 </script>
 </div>
 </div>
