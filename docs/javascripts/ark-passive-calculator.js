@@ -4519,8 +4519,21 @@
     if (diffEl) {
       const aWins = result.aVsB >= 0;
       diffEl.textContent = "Accessory " + (aWins ? "A" : "B") + " wins by " + formatBvbPct(Math.abs(result.aVsB));
-      diffEl.classList.toggle("ap-bvb-diff-a", aWins);
-      diffEl.classList.toggle("ap-bvb-diff-b", !aWins);
+      // .ap-avb-diff's own base class is .ap-esvs-diff (see its markup in
+      // resources.md), not .ap-bvb-diff - so the winner accent has to come
+      // from .ap-esvs-diff-a/-b, not .ap-bvb-diff-a/-b. An earlier version
+      // of this toggled the .ap-bvb-diff-a/-b pair instead: both families
+      // carry identical pink/teal values, but .ap-bvb-diff-a/-b are
+      // declared BEFORE .ap-esvs-diff's own base rule in extra.css, so at
+      // equal specificity .ap-esvs-diff's later border/background-color/
+      // color always won the cascade and silently overrode them - the
+      // pill rendered in its neutral lilac fallback color no matter which
+      // side actually won (confirmed via Playwright: classList showed
+      // "ap-esvs-diff ap-avb-diff ap-bvb-diff-b" applied, but the pill's
+      // computed color stayed lilac, not teal). .ap-esvs-diff-a/-b are
+      // declared AFTER .ap-esvs-diff, so they correctly win instead.
+      diffEl.classList.toggle("ap-esvs-diff-a", aWins);
+      diffEl.classList.toggle("ap-esvs-diff-b", !aWins);
     }
   }
 
@@ -5338,8 +5351,11 @@
     });
     // Main Stat / Line 3's own row - only worth showing separately from
     // "vs No X" when there's a second axis (grid/flat) for it to be
-    // distinguished FROM. See hasWpRow's own comment above for why
-    // that's never true for Earring.
+    // distinguished FROM. See hasWpRow's own comment above AVB_SLOT_LABELS
+    // - true for all three slots now; the sequential mainStatLine3Ratio/
+    // lineRatio split (evalSide) is what makes this a real, non-duplicate
+    // number for Earring rather than the flat-out duplicate of "vs No
+    // Earring" it used to be before that split existed.
     root.querySelectorAll(".ap-avb-wp-row").forEach((el) => {
       el.classList.toggle("ap-stat-card-row--hidden", !cfg.hasWpRow);
     });
