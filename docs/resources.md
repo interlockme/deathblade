@@ -738,8 +738,9 @@
     <p class="ap-brace-compare-footer-note">Flat Bonus lines use values from the Gearing section and are hidden until Weapon Power and Main Stat are both filled in.</p>
 
     <!-- Bracelet vs. Bracelet: compares two WHOLE candidate bracelets (5
-         real lines each - the two guaranteed Spec/Crit substats plus 3
-         free picks from the same line pool the table above values one at a
+         real lines each - Spec Stat plus Basic Effect 2 (Crit Stat, Main
+         Stat, or None - see that field's own comment below) plus 3 free
+         picks from the same line pool the table above values one at a
          time) against each other and against running no bracelet at all,
          including each bracelet's own best keystone (which can genuinely
          differ between two bracelets - see computeBraceletVsBracelet's own
@@ -756,6 +757,26 @@
       <div class="ap-brace-compare-body">
         <p class="ap-brace-compare-intro">Compares two full 5-line bracelets against each other and against running none at all.</p>
 
+        <!-- Basic Effect 2: a bracelet's 2nd fixed line isn't guaranteed
+             to be Crit Stat - it can also land as Main Stat (STR/DEX/INT),
+             or as a real effect this calculator doesn't track at all
+             (worth 0 here, same as picking "None" anywhere else on this
+             page). Modeled as its own type <select> (crit/main/none)
+             rather than assuming Crit like the old plain Crit Stat field
+             did, with the Crit Stat and Main Stat inputs swapped in/out
+             the same way each of the 3 free line rows below already swaps
+             its own tier/mainstat pair for "stat_main" (see
+             enforceBvbLineControls) - Main Stat here reuses that exact
+             mainStatDeltaTotal/hasWpLine path in computeSingleBracelet,
+             it's just contributed from a 4th, fixed-position source
+             instead of one of the 3 free ones. Since a real bracelet
+             can't roll Main Stat twice, picking Main Stat here disables
+             "STR/DEX/INT" in all 3 free line dropdowns below and resets
+             any of them still holding it back to None - same
+             disable-and-reset treatment enforceBvbLineExclusivity already
+             gives the 3 free lines' own duplicate types (see that
+             function and normalizeChaosCoreExclusivity's own comment for
+             the same "reset the stale side" precedent). -->
         <div class="ap-bvb-cards">
           <div class="ap-bvb-card ap-bvb-card-a">
             <p class="ap-gear-card-title ap-bvb-card-title">Bracelet A</p>
@@ -766,8 +787,14 @@
               <input type="number" class="ap-bvb-a-spec" min="60" max="120" step="1" value="100">
             </div>
             <div class="ap-calc-field-row">
-              <label class="ap-calc-field-label">Crit Stat</label>
+              <label class="ap-calc-field-label">Basic Effect</label>
+              <select class="ap-bvb-a-effect2-type">
+                <option value="crit" selected>Crit Stat</option>
+                <option value="main">Main Stat</option>
+                <option value="none">None</option>
+              </select>
               <input type="number" class="ap-bvb-a-crit" min="60" max="120" step="1" value="80">
+              <input type="number" class="ap-bvb-a-effect2-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this bracelet's Basic Effect (10000-16000)." hidden>
             </div>
             <div class="ap-bvb-line-row">
               <select class="ap-bvb-a-line1-type ap-bvb-line-type">
@@ -866,8 +893,14 @@
               <input type="number" class="ap-bvb-b-spec" min="60" max="120" step="1" value="80">
             </div>
             <div class="ap-calc-field-row">
-              <label class="ap-calc-field-label">Crit Stat</label>
+              <label class="ap-calc-field-label">Basic Effect</label>
+              <select class="ap-bvb-b-effect2-type">
+                <option value="crit" selected>Crit Stat</option>
+                <option value="main">Main Stat</option>
+                <option value="none">None</option>
+              </select>
               <input type="number" class="ap-bvb-b-crit" min="60" max="120" step="1" value="100">
+              <input type="number" class="ap-bvb-b-effect2-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this bracelet's Basic Effect (10000-16000)." hidden>
             </div>
             <div class="ap-bvb-line-row">
               <select class="ap-bvb-b-line1-type ap-bvb-line-type">

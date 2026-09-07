@@ -749,6 +749,15 @@
     return {
       spec: Math.max(60, Math.min(120, getNumber(root, base + "spec", 80))),
       critStat: Math.max(60, Math.min(120, getNumber(root, base + "crit", 80))),
+      // Basic Effect 2's own type (crit/main/none) - see the markup's own
+      // comment above ap-bvb-cards for why this exists. Both the Crit
+      // Stat and Main Stat values are read unconditionally (whichever
+      // input is currently hidden just keeps whatever it last held)
+      // rather than zeroed here, so toggling the type back and forth
+      // doesn't lose a typed value - computeSingleBracelet is what
+      // actually decides which one (if either) counts.
+      effect2Type: getSelect(root, base + "effect2-type", "crit"),
+      effect2MainStat: Math.max(10000, Math.min(16000, getNumber(root, base + "effect2-mainstat", 14000))),
       lines: [1, 2, 3].map((n) => ({
         type: getSelect(root, base + "line" + n + "-type", "none"),
         tier: getSelect(root, base + "line" + n + "-tier", "Mid"),
@@ -1873,7 +1882,11 @@
   // the Bracelet vs. Bracelet inputs (readBvbSide below).
   function computeSingleBracelet(inputsNB, sharedNB, noBraceletMult, inputs, side) {
     const cloned = Object.assign({}, inputsNB);
-    cloned.critStat = inputsNB.critStat + Math.max(0, side.critStat || 0);
+    // Basic Effect 2 isn't guaranteed to be Crit Stat - see readBvbSide's
+    // own comment - so Crit Stat here only counts while that's actually
+    // what this side's Basic Effect 2 is set to.
+    const effect2Type = side.effect2Type || "crit";
+    cloned.critStat = inputsNB.critStat + (effect2Type === "crit" ? Math.max(0, side.critStat || 0) : 0);
 
     let rateSlot = 0;
     let dmgSlot = 0;
@@ -1911,6 +1924,17 @@
         }
       }
     });
+    // Basic Effect 2 = Main Stat folds into this exact same
+    // mainStatDeltaTotal/hasWpLine path, just from a 4th, fixed-position
+    // source instead of one of the 3 free lines above - see this side's
+    // own effect2Type comment. The UI-level exclusivity (disabling
+    // "STR/DEX/INT" in the 3 free dropdowns, resetting a stale one back
+    // to None) lives in enforceBvbLineExclusivity, so by the time this
+    // runs the two sources can't both be real at once.
+    if (effect2Type === "main") {
+      hasWpLine = true;
+      mainStatDeltaTotal += Math.max(10000, Math.min(16000, side.effect2MainStat || 14000));
+    }
     cloned.critRateDual = critRateDualFlag;
     cloned.critDmgDual = critDmgDualFlag;
 
@@ -5119,8 +5143,15 @@
     enforcePartyCheckboxLimit(root);
     enforceKbwStoneDependency(root);
     enforceGearSupportUptimeGate(root);
-    enforceBvbLineControls(root);
+    // Exclusivity first: it can reset a stale line's type (Basic Effect 2
+    // just claimed "stat_main" out from under it) - Controls needs to run
+    // AFTER that reset, not before, or it swaps each line's tier/mainstat
+    // visibility using the OLD type value and leaves the wrong one shown
+    // (e.g. a freshly-reset-to-None line still displaying a Main Stat
+    // input box instead of the tier dropdown a real "None" line should
+    // show) until the next unrelated input happens to re-run this pair.
     enforceBvbLineExclusivity(root);
+    enforceBvbLineControls(root);
     enforceAvbSlotUI(root);
     enforceAvbLineControls(root);
     enforceEngravingStoneExclusivity(root);
@@ -5296,6 +5327,28 @@
   // each covers whichever of the 3 rows currently holds that type.
   function enforceBvbLineControls(root) {
     ["a", "b"].forEach((prefix) => {
+      // Basic Effect 2: same tier/mainstat-style swap as each free line
+      // row below, just between the Crit Stat input and the Main Stat
+      // input (and both hidden while "None" is picked) - see the
+      // ap-bvb-cards comment in resources.md for why this field exists.
+      const effect2TypeEl = root.querySelector(".ap-bvb-" + prefix + "-effect2-type");
+      if (effect2TypeEl) {
+        const critEl = root.querySelector(".ap-bvb-" + prefix + "-crit");
+        const effect2MainStatEl = root.querySelector(".ap-bvb-" + prefix + "-effect2-mainstat");
+        const effect2Type = effect2TypeEl.value;
+        // hidden only, deliberately NOT disabled - .ap-calc-field-row
+        // dims its whole row (opacity 0.45, see extra.css) whenever ANY
+        // input/select inside it is :disabled, a signal meant for a row
+        // that's genuinely inapplicable right now (KBW's stone level,
+        // Party & Positioning past its 3-of-5 cap). This row is always
+        // applicable - exactly one of Crit Stat/Main Stat is just hidden
+        // in favor of the other - so disabling the hidden one would
+        // falsely grey out the whole row even while a real value (Crit
+        // or Main Stat) is actively selected.
+        if (critEl) critEl.hidden = effect2Type !== "crit";
+        if (effect2MainStatEl) effect2MainStatEl.hidden = effect2Type !== "main";
+      }
+
       let hasAddB = false;
       let hasDamageCd = false;
       [1, 2, 3].forEach((n) => {
@@ -5305,7 +5358,13 @@
         const tierEl = root.querySelector(base + "-tier");
         const mainStatEl = root.querySelector(base + "-mainstat");
         const isStatMain = typeEl.value === "stat_main";
-        if (tierEl) { tierEl.hidden = isStatMain; tierEl.disabled = isStatMain; }
+        // "None" has no BRACELET_LINE_TYPES entry at all (computeSingle
+        // Bracelet's own `if (!def) return;` just skips it), so it has no
+        // tier to speak of either - hide the tier dropdown for it too,
+        // same as stat_main, rather than leaving a Low/Mid/High selector
+        // sitting next to a line that isn't actually valuing anything.
+        const isNone = typeEl.value === "none";
+        if (tierEl) { tierEl.hidden = isStatMain || isNone; tierEl.disabled = isStatMain || isNone; }
         if (mainStatEl) { mainStatEl.hidden = !isStatMain; mainStatEl.disabled = !isStatMain; }
         if (typeEl.value === "add_b") hasAddB = true;
         if (typeEl.value === "damage_cd") hasDamageCd = true;
@@ -5464,12 +5523,26 @@
         .map((n) => root.querySelector(".ap-bvb-" + prefix + "-line" + n + "-type"))
         .filter(Boolean);
       if (typeEls.length < 2) return;
+      // Basic Effect 2 = Main Stat and a free line's own "stat_main" pick
+      // are the same real stat - a bracelet can't roll it twice, so
+      // whichever fixed source already claims it disables "STR/DEX/INT"
+      // in every free line dropdown below (same disable treatment the 3
+      // free lines already give each other's duplicate types), and any
+      // free line still stuck on it gets reset back to None instead of
+      // silently staying selected-but-disabled and still double-counted
+      // (same "reset the stale side" precedent as
+      // normalizeChaosCoreExclusivity).
+      const effect2TypeEl = root.querySelector(".ap-bvb-" + prefix + "-effect2-type");
+      const effect2IsMain = !!effect2TypeEl && effect2TypeEl.value === "main";
       const usedValues = typeEls.map((el) => el.value);
       typeEls.forEach((typeEl, idx) => {
         Array.from(typeEl.options).forEach((opt) => {
           if (opt.value === "none") { opt.disabled = false; return; }
-          opt.disabled = usedValues.some((v, otherIdx) => otherIdx !== idx && v === opt.value);
+          const duplicated = usedValues.some((v, otherIdx) => otherIdx !== idx && v === opt.value);
+          const takenByEffect2 = opt.value === "stat_main" && effect2IsMain;
+          opt.disabled = duplicated || takenByEffect2;
         });
+        if (effect2IsMain && typeEl.value === "stat_main") typeEl.value = "none";
       });
     });
   }
