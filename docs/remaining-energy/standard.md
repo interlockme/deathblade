@@ -147,8 +147,18 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
+<div class="ark-cores" data-family="re" markdown>
+<script type="application/json">
+[
+  { "core": "sun", "label": "Art Master", "points": 0 },
+  { "core": "moon", "label": "Arts Core", "points": 0 },
+  { "core": "star", "label": "Basics", "points": 0 }
+]
+</script>
+</div>
+
 - Standard is playable without Ark Grid by design, but you can use the 111 core setup if you already have it.
-    - Save your Ark Grid cores for when you're ready to transition to a modern Deathblade build.
+- Save your Ark Grid cores for when you're ready to transition to a modern Deathblade build.
 
 </details>
 
