@@ -57,11 +57,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 === "113 Arts (core-limited)"
 
-    *Requires either a Lv 9+ Fatal Wave CD gem or Optimized Training 1.*
-
     ```
     E3818904D40CEFE43FC30B0715D4EF6850C4E0C2183E48110767499D73BEC3831EBB750B31176844599B47B861C731968F30681780A45447FAD8F209D8D99517
     ```
+
+    - Requires either a Lv 9+ Fatal Wave CD gem or Optimized Training 1.
 
 ## Ark Setup
 

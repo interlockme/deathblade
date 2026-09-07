@@ -58,11 +58,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 === "Orb Circulation 5 (easier)"
 
-    *This is ~3% weaker but more forgiving to play. It uses Legendary Wealth on Soul Absorber as well.*
-
     ```
     D4D17B7F291340AAD2E9831A065E7F9870B3612FFA798E77FC1FFEE9E4D68E400597FDB2A3DCAA11D5DB53B85812DF1042A685249158B4E08BB87A614E428350
     ```
+
+    - This is ~3% weaker but more forgiving to play. Additionally, it uses Legendary Wealth on Soul Absorber instead.
 
 ## Ark Setup
 

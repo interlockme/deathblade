@@ -61,11 +61,12 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 === "Pre-Ark Grid"
 
-    *Adds Earth Cleaver CD and uses Blade Dance's Quick Prep tripod to accommodate a lack of Ark Grid.<br>If you're a beginner, swap Raid Captain for Cursed Doll until you're more experienced.*
-
     ```
     6E22435EC38A3B36B27F6EE93801A0ADC45A582A1D8C1F6C3B8D7052A57696552DA526A2AAE1EB722ED1F929BE107E3749DAB4E7C0737BCC237D520B3D040A34
     ```
+
+    - Adds Earth Cleaver CD and uses Blade Dance's Quick Prep tripod to accommodate a lack of Ark Grid.
+    - If you're a beginner, swap Raid Captain for Cursed Doll until you're more experienced with the class.
 
 ## Ark Setup
 
