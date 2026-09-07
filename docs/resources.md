@@ -1774,10 +1774,16 @@
      and its neighbors' real collapsed borders are two different paint
      paths meeting at the same boundary pixel, which rendered as a
      visibly brighter seam right where the 14 Points/17 Points columns
-     meet. Real row-2 cells for Core/14 Points (blank filler cells in
-     row 1 just to hold that column's width/height) give every header
-     cell in this table the same real, collapsed border-bottom - one
-     paint path table-wide, so there's nothing left to mismatch. -->
+     meet. Real cells in BOTH rows for both the Core and 14 Points
+     columns (one holding the text, the other a blank filler just to
+     hold that column's width/height) give every header cell in this
+     table the same real, collapsed border-bottom - one paint path
+     table-wide, so there's nothing left to mismatch. 14 Points' own
+     text sits in row 1 (blank filler below it in row 2) so it lines up
+     with 17/20 Points instead of sitting a row lower than them; Core's
+     text stays in row 2 (blank filler above it in row 1) since it's a
+     row label, not a points tier, and has nothing to line up with in
+     row 1. -->
 <details class="ap-arkgrid-compare">
   <summary>Chaos Core Comparison</summary>
   <div class="ap-brace-compare-body">
@@ -1787,13 +1793,13 @@
         <thead>
           <tr>
             <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
-            <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
+            <th>14 Points</th>
             <th class="ap-arkgrid-th-group" colspan="2">17 Points</th>
             <th class="ap-arkgrid-th-group" colspan="2">20 Points</th>
           </tr>
           <tr>
             <th class="ap-brace-th-label">Core</th>
-            <th>14 Points</th>
+            <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
             <th class="ap-brace-th-low">Relic</th>
             <th class="ap-brace-th-high">Ancient</th>
             <th class="ap-brace-th-low">Relic</th>

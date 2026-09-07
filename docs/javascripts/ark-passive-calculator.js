@@ -3910,7 +3910,15 @@
       { label: "Raid Captain", gain: raidCaptainGain(engrInputs, inputs) },
       { label: "Keen Blunt Weapon", gain: kbwContributionGain(engrInputs, isolatedBest, isolatedBestStats, isolatedShared) },
       { label: "Cursed Doll", gain: cursedDollGain(engrInputs, inputs) },
-      { label: "Mass Increase", gain: massIncreaseGain(engrInputs, inputs) },
+      // Mass Increase stays Surge-only in this reference table too, same
+      // reasoning as the pool/candidateFlagSets exclusion above (RE never
+      // runs it, and its -10% Attack Speed drawback isn't modeled) -
+      // filtered out below rather than left in the array, since this
+      // table has no per-row spec toggle like the checkbox/wine/ealyn
+      // rows above do.
+      engrInputs.spec !== "re"
+        ? { label: "Mass Increase", gain: massIncreaseGain(engrInputs, inputs) }
+        : null,
       {
         label: "Ability Stone Base AP",
         gain: abilityStoneBaseApGain(inputs, engrInputs),
@@ -3934,7 +3942,7 @@
           ? "Includes using the Bleed rune on Maelstrom. Not tied to any one engraving."
           : null,
       },
-    ];
+    ].filter(Boolean);
 
     // NONE of these 7 rows' stone breakdowns are safe to read as the raw
     // Ability Stone tooltip value, EVEN the ones (Grudge/Cursed Doll/Mass
