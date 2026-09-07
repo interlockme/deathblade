@@ -30,7 +30,7 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=29
+  - stylesheets/extra.css?v=30
 
 # Load order matters: several widgets read a shared data file
 # (build-data.js/skill-data.js/skill-names.js/ap-node-names.js) or the
@@ -41,7 +41,7 @@ extra_css:
 #   2. extra.js, cpm-calculator.js, bid-calculator.js,
 #      ark-passive-calculator.js - standalone, no cross-file deps
 #   3. data files: build-data.js, skill-data.js, skill-names.js,
-#      ap-node-names.js
+#      ap-node-names.js, core-options-data.js
 #   4. renderer widgets that read those data files: build-stats-badge.js,
 #      skill-setup.js, essentials-table.js, ark-core-badge.js,
 #      ark-passive-tree.js, gem-priority.js, pentagon-badge.js,
@@ -68,7 +68,8 @@ extra_javascript:
   - javascripts/skill-names.js?v=2
   - javascripts/skill-setup.js?v=7
   - javascripts/essentials-table.js?v=3
-  - javascripts/ark-core-badge.js?v=3
+  - javascripts/core-options-data.js?v=1
+  - javascripts/ark-core-badge.js?v=4
   - javascripts/ap-node-names.js?v=1
   - javascripts/ark-passive-tree.js?v=4
   - javascripts/gem-priority.js?v=4

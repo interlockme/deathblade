@@ -6947,6 +6947,162 @@ body.page-333-blitz input[type="text"] {
   color: var(--dbc-orange);
 }
 
+/* Hover/focus/tap tooltip reproducing a core's full in-game "Core
+   Option" list (see core-options-data.js + ark-core-badge.js's
+   buildTooltip). Anchored to the card itself (position: relative) so it
+   floats above the page rather than pushing the row's layout around -
+   same floating-panel approach as .ap-calc-popover, reusing that same
+   dark-card background/border/shadow language rather than inventing a
+   new surface for it. cursor: help signals the card is hoverable for
+   more info, same convention as .ap-brace-info-icon elsewhere. */
+.md-typeset .ark-core-item-tip {
+  position: relative;
+  cursor: help;
+}
+.md-typeset .ark-core-item-tip:focus-visible {
+  outline: 2px solid var(--dbc-rose);
+  outline-offset: 2px;
+}
+.md-typeset .ark-core-options-tip {
+  position: absolute;
+  top: calc(100% + 8px);
+  z-index: 20;
+  width: max-content;
+  max-width: min(320px, 88vw);
+  padding: 0.75em 0.9em 0.8em;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
+  background-color: #1c1a22;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  text-align: left;
+  white-space: normal;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+/* Centered under the middle (Moon) card by default; the first card
+   (Sun) would otherwise center its tooltip partway off the left edge
+   of the page/panel, and the last card (Star) partway off the right -
+   there are always exactly 3 cards in a row (Sun/Moon/Star), so
+   :first-child/:last-child reliably picks the two edge cases without
+   needing to measure anything at runtime. */
+.md-typeset .ark-core-options-tip {
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+}
+.md-typeset .ark-core-item-tip:first-child .ark-core-options-tip {
+  left: 0;
+  transform: translateY(4px);
+}
+.md-typeset .ark-core-item-tip:last-child .ark-core-options-tip {
+  left: auto;
+  right: 0;
+  transform: translateY(4px);
+}
+/* Opacity/pointer-events toggle is identical across all 3 position
+   variants, so one shared rule covers it. The translateY(4px)->0
+   "settle in" animation has to be re-declared per variant below instead
+   (each variant's hidden state above pairs a different translateX/left
+   with that same translateY), since the transform shorthand can't mix
+   a shared Y change with a per-variant X in one rule. */
+.md-typeset .ark-core-item-tip:hover .ark-core-options-tip,
+.md-typeset .ark-core-item-tip:focus-visible .ark-core-options-tip,
+.md-typeset .ark-core-item-tip.ark-core-tip-open .ark-core-options-tip {
+  opacity: 1;
+  pointer-events: auto;
+}
+.md-typeset .ark-core-item-tip:not(:first-child):not(:last-child):hover .ark-core-options-tip,
+.md-typeset .ark-core-item-tip:not(:first-child):not(:last-child):focus-visible .ark-core-options-tip,
+.md-typeset .ark-core-item-tip:not(:first-child):not(:last-child).ark-core-tip-open .ark-core-options-tip {
+  transform: translateX(-50%) translateY(0);
+}
+.md-typeset .ark-core-item-tip:first-child:hover .ark-core-options-tip,
+.md-typeset .ark-core-item-tip:first-child:focus-visible .ark-core-options-tip,
+.md-typeset .ark-core-item-tip:first-child.ark-core-tip-open .ark-core-options-tip,
+.md-typeset .ark-core-item-tip:last-child:hover .ark-core-options-tip,
+.md-typeset .ark-core-item-tip:last-child:focus-visible .ark-core-options-tip,
+.md-typeset .ark-core-item-tip:last-child.ark-core-tip-open .ark-core-options-tip {
+  transform: translateY(0);
+}
+.md-typeset .ark-core-tip-title {
+  font-size: 0.78em;
+  font-weight: 700;
+  color: var(--md-default-fg-color);
+}
+.md-typeset .ark-core-tip-subtitle {
+  font-size: 0.68em;
+  font-weight: 600;
+  color: var(--dbc-muted-text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5em;
+}
+.md-typeset .ark-core-tip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+.md-typeset .ark-core-tip-line {
+  font-size: 0.72em;
+  line-height: 1.4;
+  color: var(--dbc-lilac);
+}
+.md-typeset .ark-core-tip-bp {
+  font-weight: 700;
+  color: var(--dbc-gold);
+  margin-right: 0.15em;
+}
+.md-typeset .ark-core-tip-kw {
+  color: var(--dbc-purple);
+}
+/* Small marker on any line whose text already reflects a Korea-only
+   balance patch not yet live elsewhere - see core-options-data.js's
+   krPatched field. Same gold-badge language as .ap-brace-label-caveat
+   so it reads as "conditional/flagged", not an error. */
+.md-typeset .ark-core-tip-krtag {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.3em;
+  padding: 0.02em 0.35em;
+  border-radius: 3px;
+  background: rgba(var(--dbc-gold-rgb), 0.15);
+  border: 1px solid rgba(var(--dbc-gold-rgb), 0.55);
+  color: var(--dbc-gold);
+  font-size: 0.85em;
+  font-weight: 700;
+  vertical-align: middle;
+}
+.md-typeset .ark-core-tip-note {
+  margin-top: 0.6em;
+  padding-top: 0.5em;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.66em;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--dbc-muted-text-soft);
+}
+@media screen and (max-width: 480px) {
+  /* The row itself stacks to 1 column here (see .ark-core-row's own
+     max-width: 480px rule above) so every card is effectively both a
+     first-child and a last-child in visual terms - anchor every
+     tooltip to the card's own left edge instead of leaving the
+     desktop centered/edge-aligned split, which would otherwise center
+     the Moon card's tooltip while Sun/Star's stayed edge-anchored for
+     no reason once they're all full-width and stacked. */
+  .md-typeset .ark-core-options-tip,
+  .md-typeset .ark-core-item-tip:first-child .ark-core-options-tip,
+  .md-typeset .ark-core-item-tip:last-child .ark-core-options-tip {
+    left: 0;
+    right: auto;
+    transform: translateY(4px);
+  }
+  .md-typeset .ark-core-item-tip:hover .ark-core-options-tip,
+  .md-typeset .ark-core-item-tip:focus-visible .ark-core-options-tip,
+  .md-typeset .ark-core-item-tip.ark-core-tip-open .ark-core-options-tip {
+    transform: translateY(0);
+  }
+}
+
 /* ---------- Ark Passive tree (Evolution/Enlightenment/Leap) ---------- */
 /* Rendered by javascripts/ark-passive-tree.js from a JSON blob (same
    authoring pattern as .ark-cores/ark-core-badge.js - see that file's

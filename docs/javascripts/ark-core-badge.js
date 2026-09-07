@@ -1,7 +1,8 @@
 // FORK GUIDE: ENGINE - reusable as-is for any class. Renders whatever's in
-// build-data.js/skill-data.js/skill-names.js/ap-node-names.js; no code
-// changes needed here, just point your build/essentials pages' JSON blocks
-// at your own data.
+// build-data.js/skill-data.js/skill-names.js/ap-node-names.js/
+// core-options-data.js; no code changes needed here, just point your
+// build/essentials pages' JSON blocks (and core-options-data.js) at your
+// own data.
 //
 // Renders the "## Ark Setup" section's 3 Order Cores (Sun/Moon/Star) as a
 // small native widget instead of a static ordercores-*.png screenshot.
@@ -17,6 +18,14 @@
 // its point value underneath, always visible (not hover-only) - so a
 // core that genuinely needs 0 points (some builds run a core at 0/3 on
 // purpose) reads as "0 needed", not as missing/broken data.
+//
+// A card whose label has an entry in core-options-data.js (window.
+// DB_CORE_OPTIONS, keyed by exact label text) also gets a hover/focus/
+// tap tooltip reproducing that core's full in-game "Core Option" list
+// (10P/14P/17P/18P/19P/20P), so a reader can check what a core actually
+// does without leaving the page. A label with no match (typo, or a core
+// core-options-data.js hasn't been given yet) just renders without a
+// tooltip - same "fail quietly" rule every other widget here follows.
 //
 // EASY EDIT GUIDE:
 //   <div class="ark-cores" data-family="re" markdown>
@@ -50,6 +59,69 @@
   var CORE_ART = { sun: "sun.png", moon: "moon.png", star: "star.png" };
 
   var el = window.SiteUtils.el;
+
+  // "Destiny" is the one keyword the in-game tooltip itself colors (see
+  // the reference screenshots this data was transcribed from) - matched
+  // as a whole word so it also picks up the leading "Destiny" in a named
+  // buff like "Destiny: Killing Feast" without matching unrelated text.
+  var DESTINY_RE = /\bDestiny\b/g;
+
+  // Appends `text` to `parent` as plain text nodes, splitting out any
+  // "Destiny" occurrences into their own highlighted span. DOM-built
+  // rather than innerHTML, same as every other widget here.
+  function appendHighlighted(parent, text) {
+    var lastIndex = 0;
+    var match;
+    DESTINY_RE.lastIndex = 0;
+    while ((match = DESTINY_RE.exec(text))) {
+      if (match.index > lastIndex) {
+        parent.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+      }
+      parent.appendChild(el("span", "ark-core-tip-kw", match[0]));
+      lastIndex = DESTINY_RE.lastIndex;
+    }
+    if (lastIndex < text.length) {
+      parent.appendChild(document.createTextNode(text.slice(lastIndex)));
+    }
+  }
+
+  // Builds the hover/focus/tap tooltip panel for one core, or null if
+  // core-options-data.js has no entry for this label (fails quietly).
+  function buildTooltip(label) {
+    var data = window.DB_CORE_OPTIONS && window.DB_CORE_OPTIONS[label];
+    if (!data || !data.options || !data.options.length) return null;
+
+    var tip = el("div", "ark-core-options-tip");
+    tip.setAttribute("role", "tooltip");
+
+    tip.appendChild(el("div", "ark-core-tip-title", label));
+    tip.appendChild(el("div", "ark-core-tip-subtitle", "Core Option"));
+
+    var krSet = {};
+    (data.krPatched || []).forEach(function (bp) { krSet[bp] = true; });
+
+    var list = el("div", "ark-core-tip-list");
+    data.options.forEach(function (opt) {
+      var line = el("div", "ark-core-tip-line");
+      var bpLabel = el("span", "ark-core-tip-bp", "[" + opt.bp + "]");
+      line.appendChild(bpLabel);
+      if (krSet[opt.bp]) {
+        line.appendChild(el("span", "ark-core-tip-krtag", "KR"));
+      }
+      var textEl = el("span", "ark-core-tip-text");
+      appendHighlighted(textEl, opt.text);
+      line.appendChild(document.createTextNode(" "));
+      line.appendChild(textEl);
+      list.appendChild(line);
+    });
+    tip.appendChild(list);
+
+    if (data.note) {
+      tip.appendChild(el("div", "ark-core-tip-note", data.note));
+    }
+
+    return tip;
+  }
 
   function buildItem(entry) {
     var item = el("div", "ark-core-item");
@@ -87,8 +159,45 @@
 
     item.appendChild(info);
 
+    var tip = buildTooltip(entry.label);
+    if (tip) {
+      item.classList.add("ark-core-item-tip");
+      item.setAttribute("tabindex", "0");
+      item.appendChild(tip);
+
+      // CSS alone (:hover/:focus-within) covers mouse and keyboard; this
+      // just adds a tap-to-toggle for touch, which triggers neither -
+      // matching the ap-calc-popover open/close-on-outside-click pattern
+      // elsewhere on the site rather than inventing a new one.
+      item.addEventListener("click", function (evt) {
+        if (item.classList.contains("ark-core-tip-open")) {
+          item.classList.remove("ark-core-tip-open");
+          return;
+        }
+        document.querySelectorAll(".ark-core-item.ark-core-tip-open").forEach(function (open) {
+          open.classList.remove("ark-core-tip-open");
+        });
+        item.classList.add("ark-core-tip-open");
+        evt.stopPropagation();
+      });
+    }
+
     return item;
   }
+
+  // Tap-outside-to-close for the touch toggle above.
+  document.addEventListener("click", function () {
+    document.querySelectorAll(".ark-core-item.ark-core-tip-open").forEach(function (open) {
+      open.classList.remove("ark-core-tip-open");
+    });
+  });
+  document.addEventListener("keydown", function (evt) {
+    if (evt.key === "Escape") {
+      document.querySelectorAll(".ark-core-item.ark-core-tip-open").forEach(function (open) {
+        open.classList.remove("ark-core-tip-open");
+      });
+    }
+  });
 
   function renderContainer(container) {
     var result = window.SiteUtils.readInlineJSON(container, "ark-core-badge.js");
