@@ -1437,7 +1437,7 @@
           <p class="ap-brace-compare-flip-note ap-esvs-keystone-note" hidden>Setup A and B land on different best keystones - the comparison above already accounts for that, each running its own.</p>
         </div>
       </div>
-      <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Bracelet inputs above are - fill everything in first or else.</p>
+      <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Engraving inputs above are - fill everything in first or else.</p>
     </details>
   </div>
 </details>
@@ -1730,7 +1730,7 @@
         </div>
 
       </div>
-      <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Engraving inputs above are - fill everything in first or else.</p>
+      <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Accessory inputs above are - fill everything in first or else.</p>
     </details>
   </div>
 </details>

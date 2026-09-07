@@ -884,8 +884,8 @@
       // equippedFlatApDelta/equippedWpDelta below, which only ever back
       // out Accessory A's own known share, leaving whatever the other
       // piece contributes untouched in the total the whole time.
-      avbOtherLine1Tier: getSelect(root, ".ap-avb-other-line1-tier", "Mid"),
-      avbOtherLine2Tier: getSelect(root, ".ap-avb-other-line2-tier", "High"),
+      avbOtherLine1Tier: getSelect(root, ".ap-avb-other-line1-tier", (AVB_SLOT_LABELS[getSelect(root, ".ap-avb-slot", "necklace")] || AVB_SLOT_LABELS.necklace).otherLine1Default),
+      avbOtherLine2Tier: getSelect(root, ".ap-avb-other-line2-tier", (AVB_SLOT_LABELS[getSelect(root, ".ap-avb-slot", "necklace")] || AVB_SLOT_LABELS.necklace).otherLine2Default),
 
       // Gearing (Weapon Power / Attack Power) - feeds only the 5
       // WP/AP bracelet lines below, entirely separate from the Ark
@@ -2441,18 +2441,34 @@
   // only - for Ring/Necklace that row would just show +0.00% forever
   // (lineRatio ≡ 1), since their own Line 1/2 already has its own
   // dedicated Grid/Flat row above.
+  // otherLine1Default/otherLine2Default: this slot's own first-visit
+  // starting tier for the "Other Ring/Earring's Lines" pair (see that
+  // field's own comment above enforceAvbSlotUI). Each slot with
+  // hasOther gets its own pair here specifically so Ring and Earring
+  // don't have to share one hardcoded fallback the way an earlier
+  // version did (that version's switch-listener fallback was just the
+  // literal strings "Mid"/"High" regardless of slot, so Earring's
+  // "Other" always started on Ring's own default order the first time
+  // you ever visited it - these per-slot defaults are what the "Comparing"
+  // switch listener and readInputs' getSelect fallback both read from
+  // instead of a bare string now). Necklace has no "Other" row
+  // (hasOther: false) so its pair here is never actually used - kept
+  // only so every slot has the same shape.
   const AVB_SLOT_LABELS = {
     necklace: {
       name: "Necklace", line1: "Additional Damage", line2: "Outgoing Damage", gridLabel: "Additional Dmg",
       hasGrid: true, hasFlat: true, hasOther: false, hasWpRow: true, hasLineRatioRow: false, line1Table: ACC_NECKLACE_ADD_TABLE, line2Table: ACC_NECKLACE_OUT_TABLE,
+      otherLine1Default: "Mid", otherLine2Default: "High",
     },
     ring: {
       name: "Ring", line1: "Crit Rate", line2: "Crit Damage", gridLabel: "Crit Rate/Dmg",
       hasGrid: true, hasFlat: false, hasOther: true, hasWpRow: true, hasLineRatioRow: false, line1Table: RING_RATE_TABLE, line2Table: ACC_RING_DMG_TABLE,
+      otherLine1Default: "Mid", otherLine2Default: "High",
     },
     earring: {
       name: "Earring", line1: "Attack Power %", line2: "Weapon Power %", gridLabel: "",
       hasGrid: false, hasFlat: false, hasOther: true, hasWpRow: true, hasLineRatioRow: true, line1Table: ACC_EARRING_AP_TABLE, line2Table: ACC_EARRING_WP_TABLE,
+      otherLine1Default: "High", otherLine2Default: "Mid",
     },
   };
 
@@ -5621,17 +5637,18 @@
               if (tierEl && remembered) tierEl.value = remembered.tier;
             }
           });
+          const newCfg = AVB_SLOT_LABELS[avbSlotEl.value] || AVB_SLOT_LABELS.necklace;
           const other1El = root.querySelector(".ap-avb-other-line1-tier");
           if (other1El) {
             avbOtherMemory.line1[avbLastSlot] = other1El.value;
             const remembered = avbOtherMemory.line1[avbSlotEl.value];
-            other1El.value = remembered !== undefined ? remembered : "Mid";
+            other1El.value = remembered !== undefined ? remembered : newCfg.otherLine1Default;
           }
           const other2El = root.querySelector(".ap-avb-other-line2-tier");
           if (other2El) {
             avbOtherMemory.line2[avbLastSlot] = other2El.value;
             const remembered = avbOtherMemory.line2[avbSlotEl.value];
-            other2El.value = remembered !== undefined ? remembered : "High";
+            other2El.value = remembered !== undefined ? remembered : newCfg.otherLine2Default;
           }
           avbLastSlot = avbSlotEl.value;
         });
