@@ -963,8 +963,8 @@
           <p class="ap-bvb-diff-wrap"><span class="ap-bvb-diff">—</span></p>
           <p class="ap-brace-compare-flip-note ap-bvb-keystone-note" hidden>Bracelet A and B land on different best keystones - the comparison above already accounts for that, each running its own.</p>
         </div>
-        <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Bracelet inputs above are - fill everything in first.</p>
       </div>
+      <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Bracelet inputs above are - fill everything in first or else.</p>
     </details>
   </div>
 </details>
@@ -1437,7 +1437,7 @@
           <p class="ap-brace-compare-flip-note ap-esvs-keystone-note" hidden>Setup A and B land on different best keystones - the comparison above already accounts for that, each running its own.</p>
         </div>
       </div>
-    <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Engraving inputs above are - fill everything in first.</p>
+      <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Bracelet inputs above are - fill everything in first or else.</p>
     </details>
   </div>
 </details>
@@ -1580,29 +1580,33 @@
          2 guaranteed lines can land on effects other than the 2 this
          calculator tracks) - resolves to 0, same as Line 3's None and
          every other None tier elsewhere on this page.
-         Line 1/2's labels, the Main Stat range, and the Grid/Flat/Main
-         Stat-Line3/AP%-WP% result rows all relabel/toggle per the
+         Line 1/2's labels, the Main Stat range, and the Grid/Flat/AP%-
+         WP%/Main Stat-Line3 result rows all relabel/toggle per the
          "Comparing" selector - see enforceAvbSlotUI in the JS.
          Main Stat/Line 3 (.ap-avb-wp-row, AVB_SLOT_LABELS' hasWpRow)
-         shows for all three slots. The AP%/WP% Lines row
-         (.ap-avb-lineratio-row, hasLineRatioRow) only shows for Earring
-         - it's the sequential-decomposition counterpart to Main Stat/
-         Line 3 there (see computeAccessoryVsAccessory's own comment on
+         shows for all three slots, and is placed LAST among the result
+         rows so it reads as the closing row no matter which slot is
+         selected - Necklace/Ring already end on it since their AP%/WP%
+         Lines row stays hidden, and Earring's AP%/WP% Lines row
+         (.ap-avb-lineratio-row, hasLineRatioRow) sits just above it for
+         the same reason. hasLineRatioRow only shows for Earring - it's
+         the sequential-decomposition counterpart to Main Stat/Line 3
+         there (see computeAccessoryVsAccessory's own comment on
          mainStatLine3Ratio/lineRatio for why Earring needs this second
          row at all, unlike Ring/Necklace whose Line 1/2 already gets its
          own Grid/Flat row and would just show +0.00% here). -->
     <details class="ap-avb" open>
       <summary>Accessory vs. Accessory</summary>
       <div class="ap-brace-compare-body">
-        <p class="ap-brace-compare-intro">Compares two full accessories against each other and against running neither.</p>
+        <p class="ap-brace-compare-intro">Compares your currently equipped accessory against a candidate replacement, and both against neither.</p>
 
         <div class="ap-gear-card ap-gear-card--avb-options">
           <div class="ap-calc-field-row">
             <label class="ap-calc-field-label">Comparing</label>
             <select class="ap-avb-slot">
               <option value="necklace" selected>Necklace</option>
-              <option value="ring">Ring</option>
               <option value="earring">Earring</option>
+              <option value="ring">Ring</option>
             </select>
           </div>
           <div class="ap-calc-field-row ap-avb-other-row">
@@ -1636,15 +1640,15 @@
             <p class="ap-gear-card-title ap-esvs-card-title">Accessory A<span class="ap-avb-equipped-badge"> (Currently Equipped)</span></p>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label">Main Stat</label>
-              <input type="number" class="ap-avb-a-mainstat" min="15178" max="17857" step="1" value="17857">
+              <input type="number" class="ap-avb-a-mainstat" min="15178" max="17857" step="1" value="15178">
             </div>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label ap-avb-a-line1-label">Additional Damage</label>
               <select class="ap-avb-a-line1-tier">
                 <option value="None">None</option>
                 <option value="Low">0.70%</option>
-                <option value="Mid">1.60%</option>
-                <option value="High" selected>2.60%</option>
+                <option value="Mid" selected>1.60%</option>
+                <option value="High">2.60%</option>
               </select>
             </div>
             <div class="ap-calc-field-row">
@@ -1652,8 +1656,8 @@
               <select class="ap-avb-a-line2-tier">
                 <option value="None">None</option>
                 <option value="Low">0.55%</option>
-                <option value="Mid">1.20%</option>
-                <option value="High" selected>2.00%</option>
+                <option value="Mid" selected>1.20%</option>
+                <option value="High">2.00%</option>
               </select>
             </div>
             <div class="ap-bvb-line-row">
@@ -1672,23 +1676,23 @@
               <div class="ap-stat-card-row"><span class="ap-summary-label">vs No <span class="ap-avb-slot-label-vsnone">Necklace</span></span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-avb-grid-row"><span class="ap-summary-label ap-avb-grid-label">Additional Dmg</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-avb-flat-row"><span class="ap-summary-label">Outgoing Dmg</span><span class="ap-bvb-flat ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row ap-avb-wp-row"><span class="ap-summary-label">Main Stat / Line 3</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-avb-lineratio-row"><span class="ap-summary-label">AP% / WP% Lines</span><span class="ap-bvb-lineratio ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-avb-wp-row"><span class="ap-summary-label">Main Stat / Line 3</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
             </div>
           </div>
           <div class="ap-esvs-card ap-esvs-card-b ap-avb-card-b">
-            <p class="ap-gear-card-title ap-esvs-card-title">Accessory B</p>
+            <p class="ap-gear-card-title ap-esvs-card-title">Accessory B<span class="ap-avb-equipped-badge"> (Candidate)</span></p>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label">Main Stat</label>
-              <input type="number" class="ap-avb-b-mainstat" min="15178" max="17857" step="1" value="15178">
+              <input type="number" class="ap-avb-b-mainstat" min="15178" max="17857" step="1" value="17857">
             </div>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label ap-avb-b-line1-label">Additional Damage</label>
               <select class="ap-avb-b-line1-tier">
                 <option value="None">None</option>
                 <option value="Low">0.70%</option>
-                <option value="Mid" selected>1.60%</option>
-                <option value="High">2.60%</option>
+                <option value="Mid">1.60%</option>
+                <option value="High" selected>2.60%</option>
               </select>
             </div>
             <div class="ap-calc-field-row">
@@ -1696,8 +1700,8 @@
               <select class="ap-avb-b-line2-tier">
                 <option value="None">None</option>
                 <option value="Low">0.55%</option>
-                <option value="Mid" selected>1.20%</option>
-                <option value="High">2.00%</option>
+                <option value="Mid">1.20%</option>
+                <option value="High" selected>2.00%</option>
               </select>
             </div>
             <div class="ap-bvb-line-row">
@@ -1716,8 +1720,8 @@
               <div class="ap-stat-card-row"><span class="ap-summary-label">vs No <span class="ap-avb-slot-label-vsnone">Necklace</span></span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-avb-grid-row"><span class="ap-summary-label ap-avb-grid-label">Additional Dmg</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-avb-flat-row"><span class="ap-summary-label">Outgoing Dmg</span><span class="ap-bvb-flat ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row ap-avb-wp-row"><span class="ap-summary-label">Main Stat / Line 3</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-avb-lineratio-row"><span class="ap-summary-label">AP% / WP% Lines</span><span class="ap-bvb-lineratio ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-avb-wp-row"><span class="ap-summary-label">Main Stat / Line 3</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
             </div>
           </div>
         </div>
@@ -1726,6 +1730,7 @@
         </div>
 
       </div>
+      <p class="ap-brace-compare-footer-note">Only as accurate as the Ark Passive, Character Data, and Engraving inputs above are - fill everything in first or else.</p>
     </details>
   </div>
 </details>

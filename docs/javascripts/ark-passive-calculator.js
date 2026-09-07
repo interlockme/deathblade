@@ -5360,6 +5360,12 @@
     // same two lines as the candidates, just on the piece that ISN'T
     // being swapped. Mandatory (always shown once hasOther is true, no
     // checkbox to gate visibility) - see readInputs' own comment on why.
+    // setTierOptionValues below only re-stamps this pair's option LABELS
+    // for whichever slot is picked - it never touches which option is
+    // selected, so Ring and Earring's own last-picked tiers are kept
+    // separate by the avbOtherMemory swap in the "Comparing" select's own
+    // change listener (see its comment for why, and why this needs no
+    // per-side A/B key the way Main Stat/Line 3 do).
     root.querySelectorAll(".ap-avb-other-row, .ap-avb-other-fields").forEach((el) => {
       el.hidden = !cfg.hasOther;
     });
@@ -5552,35 +5558,108 @@
         });
       }
 
-      // Accessory vs. Accessory's Main Stat and Line 3 fields are single
-      // shared inputs reused across all 3 "Comparing" slots (see
-      // AVB_SLOT_LABELS) - enforceAvbSlotUI re-labels them and clamps
-      // Main Stat's typed number into the new slot's min/max on every
-      // recompute, but it never resets either field to a fresh value on
-      // an actual slot switch, so whatever was last typed/picked for
-      // (say) Ring keeps sitting there - just clamped into range -
-      // after switching to Earring, and Line 3's type/tier carries over
-      // completely untouched. Same "only fire on an actual value change"
-      // shape as engrSpecEls above: a dedicated change listener on the
-      // slot selector itself, run once per real switch, resetting Main
-      // Stat back to its slot's own default (A: max, matching a
-      // best-in-slot current piece; B: min, matching a fresh candidate
-      // roll - same defaults the static markup ships with) and Line 3
-      // back to "None" so a stale Flat AP/WP pick from a different slot
-      // can't quietly ride along into this one.
+      // Accessory vs. Accessory's Main Stat, Line 3, and Other Ring/
+      // Earring's Lines fields are single shared inputs reused across all
+      // 3 "Comparing" slots (see AVB_SLOT_LABELS). None of them need a
+      // hard reset-on-switch - all three are clamped/relabeled into the
+      // new slot's own shape on every recompute (enforceAvbSlotUI for
+      // Main Stat's range and the Other fields' tier tables,
+      // enforceAvbLineControls for Line 3's Flat AP/WP tier tables), so
+      // there's nothing left for a reset to protect against. An earlier
+      // version of this listener force-reset Main Stat to that slot's
+      // min/max AND Line 3 back to "None" on every single switch - no
+      // real justification beyond matching the static markup's own
+      // defaults, and it actively fought the reader: type/pick a real
+      // value, glance at another slot, come back, and it was gone.
+      // Dropping the reset entirely surfaces a real problem for Main
+      // Stat though: clamping alone can't tell A and B apart. Necklace's
+      // own defaults (15178/17857) both sit above Ring's max (12897), so
+      // on the FIRST-EVER switch to Ring, both A and B would clamp to
+      // that same 12897 ceiling - the "modest current piece vs. maxed
+      // candidate" split the static markup ships with silently
+      // collapsing into two identical numbers. Line 3 has the same
+      // problem in miniature: its Flat AP/WP TYPE has no min/max to
+      // clamp into at all, so with no memory every slot's first visit
+      // would show whatever type/tier was last picked on a totally
+      // different slot, verbatim, as if it were that slot's own real
+      // starting point. Other Ring/Earring's Lines has the same problem
+      // as Line 3 (a tier <select> with nothing to clamp into), but
+      // WITHOUT a side to key on - unlike Main Stat/Line 3 there's only
+      // one "Other" field pair (not one per A and B; the piece it
+      // describes isn't being compared, so both sides share it), so its
+      // memory is keyed by slot alone, not slot-per-side.
+      // The fix for all three: remember each slot's own last value
+      // (avbMainStatMemory/avbLine3Memory per side, avbOtherMemory per
+      // slot only) and restore that on a switch BACK to an already-
+      // visited slot, but fall through to that slot's own default the
+      // first time it's ever selected - Main Stat's min/max (A: min, B:
+      // max), Line 3's "None", Other's Mid/High (matching the static
+      // markup's own starting tiers) - preserving real input without
+      // losing the intentional starting point a fresh slot should still
+      // show.
+      const avbMainStatMemory = { a: {}, b: {} };
+      const avbLine3Memory = { a: {}, b: {} };
+      const avbOtherMemory = { line1: {}, line2: {} };
+      let avbLastSlot = root.querySelector(".ap-avb-slot") ? root.querySelector(".ap-avb-slot").value : "necklace";
       const avbSlotEl = root.querySelector(".ap-avb-slot");
       if (avbSlotEl) {
         avbSlotEl.addEventListener("change", () => {
-          const range = ACC_MAIN_STAT_RANGE[avbSlotEl.value] || ACC_MAIN_STAT_RANGE.necklace;
-          const aMs = root.querySelector(".ap-avb-a-mainstat");
-          const bMs = root.querySelector(".ap-avb-b-mainstat");
-          if (aMs) aMs.value = range.max;
-          if (bMs) bMs.value = range.min;
           ["a", "b"].forEach((prefix) => {
+            const msEl = root.querySelector(".ap-avb-" + prefix + "-mainstat");
+            if (msEl) {
+              avbMainStatMemory[prefix][avbLastSlot] = msEl.value;
+              const range = ACC_MAIN_STAT_RANGE[avbSlotEl.value] || ACC_MAIN_STAT_RANGE.necklace;
+              const remembered = avbMainStatMemory[prefix][avbSlotEl.value];
+              msEl.value = remembered !== undefined ? remembered : (prefix === "a" ? range.min : range.max);
+            }
             const typeEl = root.querySelector(".ap-avb-" + prefix + "-line3-type");
-            if (typeEl) typeEl.value = "none";
+            const tierEl = root.querySelector(".ap-avb-" + prefix + "-line3-tier");
+            if (typeEl) {
+              avbLine3Memory[prefix][avbLastSlot] = { type: typeEl.value, tier: tierEl ? tierEl.value : "Mid" };
+              const remembered = avbLine3Memory[prefix][avbSlotEl.value];
+              typeEl.value = remembered ? remembered.type : "none";
+              if (tierEl && remembered) tierEl.value = remembered.tier;
+            }
           });
+          const other1El = root.querySelector(".ap-avb-other-line1-tier");
+          if (other1El) {
+            avbOtherMemory.line1[avbLastSlot] = other1El.value;
+            const remembered = avbOtherMemory.line1[avbSlotEl.value];
+            other1El.value = remembered !== undefined ? remembered : "Mid";
+          }
+          const other2El = root.querySelector(".ap-avb-other-line2-tier");
+          if (other2El) {
+            avbOtherMemory.line2[avbLastSlot] = other2El.value;
+            const remembered = avbOtherMemory.line2[avbSlotEl.value];
+            other2El.value = remembered !== undefined ? remembered : "High";
+          }
+          avbLastSlot = avbSlotEl.value;
         });
+      }
+      // resetFieldsToDefaults (used by both the Reset-to-defaults button
+      // and the preset switcher below) sets these same fields' values
+      // directly rather than through user interaction, so it never fires
+      // the "change" event the swap logic above listens for - avbLastSlot
+      // and the three memory caches are left holding whatever they had
+      // BEFORE the reset, now silently out of sync with the freshly-reset
+      // DOM. The next real slot switch then saves the just-reset value
+      // under the wrong (stale avbLastSlot) key and/or reads back a
+      // pre-reset value that's no longer meant to exist - e.g. Necklace's
+      // reset-to-default 15178 getting filed under "ring" and clamping
+      // straight to Ring's max on the next switch, the exact "Accessory
+      // A lands on max instead of min" bug this whole memory system was
+      // built to prevent in the first place. Both call sites below must
+      // call this right after the fields themselves come back to their
+      // defaults, so the caches start clean and avbLastSlot matches
+      // whatever resetFieldsToDefaults just put in the slot dropdown.
+      function resetAvbMemory() {
+        avbMainStatMemory.a = {};
+        avbMainStatMemory.b = {};
+        avbLine3Memory.a = {};
+        avbLine3Memory.b = {};
+        avbOtherMemory.line1 = {};
+        avbOtherMemory.line2 = {};
+        avbLastSlot = avbSlotEl ? avbSlotEl.value : "necklace";
       }
 
       // Coalesced to at most one recompute+render+save per animation
@@ -5684,7 +5763,10 @@
             "Reset Preset " + activeId + " to defaults? This clears Preset " +
             activeId + " only - your other presets aren't affected."
           );
-          if (confirmed) resetInputs(root);
+          if (confirmed) {
+            resetInputs(root);
+            resetAvbMemory();
+          }
         });
       }
 
@@ -5695,7 +5777,14 @@
       // gear/results panels above it.
       root.querySelectorAll(".ap-calc-preset").forEach((btn) => {
         btn.addEventListener("click", () => {
-          switchPreset(root, parseInt(btn.dataset.preset, 10));
+          const newId = parseInt(btn.dataset.preset, 10);
+          // switchPreset() itself no-ops (returns before touching any
+          // fields) when clicking the already-active preset - guard the
+          // same way here, or resetAvbMemory would wipe out perfectly
+          // live avb memory for what was actually a no-op click.
+          if (newId === getActivePresetId()) return;
+          switchPreset(root, newId);
+          resetAvbMemory();
         });
       });
 

@@ -5590,6 +5590,17 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-esvs-card-title {
   color: var(--ap-esvs-accent);
 }
+/* Accessory vs. Accessory's "(Currently Equipped)"/"(Candidate)" suffix -
+   was inheriting .ap-gear-card-title's bold/uppercase/accent-colored
+   treatment wholesale (no rule of its own existed), so it read as loud
+   as the "Accessory A"/"Accessory B" title itself instead of a secondary
+   note. Muted, normal-weight, and not uppercased so it visually steps
+   back from the title. */
+.md-typeset .ap-avb-equipped-badge {
+  color: var(--dbc-muted-text);
+  font-weight: 400;
+  text-transform: none;
+}
 .md-typeset .ap-esvs-card .ap-calc-field-row {
   margin-bottom: 0.5em;
 }
