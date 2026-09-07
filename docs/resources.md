@@ -760,17 +760,17 @@
           <div class="ap-bvb-card ap-bvb-card-a">
             <p class="ap-gear-card-title ap-bvb-card-title">Bracelet A</p>
             <div class="ap-calc-field-row">
-              <label class="ap-calc-field-label" for="ap-bvb-a-spec">Spec Stat</label>
+              <label class="ap-calc-field-label">Spec Stat</label>
               <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE for CDR." hidden>!</span>
               <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen." hidden>i</span>
-              <input type="number" id="ap-bvb-a-spec" class="ap-bvb-a-spec" min="60" max="120" step="1" value="100">
+              <input type="number" class="ap-bvb-a-spec" min="60" max="120" step="1" value="100">
             </div>
             <div class="ap-calc-field-row">
-              <label class="ap-calc-field-label" for="ap-bvb-a-crit">Crit Stat</label>
-              <input type="number" id="ap-bvb-a-crit" class="ap-bvb-a-crit" min="60" max="120" step="1" value="80">
+              <label class="ap-calc-field-label">Crit Stat</label>
+              <input type="number" class="ap-bvb-a-crit" min="60" max="120" step="1" value="80">
             </div>
             <div class="ap-bvb-line-row">
-              <select id="ap-bvb-a-line1-type" class="ap-bvb-a-line1-type ap-bvb-line-type">
+              <select class="ap-bvb-a-line1-type ap-bvb-line-type">
                 <option value="none">— Line 3: None —</option>
                 <option value="crit_rate_dual" selected>Crit Rate % &amp; Crit Hit Dmg %</option>
                 <option value="crit_rate">Crit Rate %</option>
@@ -788,15 +788,15 @@
                 <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
                 <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
               </select>
-              <select id="ap-bvb-a-line1-tier" class="ap-bvb-a-line1-tier ap-bvb-line-tier">
+              <select class="ap-bvb-a-line1-tier ap-bvb-line-tier">
                 <option value="Low">Low</option>
                 <option value="Mid" selected>Mid</option>
                 <option value="High">High</option>
               </select>
-              <input type="number" id="ap-bvb-a-line1-mainstat" class="ap-bvb-a-line1-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <input type="number" class="ap-bvb-a-line1-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
             </div>
             <div class="ap-bvb-line-row">
-              <select id="ap-bvb-a-line2-type" class="ap-bvb-a-line2-type ap-bvb-line-type">
+              <select class="ap-bvb-a-line2-type ap-bvb-line-type">
                 <option value="none">— Line 4: None —</option>
                 <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
                 <option value="crit_rate">Crit Rate %</option>
@@ -814,15 +814,15 @@
                 <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
                 <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
               </select>
-              <select id="ap-bvb-a-line2-tier" class="ap-bvb-a-line2-tier ap-bvb-line-tier">
+              <select class="ap-bvb-a-line2-tier ap-bvb-line-tier">
                 <option value="Low">Low</option>
                 <option value="Mid" selected>Mid</option>
                 <option value="High">High</option>
               </select>
-              <input type="number" id="ap-bvb-a-line2-mainstat" class="ap-bvb-a-line2-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <input type="number" class="ap-bvb-a-line2-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
             </div>
             <div class="ap-bvb-line-row">
-              <select id="ap-bvb-a-line3-type" class="ap-bvb-a-line3-type ap-bvb-line-type">
+              <select class="ap-bvb-a-line3-type ap-bvb-line-type">
                 <option value="none">— Line 5: None —</option>
                 <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
                 <option value="crit_rate">Crit Rate %</option>
@@ -840,19 +840,19 @@
                 <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
                 <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
               </select>
-              <select id="ap-bvb-a-line3-tier" class="ap-bvb-a-line3-tier ap-bvb-line-tier">
+              <select class="ap-bvb-a-line3-tier ap-bvb-line-tier">
                 <option value="Low">Low</option>
                 <option value="Mid" selected>Mid</option>
                 <option value="High">High</option>
               </select>
-              <input type="number" id="ap-bvb-a-line3-mainstat" class="ap-bvb-a-line3-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <input type="number" class="ap-bvb-a-line3-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
             </div>
             <div class="ap-bvb-results">
               <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-bvb-keystone ap-summary-value">—</span></div>
               <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Keystone/Crit Lines</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Spec Stat</span><span class="ap-bvb-spec-val ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-other-wrap"><label class="ap-bvb-inline-check ap-bvb-a-demons-wrap" title="Include the vs Demon/Archdemon portion of the Additional Damage &amp; vs Demon/Archdemon line - unchecked values only its Additional Damage portion." hidden><input type="checkbox" id="ap-bvb-a-demons" class="ap-bvb-a-demons"> vs Demons</label><label class="ap-bvb-inline-check ap-bvb-a-cdest-wrap" title="Estimate the +2% Cooldown line's penalty into its value - unchecked uses its raw stated Outgoing Damage % instead." hidden><input type="checkbox" id="ap-bvb-a-cdest" class="ap-bvb-a-cdest" checked> +CD Estimate</label><span class="ap-bvb-flat ap-summary-value">—</span></span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-other-wrap"><label class="ap-bvb-inline-check ap-bvb-a-demons-wrap" title="Include the vs Demon/Archdemon portion of the Additional Damage &amp; vs Demon/Archdemon line - unchecked values only its Additional Damage portion." hidden><input type="checkbox" class="ap-bvb-a-demons"> vs Demons</label><label class="ap-bvb-inline-check ap-bvb-a-cdest-wrap" title="Estimate the +2% Cooldown line's penalty into its value - unchecked uses its raw stated Outgoing Damage % instead." hidden><input type="checkbox" class="ap-bvb-a-cdest" checked> +CD Estimate</label><span class="ap-bvb-flat ap-summary-value">—</span></span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">WP/AP Lines</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
             </div>
           </div>
@@ -860,17 +860,17 @@
           <div class="ap-bvb-card ap-bvb-card-b">
             <p class="ap-gear-card-title ap-bvb-card-title">Bracelet B</p>
             <div class="ap-calc-field-row">
-              <label class="ap-calc-field-label" for="ap-bvb-b-spec">Spec Stat</label>
+              <label class="ap-calc-field-label">Spec Stat</label>
               <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE for CDR." hidden>!</span>
               <span class="ap-brace-info-icon ap-bvb-spec-note" title="This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen." hidden>i</span>
-              <input type="number" id="ap-bvb-b-spec" class="ap-bvb-b-spec" min="60" max="120" step="1" value="80">
+              <input type="number" class="ap-bvb-b-spec" min="60" max="120" step="1" value="80">
             </div>
             <div class="ap-calc-field-row">
-              <label class="ap-calc-field-label" for="ap-bvb-b-crit">Crit Stat</label>
-              <input type="number" id="ap-bvb-b-crit" class="ap-bvb-b-crit" min="60" max="120" step="1" value="100">
+              <label class="ap-calc-field-label">Crit Stat</label>
+              <input type="number" class="ap-bvb-b-crit" min="60" max="120" step="1" value="100">
             </div>
             <div class="ap-bvb-line-row">
-              <select id="ap-bvb-b-line1-type" class="ap-bvb-b-line1-type ap-bvb-line-type">
+              <select class="ap-bvb-b-line1-type ap-bvb-line-type">
                 <option value="none">— Line 3: None —</option>
                 <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
                 <option value="crit_rate" selected>Crit Rate %</option>
@@ -888,15 +888,15 @@
                 <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
                 <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
               </select>
-              <select id="ap-bvb-b-line1-tier" class="ap-bvb-b-line1-tier ap-bvb-line-tier">
+              <select class="ap-bvb-b-line1-tier ap-bvb-line-tier">
                 <option value="Low">Low</option>
                 <option value="Mid" selected>Mid</option>
                 <option value="High">High</option>
               </select>
-              <input type="number" id="ap-bvb-b-line1-mainstat" class="ap-bvb-b-line1-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <input type="number" class="ap-bvb-b-line1-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
             </div>
             <div class="ap-bvb-line-row">
-              <select id="ap-bvb-b-line2-type" class="ap-bvb-b-line2-type ap-bvb-line-type">
+              <select class="ap-bvb-b-line2-type ap-bvb-line-type">
                 <option value="none">— Line 4: None —</option>
                 <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
                 <option value="crit_rate">Crit Rate %</option>
@@ -914,15 +914,15 @@
                 <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
                 <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
               </select>
-              <select id="ap-bvb-b-line2-tier" class="ap-bvb-b-line2-tier ap-bvb-line-tier">
+              <select class="ap-bvb-b-line2-tier ap-bvb-line-tier">
                 <option value="Low">Low</option>
                 <option value="Mid" selected>Mid</option>
                 <option value="High">High</option>
               </select>
-              <input type="number" id="ap-bvb-b-line2-mainstat" class="ap-bvb-b-line2-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <input type="number" class="ap-bvb-b-line2-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
             </div>
             <div class="ap-bvb-line-row">
-              <select id="ap-bvb-b-line3-type" class="ap-bvb-b-line3-type ap-bvb-line-type">
+              <select class="ap-bvb-b-line3-type ap-bvb-line-type">
                 <option value="none">— Line 5: None —</option>
                 <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
                 <option value="crit_rate">Crit Rate %</option>
@@ -940,19 +940,19 @@
                 <option value="wp_periodic">Weapon Power + Periodic On-Hit</option>
                 <option value="wp_hpgated">Weapon Power + &gt;50% HP On-Hit</option>
               </select>
-              <select id="ap-bvb-b-line3-tier" class="ap-bvb-b-line3-tier ap-bvb-line-tier">
+              <select class="ap-bvb-b-line3-tier ap-bvb-line-tier">
                 <option value="Low">Low</option>
                 <option value="Mid" selected>Mid</option>
                 <option value="High">High</option>
               </select>
-              <input type="number" id="ap-bvb-b-line3-mainstat" class="ap-bvb-b-line3-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
+              <input type="number" class="ap-bvb-b-line3-mainstat ap-bvb-line-mainstat" min="10000" max="16000" step="100" value="14000" title="Flat STR/DEX/INT granted by this line (10000-16000)." hidden>
             </div>
             <div class="ap-bvb-results">
               <div class="ap-stat-card-row"><span class="ap-summary-label">Best Keystone</span><span class="ap-bvb-keystone ap-summary-value">—</span></div>
               <div class="ap-stat-card-row"><span class="ap-summary-label">vs No Bracelet</span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Keystone/Crit Lines</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Spec Stat</span><span class="ap-bvb-spec-val ap-summary-value">—</span></div>
-              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-other-wrap"><label class="ap-bvb-inline-check ap-bvb-b-demons-wrap" title="Include the vs Demon/Archdemon portion of the Additional Damage &amp; vs Demon/Archdemon line - unchecked values only its Additional Damage portion." hidden><input type="checkbox" id="ap-bvb-b-demons" class="ap-bvb-b-demons"> vs Demons</label><label class="ap-bvb-inline-check ap-bvb-b-cdest-wrap" title="Estimate the +2% Cooldown line's penalty into its value - unchecked uses its raw stated Outgoing Damage % instead." hidden><input type="checkbox" id="ap-bvb-b-cdest" class="ap-bvb-b-cdest" checked> +CD Estimate</label><span class="ap-bvb-flat ap-summary-value">—</span></span></div>
+              <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">Other Lines</span><span class="ap-bvb-other-wrap"><label class="ap-bvb-inline-check ap-bvb-b-demons-wrap" title="Include the vs Demon/Archdemon portion of the Additional Damage &amp; vs Demon/Archdemon line - unchecked values only its Additional Damage portion." hidden><input type="checkbox" class="ap-bvb-b-demons"> vs Demons</label><label class="ap-bvb-inline-check ap-bvb-b-cdest-wrap" title="Estimate the +2% Cooldown line's penalty into its value - unchecked uses its raw stated Outgoing Damage % instead." hidden><input type="checkbox" class="ap-bvb-b-cdest" checked> +CD Estimate</label><span class="ap-bvb-flat ap-summary-value">—</span></span></div>
               <div class="ap-stat-card-row ap-bvb-breakdown-row"><span class="ap-summary-label">WP/AP Lines</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
             </div>
           </div>
@@ -1552,6 +1552,181 @@
     </div>
 
     <p class="ap-brace-compare-footer-note">Earrings and Flat Bonuses use values from the Gearing section and are hidden until Weapon Power and Main Stat are both filled in.</p>
+
+    <!-- Accessory vs. Accessory: same relationship to the 4 panels above
+         as Bracelet vs. Bracelet has to Bracelet Comparison - a full-piece
+         swap (real typed Main Stat + all 3 real lines at once) instead of
+         one line valued in isolation. ONE tool with a "Comparing" selector
+         (Necklace/Ring/Earring) rather than 3 separate card pairs - the 3
+         slot types share the same shape (Main Stat + 2 guaranteed lines +
+         1 optional universal line), so relabeling one set of fields beats
+         tripling the card count for something only compared one slot at a
+         time. See computeAccessoryVsAccessory's own JS comment for the
+         full methodology, including why the OTHER real ring/earring
+         (not the one being replaced) gets its own isolated, mandatory
+         "Other Ring"/"Other Earring" fields below rather than reading
+         Gearing's ring2/earring2 fields directly or an opt-in checkbox
+         defaulting to empty - this calculator doesn't surface which of
+         your two real rings/earrings is "Ring 1" vs "Ring 2" anywhere,
+         so there's no reliable way to tell Gearing's second slot apart
+         from the one being replaced here, and "assumed empty" can never
+         be true for a stat that always physically exists.
+         Reuses .ap-esvs-card's plain label+select field-row shape (Main
+         Stat/Line 1/Line 2 are tier-only, no free-typed line-type picker
+         the way Bracelet vs. Bracelet's WP-kind lines need), not
+         .ap-bvb-card's - only Line 3 (None/Flat AP/Flat WP) needs a
+         type+tier pair, so only that one row borrows .ap-bvb-line-row.
+         Line 1/2's tier includes a None option too (a real accessory's
+         2 guaranteed lines can land on effects other than the 2 this
+         calculator tracks) - resolves to 0, same as Line 3's None and
+         every other None tier elsewhere on this page.
+         Line 1/2's labels, the Main Stat range, and the Grid/Flat/Main
+         Stat-Line3/AP%-WP% result rows all relabel/toggle per the
+         "Comparing" selector - see enforceAvbSlotUI in the JS.
+         Main Stat/Line 3 (.ap-avb-wp-row, AVB_SLOT_LABELS' hasWpRow)
+         shows for all three slots. The AP%/WP% Lines row
+         (.ap-avb-lineratio-row, hasLineRatioRow) only shows for Earring
+         - it's the sequential-decomposition counterpart to Main Stat/
+         Line 3 there (see computeAccessoryVsAccessory's own comment on
+         mainStatLine3Ratio/lineRatio for why Earring needs this second
+         row at all, unlike Ring/Necklace whose Line 1/2 already gets its
+         own Grid/Flat row and would just show +0.00% here). -->
+    <details class="ap-avb" open>
+      <summary>Accessory vs. Accessory</summary>
+      <div class="ap-brace-compare-body">
+        <p class="ap-brace-compare-intro">Compares two full accessories against each other and against running neither.</p>
+
+        <div class="ap-gear-card ap-gear-card--avb-options">
+          <div class="ap-calc-field-row">
+            <label class="ap-calc-field-label">Comparing</label>
+            <select class="ap-avb-slot">
+              <option value="necklace" selected>Necklace</option>
+              <option value="ring">Ring</option>
+              <option value="earring">Earring</option>
+            </select>
+          </div>
+          <div class="ap-calc-field-row ap-avb-other-row">
+            <label class="ap-calc-field-label">Other <span class="ap-avb-other-slot-label">Ring</span>'s Lines</label>
+            <span class="ap-brace-info-icon" title="Rings and Earrings come in pairs. Enter your OTHER ring/earring's real Crit Rate/Crit Damage (or Attack Power %/Weapon Power %) here.">i</span>
+          </div>
+          <div class="ap-avb-other-fields">
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label ap-avb-other-line1-label">Crit Rate</label>
+              <select class="ap-avb-other-line1-tier">
+                <option value="None">None</option>
+                <option value="Low">0.40%</option>
+                <option value="Mid" selected>0.95%</option>
+                <option value="High">1.55%</option>
+              </select>
+            </div>
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label ap-avb-other-line2-label">Crit Damage</label>
+              <select class="ap-avb-other-line2-tier">
+                <option value="None">None</option>
+                <option value="Low">1.10%</option>
+                <option value="Mid">2.40%</option>
+                <option value="High" selected>4.00%</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="ap-esvs-cards">
+          <div class="ap-esvs-card ap-esvs-card-a ap-avb-card-a">
+            <p class="ap-gear-card-title ap-esvs-card-title">Accessory A<span class="ap-avb-equipped-badge"> (Currently Equipped)</span></p>
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label">Main Stat</label>
+              <input type="number" class="ap-avb-a-mainstat" min="15178" max="17857" step="1" value="17857">
+            </div>
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label ap-avb-a-line1-label">Additional Damage</label>
+              <select class="ap-avb-a-line1-tier">
+                <option value="None">None</option>
+                <option value="Low">0.70%</option>
+                <option value="Mid">1.60%</option>
+                <option value="High" selected>2.60%</option>
+              </select>
+            </div>
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label ap-avb-a-line2-label">Outgoing Damage</label>
+              <select class="ap-avb-a-line2-tier">
+                <option value="None">None</option>
+                <option value="Low">0.55%</option>
+                <option value="Mid">1.20%</option>
+                <option value="High" selected>2.00%</option>
+              </select>
+            </div>
+            <div class="ap-bvb-line-row">
+              <select class="ap-avb-a-line3-type ap-bvb-line-type">
+                <option value="none" selected>— Line 3: None —</option>
+                <option value="ap_flat">Attack Power</option>
+                <option value="wp_flat">Weapon Power</option>
+              </select>
+              <select class="ap-avb-a-line3-tier ap-bvb-line-tier" hidden disabled>
+                <option value="Low">80 AP</option>
+                <option value="Mid" selected>195 AP</option>
+                <option value="High">390 AP</option>
+              </select>
+            </div>
+            <div class="ap-esvs-results">
+              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No <span class="ap-avb-slot-label-vsnone">Necklace</span></span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-avb-grid-row"><span class="ap-summary-label ap-avb-grid-label">Additional Dmg</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-avb-flat-row"><span class="ap-summary-label">Outgoing Dmg</span><span class="ap-bvb-flat ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-avb-wp-row"><span class="ap-summary-label">Main Stat / Line 3</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-avb-lineratio-row"><span class="ap-summary-label">AP% / WP% Lines</span><span class="ap-bvb-lineratio ap-summary-value">—</span></div>
+            </div>
+          </div>
+          <div class="ap-esvs-card ap-esvs-card-b ap-avb-card-b">
+            <p class="ap-gear-card-title ap-esvs-card-title">Accessory B</p>
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label">Main Stat</label>
+              <input type="number" class="ap-avb-b-mainstat" min="15178" max="17857" step="1" value="15178">
+            </div>
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label ap-avb-b-line1-label">Additional Damage</label>
+              <select class="ap-avb-b-line1-tier">
+                <option value="None">None</option>
+                <option value="Low">0.70%</option>
+                <option value="Mid" selected>1.60%</option>
+                <option value="High">2.60%</option>
+              </select>
+            </div>
+            <div class="ap-calc-field-row">
+              <label class="ap-calc-field-label ap-avb-b-line2-label">Outgoing Damage</label>
+              <select class="ap-avb-b-line2-tier">
+                <option value="None">None</option>
+                <option value="Low">0.55%</option>
+                <option value="Mid" selected>1.20%</option>
+                <option value="High">2.00%</option>
+              </select>
+            </div>
+            <div class="ap-bvb-line-row">
+              <select class="ap-avb-b-line3-type ap-bvb-line-type">
+                <option value="none" selected>— Line 3: None —</option>
+                <option value="ap_flat">Attack Power</option>
+                <option value="wp_flat">Weapon Power</option>
+              </select>
+              <select class="ap-avb-b-line3-tier ap-bvb-line-tier" hidden disabled>
+                <option value="Low">80 AP</option>
+                <option value="Mid" selected>195 AP</option>
+                <option value="High">390 AP</option>
+              </select>
+            </div>
+            <div class="ap-esvs-results">
+              <div class="ap-stat-card-row"><span class="ap-summary-label">vs No <span class="ap-avb-slot-label-vsnone">Necklace</span></span><span class="ap-bvb-vs-none ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-avb-grid-row"><span class="ap-summary-label ap-avb-grid-label">Additional Dmg</span><span class="ap-bvb-grid ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-avb-flat-row"><span class="ap-summary-label">Outgoing Dmg</span><span class="ap-bvb-flat ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-avb-wp-row"><span class="ap-summary-label">Main Stat / Line 3</span><span class="ap-bvb-wp ap-summary-value">—</span></div>
+              <div class="ap-stat-card-row ap-avb-lineratio-row"><span class="ap-summary-label">AP% / WP% Lines</span><span class="ap-bvb-lineratio ap-summary-value">—</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-esvs-summary">
+          <p class="ap-bvb-diff-wrap"><span class="ap-esvs-diff ap-avb-diff">—</span></p>
+        </div>
+
+      </div>
+    </details>
   </div>
 </details>
 

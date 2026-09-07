@@ -3980,6 +3980,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-compare,
 .md-typeset .ap-bvb,
 .md-typeset .ap-esvs,
+.md-typeset .ap-avb,
 .md-typeset .ap-engr-compare {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
@@ -4000,12 +4001,14 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-compare,
 .md-typeset .ap-bvb,
 .md-typeset .ap-esvs,
+.md-typeset .ap-avb,
 .md-typeset .ap-engr-compare,
 .md-typeset .ap-brace-compare:focus-within,
 .md-typeset .ap-acc-compare:focus-within,
 .md-typeset .ap-arkgrid-compare:focus-within,
 .md-typeset .ap-bvb:focus-within,
 .md-typeset .ap-esvs:focus-within,
+.md-typeset .ap-avb:focus-within,
 .md-typeset .ap-engr-compare:focus-within {
   box-shadow: none;
 }
@@ -4034,6 +4037,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-compare summary::after,
 .md-typeset .ap-bvb summary::after,
 .md-typeset .ap-esvs summary::after,
+.md-typeset .ap-avb summary::after,
 .md-typeset .ap-engr-compare summary::after {
   display: none !important;
 }
@@ -4042,6 +4046,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-compare summary::-webkit-details-marker,
 .md-typeset .ap-bvb summary::-webkit-details-marker,
 .md-typeset .ap-esvs summary::-webkit-details-marker,
+.md-typeset .ap-avb summary::-webkit-details-marker,
 .md-typeset .ap-engr-compare summary::-webkit-details-marker {
   display: none;
 }
@@ -4050,6 +4055,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-compare summary::marker,
 .md-typeset .ap-bvb summary::marker,
 .md-typeset .ap-esvs summary::marker,
+.md-typeset .ap-avb summary::marker,
 .md-typeset .ap-engr-compare summary::marker {
   content: "";
 }
@@ -4058,6 +4064,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-compare summary,
 .md-typeset .ap-bvb summary,
 .md-typeset .ap-esvs summary,
+.md-typeset .ap-avb summary,
 .md-typeset .ap-engr-compare summary {
   display: flex;
   align-items: center;
@@ -4097,6 +4104,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-compare:not([open]) summary,
 .md-typeset .ap-bvb:not([open]) summary,
 .md-typeset .ap-esvs:not([open]) summary,
+.md-typeset .ap-avb:not([open]) summary,
 .md-typeset .ap-engr-compare:not([open]) summary {
   padding: 0.6em 0.85em;
 }
@@ -4105,6 +4113,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-compare summary::before,
 .md-typeset .ap-bvb summary::before,
 .md-typeset .ap-esvs summary::before,
+.md-typeset .ap-avb summary::before,
 .md-typeset .ap-engr-compare summary::before {
   content: "";
   display: inline-block;
@@ -4135,6 +4144,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-compare[open] > summary::before,
 .md-typeset .ap-bvb[open] > summary::before,
 .md-typeset .ap-esvs[open] > summary::before,
+.md-typeset .ap-avb[open] > summary::before,
 .md-typeset .ap-engr-compare[open] > summary::before {
   transform: rotate(90deg);
 }
@@ -4143,6 +4153,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-compare[open] summary,
 .md-typeset .ap-bvb[open] summary,
 .md-typeset .ap-esvs[open] summary,
+.md-typeset .ap-avb[open] summary,
 .md-typeset .ap-engr-compare[open] summary {
   /* Only the color changes on open now - the summary rule above already
      reserves this same 1px transparent border in the closed state, so no
@@ -4688,6 +4699,41 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-gear-card--engr-variables {
   border-left: 1px solid rgba(255, 255, 255, 0.07);
 }
+/* Accessory vs. Accessory's Comparing/Slot Currently Empty/Other Ring-
+   Earring Equipped controls - was three bare .ap-calc-field-rows sitting
+   directly in .ap-brace-compare-body with nothing to visually group them
+   (no card, no border), reading as loose fields floating above the A/B
+   cards rather than a related settings block. Reuses .ap-gear-card's
+   shell for the same bordered-box treatment every other input group on
+   this page gets, but - like Engraving Comparison's pair right above -
+   overridden back to a plain neutral left edge: these are page-level
+   comparison SETTINGS, not one of the accent-colored per-side/per-
+   category cards (.ap-gear-card--basics etc., .ap-avb-card-a/b), so a
+   colored stripe here would wrongly suggest it's another item in that
+   same family. Sits as a single full-width div (not inside .ap-gear-cards'
+   auto-fit grid), so it just takes the width of .ap-brace-compare-body
+   like the intro paragraph above it. */
+.md-typeset .ap-gear-card--avb-options {
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+  margin-bottom: 0.9em;
+}
+/* Half-width once .ap-brace-compare-body (container-type set on it
+   above) has room to spare - at full width, this card's own row still
+   spans the WHOLE panel (as wide as the two Accessory A/B cards
+   combined), so .ap-calc-field-row's space-between stretches label and
+   control much further apart than the equally-wide-labeled rows inside
+   Accessory A/B's own (already half-width) cards right below it. Gated
+   on a container query rather than applied unconditionally so it
+   doesn't kick in below the width where "Other Earring Equipped" (this
+   card's longest label) plus its checkbox would get cramped - picked
+   480px, just above .ap-engr-stone-row--first's own 460px stacked-
+   fallback threshold nearby, so the two breakpoints don't fight over
+   the same narrow range. */
+@container (min-width: 480px) {
+  .md-typeset .ap-gear-card--avb-options {
+    width: 50%;
+  }
+}
 /* The readouts (Effective Move/Attack Speed, the Wine-vs-Mana-Food note)
    sit inside the In-Raid Variables card - same dashed-top-edge treatment
    as every other .ap-brace-compare-footer-note, just scoped to read as
@@ -5114,6 +5160,20 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-brace-info-icon[hidden] {
   display: none;
 }
+/* Same `[hidden]` specificity fix as .ap-brace-info-icon just above, for
+   Accessory vs. Accessory's isolated "Other Ring"/"Other Earring" label
+   row - enforceAvbSlotUI sets .hidden on it for Necklace (see
+   AVB_SLOT_LABELS' hasOther: false), but .ap-calc-field-row's own
+   `display: flex` rule has higher specificity than the UA stylesheet's
+   bare `[hidden] { display: none }`, so without this override the row
+   showed for Necklace too - "Other Necklace's Lines" makes no sense
+   since only one necklace can ever be equipped. .ap-avb-other-fields
+   (the actual Crit Rate/Dmg selects underneath) is a plain div with no
+   competing display rule of its own, so the bare `hidden` attribute
+   already hides it correctly with no override needed. */
+.md-typeset .ap-avb-other-row[hidden] {
+  display: none;
+}
 /* Small always-visible tag flagging that a row's number is damage-share
    only (currently the Spec row, for both RE and Surge - neither model has
    a CDR term anymore). Sized to sit inline with the label text without
@@ -5311,6 +5371,18 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-bvb-line-row .ap-bvb-line-tier {
   flex: 0 0 auto;
   width: 4.6em;
+}
+/* Accessory vs. Accessory's Line 3 tier select reuses .ap-bvb-line-tier's
+   shell (see resources.md's own class list on it) but, unlike Bracelet's
+   own Line 3 tier (always just "Low"/"Mid"/"High", 4 chars max),
+   enforceAvbLineControls re-labels its options with the real value +
+   unit - up to "960 WP" (ACC_FLAT_WP_TABLE.High) - which the inherited
+   4.6em was never sized for, clipping the trailing unit letter. Widened
+   just for these two selects rather than touching the shared class,
+   so Bracelet's own Low/Mid/High selects keep their original width. */
+.md-typeset .ap-bvb-line-row .ap-avb-a-line3-tier,
+.md-typeset .ap-bvb-line-row .ap-avb-b-line3-tier {
+  width: 5.6em;
 }
 /* STR/DEX/INT's free-typed 10000-16000 amount takes the Low/Mid/High tier
    dropdown's exact place in the row (see enforceBvbLineControls - only one

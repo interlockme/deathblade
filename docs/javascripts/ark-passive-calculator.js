@@ -165,6 +165,17 @@
   const ACC_FLAT_AP_TABLE = { Low: 80, Mid: 195, High: 390 };
   const ACC_FLAT_WP_TABLE = { Low: 195, Mid: 480, High: 960 };
   const ACC_QUALITY_MAIN_STAT_TABLE = { Low: 1935, Mid: 2083, High: 2679 };
+  // Absolute Main Stat endpoints each slot's quality roll (0-100%) can
+  // land on - the actual min/max a real accessory's tooltip shows, not
+  // just the max-minus-min spread ACC_QUALITY_MAIN_STAT_TABLE above
+  // captures. Feeds Accessory vs. Accessory's Main Stat inputs below
+  // (clamps + documents the range), which take a candidate's own typed
+  // Main Stat directly rather than a Low/Mid/High quality-tier lookup.
+  const ACC_MAIN_STAT_RANGE = {
+    ring: { min: 10962, max: 12897 },
+    earring: { min: 11806, max: 13889 },
+    necklace: { min: 15178, max: 17857 },
+  };
   // Ring Crit Damage's own magnitude (Acc!O7:Q7) - close to but not
   // identical to RING_DMG_TABLE above (that one's tuned for this site's
   // "your actual equipped ring" tracked baseline elsewhere; this is the
@@ -748,6 +759,30 @@
     };
   }
 
+  // Reads one side (A or B) of the Accessory vs. Accessory candidate for
+  // whichever slot is currently selected (see AVB_SLOT_LABELS/
+  // enforceAvbSlotUI). Main Stat is a real, typed absolute value clamped
+  // to that slot's real min/max range (see ACC_MAIN_STAT_RANGE) rather
+  // than a quality-tier lookup. Line 1/2 are always that slot's own 2
+  // guaranteed lines - only which of THIS calculator's tracked effects
+  // (if any) landed on them varies, so no type <select> is needed, only
+  // a tier (Low/Mid/High, or None for "this accessory's real roll isn't
+  // one of the 2 tracked effects" - see computeAccessoryVsAccessory for
+  // how None resolves to 0 the same way it does everywhere else on this
+  // page) - unlike Bracelet vs. Bracelet's free-typed line rows. Only
+  // Line 3 (the one optional universal line) needs a type <select>.
+  function readAvbSide(root, slot, prefix) {
+    const base = ".ap-avb-" + prefix + "-";
+    const range = ACC_MAIN_STAT_RANGE[slot];
+    return {
+      mainStat: Math.max(range.min, Math.min(range.max, getNumber(root, base + "mainstat", range.max))),
+      line1Tier: getSelect(root, base + "line1-tier", "High"),
+      line2Tier: getSelect(root, base + "line2-tier", "High"),
+      line3Type: getSelect(root, base + "line3-type", "none"),
+      line3Tier: getSelect(root, base + "line3-tier", "Mid"),
+    };
+  }
+
   function readInputs(root) {
     return {
       critStat: Math.max(0, Math.min(750, getNumber(root, ".ap-crit-stat", 658))),
@@ -805,6 +840,52 @@
       // separately - see readBvbSide/computeBraceletVsBracelet above.
       bvbA: readBvbSide(root, "a"),
       bvbB: readBvbSide(root, "b"),
+
+      // Accessory vs. Accessory: one "Comparing" selector picks which
+      // slot's line pool is in play (see AVB_SLOT_LABELS). Accessory A is
+      // always treated as your real currently-equipped piece - its own
+      // typed Main Stat, and Line 3 Flat AP/WP if set, get subtracted
+      // from Gearing's totals to build the "no accessory" baseline, so
+      // the comparison doesn't double-count them. There used to be a
+      // "Slot Currently Empty" checkbox letting Accessory A be treated
+      // as a second hypothetical instead (nothing backed out) - removed
+      // since this tool's only real use is "should I replace what I
+      // have equipped", and that always means A really is equipped; the
+      // reference table above already covers "value one line in
+      // isolation" for anyone who doesn't have a real current piece to
+      // compare against. See computeAccessoryVsAccessory for how this
+      // resolves.
+      avbSlot: getSelect(root, ".ap-avb-slot", "necklace"),
+      avbA: readAvbSide(root, getSelect(root, ".ap-avb-slot", "necklace"), "a"),
+      avbB: readAvbSide(root, getSelect(root, ".ap-avb-slot", "necklace"), "b"),
+      // Rings and Earrings come in pairs, but this tool only lets you
+      // shop for ONE of the two at a time (see AVB_SLOT_LABELS' own
+      // comment on why there's no ring1/earring1-vs-ring2/earring2
+      // selector). The OTHER slot's real Crit Rate/Dmg (Ring) or AP%/WP%
+      // (Earring) can NOT be read off ring2Rate/Dmg or gearApEarring2/
+      // WpEarring2 in the Gearing panel above - those are just "however
+      // you happened to enter your two real pieces" (Earring 1 vs 2 with
+      // no defined mapping), and Accessory A (the piece actually being
+      // swapped here) could just as easily be sitting in Gearing's slot
+      // 2 as slot 1. Reading ring2Rate/gearApEarring2 directly would then
+      // silently zero out the wrong slot and read Accessory A's own
+      // stats back in as "the other one" - a real misattribution/double-
+      // count, not a hypothetical - and there's no signal on the page
+      // that tells the tool which is which. So these two get their own
+      // isolated fields instead, entered once here, independent of
+      // Gearing entirely. They're mandatory rather than checkbox-gated
+      // (no opt-in "Other Ring/Earring Equipped" toggle defaulting to an
+      // assumed-empty state) because a second ring/earring always
+      // physically exists - "assumed empty" can never be true for a real
+      // character. Main Stat and Flat AP/Flat WP don't need this same
+      // treatment: those're whole-character totals (gearMainStat/gearWp/
+      // gearFlatAp) that already have the other piece's share baked in
+      // with no way to subtract it back out - see equippedMainStat/
+      // equippedFlatApDelta/equippedWpDelta below, which only ever back
+      // out Accessory A's own known share, leaving whatever the other
+      // piece contributes untouched in the total the whole time.
+      avbOtherLine1Tier: getSelect(root, ".ap-avb-other-line1-tier", "Mid"),
+      avbOtherLine2Tier: getSelect(root, ".ap-avb-other-line2-tier", "High"),
 
       // Gearing (Weapon Power / Attack Power) - feeds only the 5
       // WP/AP bracelet lines below, entirely separate from the Ark
@@ -2240,6 +2321,416 @@
     }
 
     return { necklace, earrings, rings, universal };
+  }
+
+  // ----- Accessory vs. Accessory -----
+  // Same relationship to Accessory Line Comparison above as Bracelet vs.
+  // Bracelet has to Bracelet Line Comparison: a full-piece swap (Main
+  // Stat + all 3 real lines at once) instead of one line valued in
+  // isolation. ONE tool with a "Comparing" selector (Necklace/Ring/
+  // Earring), not three separate panels - the 3 slot types share the
+  // exact same shape (Main Stat + 2 guaranteed lines + 1 optional
+  // universal line), so swapping which slot's line pool is shown beats
+  // duplicating the whole card pair 3 times over for something the user
+  // only ever compares one of at a time. See enforceAvbSlotUI for the
+  // label/range swap this selector drives on the static markup.
+  //
+  // Rings and Earrings each have TWO independently-tracked real slots
+  // (ring1Rate/Dmg vs ring2Rate/Dmg, gearApEarring1/WpEarring1 vs
+  // gearApEarring2/WpEarring2). Which of your two real rings/earrings is
+  // "Ring 1" vs "Ring 2" isn't something this calculator surfaces
+  // anywhere, so there's no "which slot am I replacing" selector -
+  // instead the candidate always writes into the ring1/earring1 fields,
+  // and the OTHER piece's real Crit Rate/Dmg (Ring) or AP%/WP% (Earring)
+  // comes from its own isolated avbOtherLine1Tier/avbOtherLine2Tier
+  // fields (mandatory, not checkbox-gated) rather than from ring2Rate/
+  // gearApEarring2 in Gearing - see readInputs' own comment on why those
+  // Gearing fields can't be trusted here (no defined mapping between
+  // "Earring 1/2 in Gearing" and "the one being replaced here", so
+  // reading them risks folding Accessory A's own stats back in as if
+  // they belonged to the other piece). Ignored entirely for Necklace,
+  // which has no second slot to fold in (see hasOther below). Folding
+  // this in for real (rather than assuming empty) matters because Ring's
+  // Crit Rate/Dmg interact non-linearly with the grid, so treating a
+  // real second ring as empty skews the swap's true gain, not just its
+  // absolute total.
+  //
+  // Main Stat is the one piece of real state this tool needs beyond what
+  // the Line Comparison table tracks - Gearing's Main Stat field is one
+  // aggregate total across all gear, so exactly like the Bracelet panel's
+  // "Current Bracelet's Crit Stat" field, SOME Main Stat has to come back
+  // out of that aggregate to build the "slot empty" baseline before a
+  // candidate's own typed Main Stat gets added on top. Unlike Bracelet's
+  // field, this doesn't need its own separate input - Accessory A always
+  // IS the real current piece (unless avbSlotEmpty is checked), and its
+  // own typed Main Stat (a real absolute value off its tooltip, not a
+  // quality-tier lookup) is what's subtracted, so there's nothing for
+  // the reader to keep in sync by hand. Line 3's Flat
+  // AP/Flat WP stay simple additive deltas with no such baseline
+  // subtraction - same simplification the Universal Flat AP/WP rows in
+  // Accessory Line Comparison above already make.
+  //
+  // Ring/Necklace's grid-integrated lines (Crit Rate/Dmg, Additional
+  // Damage) are valued against the FIXED best split/keystone from the
+  // overall Best Setup above, same as Accessory Line Comparison's own
+  // necklace/ring rows - not re-derived per candidate the way Bracelet
+  // vs. Bracelet's bestComboFor() call is, so there's no flip-footnote
+  // here either, matching that table's own reasoning for omitting one.
+  // gridLabel intentionally carries no "(Grid)" suffix - matches Bracelet
+  // vs. Bracelet's own analogous row ("Keystone/Crit Lines", see its
+  // markup above), which names what the line IS rather than how it's
+  // computed. The row still only shows for slots with hasGrid: true.
+  // line1Table/line2Table let enforceAvbSlotUI stamp each Low/Mid/High
+  // <option>'s real value onto its label - same "show the value, not
+  // just the tier name" convention Main Stat's own field already uses
+  // (a real typed number, not a Low/Mid/High lookup). Necklace/Ring
+  // deliberately point at the SAME ACC_ tables computeAccessoryVsAccessory
+  // itself reads from (RING_RATE_TABLE is the one exception, reused
+  // as-is - see its own comment), so the label can never drift out of
+  // sync with the number actually being calculated.
+  // hasOther: false for Necklace (only one exists, nothing to fold in),
+  // true for Ring/Earring (see the "OTHER piece's real Crit Rate/Dmg"
+  // comment above) - drives whether the isolated "Other Ring"/"Other
+  // Earring" fields are shown at all in enforceAvbSlotUI.
+  // hasWpRow: whether "Main Stat / Line 3" is worth showing as ITS OWN
+  // row, separate from "vs No X" just above it. True for all three slots
+  // now - see evalSide's mainStatLine3Ratio/lineRatio for how Earring
+  // gets a real, exact value here despite Line 1/2 (Attack Power %/
+  // Weapon Power %) sharing apTotalFor's own formula with Main Stat/
+  // Line 3, unlike Ring/Necklace where Line 1/2 (Crit Rate/Dmg,
+  // Additional/Outgoing Damage) live entirely inside gridMultFor and
+  // never touch apTotalFor at all.
+  //
+  // For Necklace/Ring, that separation means gridRatio/flatMult (Line
+  // 1/2) and wpRatio (Main Stat + Line 3's Flat AP/WP) are two totally
+  // independent function calls sharing no variables, so wpRatio is a
+  // single well-defined number no matter what Line 1/2 is set to, and
+  // totalMult = gridRatio * flatMult * wpRatio is an exact product with
+  // zero cross-term.
+  //
+  // Earring's Line 1 (Attack Power %) becomes percentApMult, a pure
+  // outer multiplier over apTotalFor's whole bracket - structurally the
+  // same category as gridRatio/flatMult, genuinely separable. Line 2
+  // (Weapon Power %) is the one that can't be pulled out the same way:
+  // it scales wp, which sits inside sqrt(wp * mainStat) alongside Main
+  // Stat, and that sqrt term is then summed ADDITIVELY with flatAp (Line
+  // 3) and supApBuff before percentApMult multiplies the total. Because
+  // of that additive combination, "how much did Weapon Power % add" is
+  // not a fixed number independent of what Line 3 is - it's an
+  // interaction effect (a naive product of two ratios computed against
+  // the same baseline in parallel does NOT reconstruct the true total
+  // when this interaction is nonzero, i.e. whenever Line 3 isn't None).
+  //
+  // The fix: compute the two pieces SEQUENTIALLY (a waterfall) instead
+  // of in parallel, crediting the interaction term to whichever step
+  // comes second. mainStatLine3Ratio holds this side's own Line 1/2 at
+  // "None" (apTotalFor(zeroed, ...) - zeroed already has this candidate's
+  // own gearApEarring1/gearWpEarring1 zeroed, only the OTHER earring's
+  // real Line 1/2 folded in) while Main Stat/Line 3 vary; lineRatio then
+  // measures the marginal jump from turning this side's own Line 1/2 on
+  // (apTotalFor(cloned, ...) / apOnlyMainStat). mainStatLine3Ratio *
+  // lineRatio === wpRatio EXACTLY, for every input, because it's the
+  // same total factored at a different point rather than two independent
+  // measurements multiplied together. For Ring/Necklace this collapses
+  // to lineRatio === 1 automatically (cloned's slot-specific mutations
+  // never touch gearWp/gearApEarring1/gearFlatAp), so mainStatLine3Ratio
+  // === wpRatio there, unchanged from before.
+  //
+  // hasLineRatioRow: whether the *separate* "Attack Power % / Weapon
+  // Power %" row is worth showing underneath Main Stat/Line 3. Earring
+  // only - for Ring/Necklace that row would just show +0.00% forever
+  // (lineRatio ≡ 1), since their own Line 1/2 already has its own
+  // dedicated Grid/Flat row above.
+  const AVB_SLOT_LABELS = {
+    necklace: {
+      name: "Necklace", line1: "Additional Damage", line2: "Outgoing Damage", gridLabel: "Additional Dmg",
+      hasGrid: true, hasFlat: true, hasOther: false, hasWpRow: true, hasLineRatioRow: false, line1Table: ACC_NECKLACE_ADD_TABLE, line2Table: ACC_NECKLACE_OUT_TABLE,
+    },
+    ring: {
+      name: "Ring", line1: "Crit Rate", line2: "Crit Damage", gridLabel: "Crit Rate/Dmg",
+      hasGrid: true, hasFlat: false, hasOther: true, hasWpRow: true, hasLineRatioRow: false, line1Table: RING_RATE_TABLE, line2Table: ACC_RING_DMG_TABLE,
+    },
+    earring: {
+      name: "Earring", line1: "Attack Power %", line2: "Weapon Power %", gridLabel: "",
+      hasGrid: false, hasFlat: false, hasOther: true, hasWpRow: true, hasLineRatioRow: true, line1Table: ACC_EARRING_AP_TABLE, line2Table: ACC_EARRING_WP_TABLE,
+    },
+  };
+
+  // Shared by enforceAvbSlotUI (Line 1/2) and enforceAvbLineControls
+  // (Line 3) - stamps each Low/Mid/High <option>'s real value onto its
+  // label, e.g. "Low" -> "0.70%", same "show the value, not the tier
+  // name" convention every OTHER Low/Mid/High select on this page
+  // already uses (Bracelet Line Comparison's top selects, the Gearing
+  // panel's Ring/Earring rows, etc. - none of them prefix the number
+  // with the tier name either). The <option>'s value attribute still
+  // carries the tier name for lookups; only the visible label changes.
+  // Leaves "None"/other values alone since None is always 0 and
+  // self-explanatory as-is.
+  function setTierOptionValues(selectEl, table, formatValue) {
+    if (!selectEl || !table) return;
+    ["Low", "Mid", "High"].forEach((tier) => {
+      const opt = selectEl.querySelector('option[value="' + tier + '"]');
+      if (opt && table[tier] != null) {
+        opt.textContent = formatValue(table[tier]);
+      }
+    });
+  }
+  function formatTierPct(value) {
+    return (value * 100).toFixed(2) + "%";
+  }
+
+  function computeAccessoryVsAccessory(inputs) {
+    const gridResult = computeGridAndSummary(inputs);
+    const best = gridResult.best;
+    if (!best) return null;
+    const { keenSense, limitBreak } = best.split;
+    const pair = best.keystone;
+    const slot = inputs.avbSlot;
+    // Earring's own candidate lines are the one case in this tool where
+    // the slot's own Line 2 feeds Weapon Power% (gearWpEarring1/2 - see
+    // AVB_SLOT_LABELS.earring.line2) rather than a grid/flat multiplier
+    // like the other two slots - see apTotalFor's own comment for why
+    // that needs gearWp itself reverse-derived out of the REAL current
+    // % (captured here, before `zeroed` below touches gearWpEarring1/2)
+    // rather than left as-is the way Ring/Necklace's untouched gearWp
+    // can be.
+    const fullWpPercentMult = 1 + gearWpPercentTotal(inputs) / 100;
+
+    // Accessory A is always treated as your real currently-equipped piece
+    // (see equippedMainStat/noSlotMainStat below), so if ITS OWN Line 3 is
+    // Flat AP/Flat WP, that amount is already baked into gearFlatAp/gearWp
+    // (or, for Earring, into gearWp via fullWpPercentMult's own real %) and
+    // has to be backed out of the shared baseline the same way Main Stat
+    // is - computed up here, before `zeroed`/apTotalFor exist, since both
+    // need it. strippedGearWp is Earring-only (its own wpBase below reverse-
+    // derives off a %, not a plain total - see apTotalFor's own comment),
+    // Ring/Necklace instead get zeroed.gearWp mutated directly further down.
+    const equippedSide = inputs.avbA;
+    const equippedFlatApDelta = equippedSide.line3Type === "ap_flat" ? (ACC_FLAT_AP_TABLE[equippedSide.line3Tier] || 0) : 0;
+    const equippedWpDelta = equippedSide.line3Type === "wp_flat" ? (ACC_FLAT_WP_TABLE[equippedSide.line3Tier] || 0) : 0;
+    const strippedGearWp = Math.max(0, inputs.gearWp - equippedWpDelta * fullWpPercentMult);
+
+    // addDmgDelta/critDmgDelta let a candidate's Necklace Additional Damage
+    // or Ring Crit Damage line inject the Accessory Line Comparison panel's
+    // OWN candidate figures (ACC_NECKLACE_ADD_TABLE/ACC_RING_DMG_TABLE)
+    // directly onto shared's running totals, instead of writing a tier
+    // name into cloned.necklace/cloned.ring1Dmg and letting computeShared
+    // re-derive it through NECKLACE_ADD_TABLE/RING_DMG_TABLE - those two
+    // are this site's "your actual equipped piece" tracked tables, close
+    // to but NOT identical to the ACC_ candidate tables (Low tier differs:
+    // 0.006 vs 0.007 Add Dmg, 0.012 vs 0.011 Ring Crit Dmg; Mid/High match
+    // exactly - see ACC_NECKLACE_ADD_TABLE/ACC_RING_DMG_TABLE's own
+    // comments). Writing the tier name into the real field silently pulled
+    // the wrong table for Low rolls, so this tool's numbers didn't always
+    // match the reference panel above for the exact same tier. Same fix
+    // computeAccessoryComparison's own ringDmgGain already applies (adding
+    // a manual critDmgTotal delta rather than swapping ring1Dmg by tier).
+    function gridMultFor(clonedInputs, addDmgDelta, critDmgDelta) {
+      const shared = computeShared(clonedInputs);
+      if (addDmgDelta) {
+        shared.addDmgBase += addDmgDelta;
+        shared.addDmgMaster += addDmgDelta;
+      }
+      if (critDmgDelta) {
+        shared.critDmgTotal += critDmgDelta;
+      }
+      return combinedMultiplier(clonedInputs, shared, keenSense, limitBreak, pair);
+    }
+
+    // Shared AP-total helper: wp/flatAp/percentApMult/wpPercentMult are
+    // all read fresh off `cloned`, so only Main Stat and Line 3's Flat
+    // AP/WP delta need passing in explicitly.
+    function apTotalFor(cloned, mainStat, flatApDelta, wpDelta) {
+      const wpPercentMult = 1 + gearWpPercentTotal(cloned) / 100;
+      // Ring/Necklace never touch gearWpEarring1/2, so gearWpPercentTotal
+      // is the same for `cloned` as it is for the real `inputs` no matter
+      // what those slots' own candidate lines are set to - cloned.gearWp
+      // is already the correct figure there (a real character-panel
+      // total that already has its existing WP% sources baked in, same
+      // assumption gearApTotal's own wp param relies on everywhere else
+      // in this file - see e.g. line 1928, 2159) and must NOT be
+      // multiplied by wpPercentMult again, only wpDelta (a fresh flat
+      // WP addition from Line 3, which - like any new flat source added
+      // on top of an already-%'d stat - does need scaling by the full %
+      // to land correctly) should be.
+      //
+      // Earring is different: its own Line 2 (AP%/WP% swap the same
+      // gearWpEarring1/2 fields the Gearing panel's real earrings use)
+      // makes wpPercentMult(cloned) genuinely differ from
+      // wpPercentMult(inputs) - the whole point of this comparison. But
+      // cloned.gearWp is still the REAL panel total with the REAL
+      // earrings' % baked in - zeroing gearWpEarring1/2 above only
+      // dropped their share from gearWpPercentTotal's SUM, it can't
+      // un-bake a % that's already multiplied into the raw number - so
+      // using it as-is here would silently ignore every candidate's own
+      // Line 2 entirely (the bug this comment is fixing: WP% did
+      // nothing, since only wpDelta - always 0 for Earring - was ever
+      // scaled by wpPercentMult). Divide the real total back out by the
+      // REAL full % (fullWpPercentMult, captured before zeroing) to
+      // recover the underlying raw figure, then re-multiply by whatever
+      // % this side actually represents - same reverse-derivation Chaos
+      // Core: Weapon uses above for its own flat+pct term (see
+      // arkNB.gearWp).
+      const wpBase = slot === "earring" ? (strippedGearWp / fullWpPercentMult) * wpPercentMult : cloned.gearWp;
+      const wp = wpBase + wpDelta * wpPercentMult;
+      const baseApMult = 1 + gearBaseApPercentTotal(cloned) / 100;
+      const flatAp = cloned.gearFlatAp + flatApDelta + gearChaosStarFlat(cloned.gearApChaosStar);
+      const percentApMult = 1 + gearAttackPowerPercentTotal(cloned) / 100;
+      // Support AP Buff models an EQUALLY-GEARED support - same WP/Main
+      // Stat/Base AP as you (see supportApBuff's own comment) - but "you"
+      // there means your real, currently-entered Gearing panel, not
+      // whatever hypothetical this candidate line is testing. Swapping
+      // your own earring's WP% doesn't change the support's actual gear,
+      // so this must be computed off the real `inputs` (frozen for the
+      // whole ratio), never off this function's own `wp`/`mainStat`/
+      // `baseApMult` params - those already reflect the candidate under
+      // test. Every other supportApBuff call site in this file (Bracelet
+      // panel's WP/AP rows, Bracelet vs. Bracelet, Ark Grid's Chaos Core:
+      // Weapon row, Mana Food) already does this; this one didn't, which
+      // is what let a candidate's own WP% silently inflate the modeled
+      // support buff right along with it - confirmed against Arsonistic's
+      // own Acc!C5/E5 formulas, which reuse one frozen SupAPBuff cell in
+      // both the numerator and denominator of every ratio on the sheet.
+      const supApBuff = supportApBuff(inputs, inputs.gearWp, inputs.gearMainStat, 1 + gearBaseApPercentTotal(inputs) / 100);
+      return gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+    }
+
+    // zeroed starts as a full copy of inputs. Only ring1Rate/Dmg or
+    // gearApEarring1/WpEarring1 (Accessory A's own slot, the one actually
+    // being swapped) get zeroed out below, since that's the slot getting
+    // replaced by a candidate. The OTHER ring/earring's real Crit Rate/
+    // Dmg or AP%/WP% is folded in from the isolated avbOtherLine1Tier/
+    // avbOtherLine2Tier fields (see readInputs' own comment on why those,
+    // not ring2Rate/gearApEarring2 off the Gearing panel, are the only
+    // trustworthy source here) - for every slot with hasOther: true, i.e.
+    // Ring and Earring, never Necklace.
+    // otherCritDmgDelta folds Ring's "Other Ring" Crit Damage into the
+    // baseline as an additive delta rather than writing it into
+    // zeroed.ring2Dmg - RING_DMG_TABLE (the real field's table) isn't an
+    // exact match to ACC_RING_DMG_TABLE (Low: 0.012 vs 0.011, see that
+    // table's own comment), so a direct write would silently pull the
+    // wrong Low value, same class of bug fixed earlier this session for
+    // the candidate lines themselves. Crit Rate has no such mismatch
+    // (RING_RATE_TABLE IS the ACC table, reused as-is), so it's safe to
+    // write straight into zeroed.ring2Rate below. Earring's Attack
+    // Power%/Weapon Power% have no such mismatch either (GEAR_AP_EARRING_
+    // TABLE/GEAR_WP_EARRING_TABLE are exact matches to their ACC_
+    // counterparts), so both of Earring's "Other Earring" lines are safe
+    // to write directly.
+    const otherCritDmgDelta =
+      slot === "ring" ? (ACC_RING_DMG_TABLE[inputs.avbOtherLine2Tier] || 0) : 0;
+
+    const zeroed = Object.assign({}, inputs);
+    if (slot === "necklace") {
+      zeroed.necklace = "None";
+    } else if (slot === "ring") {
+      zeroed.ring1Rate = "None"; zeroed.ring1Dmg = "None";
+      zeroed.ring2Rate = inputs.avbOtherLine1Tier;
+      zeroed.ring2Dmg = "None"; // otherCritDmgDelta carries Other Ring's Crit Dmg instead
+    } else if (slot === "earring") {
+      zeroed.gearApEarring1 = "None"; zeroed.gearWpEarring1 = "None";
+      zeroed.gearApEarring2 = inputs.avbOtherLine1Tier;
+      zeroed.gearWpEarring2 = inputs.avbOtherLine2Tier;
+    }
+    // Earrings never touch the crit/spec grid, so there's no grid
+    // baseline to compute for them at all (gridRatio is fixed at 1
+    // in evalSide below) - only Necklace/Ring need one here.
+    const zeroedGridMult = slot === "earring" ? 1 : gridMultFor(zeroed, 0, otherCritDmgDelta);
+    // "No accessory" baseline: Accessory A is always treated as your real
+    // currently-equipped piece, so its own typed Main Stat gets
+    // subtracted out of Gearing's total, so this comparison doesn't
+    // double-count it. Reads avbA directly rather than a separate typed
+    // field, so there's nothing for the reader to keep in sync by hand -
+    // it always matches exactly whatever's currently typed into
+    // Accessory A's own Main Stat field, even as they tweak it.
+    const equippedMainStat = equippedSide.mainStat;
+    const noSlotMainStat = Math.max(0, zeroed.gearMainStat - equippedMainStat);
+    // Line 3's Flat AP/Flat WP need the exact same "back it out of the
+    // baseline first" treatment as Main Stat just above - gearFlatAp/gearWp
+    // are whole-character totals read off the real panel, so if the
+    // equipped side's own Line 3 is Flat AP/WP, that value is ALREADY
+    // inside them. This mutates zeroed itself (not just a one-off delta
+    // passed to THIS call) because evalSide's own apTotalFor call below
+    // reads cloned.gearFlatAp/cloned.gearWp too (cloned is a copy of
+    // zeroed) - leaving zeroed's own totals un-stripped and only ever
+    // negating the delta for this one noAccessoryAp call meant
+    // evalSide(equippedSide) added Accessory A's own Line 3 back ON TOP
+    // of a baseline that still silently contained it, a real double-count
+    // (confirmed via Playwright: a Necklace's "Main Stat / Line 3" row
+    // jumped from +1.05% to +1.45% off a 960 Weapon Power Line 3 on
+    // Accessory A itself - a +0.40pp move for a source the Bracelet Line
+    // Comparison panel's own identical 960 WP figure, computed the
+    // ordinary undoubled way off the same real Gearing inputs, values at
+    // only +0.14%). Earring's own Weapon Power reverse-derivation doesn't
+    // read zeroed.gearWp at all (see apTotalFor's wpBase, strippedGearWp
+    // above) so it needs no equivalent mutation here.
+    zeroed.gearFlatAp = Math.max(0, zeroed.gearFlatAp - equippedFlatApDelta);
+    if (slot !== "earring") {
+      zeroed.gearWp = Math.max(0, zeroed.gearWp - equippedWpDelta);
+    }
+    const noAccessoryAp = apTotalFor(zeroed, noSlotMainStat, 0, 0);
+
+    function evalSide(side) {
+      const cloned = Object.assign({}, zeroed);
+      let flatMult = 1;
+      let addDmgDelta = 0;
+      let critDmgDelta = 0;
+      if (slot === "necklace") {
+        // cloned.necklace stays "None" (already zeroed above) - Additional
+        // Damage's candidate magnitude goes in as addDmgDelta instead (see
+        // gridMultFor's comment for why). Outgoing Damage has no real
+        // tracked field anywhere in this file (see the Line Comparison
+        // necklaceOut comment above) so it's applied as a standalone
+        // multiplier instead, same treatment as there.
+        addDmgDelta = ACC_NECKLACE_ADD_TABLE[side.line1Tier] || 0;
+        flatMult *= 1 + (ACC_NECKLACE_OUT_TABLE[side.line2Tier] || 0);
+      } else if (slot === "ring") {
+        // Crit Rate's RING_RATE_TABLE is an exact match to the ACC_
+        // candidate figures (see that table's own comment), so it's safe
+        // to write straight into cloned.ring1Rate. Crit Damage isn't - see
+        // gridMultFor's comment - so cloned.ring1Dmg stays "None" and
+        // critDmgDelta carries the candidate's real magnitude instead.
+        cloned.ring1Rate = side.line1Tier;
+        critDmgDelta = ACC_RING_DMG_TABLE[side.line2Tier] || 0;
+      } else if (slot === "earring") {
+        cloned.gearApEarring1 = side.line1Tier;
+        cloned.gearWpEarring1 = side.line2Tier;
+      }
+      const gridRatio =
+        slot === "earring" ? 1 : gridMultFor(cloned, addDmgDelta, critDmgDelta + otherCritDmgDelta) / zeroedGridMult;
+
+      const flatApDelta = side.line3Type === "ap_flat" ? (ACC_FLAT_AP_TABLE[side.line3Tier] || 0) : 0;
+      const wpDelta = side.line3Type === "wp_flat" ? (ACC_FLAT_WP_TABLE[side.line3Tier] || 0) : 0;
+
+      // Sequential (waterfall), not parallel, decomposition - see
+      // AVB_SLOT_LABELS' own comment above for why this is the only
+      // version that reconstructs wpRatio exactly. `zeroed` still has
+      // THIS side's own gearApEarring1/gearWpEarring1 forced to "None"
+      // (the earring branch above only mutates `cloned`, a separate
+      // copy, never `zeroed` itself) - for Ring/Necklace, cloned's own
+      // slot-specific mutations (ring1Rate, etc.) never touch
+      // gearWp/gearApEarring1/gearFlatAp at all, so apTotalFor(zeroed,...)
+      // and apTotalFor(cloned,...) are identical there and this whole
+      // decomposition collapses to lineRatio === 1 for them - the exact
+      // same numbers those two slots already produced, just computed via
+      // one extra no-op call.
+      let mainStatLine3Ratio = 1;
+      let lineRatio = 1;
+      let wpRatio = 1;
+      if (cloned.gearWp > 0 && noAccessoryAp > 0) {
+        const apOnlyMainStat = apTotalFor(zeroed, noSlotMainStat + side.mainStat, flatApDelta, wpDelta);
+        const apWithOwnLines = apTotalFor(cloned, noSlotMainStat + side.mainStat, flatApDelta, wpDelta);
+        mainStatLine3Ratio = apOnlyMainStat / noAccessoryAp;
+        lineRatio = apWithOwnLines / apOnlyMainStat;
+        wpRatio = apWithOwnLines / noAccessoryAp;
+      }
+
+      return { totalMult: gridRatio * flatMult * wpRatio, gridRatio, flatMult, wpRatio, mainStatLine3Ratio, lineRatio };
+    }
+
+    const a = evalSide(inputs.avbA);
+    const b = evalSide(inputs.avbB);
+    return { slot, a, b, aVsB: a.totalMult / b.totalMult - 1 };
   }
 
   // ----- ArkGrid (Chaos Core) Comparison -----
@@ -3978,6 +4469,45 @@
     });
   }
 
+  // ----- Accessory vs. Accessory rendering -----
+  // Single card pair, not one set per slot - see AVB_SLOT_LABELS/
+  // enforceAvbSlotUI for how the same markup relabels itself per slot.
+  // No keystone label (Ring/Necklace swaps are valued against a fixed
+  // best split/keystone - see computeAccessoryVsAccessory's own comment
+  // for why - so there's nothing per-candidate to show or flip-check,
+  // unlike Bracelet vs. Bracelet).
+  function renderAvbCard(root, prefix, sideResult) {
+    const card = root.querySelector(".ap-avb-card-" + prefix);
+    if (!card) return;
+    const set = (selector, text) => {
+      const el = card.querySelector(selector);
+      if (el) el.textContent = text;
+    };
+    set(".ap-bvb-vs-none", formatBvbPct(sideResult.totalMult - 1));
+    set(".ap-bvb-grid", formatBvbPct(sideResult.gridRatio - 1));
+    set(".ap-bvb-flat", formatBvbPct(sideResult.flatMult - 1));
+    // Main Stat / Line 3 now uses mainStatLine3Ratio (this side's own
+    // Line 1/2 held at "None") rather than the raw wpRatio - for Ring/
+    // Necklace these are identical (see AVB_SLOT_LABELS' comment), for
+    // Earring this is what makes the row a real, isolated number instead
+    // of a duplicate of "vs No Earring".
+    set(".ap-bvb-wp", formatBvbPct(sideResult.mainStatLine3Ratio - 1));
+    set(".ap-bvb-lineratio", formatBvbPct(sideResult.lineRatio - 1));
+  }
+
+  function renderAccessoryVsAccessory(root, result) {
+    if (!result) return;
+    renderAvbCard(root, "a", result.a);
+    renderAvbCard(root, "b", result.b);
+    const diffEl = root.querySelector(".ap-avb-diff");
+    if (diffEl) {
+      const aWins = result.aVsB >= 0;
+      diffEl.textContent = "Accessory " + (aWins ? "A" : "B") + " wins by " + formatBvbPct(Math.abs(result.aVsB));
+      diffEl.classList.toggle("ap-bvb-diff-a", aWins);
+      diffEl.classList.toggle("ap-bvb-diff-b", !aWins);
+    }
+  }
+
   // ----- ArkGrid (Chaos Core) Comparison rendering -----
   // Custom renderer, not renderComparisonRows above - each row shows 5
   // numeric cells (one merged 14 Points cell, then Relic/Ancient x 17/20
@@ -4554,6 +5084,8 @@
     enforceGearSupportUptimeGate(root);
     enforceBvbLineControls(root);
     enforceBvbLineExclusivity(root);
+    enforceAvbSlotUI(root);
+    enforceAvbLineControls(root);
     enforceEngravingStoneExclusivity(root);
     enforceStoneSlotExclusivity(root, "ap-esvs-a");
     enforceStoneSlotExclusivity(root, "ap-esvs-b");
@@ -4565,6 +5097,7 @@
     renderBraceletComparison(root, computeBraceletComparison(inputs));
     renderBraceletVsBracelet(root, inputs, computeBraceletVsBracelet(inputs));
     renderAccessoryComparison(root, computeAccessoryComparison(inputs));
+    renderAccessoryVsAccessory(root, computeAccessoryVsAccessory(inputs));
     renderArkGridComparison(root, computeArkGridComparison(inputs));
     const engrInputs = readEngravingInputs(root);
     renderEngravingComparison(root, computeEngravingComparison(inputs, engrInputs), engrInputs);
@@ -4751,6 +5284,124 @@
     });
   }
 
+  // Accessory vs. Accessory's "Comparing" selector relabels the shared
+  // markup for whichever slot is picked - Line 1/Line 2's field labels,
+  // the Main Stat inputs' min/max (and title tooltip), the results
+  // panel's Grid/Flat rows (each only meaningful for some slots - see
+  // AVB_SLOT_LABELS), and the "Current X's Main Stat"/"vs No X" text.
+  // Runs before readInputs in update() so Main Stat's own DOM min/max
+  // are correct for whatever readAvbSide's own clamp uses that same
+  // turn (that clamp doesn't actually read the DOM attribute - it goes
+  // straight to ACC_MAIN_STAT_RANGE[slot] - so this is purely the
+  // user-facing spinner/tooltip staying in sync, not load-bearing for
+  // the math itself).
+  function enforceAvbSlotUI(root) {
+    const slotEl = root.querySelector(".ap-avb-slot");
+    if (!slotEl) return;
+    const slot = slotEl.value;
+    const cfg = AVB_SLOT_LABELS[slot] || AVB_SLOT_LABELS.necklace;
+    const range = ACC_MAIN_STAT_RANGE[slot] || ACC_MAIN_STAT_RANGE.necklace;
+
+    root.querySelectorAll(".ap-avb-slot-label-vsnone").forEach((el) => {
+      el.textContent = cfg.name;
+    });
+    root.querySelectorAll(".ap-avb-a-line1-label, .ap-avb-b-line1-label").forEach((el) => {
+      el.textContent = cfg.line1;
+    });
+    root.querySelectorAll(".ap-avb-a-line2-label, .ap-avb-b-line2-label").forEach((el) => {
+      el.textContent = cfg.line2;
+    });
+    root.querySelectorAll(".ap-avb-grid-label").forEach((el) => {
+      el.textContent = cfg.gridLabel;
+    });
+    root.querySelectorAll(".ap-avb-grid-row").forEach((el) => {
+      el.classList.toggle("ap-stat-card-row--hidden", !cfg.hasGrid);
+    });
+    root.querySelectorAll(".ap-avb-flat-row").forEach((el) => {
+      el.classList.toggle("ap-stat-card-row--hidden", !cfg.hasFlat);
+    });
+    // Main Stat / Line 3's own row - only worth showing separately from
+    // "vs No X" when there's a second axis (grid/flat) for it to be
+    // distinguished FROM. See hasWpRow's own comment above for why
+    // that's never true for Earring.
+    root.querySelectorAll(".ap-avb-wp-row").forEach((el) => {
+      el.classList.toggle("ap-stat-card-row--hidden", !cfg.hasWpRow);
+    });
+    root.querySelectorAll(".ap-avb-lineratio-row").forEach((el) => {
+      el.classList.toggle("ap-stat-card-row--hidden", !cfg.hasLineRatioRow);
+    });
+    // "Currently Equipped" badge on Accessory A's card title is now
+    // always true (there's no more "Slot Currently Empty" toggle to make
+    // it not true - see readInputs' own comment on why that was
+    // removed), so it's just static markup now - nothing to enforce
+    // here anymore.
+    ["a", "b"].forEach((prefix) => {
+      setTierOptionValues(root.querySelector(".ap-avb-" + prefix + "-line1-tier"), cfg.line1Table, formatTierPct);
+      setTierOptionValues(root.querySelector(".ap-avb-" + prefix + "-line2-tier"), cfg.line2Table, formatTierPct);
+      const msEl = root.querySelector(".ap-avb-" + prefix + "-mainstat");
+      if (msEl) {
+        msEl.min = range.min;
+        msEl.max = range.max;
+        msEl.title = "This accessory's own Main Stat (" + cfg.name + " range: " + range.min.toLocaleString() + "-" + range.max.toLocaleString() + ").";
+        // Clamp whatever was already typed into the new slot's range -
+        // switching Ring -> Necklace otherwise leaves e.g. 12897 sitting
+        // in a 15178-17857 field, which the browser flags as :invalid
+        // (a red outline) since it's now below the new min.
+        const current = parseFloat(msEl.value);
+        if (isFinite(current)) {
+          msEl.value = Math.max(range.min, Math.min(range.max, current));
+        }
+      }
+    });
+    // "Other Ring"/"Other Earring" isolated fields only make sense for
+    // slots with a real second piece - hidden entirely for Necklace (see
+    // AVB_SLOT_LABELS' hasOther). Its two labels reuse cfg.line1/line2
+    // (Crit Rate/Crit Dmg or AP%/WP%) since it's asking about the exact
+    // same two lines as the candidates, just on the piece that ISN'T
+    // being swapped. Mandatory (always shown once hasOther is true, no
+    // checkbox to gate visibility) - see readInputs' own comment on why.
+    root.querySelectorAll(".ap-avb-other-row, .ap-avb-other-fields").forEach((el) => {
+      el.hidden = !cfg.hasOther;
+    });
+    root.querySelectorAll(".ap-avb-other-slot-label").forEach((el) => {
+      el.textContent = cfg.name;
+    });
+    root.querySelectorAll(".ap-avb-other-line1-label").forEach((el) => {
+      el.textContent = cfg.line1;
+    });
+    root.querySelectorAll(".ap-avb-other-line2-label").forEach((el) => {
+      el.textContent = cfg.line2;
+    });
+    setTierOptionValues(root.querySelector(".ap-avb-other-line1-tier"), cfg.line1Table, formatTierPct);
+    setTierOptionValues(root.querySelector(".ap-avb-other-line2-tier"), cfg.line2Table, formatTierPct);
+  }
+
+  // Accessory vs. Accessory's Line 3 (None/Flat AP/Flat WP, one per side)
+  // shows its tier <select> only once a real type is picked - same
+  // show-on-pick idea as Bracelet vs. Bracelet's STR/DEX/INT swap above,
+  // just toggling visibility instead of swapping which control occupies
+  // the slot (Line 3 has no free-typed alternative to swap in).
+  function enforceAvbLineControls(root) {
+    ["a", "b"].forEach((prefix) => {
+      const base = ".ap-avb-" + prefix + "-line3";
+      const typeEl = root.querySelector(base + "-type");
+      const tierEl = root.querySelector(base + "-tier");
+      if (!typeEl || !tierEl) return;
+      const hasTier = typeEl.value !== "none";
+      tierEl.hidden = !hasTier;
+      tierEl.disabled = !hasTier;
+      // Same value-on-label treatment as Line 1/2 (see setTierOptionValues'
+      // own comment) - which table applies depends on the TYPE picked
+      // (Attack Power vs Weapon Power), not the slot, so this can't live
+      // in enforceAvbSlotUI's per-slot cfg the way Line 1/2's tables do.
+      if (typeEl.value === "ap_flat") {
+        setTierOptionValues(tierEl, ACC_FLAT_AP_TABLE, (v) => v + " AP");
+      } else if (typeEl.value === "wp_flat") {
+        setTierOptionValues(tierEl, ACC_FLAT_WP_TABLE, (v) => v + " WP");
+      }
+    });
+  }
+
   // A real bracelet can only roll one line of any given type - so within
   // a single side (A or B), once a type is picked in one of the 3 free
   // line rows, that same option gets disabled (not hidden - it needs to
@@ -4901,6 +5552,37 @@
         });
       }
 
+      // Accessory vs. Accessory's Main Stat and Line 3 fields are single
+      // shared inputs reused across all 3 "Comparing" slots (see
+      // AVB_SLOT_LABELS) - enforceAvbSlotUI re-labels them and clamps
+      // Main Stat's typed number into the new slot's min/max on every
+      // recompute, but it never resets either field to a fresh value on
+      // an actual slot switch, so whatever was last typed/picked for
+      // (say) Ring keeps sitting there - just clamped into range -
+      // after switching to Earring, and Line 3's type/tier carries over
+      // completely untouched. Same "only fire on an actual value change"
+      // shape as engrSpecEls above: a dedicated change listener on the
+      // slot selector itself, run once per real switch, resetting Main
+      // Stat back to its slot's own default (A: max, matching a
+      // best-in-slot current piece; B: min, matching a fresh candidate
+      // roll - same defaults the static markup ships with) and Line 3
+      // back to "None" so a stale Flat AP/WP pick from a different slot
+      // can't quietly ride along into this one.
+      const avbSlotEl = root.querySelector(".ap-avb-slot");
+      if (avbSlotEl) {
+        avbSlotEl.addEventListener("change", () => {
+          const range = ACC_MAIN_STAT_RANGE[avbSlotEl.value] || ACC_MAIN_STAT_RANGE.necklace;
+          const aMs = root.querySelector(".ap-avb-a-mainstat");
+          const bMs = root.querySelector(".ap-avb-b-mainstat");
+          if (aMs) aMs.value = range.max;
+          if (bMs) bMs.value = range.min;
+          ["a", "b"].forEach((prefix) => {
+            const typeEl = root.querySelector(".ap-avb-" + prefix + "-line3-type");
+            if (typeEl) typeEl.value = "none";
+          });
+        });
+      }
+
       // Coalesced to at most one recompute+render+save per animation
       // frame, shared across every field in this root. Range sliders fire
       // "input" continuously while dragging (the number/select fields
@@ -4924,7 +5606,17 @@
         // the way to "259216") flash wildly wrong % gains before the
         // reader finishes typing. These three wait for "change" (blur,
         // or Enter) instead - everything else still updates live.
-        if (!el.matches(".ap-gear-wp, .ap-gear-main-stat, .ap-gear-flat-ap")) {
+        // Accessory vs. Accessory's own Main Stat fields are the same
+        // shape (a real 5-digit value typed straight in, not a tier
+        // lookup) and hit the same problem, just worse: enforceAvbSlotUI
+        // clamps to the slot's min/max on every recompute, so on the
+        // "input" event a bare leading digit ("1" on the way to
+        // "11500") reads as miles outside range and gets force-
+        // overwritten mid-keystroke - the field fights back against
+        // being typed into at all, not just showing wrong numbers
+        // briefly. Same "change"-only fix as the other three resolves
+        // it the same way.
+        if (!el.matches(".ap-gear-wp, .ap-gear-main-stat, .ap-gear-flat-ap, .ap-avb-a-mainstat, .ap-avb-b-mainstat")) {
           el.addEventListener("input", scheduleUpdate);
         }
         el.addEventListener("change", scheduleUpdate);
@@ -4945,7 +5637,27 @@
       // field here feeds an always-on live grid that has to show SOME
       // number, so blank/unparseable snaps back to the field's authored
       // default instead of being left broken.
+      // Accessory vs. Accessory's own Main Stat fields are excluded here -
+      // clampOnBlur captures min/max as plain numbers ONCE, at this
+      // setup call, from whatever the DOM's min/max attrs happen to be
+      // at page load (necklace's, since that's the default slot) - it
+      // has no way to notice enforceAvbSlotUI rewriting those same
+      // attrs later when the reader switches slots, so its blur handler
+      // goes on clamping to necklace's range forever. That's exactly
+      // backwards from the "live" clamp these two fields actually need,
+      // and it actively fights it: blur fires "change" first (already
+      // correctly reads the live slot range via enforceAvbSlotUI on the
+      // next frame), then this stale-range clamp overwrites the field
+      // with a wrong value before that frame runs, which enforceAvbSlotUI
+      // then clamps AGAIN into the real range - so a perfectly in-range
+      // typed value (e.g. Ring's 11500) snaps to the slot's max instead
+      // of staying put. enforceAvbSlotUI already re-clamps these two
+      // fields into the CURRENT slot's range on every update() call
+      // (min/max re-read fresh each time, not captured once), which is
+      // exactly what change->scheduleUpdate already triggers on blur -
+      // so this generic helper is both redundant and wrong for them.
       root.querySelectorAll('input[type="number"]').forEach((el) => {
+        if (el.matches(".ap-avb-a-mainstat, .ap-avb-b-mainstat")) return;
         const min = el.min !== "" ? parseFloat(el.min) : -Infinity;
         const max = el.max !== "" ? parseFloat(el.max) : Infinity;
         window.SiteUtils.clampOnBlur(el, min, max, scheduleUpdate, {
