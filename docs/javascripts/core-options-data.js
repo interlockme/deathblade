@@ -15,13 +15,13 @@
 // percentage line but aren't tracked here.
 //
 // Optional per-entry fields:
-//   krPatched - array of bp strings (e.g. ["17P"]) whose text already
-//               reflects a Korea-only balance patch not yet live
-//               elsewhere. Tooltip marks these lines with a small (KR)
-//               tag; update/remove once the patch goes live on Global.
-//   note      - short caveat shown at the bottom of the tooltip, e.g.
-//               flagging a core that's a Korea-only placeholder for a
-//               not-yet-released replacement.
+//   note - short caveat shown at the bottom of the tooltip, e.g.
+//          flagging a core that's a Korea-only placeholder for a
+//          not-yet-released replacement.
+//
+// All option text below is written as-is (no more (KR)-tagged lines) -
+// the balance-patch values transcribed from Korea are now just treated
+// as this core's values, full stop, ahead of the Global patch landing.
 (function () {
   window.DB_CORE_OPTIONS = {
     "Levin Slash": {
@@ -55,7 +55,6 @@
       ],
     },
     "Arts Core": {
-      krPatched: ["17P"],
       options: [
         { bp: "10P", text: "Damage to foes +1.5%." },
         { bp: "14P", text: "Using Deathblade Surge activates Destiny." },
@@ -66,7 +65,6 @@
       ],
     },
     "Art Master": {
-      krPatched: ["17P"],
       options: [
         { bp: "10P", text: "Damage to foes +1.5%." },
         { bp: "14P", text: "On Destiny activation, Damage to foes +5.0% for 15.0s." },
@@ -87,7 +85,6 @@
       ],
     },
     "Deathblade Surge": {
-      krPatched: ["14P"],
       options: [
         { bp: "10P", text: "Deathblade Surge Damage +2.5%." },
         { bp: "14P", text: "On Destiny activation, Damage to foes +5.0% for 30.0s." },
@@ -98,7 +95,6 @@
       ],
     },
     "Surge Core": {
-      krPatched: ["14P", "17P"],
       options: [
         { bp: "10P", text: "Deathblade Surge Damage +2.5%." },
         { bp: "14P", text: "Entering Death Trance triggers Destiny." },
@@ -109,7 +105,6 @@
       ],
     },
     "Strike": {
-      krPatched: ["14P", "17P"],
       options: [
         { bp: "10P", text: "Deathblade Surge Damage +1.5%." },
         { bp: "14P", text: "Breaking Moon Damage +30.0%." },
@@ -120,7 +115,6 @@
       ],
     },
     "Swift Resolution": {
-      krPatched: ["10P", "14P", "17P", "18P", "19P", "20P"],
       options: [
         { bp: "10P", text: "Deathly Slash cooldown -2.0s." },
         { bp: "14P", text: "With Quick Prep, Blade Dance cooldown +6.0s, but damage +90.0%." },
@@ -131,7 +125,6 @@
       ],
     },
     "Deathblade Rush": {
-      krPatched: ["17P"],
       options: [
         { bp: "10P", text: "Damage to foes +1.5%." },
         { bp: "14P", text: "Activating Destiny resets the cooldown of Blitz Rush." },
@@ -142,7 +135,6 @@
       ],
     },
     "Death Blitz": {
-      krPatched: ["17P"],
       options: [
         { bp: "10P", text: "Damage to foes +1.5%." },
         { bp: "14P", text: "Using Turning Slash activates Destiny." },
@@ -153,7 +145,6 @@
       ],
     },
     "Frostfire Blade": {
-      krPatched: ["14P", "17P"],
       options: [
         { bp: "10P", text: "Damage to foes +1.0%." },
         { bp: "14P", text: "Blitz Rush Damage +7.0%." },
@@ -163,13 +154,11 @@
         { bp: "20P", text: "Blitz Rush Damage +0.6%." },
       ],
     },
-    // 222's Sun/Moon cores are being replaced outright by these two -
-    // Korea-only for now, so builds already reference them by their new
-    // name as a placeholder ahead of Global release. Full option text
-    // comes from KR patch notes, not an in-game screenshot like the rest
-    // of this file, since neither core is obtainable yet outside Korea.
+    // 222's Sun/Moon cores are being replaced outright by these two.
+    // Full option text comes from KR patch notes, not an in-game
+    // screenshot like the rest of this file, since these weren't
+    // obtainable outside Korea when transcribed.
     "Deadly Feast": {
-      note: "Korea-only replacement for Sword Reset, shown as a placeholder ahead of Global release.",
       options: [
         { bp: "10P", text: "Normal Skill Damage +3.0%." },
         { bp: "14P", text: "When Destiny is triggered, gain the 'Destiny: Killing Feast' buff. 'Destiny: Killing Feast': Using Deathly Slash consumes the effect to increase its damage by 30.0%." },
@@ -180,7 +169,6 @@
       ],
     },
     "Dual Blade Dance": {
-      note: "Korea-only replacement for Destiny Core, shown as a placeholder ahead of Global release.",
       options: [
         { bp: "10P", text: "Normal Skill Damage +3.0%." },
         { bp: "14P", text: "Using Blade Arts activates Destiny." },

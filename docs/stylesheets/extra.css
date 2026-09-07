@@ -6980,48 +6980,27 @@ body.page-333-blitz input[type="text"] {
   pointer-events: none;
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
-/* Centered under the middle (Moon) card by default; the first card
-   (Sun) would otherwise center its tooltip partway off the left edge
-   of the page/panel, and the last card (Star) partway off the right -
-   there are always exactly 3 cards in a row (Sun/Moon/Star), so
-   :first-child/:last-child reliably picks the two edge cases without
-   needing to measure anything at runtime. */
+/* Horizontal position is set inline (as an exact `left` in px) by
+   ark-core-badge.js's positionTip() right before the tooltip opens -
+   centered under its own card by default, then clamped so it never
+   runs past the viewport's edges. This replaced a :first-child/
+   :last-child CSS-only split that flush-aligned the Sun and Star
+   cards' tooltips to their own card edge instead of centering them -
+   correct in that it kept them on-screen, but since the tooltip
+   (~320px) is wider than a card (~290px), flush-aligning made those
+   two visibly hang off to one side while the Moon card's centered one
+   looked right - all 3 now use the same centered-then-clamped logic,
+   so they match. `left: 0` below is just the pre-JS fallback so the
+   element has a valid box before the first hover/focus/tap fires. */
 .md-typeset .ark-core-options-tip {
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-}
-.md-typeset .ark-core-item-tip:first-child .ark-core-options-tip {
   left: 0;
   transform: translateY(4px);
 }
-.md-typeset .ark-core-item-tip:last-child .ark-core-options-tip {
-  left: auto;
-  right: 0;
-  transform: translateY(4px);
-}
-/* Opacity/pointer-events toggle is identical across all 3 position
-   variants, so one shared rule covers it. The translateY(4px)->0
-   "settle in" animation has to be re-declared per variant below instead
-   (each variant's hidden state above pairs a different translateX/left
-   with that same translateY), since the transform shorthand can't mix
-   a shared Y change with a per-variant X in one rule. */
 .md-typeset .ark-core-item-tip:hover .ark-core-options-tip,
 .md-typeset .ark-core-item-tip:focus-visible .ark-core-options-tip,
 .md-typeset .ark-core-item-tip.ark-core-tip-open .ark-core-options-tip {
   opacity: 1;
   pointer-events: auto;
-}
-.md-typeset .ark-core-item-tip:not(:first-child):not(:last-child):hover .ark-core-options-tip,
-.md-typeset .ark-core-item-tip:not(:first-child):not(:last-child):focus-visible .ark-core-options-tip,
-.md-typeset .ark-core-item-tip:not(:first-child):not(:last-child).ark-core-tip-open .ark-core-options-tip {
-  transform: translateX(-50%) translateY(0);
-}
-.md-typeset .ark-core-item-tip:first-child:hover .ark-core-options-tip,
-.md-typeset .ark-core-item-tip:first-child:focus-visible .ark-core-options-tip,
-.md-typeset .ark-core-item-tip:first-child.ark-core-tip-open .ark-core-options-tip,
-.md-typeset .ark-core-item-tip:last-child:hover .ark-core-options-tip,
-.md-typeset .ark-core-item-tip:last-child:focus-visible .ark-core-options-tip,
-.md-typeset .ark-core-item-tip:last-child.ark-core-tip-open .ark-core-options-tip {
   transform: translateY(0);
 }
 .md-typeset .ark-core-tip-title {
@@ -7040,11 +7019,18 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-core-tip-list {
   display: flex;
   flex-direction: column;
-  gap: 0.4em;
+  /* No gap here on purpose - see .ark-core-tip-line below. */
 }
+/* line-height alone spaces every line, wrapped or not. A flex `gap` on
+   the list on top of this would only ever land BETWEEN two separate
+   [xxP] options (each is its own .ark-core-tip-line) and never inside
+   one that wraps - so a 2-line option would sit tighter internally than
+   it sits next to its neighbors. The in-game tooltip this was
+   transcribed from has no such gap; every line, wrapped continuation or
+   new option, sits the same distance from the one above it. */
 .md-typeset .ark-core-tip-line {
   font-size: 0.72em;
-  line-height: 1.4;
+  line-height: 1.65;
   color: var(--dbc-lilac);
 }
 .md-typeset .ark-core-tip-bp {
@@ -7055,23 +7041,6 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-core-tip-kw {
   color: var(--dbc-purple);
 }
-/* Small marker on any line whose text already reflects a Korea-only
-   balance patch not yet live elsewhere - see core-options-data.js's
-   krPatched field. Same gold-badge language as .ap-brace-label-caveat
-   so it reads as "conditional/flagged", not an error. */
-.md-typeset .ark-core-tip-krtag {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 0.3em;
-  padding: 0.02em 0.35em;
-  border-radius: 3px;
-  background: rgba(var(--dbc-gold-rgb), 0.15);
-  border: 1px solid rgba(var(--dbc-gold-rgb), 0.55);
-  color: var(--dbc-gold);
-  font-size: 0.85em;
-  font-weight: 700;
-  vertical-align: middle;
-}
 .md-typeset .ark-core-tip-note {
   margin-top: 0.6em;
   padding-top: 0.5em;
@@ -7081,28 +7050,6 @@ body.page-333-blitz input[type="text"] {
   line-height: 1.4;
   color: var(--dbc-muted-text-soft);
 }
-@media screen and (max-width: 480px) {
-  /* The row itself stacks to 1 column here (see .ark-core-row's own
-     max-width: 480px rule above) so every card is effectively both a
-     first-child and a last-child in visual terms - anchor every
-     tooltip to the card's own left edge instead of leaving the
-     desktop centered/edge-aligned split, which would otherwise center
-     the Moon card's tooltip while Sun/Star's stayed edge-anchored for
-     no reason once they're all full-width and stacked. */
-  .md-typeset .ark-core-options-tip,
-  .md-typeset .ark-core-item-tip:first-child .ark-core-options-tip,
-  .md-typeset .ark-core-item-tip:last-child .ark-core-options-tip {
-    left: 0;
-    right: auto;
-    transform: translateY(4px);
-  }
-  .md-typeset .ark-core-item-tip:hover .ark-core-options-tip,
-  .md-typeset .ark-core-item-tip:focus-visible .ark-core-options-tip,
-  .md-typeset .ark-core-item-tip.ark-core-tip-open .ark-core-options-tip {
-    transform: translateY(0);
-  }
-}
-
 /* ---------- Ark Passive tree (Evolution/Enlightenment/Leap) ---------- */
 /* Rendered by javascripts/ark-passive-tree.js from a JSON blob (same
    authoring pattern as .ark-cores/ark-core-badge.js - see that file's

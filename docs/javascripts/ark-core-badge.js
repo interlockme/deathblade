@@ -97,17 +97,11 @@
     tip.appendChild(el("div", "ark-core-tip-title", label));
     tip.appendChild(el("div", "ark-core-tip-subtitle", "Core Option"));
 
-    var krSet = {};
-    (data.krPatched || []).forEach(function (bp) { krSet[bp] = true; });
-
     var list = el("div", "ark-core-tip-list");
     data.options.forEach(function (opt) {
       var line = el("div", "ark-core-tip-line");
       var bpLabel = el("span", "ark-core-tip-bp", "[" + opt.bp + "]");
       line.appendChild(bpLabel);
-      if (krSet[opt.bp]) {
-        line.appendChild(el("span", "ark-core-tip-krtag", "KR"));
-      }
       var textEl = el("span", "ark-core-tip-text");
       appendHighlighted(textEl, opt.text);
       line.appendChild(document.createTextNode(" "));
@@ -121,6 +115,25 @@
     }
 
     return tip;
+  }
+
+  // Centers `tip` under `item` and clamps it so it never runs past the
+  // viewport's left/right edges. Called right before the tooltip opens
+  // (hover, keyboard focus, or tap) rather than kept in sync continuously -
+  // matching the "recompute on the triggering event, don't chase it" pattern
+  // used elsewhere on this site (see skill-setup.js's masonry width check).
+  // Sets an inline `left` in px instead of the usual 50%/translateX centering
+  // trick because the clamped position is frequently NOT the true center -
+  // px is the only way to express "centered, unless that would clip, in
+  // which case slide over just enough to stay on screen."
+  var VIEWPORT_MARGIN = 8;
+  function positionTip(item, tip) {
+    var itemRect = item.getBoundingClientRect();
+    var tipWidth = tip.getBoundingClientRect().width;
+    var desiredLeft = itemRect.left + itemRect.width / 2 - tipWidth / 2;
+    var maxLeft = window.innerWidth - tipWidth - VIEWPORT_MARGIN;
+    var clampedLeft = Math.min(Math.max(desiredLeft, VIEWPORT_MARGIN), maxLeft);
+    tip.style.left = (clampedLeft - itemRect.left) + "px";
   }
 
   function buildItem(entry) {
@@ -165,8 +178,14 @@
       item.setAttribute("tabindex", "0");
       item.appendChild(tip);
 
-      // CSS alone (:hover/:focus-within) covers mouse and keyboard; this
-      // just adds a tap-to-toggle for touch, which triggers neither -
+      // CSS (:hover/:focus-visible) still drives showing/hiding the
+      // tooltip for mouse and keyboard - these two just reposition it
+      // right before that happens, so it's centered-and-clamped by the
+      // time it becomes visible.
+      item.addEventListener("mouseenter", function () { positionTip(item, tip); });
+      item.addEventListener("focusin", function () { positionTip(item, tip); });
+
+      // Tap-to-toggle for touch, which triggers neither hover nor focus -
       // matching the ap-calc-popover open/close-on-outside-click pattern
       // elsewhere on the site rather than inventing a new one.
       item.addEventListener("click", function (evt) {
@@ -177,6 +196,7 @@
         document.querySelectorAll(".ark-core-item.ark-core-tip-open").forEach(function (open) {
           open.classList.remove("ark-core-tip-open");
         });
+        positionTip(item, tip);
         item.classList.add("ark-core-tip-open");
         evt.stopPropagation();
       });
