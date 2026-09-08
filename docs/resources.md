@@ -569,6 +569,7 @@
           <span class="ap-value-display" data-for="ap-gear-weapon-core"></span>
           <select id="ap-gear-weapon-core" class="ap-gear-weapon-core">
             <option value="None|0P" selected>None</option>
+            <option value="Any|10P">10 Points</option>
             <option value="Any|14P">14 Points</option>
             <option value="Relic|17P">Relic 17P</option>
             <option value="Relic|18P">Relic 18P</option>

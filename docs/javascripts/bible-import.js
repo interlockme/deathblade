@@ -980,7 +980,7 @@
       "Swift Attack": { field: "ap-swift-core", format: "pipe", mergedAt14: true },
       "Crushing Strike": { field: "ap-crushing-core", format: "pipe", mergedAt14: true },
       "Attack": { field: "ap-gear-ap-chaos-star", format: "pipe", mergedAt14: true, mergedAt10: true },
-      "Weapon": { field: "ap-gear-weapon-core", format: "pipe", mergedAt14: true },
+      "Weapon": { field: "ap-gear-weapon-core", format: "pipe", mergedAt14: true, mergedAt10: true },
     };
     var CHAOS_SLOT_TO_KEY = { "Chaos Sun": "chaos_sun", "Chaos Moon": "chaos_moon", "Chaos Star": "chaos_star" };
     if (text.hasArkGrid && text.chaosCores) {
@@ -1003,6 +1003,24 @@
           // shows chaosCores in full for anyone who wants to double check.
           return;
         }
+        if (core.points < 10) {
+          // The real investment tiers are 0/10/14/17/18/19/20 - nothing below
+          // 10P exists as a paid breakpoint (confirmed from tooltip deltas),
+          // so a core sitting at 1-9 points hasn't crossed the first tier and
+          // is worth exactly what an uninvested core is worth: zero. Handle
+          // this ahead of every other branch, since both the space17 "<17"
+          // check below and the mergedAt10 exact-match above would otherwise
+          // mis-handle it - space17 would wrongly write "Epic-Leg 10P" for a
+          // core that hasn't earned it, and pipe-format mergedAt10 cores
+          // (Attack/Weapon) would fall through to the generic grade+points
+          // branch and produce a nonexistent "Relic|9P"/"Ancient|9P" value,
+          // same stale-write risk as the other bugs fixed above. Write the
+          // format's real "no core" option directly: space17's is "None"
+          // (no "|0P" suffix - checked resources.md, Flashy is the only one
+          // of the six that isn't pipe-format), everything else is "None|0P".
+          data[target.field] = target.format === "space17" ? "None" : "None|0P";
+          return;
+        }
         if (target.mergedAt14 && core.points === 14) {
           // Stable Attack's 14P tier is a single "Any|14P" option in
           // resources.md (Legend/Relic/Ancient all pay out identically at
@@ -1023,6 +1041,27 @@
           // detection entirely rather than risk a spurious "couldn't read
           // grade" warning for a value that never depended on grade.
           data[target.field] = "Any|10P";
+          return;
+        }
+        if (target.format === "pipe" && !target.mergedAt10 && core.points < 17 && core.points !== 14) {
+          // Only 10P and 14P are assignable point totals below 17P (confirmed
+          // in-game) - mergedAt14 above already handled 14P, so anything left
+          // here is a 10-point core. Stable/Swift/Crushing have no 10P entry
+          // in their own tables (STABLE_ATK_TABLE / ARK_SWIFT_CDMG_TABLE /
+          // ARK_CRUSHING_CRATE_TABLE all lack an "Any|10P"/"Relic|10P" key
+          // and fall back to 0 via `|| 0`), matching resources.md's own
+          // selects, which don't offer a "10 Points" option for these three
+          // fields at all - a 10-point core here is genuinely worth nothing.
+          // (Attack and Weapon are the two exceptions - both have a real
+          // nonzero 10P payout, confirmed from their own in-game tooltips,
+          // which is why both carry mergedAt10 and are excluded from this
+          // branch entirely.) Write "None|0P" directly and skip grade
+          // detection: falling through to the generic grade+points branch
+          // below would write a nonexistent "Relic|10P"/"Ancient|10P" option
+          // that applyImportText silently skips, potentially leaving a STALE
+          // prior value in the field instead of the correct "None|0P" - same
+          // failure shape as the KBW/Adrenaline default bug.
+          data[target.field] = "None|0P";
           return;
         }
         if (target.format === "space17" && core.points < 17) {

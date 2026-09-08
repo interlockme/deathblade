@@ -478,11 +478,16 @@
   // flashyAtk/stableAtk get. "None|0P" (0/0) added on top of the raw
   // tooltip data so a reader with neither core equipped has a real
   // option to select, matching GEAR_AP_CHAOS_STAR_TABLE's own "None|0P"
-  // entry. No "10 Points" flat-only stage is modeled here (unlike Chaos
-  // Core: Attack's "Any|10P") - no reference figure for Weapon's payout
-  // at that tier was available; add one if you have it.
+  // entry. "Any|10P" (confirmed from the core's own in-game tooltip:
+  // [10P] Weapon Power +1300, flat-only, no % yet) mirrors Chaos Core:
+  // Attack's own 10P shape exactly - flat is set at 10P and stays fixed
+  // through 14P (Attack: 900 at both 10P and 14P; Weapon: 1300 at both),
+  // only stepping again at 17P. Same merged-regardless-of-grade reasoning
+  // as GEAR_AP_CHAOS_STAR_TABLE's "Any|10P": the tooltip's 10P line has no
+  // grade-dependent split.
   const ARK_WEAPON_CORE_TABLE = {
     "None|0P": { pct: 0, flat: 0 },
+    "Any|10P": { pct: 0, flat: 1300 },
     "Any|14P": { pct: 0.75, flat: 1300 },
     "Relic|14P": { pct: 0.75, flat: 1300 }, // alias of Any|14P - see GEAR_AP_CHAOS_STAR_TABLE's own comment on why points6() needs this key too
     "Relic|17P": { pct: 2.25, flat: 3900 },
