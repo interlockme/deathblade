@@ -415,7 +415,21 @@
     </div>
   </div>
 
-  <p class="ap-calc-footnote">Your inputs are saved in this browser so they're still here next visit.
+  <!-- This has to be a <div>, not a <p> - it was a <p> originally, but a
+       <p> can't legally contain block-level content, and the
+       bible-import-warnings <ul> below is block-level. A browser's HTML5
+       parser silently closes </p> right before that <ul>, which reparents
+       the <ul> all the way out to a sibling of .ap-calc-layout - outside
+       .ap-calc-footnote entirely, so every ".ap-calc-footnote
+       .bible-import-warnings" CSS rule below stops matching and the
+       warning list renders unstyled in an unrelated part of the page.
+       Confirmed via a real DOM inspection, not just reading the markup -
+       the ul's parentElement was .ap-calc-live, and ul.closest
+       ('.ap-calc-footnote') was null. A <div> has no such restriction and
+       needs no CSS changes, since every rule below already targets
+       ".ap-calc-footnote" as a class, not a "p.ap-calc-footnote" tag
+       selector. -->
+  <div class="ap-calc-footnote">
   <span class="ap-calc-preset-group" role="group" aria-label="Preset slot">Preset <button type="button" class="ap-calc-preset" data-preset="1">1</button><button type="button" class="ap-calc-preset" data-preset="2">2</button><button type="button" class="ap-calc-preset" data-preset="3">3</button></span>
   <button type="button" class="ap-calc-export">Export</button>
   <button type="button" class="ap-calc-import">Import</button>
@@ -432,7 +446,7 @@
        dragged to a bookmarks bar, so the icon has to live outside it or
        every saved bookmark would be titled "⠿ Bible Import". -->
   <span class="bible-import-control">
-    <a href="#" class="bible-import-bookmarklet" title="Drag to your bookmarks bar, then click it on a loaded lostark.bible character page.">Bible Import</a>
+    <a href="#" class="bible-import-bookmarklet" title="Drag to your bookmarks bar, then click it on a loaded lostark.bible character page. Doesn't capture Main Stat % (Stronghold Pet + Skins), set them manually. Only as accurate as your Raid Loadout, make sure it matches your equipment.">Bible Import</a>
     <span class="bible-import-status" aria-live="polite"></span>
     <ul class="bible-import-warnings" hidden></ul>
   </span>
@@ -456,7 +470,7 @@
     </span>
     <span class="ap-calc-popover-msg" aria-live="polite"></span>
   </span>
-  </p>
+  </div>
 
 
 </div> <!-- end ap-calc-live -->

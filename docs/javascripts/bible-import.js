@@ -43,12 +43,23 @@
 //     so there's nothing to import it into.
 //   - Chaos Grid core GRADE (Relic vs Ancient) isn't in the page's text or
 //     hydration data anywhere - only encoded as an icon background-color
-//     gradient. The two gradients below were decoded against one real
-//     character and cross-checked against this calculator's own
-//     already-filled-in defaults (ap-gear-ap-chaos-star was already
-//     "Relic|20P" - matches). If Bible ever ships a third grade or
-//     changes these colors, an unrecognized gradient is left as null and
-//     that core's grade is simply not imported (see CHAOS_GRADE_COLORS).
+//     gradient (see findChaosGrade). The two gradients below were decoded
+//     against one real character and cross-checked against this
+//     calculator's own already-filled-in defaults (ap-gear-ap-chaos-star
+//     was already "Relic|20P" - matches). Marker detection had a real bug
+//     early on (a stray trailing "_" meant the marker never matched at
+//     all - see findChaosGrade's own comment) which is now fixed and
+//     confirmed working against two separate real characters. If Bible
+//     ever ships a third grade or changes these colors, an unrecognized
+//     gradient is left as null and that core's grade is simply not
+//     imported (see CHAOS_GRADE_COLORS).
+//   - Main Stat % (ap-gear-main-stat-pct - Stronghold Pet + Skins bonus,
+//     see its label in resources.md) is never written by this file at
+//     all, deliberately - it isn't shown anywhere on a Bible character
+//     page (pet/skin cosmetics aren't gear data), so there's nothing to
+//     read it from. Whatever value is already sitting in that field is
+//     left untouched by an import, same as any other field this file
+//     doesn't produce data for.
 
 (function () {
   var SITE_ROOT = window.SiteUtils.detectSiteRoot("bible-import.js");
@@ -283,14 +294,13 @@
   // arkGridCores hydration objects confirmed to have NO grade/tier/rarity
   // field at all (checked a real dump: each core is just {id, base, gems:
   // [...]}), so Relic/Ancient really can only come from this icon-color
-  // decode, not from data. That makes it worth debugging directly rather
-  // than guessing at another table entry: two of three Chaos slots failed
-  // to resolve on a real character, and this records, per slot, whether
-  // the marker string was even found, what gradient colors (if any) turned
-  // up in the 1000-char window before it, and what CHAOS_GRADE_COLORS did
-  // with the last one - so the actual failure point (marker not found vs.
-  // no gradient in range vs. an unrecognized color) is visible instead of
-  // just the pass/fail this function returns.
+  // decode, not from data. Kept for future debugging, not because this is
+  // currently failing - records, per slot, whether the marker string was
+  // even found, what gradient colors (if any) turned up in the 1000-char
+  // window before it, and what CHAOS_GRADE_COLORS did with the last one,
+  // so a future failure's exact point (marker not found vs. no gradient
+  // in range vs. an unrecognized color) is visible instead of just the
+  // pass/fail this function returns.
   var LAST_CHAOS_GRADE_DEBUG = {};
   function findChaosGrade(rawHtml, slot) {
     // Was "emoticon_arkgrid_" + slot + "_" (trailing underscore, expecting
@@ -298,21 +308,20 @@
     // dumpArkGridMarkers against a real page that the actual filename is
     // "emoticon_arkgrid_chaos_sun.png" - slot name goes straight into
     // ".png", no trailing underscore, no grade encoded in the filename
-    // itself. That extra "_" was the whole markerFound:false bug.
+    // itself. That extra "_" was the whole markerFound:false bug seen
+    // during the original investigation below - fixed here, and confirmed
+    // resolving correctly (markerFound:true, gradient found, grade
+    // resolved) against two separate real characters since.
     var idx = rawHtml.indexOf("emoticon_arkgrid_" + slot);
     if (idx === -1) { LAST_CHAOS_GRADE_DEBUG[slot] = { markerFound: false }; return null; }
     var windowStr = rawHtml.slice(Math.max(0, idx - 1000), idx);
     var matches = windowStr.match(/linear-gradient\(135deg, ([^)]+)\)/g);
     if (!matches || !matches.length) {
-      // The icon markup dumpArkGridMarkers captured is a plain
-      // <img src="https://cdn.ags.lol/ui/...">, not a background-gradient
-      // div like the original color decode assumed - so it's entirely
-      // possible grade is no longer encoded as a nearby gradient at all
-      // (site may have moved it elsewhere, or dropped it from this page).
-      // Capturing a slice of windowStr's tail here (rather than just the
-      // empty-array pass/fail) means that, if this is the failure again,
-      // the actual markup immediately before the <img> is visible in one
-      // shot instead of requiring yet another guess-and-recheck round trip.
+      // Hasn't recurred since the marker fix above, but if it does: capture
+      // a slice of windowStr's tail (rather than just the empty-array
+      // pass/fail) so the actual markup immediately before the marker is
+      // visible in one shot instead of requiring another guess-and-recheck
+      // round trip.
       LAST_CHAOS_GRADE_DEBUG[slot] = { markerFound: true, gradientsInWindow: [], windowTail: windowStr.slice(-300) };
       return null;
     }
@@ -322,15 +331,14 @@
     return grade;
   }
 
-  // Diagnostic only, one-shot: findChaosGrade's exact-literal marker
-  // ("emoticon_arkgrid_<slot>_") came back markerFound:false for every
-  // Chaos slot on a real character - not a color problem, the marker
-  // string itself isn't in the page anymore, meaning Bible's icon
-  // class/attribute naming has likely changed since this was decoded.
-  // Rather than guess a replacement pattern blind, this scans the raw
-  // HTML case-insensitively for the broader substring "arkgrid" (so it
+  // Diagnostic only, kept for future debugging - not a sign of an open
+  // problem. This is the tool that found the original bug: an earlier
+  // version of findChaosGrade's marker string had a trailing "_" that
+  // never matched the real page, coming back markerFound:false for every
+  // Chaos slot on a real character. Scanning the raw HTML
+  // case-insensitively for the broader substring "arkgrid" (so it
   // survives a rename of the "emoticon_" prefix or the trailing "_")
-  // and keeps a chunk of surrounding text around each of the first few
+  // and keeping a chunk of surrounding text around each of the first few
   // hits, so the CURRENT naming is visible directly in the console
   // instead of requiring another guess.
   var LAST_ARK_GRID_MARKER_DUMP = null;
@@ -776,18 +784,29 @@
     return "wrong-class";
   }
 
-  // Character name: always the line directly above "Combat Power," no
-  // matter how many lines separate the class name from it (region-name
-  // lines above it vary) - confirmed from real dumps, e.g.
-  // ".../Deathblade/Bladea/Combat Power" -> "Bladea" is the name. Returns
-  // null if "Combat Power" isn't present at all; checkDeathbladeClass
-  // already rejects that case as "not-loaded" separately, this only ever
-  // runs once a Deathblade page is confirmed.
+  // Character name: the line directly after "Deathblade" (the class line
+  // checkDeathbladeClass already located), NOT the line directly above
+  // "Combat Power" - those are only the same line when the character has
+  // no equipped title. When a title IS equipped, the layout is
+  // "...Deathblade / <name> / <title> / Combat Power", so anchoring off
+  // "Combat Power" grabs the title instead (confirmed from a real dump:
+  // ".../Deathblade/ẞroselike/Monarch of the Bitter Cold/Combat Power"
+  // was importing as "Monarch of the Bitter Cold"). Anchoring off
+  // "Deathblade" instead works in both cases, since the name always comes
+  // right after the class line whether or not a title follows it. Returns
+  // null if "Combat Power" isn't present at all, or if "Deathblade" isn't
+  // found in the window above it; checkDeathbladeClass already rejects
+  // the latter as "wrong-class"/"not-loaded" separately before this runs,
+  // this is just belt-and-suspenders.
   function extractCharacterName(lines) {
     var cpIdx = -1;
     for (var i = 0; i < lines.length; i++) { if (lines[i] === "Combat Power") { cpIdx = i; break; } }
     if (cpIdx <= 0) return null;
-    return lines[cpIdx - 1] || null;
+    var windowStart = Math.max(0, cpIdx - 6);
+    for (var j = cpIdx - 1; j >= windowStart; j--) {
+      if (lines[j] === "Deathblade") return lines[j + 1] || null;
+    }
+    return null;
   }
 
   function buildPayload(rawHtml, lines, onRaidLoadoutConfirmed) {
