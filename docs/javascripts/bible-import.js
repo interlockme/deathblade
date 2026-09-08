@@ -986,11 +986,6 @@
     if (text.hasArkGrid && text.chaosCores) {
       Object.keys(text.chaosCores).forEach(function (slotLabel) {
         var core = text.chaosCores[slotLabel];
-        var hydrationCore = hydration.gridSlots && hydration.gridSlots[CHAOS_SLOT_TO_KEY[slotLabel]];
-        if (hydrationCore && hydrationCore.points != null && hydrationCore.points !== core.points) {
-          warnings.push(slotLabel + ": page text says " + core.points + "P but the page's own data says " + hydrationCore.points + "P - used the page data (" + hydrationCore.points + "P), but this mismatch is worth a second look.");
-          core.points = hydrationCore.points;
-        }
         var target = CHAOS_CORE_FIELDS[core.name];
         if (!target) {
           // Not a bug and not actionable - the calculator only models
@@ -1001,7 +996,26 @@
           // for anyone running an unmodeled core, telling them nothing they
           // could act on. Silently skip instead - console dump below still
           // shows chaosCores in full for anyone who wants to double check.
+          // Checked BEFORE the hydration-mismatch comparison below, on
+          // purpose: that comparison's corrected point value is only ever
+          // read by the modeled-core branches further down, so running it
+          // for an unmodeled core produced a "page text says XP but the
+          // page's own data says YP" warning whose "fix" was immediately
+          // discarded on this return - noise about a correction that never
+          // applied. This isn't because the point mechanics differ for
+          // unmodeled cores - all 18 core types share the same 0-20
+          // investable range with effect/grade breakpoints only at
+          // 10/14/17-20 (confirmed universal, not just for the six modeled
+          // ones), so an 11P Smoldering Strike core is a perfectly normal
+          // value, not a parsing anomaly. It's skipped here purely because
+          // there's no field for it to feed - "unmodeled" means no damage
+          // math is encoded for it, not that its points are suspect.
           return;
+        }
+        var hydrationCore = hydration.gridSlots && hydration.gridSlots[CHAOS_SLOT_TO_KEY[slotLabel]];
+        if (hydrationCore && hydrationCore.points != null && hydrationCore.points !== core.points) {
+          warnings.push(slotLabel + ": page text says " + core.points + "P but the page's own data says " + hydrationCore.points + "P - used the page data (" + hydrationCore.points + "P), but this mismatch is worth a second look.");
+          core.points = hydrationCore.points;
         }
         if (core.points < 10) {
           // The real investment tiers are 0/10/14/17/18/19/20 - nothing below
