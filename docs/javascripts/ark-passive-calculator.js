@@ -79,15 +79,19 @@
   const FLASHY_ATK_TABLE = { None: 0, "Epic-Leg 10P": 0.0055, "Relic 17P": 0.011, "Ancient 17P": 0.0165 };
 
   // Merged Stable Atk table: "Grade|Points" -> value
+  // 14P is a single "Any|14P" bucket, not split by grade - Legend/Relic/
+  // Ancient all pay out the identical 0.007 at 14P (confirmed: grade only
+  // starts affecting the value at 17P+). Matches the resources.md dropdown,
+  // which merges those three options into one "14 Points" choice for the
+  // same reason "Any|10P" is merged on the Chaos Star Attack core below.
   const STABLE_ATK_TABLE = {
     "None|0P": 0,
-    "Legend|14P": 0.007,
-    "Relic|14P": 0.007,
+    "Any|14P": 0.007,
+    "Relic|14P": 0.007, // alias of Any|14P - computeArkGridComparison's points6() always looks up "Relic"+"14P" for its merged column, never the "Any|"-prefixed key
     "Relic|17P": 0.021,
     "Relic|18P": 0.0233,
     "Relic|19P": 0.0256,
     "Relic|20P": 0.0279,
-    "Ancient|14P": 0.007,
     "Ancient|17P": 0.035,
     "Ancient|18P": 0.0373,
     "Ancient|19P": 0.0396,
@@ -340,21 +344,24 @@
   // (see the two gearApTotal call sites below) rather than asking the
   // reader to hand-add it into that field themselves.
   // "Any|10P" covers the flat-only stage (10 Points, both grades give
-  // the same +900 with no % yet, so grade doesn't matter until 14P).
-  // 14P/17P+ values are cumulative totals at each tier, matching how
-  // the core's own tooltip lists each breakpoint as additive. Ancient
-  // 20P's pct (2.68%) and flat (3600) both match this table's own
+  // the same +900 with no % yet), and "Any|14P" merges the 14P tier the
+  // same way - grade doesn't actually diverge until 17P (Relic|14P and
+  // Ancient|14P were bit-identical, 0.55%/900, before this merge; see the
+  // Ark Grid Core Comparison table's own header note in resources.md,
+  // which already merged the same tier for the same reason). 17P+ values
+  // are cumulative totals at each tier, matching how the core's own
+  // tooltip lists each breakpoint as additive. Ancient 20P's pct (2.68%) and flat (3600) both match this table's own
   // prior single fixed constant/default exactly, which is what this
   // table replaces.
   const GEAR_AP_CHAOS_STAR_TABLE = {
     "None|0P": { pct: 0, flat: 0 },
     "Any|10P": { pct: 0, flat: 900 },
-    "Relic|14P": { pct: 0.55, flat: 900 },
+    "Any|14P": { pct: 0.55, flat: 900 },
+    "Relic|14P": { pct: 0.55, flat: 900 }, // alias of Any|14P - computeArkGridComparison's points6() always looks up "Relic"+"14P" for its merged column, never the "Any|"-prefixed key
     "Relic|17P": { pct: 1.65, flat: 2700 },
     "Relic|18P": { pct: 1.81, flat: 2700 },
     "Relic|19P": { pct: 1.97, flat: 2700 },
     "Relic|20P": { pct: 2.13, flat: 2700 },
-    "Ancient|14P": { pct: 0.55, flat: 900 },
     "Ancient|17P": { pct: 2.2, flat: 3600 },
     "Ancient|18P": { pct: 2.36, flat: 3600 },
     "Ancient|19P": { pct: 2.52, flat: 3600 },
@@ -388,12 +395,12 @@
   // relevant half of each modeled below.
   const ARK_SWIFT_CDMG_TABLE = {
     "None|0P": 0,
-    "Relic|14P": 0.014,
+    "Any|14P": 0.014,
+    "Relic|14P": 0.014, // alias of Any|14P - see GEAR_AP_CHAOS_STAR_TABLE's own comment on why points6() needs this key too
     "Relic|17P": 0.042,
     "Relic|18P": 0.0465,
     "Relic|19P": 0.051,
     "Relic|20P": 0.0555,
-    "Ancient|14P": 0.014,
     "Ancient|17P": 0.07,
     "Ancient|18P": 0.0745,
     "Ancient|19P": 0.079,
@@ -401,12 +408,12 @@
   };
   const ARK_CRUSHING_CRATE_TABLE = {
     "None|0P": 0,
-    "Relic|14P": 0.0065,
+    "Any|14P": 0.0065,
+    "Relic|14P": 0.0065, // alias of Any|14P - see GEAR_AP_CHAOS_STAR_TABLE's own comment on why points6() needs this key too
     "Relic|17P": 0.0195,
     "Relic|18P": 0.0216,
     "Relic|19P": 0.0237,
     "Relic|20P": 0.0258,
-    "Ancient|14P": 0.0065,
     "Ancient|17P": 0.0325,
     "Ancient|18P": 0.0346,
     "Ancient|19P": 0.0367,
@@ -414,25 +421,29 @@
   };
   // Flashy's Dmg% half - separate from FLASHY_ATK_TABLE above, which
   // only covers its Crit Hit Damage half (see that table's own comment).
+  // No "Ancient|14P" key: computeArkGridComparison's points6() always
+  // reads the merged 14P column as gainFn("Relic", "14P") - it never
+  // constructs an "Ancient"+"14P" lookup for any table - and this table
+  // has no live select of its own to serve, unlike the merged Any|14P
+  // tables above, so there's nothing else that would ever read that key.
   const ARK_FLASHY_DMG_TABLE = {
     "Relic|14P": 0.005,
     "Relic|17P": 0.015,
     "Relic|18P": 0.0166,
     "Relic|19P": 0.0182,
     "Relic|20P": 0.0198,
-    "Ancient|14P": 0.005,
     "Ancient|17P": 0.02,
     "Ancient|18P": 0.0216,
     "Ancient|19P": 0.0232,
     "Ancient|20P": 0.0248,
   };
+  // No "Ancient|14P" key - see ARK_FLASHY_DMG_TABLE's own comment above.
   const ARK_SMOLDERING_BOSSDMG_TABLE = {
     "Relic|14P": 0.005,
     "Relic|17P": 0.015,
     "Relic|18P": 0.0166,
     "Relic|19P": 0.0182,
     "Relic|20P": 0.0198,
-    "Ancient|14P": 0.005,
     "Ancient|17P": 0.025,
     "Ancient|18P": 0.0266,
     "Ancient|19P": 0.0282,
@@ -445,13 +456,13 @@
   // translate cleanly into this calculator's own methodology. Modeled
   // instead as a flat, grade-only %DPS estimate.
   const ARK_SMOLDERING_BURN_TABLE = { Relic: 0.005, Ancient: 0.0075 };
+  // No "Ancient|14P" key - see ARK_FLASHY_DMG_TABLE's own comment above.
   const ARK_ABSORBING_DMG_TABLE = {
     "Relic|14P": 0.005,
     "Relic|17P": 0.015,
     "Relic|18P": 0.0166,
     "Relic|19P": 0.0182,
     "Relic|20P": 0.0198,
-    "Ancient|14P": 0.005,
     "Ancient|17P": 0.025,
     "Ancient|18P": 0.0266,
     "Ancient|19P": 0.0282,
@@ -472,12 +483,12 @@
   // at that tier was available; add one if you have it.
   const ARK_WEAPON_CORE_TABLE = {
     "None|0P": { pct: 0, flat: 0 },
-    "Relic|14P": { pct: 0.75, flat: 1300 },
+    "Any|14P": { pct: 0.75, flat: 1300 },
+    "Relic|14P": { pct: 0.75, flat: 1300 }, // alias of Any|14P - see GEAR_AP_CHAOS_STAR_TABLE's own comment on why points6() needs this key too
     "Relic|17P": { pct: 2.25, flat: 3900 },
     "Relic|18P": { pct: 2.48, flat: 3900 },
     "Relic|19P": { pct: 2.71, flat: 3900 },
     "Relic|20P": { pct: 2.94, flat: 3900 },
-    "Ancient|14P": { pct: 0.75, flat: 1300 },
     "Ancient|17P": { pct: 3.0, flat: 5200 },
     "Ancient|18P": { pct: 3.23, flat: 5200 },
     "Ancient|19P": { pct: 3.46, flat: 5200 },

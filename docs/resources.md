@@ -94,12 +94,11 @@
       <span class="ap-value-display" data-for="ap-crushing-core"></span>
       <select id="ap-crushing-core" class="ap-crushing-core">
         <option value="None|0P" selected>None</option>
-        <option value="Relic|14P">Relic 14P</option>
+        <option value="Any|14P">14 Points</option>
         <option value="Relic|17P">Relic 17P</option>
         <option value="Relic|18P">Relic 18P</option>
         <option value="Relic|19P">Relic 19P</option>
         <option value="Relic|20P">Relic 20P</option>
-        <option value="Ancient|14P">Ancient 14P</option>
         <option value="Ancient|17P">Ancient 17P</option>
         <option value="Ancient|18P">Ancient 18P</option>
         <option value="Ancient|19P">Ancient 19P</option>
@@ -166,12 +165,11 @@
       <span class="ap-value-display" data-for="ap-swift-core"></span>
       <select id="ap-swift-core" class="ap-swift-core">
         <option value="None|0P" selected>None</option>
-        <option value="Relic|14P">Relic 14P</option>
+        <option value="Any|14P">14 Points</option>
         <option value="Relic|17P">Relic 17P</option>
         <option value="Relic|18P">Relic 18P</option>
         <option value="Relic|19P">Relic 19P</option>
         <option value="Relic|20P">Relic 20P</option>
-        <option value="Ancient|14P">Ancient 14P</option>
         <option value="Ancient|17P">Ancient 17P</option>
         <option value="Ancient|18P">Ancient 18P</option>
         <option value="Ancient|19P">Ancient 19P</option>
@@ -287,13 +285,11 @@
       <span class="ap-value-display" data-for="ap-stable-atk"></span>
       <select id="ap-stable-atk" class="ap-stable-atk">
         <option value="None|0P" selected>None</option>
-        <option value="Legend|14P">Legend 14P</option>
-        <option value="Relic|14P">Relic 14P</option>
+        <option value="Any|14P">14 Points</option>
         <option value="Relic|17P">Relic 17P</option>
         <option value="Relic|18P">Relic 18P</option>
         <option value="Relic|19P">Relic 19P</option>
         <option value="Relic|20P">Relic 20P</option>
-        <option value="Ancient|14P">Ancient 14P</option>
         <option value="Ancient|17P">Ancient 17P</option>
         <option value="Ancient|18P">Ancient 18P</option>
         <option value="Ancient|19P">Ancient 19P</option>
@@ -573,12 +569,11 @@
           <span class="ap-value-display" data-for="ap-gear-weapon-core"></span>
           <select id="ap-gear-weapon-core" class="ap-gear-weapon-core">
             <option value="None|0P" selected>None</option>
-            <option value="Relic|14P">Relic 14P</option>
+            <option value="Any|14P">14 Points</option>
             <option value="Relic|17P">Relic 17P</option>
             <option value="Relic|18P">Relic 18P</option>
             <option value="Relic|19P">Relic 19P</option>
             <option value="Relic|20P">Relic 20P</option>
-            <option value="Ancient|14P">Ancient 14P</option>
             <option value="Ancient|17P">Ancient 17P</option>
             <option value="Ancient|18P">Ancient 18P</option>
             <option value="Ancient|19P">Ancient 19P</option>
@@ -664,12 +659,11 @@
           <select id="ap-gear-ap-chaos-star" class="ap-gear-ap-chaos-star">
             <option value="None|0P">None</option>
             <option value="Any|10P">10 Points</option>
-            <option value="Relic|14P">Relic 14P</option>
+            <option value="Any|14P">14 Points</option>
             <option value="Relic|17P">Relic 17P</option>
             <option value="Relic|18P">Relic 18P</option>
             <option value="Relic|19P">Relic 19P</option>
             <option value="Relic|20P" selected>Relic 20P</option>
-            <option value="Ancient|14P">Ancient 14P</option>
             <option value="Ancient|17P">Ancient 17P</option>
             <option value="Ancient|18P">Ancient 18P</option>
             <option value="Ancient|19P">Ancient 19P</option>

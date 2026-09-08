@@ -189,7 +189,17 @@
       };
     });
 
-    if (!raid) return null;
+    // No "most_recent_raid" loadout snapshot exists for this character -
+    // common for alts/inactive characters who've never entered that raid.
+    // This is NOT the same failure as "couldn't find the hydration payload
+    // at all" (the two return-null cases above, still hard fails): here the
+    // page loaded fine and most of buildPayload's fields (accessories,
+    // bracelet, gems, engravings) come from visible text and don't need
+    // this object at all. Return an explicit sentinel with an empty-but-
+    // present shape (gridSlots included) so buildPayload can degrade
+    // gracefully - warn and continue - instead of hard-failing the whole
+    // import over fields that were never going to be available anyway.
+    if (!raid) return { noRaidLoadout: true, mainStat: null, weaponPower: null, weaponQuality: null, karma: null, gridPoints: {}, gridSlots: {} };
 
     var result = { mainStat: null, weaponPower: null, weaponQuality: null, karma: null, gridPoints: {} };
 
@@ -833,6 +843,10 @@
     var data = {};
     var warnings = [];
 
+    if (hydration.noRaidLoadout) {
+      warnings.push("No raid loadout snapshot found for this character - Weapon Power, Main Stat, Crit Stat, Karma, and Chaos Grid core grades couldn't be auto-filled from that source. Accessories, bracelet, gems, engravings, and ability stone were still read from the page text below; fill in the rest manually.");
+    }
+
     if (hydration.weaponPower != null) data["ap-gear-wp"] = String(hydration.weaponPower);
     if (hydration.mainStat != null) data["ap-gear-main-stat"] = String(hydration.mainStat);
     if (hydration.critStat != null) data["ap-crit-stat"] = String(hydration.critStat);
@@ -962,11 +976,11 @@
     // by the core's actual name, not by which slot it's in.
     var CHAOS_CORE_FIELDS = {
       "Flashy Attack": { field: "ap-flashy-atk", format: "space17" },
-      "Stable Attack": { field: "ap-stable-atk", format: "pipe" },
-      "Swift Attack": { field: "ap-swift-core", format: "pipe" },
-      "Crushing Strike": { field: "ap-crushing-core", format: "pipe" },
-      "Attack": { field: "ap-gear-ap-chaos-star", format: "pipe" },
-      "Weapon": { field: "ap-gear-weapon-core", format: "pipe" },
+      "Stable Attack": { field: "ap-stable-atk", format: "pipe", mergedAt14: true },
+      "Swift Attack": { field: "ap-swift-core", format: "pipe", mergedAt14: true },
+      "Crushing Strike": { field: "ap-crushing-core", format: "pipe", mergedAt14: true },
+      "Attack": { field: "ap-gear-ap-chaos-star", format: "pipe", mergedAt14: true },
+      "Weapon": { field: "ap-gear-weapon-core", format: "pipe", mergedAt14: true },
     };
     var CHAOS_SLOT_TO_KEY = { "Chaos Sun": "chaos_sun", "Chaos Moon": "chaos_moon", "Chaos Star": "chaos_star" };
     if (text.hasArkGrid && text.chaosCores) {
@@ -989,6 +1003,18 @@
           // shows chaosCores in full for anyone who wants to double check.
           return;
         }
+        if (target.mergedAt14 && core.points === 14) {
+          // Stable Attack's 14P tier is a single "Any|14P" option in
+          // resources.md (Legend/Relic/Ancient all pay out identically at
+          // 14P - see STABLE_ATK_TABLE) - write it directly and skip grade
+          // detection entirely. This isn't just a shortcut: CHAOS_GRADE_
+          // COLORS only has hex entries for Relic/Ancient, so a genuinely
+          // Legendary core here would otherwise ALWAYS fail findChaosGrade
+          // and hit the "couldn't read grade" warning below, even though
+          // the value it needs to write never depended on grade at all.
+          data[target.field] = "Any|14P";
+          return;
+        }
         var grade = findChaosGrade(rawHtml, CHAOS_SLOT_TO_KEY[slotLabel]);
         if (!grade) {
           warnings.push(slotLabel + " (" + core.name + ", " + core.points + "P): couldn't read its grade (Relic/Ancient) from the page - left unset, pick it manually.");
@@ -996,9 +1022,14 @@
         }
         if (target.format === "space17") {
           // ap-flashy-atk only tracks Crit Hit Dmg, confirmed to only move
-          // at 10P/17P (nothing changes at 14P or 18-20P) - "17P" is the
-          // exact bucket for any point total >= 17, not an approximation.
-          data[target.field] = grade + " 17P";
+          // at 10P/17P (nothing changes at 14P or 18-20P), and its options
+          // (see resources.md) don't even offer a Relic/Ancient choice below
+          // 17P - the only lower bucket selectable at all is "Epic-Leg 10P".
+          // So below 17 points, write that bucket regardless of the core's
+          // actual Relic/Ancient grade (mechanically identical to Epic/Leg
+          // at that point total, and there's no more precise option to pick
+          // anyway); at 17+ points, write the real grade's "17P" option.
+          data[target.field] = core.points >= 17 ? (grade + " 17P") : "Epic-Leg 10P";
         } else {
           data[target.field] = grade + "|" + core.points + "P"; // applyFieldData no-ops if this exact option doesn't exist
         }
@@ -1393,6 +1424,21 @@
       textarea.value = JSON.stringify(payload.data);
       var loadBtn = popover.querySelector(".ap-calc-popover-load");
       loadBtn.click();
+      // applyImportText (ark-passive-calculator.js) runs synchronously off
+      // that click and writes its own result - including a skipped-field
+      // list when a pipe/space17 value doesn't match any current <option>
+      // (stale point tier, future option rename, etc.) - into this popover's
+      // own message element. Read it before closing the popover below: this
+      // is the only place that particular failure mode surfaces, and it's a
+      // different list from payload.warnings (which is bible-import.js's
+      // own, computed before ever touching the DOM) - without this, a
+      // failed field here fails completely silently, the same gap
+      // skippedOut was built to close for manual pastes.
+      var popoverMsgEl = popover.querySelector(".ap-calc-popover-msg");
+      if (popoverMsgEl && popoverMsgEl.classList.contains("ap-calc-popover-msg-error") && popoverMsgEl.textContent) {
+        payload.warnings = payload.warnings || [];
+        payload.warnings.push(popoverMsgEl.textContent);
+      }
       // The Import popover is only opened here to reuse its own Load
       // logic/validation - for a manual paste it's meant to stay open so
       // you can read its "Imported into Preset N" message, but for this
