@@ -500,6 +500,15 @@
     "Ancient|20P": { pct: 3.69, flat: 5200 },
   };
   const GEAR_AP_ASTROGEM_MAX = 4.4;
+  // Ark Grid side-node levels (what this field actually tracks) cap at
+  // 120, not 100 - confirmed against 1.1%/2.2%/3.3%/4.4% checkpoints at
+  // 30/60/90/120 (a flat 0.03667%/level), which only land on whole
+  // numbers at a 120 denominator. Previously divided by 100, matching
+  // the OTHER Astrogem field's 0-100 scale below instead of this one's
+  // real max - the reference sheet's own "up to 4.4%" note never states
+  // a level cap, so that assumption went unquestioned until checked
+  // against outside sources.
+  const GEAR_AP_ASTROGEM_MAX_LEVEL = 120;
 
   // Astrogem Atk. Power Level is its OWN field (.ap-gear-ap-astrogem-lv),
   // separate from the Additional Damage group's Astrogem Level
@@ -508,7 +517,7 @@
   // of one number. Used to reuse the Additional Damage field directly,
   // which silently forced the two to always match.
   function gearAstrogemApPercent(inputs) {
-    return (inputs.gearAstrogemLv / 100) * GEAR_AP_ASTROGEM_MAX;
+    return (inputs.gearAstrogemLv / GEAR_AP_ASTROGEM_MAX_LEVEL) * GEAR_AP_ASTROGEM_MAX;
   }
 
   // Atropine's own AP contribution (time-averaged, see
@@ -571,6 +580,46 @@
 
   function gearBaseApPercentTotal(inputs) {
     return inputs.gearGemBaseAp + (inputs.gearAbilityStoneBaseAp ? ABILITY_STONE_BASE_AP_BONUS : 0);
+  }
+
+  // ----- Attack Power readout (base -> Adrenaline -> Support, each stage
+  // cumulative) -----
+  // A plain restatement of the exact same gearApTotal() layer the
+  // Bracelet Comparison's 5 WP/AP rows already use below (see that
+  // section's own comment) - not a second formula, just that one run
+  // three times with Adrenaline's percentApMult contribution and the
+  // Support additive term (supApBuff) toggled on one at a time, so this
+  // can never drift out of sync with the real Brace!C6 formula those
+  // rows use. Every stage keeps every OTHER Attack Power % source
+  // (Kazeros, Guardian, Chaos Core: Attack, Atropine, Strength Orb,
+  // etc.) throughout - only Adrenaline and Support are staged in one at
+  // a time, since those are the two buffs this readout is specifically
+  // about:
+  //   - base: neither Adrenaline nor Support
+  //   - afterAdrenaline: Adrenaline included, Support still excluded
+  //   - final: both included (your real total) - this is what every
+  //     other reader on the page (Bracelet Comparison, etc.) already
+  //     calls "after"
+  // adrenalineUsed mirrors the dropdown itself (inputs.adrenaline !==
+  // "Not Used"), not just whether its % happens to be nonzero, so the
+  // middle stage still shows (as an equal-to-base stepping stone) at
+  // e.g. 0% Adrenaline Uptime rather than silently vanishing.
+  function gearApBeforeAfter(inputs) {
+    const wp = inputs.gearWp;
+    const mainStat = inputs.gearMainStat;
+    const baseApMult = 1 + gearBaseApPercentTotal(inputs) / 100;
+    const flatAp = inputs.gearFlatAp + gearChaosStarFlat(inputs.gearApChaosStar);
+    const percentApTotal = gearAttackPowerPercentTotal(inputs);
+    const adrenalinePct = adrenalineApFraction(inputs) * 100;
+    const percentApMultAfter = 1 + percentApTotal / 100;
+    const percentApMultBeforeAdrenaline = 1 + (percentApTotal - adrenalinePct) / 100;
+    const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
+    return {
+      base: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultBeforeAdrenaline, 0),
+      afterAdrenaline: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultAfter, 0),
+      final: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultAfter, supApBuff),
+      adrenalineUsed: inputs.adrenaline !== "Not Used",
+    };
   }
 
   // ----- Weapon Power % (Gearing) -----
@@ -817,7 +866,7 @@
     return {
       critStat: Math.max(0, Math.min(750, getNumber(root, ".ap-crit-stat", 658))),
       weaponQuality: Math.max(0, Math.min(100, getNumber(root, ".ap-weapon-quality", 100))),
-      astrogemLv: Math.max(0, Math.min(100, getNumber(root, ".ap-astrogem-lv", 59))),
+      astrogemLv: Math.max(0, Math.min(120, getNumber(root, ".ap-astrogem-lv", 59))),
 
       ring1Rate: getSelect(root, ".ap-ring1-rate", "Mid"),
       ring1Dmg: getSelect(root, ".ap-ring1-dmg", "High"),
@@ -980,7 +1029,7 @@
       // Astrogem Atk. Power Level - independent of the Additional
       // Damage group's Astrogem Level field above, see
       // gearAstrogemApPercent's own comment.
-      gearAstrogemLv: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-ap-astrogem-lv", 35))),
+      gearAstrogemLv: Math.max(0, Math.min(120, getNumber(root, ".ap-gear-ap-astrogem-lv", 35))),
       // Catch-all for anything not individually listed (the reference
       // sheet's own comment ends its source list with "some in-raid
       // buffs", too variable/situational to enumerate) - defaults to 0
@@ -4251,6 +4300,33 @@
     const gearApTotalSpan = root.querySelector('.ap-value-display[data-for="ap-gear-ap-total"]');
     if (gearApTotalSpan) {
       gearApTotalSpan.textContent = "(" + gearAttackPowerPercentTotal(inputs).toFixed(2) + "%)";
+    }
+
+    // Attack Power readout (base -> Adrenaline -> Support, each stage
+    // cumulative) - hidden entirely until Weapon Power and Main Stat are
+    // both filled in, same "don't render off a nonsensical partial
+    // state" guard the Bracelet Comparison's own WP/AP rows use (see
+    // computeBraceletComparison's wp > 0 && mainStat > 0 && baselineAp > 0
+    // check). The Adrenaline stage (arrow + value) is its own hidden-able
+    // pair, toggled off entirely when Adrenaline is "Not Used" so the
+    // readout reads as a straight base -> final chain instead of implying
+    // a buff that isn't in play.
+    const apReadout = root.querySelector(".ap-gear-ap-readout");
+    if (apReadout) {
+      const { base, afterAdrenaline, final, adrenalineUsed } = gearApBeforeAfter(inputs);
+      if (inputs.gearWp > 0 && inputs.gearMainStat > 0 && final > 0) {
+        apReadout.hidden = false;
+        const baseEl = apReadout.querySelector(".ap-gear-ap-readout-base");
+        const adrenalineStage = apReadout.querySelector(".ap-gear-ap-readout-adrenaline-stage");
+        const adrenalineEl = apReadout.querySelector(".ap-gear-ap-readout-adrenaline");
+        const finalEl = apReadout.querySelector(".ap-gear-ap-readout-final");
+        if (baseEl) baseEl.textContent = base.toLocaleString();
+        if (adrenalineStage) adrenalineStage.hidden = !adrenalineUsed;
+        if (adrenalineEl) adrenalineEl.textContent = afterAdrenaline.toLocaleString();
+        if (finalEl) finalEl.textContent = final.toLocaleString();
+      } else {
+        apReadout.hidden = true;
+      }
     }
 
     setDisplay("#ap-crit-syn1", inputs.critSyn1 ? 0.1 : 0);

@@ -4755,6 +4755,93 @@ h3 { color: var(--dbc-teal); }
   font-weight: 700;
   margin: 0 0 0.55em;
 }
+/* Attack Power base -> Adrenaline -> Support readout (gearApBeforeAfter,
+   see the JS comment) - sits full-width below the two Character Data
+   cards. No top border/rule here (this card's own field rows above
+   already close the card out - a second dashed edge right underneath
+   them read as a redundant divider rather than a meaningful section
+   break). Uses flex + wrap rather than a grid since this is just a
+   handful of short inline pieces that should stay on one line until
+   they genuinely don't fit. */
+.md-typeset .ap-gear-ap-readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4em;
+  /* Was 1.1em, stacking on top of .ap-brace-compare-inputs's own
+     0.9em flex row-gap (this readout and .ap-gear-cards are both
+     direct flex children there, each forced onto their own line by
+     .ap-gear-cards' flex: 1 1 100%) for a real 2em gap above the
+     readout - visibly more open than the 0.7em gap below it to
+     .ap-gear-inputs's own bottom padding (.ap-gear-inputs >
+     .ap-brace-compare-inputs's padding-bottom), which reads as this
+     readout's real "next section" boundary (the border-top divider
+     .ap-gear-comp-group > details + details draws against the row
+     below). Set negative here so it cancels the flex row-gap down to
+     that same 0.7em net, instead of adding on top of it - matching
+     the breathing room above (to the cards) to the room already below
+     (to that divider). */
+  margin: -0.2em 0 0;
+}
+/* Same `[hidden]` specificity fix as .ap-brace-info-icon elsewhere in this
+   file - the rule above's own `display: flex` beats the UA stylesheet's
+   bare `[hidden] { display: none }`, so without this override
+   updateInputDisplays' `apReadout.hidden = true` (before Weapon Power/
+   Main Stat are filled in) would be silently ignored. */
+.md-typeset .ap-gear-ap-readout[hidden] {
+  display: none;
+}
+.md-typeset .ap-gear-ap-readout-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--dbc-slate);
+  font-weight: 700;
+  margin-right: 0.2em;
+}
+/* "Base" is deliberately plain/muted text (not a pill) - it's context
+   for the real answer, not the answer itself. */
+.md-typeset .ap-gear-ap-readout-base {
+  color: var(--dbc-slate);
+  font-variant-numeric: tabular-nums;
+}
+/* The Adrenaline stage (its own arrow + value) toggles as one unit via
+   its wrapper's `hidden` attribute (set by updateInputDisplays whenever
+   Adrenaline is "Not Used") rather than each child independently, so the
+   arrow can never end up stranded without the value it points to or
+   vice versa. Same flex+gap shape as the outer readout so its arrow/
+   value pair spaces identically to the row's other arrow. */
+.md-typeset .ap-gear-ap-readout-adrenaline-stage {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+}
+.md-typeset .ap-gear-ap-readout-adrenaline-stage[hidden] {
+  display: none;
+}
+/* Adrenaline's own stage value: still context rather than the headline
+   number, so no pill - but a step brighter than Base's --dbc-slate so it
+   reads as "further along" than Base rather than an identical repeat. */
+.md-typeset .ap-gear-ap-readout-adrenaline {
+  color: var(--dbc-lavender);
+  font-variant-numeric: tabular-nums;
+}
+.md-typeset .ap-gear-ap-readout-arrow {
+  color: var(--dbc-slate);
+  opacity: 0.6;
+}
+/* The final value gets the same pill treatment as .ap-bvb-diff above -
+   this is the one number in the card the eye should land on. */
+.md-typeset .ap-gear-ap-readout-final {
+  display: inline-block;
+  padding: 0.15em 0.7em;
+  border-radius: 999px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--dbc-lilac);
+}
 /* Sub-group label inside a merged card (currently just Competing Pool
    inside .ap-gear-card--engr-core) - same text treatment as
    .ap-gear-card-title but a fixed gold accent (Competing Pool's old

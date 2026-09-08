@@ -268,7 +268,7 @@
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-astrogem-lv">Astrogem Level</label>
       <span class="ap-value-display" data-for="ap-astrogem-lv"></span>
-      <input type="number" id="ap-astrogem-lv" class="ap-astrogem-lv" min="0" max="100" step="1" value="59">
+      <input type="number" id="ap-astrogem-lv" class="ap-astrogem-lv" min="0" max="120" step="1" value="59">
     </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-sh-pet">Stronghold Pet</label>
@@ -674,7 +674,7 @@
         <div class="ap-calc-field-row">
           <label class="ap-calc-field-label" for="ap-gear-ap-astrogem-lv" >Astrogem Atk. Power Level</label>
           <span class="ap-value-display" data-for="ap-gear-ap-astrogem-lv"></span>
-          <input type="number" id="ap-gear-ap-astrogem-lv" class="ap-gear-ap-astrogem-lv" min="0" max="100" step="1" value="35">
+          <input type="number" id="ap-gear-ap-astrogem-lv" class="ap-gear-ap-astrogem-lv" min="0" max="120" step="1" value="35">
         </div>
         <div class="ap-calc-field-row ap-gear-ap-select-row">
           <label class="ap-calc-field-label" for="ap-adrenaline-stone" title="A fixed 0.9% per stack (assuming the full 6 stacks), scaled by Adrenaline Uptime %, plus this stone's own bonus, same scaling (Lv.1 +0.48% / Lv.2 +0.60% / Lv.3 +0.83% / Lv.4 +0.95% per stack).">Ability Stone: Adrenaline</label>
@@ -702,6 +702,28 @@
           <input type="number" id="ap-gear-ap-other" class="ap-gear-ap-other ap-gear-input-narrow" min="0" max="50" step="0.01" value="0">
         </div>
       </div>
+    </div>
+    <!-- Actual Attack Power readout, computed from the same gearApTotal()
+         formula the Bracelet Comparison's WP/AP rows below already use -
+         see gearApBeforeAfter's own comment in the JS. Hidden until
+         Weapon Power and Main Stat are both filled in (same guard as
+         those rows). Three cumulative stages, not a single before/after
+         pair: Base (every Attack Power % source except Adrenaline, no
+         Support buff) -> Adrenaline (Adrenaline's bonus added in, still
+         no Support) -> Attack Power (your real total, both included).
+         The Adrenaline stage - its arrow AND value together - is hidden
+         by the JS whenever Adrenaline is "Not Used" above, so the chain
+         reads as a plain Base -> Attack Power step instead of implying a
+         buff that isn't active. -->
+    <div class="ap-gear-ap-readout" hidden>
+      <span class="ap-gear-ap-readout-label">Attack Power</span>
+      <span class="ap-gear-ap-readout-base" title="Every Attack Power % source except Adrenaline, before your Support's Attack Power buff.">&mdash;</span>
+      <span class="ap-gear-ap-readout-adrenaline-stage">
+        <span class="ap-gear-ap-readout-arrow">&rarr;</span>
+        <span class="ap-gear-ap-readout-adrenaline" title="With Adrenaline's Attack Power bonus added in, based on the Adrenaline fields above. Still before your Support's Attack Power buff.">&mdash;</span>
+      </span>
+      <span class="ap-gear-ap-readout-arrow">&rarr;</span>
+      <span class="ap-gear-ap-readout-final" title="Your real Attack Power total - Adrenaline's bonus and your Support's Attack Power buff both included.">&mdash;</span>
     </div>
   </div>
 </details>
