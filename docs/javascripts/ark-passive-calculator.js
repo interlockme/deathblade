@@ -517,7 +517,17 @@
   // of one number. Used to reuse the Additional Damage field directly,
   // which silently forced the two to always match.
   function gearAstrogemApPercent(inputs) {
-    return (inputs.gearAstrogemLv / GEAR_AP_ASTROGEM_MAX_LEVEL) * GEAR_AP_ASTROGEM_MAX;
+    // Floored to 2 decimals, matching the in-game tile's own display
+    // (confirmed against Lv.1-5/35/38 screenshots: Lv.1's raw 0.03667%
+    // shows in-game as "+0.03%", not "+0.04%" - a FLOOR, not a round).
+    // Carrying the raw unrounded value into the AP total instead of this
+    // floored one was the source of a consistent ~5-7 point drift
+    // between this calculator's Attack Power readout and the real
+    // character sheet whenever Astrogem Atk. Power Level landed off a
+    // 30/60/90/120 checkpoint (e.g. Lv.35, Lv.38) - reader-reported and
+    // reproduced exactly (236,012 calc vs 236,005 real -> 0 diff once
+    // floored) before this fix.
+    return roundDown((inputs.gearAstrogemLv / GEAR_AP_ASTROGEM_MAX_LEVEL) * GEAR_AP_ASTROGEM_MAX, 2);
   }
 
   // Atropine's own AP contribution (time-averaged, see
