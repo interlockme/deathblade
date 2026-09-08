@@ -979,7 +979,7 @@
       "Stable Attack": { field: "ap-stable-atk", format: "pipe", mergedAt14: true },
       "Swift Attack": { field: "ap-swift-core", format: "pipe", mergedAt14: true },
       "Crushing Strike": { field: "ap-crushing-core", format: "pipe", mergedAt14: true },
-      "Attack": { field: "ap-gear-ap-chaos-star", format: "pipe", mergedAt14: true },
+      "Attack": { field: "ap-gear-ap-chaos-star", format: "pipe", mergedAt14: true, mergedAt10: true },
       "Weapon": { field: "ap-gear-weapon-core", format: "pipe", mergedAt14: true },
     };
     var CHAOS_SLOT_TO_KEY = { "Chaos Sun": "chaos_sun", "Chaos Moon": "chaos_moon", "Chaos Star": "chaos_star" };
@@ -1015,12 +1015,17 @@
           data[target.field] = "Any|14P";
           return;
         }
-        var grade = findChaosGrade(rawHtml, CHAOS_SLOT_TO_KEY[slotLabel]);
-        if (!grade) {
-          warnings.push(slotLabel + " (" + core.name + ", " + core.points + "P): couldn't read its grade (Relic/Ancient) from the page - left unset, pick it manually.");
+        if (target.mergedAt10 && core.points === 10) {
+          // Chaos Core: Attack's 10P tier is also a single "Any|10P" option
+          // in resources.md (grade doesn't affect the payout at 10P, only
+          // 14P has a dedicated merged option elsewhere) - same shortcut as
+          // the mergedAt14 branch above, and for the same reason: skip grade
+          // detection entirely rather than risk a spurious "couldn't read
+          // grade" warning for a value that never depended on grade.
+          data[target.field] = "Any|10P";
           return;
         }
-        if (target.format === "space17") {
+        if (target.format === "space17" && core.points < 17) {
           // ap-flashy-atk only tracks Crit Hit Dmg, confirmed to only move
           // at 10P/17P (nothing changes at 14P or 18-20P), and its options
           // (see resources.md) don't even offer a Relic/Ancient choice below
@@ -1028,8 +1033,23 @@
           // So below 17 points, write that bucket regardless of the core's
           // actual Relic/Ancient grade (mechanically identical to Epic/Leg
           // at that point total, and there's no more precise option to pick
-          // anyway); at 17+ points, write the real grade's "17P" option.
-          data[target.field] = core.points >= 17 ? (grade + " 17P") : "Epic-Leg 10P";
+          // anyway) - and skip grade detection entirely, since a genuinely
+          // Legendary/Epic core here would otherwise always fail
+          // findChaosGrade (CHAOS_GRADE_COLORS only has Relic/Ancient hexes)
+          // and produce a spurious "couldn't read grade" warning for a value
+          // that never depended on grade in the first place.
+          data[target.field] = "Epic-Leg 10P";
+          return;
+        }
+        var grade = findChaosGrade(rawHtml, CHAOS_SLOT_TO_KEY[slotLabel]);
+        if (!grade) {
+          warnings.push(slotLabel + " (" + core.name + ", " + core.points + "P): couldn't read its grade (Relic/Ancient) from the page - left unset, pick it manually.");
+          return;
+        }
+        if (target.format === "space17") {
+          // At this point core.points >= 17 (the <17 case returned above),
+          // so write the real grade's "17P" option.
+          data[target.field] = grade + " 17P";
         } else {
           data[target.field] = grade + "|" + core.points + "P"; // applyFieldData no-ops if this exact option doesn't exist
         }
@@ -1044,8 +1064,8 @@
     // a character simply not running Adrenaline or Kbw at all is a normal,
     // common state (most builds only run one of the two, if either), and
     // the old code left the field completely unwritten in that case.
-    data["ap-adrenaline"] = "0 Nodes";
-    data["ap-kbw"] = "0 Nodes";
+    data["ap-adrenaline"] = "Not Used";
+    data["ap-kbw"] = "Not Used";
     if (text.engravings) {
       if ("Adrenaline" in text.engravings) data["ap-adrenaline"] = Math.round(text.engravings["Adrenaline"] / 5) + " Nodes";
       if ("Keen Blunt Weapon" in text.engravings) data["ap-kbw"] = Math.round(text.engravings["Keen Blunt Weapon"] / 5) + " Nodes";
