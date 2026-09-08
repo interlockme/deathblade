@@ -766,6 +766,14 @@
   }
 
   // ----- Payload assembly -----
+  // How far above "Combat Power" to look for the "Deathblade" class line -
+  // shared by checkDeathbladeClass and extractCharacterName below, which
+  // both anchor off the same real layout ("...Deathblade" / "<name>" /
+  // ["<title>"] / "Combat Power"). Confirmed real dumps never need more
+  // than 2-3 lines of lookback (name, optional title); 6 leaves headroom
+  // without being unbounded.
+  var CLASS_NAME_LOOKBACK_LINES = 6;
+
   // Class check status for a Bible character page. Deliberately does NOT
   // maintain a list of every class name (Lost Ark keeps adding new ones,
   // e.g. Artist/Valkyrie already exist and more will keep shipping) - it
@@ -787,7 +795,7 @@
     var cpIdx = -1;
     for (var i = 0; i < lines.length; i++) { if (lines[i] === "Combat Power") { cpIdx = i; break; } }
     if (cpIdx === -1) return "not-loaded";
-    var windowStart = Math.max(0, cpIdx - 6);
+    var windowStart = Math.max(0, cpIdx - CLASS_NAME_LOOKBACK_LINES);
     for (var j = cpIdx - 1; j >= windowStart; j--) {
       if (lines[j] === "Deathblade") return "deathblade";
     }
@@ -812,7 +820,7 @@
     var cpIdx = -1;
     for (var i = 0; i < lines.length; i++) { if (lines[i] === "Combat Power") { cpIdx = i; break; } }
     if (cpIdx <= 0) return null;
-    var windowStart = Math.max(0, cpIdx - 6);
+    var windowStart = Math.max(0, cpIdx - CLASS_NAME_LOOKBACK_LINES);
     for (var j = cpIdx - 1; j >= windowStart; j--) {
       if (lines[j] === "Deathblade") return lines[j + 1] || null;
     }
@@ -1082,9 +1090,24 @@
           data[target.field] = "Epic-Leg 10P";
           return;
         }
-        var grade = findChaosGrade(rawHtml, CHAOS_SLOT_TO_KEY[slotLabel]);
+        var gradeKey = CHAOS_SLOT_TO_KEY[slotLabel];
+        var grade = findChaosGrade(rawHtml, gradeKey);
         if (!grade) {
-          warnings.push(slotLabel + " (" + core.name + ", " + core.points + "P): couldn't read its grade (Relic/Ancient) from the page - left unset, pick it manually.");
+          // findChaosGrade already stashed exactly why into
+          // LAST_CHAOS_GRADE_DEBUG before returning null (marker not found
+          // at all, vs. marker found but the color it decoded isn't in
+          // CHAOS_GRADE_COLORS) - previously that detail only reached the
+          // console dump, so diagnosing a future Bible UI change meant
+          // reopening devtools. Surface it in the warning itself instead,
+          // since it's already computed and free to include.
+          var gradeDebug = LAST_CHAOS_GRADE_DEBUG[gradeKey];
+          var gradeDetail = "";
+          if (gradeDebug && gradeDebug.lastColor) {
+            gradeDetail = " (found color \"" + gradeDebug.lastColor + "\", which isn't a recognized grade)";
+          } else if (gradeDebug && gradeDebug.markerFound === false) {
+            gradeDetail = " (couldn't even find this slot's icon marker on the page)";
+          }
+          warnings.push(slotLabel + " (" + core.name + ", " + core.points + "P): couldn't read its grade (Relic/Ancient) from the page" + gradeDetail + " - left unset, pick it manually.");
           return;
         }
         if (target.format === "space17") {
@@ -1093,6 +1116,27 @@
           data[target.field] = grade + " 17P";
         } else {
           data[target.field] = grade + "|" + core.points + "P"; // applyFieldData no-ops if this exact option doesn't exist
+        }
+      });
+    }
+
+    // Sanity check: if the raid loadout's own hydration data shows real
+    // points invested in a Chaos slot, but the visible-text scan above
+    // never managed to read a core NAME for that same slot (icon markup
+    // change, unexpected separator, etc - see the "|" check above),
+    // that slot silently keeps its "None|0P" default with no warning
+    // anywhere else in this function. Every other field in this file
+    // defaults-and-warns when it can't resolve something; core-name
+    // detection was the one silent exception, so close it here rather
+    // than only via a console dump nobody but a maintainer sees. Gated
+    // on hasArkGrid so a character with genuinely no Ark Grid unlocked
+    // (and no chaosCores at all) doesn't get warned about slots it was
+    // never going to have data for.
+    if (text.hasArkGrid && hydration.gridSlots) {
+      Object.keys(CHAOS_SLOT_TO_KEY).forEach(function (slotLabel) {
+        var hydrationCore = hydration.gridSlots[CHAOS_SLOT_TO_KEY[slotLabel]];
+        if (hydrationCore && hydrationCore.points > 0 && !text.chaosCores[slotLabel]) {
+          warnings.push(slotLabel + ": the page's own data shows " + hydrationCore.points + "P invested here, but this file couldn't read a core name for it from the page text - left unset, pick it manually.");
         }
       });
     }
@@ -1429,6 +1473,7 @@
       parseBraceClauses, parseVisibleText, tierMatch, tierMatchOrNone, checkDeathbladeClass, extractCharacterName, buildPayload,
     ].map(function (fn) { return stripComments(fn.toString()); }).join("\n");
     var tableSrc = [
+      "var CLASS_NAME_LOOKBACK_LINES=" + JSON.stringify(CLASS_NAME_LOOKBACK_LINES) + ";",
       "var NECKLACE_TABLE=" + JSON.stringify(NECKLACE_TABLE) + ";",
       "var EARRING_WP_TABLE=" + JSON.stringify(EARRING_WP_TABLE) + ";",
       "var EARRING_AP_TABLE=" + JSON.stringify(EARRING_AP_TABLE) + ";",
@@ -1455,6 +1500,32 @@
       "\nwindow.__lastCritStatDebug=function(){return LAST_CRIT_STAT_DEBUG;};" +
       "\nwindow.__dumpArkGridMarkers=dumpArkGridMarkers;" +
       "\n(" + stripComments(bookmarkletBody.toString()) + ")(" + JSON.stringify(calculatorUrl) + ");})();";
+
+    // Cheap safety net for two ways this generated body can quietly break,
+    // neither of which would surface until a real user tried the
+    // bookmarklet on lostark.bible:
+    //  1. stripComments doesn't handle regex literals containing "//" or
+    //     "/*" (see its own comment) - a future regex added to any inlined
+    //     function could get truncated mid-source without anyone noticing
+    //     here. `new Function` forces a real parse of the exact stripped
+    //     source, so a corruption like that throws a loud console error
+    //     immediately instead of only failing much later inside a
+    //     javascript: URL a person actually clicked.
+    //  2. The encoded URL already hit a real bookmarks-bar drag limit once
+    //     at ~66KB (see stripComments' own comment) - warn well before that
+    //     threshold so it's caught the moment a change pushes size up, not
+    //     via another "drag doesn't work" report.
+    if (window.console) {
+      try {
+        new Function(body);
+      } catch (e) {
+        console.error("[bible-import] generated bookmarklet body failed to parse - it will not run on lostark.bible: " + e.message);
+      }
+      if (body.length > 55000) {
+        console.warn("[bible-import] bookmarklet body is " + body.length + " chars - approaching the size that previously broke bookmarks-bar dragging (~66KB encoded). Consider trimming stripComments' output or the inlined function list.");
+      }
+    }
+
     return "javascript:" + encodeURIComponent(body);
   }
 
