@@ -5717,6 +5717,12 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.72em;
   color: var(--dbc-slate);
   text-align: right;
+  /* Extra line-height so wrapped rows (e.g. Preset 1 2 3 on one line,
+     Export/Import/Reset/Bible Import on the next) get real vertical
+     separation - text-align: right means both rows end at the same right
+     edge, so without this the row-2 content sits uncomfortably close
+     under row-1's right-aligned content. */
+  line-height: 2.2;
 }
 .md-typeset .ap-calc-footnote .ap-calc-reset,
 .md-typeset .ap-calc-footnote .ap-calc-export,
@@ -5739,6 +5745,87 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-calc-footnote .ap-calc-import:hover {
   color: var(--dbc-pink);
   text-decoration-color: currentColor;
+}
+
+/* Bible Import bookmarklet: deliberately NOT styled like the Export/Import/
+   Reset text links next to it (see that rule above) - those are click
+   targets, this one only works when DRAGGED to a bookmarks bar. Matching
+   underline styling trained people to click it instead, which just ran the
+   bookmarklet against this calculator page itself (no character data here)
+   and produced a confusing "couldn't find character data" message rather
+   than telling them what to do differently. A dashed-border pill with a
+   grab cursor reads as "drag this object," not "click this link" - the
+   click handler in bible-import.js is the other half of this fix. */
+.md-typeset .ap-calc-footnote .bible-import-control {
+  /* No margin of its own - the bookmarklet pill below carries the same
+     0.9em left margin as Export/Import/Reset use on each other, so the
+     gap from "Reset to defaults" to this pill matches every other gap in
+     the row instead of stacking two margins on top of each other. */
+  margin-left: 0;
+}
+.md-typeset .ap-calc-footnote .bible-import-bookmarklet {
+  display: inline-flex;
+  align-items: center;
+  color: var(--dbc-lavender);
+  text-decoration: none;
+  background: rgba(var(--dbc-purple-rgb), 0.12);
+  border: 1px dashed rgba(var(--dbc-purple-rgb), 0.55);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  margin: 0 0 0 0.9em;
+  font: inherit;
+  font-size: 0.92em;
+  cursor: grab;
+  line-height: 1.4; /* independent of the footnote's own 2.2 - keeps the pill's own text/icon snug, only the gap BETWEEN rows needed the extra height */
+}
+/* Grip icon as a pseudo-element, not text inside the <a> - dragging this
+   link to a bookmarks bar uses the anchor's actual text content as the
+   saved bookmark title, and CSS-generated content isn't part of that, so
+   this is the only way to show the icon without it ending up saved as
+   "⠿ Bible Import". Sized and centered as its own flex item (rather than
+   inline with the label text) so its glyph's own font metrics don't throw
+   off vertical alignment against "Bible Import" the way sharing one text
+   node did. */
+.md-typeset .ap-calc-footnote .bible-import-bookmarklet::before {
+  content: "⠿";
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.35em;
+  opacity: 0.7;
+  line-height: 1;
+  /* The glyph's own visual weight sits slightly above its em-box center
+     in most fonts, so centering it via align-items alone still reads as
+     a hair too high next to the "B" baseline - nudge down a touch. */
+  position: relative;
+  top: 1px;
+}
+.md-typeset .ap-calc-footnote .bible-import-bookmarklet:hover {
+  border-color: var(--dbc-pink);
+  color: var(--dbc-pink);
+  background: rgba(var(--dbc-purple-rgb), 0.2);
+}
+.md-typeset .ap-calc-footnote .bible-import-bookmarklet:active {
+  cursor: grabbing;
+}
+.md-typeset .ap-calc-footnote .bible-import-status {
+  display: block;
+  margin-top: 0.3em;
+  color: #7fd8b8;
+}
+.md-typeset .ap-calc-footnote .bible-import-status-error {
+  color: #f0a8a8;
+}
+/* Warning list is left-aligned prose, not right-aligned footnote text -
+   right-aligning wrapped sentences makes them hard to read, and these can
+   run to a full sentence or two per field. */
+.md-typeset .ap-calc-footnote .bible-import-warnings {
+  margin: 0.4em 0 0;
+  padding-left: 1.2em;
+  text-align: left;
+  color: var(--dbc-muted-text-soft);
+}
+.md-typeset .ap-calc-footnote .bible-import-warnings[hidden] {
+  display: none;
 }
 
 /* Preset group: "Preset 1 2 3" with the active slot picked out by solid

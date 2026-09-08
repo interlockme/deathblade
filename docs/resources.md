@@ -132,13 +132,13 @@
       <div class="ap-calc-pair">
         <select id="ap-ring1-dmg" class="ap-ring1-dmg">
           <option value="None">None</option>
-          <option value="Low">1.20%</option>
+          <option value="Low">1.10%</option>
           <option value="Mid">2.40%</option>
           <option value="High" selected>4.00%</option>
         </select>
         <select id="ap-ring2-dmg" class="ap-ring2-dmg">
           <option value="None">None</option>
-          <option value="Low">1.20%</option>
+          <option value="Low">1.10%</option>
           <option value="Mid">2.40%</option>
           <option value="High" selected>4.00%</option>
         </select>
@@ -420,6 +420,22 @@
   <button type="button" class="ap-calc-export">Export</button>
   <button type="button" class="ap-calc-import">Import</button>
   <button type="button" class="ap-calc-reset">Reset to defaults</button>
+  <!-- Wired up by bible-import.js. Drag the link to a bookmarks bar, then
+       click it while on a fully-loaded/refreshed lostark.bible character
+       page - it redirects back here with the character's data, which then
+       flows through the existing Import mechanism above (same validation,
+       same "unknown option = skipped" safety). Nothing here talks to Bible
+       or to this site's own server - see bible-import.js's header comment
+       for the full data flow and its known gaps. The "⠿" grip icon is a
+       CSS ::before, not text inside the <a> - text content is what a
+       browser uses as the bookmark's saved title when this link is
+       dragged to a bookmarks bar, so the icon has to live outside it or
+       every saved bookmark would be titled "⠿ Bible Import". -->
+  <span class="bible-import-control">
+    <a href="#" class="bible-import-bookmarklet" title="Drag to your bookmarks bar, then click it on a loaded lostark.bible character page.">Bible Import</a>
+    <span class="bible-import-status" aria-live="polite"></span>
+    <ul class="bible-import-warnings" hidden></ul>
+  </span>
   <span class="ap-calc-popover" data-popover="export" hidden>
     <span class="ap-calc-popover-title">Export Preset <span class="ap-calc-popover-preset-num"></span></span>
     <textarea class="ap-calc-popover-textarea" readonly rows="4" spellcheck="false"></textarea>

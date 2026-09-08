@@ -64,7 +64,7 @@
   // ----- Lookup tables -----
   const NONE_LOW_MID_HIGH = (none, low, mid, high) => ({ None: none, Low: low, Mid: mid, High: high });
   const RING_RATE_TABLE = NONE_LOW_MID_HIGH(0, 0.004, 0.0095, 0.0155);
-  const RING_DMG_TABLE = NONE_LOW_MID_HIGH(0, 0.012, 0.024, 0.04);
+  const RING_DMG_TABLE = NONE_LOW_MID_HIGH(0, 0.011, 0.024, 0.04);
   const BRACELET_RATE_TABLE = NONE_LOW_MID_HIGH(0, 0.034, 0.042, 0.05);
   const BRACELET_DMG_TABLE = NONE_LOW_MID_HIGH(0, 0.068, 0.084, 0.1);
   const BRACELET_ADD_A_TABLE = NONE_LOW_MID_HIGH(0, 0.03, 0.035, 0.04);
@@ -176,12 +176,17 @@
     earring: { min: 11806, max: 13889 },
     necklace: { min: 15178, max: 17857 },
   };
-  // Ring Crit Damage's own magnitude (Acc!O7:Q7) - close to but not
-  // identical to RING_DMG_TABLE above (that one's tuned for this site's
-  // "your actual equipped ring" tracked baseline elsewhere; this is the
-  // sheet's own stated Bonus figure for the comparison candidate). Ring
-  // Crit Rate has no equivalent new table - RING_RATE_TABLE above is an
-  // exact match to Acc!O6:Q6, so that one's reused as-is.
+  // Ring Crit Damage's own magnitude (Acc!O7:Q7). Previously documented
+  // here as "close to but not identical to RING_DMG_TABLE above" - that
+  // was wrong. RING_DMG_TABLE's Low was a mistranscription (0.012
+  // instead of 0.011); once corrected, the two tables are an exact match
+  // at every tier, confirmed against a real character's Ring Crit Damage
+  // (+1.1%, i.e. Low). Kept as a separate table anyway (see ringDmgGain
+  // and otherCritDmgDelta below, which intentionally avoid reusing
+  // RING_DMG_TABLE) since nothing depends on merging them and a second
+  // confirmed source is good to keep around. Ring Crit Rate has no
+  // equivalent new table - RING_RATE_TABLE above is an exact match to
+  // Acc!O6:Q6, so that one's reused as-is.
   const ACC_RING_DMG_TABLE = { Low: 0.011, Mid: 0.024, High: 0.04 };
 
   // ----- Gearing (Weapon Power / Attack Power) constants -----
@@ -2138,12 +2143,12 @@
       const mult = combinedMultiplier(cloned, shared, keenSense, limitBreak, pair);
       return mult / baselineMultRingsNB - 1;
     }
-    // Crit Damage: ACC_RING_DMG_TABLE's candidate figures differ slightly
-    // from what a real equipped ring contributes via RING_DMG_TABLE (see
-    // ACC_RING_DMG_TABLE's own comment) - swapping ring1Dmg to a tier
-    // name would silently pull the wrong table, so this adds the
-    // candidate's own magnitude as a manual critDmgTotal delta on top of
-    // the already-stripped baseline instead.
+    // Crit Damage: ACC_RING_DMG_TABLE and RING_DMG_TABLE are now confirmed
+    // identical at every tier (see ACC_RING_DMG_TABLE's own comment), but
+    // this still adds the candidate's own magnitude as a manual
+    // critDmgTotal delta rather than swapping ring1Dmg to a tier name -
+    // no functional difference today, just avoids re-coupling two tables
+    // that were tracked separately on purpose.
     function ringDmgGain(dmgPct) {
       if (!dmgPct) return 0;
       const shared = Object.assign({}, sharedRingsNB, { critDmgTotal: sharedRingsNB.critDmgTotal + dmgPct });
@@ -2556,15 +2561,19 @@
     // directly onto shared's running totals, instead of writing a tier
     // name into cloned.necklace/cloned.ring1Dmg and letting computeShared
     // re-derive it through NECKLACE_ADD_TABLE/RING_DMG_TABLE - those two
-    // are this site's "your actual equipped piece" tracked tables, close
-    // to but NOT identical to the ACC_ candidate tables (Low tier differs:
-    // 0.006 vs 0.007 Add Dmg, 0.012 vs 0.011 Ring Crit Dmg; Mid/High match
-    // exactly - see ACC_NECKLACE_ADD_TABLE/ACC_RING_DMG_TABLE's own
-    // comments). Writing the tier name into the real field silently pulled
-    // the wrong table for Low rolls, so this tool's numbers didn't always
-    // match the reference panel above for the exact same tier. Same fix
-    // computeAccessoryComparison's own ringDmgGain already applies (adding
-    // a manual critDmgTotal delta rather than swapping ring1Dmg by tier).
+    // are this site's "your actual equipped piece" tracked tables. Add
+    // Dmg's pair still differs at Low (0.006 vs 0.007 - see
+    // ACC_NECKLACE_ADD_TABLE's own comment); Ring Crit Dmg's pair is now
+    // confirmed an exact match at every tier (see ACC_RING_DMG_TABLE's own
+    // comment - RING_DMG_TABLE's old 0.012 Low was a mistranscription),
+    // but this still routes through the same manual-delta path rather
+    // than writing ring1Dmg's tier name directly, for consistency with
+    // Add Dmg and to avoid re-coupling two tables that were tracked
+    // separately on purpose. Writing the tier name into the real field
+    // silently pulled the wrong table for Add Dmg's Low roll, so this
+    // tool's numbers didn't always match the reference panel above for
+    // the exact same tier. Same fix computeAccessoryComparison's own
+    // ringDmgGain already applies.
     function gridMultFor(clonedInputs, addDmgDelta, critDmgDelta) {
       const shared = computeShared(clonedInputs);
       if (addDmgDelta) {
@@ -2646,13 +2655,14 @@
     // Ring and Earring, never Necklace.
     // otherCritDmgDelta folds Ring's "Other Ring" Crit Damage into the
     // baseline as an additive delta rather than writing it into
-    // zeroed.ring2Dmg - RING_DMG_TABLE (the real field's table) isn't an
-    // exact match to ACC_RING_DMG_TABLE (Low: 0.012 vs 0.011, see that
-    // table's own comment), so a direct write would silently pull the
-    // wrong Low value, same class of bug fixed earlier this session for
-    // the candidate lines themselves. Crit Rate has no such mismatch
-    // (RING_RATE_TABLE IS the ACC table, reused as-is), so it's safe to
-    // write straight into zeroed.ring2Rate below. Earring's Attack
+    // zeroed.ring2Dmg - RING_DMG_TABLE and ACC_RING_DMG_TABLE are now
+    // confirmed an exact match at every tier (see ACC_RING_DMG_TABLE's
+    // own comment), so a direct write would be equally correct today, but
+    // this keeps the same delta approach used elsewhere on this page for
+    // the candidate lines themselves rather than re-coupling two tables
+    // that are tracked separately on purpose. Crit Rate has no such
+    // history (RING_RATE_TABLE IS the ACC table, reused as-is), so it's
+    // safe to write straight into zeroed.ring2Rate below. Earring's Attack
     // Power%/Weapon Power% have no such mismatch either (GEAR_AP_EARRING_
     // TABLE/GEAR_WP_EARRING_TABLE are exact matches to their ACC_
     // counterparts), so both of Earring's "Other Earring" lines are safe
@@ -4898,10 +4908,21 @@
   // Import) onto the widget's fields. Missing keys are left untouched
   // rather than guessed at - callers that want a full reset to authored
   // defaults first should call resetFieldsToDefaults(root) before this.
-  function applyFieldData(root, data) {
+  //
+  // skippedOut, if passed, collects every key from `data` that was NOT
+  // applied - either a <select> value that doesn't match any current
+  // option, or an id that doesn't correspond to any field on the page at
+  // all. Both cases used to fail completely silently (the localStorage
+  // round-trip path wants that - a stale saved value quietly falling
+  // back to the authored default is correct there), but for a pasted/
+  // uploaded Import the person has no other way to find out a field
+  // didn't take - see applyImportText's use of this.
+  function applyFieldData(root, data, skippedOut) {
     if (!data || typeof data !== "object") return;
+    const seen = {};
     root.querySelectorAll("input, select").forEach((el) => {
       if (!el.id || !(el.id in data)) return;
+      seen[el.id] = true;
       if (el.type === "checkbox" || el.type === "radio") {
         el.checked = !!data[el.id];
       } else if (el.tagName === "SELECT") {
@@ -4911,11 +4932,20 @@
         // selection at all (selectedIndex -1) instead of falling back to
         // the authored default.
         const stillValid = Array.from(el.options).some((opt) => opt.value === data[el.id]);
-        if (stillValid) el.value = data[el.id];
+        if (stillValid) {
+          el.value = data[el.id];
+        } else if (skippedOut) {
+          skippedOut.push(el.id);
+        }
       } else {
         el.value = data[el.id];
       }
     });
+    if (skippedOut) {
+      Object.keys(data).forEach((id) => {
+        if (!seen[id]) skippedOut.push(id);
+      });
+    }
   }
 
   function saveInputs(root, presetId) {
@@ -5095,14 +5125,25 @@
       return;
     }
     const activeId = getActivePresetId();
+    const skipped = [];
     resetFieldsToDefaults(root);
-    applyFieldData(root, data);
+    applyFieldData(root, data, skipped);
     normalizeChaosCoreExclusivity(root);
     normalizeWeaponCoreExclusivity(root);
     normalizeRaidContributionExclusivity(root);
     saveInputs(root, activeId);
     update(root);
-    showPopoverMessage(popoverEl, "Imported into Preset " + activeId + ".", false);
+    let msg = "Imported into Preset " + activeId + ".";
+    // Tell the person when something in their paste didn't take, instead
+    // of letting it fail silently - a stale/renamed select option value
+    // or an id that doesn't exist on this page otherwise looks identical
+    // to a successful import (see applyFieldData's skippedOut comment).
+    if (skipped.length) {
+      msg += " " + skipped.length + " field" + (skipped.length === 1 ? "" : "s") +
+        " in that data didn't match anything on this page and " +
+        (skipped.length === 1 ? "was" : "were") + " left as-is: " + skipped.join(", ") + ".";
+    }
+    showPopoverMessage(popoverEl, msg, skipped.length > 0);
   }
 
 
