@@ -22,7 +22,7 @@ Herb Steak Meal
 <div class="food-option" markdown>
 ![](../assets/shared/icon-azena.png){: .food-option-icon }
 
-Azena's Blessing (P2W)
+Azena's Blessing
 { .food-option-tag }
 </div>
 

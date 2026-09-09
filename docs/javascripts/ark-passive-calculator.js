@@ -600,16 +600,22 @@
   // three times with Adrenaline's percentApMult contribution and the
   // Support additive term (supApBuff) toggled on one at a time, so this
   // can never drift out of sync with the real Brace!C6 formula those
-  // rows use. Every stage keeps every OTHER Attack Power % source
-  // (Kazeros, Guardian, Chaos Core: Attack, Atropine, Strength Orb,
-  // etc.) throughout - only Adrenaline and Support are staged in one at
-  // a time, since those are the two buffs this readout is specifically
-  // about:
+  // rows use. Only Adrenaline and Support are staged in one at a time,
+  // since those are the two buffs this readout is specifically about:
   //   - base: neither Adrenaline nor Support
   //   - afterAdrenaline: Adrenaline included, Support still excluded
   //   - final: both included (your real total) - this is what every
   //     other reader on the page (Bracelet Comparison, etc.) already
   //     calls "after"
+  // Unlike every other AP-based reader on this page, base and
+  // afterAdrenaline additionally EXCLUDE AP% Other, Atropine, and
+  // Strength Orb (excludedPct below) - those three are all
+  // situational/raid buffs the Character Profile itself doesn't show
+  // baked into its own number the way it does Kazeros/Guardian/Chaos
+  // Core/gems, so keeping them in base/afterAdrenaline would make this
+  // readout diverge from what the profile actually displays. final
+  // keeps them (via percentApTotal, untouched) alongside Support, same
+  // as the real total everywhere else on the page.
   // adrenalineUsed mirrors the dropdown itself (inputs.adrenaline !==
   // "Not Used"), not just whether its % happens to be nonzero, so the
   // middle stage still shows (as an equal-to-base stepping stone) at
@@ -621,12 +627,17 @@
     const flatAp = inputs.gearFlatAp + gearChaosStarFlat(inputs.gearApChaosStar);
     const percentApTotal = gearAttackPowerPercentTotal(inputs);
     const adrenalinePct = adrenalineApFraction(inputs) * 100;
+    const excludedPct =
+      inputs.gearApOther +
+      (inputs.gearAtropineUptime / 100) * GEAR_AP_ATROPINE_FULL +
+      (inputs.gearStrengthOrbUptime / 100) * STRENGTH_ORB_FULL_AP;
     const percentApMultAfter = 1 + percentApTotal / 100;
-    const percentApMultBeforeAdrenaline = 1 + (percentApTotal - adrenalinePct) / 100;
+    const percentApMultAfterExcludingOther = 1 + (percentApTotal - excludedPct) / 100;
+    const percentApMultBeforeAdrenalineExcludingOther = 1 + (percentApTotal - excludedPct - adrenalinePct) / 100;
     const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
     return {
-      base: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultBeforeAdrenaline, 0),
-      afterAdrenaline: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultAfter, 0),
+      base: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultBeforeAdrenalineExcludingOther, 0),
+      afterAdrenaline: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultAfterExcludingOther, 0),
       final: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultAfter, supApBuff),
       adrenalineUsed: inputs.adrenaline !== "Not Used",
     };
