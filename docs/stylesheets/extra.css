@@ -581,6 +581,26 @@ h3 { color: var(--dbc-teal); }
   border-radius: 4px;
   margin: 0 2px 0 4px;
 }
+/* Only icons skill-tooltip.js's attachBareIcon actually found
+   DB_SKILL_EXTRAS data for get a hoverable ring - a plain .skill-icon
+   with no match (there aren't any today, but nothing enforces that)
+   stays exactly as bare as before. Same ring-brightens-on-hover language
+   as .skill-inline img's own box-shadow (that one's always-on since a
+   .skill-inline span only ever appears when it resolved to data in the
+   first place; this one has to earn it via the class since a bare
+   .skill-icon usage isn't guaranteed to). Purple rather than the
+   food-required panel's rose: these currently live in the lavender-
+   accented Engravings section, not the pink food-required one - see
+   .food-option-icon.skill-tip-anchor below for that panel's own bare-icon
+   case, which keeps the rose family instead. */
+.md-typeset img.skill-icon.skill-tip-anchor {
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.3);
+  transition: box-shadow 0.15s ease;
+}
+.md-typeset img.skill-icon.skill-tip-anchor:hover,
+.md-typeset img.skill-icon.skill-tip-anchor:focus-visible {
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.65), 0 0 8px rgba(var(--dbc-purple-rgb), 0.4);
+}
 
 /* ---------- Inline skill reference for prose (outside rotation-lines) ---------- */
 /* Was a boxed/bordered "chip" (border + background tint, same language as
@@ -615,19 +635,23 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-lavender);
   transition: color 0.15s ease;
 }
-/* Only skill-inline spans that actually carry a description (title attr)
-   get the hover affordance - a lighter text color plus an underline that
-   only appears on hover/focus (not permanent, so it doesn't read as a
-   real link) - so a reader can tell which pivotal mentions have more
-   info without every single one visually promising a tooltip. */
-.md-typeset .skill-inline[title]:hover .skill-inline-name,
-.md-typeset .skill-inline[title]:focus-visible .skill-inline-name {
+/* Only skill-inline spans that actually resolved to tooltip data get the
+   hover affordance - a brighter text color on hover/focus (not
+   permanent, so it doesn't read as a real link) - so a reader can tell
+   which pivotal mentions have more info without every single one
+   visually promising a tooltip. No underline: tried, read as too busy
+   sitting under a short bold name mid-sentence - the color shift alone,
+   plus the cursor, is enough of a cue. Keyed off .skill-tip-anchor
+   (added by skill-tooltip.js's wire(), only for a span it found
+   DB_SKILL_DATA/DB_SKILL_EXTRAS data for) rather than a [title] attr -
+   no .skill-inline span in the markdown actually carries title, that
+   was leftover from an earlier design this rule never got updated to
+   match. cursor: help itself doesn't need repeating here: the shared
+   .md-typeset .skill-tip-anchor rule below already covers every anchor,
+   .skill-inline included. */
+.md-typeset .skill-inline.skill-tip-anchor:hover .skill-inline-name,
+.md-typeset .skill-inline.skill-tip-anchor:focus-visible .skill-inline-name {
   color: var(--dbc-purple);
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-}
-.md-typeset .skill-inline[title] {
-  cursor: help;
 }
 .md-typeset .skill-inline img {
   height: 1.1em;
@@ -892,6 +916,20 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.92em;
   color: #b8b2c0;
 }
+/* gem-dps-tooltip.js used to set a native `title` (damage-share on hover)
+   on plain, non-expandable rows, and this rule restored the cursor:help
+   affordance every other title/JS tooltip trigger on the site gets for
+   consistency. That row now gets a real .skill-tip via
+   window.SkillTooltip.attach() instead (see gem-dps-tooltip.js) - the
+   shared ".md-typeset .skill-tip-anchor { cursor: help; }" rule further
+   down covers the cursor for that automatically, so this [title]-scoped
+   version is dead: no gem-item row carries a `title` attribute anymore.
+   The expandable row's <summary> still correctly keeps cursor:pointer
+   despite ALSO becoming a .skill-tip-anchor now (tooltip AND click-to-
+   expand both apply to it) - its own more specific
+   ".gem-item-expandable > summary" rule further down wins on
+   specificity over the shared anchor rule without needing an explicit
+   override here. */
 
 /* Hover feedback, matching .rotation-line .skill/.skill-card elsewhere:
    border lift + a glow on the icon specifically. Applies to plain rows
@@ -7248,6 +7286,96 @@ body.page-333-blitz input[type="text"] {
   line-height: 1.4;
   color: var(--dbc-muted-text-soft);
 }
+
+/* ---------- Skill tooltip (rotation chips + inline skill mentions) ---------- */
+/* Hover/focus/tap tooltip attached by skill-tooltip.js to .rotation-line
+   .skill chips and .skill-inline prose mentions, reproducing the same
+   tags + note a Skill Setup card's expanded body already shows for that
+   skill (or, for Atropine/Stimulant, DB_SKILL_EXTRAS' flat effect text).
+   Same floating-panel visual language as .ark-core-options-tip above,
+   but NOT anchored/absolutely-positioned inside the trigger the way that
+   one is: .skill-tip is appended to <body> as position: fixed and
+   positioned/shown from JS instead, since a trigger here can sit inside
+   .rotation-line, which sets its own overflow: hidden (see
+   rotation-practice.js's near-identical note on its toggle pill) and
+   would otherwise clip it. See skill-tooltip.js for the positioning/
+   show-hide logic this only styles the result of - .skill-tip-visible is
+   what that JS toggles, there's no CSS :hover rule doing it here.
+   Only an element skill-tooltip.js actually found data for gets
+   .skill-tip-anchor + tabindex in the first place - a skill/id it can't
+   resolve is left as a plain chip/mention with no tooltip at all, same
+   "fail quietly" rule every widget here follows. */
+.md-typeset .skill-tip-anchor {
+  cursor: help;
+}
+.md-typeset .skill-tip-anchor:focus-visible {
+  outline: 2px solid var(--dbc-purple);
+  outline-offset: 2px;
+}
+.skill-tip {
+  position: fixed;
+  top: 0;
+  left: 0; /* pre-JS fallback - skill-tooltip.js's positionTip() sets the real values inline before ever showing this */
+  z-index: 1000; /* body-level fixed overlay, same tier as .image-lightbox-overlay/.tiger-rain elsewhere */
+  width: max-content;
+  max-width: min(280px, 88vw);
+  padding: 0.65em 0.8em 0.7em;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
+  background-color: #1c1a22;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  text-align: left;
+  white-space: normal;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.skill-tip.skill-tip-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.skill-tip-title {
+  font-size: 0.78em;
+  font-weight: 700;
+  color: var(--md-default-fg-color);
+  margin-bottom: 0.4em;
+}
+/* Only set by gem-dps-tooltip.js's damage-share figure (see buildTip's
+   opts.primary in skill-tooltip.js) - rose to tie back to the Damage
+   column's own accent color (.gem-col-dmg), bigger/bolder than the tags/
+   note below it since that number is the reason someone hovered a gem
+   row at all. Every other .skill-tip caller (rotation chips, prose
+   mentions, food items) never passes opts.primary, so they never get
+   this element or the .skill-tip-secondary wrapper below - tags/note
+   render at their original first-line weight for those, unaffected. */
+.skill-tip-primary {
+  font-size: 0.85em;
+  font-weight: 700;
+  color: var(--dbc-rose);
+  margin-bottom: 0.5em;
+}
+/* Demotes tags/note below a .skill-tip-primary line - a divider plus a
+   slight size/opacity step down, same "this is the secondary info" cue
+   .skill-card's own expanded-body note uses elsewhere, so the panel
+   reads top-to-bottom as "the number you hovered for, then the rest"
+   rather than three same-weight lines. */
+.skill-tip-secondary {
+  padding-top: 0.4em;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  opacity: 0.85;
+}
+.skill-tip-tags {
+  margin-bottom: 0.3em;
+}
+.skill-tip-note {
+  margin: 0;
+  font-size: 0.72em;
+  line-height: 1.5;
+  color: var(--dbc-lilac);
+}
+
 /* ---------- Ark Passive tree (Evolution/Enlightenment/Leap) ---------- */
 /* Rendered by javascripts/ark-passive-tree.js from a JSON blob (same
    authoring pattern as .ark-cores/ark-core-badge.js - see that file's
@@ -8035,7 +8163,13 @@ body.page-333-blitz input[type="text"] {
    </div>
    ... (repeat per item - pills wrap and hug their own content, so 2
    items and 4 items both look intentional rather than stretched) </div>
-   </div> */
+   </div>
+
+   No `title` attribute needed on a .food-option div anymore -
+   skill-tooltip.js's attachFoodOption wires each pill as a real
+   .skill-tip trigger, reading the effect text from DB_SKILL_EXTRAS by
+   the wrapped icon's filename instead (skill-data.js). The hover/focus
+   glow below is unrelated to that tooltip and stays exactly as it was. */
 .md-typeset .food-required {
   border: 1px solid rgba(var(--dbc-rose-rgb), 0.35);
   background-color: rgba(var(--dbc-rose-rgb), 0.055);
@@ -8103,6 +8237,20 @@ body.page-333-blitz input[type="text"] {
   object-fit: contain;
   border-radius: 6px;
   box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.4), 0 0 6px rgba(var(--dbc-rose-rgb), 0.25);
+  transition: box-shadow 0.15s ease;
+}
+/* Bare .food-option-icon usages only (Surge's "Mana Food + Maelstrom
+   Bleed" alt line) - the .skill-tip-anchor class here only ever lands on
+   a standalone icon, never one already sitting inside a .food-option
+   pill (attachBareIcon in skill-tooltip.js explicitly skips those, since
+   the whole pill is already its own trigger via attachFoodOption/
+   .food-option:hover above) - so this can't double up with that rule.
+   Same rose family and box-shadow shape as .food-option:hover, just
+   intensifying this icon's own always-on ring directly since there's no
+   wrapping pill here to react on :hover instead. */
+.md-typeset .food-option-icon.skill-tip-anchor:hover,
+.md-typeset .food-option-icon.skill-tip-anchor:focus-visible {
+  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.75), 0 0 10px rgba(var(--dbc-rose-rgb), 0.5);
 }
 .md-typeset .food-option p {
   margin: 0;

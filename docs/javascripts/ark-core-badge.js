@@ -136,6 +136,20 @@
     tip.style.left = (clampedLeft - itemRect.left) + "px";
   }
 
+  // Tap-toggle-open (.ark-core-tip-open) is a JS-added class, so it stays
+  // on an item independently of :hover/:focus-visible - closing it only
+  // ever happened on another TAP, on outside-click, or Escape (below), so
+  // tapping one core then simply hovering a different one over it with
+  // the mouse left the first tip showing right alongside the newly
+  // hovered one. Called from mouseenter/focusin too now, not just click,
+  // so moving onto a different core by any means retires a tap-opened
+  // tooltip elsewhere on the page.
+  function closeOpenExcept(item) {
+    document.querySelectorAll(".ark-core-item.ark-core-tip-open").forEach(function (open) {
+      if (open !== item) open.classList.remove("ark-core-tip-open");
+    });
+  }
+
   function buildItem(entry) {
     var item = el("div", "ark-core-item");
 
@@ -182,8 +196,8 @@
       // tooltip for mouse and keyboard - these two just reposition it
       // right before that happens, so it's centered-and-clamped by the
       // time it becomes visible.
-      item.addEventListener("mouseenter", function () { positionTip(item, tip); });
-      item.addEventListener("focusin", function () { positionTip(item, tip); });
+      item.addEventListener("mouseenter", function () { closeOpenExcept(item); positionTip(item, tip); });
+      item.addEventListener("focusin", function () { closeOpenExcept(item); positionTip(item, tip); });
 
       // Tap-to-toggle for touch, which triggers neither hover nor focus -
       // matching the ap-calc-popover open/close-on-outside-click pattern
@@ -193,9 +207,7 @@
           item.classList.remove("ark-core-tip-open");
           return;
         }
-        document.querySelectorAll(".ark-core-item.ark-core-tip-open").forEach(function (open) {
-          open.classList.remove("ark-core-tip-open");
-        });
+        closeOpenExcept(item);
         positionTip(item, tip);
         item.classList.add("ark-core-tip-open");
         evt.stopPropagation();

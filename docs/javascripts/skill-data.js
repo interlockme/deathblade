@@ -151,4 +151,53 @@
       },
     },
   };
+
+  // SINGLE SOURCE OF TRUTH for skill-tooltip.js's fallback lookup, for the
+  // couple of .skill-inline prose mentions (see extra.css's "Inline skill
+  // reference for prose" section) that aren't a real skill at all -
+  // Atropine and Stimulant are consumable items, so they have no tripods/
+  // rune/family split to speak of and don't belong in DB_SKILL_DATA above.
+  // Flat id -> note (no tags array - a tag pill would misrepresent a
+  // consumable's flat effect text as a skill trait like DAMAGE/SYNERGY).
+  // Keyed the same way as everywhere else: matches icon-<id>.png in
+  // assets/shared/. A lookup miss here (same as a miss in DB_SKILL_DATA)
+  // just means no tooltip renders - fail quietly, see skill-tooltip.js.
+  // Food/consumable entries below are the single source of truth for the
+  // effect text shown in three places: essentials.md's Food Requirement
+  // panel (.food-option divs), Surge's "Mana Food + Maelstrom Bleed" alt
+  // line (bare .food-option-icon images), and both families' Engravings
+  // section food mentions (bare .skill-icon images/.engraving-chip-food
+  // /.engraving-loadout-note). All of that markup used to hand-carry this
+  // same text in its own `title` attribute (native tooltip, no styling,
+  // easy to drift out of sync across 3+ copies) - skill-tooltip.js now
+  // reads it from here instead for all of them, matching icon-<id>.png
+  // the same way every other lookup on this file does. Update the text
+  // here and every surface picks it up; there's no other copy left to
+  // remember to update.
+  window.DB_SKILL_EXTRAS = {
+    atropine: {
+      note: "HP -25% but Atk. Power +30% and Move/Atk. Speed +20% for 10s.",
+    },
+    stimulant: {
+      note: "Recovers Specialty Meter by 100%.",
+    },
+    striploin: {
+      note: "Main Stat +12,000. Vitality +8,000. Combat Resource Natural Recovery +24%.",
+    },
+    steak: {
+      note: "Main Stat +6,000. Vitality +4,500. Combat Resource Natural Recovery +24%.",
+    },
+    azena: {
+      note: "Main Stat +6,000. HP +12,000. Combat Resource Natural Recovery +24%.",
+    },
+    feast: {
+      note: "Weapon Power +1,600/1,800. Atk. Speed +5%. Move Speed +5%.",
+    },
+    vernesewine: {
+      note: "Increases Move Speed by 3%.",
+    },
+    ealynsblessing: {
+      note: "Increases Atk. Speed by 3%.",
+    },
+  };
 })();

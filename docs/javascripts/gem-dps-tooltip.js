@@ -3,13 +3,26 @@
 // changes needed here, just point your build/essentials pages' JSON blocks
 // at your own data.
 //
-// Adds a native hover tooltip to each Damage-column gem card showing
-// that skill's damage share, reusing the numbers already authored for
-// the "## Trixion DPS" chart further down the same page (see
-// dps-chart.js) instead of hand-duplicating them onto the gem cards.
+// Adds a rich hover tooltip (skill-tooltip.js's shared panel, via
+// window.SkillTooltip.attach) to each Damage-column gem card, leading
+// with that skill's damage share - reusing the numbers already authored
+// for the "## Trixion DPS" chart further down the same page (see
+// dps-chart.js) instead of hand-duplicating them onto the gem cards -
+// with that skill's usual tags/note underneath (same DB_SKILL_DATA a
+// Skill Setup card's expanded body already shows, see skill-tooltip.js),
+// shown secondary to the damage-share line since that number is the
+// reason someone's hovering a gem priority row in the first place.
+// Formerly a bare native `title` with just the percentage and no
+// tags/note - upgraded for visual consistency with every other tooltip
+// trigger on the site now (.skill-inline, rotation chips, Ark Grid
+// cores).
 //
 // Damage gems only - Cooldown-column gems aren't damage skills, so
 // there's no meaningful "% of total damage" figure to show them.
+//
+// Must load after gem-priority.js (needs each row's data-id already in
+// the DOM) and skill-tooltip.js (needs window.SkillTooltip.attach to
+// exist) - see the extra_javascript order in mkdocs.yml.
 //
 // EASY EDIT GUIDE: there is nothing to edit here. Once a build page's
 // <div class="dps-chart" data-labels="..." data-values="..."
@@ -84,7 +97,12 @@
         }
         if (pct === undefined) return;
 
-        el.title = nameEl.textContent.trim() + ": " + fmtPct(pct) + " of total damage";
+        // id is always present in practice (gem-priority.js stamps it on
+        // every row), but the pct-matching fallback right above is
+        // name-based specifically to tolerate an old chart with no
+        // data-ids yet - guard here too rather than assume.
+        if (!id) return;
+        window.SkillTooltip.attach(el, id, fmtPct(pct) + " of total damage");
       });
     });
   }

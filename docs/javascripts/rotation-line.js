@@ -18,6 +18,11 @@
 // rotation-practice.js only wires up whatever .skill/.arrow elements
 // already exist in the DOM when it runs, so this has to build them first.
 //
+// Every plain (non-icons, non-cycleRef) step's .skill chip also gets a
+// data-skill-id attribute, which is all skill-tooltip.js needs to attach
+// its hover/focus/tap tooltip to it - no markup changes needed here if
+// that file's own logic ever changes.
+//
 // EASY EDIT GUIDE:
 //   <div class="rotation-line" markdown>
 //   <script type="application/json">
@@ -96,6 +101,13 @@
       span.appendChild(buildIcon(step.id));
       var name = step.name || window.DB_SKILL_NAMES[step.id] || step.id;
       span.appendChild(document.createTextNode(name));
+      // Lets skill-tooltip.js attach a hover/focus/tap tooltip to this
+      // chip without having to re-derive the id from anything - single,
+      // unambiguous skill per step here (unlike the icons/cycleRef
+      // branches above, which don't get this attribute at all: a "pick
+      // whichever" multi-icon step or a Cycle pointer isn't one skill a
+      // tooltip could describe).
+      span.setAttribute("data-skill-id", step.id);
     }
 
     if (step.situational) {

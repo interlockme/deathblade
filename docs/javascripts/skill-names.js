@@ -46,5 +46,22 @@
     earthcleaver: "Earth Cleaver",
     headhunt: "Head Hunt",
     spincutter: "Spincutter",
+
+    // Not skills (consumables - see skill-data.js's DB_SKILL_EXTRAS for
+    // their tooltip text), but still shown by name wherever a
+    // .skill-inline mention or skill-tooltip.js resolves them by id.
+    atropine: "Atropine",
+    stimulant: "Stimulant",
+
+    // Also not skills (food items - same DB_SKILL_EXTRAS pattern as
+    // above), shown by name wherever a Food Requirement pill, a bare
+    // food icon, or an Engravings section food mention resolves one of
+    // these by id (see skill-tooltip.js's attachFoodOption/attachBareIcon).
+    striploin: "Striploin Steak Meal",
+    steak: "Herb Steak Meal",
+    azena: "Azena's Blessing",
+    feast: "Atk/Move Speed Feast",
+    vernesewine: "Vernese Wine",
+    ealynsblessing: "Ealyn's Blessing",
   };
 })();

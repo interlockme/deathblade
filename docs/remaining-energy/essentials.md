@@ -7,7 +7,7 @@
 
 <div class="food-options" markdown>
 
-<div class="food-option" title="Strength, Dexterity, and Intelligence +12,000. Vitality +8,000. Combat Resource Natural Recovery +24%." markdown>
+<div class="food-option" markdown>
 ![](../assets/shared/icon-striploin.png){: .food-option-icon }
 
 Striploin Steak Meal
@@ -15,7 +15,7 @@ Striploin Steak Meal
 
 <span class="food-option-connector">or</span>
 
-<div class="food-option" title="Strength, Dexterity, and Intelligence +6,000. Vitality +4,500. Combat Resource Natural Recovery +24%." markdown>
+<div class="food-option" markdown>
 ![](../assets/shared/icon-steak.png){: .food-option-icon }
 
 Herb Steak Meal
@@ -23,7 +23,7 @@ Herb Steak Meal
 
 <span class="food-option-connector">or</span>
 
-<div class="food-option" title="Strength, Dexterity, and Intelligence +6,000. HP +12,000. Combat Resource Natural Recovery +24%." markdown>
+<div class="food-option" markdown>
 ![](../assets/shared/icon-azena.png){: .food-option-icon }
 
 Azena's Blessing
@@ -32,7 +32,7 @@ Azena's Blessing
 
 <span class="food-option-connector food-option-connector-plus">+</span>
 
-<div class="food-option" title="Weapon Power +1,600/1,800. Atk. Speed +5.00%. Move Speed +5.00%." markdown>
+<div class="food-option" markdown>
 ![](../assets/shared/icon-feast.png){: .food-option-icon }
 
 Atk/Move Speed Feast
@@ -103,7 +103,6 @@ Atk/Move Speed Feast
 <span class="engraving-chip">Adrenaline</span>
 <span class="engraving-chip">Ambush Master</span>
 <span class="engraving-chip engraving-chip-food">![](../assets/shared/icon-feast.png){: .skill-icon } Raid Captain</span>
-<span class="engraving-loadout-note">![](../assets/shared/icon-feast.png){: .skill-icon }requires Atk/Move Speed feast</span>
 </div>
 <div class="engraving-loadout-group" markdown>
 <span class="engraving-loadout-label">Choose 1</span>
@@ -150,7 +149,7 @@ Atk/Move Speed Feast
 
 </div>
 
-<span class="engraving-loadout-hint">Note: To compare advanced engraving values or get customized recommendations, check out the [Ark Passive Calculator!](../resources.md#ark-passive-calculator)</span>
+<span class="engraving-loadout-note">Note: To compare advanced engraving values or get customized recommendations, check out the [Ark Passive Calculator!](../resources.md#ark-passive-calculator)</span>
 
 </div>
 
