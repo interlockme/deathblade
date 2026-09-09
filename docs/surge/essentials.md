@@ -7,19 +7,23 @@
 
 <div class="food-options" markdown>
 
-<div class="food-option" markdown>
+<div class="food-option" title="Increases Move Speed by 3%." markdown>
 ![](../assets/shared/icon-vernesewine.png){: .food-option-icon }
 
 Vernese Wine
 </div>
 
-<div class="food-option" markdown>
+<span class="food-option-connector">or</span>
+
+<div class="food-option" title="Increases Atk. Speed by 3%." markdown>
 ![](../assets/shared/icon-ealynsblessing.png){: .food-option-icon }
 
 Ealyn's Blessing
 </div>
 
-<div class="food-option" markdown>
+<span class="food-option-connector food-option-connector-plus">+</span>
+
+<div class="food-option" title="Weapon Power +1,600/1,800. Atk. Speed +5.00%. Move Speed +5.00%." markdown>
 ![](../assets/shared/icon-feast.png){: .food-option-icon }
 
 Atk/Move Speed Feast
@@ -30,7 +34,7 @@ Atk/Move Speed Feast
 <details class="setup-note" data-kind="example" open markdown>
 <summary><span class="setup-note-tag">alt</span>Mana Food + Maelstrom Bleed<span class="setup-note-arrow"></span></summary>
 
-- Alternatively, use ![](../assets/shared/icon-striploin.png){: .food-option-icon } ![](../assets/shared/icon-steak.png){: .food-option-icon } ![](../assets/shared/icon-azena.png){: .food-option-icon } mana food + ![](../assets/shared/icon-feast.png){: .food-option-icon } feast and equip Legendary Bleed rune on Maelstrom.
+- Alternatively, use ![](../assets/shared/icon-striploin.png){: .food-option-icon title="Strength, Dexterity, and Intelligence +12,000. Vitality +8,000. Combat Resource Natural Recovery +24%." } <span class="food-option-connector">or</span> ![](../assets/shared/icon-steak.png){: .food-option-icon title="Strength, Dexterity, and Intelligence +6,000. Vitality +4,500. Combat Resource Natural Recovery +24%." } <span class="food-option-connector">or</span> ![](../assets/shared/icon-azena.png){: .food-option-icon title="Strength, Dexterity, and Intelligence +6,000. HP +12,000. Combat Resource Natural Recovery +24%." } <span class="food-option-connector food-option-connector-plus">+</span> ![](../assets/shared/icon-feast.png){: .food-option-icon title="Weapon Power +1,600/1,800. Atk. Speed +5.00%. Move Speed +5.00%." } and equip Legendary Bleed rune on Maelstrom.
 
 </details>
 

@@ -8035,7 +8035,22 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .food-options {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5em;
+}
+/* "or"/"+" connectors are bare text on their own line inside the
+   food-options markdown block, so the markdown parser wraps each one in
+   its own <p> - which brings the theme's default paragraph margin along
+   as a flex item. Two knock-on effects of leaving that margin in:
+   align-items' default of "stretch" reads that margin as part of the
+   item's outer cross size when sizing the flex line, so every .food-option
+   pill in the row stretched to match it and rendered as a tall oval
+   instead of its normal compact pill height (align-items: center above
+   is the real fix for that - pills now keep their own height regardless);
+   zeroing the margin here on top of that removes the leftover extra
+   vertical gutter the row was still carrying from it. */
+.md-typeset .food-options p {
+  margin: 0;
 }
 .md-typeset .food-option {
   flex: 0 0 auto;
@@ -8083,6 +8098,33 @@ body.page-333-blitz input[type="text"] {
   font-weight: 600;
   color: var(--dbc-lavender);
   white-space: nowrap;
+}
+/* "or"/"+" connectors between .food-options pills - the row used to be a
+   flat list of pills with no indication of which items are alternatives
+   to each other (RE's mana food, Surge's Atk/Move Speed food) vs which
+   are required alongside whatever you picked (feast, for both builds).
+   Plain inline text rather than a bordered/boxed group: sized to its own
+   content like the pills themselves (flex: 0 0 auto), so it drops
+   straight into .food-options' existing flex row/wrap without adding a
+   nesting level - keeps the row fitting on one line at the same widths
+   the plain pill row already did. */
+.md-typeset .food-option-connector {
+  flex: 0 0 auto;
+  align-self: center;
+  font-size: 0.78em;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--md-default-fg-color--light);
+  white-space: nowrap;
+}
+/* The "+" between the choice group and feast is a required-together
+   join, not an alternatives one - sized up and accent-colored (same
+   pink as .food-required-lead's own "required" emphasis) so it reads as
+   a different, stronger kind of connector than "or" at a glance. */
+.md-typeset .food-option-connector-plus {
+  font-size: 1.1em;
+  font-style: normal;
+  color: var(--dbc-pink);
 }
 
 /* ---------- Click-to-zoom lightbox for standalone content images ---------- */
