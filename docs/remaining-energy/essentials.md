@@ -174,7 +174,7 @@ Lower values are fine, but may experience some downtime.
 - Aim for your build's Surge CPM goal in Trixion to check for issues:
     - For [111 (Head Hunt)](111-head-hunt.md) and [313 (High Floor)](313-high-floor.md), try to approach 16 Surge CPM.
     - For [333 (Ceiling)](333-ceiling.md), try to approach 14.5 Surge CPM (15 after Balance Patch).
-    - Use the [DPS Meter](https://github.com/snoww/loa-logs) and equip maxed Spirit Absorption and Max MP engravings!
+    - Use the [DPS Meter](https://github.com/snoww/loa-logs) and equip maxed Spirit Absorption/Max MP engravings!
 
 </details>
 
@@ -227,6 +227,8 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 
 ## Remaining Energy Skills
 
+*Values recorded at 1830 Specialization with no runes or Maelstrom buff, 3 orbs are 30000 meter.*
+
 <!-- Per-row id/name/lines (small italic value lines like "4201 meter") -
      full schema is in javascripts/essentials-table.js's "EASY EDIT GUIDE"
      comment. Tags and Notes columns are NOT authored here: they come from
@@ -253,8 +255,6 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 ]
 </script>
 </div>
-
-*Values recorded at 1830 Specialization with no runes or Maelstrom buff, 3 orbs is 30000 meter.*
 
 <div class="tag-legend" markdown>
 <span class="tag-legend-item"><span class="tag-legend-dot tag-legend-dmg"></span>Damage</span>

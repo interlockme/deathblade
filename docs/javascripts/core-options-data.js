@@ -161,7 +161,7 @@
     "Deadly Feast": {
       options: [
         { bp: "10P", text: "Normal Skill Damage +3.0%." },
-        { bp: "14P", text: "When Destiny is triggered, gain the 'Destiny: Killing Feast' buff. 'Destiny: Killing Feast': Using Deathly Slash consumes the effect to increase its damage by 30.0%." },
+        { bp: "14P", text: "On Destiny activation, gain the 'Destiny: Killing Feast' buff. 'Destiny: Killing Feast': Using Deathly Slash consumes the effect to increase its damage by 30.0%." },
         { bp: "17P", text: "Using a Normal Skill (excluding Deathly Slash) while 'Destiny: Killing Feast' is active grants 'Destiny: Sharp Senses', stackable up to 5 times. 'Destiny: Sharp Senses': consumed by Deathly Slash to increase its damage by 4.0% per stack." },
         { bp: "18P", text: "Normal Skill Damage +0.3%." },
         { bp: "19P", text: "Normal Skill Damage +0.3%." },
@@ -171,8 +171,8 @@
     "Dual Blade Dance": {
       options: [
         { bp: "10P", text: "Normal Skill Damage +3.0%." },
-        { bp: "14P", text: "Using Blade Arts activates Destiny." },
-        { bp: "17P", text: "Blade Dance and Deathly Slash Casting Speed +10.0%, and their Damage +12.0%." },
+        { bp: "14P", text: "Entering Death Trance triggers Destiny." },
+        { bp: "17P", text: "Blade Dance and Deathly Slash Casting Speed +10.0%. Damage +12.0%." },
         { bp: "18P", text: "Normal Skill Damage +0.3%." },
         { bp: "19P", text: "Normal Skill Damage +0.3%." },
         { bp: "20P", text: "Normal Skill Damage +0.3%." },

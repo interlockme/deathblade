@@ -717,13 +717,13 @@
          buff that isn't active. -->
     <div class="ap-gear-ap-readout" hidden>
       <span class="ap-gear-ap-readout-label">Attack Power</span>
-      <span class="ap-gear-ap-readout-base" title="Every Attack Power % source except Adrenaline, before your Support's Attack Power buff.">&mdash;</span>
+      <span class="ap-gear-ap-readout-base" title="Your Attack Power, as calculated and displayed on your Character Profile.">&mdash;</span>
       <span class="ap-gear-ap-readout-adrenaline-stage">
         <span class="ap-gear-ap-readout-arrow">&rarr;</span>
-        <span class="ap-gear-ap-readout-adrenaline" title="With Adrenaline's Attack Power bonus added in, based on the Adrenaline fields above. Still before your Support's Attack Power buff.">&mdash;</span>
+        <span class="ap-gear-ap-readout-adrenaline" title="Your Attack Power with Adrenaline's AP bonus added.">&mdash;</span>
       </span>
       <span class="ap-gear-ap-readout-arrow">&rarr;</span>
-      <span class="ap-gear-ap-readout-final" title="Your real Attack Power total - Adrenaline's bonus and your Support's Attack Power buff both included.">&mdash;</span>
+      <span class="ap-gear-ap-readout-final" title="Your Attack Power in a raid setting, factoring in an estimated AP buff from a similarly geared Support.">&mdash;</span>
     </div>
   </div>
 </details>

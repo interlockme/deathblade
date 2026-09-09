@@ -25,7 +25,7 @@
     re: {
       maelstrom: {
         tags: [["util", "SYNERGY"], ["util", "BUFF"], ["warn", "NO PARA IMMUNE"]],
-        note: "Increases orb generation and Attack/Move Speed, charges up to two stacks.",
+        note: "Increases orb generation and Attack/Move Speed for 6 seconds, charges up to two stacks.",
       },
       voidstrike: {
         tags: [["util", "ORB GEN"]],
@@ -33,7 +33,7 @@
       },
       twinshadows: {
         tags: [["util", "ORB GEN"], ["util", "RECOVERY"], ["util", "MOBILITY"]],
-        note: "Multi-purpose skill that charges up to two stacks.",
+        note: "Multi-purpose, charges up to two stacks.",
       },
       deathlyslash: {
         tags: [["dmg", "DAMAGE"], ["util", "ORB GEN"], ["util", "MOBILITY"]],
@@ -41,15 +41,15 @@
       },
       turningslash: {
         tags: [["util", "SYNERGY"], ["util", "ORB GEN"], ["util", "DESTINY"], ["immune", "PUSH IMMUNE"]],
-        note: "Applies +4% outgoing and +5% directional damage synergy on hit.",
+        note: "Applies +4% outgoing and +5% directional damage synergy on hit. Activates Destiny for 333.",
       },
       fatalwave: {
         tags: [["dmg", "DAMAGE"], ["util", "ORB GEN"], ["util", "DESTINY"]],
-        note: "Resets and becomes empowered when the Destiny effect is activated.",
+        note: "Resets its cooldown and becomes empowered when the Destiny effect is activated.",
       },
       surge: {
         tags: [["dmg", "DAMAGE"], ["util", "MOBILITY"], ["util", "DESTINY"], ["immune", "PUSH IMMUNE"]],
-        note: "Consumes orbs to grant the RE buff, Mana Recovery, and skill CDR.",
+        note: "Consumes orbs to grant the RE buff, Mana Recovery, and skill CDR. Activates Destiny for 111/313.",
       },
       soulabsorber: {
         tags: [["util", "ORB GEN"], ["util", "WEAK POINT"]],
@@ -57,11 +57,11 @@
       },
       blitzrush: {
         tags: [["util", "ORB GEN"], ["util", "RECOVERY"]],
-        note: "Flexible ranged skill.",
+        note: "Flexible ranged attack.",
       },
       headhunt: {
         tags: [["util", "COUNTER"], ["util", "RECOVERY"], ["warn", "NO PARA IMMUNE"]],
-        note: "Most flexible recovery skill.",
+        note: "Most flexible utility/recovery tool.",
       },
       bladeassault: {
         tags: [["util", "AWAKENING"], ["dmg", "DAMAGE"], ["util", "ORB GEN"], ["immune", "PUSH IMMUNE"], ["immune", "STATUS IMMUNE"]],
@@ -77,25 +77,25 @@
       },
       deathsentence: {
         tags: [["dmg", "DAMAGE"], ["util", "STAGGER"], ["util", "MOBILITY"]],
-        note: "Well-rounded addition to some builds.",
+        note: "Well-rounded addition to classic builds.",
       },
     },
     surge: {
       windcut: {
         tags: [["util", "STACKS"], ["warn", "NO PARA IMMUNE"]],
-        note: "Usually pre-cast before Death Trance.",
+        note: "Core builder, often pre-cast before Death Trance.",
       },
       deathtrance: {
         tags: [["util", "BUFF"], ["util", "DESTINY"], ["immune", "PUSH IMMUNE"]],
-        note: "Grants buffs and skill CDR.",
+        note: "Identity state that grants buffs and skill CDR. Activates Destiny for \uD83E\uDD81/\uD83D\uDC06.",
       },
       maelstrom: {
         tags: [["util", "SYNERGY"], ["util", "BUFF"], ["warn", "NO PARA IMMUNE"]],
-        note: "Increases Attack/Move Speed, charges up to two stacks.",
+        note: "Increases Attack/Move Speed for 6 seconds, charges up to two stacks.",
       },
       surpriseattack: {
         tags: [["util", "SYNERGY"], ["util", "MOBILITY"], ["util", "WEAK POINT"]],
-        note: "Applies +4% outgoing and +5% directional damage synergy on hit.",
+        note: "Core builder, applies +4% outgoing and +5% directional damage synergy on hit.",
       },
       breakingmoon: {
         tags: [["dmg", "DAMAGE"], ["util", "STACKS"], ["util", "BUFF"]],
@@ -107,27 +107,27 @@
       },
       bladedance: {
         tags: [["util", "STACKS"], ["dmg", "DAMAGE"]],
-        note: "You can stop holding it about 90% of the way and still generate full stacks.",
+        note: "Core builder, you can stop holding it about 90% of the way and still generate full stacks.",
       },
       blitzrush: {
         tags: [["dmg", "DAMAGE"]],
-        note: "Filler that's also a skill reset and core skill for \uD83D\uDC2F.",
+        note: "Filler builder for \uD83E\uDD81. On Destiny activation, resets its cooldown and becomes empowered for \uD83D\uDC2F.",
       },
       headhunt: {
         tags: [["util", "COUNTER"], ["warn", "NO PARA IMMUNE"]],
-        note: "Fast counter with micro-mobility.",
+        note: "Fast utility/backup with micro-mobility.",
       },
       earthcleaver: {
         tags: [["dmg", "DAMAGE"], ["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NO PARA IMMUNE"]],
-        note: "Charges up to two stacks for \uD83E\uDD81.",
+        note: "Slow utility filler. Charges up to two stacks for \uD83E\uDD81.",
       },
       spincutter: {
         tags: [["util", "MOBILITY"], ["util", "STACKS"]],
-        note: "Can be cast up to 3 times, backup stack builder.",
+        note: "Backup builder that can be cast up to 3 times.",
       },
       turningslash: {
         tags: [["util", "SYNERGY"], ["util", "DESTINY"], ["immune", "PUSH IMMUNE"]],
-        note: "Applies +4% outgoing and +5% directional damage synergy on hit, destiny activator for \uD83D\uDC2F.",
+        note: "Applies +4% outgoing and +5% directional damage synergy on hit. Activates Destiny for \uD83D\uDC2F.",
       },
       bladeassault: {
         tags: [["util", "AWAKENING"], ["dmg", "DAMAGE"], ["immune", "PUSH IMMUNE"], ["immune", "STATUS IMMUNE"]],
@@ -135,15 +135,15 @@
       },
       deathlyslash: {
         tags: [["dmg", "DAMAGE"], ["util", "MOBILITY"]],
-        note: "Empowered core skill for \uD83D\uDC06.",
+        note: "Becomes empowered upon Destiny activation and subsequent normal skill use for \uD83D\uDC06.",
       },
       darkaxel: {
         tags: [["util", "MOBILITY"], ["immune", "PUSH IMMUNE"]],
-        note: "Jumps over bosses to ensure a back attack.",
+        note: "Jumps over bosses to facilitate a back attack.",
       },
       upperslash: {
         tags: [["immune", "PUSH IMMUNE"]],
-        note: "Core utility skill for \uD83D\uDC06.",
+        note: "Core builder and utility for \uD83D\uDC06.",
       },
       fallstar: {
         tags: [["immune", "PUSH IMMUNE"]],

@@ -62,6 +62,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     ```
 
     - Requires either a Lv 9+ Fatal Wave CD gem or Optimized Training 1.
+    - It's preferable to invest a little more and unlock 313 or 333 properly.
 
 ## Ark Setup
 
