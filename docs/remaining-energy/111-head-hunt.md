@@ -269,7 +269,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
     Openers stack Adrenaline and apply synergies efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
 
-    *From 3 orbs (![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant):*
+    *From 3 orbs (<span class="skill-inline">![](../assets/shared/icon-stimulant.png)<span class="skill-inline-name">Stimulant</span></span>):*
     { .lead }
 
     <div class="rotation-line" markdown>
@@ -281,8 +281,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     </script>
     </div>
 
-    1. <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> is interchangeable with Cycle **2** if it's available.
-    2. It's efficient to use ![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine after Deathly Slash, with Blade Assault available.
+    1. If available, <span class="skill-inline">![](../assets/shared/icon-bladeassault.png)<span class="skill-inline-name">Blade Assault</span></span> is interchangeable with Cycle **2**.
+    2. It's efficient to use <span class="skill-inline">![](../assets/shared/icon-atropine.png)<span class="skill-inline-name">Atropine</span></span> after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs:*
     { .lead }

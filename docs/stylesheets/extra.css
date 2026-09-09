@@ -582,47 +582,71 @@ h3 { color: var(--dbc-teal); }
   margin: 0 2px 0 4px;
 }
 
-/* ---------- Reusable skill chip for prose (outside rotation-lines) ---------- */
-/* Same look as the chips inside .rotation-line/.cycle-card, but sized to
-   sit inline in a normal paragraph without stretching the line height.
-   Usage: <span class="skill-chip">![](../assets/shared/icon-headhunt.png)Head Hunt</span>
-   The gradient/shadow/glow/lift below match the .rotation-line redesign,
-   safe to reuse here since none of them add layout height - box-shadow
-   and transform are paint-only, they don't participate in line-height
-   the way the height-budget comment two lines down is actually about. */
-.md-typeset .skill-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3em;
+/* ---------- Inline skill reference for prose (outside rotation-lines) ---------- */
+/* Was a boxed/bordered "chip" (border + background tint, same language as
+   .rotation-line's own chips) - read as heavy and out of place sitting
+   in the middle of a normal sentence, unlike .rotation-line/.cycle-card
+   where every step IS a chip and the boxed language fits the whole row.
+   No box/background/border/padding here at all: just the icon (kept at
+   the same size, with the same ring/glow treatment used site-wide -
+   .food-option-icon, .skill-chip's old img rule - so it still reads as
+   a pulled-out game icon rather than a plain inline image) sitting next
+   to the name, which gets a modest color lift instead of a border so a
+   pivotal skill mention still stands out from surrounding body text
+   without a shape wrapped around it.
+   Usage: <span class="skill-inline">![](../assets/shared/icon-headhunt.png)Head Hunt</span>
+   Deliberately NOT display:inline-flex (the first version of this rule
+   was, and it was wrong): flexbox takes over vertical alignment of its
+   own children, so the img's own vertical-align below stopped doing
+   anything, and the whole unit's position against the surrounding line
+   was instead whatever vertical-align the flex container itself got -
+   which floated the icon+name noticeably above the sentence's baseline
+   instead of sitting on it. Plain inline flow (same as the bare
+   .skill-icon usages dotted through prose elsewhere, e.g. the
+   feast/consumable notes in essentials.md) lets the img's own
+   vertical-align do the alignment work directly against the actual
+   text, same as any other inline image next to text - see that
+   property's own comment below for how its value was tuned. */
+.md-typeset .skill-inline {
   white-space: nowrap;
-  /* Flat tint-over-hairline-border - kept in sync with .rotation-line
-     .skill above, since this is the same chip just sized for inline
-     prose rather than a rotation box. */
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
-  padding: 0.1em 0.3em 0.1em 0.3em;
-  transition: border-color 0.15s ease, transform 0.15s ease;
-  /* Without this, the chip's text inherits the surrounding paragraph's
-     line-height (e.g. 25.6px at 1.6x/16px), which is taller than the
-     icon and becomes the flex row's height — stretching the whole
-     chip well past what the icon alone needs and inflating the line
-     it sits on. Collapsing to the font's natural line height keeps
-     the chip's height driven by the icon instead. */
-  line-height: 1.2;
-  vertical-align: middle;
 }
-.md-typeset .skill-chip:hover {
-  border-color: rgba(var(--dbc-purple-rgb), 0.55);
-  transform: translateY(-1px);
+.md-typeset .skill-inline-name {
+  font-weight: 700;
+  color: var(--dbc-lavender);
+  transition: color 0.15s ease;
 }
-.md-typeset .skill-chip img {
+/* Only skill-inline spans that actually carry a description (title attr)
+   get the hover affordance - a lighter text color plus an underline that
+   only appears on hover/focus (not permanent, so it doesn't read as a
+   real link) - so a reader can tell which pivotal mentions have more
+   info without every single one visually promising a tooltip. */
+.md-typeset .skill-inline[title]:hover .skill-inline-name,
+.md-typeset .skill-inline[title]:focus-visible .skill-inline-name {
+  color: var(--dbc-purple);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.md-typeset .skill-inline[title] {
+  cursor: help;
+}
+.md-typeset .skill-inline img {
   height: 1.1em;
   width: 1.1em;
   object-fit: contain;
-  vertical-align: text-bottom;
+  /* vertical-align: middle looked right in theory but sat low in practice:
+     the spec aligns the image's middle to a point only 0.5ex above the
+     baseline, which is well below the visual center of this font's bold
+     caps/x-height. Nudging up with a small negative length (offset from
+     middle, not a swap to a different keyword) corrects that without
+     touching line-height/row spacing - vertical-align never affects the
+     line box height, only where the inline box paints within it, so the
+     icon and name still can't push rows apart. -0.15em matched this font
+     at both sizes this is used at (prose ~15px, list items ~13-14px);
+     recheck against a couple of live .skill-inline instances if the base
+     font ever changes. */
+  vertical-align: -0.15em;
   border-radius: 4px;
-  margin: 0;
+  margin: 0 3px 0 4px;
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.3);
 }
 

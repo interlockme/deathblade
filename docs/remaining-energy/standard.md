@@ -263,9 +263,9 @@ The opener stacks Adrenaline and applies synergies efficiently as you build up t
 </script>
 </div>
 
-1. <span class="skill-chip">![](../assets/shared/icon-deathlyslash.png)Deathly Slash</span> is only available every other rotation, just keep going if it's on cooldown.
-2. Use <span class="skill-chip">![](../assets/shared/icon-spincutter.png)Spincutter</span> during downtime to reposition, or hold it to dodge upcoming attacks.
-3. Use <span class="skill-chip">![](../assets/shared/icon-bladeassault.png)Blade Assault</span> for damage, or hold it for Hyper Awakening or a clutch recovery.
+1. <span class="skill-inline">![](../assets/shared/icon-deathlyslash.png)<span class="skill-inline-name">Deathly Slash</span></span> is only available every other rotation, just keep going if it's on cooldown.
+2. Use Spincutter during downtime to reposition, or hold it to dodge upcoming attacks.
+3. Use <span class="skill-inline">![](../assets/shared/icon-bladeassault.png)<span class="skill-inline-name">Blade Assault</span></span> for damage, or hold it for Hyper Awakening or a clutch recovery.
 4. The rotation is bottle-necked entirely by Soul Absorber's cooldown, it is what it is.
     - You can skip Earth Cleaver if Soul Absorber's off cooldown already.
 

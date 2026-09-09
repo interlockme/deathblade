@@ -30,7 +30,7 @@
 
 ## Additional Resources
 
-*(Shared by both playstyles, see [Additional Resources](resources.md) for links, gearing tables, and bonus content.)*
+*(Shared by both playstyles, see [Additional Resources](resources.md) for links, calculators, and bonus content.)*
 
 ---
 

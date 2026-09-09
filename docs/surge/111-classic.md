@@ -320,7 +320,7 @@ Alternate main cycle meant to try-hard Raid Captain and Mass Increase efficiency
 *From zero orbs:*
 { .lead }
 
-1. Use a ![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant (recommended) or proceed to #2.
+1. Use a <span class="skill-inline">![](../assets/shared/icon-stimulant.png)<span class="skill-inline-name">Stimulant</span></span> (recommended) or proceed to #2.
 2. Generate one orb, build at least 40 stacks, then Surge to refill all 3 orbs.
 
 ## DPS Spread
