@@ -32,9 +32,24 @@
 // rune not in that file at all) is left as a plain chip with no tooltip -
 // fail quietly, same rule as every other widget here.
 //
+// A Skill Setup card's rune chip sits inside that card's own <summary>
+// (skill-setup.js's chips row), so clicking it is ALSO how the browser
+// natively expands/collapses the enclosing card - same nested-toggle
+// problem gem-dps-tooltip.js has for an expandable gem row's <summary>,
+// and the same fix: skip skill-tooltip.js's own tap-to-open click
+// behavior for a rune chip specifically (wireCustom's opts.tapToggle:
+// false below), so tapping/clicking one only ever expands the card, and
+// hook the card's native `toggle` event to force-close the tooltip the
+// instant it opens as a belt-and-suspenders safety net (a mouse user who
+// hovers the chip then clicks without moving away first would otherwise
+// still see it lingering over the card's freshly-revealed body). A bare
+// `.skill-mention[data-rune-name]` prose mention is never inside a
+// .skill-card at all, so it's unaffected either way - full normal tap-
+// to-open behavior, same as any other skill-tooltip.js trigger.
+//
 // Must load after skill-setup.js (needs its rendered .rune-chip[data-
 // rune-name] elements), rune-data.js, and skill-tooltip.js (needs
-// window.SkillTooltip.wireCustom to exist) - see the extra_javascript
+// window.SkillTooltip.wireCustom/.hide to exist) - see the extra_javascript
 // order in mkdocs.yml. Same caveat as skill-tooltip.js's own note on
 // rotation-line.js load order, though: that ordering is only for
 // readability, since SiteUtils.registerRenderer's MutationObserver is
@@ -104,12 +119,26 @@
     var entry = window.DB_RUNE_EFFECTS && window.DB_RUNE_EFFECTS[name.toLowerCase()];
     if (!entry) return;
 
+    var tip;
     if (tier) {
       var text = entry[tier];
       if (!text) return;
-      window.SkillTooltip.wireCustom(trigger, buildTip(name, tier, text));
+      tip = buildTip(name, tier, text);
     } else {
-      window.SkillTooltip.wireCustom(trigger, buildAllTiersTip(name, entry));
+      tip = buildAllTiersTip(name, entry);
+    }
+
+    // See the file-level comment above for why a Skill Setup card's own
+    // rune chip skips the tap-to-open behavior other skill-tooltip.js
+    // triggers get - a bare prose mention (.skill-mention) has no
+    // .skill-card ancestor, so `card` is null and it's unaffected.
+    var card = trigger.closest(".skill-card");
+    var wired = window.SkillTooltip.wireCustom(trigger, tip, card ? { tapToggle: false } : undefined);
+    if (wired && card && !card.__runeTipToggleWired) {
+      card.__runeTipToggleWired = true;
+      card.addEventListener("toggle", function () {
+        if (card.open) window.SkillTooltip.hide(trigger);
+      });
     }
   }
 

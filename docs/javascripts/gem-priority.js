@@ -55,8 +55,12 @@
 //   Per column:
 //     col   - REQUIRED. "dmg" | "cd" - picks the rose/teal accent
 //             styling (.gem-col-dmg / .gem-col-cd in extra.css) and
-//             whether gem-dps-tooltip.js's damage-share tooltips apply
-//             (Damage only - Cooldown gems aren't damage skills).
+//             which flavor of tooltip gem-dps-tooltip.js attaches: a
+//             Damage row leads with its damage-share figure (from the
+//             page's "## Trixion DPS" chart), a Cooldown row has no such
+//             figure (Cooldown gems aren't damage skills) and just gets
+//             its usual tags/note, plus this row's own "tip" text below
+//             if authored - see the "tip" field above.
 //     label - REQUIRED. Column header text, e.g. "Damage", "Cooldown".
 //     items - REQUIRED array of gem entries, ROW ORDER IS RANK - the
 //             first entry is rank 1 (gets the gold treatment), the
@@ -78,6 +82,18 @@
 //         "name" override optional same as the parent) and "note" (why
 //         you'd swap to it - shown after the alt's name). "**word**"
 //         inside a note bolds that word.
+//     { "id": "voidstrike", "tip": "Swap to the alt below when running 113." }
+//       - OPTIONAL freeform recommendation shown as an extra line in
+//         THIS row's own hover tooltip (gem-dps-tooltip.js), below its
+//         usual tags/note - not the same thing as an alt's "note" above,
+//         which only shows once that alt's row is expanded. Mainly for
+//         Cooldown gems: they have no damage-share figure to justify a
+//         swap the way a Damage gem's tooltip can point at, so this is
+//         the place to spell out build-specific context on the base gem
+//         itself (e.g. "replace with the alternate skill when using
+//         113") without requiring the reader to expand it first. Combine
+//         freely with "alts" - the tip talks about the base gem's OWN
+//         row, the alts list is still what the reader actually swaps to.
 //
 //   No "situational" concept here (unlike rotation-line.js) - a gem
 //   either makes a build's priority list at some rank, or it's an alt
@@ -121,6 +137,12 @@
     // expandable one) - lets it match against a dps-chart's data-ids by
     // id instead of comparing rendered name text.
     parent.setAttribute("data-id", entry.id);
+    // Same "stamp on the exact rendered trigger element" pattern as
+    // data-id above, for gem-dps-tooltip.js's opts.extra line - kept as
+    // its own attribute (not folded into data-id) so a row with no "tip"
+    // authored simply has no attribute at all, rather than one holding
+    // an empty string.
+    if (entry.tip) parent.setAttribute("data-gem-tip", entry.tip);
     parent.appendChild(el("span", "gem-item-rank", String(rank)));
     parent.appendChild(buildIcon(entry.id, "gem-item-icon"));
     parent.appendChild(el("span", "gem-item-name", displayName(entry)));

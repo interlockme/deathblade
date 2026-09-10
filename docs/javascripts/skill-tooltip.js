@@ -46,7 +46,11 @@
 //     attachSkillInline (its no-data-skill-id branch).
 //   - Also exposes window.SkillTooltip.attach() for gem-dps-tooltip.js,
 //     which needs this file's same lookup/build/wire pipeline but with an
-//     extra damage-share line this file doesn't itself compute.
+//     extra damage-share line (Damage gems) and/or an author-supplied
+//     recommendation line (opts.extra - mainly Cooldown gems) this file
+//     doesn't itself compute, plus opts.tapToggle:false for expandable
+//     gem rows and a hide() escape hatch - see attach/hide/wire's own
+//     comments below.
 //
 // Tooltip content is the SAME tags + note skill-setup.js already shows in
 // a Skill Setup card's expanded body (DB_SKILL_DATA[family][id]) - no
@@ -115,6 +119,13 @@
   // of three same-weight lines. Every other caller (rotation chips,
   // .skill-inline mentions) has no primary stat to show, so they're
   // unaffected: no opts, tags/note render at their old first-line weight.
+  //
+  // opts.extra: an author-supplied freeform recommendation string (gem-
+  // priority.js's per-item "tip" field, via gem-dps-tooltip.js) - shown
+  // as its own divider-topped line BELOW tags/note (see .skill-tip-extra
+  // in extra.css). Independent of opts.primary: a Cooldown gem passes
+  // extra with no primary (no damage-share to show), a Damage gem could
+  // in principle pass both. Omitted entirely when there's no tip text.
   function buildTip(id, data, opts) {
     opts = opts || {};
 
@@ -148,6 +159,14 @@
 
     if (data.note) {
       body.appendChild(el("p", "skill-tip-note", data.note));
+    }
+
+    // Appended to `tip` directly (not `body`) - it should always sit at
+    // the very bottom of the panel as its own aside, not get folded
+    // inside the dimmed .skill-tip-secondary wrapper a primary stat
+    // would otherwise push tags/note into.
+    if (opts.extra) {
+      tip.appendChild(el("p", "skill-tip-extra", opts.extra));
     }
 
     return tip;
@@ -246,6 +265,19 @@
     return null;
   }
 
+  // opts.tapToggle: defaults to true (tap/click toggles the tooltip open,
+  // same as ever). Pass false for a trigger that's ALSO a click control
+  // for something else - currently a .gem-item-expandable <summary>,
+  // which already treats its own click as "toggle the alts list open" -
+  // so this tooltip doesn't ALSO claim that same click to force itself
+  // open. Without this, tapping to expand a gem row on a touch device
+  // (no real hover to fall back on) opens the tooltip at the same time,
+  // and since the newly-revealed .gem-item-alts content sits directly
+  // below the row, the tooltip renders right on top of the very thing
+  // the tap was trying to reveal. Hover/focus are untouched either way -
+  // a mouse user still gets the tooltip on hover same as any other
+  // trigger, this only removes the SEPARATE forced-open-until-tapped-
+  // elsewhere behavior tap/click would otherwise add on top of hover.
   function wire(trigger, tip, opts) {
     opts = opts || {};
     trigger.classList.add("skill-tip-anchor", "skill-tip-wired");
@@ -305,19 +337,21 @@
     // than swallowing the click for our own tap-toggle instead. Hover/
     // focus still shows the tooltip fine even while practicing; only the
     // touch tap-to-open is what steps aside here.
-    trigger.addEventListener("click", function (evt) {
-      if (trigger.closest(".rotation-line.practice-mode")) return;
-      if (entry.state.open) {
-        entry.state.open = false;
+    if (opts.tapToggle !== false) {
+      trigger.addEventListener("click", function (evt) {
+        if (trigger.closest(".rotation-line.practice-mode")) return;
+        if (entry.state.open) {
+          entry.state.open = false;
+          refresh(entry);
+          return;
+        }
+        closeAllExcept(trigger);
+        entry.state.open = true;
+        positionTip(trigger, tip);
         refresh(entry);
-        return;
-      }
-      closeAllExcept(trigger);
-      entry.state.open = true;
-      positionTip(trigger, tip);
-      refresh(entry);
-      evt.stopPropagation();
-    });
+        evt.stopPropagation();
+      });
+    }
   }
 
   function attachRotationSkill(trigger) {
@@ -507,25 +541,52 @@
   // attach* function above, so the caller knows whether to also fall back
   // to a plain native title.
   window.SkillTooltip = {
-    attach: function (trigger, id, primary) {
+    // opts.extra / opts.tapToggle: see buildTip's and wire's own comments
+    // above. Both optional - existing callers passing just (trigger, id,
+    // primary) are unaffected (opts defaults to {}, extra is undefined,
+    // tapToggle stays at its normal true).
+    attach: function (trigger, id, primary, opts) {
+      opts = opts || {};
       if (trigger.classList.contains("skill-tip-wired")) return false;
       var data = lookupData(id, resolveFamily(trigger));
       if (!data) return false;
-      wire(trigger, buildTip(id, data, { primary: primary }));
+      wire(trigger, buildTip(id, data, { primary: primary, extra: opts.extra }), { tapToggle: opts.tapToggle });
       return true;
+    },
+
+    // Force-closes a specific trigger's tooltip regardless of why it's
+    // currently showing (hover/focus/tap-open) - a belt-and-suspenders
+    // safety net for gem-dps-tooltip.js's expandable gem rows: even with
+    // tapToggle:false above removing the CLICK-driven cause, a mouse
+    // user who hovers a row and then clicks without moving the pointer
+    // away first would still see the tooltip lingering (state.hover is
+    // still true) right over the alts list that click just revealed.
+    // gem-dps-tooltip.js calls this on the row's native `toggle` event
+    // whenever it opens, so the tooltip always gets out of the way the
+    // instant the alts become visible, independent of pointer movement.
+    // No-op if the trigger was never wired (nothing to hide) or has no
+    // open entry (already closed).
+    hide: function (trigger) {
+      var entry = findEntry(trigger);
+      if (!entry) return;
+      entry.state.hover = entry.state.focus = entry.state.open = false;
+      refresh(entry);
     },
 
     // Lower-level than attach(): takes an already-built tip element instead
     // of looking one up via DB_SKILL_DATA/DB_SKILL_EXTRAS, for a caller
     // with its own data source and tip layout (ark-passive-tooltip.js's
-    // per-node/per-level effect text) that still wants the same body-fixed,
-    // hover/focus/tap-toggle, viewport-clamped positioning engine this file
-    // already built for skill mentions - see wire()'s own comment. Returns
-    // false without wiring anything if trigger is already wired (same
-    // idempotency guard as attach()), true otherwise.
-    wireCustom: function (trigger, tip) {
+    // per-node/per-level effect text, rune-tooltip.js's tier text) that
+    // still wants the same body-fixed, hover/focus/tap-toggle, viewport-
+    // clamped positioning engine this file already built for skill
+    // mentions - see wire()'s own comment. opts is optional and forwarded
+    // to wire() as-is (currently just tapToggle - see rune-tooltip.js's
+    // own use of it for a rune chip nested inside a Skill Setup card's
+    // <summary>). Returns false without wiring anything if trigger is
+    // already wired (same idempotency guard as attach()), true otherwise.
+    wireCustom: function (trigger, tip, opts) {
       if (trigger.classList.contains("skill-tip-wired")) return false;
-      wire(trigger, tip);
+      wire(trigger, tip, opts);
       return true;
     },
   };

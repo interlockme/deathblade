@@ -262,10 +262,10 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
   { "col": "cd", "label": "Cooldown", "items": [
     "maelstrom",
     "turningslash",
-    { "id": "soulabsorber", "alts": [
+    { "id": "soulabsorber", "tip": "Swap to Blitz Rush when running 113 (Arts).", "alts": [
       { "id": "blitzrush", "note": "Faster recovery from smaller mistakes, pairs with Twin Shadows or Fatal Wave below." }
     ] },
-    { "id": "voidstrike", "alts": [
+    { "id": "voidstrike", "tip": "Swap to Fatal Wave when running 113 (Arts).", "alts": [
       { "id": "twinshadows", "note": "Pairs with Blitz Rush above for the skilled-player recovery route." },
       { "id": "fatalwave", "note": "Required for 113 (Arts) or when sharing gems with 333 (Ceiling), pairs with Blitz Rush." }
     ] }

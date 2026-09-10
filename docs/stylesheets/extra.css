@@ -6931,6 +6931,14 @@ body.page-333-blitz input[type="text"] {
   padding: 0.55em 0.7em;
   cursor: pointer;
   list-style: none;
+  /* A fast double-click/tap to expand or collapse a card otherwise also
+     selects the summary row's text (name, level/subtitle, chip labels) -
+     the browser's default double-click-to-select behavior racing the
+     same click that toggles the <details>. The row is a toggle control,
+     not readable/copyable text, so selection has no legitimate use here
+     and only shows up as a distracting highlight after a quick toggle. */
+  user-select: none;
+  -webkit-user-select: none;
   /* Material's `.md-typeset .admonition-title,.md-typeset summary` rule
      sets `background-color: #448aff1a` (its default admonition blue) -
      this override only reset shape/spacing, never color, so that blue
@@ -7588,6 +7596,28 @@ body.page-333-blitz input[type="text"] {
   font-size: 0.72em;
   line-height: 1.5;
   color: var(--dbc-lilac);
+}
+/* Author-supplied freeform recommendation line (gem-priority.js's per-
+   item "tip" field, surfaced via gem-dps-tooltip.js's opts.extra - see
+   skill-tooltip.js's buildTip). Mainly for Cooldown-column gems, which
+   have no damage-share figure (.skill-tip-primary above) to justify a
+   swap the way a Damage gem's tooltip can point at - this is the
+   equivalent "here's why" callout for those, e.g. "swap to the alt
+   below when running 113". Divider-topped like .skill-tip-all-row so it
+   reads as a distinct aside under the skill's own tags/note rather than
+   more of the same text, teal to tie back to the Cooldown column's own
+   accent (.gem-col-cd) without implying it's a hard stat the way
+   .skill-tip-primary's rose does. Renders whether or not a .skill-tip-
+   primary/.skill-tip-secondary split is also present (Damage gems could
+   use this field too, in principle, alongside their damage-share line;
+   nothing here assumes Cooldown-only). */
+.skill-tip-extra {
+  margin: 0.5em 0 0;
+  padding-top: 0.4em;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.72em;
+  line-height: 1.5;
+  color: var(--dbc-teal);
 }
 /* Divider between stacked entries in an "all tiers"/"all levels" tooltip
    fallback (rune-tooltip.js's buildAllTiersTip, ark-passive-tooltip.js's
