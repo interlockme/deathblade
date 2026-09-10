@@ -165,10 +165,10 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 [
   {"id": "soulabsorber", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
   {"id": "deathsentence", "level": 14, "tripods": [2, 2, 1], "rune": {"tier": "legendary", "name": "Galewind"}},
-  {"id": "twinshadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "blue", "name": "Wealth"}},
-  {"id": "headhunt", "level": 7, "tripods": [2, 2], "rune": {"tier": "green", "name": "Wealth"}},
-  {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "blue", "name": "Wealth"}},
-  {"id": "maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "twinshadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "rare", "name": "Wealth"}},
+  {"id": "headhunt", "level": 7, "tripods": [2, 2], "rune": {"tier": "uncommon", "name": "Wealth"}},
+  {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "rare", "name": "Wealth"}},
+  {"id": "maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "rare", "name": "Wealth"}},
   {"id": "blitzrush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "epic", "name": "Wealth"}},
   {"id": "voidstrike", "level": 11, "tripods": [3, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
   {"id": "surge", "subtitle": "Identity"},
@@ -183,7 +183,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
-- Use Purify on Head Hunt if absolutely necessary.
+- Use <span class="skill-mention" data-rune-name="Purify">Purify</span> on Head Hunt if absolutely necessary.
 
 </details>
 
@@ -192,7 +192,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 - You can swap Head Hunt's tripod to Quick Prep and gain an extra gem slot.
     - Change your Head Hunt CD gem to Twin Shadows CD. Enjoy slightly easier recovery!
-    - This setup may run into mana issues, use a Focus rune on Head Hunt if necessary.
+    - This setup may run into mana issues, use a <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> rune on Head Hunt if necessary.
 
 </details>
 

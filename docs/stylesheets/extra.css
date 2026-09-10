@@ -45,7 +45,7 @@
   --dbc-sky: #7ec4e8;          /* additional damage category accent */
   --dbc-pink-bright: #ffb3cf;  /* hover/active state pink - links, tabs, chips, section tracker */
   --dbc-arrow: #cf99c7;        /* rotation-line chevron color (.arrow/.arrow-swap) */
-  --dbc-green: #66bb6a;        /* rune-chip "green" tier, tripod-chip tier 2 */
+  --dbc-green: #66bb6a;        /* rune-chip "uncommon" tier, tripod-chip tier 2 */
   --dbc-green-rgb: 102, 187, 106;
   --dbc-violet: #c77dff;       /* rune-chip "epic" tier, .skill-card border/hover glow */
   --dbc-violet-rgb: 199, 125, 255;
@@ -7019,7 +7019,10 @@ body.page-333-blitz input[type="text"] {
   visibility: hidden;
 }
 /* Rune chip — text pill instead of an icon (no rune icon set either),
-   colored by the site's four rune tiers: green < blue < epic < legendary.
+   colored by the site's four rune tiers: uncommon < rare < epic <
+   legendary (the actual Lost Ark rarity names - see rune-data.js's own
+   header comment on why this file's class suffixes match those names
+   instead of the chip's display colors).
    FIXED width (not min-width - min-width still let a wide name like
    "Galewind" grow past a short one like "Rage"'s box, so the group was
    still misaligned - this needs a hard ceiling, not just a floor) +
@@ -7048,12 +7051,12 @@ body.page-333-blitz input[type="text"] {
   white-space: nowrap;
   flex-shrink: 0;
 }
-.md-typeset .rune-chip.rune-green {
+.md-typeset .rune-chip.rune-uncommon {
   background-color: rgba(var(--dbc-green-rgb), 0.14);
   color: #81c995;
   border-color: rgba(var(--dbc-green-rgb), 0.4);
 }
-.md-typeset .rune-chip.rune-blue {
+.md-typeset .rune-chip.rune-rare {
   background-color: rgba(var(--dbc-blue-rgb), 0.14);
   color: var(--dbc-blue);
   border-color: rgba(var(--dbc-blue-rgb), 0.4);
@@ -7067,6 +7070,28 @@ body.page-333-blitz input[type="text"] {
   background-color: rgba(var(--dbc-violet-rgb), 0.16);
   color: var(--dbc-violet);
   border-color: rgba(var(--dbc-violet-rgb), 0.45);
+}
+/* rune-tooltip.js's tooltip - same "muted label line under the title"
+   idea as .ap-node-tip-level (see that rule's own comment), but tinted
+   to the rune's own tier color instead of a flat muted tone, echoing the
+   .rune-chip.rune-* colors above so the tooltip and the chip that
+   triggered it visually agree on what tier is being described. */
+.rune-tip-tier {
+  margin-top: 0.1em;
+  font-size: 0.68em;
+  font-weight: 700;
+}
+.rune-tip-tier-uncommon {
+  color: #81c995;
+}
+.rune-tip-tier-rare {
+  color: var(--dbc-blue);
+}
+.rune-tip-tier-epic {
+  color: var(--dbc-violet);
+}
+.rune-tip-tier-legendary {
+  color: var(--dbc-orange);
 }
 /* Disclosure arrow — same border-triangle technique as .ap-brace-compare,
    rotates open instead of using an image/glyph. */
@@ -7456,6 +7481,24 @@ body.page-333-blitz input[type="text"] {
   font-size: 0.72em;
   line-height: 1.5;
   color: var(--dbc-lilac);
+}
+/* Divider between stacked entries in an "all tiers"/"all levels" tooltip
+   fallback (rune-tooltip.js's buildAllTiersTip, ark-passive-tooltip.js's
+   buildAllLevelsTip) - shown when a bare prose mention names a rune/node
+   but not which tier/level ("the next best Galewind or Vision rune
+   that's available"), so the tooltip lists every real option instead of
+   guessing one. Same divider treatment as .ap-node-tip-caveat below,
+   just generalized since both tooltip types need it; first row skips the
+   divider since there's nothing above it to separate from. */
+.skill-tip-all-row {
+  margin-top: 0.5em;
+  padding-top: 0.5em;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.skill-tip-all-row:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
 }
 
 /* ---------- Ark Passive node tooltip ---------- */

@@ -34,7 +34,7 @@ Atk/Move Speed Feast
 <details class="setup-note" data-kind="example" open markdown>
 <summary><span class="setup-note-tag">alt</span>Mana Food + Maelstrom Bleed<span class="setup-note-arrow"></span></summary>
 
-- Alternatively, use ![](../assets/shared/icon-striploin.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-steak.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-azena.png){: .food-option-icon } <span class="food-option-connector food-option-connector-plus">+</span> ![](../assets/shared/icon-feast.png){: .food-option-icon } and equip Legendary Bleed rune on Maelstrom.
+- Alternatively, use ![](../assets/shared/icon-striploin.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-steak.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-azena.png){: .food-option-icon } <span class="food-option-connector food-option-connector-plus">+</span> ![](../assets/shared/icon-feast.png){: .food-option-icon } and equip <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> rune on Maelstrom.
 
 </details>
 
@@ -160,7 +160,7 @@ Pair with <span class="skill-mention" data-skill-id="curseddoll">Cursed Doll</sp
 
 <details class="engraving-card" data-accent="combo" open markdown>
 <summary>
-<span class="engraving-card-name">RC + MI 🦁 🐆 🐯</span>
+<span class="engraving-card-name"><span class="skill-mention" data-skill-id="raidcaptain">RC</span> + <span class="skill-mention" data-skill-id="massincrease">MI</span> 🦁 🐆 🐯</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-ceiling">★ Ceiling</span>
 <span class="engraving-card-badge engraving-card-badge-food">Food Advised</span>

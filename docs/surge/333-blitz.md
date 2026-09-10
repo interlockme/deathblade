@@ -198,10 +198,10 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
-- Use Legendary Purify on Spincutter if needed.
-- Use Legendary Bleed or Poison instead of Rage if you don't use RC or MI engravings.
+- Use <span class="skill-mention" data-rune-name="Purify">Purify</span> on Spincutter if needed.
+- Use Legendary <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Bleed</span> or <span class="skill-mention" data-rune-name="Poison" data-rune-tier="legendary">Poison</span> instead of <span class="skill-mention" data-rune-name="Rage" data-rune-tier="legendary">Rage</span> if you don't use <span class="skill-mention" data-skill-id="raidcaptain">RC</span> or <span class="skill-mention" data-skill-id="massincrease">MI</span> engravings.
     - Each one is about 0.75% DPS in exchange for lower or no Rage buff uptime.
-    - Give the Bleed/Poison to Maelstrom and Turning Slash if you use mana food.
+    - Give the <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Bleed</span>/<span class="skill-mention" data-rune-name="Poison" data-rune-tier="legendary">Poison</span> to Maelstrom and Turning Slash if you use mana food.
 
 </details>
 

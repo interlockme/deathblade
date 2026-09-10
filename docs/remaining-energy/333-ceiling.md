@@ -62,7 +62,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     D4D17B7F291340AAD2E9831A065E7F9870B3612FFA798E77FC1FFEE9E4D68E400597FDB2A3DCAA11D5DB53B85812DF1042A685249158B4E08BB87A614E428350
     ```
 
-    - This is ~3% weaker but more forgiving to play. Additionally, it uses Legendary Wealth on Soul Absorber instead.
+    - This is ~3% weaker but more forgiving to play. Additionally, it uses <span class="skill-mention" data-rune-name="Wealth" data-rune-tier="legendary">Legendary Wealth</span> on Soul Absorber instead.
 
 ## Ark Setup
 
@@ -222,11 +222,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 [
   {"id": "soulabsorber", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
   {"id": "twinshadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
-  {"id": "headhunt", "level": 7, "tripods": [1, 2], "rune": {"tier": "green", "name": "Wealth"}},
-  {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "blue", "name": "Wealth"}},
-  {"id": "maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "headhunt", "level": 7, "tripods": [1, 2], "rune": {"tier": "uncommon", "name": "Wealth"}},
+  {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "rare", "name": "Wealth"}},
+  {"id": "maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "rare", "name": "Wealth"}},
   {"id": "fatalwave", "level": 14, "tripods": [2, 3, 2], "rune": {"tier": "legendary", "name": "Galewind"}},
-  {"id": "blitzrush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "blitzrush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "rare", "name": "Wealth"}},
   {"id": "voidstrike", "level": 11, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
   {"id": "surge", "subtitle": "Identity"},
   {"id": "deathlyslash", "subtitle": "Technique"},
@@ -240,7 +240,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
-- Use Legendary Galewind, Focus or Purify on Head Hunt if you prefer.
+- Use <span class="skill-mention" data-rune-name="Galewind" data-rune-tier="legendary">Legendary Galewind</span>, <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> or <span class="skill-mention" data-rune-name="Purify">Purify</span> on Head Hunt if you prefer.
 
 </details>
 
@@ -258,7 +258,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="example" markdown>
 <summary><span class="setup-note-tag">Alt</span>Fatal Wealth<span class="setup-note-arrow"></span></summary>
 
-- Wealth rune on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
+- <span class="skill-mention" data-rune-name="Wealth" data-rune-tier="epic">Wealth rune</span> on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
 - It won't cycle as smoothly, but the reduced stress and urgency may suit some people.
 - Honestly, don't play this; 333 with <span class="skill-mention" data-ap-id="orbcirculation" data-level="5">OC 5</span>, 313, or literally any Surge build will perform better.
 
@@ -268,8 +268,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
   {"id": "fatalwave", "level": 14, "rune": {"tier": "epic", "name": "Wealth"}},
   {"id": "voidstrike", "level": 11, "rune": {"tier": "epic", "name": "Wealth"}},
   {"id": "soulabsorber", "level": 14, "rune": {"tier": "legendary", "name": "Wealth"}},
-  {"id": "twinshadows", "level": 14, "rune": {"tier": "blue", "name": "Wealth"}},
-  {"id": "maelstrom", "level": 10, "rune": {"tier": "green", "name": "Wealth"}}
+  {"id": "twinshadows", "level": 14, "rune": {"tier": "rare", "name": "Wealth"}},
+  {"id": "maelstrom", "level": 10, "rune": {"tier": "uncommon", "name": "Wealth"}}
 ]
 </script>
 </div>

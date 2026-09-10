@@ -53,7 +53,7 @@
 //     tripods - Array of 1-3 numbers, the picked option (1-3) in each
 //               tripod tier, left to right. Omit entirely for skills
 //               without tripods (Surge itself, Technique, Awakening).
-//     rune    - { "tier": "green"|"blue"|"epic"|"legendary", "name": "..." }
+//     rune    - { "tier": "uncommon"|"rare"|"epic"|"legendary", "name": "..." }
 //               Omit for skills that don't take a rune.
 //     picks   - OPTIONAL array of short strings appended as bullets below
 //               the shared note - use this for build-specific "why this
@@ -140,7 +140,18 @@
       }
     }
     if (entry.rune) {
-      chips.appendChild(el("span", "rune-chip rune-" + entry.rune.tier, entry.rune.name));
+      var runeChip = el("span", "rune-chip rune-" + entry.rune.tier, entry.rune.name);
+      // Stamped for rune-tooltip.js to key its DB_RUNE_EFFECTS lookup off
+      // of - same "data-id on the exact rendered element" pattern as
+      // gem-priority.js's data-id and ark-passive-tree.js's data-ap-id/
+      // data-level, rather than that file re-deriving name/tier back out
+      // of the chip's own text/class. entry.rune.name's capitalization
+      // (e.g. "Wealth") is kept as-is here for display; rune-tooltip.js
+      // lowercases it itself when keying into DB_RUNE_EFFECTS, same as
+      // every other id lookup on this site.
+      runeChip.setAttribute("data-rune-name", entry.rune.name);
+      runeChip.setAttribute("data-rune-tier", entry.rune.tier);
+      chips.appendChild(runeChip);
     }
     // Identity/Technique/Awakening cards have neither tripods nor a
     // rune, so skip appending an empty chips row for them.

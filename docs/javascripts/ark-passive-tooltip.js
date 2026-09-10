@@ -33,11 +33,17 @@
 // mentions (see that file and extra.css's "Bare prose mentions with no
 // chip/icon at all" section), just keyed by data-ap-id/data-level instead
 // of data-skill-id so the two never collide on the same span. `data-level`
-// is required here (unlike the tree widget, there's no rendered row to
-// read an invested level off of) - author it by hand to match whatever
-// level the prose is actually talking about, e.g.
+// is optional: give it to show just that level (author it by hand to
+// match whatever level the prose is actually talking about, e.g.
 // `<span class="skill-mention" data-ap-id="optimizedtraining"
-// data-level="1">Optimized Training 1</span>`.
+// data-level="1">Optimized Training 1</span>`); omit it entirely for a
+// mention with no single level in mind ("raise Illicit Spell instead of
+// Limit Break") to show every level the node has instead of guessing one -
+// see buildAllLevelsTip below. Only works for a node whose entry has a
+// `levels` list to enumerate; a perPoint node (Crit, Specialization) has
+// no discrete levels to list at all, so a bare mention of one of those
+// still renders with no tooltip - there's nothing false to show, but
+// nothing true to show either without a specific level.
 //
 // EASY EDIT GUIDE: nothing to edit here for the tree widget itself. Once a
 // node's entry.id resolves in both ap-node-names.js (display name/icon)
@@ -127,13 +133,55 @@
     return tip;
   }
 
+  // Fallback for a `.skill-mention[data-ap-id]` with no data-level - lists
+  // every level in entry.levels instead of guessing one, same reasoning
+  // as rune-tooltip.js's buildAllTiersTip (see that file's own comment):
+  // each level keeps its own real effect text rather than an auto-merged
+  // number, since some nodes change more than one number per level
+  // (Illicit Spell's Evolution-Type Damage AND MP Cost both step per
+  // level) and there's no safe generic way to tell which nodes are simple
+  // enough to squash into one line and which aren't. Only called for
+  // nodes that actually have a `levels` list (see attachNode) - a
+  // perPoint node has nothing discrete to enumerate here.
+  function buildAllLevelsTip(id, entry) {
+    var tip = el("div", "skill-tip md-typeset ap-node-tip");
+    tip.setAttribute("role", "tooltip");
+
+    var known = window.DB_AP_NODE_NAMES && window.DB_AP_NODE_NAMES[id];
+    tip.appendChild(el("div", "skill-tip-title", (known && known.name) || id));
+
+    entry.levels.forEach(function (lvl) {
+      var row = el("div", "skill-tip-all-row");
+      row.appendChild(el("div", "ap-node-tip-level", "Ark Passive Lv. " + lvl.level));
+      row.appendChild(el("p", "skill-tip-note ap-node-tip-text", lvl.text));
+      tip.appendChild(row);
+    });
+
+    if (entry.note) {
+      tip.appendChild(el("p", "skill-tip-note ap-node-tip-caveat", entry.note));
+    }
+
+    return tip;
+  }
+
   function attachNode(trigger) {
     if (trigger.classList.contains("skill-tip-wired")) return;
     var id = trigger.getAttribute("data-ap-id");
     if (!id) return;
     var entry = window.DB_AP_NODE_EFFECTS && window.DB_AP_NODE_EFFECTS[id];
     if (!entry) return;
-    window.SkillTooltip.wireCustom(trigger, buildTip(id, entry, trigger.getAttribute("data-level")));
+    var currentLevel = trigger.getAttribute("data-level");
+    // Only a genuinely leveled node (entry.levels) with no level given at
+    // all gets the all-levels fallback - a flat-text node (Master,
+    // Pulverize, Critical) or a perPoint node (Crit, Specialization) has
+    // no data-level on the real tree widget either (see ark-passive-
+    // tree.js's own note on that), so it must keep falling through to the
+    // normal buildTip below exactly as before, not get diverted here.
+    if (currentLevel == null && entry.levels && entry.levels.length) {
+      window.SkillTooltip.wireCustom(trigger, buildAllLevelsTip(id, entry));
+      return;
+    }
+    window.SkillTooltip.wireCustom(trigger, buildTip(id, entry, currentLevel));
   }
 
   window.SiteUtils.registerRenderer(".ark-passive-node[data-ap-id], .skill-mention[data-ap-id]", attachNode);

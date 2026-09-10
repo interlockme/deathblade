@@ -193,12 +193,12 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <script type="application/json">
 [
   {"id": "soulabsorber", "level": 14, "tripods": [3, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
-  {"id": "twinshadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "twinshadows", "level": 14, "tripods": [2, 1, 2], "rune": {"tier": "rare", "name": "Wealth"}},
   {"id": "headhunt", "level": 7, "tripods": [1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
-  {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "blue", "name": "Wealth"}},
-  {"id": "maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "green", "name": "Wealth"}},
+  {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "rare", "name": "Wealth"}},
+  {"id": "maelstrom", "level": 10, "tripods": [2, 1, 2], "rune": {"tier": "uncommon", "name": "Wealth"}},
   {"id": "fatalwave", "level": 14, "tripods": [1, 3, 2], "rune": {"tier": "legendary", "name": "Wealth"}},
-  {"id": "blitzrush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "blue", "name": "Wealth"}},
+  {"id": "blitzrush", "level": 14, "tripods": [2, 1, 1], "rune": {"tier": "rare", "name": "Wealth"}},
   {"id": "voidstrike", "level": 11, "tripods": [3, 1, 2], "rune": {"tier": "epic", "name": "Wealth"}},
   {"id": "surge", "subtitle": "Identity"},
   {"id": "deathlyslash", "subtitle": "Technique"},
@@ -212,8 +212,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
-- Use Legendary Galewind, Purify or green Wealth on Head Hunt if you have no mana issues.
-- Legendary Focus on Maelstrom can solve major mana issues at a minor loss of orb generation.
+- Use <span class="skill-mention" data-rune-name="Galewind" data-rune-tier="legendary">Legendary Galewind</span>, <span class="skill-mention" data-rune-name="Purify">Purify</span> or <span class="skill-mention" data-rune-name="Wealth" data-rune-tier="uncommon">Uncommon Wealth</span> on Head Hunt if you have no mana issues.
+- <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Legendary Focus</span> on Maelstrom can solve major mana issues at a minor loss of orb generation.
 
 </details>
 

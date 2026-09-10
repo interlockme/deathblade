@@ -150,7 +150,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Tip</span>Ark Passive<span class="setup-note-arrow"></span></summary>
 
 - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes.
-- In some cases (low Specialization, +CD% bracelet) Release Potential 4 + Instant Spell 2 may be preferred.
+- In some cases (low Specialization, +CD% bracelet) <span class="skill-mention" data-ap-id="releasepotential" data-level="4">Release Potential 4</span> + <span class="skill-mention" data-ap-id="instantspell" data-level="2">Instant Spell 2</span> may be preferred.
     - This setting increases mana costs, may require the use of mana food instead of wine.
 
 </details>
@@ -199,8 +199,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
-- Use Legendary Purify on Spincutter if needed.
-- Use Legendary Bleed on Maelstrom if you use mana food instead of wine.
+- Use <span class="skill-mention" data-rune-name="Purify">Purify</span> on Spincutter if needed.
+- Use <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> on Maelstrom if you use mana food instead of wine.
 
 </details>
 
@@ -311,7 +311,7 @@ Alternate main cycle meant to try-hard <span class="skill-mention" data-skill-id
 
 1. Just recast Maelstrom as it expires, but some optimal cast spots are suggested.
 2. Use your judgment. Not every skill needs the Maelstrom buff, so prioritize Surge.
-3. Consider skipping Maelstrom to conserve a stack if you received a Rage buff.
+3. Consider skipping Maelstrom to conserve a stack if you received a <span class="skill-mention" data-rune-name="Rage">Rage</span> buff.
 </details>
 
 </div>

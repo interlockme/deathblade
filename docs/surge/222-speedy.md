@@ -189,12 +189,12 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
-- Use Legendary Purify on Head Hunt if needed.
-- Use Legendary Bleed on Maelstrom if you don't experience mana issues.
+- Use <span class="skill-mention" data-rune-name="Purify">Purify</span> on Head Hunt if needed.
+- Use <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> on Maelstrom if you don't experience mana issues.
     - Bleed is about 0.75% DPS in exchange for playing skillfully or using mana food.
-- Use Legendary Vision on Surprise Attack if you don't use RC or MI engravings.
+- Use <span class="skill-mention" data-rune-name="Vision" data-rune-tier="legendary">Legendary Vision</span> on Surprise Attack if you don't use <span class="skill-mention" data-skill-id="raidcaptain">RC</span> or <span class="skill-mention" data-skill-id="massincrease">MI</span> engravings.
     - Increases chance of getting an extra stack on Surprise Attack precast.
-    - Give Head Hunt the next best Galewind or Vision rune that's available.
+    - Give Head Hunt the next best <span class="skill-mention" data-rune-name="Galewind">Galewind</span> or <span class="skill-mention" data-rune-name="Vision">Vision</span> rune that's available.
 
 </details>
 

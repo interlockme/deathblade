@@ -47,10 +47,10 @@ Atk/Move Speed Feast
 
 | Where | Change |
 |---|---|
-| Evolution Ark | Raise Illicit Spell instead of Limit Break (unimportant content only) |
-| Leap Ark | Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 ★ |
-| Head Hunt | Magick Control tripod, Focus rune, or set to Lv 1 (Fatal Wave only)|
-| Maelstrom | Focus rune (easier builds with excess orb generation only) |
+| Evolution Ark | Raise <span class="skill-mention" data-ap-id="illicitspell">Illicit Spell</span> instead of <span class="skill-mention" data-ap-id="limitbreakevo">Limit Break</span> (unimportant content only) |
+| Leap Ark | <span class="skill-mention" data-ap-id="releasepotential" data-level="3">Release Potential 3</span> / <span class="skill-mention" data-ap-id="instantspell" data-level="3">Instant Spell 3</span> / <span class="skill-mention" data-ap-id="awakeningamplifier" data-level="1">Awakening Amplifier 1</span> ★ |
+| Head Hunt | Magick Control tripod, <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus rune</span>, or set to Lv 1 (Fatal Wave only)|
+| Maelstrom | <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Legendary Focus</span> rune (easier builds with excess orb generation only) |
 
 </div>
 

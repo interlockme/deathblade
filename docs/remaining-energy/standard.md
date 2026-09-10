@@ -198,7 +198,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
-- Use Epic Wealth on Soul Absorber for extra orb generation until you're more familiar with the class.
+- Use <span class="skill-mention" data-rune-name="Wealth" data-rune-tier="epic">Epic Wealth</span> on Soul Absorber for extra orb generation until you're more familiar with the class.
 
 </details>
 
