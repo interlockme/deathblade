@@ -16,7 +16,7 @@
 **Tradeoff:**{: .tradeoff } Slightly lower orb generation and a less forgiving rotation.
 
 - Uses Fatal Wave as two fast casts (FTF combo) via a skill reset.
-- Head Hunt is always free for counters, recovery, purify, or Adrenaline upkeep.
+- Head Hunt is always free for counters, recovery, purify, or <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> upkeep.
 - High gem efficiency, Fatal Wave and Deathly Slash are most of your DPS.
 - Susceptible to high ping or low FPS, but you can compensate with a few changes.
 
@@ -144,7 +144,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Tip</span>Ark Passive<span class="setup-note-arrow"></span></summary>
 
 - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes.
-- Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a very minor DPS loss.
+- <span class="skill-mention" data-ap-id="releasepotential" data-level="3">Release Potential 3</span> / <span class="skill-mention" data-ap-id="instantspell" data-level="3">Instant Spell 3</span> / <span class="skill-mention" data-ap-id="awakeningamplifier" data-level="1">Awakening Amplifier 1</span> can solve mana issues at a very minor DPS loss.
     - Not as comfortable with +CD% bracelet line and/or low Specialization.
 
 </details>
@@ -157,7 +157,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 </details>
 
 <details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alt</span>Orb Circulation 5<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Alt</span><span class="skill-mention" data-ap-id="orbcirculation" data-level="5">Orb Circulation 5</span><span class="setup-note-arrow"></span></summary>
 
 - Makes this build more forgiving at a ~3% DPS loss by increasing passive orb generation.
 
@@ -260,7 +260,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 - Wealth rune on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
 - It won't cycle as smoothly, but the reduced stress and urgency may suit some people.
-- Honestly, don't play this; 333 with OC 5, 313, or literally any Surge build will perform better.
+- Honestly, don't play this; 333 with <span class="skill-mention" data-ap-id="orbcirculation" data-level="5">OC 5</span>, 313, or literally any Surge build will perform better.
 
 <div class="skill-setup" data-family="re" markdown>
 <script type="application/json">
@@ -384,7 +384,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 === "Openers"
 
-    Openers stack Adrenaline and apply synergies efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
+    Openers stack <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and apply synergies efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
 
     *From 3 orbs (<span class="skill-inline">![](../assets/shared/icon-stimulant.png)<span class="skill-inline-name">Stimulant</span></span>):*
     { .lead }

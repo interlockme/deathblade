@@ -683,20 +683,35 @@ h3 { color: var(--dbc-teal); }
    data-skill-id="spiritabsorption">Spirit Absorption</span>` - no icon
    needed, wired by skill-tooltip.js's attachSkillInline same as
    .engraving-chip/.engraving-card-name (its data-skill-id branch reads
-   this directly, see that file). Only .skill-tip-anchor spans (i.e. ones
+   this directly, see that file). Also reused as-is for bare prose
+   mentions of an Ark Passive node (e.g. "Optimized Training 1 helps at
+   low investment") via a data-ap-id/data-level pair instead of
+   data-skill-id - wired by ark-passive-tooltip.js, see that file's own
+   header comment. Same class, same visual treatment, two independent
+   data-attribute lookups so the two never collide on one span. Only
+   .skill-tip-anchor spans (i.e. ones
    that actually resolved to DB_SKILL_EXTRAS data) get any visual change
    at all - a miss renders as completely plain text, same "fail quietly"
-   rule as everywhere else. Same instinct as .skill-inline-name's own
-   hover rule above (color shift only, no underline - tried, read as too
-   busy for a couple of words sitting mid-sentence); cursor: help comes
-   free from the shared .skill-tip-anchor rule below. */
-.md-typeset .skill-mention.skill-tip-anchor {
-  color: var(--dbc-lavender);
-  font-weight: 600;
-}
+   rule as everywhere else.
+
+   Deliberately NO color/weight change at rest - these sit inline in
+   normal sentences all over every build page now (engravings AND Ark
+   Passive node mentions share this one class), and a permanently
+   lavender/bold word for every one of them read as too much emphasis at
+   that volume - easy to mistake for a link or a deliberately highlighted
+   term rather than an incidental mention. Left as completely plain text
+   until interacted with; cursor: help (from the shared .skill-tip-anchor
+   rule below) is the only always-on cue that something's there. On
+   hover/focus only, a faint dotted underline in a muted, low-contrast
+   tone - same "found it" moment as the cursor already gives, just a
+   second confirmation once the mouse is actually on the word instead of
+   only in the cursor icon. No color shift on the text itself even then,
+   for the same over-emphasis reason as above. */
 .md-typeset .skill-mention.skill-tip-anchor:hover,
 .md-typeset .skill-mention.skill-tip-anchor:focus-visible {
-  color: var(--dbc-purple);
+  text-decoration: underline dotted;
+  text-decoration-color: rgba(var(--dbc-lavender-rgb), 0.55);
+  text-underline-offset: 3px;
 }
 
 /* ---------- Skill role tags (Essentials skill tables) ---------- */

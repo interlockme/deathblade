@@ -64,7 +64,7 @@ Atk/Move Speed Feast
 - Always press the next skill during your current skill's animation (skill queuing).
 - If unsure, select <span class="skill-mention" data-skill-id="grudge">Grudge</span> and <span class="skill-mention" data-skill-id="ambushmaster">Ambush Master</span> as your Ability Stone engravings.
 - Trixion practice requires equipping maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> and <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.
-- Optimized Training 1 may help smooth things out at lower gem levels.
+- <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training 1</span> may help smooth things out at lower gem levels.
 
 </details>
 
@@ -165,7 +165,7 @@ Atk/Move Speed Feast
 <span class="stat-label">Breakpoint</span><span class="stat-value">1818+</span><span class="food-req">No downtime on [333 (Ceiling)](333-ceiling.md)</span>
 </div>
 <div class="stat" data-kind="warn" markdown="span">
-<span class="stat-label">Raises CD leap/gem Requirements</span><span class="stat-value">+CD% bracelet</span><span class="food-req">RP 4 needed for Fatal Wave builds</span>
+<span class="stat-label">Raises CD leap/gem Requirements</span><span class="stat-value">+CD% bracelet</span><span class="food-req"><span class="skill-mention" data-ap-id="releasepotential" data-level="4">RP 4</span> needed for Fatal Wave builds</span>
 </div>
 </div>
 
@@ -179,7 +179,7 @@ Lower values are fine, but may experience some downtime.
 - Aim for your build's Surge CPM goal in Trixion to check for issues:
     - For [111 (Head Hunt)](111-head-hunt.md) and [313 (High Floor)](313-high-floor.md), try to approach 16 Surge CPM.
     - For [333 (Ceiling)](333-ceiling.md), try to approach 14.5 Surge CPM (15 after Balance Patch).
-    - Use the [DPS Meter](https://github.com/snoww/loa-logs) and equip maxed Spirit Absorption/Max MP engravings!
+    - Use the [DPS Meter](https://github.com/snoww/loa-logs) and equip maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span>/<span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings!
 
 </details>
 

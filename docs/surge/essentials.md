@@ -46,7 +46,7 @@ Atk/Move Speed Feast
 - Always press the next skill during your current skill's animation (skill queuing).
 - If unsure, select <span class="skill-mention" data-skill-id="grudge">Grudge</span> and <span class="skill-mention" data-skill-id="ambushmaster">Ambush Master</span> as your Ability Stone engravings.
 - Trixion practice requires equipping maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> and <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.
-- Optimized Training 1 may help smooth things out at lower gem levels.
+- <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training 1</span> may help smooth things out at lower gem levels.
 
 </details>
 

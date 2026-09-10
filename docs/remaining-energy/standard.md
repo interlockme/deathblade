@@ -241,7 +241,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 Cast Spincutter to approach the boss, use the opener and continue to loop the main cycle afterwards.
 
-The opener stacks Adrenaline and applies synergies efficiently as you build up to the encounter's first Surge.
+The opener stacks <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and applies synergies efficiently as you build up to the encounter's first Surge.
 
 *Opener from zero orbs:*
 { .lead }

@@ -267,7 +267,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 === "Openers"
 
-    Openers stack Adrenaline and apply synergies efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
+    Openers stack <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and apply synergies efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
 
     *From 3 orbs (<span class="skill-inline">![](../assets/shared/icon-stimulant.png)<span class="skill-inline-name">Stimulant</span></span>):*
     { .lead }

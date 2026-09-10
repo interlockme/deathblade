@@ -140,8 +140,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Tip</span>Ark Passive<span class="setup-note-arrow"></span></summary>
 
 - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes.
-- Chaos Infusion 1 + Orb Control 1 can be used if your Surge dps share is consistently over 50%.
-- This build is capable of using Raid Captain + Mass Increase with the least drawbacks.
+- <span class="skill-mention" data-ap-id="chaosinfusion" data-level="1">Chaos Infusion 1</span> + <span class="skill-mention" data-ap-id="orbcontrol" data-level="1">Orb Control 1</span> can be used if your Surge dps share is consistently over 50%.
+- This build is capable of using <span class="skill-mention" data-skill-id="raidcaptain">Raid Captain</span> + <span class="skill-mention" data-skill-id="massincrease">Mass Increase</span> with the least drawbacks.
 
 </details>
 
@@ -258,7 +258,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Note</span>Gem Requirements<span class="setup-note-arrow"></span></summary>
 
 - To reach its ceiling, this build requires higher level cooldown gems than the others.
-    - Mass Increase and/or Optimized Training 1 help smooth things out at low investment levels.
+    - <span class="skill-mention" data-skill-id="massincrease">Mass Increase</span> and/or <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training 1</span> help smooth things out at low investment levels.
     - +CD% bracelet increases gem level requirements by 1, low Specialization is not recommended.
     - Once Blade Dance and Maelstrom CD are at Lv 9, Wind Cut CD priority increases significantly.
 
@@ -337,7 +337,7 @@ It helps to think of everything within <span class="skill-inline">![](../assets/
 </div>
 
 1. Depending on attack speed/latency, your Wind Cut precast may grant 7 stacks instead of 8.
-2. With lower Attack Speed (Mass Increase), Deathly Slash may grant 12 stacks instead of 11.
+2. With lower Attack Speed (<span class="skill-mention" data-skill-id="massincrease">Mass Increase</span>), Deathly Slash may grant 12 stacks instead of 11.
 3. It's better to cast a ~59 stack Surge if the alternative is waiting more than 1.5 seconds.
 4. Delaying Deathly Slash + Surge by more than 1.75 seconds to ensure a back attack is a DPS loss.
 5. Delaying *only* Surge by more than 1 second to ensure a back attack is also a DPS loss.

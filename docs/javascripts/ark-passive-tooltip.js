@@ -26,14 +26,29 @@
 // happen - see ap-node-effects.js's shape comment) falls back to the
 // highest level at or below it, then to the entry's own max level.
 //
-// EASY EDIT GUIDE: there is nothing to edit here or per-page. Once a
+// Also attaches to bare prose mentions of a node outside the tree widget
+// entirely (e.g. a Quick Tips line like "Optimized Training 1 helps at
+// low investment") via `.skill-mention[data-ap-id]` - same markup/CSS as
+// skill-tooltip.js's own `.skill-mention[data-skill-id]` bare-prose
+// mentions (see that file and extra.css's "Bare prose mentions with no
+// chip/icon at all" section), just keyed by data-ap-id/data-level instead
+// of data-skill-id so the two never collide on the same span. `data-level`
+// is required here (unlike the tree widget, there's no rendered row to
+// read an invested level off of) - author it by hand to match whatever
+// level the prose is actually talking about, e.g.
+// `<span class="skill-mention" data-ap-id="optimizedtraining"
+// data-level="1">Optimized Training 1</span>`.
+//
+// EASY EDIT GUIDE: nothing to edit here for the tree widget itself. Once a
 // node's entry.id resolves in both ap-node-names.js (display name/icon)
 // AND ap-node-effects.js (effect text), ark-passive-tree.js already
 // stamps that id (plus the node's own invested level) onto the rendered
 // row as data-ap-id/data-level - this file just finds those and wires a
 // tooltip on top. A node with no DB_AP_NODE_EFFECTS entry (data-ap-id
-// present but lookup misses) is left as a plain node with no tooltip,
-// same "fail quietly" rule as every other widget here.
+// present but lookup misses) is left as a plain node/mention with no
+// tooltip, same "fail quietly" rule as every other widget here. For a new
+// bare prose mention, just add the `.skill-mention[data-ap-id]` span by
+// hand as shown above - no JS changes needed.
 //
 // Must load after ap-node-names.js, ap-node-effects.js, ark-passive-
 // tree.js (needs its rendered data-ap-id rows), and skill-tooltip.js
@@ -121,6 +136,6 @@
     window.SkillTooltip.wireCustom(trigger, buildTip(id, entry, trigger.getAttribute("data-level")));
   }
 
-  window.SiteUtils.registerRenderer(".ark-passive-node[data-ap-id]", attachNode);
+  window.SiteUtils.registerRenderer(".ark-passive-node[data-ap-id], .skill-mention[data-ap-id]", attachNode);
 })();
 

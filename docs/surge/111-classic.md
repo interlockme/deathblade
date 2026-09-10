@@ -66,7 +66,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     ```
 
     - Adds Earth Cleaver CD and uses Blade Dance's Quick Prep tripod to accommodate a lack of Ark Grid.
-    - If you're a beginner, swap Raid Captain for Cursed Doll until you're more experienced with the class.
+    - If you're a beginner, swap <span class="skill-mention" data-skill-id="raidcaptain">Raid Captain</span> for <span class="skill-mention" data-skill-id="curseddoll">Cursed Doll</span> until you're more experienced with the class.
 
 ## Ark Setup
 
@@ -290,7 +290,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 </div>
 
 1. The final Surprise Attack can often be skipped with surplus stacks and expected raid downtime.
-2. Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge (Raid Captain).
+2. Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge (<span class="skill-mention" data-skill-id="raidcaptain">Raid Captain</span>).
 
 <div class="setup-panel" data-accent="lavender" markdown>
 <div class="setup-notes" markdown>
@@ -298,7 +298,7 @@ Use the Breaking Moon cycle whenever it's available, then repeat the main cycle 
 <details class="setup-note" data-kind="example" markdown>
 <summary><span class="setup-note-tag">Alt</span>Lion Mode (Optional)<span class="setup-note-arrow"></span></summary>
 
-Alternate main cycle meant to try-hard Raid Captain and Mass Increase efficiency in raids:
+Alternate main cycle meant to try-hard <span class="skill-mention" data-skill-id="raidcaptain">Raid Captain</span> and <span class="skill-mention" data-skill-id="massincrease">Mass Increase</span> efficiency in raids:
 
 <div class="cycle-card" markdown>
 <div class="cycle-card-header"><span class="cycle-num cycle-num-2">2</span><span class="cycle-title">Main Repeating Cycle</span></div>

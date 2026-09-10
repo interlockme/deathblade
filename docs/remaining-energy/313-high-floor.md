@@ -15,7 +15,7 @@
 
 **Tradeoff:**{: .tradeoff } Lower damage ceiling, but easier to recover from mistakes.
 
-- Head Hunt is always free for counters, recovery, purify, or Adrenaline upkeep.
+- Head Hunt is always free for counters, recovery, purify, or <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> upkeep.
 - Accessible from a 14p Star core as 113 (Arts), a transitional core-limited option.
 - Move on to [333 (Ceiling)](333-ceiling.md) when you're ready, or stay here if you prefer!
 
@@ -61,7 +61,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     E3818904D40CEFE43FC30B0715D4EF6850C4E0C2183E48110767499D73BEC3831EBB750B31176844599B47B861C731968F30681780A45447FAD8F209D8D99517
     ```
 
-    - Requires either a Lv 9+ Fatal Wave CD gem or Optimized Training 1.
+    - Requires either a Lv 9+ Fatal Wave CD gem or <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training 1</span>.
     - It's preferable to invest a little more and unlock 313 or 333 properly.
 
 ## Ark Setup
@@ -144,7 +144,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Tip</span>Ark Passive<span class="setup-note-arrow"></span></summary>
 
 - Use the [Ark Passive Calculator](../resources.md#ark-passive-calculator) to optimize Evolution nodes.
-- Release Potential 3 / Instant Spell 3 / Awakening Amplifier 1 can solve mana issues at a minor DPS loss.
+- <span class="skill-mention" data-ap-id="releasepotential" data-level="3">Release Potential 3</span> / <span class="skill-mention" data-ap-id="instantspell" data-level="3">Instant Spell 3</span> / <span class="skill-mention" data-ap-id="awakeningamplifier" data-level="1">Awakening Amplifier 1</span> can solve mana issues at a minor DPS loss.
     - Not as comfortable with +CD% bracelet line and/or low Specialization.
 
 </details>
@@ -170,7 +170,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 </div>
 
 - Same as 313 but **without** the Fatal Wave reset.
-- Requires Lv 9+ Fatal Wave CD gem or Optimized Training Lv 1.
+- Requires Lv 9+ Fatal Wave CD gem or <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training Lv 1</span>.
     - Avoid +CD% bracelet line for this core-limited variant.
     - Check gem section to see which gems to replace from 313.
 
@@ -314,7 +314,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 === "Openers"
 
-    Openers stack Adrenaline and apply synergies efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
+    Openers stack <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and apply synergies efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
 
     *From 3 orbs (<span class="skill-inline">![](../assets/shared/icon-stimulant.png)<span class="skill-inline-name">Stimulant</span></span>):*
     { .lead }
@@ -335,7 +335,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     { .lead }
 
     1. Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
-    2. Prioritize Turning Slash earlier for synergy and Deathly Slash last for Adrenaline/RE buff.
+    2. Prioritize Turning Slash earlier for synergy and Deathly Slash last for <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span>/RE buff.
 
 === "Recovery"
 
