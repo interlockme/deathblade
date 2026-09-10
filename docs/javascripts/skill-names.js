@@ -63,5 +63,18 @@
     feast: "Atk/Move Speed Feast",
     vernesewine: "Vernese Wine",
     ealynsblessing: "Ealyn's Blessing",
+
+    // Also not skills (engravings - same DB_SKILL_EXTRAS pattern again),
+    // shown by name wherever an .engraving-chip/.engraving-card-name or a
+    // bare .skill-mention prose reference resolves one of these by id.
+    grudge: "Grudge",
+    ambushmaster: "Ambush Master",
+    raidcaptain: "Raid Captain",
+    adrenaline: "Adrenaline",
+    keenbluntweapon: "Keen Blunt Weapon",
+    curseddoll: "Cursed Doll",
+    massincrease: "Mass Increase",
+    maxmp: "Max MP Increase",
+    spiritabsorption: "Spirit Absorption",
   };
 })();

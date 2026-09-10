@@ -23,6 +23,15 @@
 //     skill reference for prose" section) - id is read off the span's
 //     single <img> icon-<id>.png filename, since those spans are static
 //     markdown and don't otherwise carry one.
+//   - .engraving-chip / .engraving-card-name spans (essentials.md's
+//     Engravings section) and .skill-mention spans (bare prose mentions
+//     with no chip/pill around them at all, e.g. "equip maxed Spirit
+//     Absorption and Max MP engravings") - none of these have an icon to
+//     read an id off of (a chip/heading/prose word has no image slot), so
+//     each carries an explicit data-skill-id instead. Reuses
+//     attachSkillInline itself (its data-skill-id branch, see below) - not
+//     a separate function - since once an id is known the lookup/build/
+//     wire steps are identical either way.
 //   - .food-option pills (essentials.md's Food Requirement panel) - same
 //     icon-filename id lookup as .skill-inline, the pill div itself is
 //     the trigger. See attachFoodOption.
@@ -340,6 +349,17 @@
   function attachBareIcon(trigger) {
     if (trigger.classList.contains("skill-tip-wired")) return;
     if (trigger.closest(".food-option")) return;
+    // Same skip as .food-option just above, for the same reason: RE's
+    // Raid Captain chip (.engraving-chip-food) wraps its feast icon
+    // INSIDE the chip that's already wired as its own trigger
+    // (.engraving-chip[data-skill-id="raidcaptain"], via attachSkillInline).
+    // Without this, the icon became a second, independent, nested
+    // trigger - hovering it fired its own mouseenter, which calls
+    // closeAllExcept and immediately closes the chip's just-opened Raid
+    // Captain tooltip in favor of the icon's Feast one, so the outer
+    // chip's tooltip was only reachable by landing on the small sliver of
+    // chip NOT covered by the icon, never by hovering the icon itself.
+    if (trigger.closest(".engraving-chip[data-skill-id]")) return;
     var match = ICON_ID_RE.exec(trigger.getAttribute("src") || "");
     if (!match) return;
     var id = match[1];
@@ -399,7 +419,7 @@
   });
 
   window.SiteUtils.registerRenderer(".rotation-line .skill[data-skill-id]", attachRotationSkill);
-  window.SiteUtils.registerRenderer(".skill-inline", attachSkillInline);
+  window.SiteUtils.registerRenderer(".skill-inline, .engraving-chip[data-skill-id], .engraving-card-name[data-skill-id], .skill-mention[data-skill-id]", attachSkillInline);
   window.SiteUtils.registerRenderer(".food-option", attachFoodOption);
   window.SiteUtils.registerRenderer(".food-option-icon, img.skill-icon", attachBareIcon);
 

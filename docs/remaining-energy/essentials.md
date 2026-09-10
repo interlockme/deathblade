@@ -62,8 +62,8 @@ Atk/Move Speed Feast
 - All Deathblade builds run a pet with the Specialization stat bonus.
 - Optimize Ark Passive nodes or compare bracelets/equipment [here!](../resources.md#ark-passive-calculator)
 - Always press the next skill during your current skill's animation (skill queuing).
-- If unsure, select Grudge and Ambush Master as your Ability Stone engravings.
-- Trixion practice requires equipping maxed Spirit Absorption and Max MP engravings.
+- If unsure, select <span class="skill-mention" data-skill-id="grudge">Grudge</span> and <span class="skill-mention" data-skill-id="ambushmaster">Ambush Master</span> as your Ability Stone engravings.
+- Trixion practice requires equipping maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> and <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.
 - Optimized Training 1 may help smooth things out at lower gem levels.
 
 </details>
@@ -99,10 +99,10 @@ Atk/Move Speed Feast
 <div class="engraving-loadout" markdown>
 <div class="engraving-loadout-group" markdown>
 <span class="engraving-loadout-label">Always Equip</span>
-<span class="engraving-chip">Grudge</span>
-<span class="engraving-chip">Adrenaline</span>
-<span class="engraving-chip">Ambush Master</span>
-<span class="engraving-chip engraving-chip-food">![](../assets/shared/icon-feast.png){: .skill-icon } Raid Captain</span>
+<span class="engraving-chip" data-skill-id="grudge">Grudge</span>
+<span class="engraving-chip" data-skill-id="adrenaline">Adrenaline</span>
+<span class="engraving-chip" data-skill-id="ambushmaster">Ambush Master</span>
+<span class="engraving-chip engraving-chip-food" data-skill-id="raidcaptain">![](../assets/shared/icon-feast.png){: .skill-icon } Raid Captain</span>
 </div>
 <div class="engraving-loadout-group" markdown>
 <span class="engraving-loadout-label">Choose 1</span>
@@ -114,7 +114,7 @@ Atk/Move Speed Feast
 
 <details class="engraving-card" data-accent="kbw" open markdown>
 <summary>
-<span class="engraving-card-name">Keen Blunt Weapon</span>
+<span class="engraving-card-name" data-skill-id="keenbluntweapon">Keen Blunt Weapon</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-top">★ Recommended</span>
 <span class="engraving-card-badge engraving-card-badge-safe">Safe Pick</span>
@@ -123,16 +123,16 @@ Atk/Move Speed Feast
 </summary>
 <div class="engraving-card-body" markdown>
 
-**Pros:**{: .best-for } Stronger than Cursed Doll by ~1% late game.
+**Pros:**{: .best-for } Stronger than <span class="skill-mention" data-skill-id="curseddoll">Cursed Doll</span> by ~1% late game.
 
-**Cons:**{: .tradeoff } Scales with Adrenaline relic books.
+**Cons:**{: .tradeoff } Scales with <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> relic books.
 
 </div>
 </details>
 
 <details class="engraving-card" data-accent="cursed" open markdown>
 <summary>
-<span class="engraving-card-name">Cursed Doll</span>
+<span class="engraving-card-name" data-skill-id="curseddoll">Cursed Doll</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-safe">Alternative</span>
 </span>

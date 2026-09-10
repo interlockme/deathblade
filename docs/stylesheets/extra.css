@@ -674,6 +674,31 @@ h3 { color: var(--dbc-teal); }
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.3);
 }
 
+/* ---------- Bare prose mentions with no chip/icon at all ---------- */
+/* A step below .skill-inline: that one at least gets an icon + bold name
+   span to hang a trigger off; a .skill-mention is a plain word or two
+   sitting in a normal sentence with nothing else marking it as special
+   (e.g. Quick Tips' "equip maxed Spirit Absorption and Max MP
+   engravings"). Markup is just `<span class="skill-mention"
+   data-skill-id="spiritabsorption">Spirit Absorption</span>` - no icon
+   needed, wired by skill-tooltip.js's attachSkillInline same as
+   .engraving-chip/.engraving-card-name (its data-skill-id branch reads
+   this directly, see that file). Only .skill-tip-anchor spans (i.e. ones
+   that actually resolved to DB_SKILL_EXTRAS data) get any visual change
+   at all - a miss renders as completely plain text, same "fail quietly"
+   rule as everywhere else. Same instinct as .skill-inline-name's own
+   hover rule above (color shift only, no underline - tried, read as too
+   busy for a couple of words sitting mid-sentence); cursor: help comes
+   free from the shared .skill-tip-anchor rule below. */
+.md-typeset .skill-mention.skill-tip-anchor {
+  color: var(--dbc-lavender);
+  font-weight: 600;
+}
+.md-typeset .skill-mention.skill-tip-anchor:hover,
+.md-typeset .skill-mention.skill-tip-anchor:focus-visible {
+  color: var(--dbc-purple);
+}
+
 /* ---------- Skill role tags (Essentials skill tables) ---------- */
 /* Small badges classifying what a skill does at a glance.
    Usage: <span class="tag tag-util">SYNERGY</span>
@@ -2365,6 +2390,27 @@ h3 { color: var(--dbc-teal); }
   color: var(--md-default-fg-color);
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: border-color 0.15s ease;
+}
+/* Only a chip skill-tooltip.js actually wired (.skill-tip-anchor, added
+   by wire() once an id resolved to DB_SKILL_EXTRAS data) gets a hover/
+   focus cue - same "don't visually promise a tooltip a chip doesn't
+   have" rule as .skill-inline-name/.skill-mention above. Border-brighten
+   rather than a color shift (unlike those two): a chip already carries
+   its own border/background language, so brightening that border reads
+   as "this pill is interactive" the same way .rotation-line .skill:hover
+   and .engraving-card:hover already do elsewhere on this page - a text
+   color change alone would be easy to miss against the pill's fill.
+   .engraving-chip-food gets its own rose-family version right after
+   (same specificity, later in the cascade wins) so Raid Captain's chip
+   brightens its OWN accent instead of jumping to purple. */
+.md-typeset .engraving-chip.skill-tip-anchor:hover,
+.md-typeset .engraving-chip.skill-tip-anchor:focus-visible {
+  border-color: rgba(var(--dbc-purple-rgb), 0.6);
+}
+.md-typeset .engraving-chip-food.skill-tip-anchor:hover,
+.md-typeset .engraving-chip-food.skill-tip-anchor:focus-visible {
+  border-color: rgba(var(--dbc-rose-rgb), 0.7);
 }
 /* A fixed engraving can still carry a hard food requirement (e.g. Raid
    Captain on the RE page, where it's always equipped but pointless without
@@ -2518,6 +2564,18 @@ h3 { color: var(--dbc-teal); }
 .md-typeset details.engraving-card summary::after {
   display: none !important;
 }
+/* summary's own pointer-events: none (above) is inherited by every
+   descendant, including .engraving-card-name - that's what silently
+   killed its skill-tooltip.js hover/focus/tap trigger entirely (the
+   element was still wired in JS, it just never received the mouseenter/
+   focusin/click events needed to fire). Only the name needs it restored:
+   it's the one span in here that skill-tooltip.js actually wires
+   (.engraving-card-name[data-skill-id], see that file's
+   registerRenderer call) - badges/arrow stay non-interactive so the
+   card-collapse-disabling trick above isn't undone anywhere else. */
+.md-typeset .engraving-card-name {
+  pointer-events: auto;
+}
 .md-typeset .engraving-cards details.engraving-card:focus-within {
   box-shadow: none;
 }
@@ -2527,6 +2585,15 @@ h3 { color: var(--dbc-teal); }
   font-size: 1em;
   color: var(--md-default-fg-color);
   margin-right: auto;
+  transition: color 0.15s ease;
+}
+/* Same "only a wired anchor gets the cue" rule as .engraving-chip above -
+   color shift here instead of a border-brighten since a card-name is
+   plain text with no pill/fill of its own to brighten (matches
+   .skill-inline-name/.skill-mention's own hover treatment further up). */
+.md-typeset .engraving-card-name.skill-tip-anchor:hover,
+.md-typeset .engraving-card-name.skill-tip-anchor:focus-visible {
+  color: var(--dbc-purple);
 }
 .md-typeset .engraving-card-badges {
   display: flex;

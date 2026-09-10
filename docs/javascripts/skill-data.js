@@ -174,6 +174,38 @@
   // the same way every other lookup on this file does. Update the text
   // here and every surface picks it up; there's no other copy left to
   // remember to update.
+  //
+  // Engraving entries (grudge/ambushmaster/raidcaptain/adrenaline/
+  // keenbluntweapon/curseddoll/massincrease/maxmp/spiritabsorption) below
+  // are the same idea for the Engravings section's .engraving-chip/
+  // .engraving-card-name mentions and the bare-prose .skill-mention
+  // mentions elsewhere (Quick Tips, engraving card body text) - none of
+  // those carry an icon at all (there's no icon slot on a chip, a
+  // card-name heading, or prose text), so they're wired by a plain
+  // data-skill-id on the span instead of the icon-filename guess
+  // skill-inline normally uses - see skill-tooltip.js's attachSkillInline,
+  // which already checks data-skill-id first for exactly this reason.
+  // `note` is a single flat string, same shape as every consumable entry
+  // above - one min-max range per stat line rather than the game
+  // tooltip's own Basic/Legendary/Relic/Ability Stone breakdown, which
+  // read as too many lines for what's meant to be a quick reference (an
+  // earlier version of this file spelled out all 4 tiers; simplified down
+  // after the fact). min = the flat Basic effect (what the engraving
+  // grants at any level, grade-independent). max = Basic + Legendary's
+  // OWN max tier + Relic's OWN max tier + Ability Stone's own max tier,
+  // ALL summed - Legendary and Relic are not alternate/exclusive paths,
+  // each is its own additive layer on top of Basic (upgrading a
+  // Legendary-grade engraving to Relic grade doesn't replace the
+  // Legendary bonus already earned, it adds Relic's further bonus on top
+  // of it) - confirmed by cross-checking this sum against each
+  // screenshot's own "Final Applied Effect" number wherever that person's
+  // build happened to have some but not all tiers maxed (e.g. Keen Blunt
+  // Weapon's 52.00% = 36 Basic + 8 Legendary max + 8 Relic max, no stone;
+  // Ambush Master's 11.00% Outgoing = 4 Basic + 0.80 Legendary max + 2.80
+  // Relic max + 3.40 at Stone Lv.2, not Lv.4) - every one matched exactly.
+  // A stat with no Legendary/Relic/Stone scaling at all (a flat
+  // drawback/cost like Incoming Damage/Recovery/Atk. Speed) is left as a
+  // single number, not a range.
   window.DB_SKILL_EXTRAS = {
     atropine: {
       note: "HP -25% but Atk. Power +30% and Move/Atk. Speed +20% for 10s.",
@@ -198,6 +230,33 @@
     },
     ealynsblessing: {
       note: "Increases Atk. Speed by 3%.",
+    },
+    grudge: {
+      note: "Damage +15-27% to Boss/Raid monsters. Incoming Damage +20%.",
+    },
+    ambushmaster: {
+      note: "Outgoing Damage +4-13%. Back Attack Damage +12-15%.",
+    },
+    raidcaptain: {
+      note: "Outgoing Damage +32-63% of Move Speed bonus percentage.",
+    },
+    adrenaline: {
+      note: "Atk. Power +0.9-1.85% per stack (up to 6 stacks). Crit Rate +8-20% at max stacks.",
+    },
+    keenbluntweapon: {
+      note: "Crit Damage +36-67%, but attacks have a chance to deal -20% Damage.",
+    },
+    curseddoll: {
+      note: "Outgoing Damage +11-23%. Recovery -25%.",
+    },
+    massincrease: {
+      note: "Atk. Speed -10%. Outgoing Damage +13-25%.",
+    },
+    maxmp: {
+      note: "Max MP +24-40%.",
+    },
+    spiritabsorption: {
+      note: "Atk. and Move Speed +10-22%.",
     },
   };
 })();
