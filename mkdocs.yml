@@ -30,7 +30,7 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=33
+  - stylesheets/extra.css?v=35
 
 # Load order matters: several widgets read a shared data file
 # (build-data.js/skill-data.js/skill-names.js/ap-node-names.js) or the
@@ -43,7 +43,7 @@ extra_css:
 #      ark-passive-calculator.js - reuses its Import popover) - standalone,
 #      no cross-file deps
 #   3. data files: build-data.js, skill-data.js, skill-names.js,
-#      ap-node-names.js, core-options-data.js
+#      ap-node-names.js, ap-node-effects.js, core-options-data.js
 #   4. renderer widgets that read those data files: build-stats-badge.js,
 #      skill-setup.js, essentials-table.js, ark-core-badge.js,
 #      ark-passive-tree.js, gem-priority.js, pentagon-badge.js,
@@ -51,7 +51,8 @@ extra_css:
 #      image-lightbox.js
 #   5. widgets that read the DOM step 4 just built: rotation-practice.js
 #      (after rotation-line.js), gem-dps-tooltip.js (after gem-priority.js
-#      AND dps-chart.js)
+#      AND dps-chart.js), ark-passive-tooltip.js (after ark-passive-tree.js
+#      AND skill-tooltip.js - reuses the latter's SkillTooltip.wireCustom)
 #
 # Forking for another class? Every file above has its own "FORK GUIDE:"
 # comment at the very top - DATA (rewrite the whole file), ENGINE/INFRA
@@ -73,12 +74,14 @@ extra_javascript:
   - javascripts/essentials-table.js?v=3
   - javascripts/core-options-data.js?v=1
   - javascripts/ark-core-badge.js?v=4
-  - javascripts/ap-node-names.js?v=1
-  - javascripts/ark-passive-tree.js?v=4
+  - javascripts/ap-node-names.js?v=3
+  - javascripts/ap-node-effects.js?v=3
+  - javascripts/ark-passive-tree.js?v=5
   - javascripts/gem-priority.js?v=4
   - javascripts/pentagon-badge.js?v=4
   - javascripts/rotation-line.js?v=3
-  - javascripts/skill-tooltip.js?v=2
+  - javascripts/skill-tooltip.js?v=3
+  - javascripts/ark-passive-tooltip.js?v=3
   - javascripts/rotation-practice.js?v=3
   - javascripts/dps-chart.js?v=5
   - javascripts/gem-dps-tooltip.js?v=7

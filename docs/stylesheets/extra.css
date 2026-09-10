@@ -7376,6 +7376,45 @@ body.page-333-blitz input[type="text"] {
   color: var(--dbc-lilac);
 }
 
+/* ---------- Ark Passive node tooltip ---------- */
+/* Attached by ark-passive-tooltip.js to each .ark-passive-node
+   (ark-passive-tree.js's rendered Evolution/Enlightenment/Leap nodes),
+   reusing .skill-tip/.skill-tip-title above for the same floating-panel
+   chrome and hover/focus/tap engine every other tooltip on the site
+   already has - only the "Ark Passive Lv. N" line and effect text below
+   are specific to a node (see ark-passive-tooltip.js's buildTip). Wider
+   max-width than the base .skill-tip (some node effect text runs several
+   sentences long, e.g. Chaotic Power) - narrower would just wrap it into
+   an unreadably tall column instead of a legible paragraph width. */
+.ap-node-tip {
+  max-width: min(360px, 88vw);
+}
+/* "Ark Passive Lv. N" - a muted label line under the title, matching the
+   game's own tooltip layout (name, then current level, then effect
+   text) rather than repeating "Lv. N" inline with the effect text
+   itself. */
+.ap-node-tip-level {
+  margin-top: 0.1em;
+  font-size: 0.68em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--dbc-muted-text-soft);
+}
+.ap-node-tip-text {
+  color: var(--dbc-lilac);
+}
+/* Mutual-exclusivity caveat (e.g. "Cannot be obtained together with
+   Swift Strike") - same demoted treatment as .skill-tip-note already
+   gets, plus a divider so it doesn't read as a continuation of the
+   effect text above it. */
+.ap-node-tip-caveat {
+  margin-top: 0.4em;
+  padding-top: 0.4em;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-style: italic;
+  opacity: 0.85;
+}
+
 /* ---------- Ark Passive tree (Evolution/Enlightenment/Leap) ---------- */
 /* Rendered by javascripts/ark-passive-tree.js from a JSON blob (same
    authoring pattern as .ark-cores/ark-core-badge.js - see that file's

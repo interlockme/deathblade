@@ -85,6 +85,18 @@
   function buildNode(entry) {
     var row = el("div", "ark-passive-node");
 
+    // Stamped only when entry.id is present - ark-passive-tooltip.js looks
+    // nodes up in DB_AP_NODE_EFFECTS by this same id, and a node authored
+    // via the name/icon escape hatch (no id) has no effect-text entry to
+    // find anyway, so it's left without either attribute and just renders
+    // with no tooltip (same fail-quietly rule as everywhere else here).
+    // data-level is separate from the visible "n/max" badge text below -
+    // it's what lets the tooltip highlight this build's own current pick.
+    if (entry.id) {
+      row.setAttribute("data-ap-id", entry.id);
+      if (entry.level != null) row.setAttribute("data-level", entry.level);
+    }
+
     // Prefer the shared id -> {name, icon} lookup (ap-node-names.js) so
     // authored JSON only carries level/max, which is genuinely
     // build-specific. entry.name/entry.icon still win when present, as

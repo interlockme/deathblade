@@ -21,10 +21,12 @@
 //     one column's icon would silently overwrite the other's. Use
 //     "limitbreakevo" / "limitbreakenl" and pick the one matching
 //     whichever column the node is actually in.
-//   - "Crit" is a short display label whose icon file is critical.png,
-//     not crit.png - name-slug-as-icon-filename doesn't hold for this
-//     one node, which is exactly why this is a table and not a
-//     name.toLowerCase().replace(/\s+/g, "") auto-lookup.
+//   - "Crit" (a Tier 1 Evolution stat node, +50 per point) and
+//     "Critical" (a separate Tier 3 Evolution keystone, alternative to
+//     Master/Pulverize) are two different real nodes with two different
+//     icons that happen to collide under the id.toLowerCase() convention
+//     - kept as "crit" (icon crit.png) and "critical" (icon
+//     critical.png) instead of colliding on one id.
 //
 // Id convention: name lowercased with spaces/hyphens stripped (matches
 // the skill id convention already used in skill-names.js/skill-data.js),
@@ -35,21 +37,31 @@
 (function () {
   window.DB_AP_NODE_NAMES = {
     // Evolution
-    crit: { name: "Crit", icon: "ap-icons/critical.png" },
+    crit: { name: "Crit", icon: "ap-icons/crit.png" },
     specialization: { name: "Specialization", icon: "ap-icons/specialization.png" },
+    // Goddess of Blessings/Illicit Spell/Optimized Training: Tier 1
+    // Evolution keystone alternatives to Crit/Specialization. Not used by
+    // any current build - added for future builds/prose reference.
+    goddessofblessings: { name: "Goddess of Blessings", icon: "ap-icons/goddess-of-blessings.png" },
+    illicitspell: { name: "Illicit Spell", icon: "ap-icons/illicit-spell.png" },
+    optimizedtraining: { name: "Optimized Training", icon: "ap-icons/optimized-training.png" },
     keensense: { name: "Keen Sense", icon: "ap-icons/keen-sense.png" },
     limitbreakevo: { name: "Limit Break", icon: "ap-icons/limit-break-evo.png" },
     strike: { name: "Strike", icon: "ap-icons/strike.png" },
     master: { name: "Master", icon: "ap-icons/master.png" },
     pulverize: { name: "Pulverize", icon: "ap-icons/pulverize.png" },
+    // Critical: Tier 3 Evolution keystone alternative to Master/Pulverize.
+    // Not used by any current build - added for future builds/prose
+    // reference.
+    critical: { name: "Critical", icon: "ap-icons/critical.png" },
     standingstriker: { name: "Standing Striker", icon: "ap-icons/standing-striker.png" },
+
+    // Enlightenment
     swiftstrike: { name: "Swift Strike", icon: "ap-icons/swift-strike.png" },
     remainingenergy: { name: "Remaining Energy", icon: "ap-icons/remaining-energy.png" },
     firmwill: { name: "Firm Will", icon: "ap-icons/firm-will.png" },
     surgeenhancement: { name: "Surge Enhancement", icon: "ap-icons/surge-enhancement.png" },
     swordcraftenhancement: { name: "Swordcraft Enhancement", icon: "ap-icons/swordcraft-enhancement.png" },
-
-    // Enlightenment
     extremebodymovement: { name: "Extreme Body Movement", icon: "ap-icons/extreme-body-movement.png" },
     orbcirculation: { name: "Orb Circulation", icon: "ap-icons/orb-circulation.png" },
     orbcompression: { name: "Orb Compression", icon: "ap-icons/orb-compression.png" },
@@ -57,9 +69,9 @@
     limitbreakenl: { name: "Limit Break", icon: "ap-icons/limit-break-enl.png" },
     chaosinfusion: { name: "Chaos Infusion", icon: "ap-icons/chaos-infusion.png" },
     chaoticpower: { name: "Chaotic Power", icon: "ap-icons/chaotic-power.png" },
-    transcendentpower: { name: "Transcendent Power", icon: "ap-icons/transcendent-power.png" },
 
     // Leap
+    transcendentpower: { name: "Transcendent Power", icon: "ap-icons/transcendent-power.png" },
     awakeningamplifier: { name: "Awakening Amplifier", icon: "ap-icons/awakening-amplifier.png" },
     unleashedpower: { name: "Unleashed Power", icon: "ap-icons/unleashed-power.png" },
     releasepotential: { name: "Release Potential", icon: "ap-icons/release-potential.png" },
@@ -67,5 +79,9 @@
     danceofnightmares: { name: "Dance of Nightmares", icon: "ap-icons/dance-of-nightmares.png" },
     danceofscreams: { name: "Dance of Screams", icon: "ap-icons/dance-of-screams.png" },
     pathoftheblade: { name: "Path of the Blade", icon: "ap-icons/path-of-the-blade.png" },
+    // Flash Slash: Tier 1 Leap keystone alternative to Path of the
+    // Blade/Dance of Nightmares/Dance of Screams. Not used by any current
+    // build - added for future builds/prose reference.
+    flashslash: { name: "Flash Slash", icon: "ap-icons/flash-slash.png" },
   };
 })();

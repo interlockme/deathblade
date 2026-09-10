@@ -422,5 +422,19 @@
       wire(trigger, buildTip(id, data, { primary: primary }));
       return true;
     },
+
+    // Lower-level than attach(): takes an already-built tip element instead
+    // of looking one up via DB_SKILL_DATA/DB_SKILL_EXTRAS, for a caller
+    // with its own data source and tip layout (ark-passive-tooltip.js's
+    // per-node/per-level effect text) that still wants the same body-fixed,
+    // hover/focus/tap-toggle, viewport-clamped positioning engine this file
+    // already built for skill mentions - see wire()'s own comment. Returns
+    // false without wiring anything if trigger is already wired (same
+    // idempotency guard as attach()), true otherwise.
+    wireCustom: function (trigger, tip) {
+      if (trigger.classList.contains("skill-tip-wired")) return false;
+      wire(trigger, tip);
+      return true;
+    },
   };
 })();
