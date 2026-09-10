@@ -51,8 +51,10 @@ extra_css:
 #      image-lightbox.js
 #   5. widgets that read the DOM step 4 just built: rotation-practice.js
 #      (after rotation-line.js), gem-dps-tooltip.js (after gem-priority.js
-#      AND dps-chart.js), ark-passive-tooltip.js (after ark-passive-tree.js
-#      AND skill-tooltip.js - reuses the latter's SkillTooltip.wireCustom)
+#      AND dps-chart.js), ark-passive-tooltip.js AND rune-tooltip.js AND
+#      glossary-tooltip.js (each after skill-tooltip.js - all three reuse
+#      the latter's SkillTooltip.wireCustom; glossary-tooltip.js also
+#      needs glossary-data.js loaded first)
 #
 # Forking for another class? Every file above has its own "FORK GUIDE:"
 # comment at the very top - DATA (rewrite the whole file), ENGINE/INFRA
@@ -84,6 +86,8 @@ extra_javascript:
   - javascripts/skill-tooltip.js?v=5
   - javascripts/ark-passive-tooltip.js?v=4
   - javascripts/rune-tooltip.js?v=4
+  - javascripts/glossary-data.js?v=1
+  - javascripts/glossary-tooltip.js?v=1
   - javascripts/rotation-practice.js?v=3
   - javascripts/dps-chart.js?v=5
   - javascripts/gem-dps-tooltip.js?v=8

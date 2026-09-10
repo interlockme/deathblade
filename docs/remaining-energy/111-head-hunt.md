@@ -190,7 +190,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
-- You can swap Head Hunt's tripod to Quick Prep and gain an extra gem slot.
+- You can swap Head Hunt's <span class="skill-mention" data-glossary-id="tripod">tripod</span> to Quick Prep and gain an extra gem slot.
     - Change your Head Hunt CD gem to Twin Shadows CD. Enjoy slightly easier recovery!
     - This setup may run into mana issues, use a <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> rune on Head Hunt if necessary.
 

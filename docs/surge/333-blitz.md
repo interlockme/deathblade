@@ -19,7 +19,7 @@
 
 - Uses Blitz Rush as two fast casts (BTB combo) via a skill reset.
 - High gem efficiency, Surge and Blitz Rush are most of your DPS.
-- Must balance Surge, Blitz Rush, and Deathly Slash back attack rate with Surge CPM.
+- Must balance Surge, Blitz Rush, and Deathly Slash <span class="skill-mention" data-glossary-id="backattack">back attack</span> rate with Surge CPM.
 
 </div>
 <div class="pentagon-badge" data-build="333-blitz" data-family="surge" markdown>
@@ -208,7 +208,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
-- You can use the Quick Prep tripod on Blade Dance at lower gem levels.
+- You can use the Quick Prep <span class="skill-mention" data-glossary-id="tripod">tripod</span> on Blade Dance at lower gem levels.
 - Earth Explosion tripod on Earth Cleaver is up to personal preference.
     - Increased cast speed, but greatly lowers mobility and damage.
 - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.

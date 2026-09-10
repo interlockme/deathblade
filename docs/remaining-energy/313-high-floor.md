@@ -222,7 +222,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 - You can bring Head Hunt down to Lv 1 and Void Strike up to Lv 14 for +0.5% DPS and lower mana use.
     - However, Lv 7 is more practical and makes recovery much easier and faster. ★
-    - At Lv 7, Magick Control tripod can help solve mana issues if you don't need the CDR.
+    - At Lv 7, Magick Control <span class="skill-mention" data-glossary-id="tripod">tripod</span> can help solve mana issues if you don't need the CDR.
     - Lv 4 Head Hunt (Quick Prep) with Void Strike Lv 13 is a decent overall compromise.
 
 </details>

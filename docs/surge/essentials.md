@@ -41,11 +41,11 @@ Atk/Move Speed Feast
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Quick Tips<span class="setup-note-arrow"></span></summary>
 
-- All Deathblade builds run a pet with the Specialization stat bonus.
-- Optimize Ark Passive nodes or compare bracelets/equipment [here!](../resources.md#ark-passive-calculator)
+- All Deathblade builds run a pet with the <span class="skill-mention" data-glossary-id="specializationstat">Specialization</span> stat bonus.
+- Optimize <span class="skill-mention" data-glossary-id="arkpassive">Ark Passive</span> nodes or compare <span class="skill-mention" data-glossary-id="bracelet">bracelets</span>/equipment [here!](../resources.md#ark-passive-calculator)
 - Always press the next skill during your current skill's animation (skill queuing).
-- If unsure, select <span class="skill-mention" data-skill-id="grudge">Grudge</span> and <span class="skill-mention" data-skill-id="ambushmaster">Ambush Master</span> as your Ability Stone engravings.
-- Trixion practice requires equipping maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> and <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.
+- If unsure, select <span class="skill-mention" data-skill-id="grudge">Grudge</span> and <span class="skill-mention" data-skill-id="ambushmaster">Ambush Master</span> as your <span class="skill-mention" data-glossary-id="abilitystone">Ability Stone</span> engravings.
+- <span class="skill-mention" data-glossary-id="trixion">Trixion</span> practice requires equipping maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> and <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.
 - <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training 1</span> may help smooth things out at lower gem levels.
 
 </details>
@@ -58,7 +58,7 @@ Atk/Move Speed Feast
 - Stack cap increased from 60 to 80. Extra stacks now roll over.
 - Breaking Moon changes to a Normal skill and gives 60 stacks on hit.
 - Complete rework of 222 cores and playstyle. It's actually good now.
-- Blitz Rush gains a 27% cast speed tripod and 20% more attack range.
+- Blitz Rush gains a 27% cast speed <span class="skill-mention" data-glossary-id="tripod">tripod</span> and 20% more attack range.
 - Turning Slash and Surprise Attack's after-effects now also apply Synergy.
 - Overall damage increases, Surge is now competitive with RE.
 - Surge post-cast delay was removed, animation cancelling is no longer needed.
@@ -133,7 +133,7 @@ Pair with <span class="skill-mention" data-skill-id="curseddoll">Cursed Doll</sp
 
 **Pros:**{: .best-for } A safe default with no drawbacks.
 
-**Cons:**{: .tradeoff } Scales with <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> relic books.
+**Cons:**{: .tradeoff } Scales with <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> <span class="skill-mention" data-glossary-id="relicbook">relic books</span>.
 
 </div>
 </details>
@@ -221,7 +221,7 @@ Surge is a repeating cycle:
 
 3 Orbs → Death Trance → Build Stacks → Surge → Repeat.
 
-Build toward 60 stacks using your multi-hit skills, then land Surge as a Back Attack.
+Build toward 60 stacks using your multi-hit skills, then land Surge as a <span class="skill-mention" data-glossary-id="backattack">Back Attack</span>.
 
 The 80-stack cap and rollover give you flexibility. You don't need to stop or force a skill just to hit exactly 60.
 
@@ -229,7 +229,7 @@ Knowing roughly how many stacks each skill generates is important for adapting y
 
 ### Combat Performance
 
-**Surge Casts Per Minute (CPM)** and back attack rate are useful measures of how efficiently you cycle Surge.
+**Surge Casts Per Minute (CPM)** and <span class="skill-mention" data-glossary-id="backattack">back attack</span> rate are useful measures of how efficiently you cycle Surge.
 
 Only compare CPM between the **same encounter and build**, as boss uptime and mechanics heavily affect it.
 

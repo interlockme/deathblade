@@ -3,7 +3,7 @@
 <div class="setup-panel" data-accent="pink" markdown>
 <div class="setup-notes" markdown>
 
-<p class="food-required-lead">Mana food and Atk/Move Speed feast are <strong>required</strong> to play Ark Grid Remaining Energy optimally.</p>
+<p class="food-required-lead">Mana food and Atk/Move Speed feast are <strong>required</strong> to play <span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span> Remaining Energy optimally.</p>
 
 <div class="food-options" markdown>
 
@@ -59,11 +59,11 @@ Atk/Move Speed Feast
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Quick Tips<span class="setup-note-arrow"></span></summary>
 
-- All Deathblade builds run a pet with the Specialization stat bonus.
-- Optimize Ark Passive nodes or compare bracelets/equipment [here!](../resources.md#ark-passive-calculator)
+- All Deathblade builds run a pet with the <span class="skill-mention" data-glossary-id="specializationstat">Specialization</span> stat bonus.
+- Optimize <span class="skill-mention" data-glossary-id="arkpassive">Ark Passive</span> nodes or compare <span class="skill-mention" data-glossary-id="bracelet">bracelets</span>/equipment [here!](../resources.md#ark-passive-calculator)
 - Always press the next skill during your current skill's animation (skill queuing).
-- If unsure, select <span class="skill-mention" data-skill-id="grudge">Grudge</span> and <span class="skill-mention" data-skill-id="ambushmaster">Ambush Master</span> as your Ability Stone engravings.
-- Trixion practice requires equipping maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> and <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.
+- If unsure, select <span class="skill-mention" data-skill-id="grudge">Grudge</span> and <span class="skill-mention" data-skill-id="ambushmaster">Ambush Master</span> as your <span class="skill-mention" data-glossary-id="abilitystone">Ability Stone</span> engravings.
+- <span class="skill-mention" data-glossary-id="trixion">Trixion</span> practice requires equipping maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> and <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.
 - <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training 1</span> may help smooth things out at lower gem levels.
 
 </details>
@@ -76,7 +76,7 @@ Atk/Move Speed Feast
 - Turning Slash's after-effect now also applies Synergy.
 - Surge's buffed coefficient increases DPS for all RE builds by ~1%.
 - Buffed Ark Grid cores increase 111 HH DPS by ~2% and 313 DPS by ~1%.
-- See [333 (Ceiling)](333-ceiling.md) or [313 (High Floor)](313-high-floor.md) for build-specific tripod/gem adjustments.
+- See [333 (Ceiling)](333-ceiling.md) or [313 (High Floor)](313-high-floor.md) for build-specific <span class="skill-mention" data-glossary-id="tripod">tripod</span>/gem adjustments.
 
 </details>
 
@@ -125,7 +125,7 @@ Atk/Move Speed Feast
 
 **Pros:**{: .best-for } Stronger than <span class="skill-mention" data-skill-id="curseddoll">Cursed Doll</span> by ~1% late game.
 
-**Cons:**{: .tradeoff } Scales with <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> relic books.
+**Cons:**{: .tradeoff } Scales with <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> <span class="skill-mention" data-glossary-id="relicbook">relic books</span>.
 
 </div>
 </details>
@@ -176,7 +176,7 @@ Lower values are fine, but may experience some downtime.
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Trixion CPM Goals<span class="setup-note-arrow"></span></summary>
 
-- Aim for your build's Surge CPM goal in Trixion to check for issues:
+- Aim for your build's Surge <span class="skill-mention" data-glossary-id="cpm">CPM</span> goal in <span class="skill-mention" data-glossary-id="trixion">Trixion</span> to check for issues:
     - For [111 (Head Hunt)](111-head-hunt.md) and [313 (High Floor)](313-high-floor.md), try to approach 16 Surge CPM.
     - For [333 (Ceiling)](333-ceiling.md), try to approach 14.5 Surge CPM (15 after Balance Patch).
     - Use the [DPS Meter](https://github.com/snoww/loa-logs) and equip maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span>/<span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings!
@@ -215,7 +215,7 @@ Remaining Energy is a continuous cycle:
 
 Generate Orbs → 3 Orbs → Surge → Repeat.
 
-Prioritize consistent uptime and good use of Maelstrom's buffs over back attacks. Use Surge to reposition.
+Prioritize consistent uptime and good use of Maelstrom's buffs over <span class="skill-mention" data-glossary-id="backattack">back attacks</span>. Use Surge to reposition.
 
 ### Combat Performance
 

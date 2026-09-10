@@ -11,7 +11,7 @@
      all update together from that one place. -->
 <div class="build-stats" data-build="standard" data-family="re"></div>
 
-**Best For:**{: .best-for } Brand-new Remaining Energy players with no Ark Grid yet.
+**Best For:**{: .best-for } Brand-new Remaining Energy players with no <span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span> yet.
 
 **Tradeoff:**{: .tradeoff } Legacy build with some downtime and little to no recovery.
 

@@ -20,8 +20,8 @@
 - Powerful burst windows with the Breaking Moon combo.
 - No need to hold Counter, it charges up to two stacks.
 - Very high gem efficiency, Surge is nearly all of your DPS.
-- Accessible from zero Ark Grid cores with minor adjustments.
-- Must constantly balance Surge back attack rate with Surge CPM.
+- Accessible from zero <span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span> cores with minor adjustments.
+- Must constantly balance Surge <span class="skill-mention" data-glossary-id="backattack">back attack</span> rate with Surge CPM.
 
 </div>
 <div class="pentagon-badge" data-build="111-classic" data-family="surge" markdown>
@@ -207,7 +207,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
-- You can keep the Quick Prep tripod on Blade Dance at lower gem levels.
+- You can keep the Quick Prep <span class="skill-mention" data-glossary-id="tripod">tripod</span> on Blade Dance at lower gem levels.
 - Earth Explosion tripod on Earth Cleaver is up to personal preference.
     - Increased cast speed, but greatly lowers mobility and damage.
 - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.

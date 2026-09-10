@@ -248,7 +248,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Optional<span class="setup-note-arrow"></span></summary>
 
-- Orb Control tripod on Fatal Wave is **not viable** and you should not use it for any reason.
+- Orb Control <span class="skill-mention" data-glossary-id="tripod">tripod</span> on Fatal Wave is **not viable** and you should not use it for any reason.
 - You can bring Head Hunt down to Lv 1 and Void Strike up to Lv 14 for +0.4% DPS and lower mana use.
     - However, Lv 7 is more practical and makes recovery much easier and faster. ★
     - At Lv 7, Magick Control tripod can help solve mana issues if you don't need the CDR.

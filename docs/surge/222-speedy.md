@@ -15,7 +15,7 @@
 
 **Best For:**{: .best-for } Players who want something easy to pick up but difficult to master.
 
-**Tradeoff:**{: .tradeoff } Increased back attack stress and uptime requirements.
+**Tradeoff:**{: .tradeoff } Increased <span class="skill-mention" data-glossary-id="backattack">back attack</span> stress and uptime requirements.
 
 - Simple uptime-focused gameplay with no gimmicks.
 - Incorporates Dark Axel for higher mobility and utility.
@@ -204,7 +204,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 - You can bring Head Hunt down to Lv 1 for lower mana use.
 - Earth Cleaver can be used instead of Head Hunt if you prefer.
 - You can replace Dark Axel for Spincutter if you find it more useful.
-- You can use Wide Attack tripod on Surprise Attack if your uptime with Turning Slash is good.
+- You can use Wide Attack <span class="skill-mention" data-glossary-id="tripod">tripod</span> on Surprise Attack if your uptime with Turning Slash is good.
 
 </details>
 
