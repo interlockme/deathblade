@@ -130,7 +130,7 @@
         lines: ["7 stacks"],
       },
       surpriseattack: {
-        tags: [["util", "SYNERGY"], ["util", "MOBILITY"], ["util", "WEAK POINT"]],
+        tags: [["util", "STACKS"], ["util", "SYNERGY"], ["util", "MOBILITY"], ["util", "WEAK POINT"]],
         note: "Core builder, applies +4% outgoing and +5% directional damage synergy on hit.",
         lines: ["7 stacks"],
       },
@@ -151,7 +151,7 @@
       blitzrush: {
         tags: [["dmg", "DAMAGE"]],
         note: "Filler builder for \uD83E\uDD81. On Destiny activation, resets its cooldown and becomes empowered for \uD83D\uDC2F.",
-        lines: ["7 stacks", "or 1 (333)"],
+        lines: ["7 stacks", "1 for 333"],
       },
       headhunt: {
         tags: [["util", "COUNTER"], ["warn", "NO PARA IMMUNE"]],
