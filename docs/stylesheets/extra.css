@@ -31,6 +31,7 @@
   --dbc-purple-rgb: 179, 157, 219;
   --dbc-lilac: #cfc9dd;        /* light lavender body/label text */
   --dbc-slate: #6f6a80;        /* muted purple-gray secondary text */
+  --dbc-slate-rgb: 111, 106, 128;
   --dbc-red: #e57373;          /* danger/error accent, replaces Material's default #ff1744 */
   --dbc-red-rgb: 229, 115, 115;
   --dbc-rose: #f48fb1;         /* secondary pink accent */
@@ -1092,6 +1093,12 @@ h3 { color: var(--dbc-teal); }
   color: inherit;
   cursor: pointer;
   list-style: none;
+  /* Same fast-click-selects-the-row-text issue .skill-card summary has
+     (a quick expand/collapse click races the browser's double-click
+     text selection) - this is a <details> toggle exactly like that one,
+     so it needs the same guard. */
+  user-select: none;
+  -webkit-user-select: none;
 }
 .md-typeset details.gem-item-expandable > summary::-webkit-details-marker { display: none; }
 .md-typeset details.gem-item-expandable > summary::marker { content: ""; }
@@ -4308,6 +4315,11 @@ h3 { color: var(--dbc-teal); }
      "no fill as .ap-calc-results"). Same root cause the .skill-card and
      .setup-note fixes already cover elsewhere - just missed here. */
   background: none;
+  /* Same fast-click-selects-the-row-text issue .skill-card summary and
+     .gem-item-expandable summary already guard against - these six
+     sandboxes' title bars are <details> toggles too. */
+  user-select: none;
+  -webkit-user-select: none;
   /* Transparent border-bottom reserved here at the SAME width the [open]
      rule below switches to solid - so opening a section only recolors
      this line instead of adding a full extra pixel of border that wasn't
@@ -4634,6 +4646,11 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.85em;
   cursor: pointer;
   list-style: none;
+  /* Same fast-click-selects-the-row-text issue as the other summary
+     toggles on the site - Character Data's title bar is a <details>
+     toggle too. */
+  user-select: none;
+  -webkit-user-select: none;
   /* Same reservation as the shared .ap-brace-compare/etc summary rule
      above - a transparent border-bottom at the same width the grouped
      [open] rule below switches to solid, so expanding Character Data
@@ -7237,7 +7254,14 @@ body.page-333-blitz input[type="text"] {
      while summary and the outer card border didn't. Bleed out the same
      way, then re-pad for content spacing. */
   margin: 0 -0.6rem;
-  padding: 0.6em calc(0.75em + 0.6rem) 0.75em;
+  /* Top padding trimmed from 0.6em - stacked on top of summary's own
+     0.55em bottom padding it left ~1.15em of dead air between the name
+     row and whatever the body's first line is (meter pill, tags, or the
+     note), reading as the body having drifted loose from the card's
+     header rather than being its expanded content. 0.3em keeps a real
+     seam (so the body doesn't touch the header) without it looking like
+     a second, disconnected block. */
+  padding: 0.3em calc(0.75em + 0.6rem) 0.75em;
   /* No border-top - the reference mockup separates the name row from the
      tags/description with spacing alone, no hairline. A previous pass
      added one here to make a supposedly-invisible divider visible, but
@@ -7246,6 +7270,42 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .skill-card-body .tag {
   margin: 0 4px 6px 0;
+}
+/* Same meter/stack value line skill-tooltip.js's .skill-tip-meter shows
+   (e.g. "6314 meter", "7 stacks") - same slate/muted reference-data
+   role as that one, sitting above the tag pills the same order
+   skill-tooltip.js uses.
+   Given the .tag pills' own pill shape (bg + border + radius) rather than
+   bare italic text - as plain text it sat in the gap between the name row
+   above and the tag chips below with nothing tying it to either, reading
+   as a stray line breaking the flow instead of part of the card. The pill
+   groups it visually with the tags underneath (same shape language) while
+   the neutral slate fill (vs. the tags' rose/teal/blue/gold) keeps it from
+   being mistaken for one of the classified tag categories - it's reference
+   data, not a role tag.
+   Margin matches .tag's own `0 4px 6px 0` exactly rather than approximating
+   it - this pill sits inline in the same wrapping row as the tags right
+   after it (not on a guaranteed row of its own), so without a matching
+   right margin it butts straight up against the first tag with no gap the
+   instant they land side by side, while every tag-to-tag gap next to it
+   keeps its normal 4px.
+   font-size/padding/line-height copied from `.md-typeset .tag` verbatim
+   (0.62rem/1px 6px/1.7, vs. this rule's own earlier 0.78em/2px 8px/
+   unset-inherited) rather than picked to just look similar - a rem font-
+   size plus the exact same padding and line-height is what actually
+   makes this pill's rendered box the same height as a .tag pill sitting
+   next to it in the same row; matching only one or two of those three
+   still left a visible size/baseline mismatch between them. */
+.md-typeset .skill-card-meter {
+  display: inline-block;
+  margin: 0 4px 6px 0;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background-color: rgba(var(--dbc-slate-rgb), 0.14);
+  border: 1px solid rgba(var(--dbc-slate-rgb), 0.3);
+  font-size: 0.62rem;
+  line-height: 1.7;
+  color: var(--dbc-slate);
 }
 .md-typeset .skill-card-note {
   margin: 0.3em 0 0;
@@ -7587,6 +7647,44 @@ body.page-333-blitz input[type="text"] {
   padding-top: 0.4em;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   opacity: 0.85;
+}
+/* Same meter/stack value essentials-table.js shows in small italics
+   under a skill's name on its reference table (e.g. "6314 meter",
+   "7 stacks · or 1 (333)") - one joined line here rather than that
+   table row's stacked <br>-separated lines, since a tooltip has nowhere
+   near that much vertical room to spare. Rendered as the first child of
+   .skill-tip-tags (see buildTip in skill-tooltip.js) so it wraps inline
+   alongside the tag pills right after it instead of forcing its own row.
+   Pill-shaped like .skill-card-meter (its counterpart in the Skill Setup
+   card body - see that rule's comment in extra.css) rather than bare
+   italic text, for the same reason: unstyled, it read as a stray line of
+   text floating between the skill name and the tag pills with nothing
+   visually tying it to either. The pill borrows the tags' own shape
+   language (bg + border + radius) so it reads as part of that same
+   family of reference-data chips, just neutral-slate instead of a
+   category color since it isn't one of the classified tags.
+   Margin matches the base `.md-typeset .tag` rule's own `2px 3px 2px 0`
+   exactly (not .skill-card-meter's `0 4px 6px 0` - that's the .skill-
+   card-body-scoped .tag override's margin, not what tags use here) so it
+   sits in the shared row with the same rhythm as the tags next to it,
+   rather than the old fixed margin-bottom sized for when it was a
+   guaranteed row of its own.
+   font-size/padding/line-height copied from `.md-typeset .tag` verbatim
+   (0.62rem/1px 6px/1.7, vs. this rule's own earlier 0.68em/1px 7px/
+   unset-inherited) for the same reason .skill-card-meter's were - a rem
+   font-size plus the tag's exact padding/line-height is what makes this
+   pill's box the same height as a .tag pill next to it; approximating
+   any one of the three left a visible size/baseline mismatch. */
+.skill-tip-meter {
+  display: inline-block;
+  margin: 2px 3px 2px 0;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background-color: rgba(var(--dbc-slate-rgb), 0.14);
+  border: 1px solid rgba(var(--dbc-slate-rgb), 0.3);
+  font-size: 0.62rem;
+  line-height: 1.7;
+  color: var(--dbc-slate);
 }
 .skill-tip-tags {
   margin-bottom: 0.3em;
@@ -8345,6 +8443,11 @@ body.page-333-blitz input[type="text"] {
      clipped. Same root cause .skill-card summary already had fixed here -
      just never carried over to this component. */
   overflow: visible;
+  /* Same fast-click-selects-the-row-text issue .skill-card summary
+     already guards against - a setup note's tag/title bar is a
+     <details> toggle too, just never carried over to this component. */
+  user-select: none;
+  -webkit-user-select: none;
 }
 .md-typeset .setup-note > summary::-webkit-details-marker { display: none; }
 .md-typeset .setup-note > summary::marker { content: ""; }

@@ -4,12 +4,14 @@
 // at your own data.
 //
 // Renders each family's "## <Family> Skills" reference table on
-// essentials.md from a compact per-row JSON blob (icon id, name, and any
-// small italic value lines like "4201 meter"), joined at render time with
-// the SAME tags/note text skill-setup.js's build-page cards read from
-// skill-data.js (window.DB_SKILL_DATA). Update a tag or note ONCE there
-// and both this table and every build page's Skill Setup card picks it
-// up - no more editing the same text in two places.
+// essentials.md from a compact per-row JSON blob (just icon id + name,
+// for row order and the bold name cell), joined at render time with the
+// SAME tags/note/lines data skill-setup.js's build-page cards AND
+// skill-tooltip.js's tooltips read from skill-data.js (window.
+// DB_SKILL_DATA). Update a tag, note, or meter/stack line ONCE there and
+// this table, every build page's Skill Setup card, and every tooltip
+// that names the skill all pick it up - no more editing the same text
+// in multiple places.
 //
 // Must load after skill-data.js - see the extra_javascript order in
 // mkdocs.yml.
@@ -18,27 +20,27 @@
 //   <div class="skills-table" data-family="re" markdown>
 //   <script type="application/json">
 //   [
-//     { "id": "maelstrom", "name": "Maelstrom", "lines": ["4201 meter", "self buffed"] },
-//     { "id": "voidstrike", "name": "Void Strike", "lines": ["6314 meter"] },
-//     { "id": "surge", "name": "Surge", "lines": ["180/s OC2", "450/s OC5"] }
+//     { "id": "maelstrom", "name": "Maelstrom" },
+//     { "id": "voidstrike", "name": "Void Strike" },
+//     { "id": "surge", "name": "Surge" }
 //   ]
 //   </script>
 //   </div>
 //
 //   data-family - "re" or "surge". Same meaning as skill-setup.js: picks
-//                 which half of skill-data.js to read tags/notes from.
+//                 which half of skill-data.js to read tags/notes/lines from.
 //
 //   Per row:
 //     id    - REQUIRED. Matches icon-<id>.png in assets/shared/ AND the
 //             key in skill-data.js. Same slug every icon-*.png asset uses.
 //     name  - REQUIRED. Bold skill name shown in the first text cell.
-//     lines - OPTIONAL array of small italic lines under the name (a
-//             meter/stack value, a cast-rate note, etc). Omit for skills
-//             with nothing extra to show (e.g. Death Trance).
 //
-//   Tags + Notes columns are never authored here - they always come from
-//   skill-data.js so this table and the matching build-page skill cards
-//   can't drift out of sync.
+//   Tags, Notes, and the small italic value lines under the name (a
+//   meter/stack value, a cast-rate note, etc) are never authored here -
+//   they always come from skill-data.js's "lines" field so this table,
+//   the matching build-page skill cards, and every tooltip can't drift
+//   out of sync. Omitted there entirely for skills with nothing extra
+//   to show (e.g. Death Trance).
 (function () {
   var SITE_ROOT = window.SiteUtils.detectSiteRoot("essentials-table.js");
 
@@ -56,19 +58,19 @@
     iconTd.appendChild(icon);
     tr.appendChild(iconTd);
 
+    var data = (window.DB_SKILL_DATA && window.DB_SKILL_DATA[family] && window.DB_SKILL_DATA[family][entry.id]) || {};
+
     var nameTd = document.createElement("td");
     var strong = document.createElement("strong");
     strong.textContent = entry.name || entry.id;
     nameTd.appendChild(strong);
-    (entry.lines || []).forEach(function (line) {
+    (data.lines || []).forEach(function (line) {
       nameTd.appendChild(document.createElement("br"));
       var em = document.createElement("em");
       em.textContent = line;
       nameTd.appendChild(em);
     });
     tr.appendChild(nameTd);
-
-    var data = (window.DB_SKILL_DATA && window.DB_SKILL_DATA[family] && window.DB_SKILL_DATA[family][entry.id]) || {};
 
     var tagsTd = document.createElement("td");
     (data.tags || []).forEach(function (pair) {

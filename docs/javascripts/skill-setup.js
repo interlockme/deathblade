@@ -4,11 +4,13 @@
 // at your own data.
 //
 // Renders each build page's "## Skill Setup" section from a compact JSON
-// blob instead of a static skillsetup-*.png screenshot. Tag pills + the
-// short descriptive note in a card's expanded body come from skill-data.js
-// (window.DB_SKILL_DATA) - the SAME text as each family's own
-// "## <Family> Skills" table on essentials.md, so the two stay in sync
-// (see that file's own comment on how to keep them matching).
+// blob instead of a static skillsetup-*.png screenshot. Tag pills, the
+// short descriptive note, and the small meter/stack value line in a
+// card's expanded body all come from skill-data.js (window.
+// DB_SKILL_DATA) - the SAME text as each family's own "## <Family>
+// Skills" table on essentials.md and skill-tooltip.js's tooltips, so all
+// three stay in sync (see that file's own comment on how to keep them
+// matching).
 //
 // Must load after skill-data.js - see the extra_javascript order in
 // mkdocs.yml.
@@ -164,6 +166,13 @@
 
     var body = el("div", "skill-card-body");
     var data = (window.DB_SKILL_DATA && window.DB_SKILL_DATA[family] && window.DB_SKILL_DATA[family][entry.id]) || {};
+    // Same meter/stack value line skill-tooltip.js shows under a skill's
+    // name (e.g. "6314 meter", "7 stacks") - joined onto one line
+    // the same way, sitting above the tag pills since it's quick
+    // reference data, not one of the tags itself.
+    if (data.lines && data.lines.length) {
+      body.appendChild(el("p", "skill-card-meter", data.lines.join(" \u00B7 ")));
+    }
     (data.tags || []).forEach(function (pair) {
       body.appendChild(el("span", "tag tag-" + pair[0], pair[1]));
     });
@@ -177,7 +186,7 @@
       });
       body.appendChild(ul);
     }
-    if (!data.note && !(data.tags && data.tags.length) && !(entry.picks && entry.picks.length)) {
+    if (!data.note && !(data.tags && data.tags.length) && !(data.lines && data.lines.length) && !(entry.picks && entry.picks.length)) {
       body.appendChild(el("p", "skill-card-note", "No additional notes."));
     }
     details.appendChild(body);

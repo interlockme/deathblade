@@ -51,7 +51,8 @@
 // rendered name text (old behavior) only if the chart has no data-ids
 // at all, for any chart that hasn't been given one yet. A Damage gem with
 // no id/name match in the chart (e.g. it's absent from that build's
-// recorded split) is just left without a tooltip. Cooldown gems need no
+// recorded split) still gets a tooltip off DB_SKILL_DATA - just without
+// the damage-share line, same as a Cooldown gem's. Cooldown gems need no
 // chart at all - they're wired directly off the "cd" column's own rows.
 // The only per-page authoring surface either flavor has is gem-priority.js's
 // own "tip" field - see that file's EASY EDIT GUIDE.
@@ -145,21 +146,30 @@
         var nameEl = el.querySelector(".gem-item-name");
         if (!nameEl) return;
 
+        // id is always present in practice (gem-priority.js stamps it on
+        // every row) - attachOne itself would no-op without one anyway,
+        // but guarding here too skips the pointless name-fallback lookup
+        // below for a row that could never get a tooltip regardless.
         var id = el.getAttribute("data-id");
-        var pct = id && id in shareMap.byId ? shareMap.byId[id] : undefined;
+        if (!id) return;
+
+        var pct = id in shareMap.byId ? shareMap.byId[id] : undefined;
         if (pct === undefined) {
           var name = nameEl.textContent.trim().toLowerCase();
           pct = shareMap.byName[name];
         }
-        if (pct === undefined) return;
 
-        // id is always present in practice (gem-priority.js stamps it on
-        // every row), but the pct-matching fallback right above is
-        // name-based specifically to tolerate an old chart with no
-        // data-ids yet - guard here too rather than assume.
-        if (!id) return;
-
-        attachOne(el, fmtPct(pct) + " of total damage", el.getAttribute("data-gem-tip") || undefined);
+        // A Damage gem with no id/name match in this build's chart (e.g.
+        // it's absent from that build's recorded split) still gets a
+        // tooltip, just without the "% of total damage" opts.primary
+        // line - same as a Cooldown gem's tags/note-only tooltip below,
+        // which never has a pct to begin with. This used to return here
+        // instead and leave the row with NO tooltip at all whenever a %
+        // wasn't found, which silently dropped that skill's tags/note/
+        // meter too (e.g. Turning Slash on 333 Blitz), even though all
+        // three come from DB_SKILL_DATA and never depended on the chart
+        // having this skill in the first place.
+        attachOne(el, pct !== undefined ? fmtPct(pct) + " of total damage" : undefined, el.getAttribute("data-gem-tip") || undefined);
       });
     });
   }

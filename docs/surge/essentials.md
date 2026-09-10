@@ -235,32 +235,33 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 
 ## Surge Skills
 
-<!-- Per-row id/name/lines (small italic value lines like "4201 meter") -
-     full schema is in javascripts/essentials-table.js's "EASY EDIT GUIDE"
-     comment. Tags and Notes columns are NOT authored here: they come from
-     skill-data.js, so this table and every build page's Skill Setup card
-     stay in sync automatically - edit a tag/note there, not here. -->
+<!-- Per-row id/name - full schema is in javascripts/essentials-table.js's
+     "EASY EDIT GUIDE" comment. Tags, Notes, and the small italic value
+     lines under each name are NOT authored here: they come from
+     skill-data.js, so this table, every build page's Skill Setup card,
+     and every tooltip that names the skill stay in sync automatically -
+     edit a tag/note/line there, not here. -->
 
 <div class="skills-table" data-family="surge" markdown>
 <script type="application/json">
 [
-  { "id": "windcut", "name": "Wind Cut", "lines": ["up to 7-9 stacks"] },
+  { "id": "windcut", "name": "Wind Cut" },
   { "id": "deathtrance", "name": "Death Trance" },
-  { "id": "maelstrom", "name": "Maelstrom", "lines": ["up to 7 stacks"] },
-  { "id": "surpriseattack", "name": "Surprise Attack", "lines": ["up to 7 stacks"] },
-  { "id": "breakingmoon", "name": "Breaking Moon", "lines": ["60 stacks"] },
+  { "id": "maelstrom", "name": "Maelstrom" },
+  { "id": "surpriseattack", "name": "Surprise Attack" },
+  { "id": "breakingmoon", "name": "Breaking Moon" },
   { "id": "surge", "name": "Surge" },
-  { "id": "bladedance", "name": "Blade Dance", "lines": ["up to 9 stacks"] },
-  { "id": "blitzrush", "name": "Blitz Rush", "lines": ["up to 7 stacks", "or 1 (333)"] },
-  { "id": "headhunt", "name": "Head Hunt", "lines": ["up to 2 stacks"] },
-  { "id": "earthcleaver", "name": "Earth Cleaver", "lines": ["2 to 3 stacks"] },
-  { "id": "spincutter", "name": "Spincutter", "lines": ["2 stacks", "per cast"] },
-  { "id": "turningslash", "name": "Turning Slash", "lines": ["up to 5 stacks"] },
-  { "id": "bladeassault", "name": "Blade Assault", "lines": ["up to 20 stacks"] },
-  { "id": "deathlyslash", "name": "Deathly Slash", "lines": ["up to 11-12 stacks"] },
-  { "id": "darkaxel", "name": "Dark Axel", "lines": ["2 to 3 stacks"] },
-  { "id": "upperslash", "name": "Upper Slash", "lines": ["up to 5 stacks"] },
-  { "id": "fallstar", "name": "Fallstar", "lines": ["up to 8 stacks"] }
+  { "id": "bladedance", "name": "Blade Dance" },
+  { "id": "blitzrush", "name": "Blitz Rush" },
+  { "id": "headhunt", "name": "Head Hunt" },
+  { "id": "earthcleaver", "name": "Earth Cleaver" },
+  { "id": "spincutter", "name": "Spincutter" },
+  { "id": "turningslash", "name": "Turning Slash" },
+  { "id": "bladeassault", "name": "Blade Assault" },
+  { "id": "deathlyslash", "name": "Deathly Slash" },
+  { "id": "darkaxel", "name": "Dark Axel" },
+  { "id": "upperslash", "name": "Upper Slash" },
+  { "id": "fallstar", "name": "Fallstar" }
 ]
 </script>
 </div>

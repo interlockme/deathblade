@@ -53,8 +53,10 @@
 //     comments below.
 //
 // Tooltip content is the SAME tags + note skill-setup.js already shows in
-// a Skill Setup card's expanded body (DB_SKILL_DATA[family][id]) - no
-// separate copy of that text to keep in sync. A .skill-inline id with no
+// a Skill Setup card's expanded body, PLUS the meter/stack value lines
+// essentials-table.js's reference table shows under a skill's name (all
+// three read the same DB_SKILL_DATA[family][id] entry) - no separate
+// copy of any of that text to keep in sync. A .skill-inline id with no
 // entry there (Atropine, Stimulant - consumables, not real skills) falls
 // back to DB_SKILL_EXTRAS[id] instead: a flat id -> note map with no
 // family split and no tags, just enough for the tooltip to show their
@@ -149,17 +151,37 @@
       tip.appendChild(body);
     }
 
-    if (data.tags && data.tags.length) {
-      var tags = el("div", "skill-tip-tags");
-      data.tags.forEach(function (pair) {
-        tags.appendChild(el("span", "tag tag-" + pair[0], pair[1]));
+    // Same meter/stack value lines essentials-table.js shows in small
+    // italics under a skill's name on its reference table (e.g. "6314
+    // meter", "7 stacks") - joined onto one line here since a
+    // tooltip has nowhere near that table row's vertical room. Only
+    // DB_SKILL_DATA entries ever carry this (DB_SKILL_EXTRAS' consumable/
+    // food/engraving fallbacks never do), so this is a no-op for those.
+    //
+    // Appended as the first child of the SAME .skill-tip-tags row as the
+    // tag pills below, not its own div ahead of it - matching skill-
+    // setup.js's buildCard, which appends its .skill-card-meter and its
+    // .tag spans as flat siblings of one shared body so they wrap
+    // together as one inline group. A separate div here (this file's
+    // previous approach) is a block box regardless of what display value
+    // its own CSS gives it, so it always started its own row before the
+    // tags div after it no matter how the pill itself was styled - this
+    // keeps the meter chip in that same flow instead.
+    if ((data.lines && data.lines.length) || (data.tags && data.tags.length)) {
+      var tagsRow = el("div", "skill-tip-tags");
+      if (data.lines && data.lines.length) {
+        tagsRow.appendChild(el("span", "skill-tip-meter", data.lines.join(" \u00B7 ")));
+      }
+      (data.tags || []).forEach(function (pair) {
+        tagsRow.appendChild(el("span", "tag tag-" + pair[0], pair[1]));
       });
-      body.appendChild(tags);
+      body.appendChild(tagsRow);
     }
 
     if (data.note) {
       body.appendChild(el("p", "skill-tip-note", data.note));
     }
+
 
     // Appended to `tip` directly (not `body`) - it should always sit at
     // the very bottom of the panel as its own aside, not get folded

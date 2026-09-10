@@ -4,14 +4,20 @@
 //
 // SINGLE SOURCE OF TRUTH for the tag pills + short "what it does" note
 // shown inside a skill-card's expanded body on every build page's Skill
-// Setup section (see skill-setup.js, the renderer that reads this).
+// Setup section (see skill-setup.js, the renderer that reads this) - AND
+// (via `lines`) for the small meter/stack value skill-tooltip.js now
+// shows under a skill's name in every tooltip it renders (rotation
+// chips, .skill-inline mentions, and Damage-column gem tooltips, since a
+// gem's id is the same id as the skill it represents - see
+// gem-dps-tooltip.js/skill-tooltip.js's buildTip).
 //
 // This text is intentionally the SAME as each family's own
 // "## <Family> Skills" reference table on essentials.md - if you update a
-// tag or note there, update the matching entry here too so both stay in
-// sync. Build-specific reasoning (why THIS build picked THIS tripod)
-// stays out of here and instead lives in each build's own "picks" array
-// in its Skill Setup JSON, or in the prose sections already below it.
+// tag, note, or meter/stack line there, update the matching entry here
+// too so both stay in sync. Build-specific reasoning (why THIS build
+// picked THIS tripod) stays out of here and instead lives in each
+// build's own "picks" array in its Skill Setup JSON, or in the prose
+// sections already below it.
 //
 // Keyed by family ("re" / "surge") then skill id - the SAME id you use
 // in a Skill Setup JSON entry's "id" field, matching the icon-<id>.png
@@ -20,70 +26,99 @@
 // tags: array of ["dmg"|"util"|"immune"|"warn", "LABEL TEXT"] pairs,
 // rendered with the site's existing .tag/.tag-dmg/.tag-util/etc classes -
 // same four categories as the tag-legend on essentials.md.
+//
+// lines: OPTIONAL array of small value strings (a meter/stack number, a
+// cast-rate note, etc) - e.g. ["6314 meter"] or ["7 stacks"]. Stack counts
+// are written bare/ranged ("7 stacks", "2-3 stacks"), never "up to N" or
+// "N to M" - the pill they render into (see skill-setup.js/skill-tooltip.js)
+// is already labeled "stacks", so a leading "up to" or a spelled-out "to"
+// just repeats/lengthens what the number next to it already says.
+// Omit entirely for skills with nothing extra to show (e.g. Death
+// Trance). Same values essentials-table.js used to have authored a
+// second time per-page in each essentials.md skills-table JSON block -
+// that per-row "lines" field now just pulls from here instead, so
+// there's one fewer place to remember to update. RE's values assume the
+// caveat stated once above that family's table (1830 Specialization, no
+// runes/Maelstrom buff) - not restated per skill here or in the tooltip.
 (function () {
   window.DB_SKILL_DATA = {
     re: {
       maelstrom: {
         tags: [["util", "SYNERGY"], ["util", "BUFF"], ["warn", "NO PARA IMMUNE"]],
         note: "Increases orb generation and Attack/Move Speed for 6 seconds, charges up to two stacks.",
+        lines: ["4201 meter", "self buffed"],
       },
       voidstrike: {
         tags: [["util", "ORB GEN"]],
         note: "Main orb generator, use under Maelstrom's effect at a short distance from the boss.",
+        lines: ["6314 meter"],
       },
       twinshadows: {
         tags: [["util", "ORB GEN"], ["util", "RECOVERY"], ["util", "MOBILITY"]],
         note: "Multi-purpose, charges up to two stacks.",
+        lines: ["2227 meter"],
       },
       deathlyslash: {
         tags: [["dmg", "DAMAGE"], ["util", "ORB GEN"], ["util", "MOBILITY"]],
         note: "Strongest attack per cast, available every other cycle due to its long cooldown.",
+        lines: ["2880 meter"],
       },
       turningslash: {
         tags: [["util", "SYNERGY"], ["util", "ORB GEN"], ["util", "DESTINY"], ["immune", "PUSH IMMUNE"]],
         note: "Applies +4% outgoing and +5% directional damage synergy on hit. Activates Destiny for 333.",
+        lines: ["2228 meter"],
       },
       fatalwave: {
         tags: [["dmg", "DAMAGE"], ["util", "ORB GEN"], ["util", "DESTINY"]],
         note: "Resets its cooldown and becomes empowered when the Destiny effect is activated.",
+        lines: ["2217 meter", "3879 for 313"],
       },
       surge: {
         tags: [["dmg", "DAMAGE"], ["util", "MOBILITY"], ["util", "DESTINY"], ["immune", "PUSH IMMUNE"]],
         note: "Consumes orbs to grant the RE buff, Mana Recovery, and skill CDR. Activates Destiny for 111/313.",
+        lines: ["180/s OC2", "450/s OC5"],
       },
       soulabsorber: {
         tags: [["util", "ORB GEN"], ["util", "WEAK POINT"]],
         note: "Main orb generator, charge under Maelstrom's effect. You can aim its second hit for mobility.",
+        lines: ["7418 meter"],
       },
       blitzrush: {
         tags: [["util", "ORB GEN"], ["util", "RECOVERY"]],
         note: "Flexible ranged attack.",
+        lines: ["3156 meter"],
       },
       headhunt: {
         tags: [["util", "COUNTER"], ["util", "RECOVERY"], ["warn", "NO PARA IMMUNE"]],
         note: "Most flexible utility/recovery tool.",
+        lines: ["2200 meter"],
       },
       bladeassault: {
         tags: [["util", "AWAKENING"], ["dmg", "DAMAGE"], ["util", "ORB GEN"], ["immune", "PUSH IMMUNE"], ["immune", "STATUS IMMUNE"]],
         note: "Hold for damage and orb generation.",
+        lines: ["20467 meter"],
       },
       earthcleaver: {
         tags: [["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NO PARA IMMUNE"]],
         note: "Slow and utility focused.",
+        lines: ["2208 meter"],
       },
       spincutter: {
         tags: [["util", "MOBILITY"]],
         note: "Can be cast up to 2 times at Lv 4.",
+        lines: ["592 meter", "per cast"],
       },
       deathsentence: {
         tags: [["dmg", "DAMAGE"], ["util", "STAGGER"], ["util", "MOBILITY"]],
         note: "Well-rounded addition to classic builds.",
+        lines: ["1760 meter"],
       },
     },
     surge: {
       windcut: {
         tags: [["util", "STACKS"], ["warn", "NO PARA IMMUNE"]],
         note: "Core builder, often pre-cast before Death Trance.",
+        lines: ["7-9 stacks"],
       },
       deathtrance: {
         tags: [["util", "BUFF"], ["util", "DESTINY"], ["immune", "PUSH IMMUNE"]],
@@ -92,14 +127,17 @@
       maelstrom: {
         tags: [["util", "SYNERGY"], ["util", "BUFF"], ["warn", "NO PARA IMMUNE"]],
         note: "Increases Attack/Move Speed for 6 seconds, charges up to two stacks.",
+        lines: ["7 stacks"],
       },
       surpriseattack: {
         tags: [["util", "SYNERGY"], ["util", "MOBILITY"], ["util", "WEAK POINT"]],
         note: "Core builder, applies +4% outgoing and +5% directional damage synergy on hit.",
+        lines: ["7 stacks"],
       },
       breakingmoon: {
         tags: [["dmg", "DAMAGE"], ["util", "STACKS"], ["util", "BUFF"]],
         note: "Grants 60 stacks on hit and empowers the next Surge with +60% Critical Damage.",
+        lines: ["60 stacks"],
       },
       surge: {
         tags: [["dmg", "DAMAGE"], ["immune", "PUSH IMMUNE"]],
@@ -108,46 +146,57 @@
       bladedance: {
         tags: [["util", "STACKS"], ["dmg", "DAMAGE"]],
         note: "Core builder, you can stop holding it about 90% of the way and still generate full stacks.",
+        lines: ["9 stacks"],
       },
       blitzrush: {
         tags: [["dmg", "DAMAGE"]],
         note: "Filler builder for \uD83E\uDD81. On Destiny activation, resets its cooldown and becomes empowered for \uD83D\uDC2F.",
+        lines: ["7 stacks", "or 1 (333)"],
       },
       headhunt: {
         tags: [["util", "COUNTER"], ["warn", "NO PARA IMMUNE"]],
         note: "Fast utility/backup with micro-mobility.",
+        lines: ["2 stacks"],
       },
       earthcleaver: {
         tags: [["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NO PARA IMMUNE"]],
         note: "Slow utility filler. Charges up to two stacks for \uD83E\uDD81.",
+        lines: ["2-3 stacks"],
       },
       spincutter: {
         tags: [["util", "MOBILITY"], ["util", "STACKS"]],
         note: "Backup builder that can be cast up to 3 times.",
+        lines: ["2 stacks", "per cast"],
       },
       turningslash: {
         tags: [["util", "SYNERGY"], ["util", "DESTINY"], ["immune", "PUSH IMMUNE"]],
         note: "Applies +4% outgoing and +5% directional damage synergy on hit. Activates Destiny for \uD83D\uDC2F.",
+        lines: ["5 stacks"],
       },
       bladeassault: {
         tags: [["util", "AWAKENING"], ["dmg", "DAMAGE"], ["immune", "PUSH IMMUNE"], ["immune", "STATUS IMMUNE"]],
         note: "Hold for damage and stack generation.",
+        lines: ["20 stacks"],
       },
       deathlyslash: {
         tags: [["dmg", "DAMAGE"], ["util", "STACKS"], ["util", "MOBILITY"]],
         note: "Becomes empowered upon Destiny activation and subsequent normal skill use for \uD83D\uDC06.",
+        lines: ["11-12 stacks"],
       },
       darkaxel: {
         tags: [["util", "MOBILITY"], ["immune", "PUSH IMMUNE"]],
         note: "Jumps over bosses to facilitate a back attack.",
+        lines: ["2-3 stacks"],
       },
       upperslash: {
         tags: [["immune", "PUSH IMMUNE"]],
         note: "Core builder and utility for \uD83D\uDC06.",
+        lines: ["5 stacks"],
       },
       fallstar: {
         tags: [["immune", "PUSH IMMUNE"]],
         note: "Surely one day this will be the meta...",
+        lines: ["8 stacks"],
       },
     },
   };

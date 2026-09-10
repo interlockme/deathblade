@@ -234,29 +234,30 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 
 *Values recorded at 1830 Specialization with no runes or Maelstrom buff, 3 orbs are 30000 meter.*
 
-<!-- Per-row id/name/lines (small italic value lines like "4201 meter") -
-     full schema is in javascripts/essentials-table.js's "EASY EDIT GUIDE"
-     comment. Tags and Notes columns are NOT authored here: they come from
-     skill-data.js, so this table and every build page's Skill Setup card
-     stay in sync automatically - edit a tag/note there, not here. -->
+<!-- Per-row id/name - full schema is in javascripts/essentials-table.js's
+     "EASY EDIT GUIDE" comment. Tags, Notes, and the small italic value
+     lines under each name are NOT authored here: they come from
+     skill-data.js, so this table, every build page's Skill Setup card,
+     and every tooltip that names the skill stay in sync automatically -
+     edit a tag/note/line there, not here. -->
 
 <div class="skills-table" data-family="re" markdown>
 <script type="application/json">
 [
-  { "id": "maelstrom", "name": "Maelstrom", "lines": ["4201 meter", "self buffed"] },
-  { "id": "voidstrike", "name": "Void Strike", "lines": ["6314 meter"] },
-  { "id": "twinshadows", "name": "Twin Shadows", "lines": ["2227 meter"] },
-  { "id": "deathlyslash", "name": "Deathly Slash", "lines": ["2880 meter"] },
-  { "id": "turningslash", "name": "Turning Slash", "lines": ["2228 meter"] },
-  { "id": "fatalwave", "name": "Fatal Wave", "lines": ["2217 meter", "3879 for 313"] },
-  { "id": "surge", "name": "Surge", "lines": ["180/s OC2", "450/s OC5"] },
-  { "id": "soulabsorber", "name": "Soul Absorber", "lines": ["7418 meter"] },
-  { "id": "blitzrush", "name": "Blitz Rush", "lines": ["3156 meter"] },
-  { "id": "headhunt", "name": "Head Hunt", "lines": ["2200 meter"] },
-  { "id": "bladeassault", "name": "Blade Assault", "lines": ["20467 meter"] },
-  { "id": "earthcleaver", "name": "Earth Cleaver", "lines": ["2208 meter"] },
-  { "id": "spincutter", "name": "Spincutter", "lines": ["592 meter", "per cast"] },
-  { "id": "deathsentence", "name": "Death Sentence", "lines": ["1760 meter"] }
+  { "id": "maelstrom", "name": "Maelstrom" },
+  { "id": "voidstrike", "name": "Void Strike" },
+  { "id": "twinshadows", "name": "Twin Shadows" },
+  { "id": "deathlyslash", "name": "Deathly Slash" },
+  { "id": "turningslash", "name": "Turning Slash" },
+  { "id": "fatalwave", "name": "Fatal Wave" },
+  { "id": "surge", "name": "Surge" },
+  { "id": "soulabsorber", "name": "Soul Absorber" },
+  { "id": "blitzrush", "name": "Blitz Rush" },
+  { "id": "headhunt", "name": "Head Hunt" },
+  { "id": "bladeassault", "name": "Blade Assault" },
+  { "id": "earthcleaver", "name": "Earth Cleaver" },
+  { "id": "spincutter", "name": "Spincutter" },
+  { "id": "deathsentence", "name": "Death Sentence" }
 ]
 </script>
 </div>
