@@ -20,9 +20,14 @@
 //   - .rotation-line .skill chips that carry a data-skill-id (set by
 //     rotation-line.js for any plain single-skill step - see that file).
 //   - .skill-inline spans handwritten in prose (see extra.css's "Inline
-//     skill reference for prose" section) - id is read off the span's
-//     single <img> icon-<id>.png filename, since those spans are static
-//     markdown and don't otherwise carry one.
+//     skill reference for prose" section) - text-only now (no icon), so
+//     each carries an explicit data-skill-id itself, same as the
+//     data-skill-id branch described just below. The id-from-icon-
+//     filename guess this branch also supports is a fallback for a
+//     single direct-child <img> only: no current .skill-inline markup
+//     uses it (kept for a future mention that wants its own icon back
+//     without a code change - see extra.css's comment on that class for
+//     why today's mentions dropped the icon).
 //   - .engraving-chip / .engraving-card-name spans (essentials.md's
 //     Engravings section) and .skill-mention spans (bare prose mentions
 //     with no chip/pill around them at all, e.g. "equip maxed Spirit
@@ -33,17 +38,21 @@
 //     a separate function - since once an id is known the lookup/build/
 //     wire steps are identical either way.
 //   - .food-option pills (essentials.md's Food Requirement panel) - same
-//     icon-filename id lookup as .skill-inline, the pill div itself is
-//     the trigger. See attachFoodOption.
+//     icon-filename id lookup as attachBareIcon below, the pill div itself
+//     is the trigger. See attachFoodOption.
 //   - Bare food/consumable icons with no pill or name span around them
 //     (.food-option-icon standalone in Surge's alt line, .skill-icon
 //     standalone in both families' Engravings section) - the icon itself
 //     is the trigger. See attachBareIcon.
 //   - .food-req-item spans (Surge essentials' engraving-card food notes,
-//     e.g. "Atk/Move Speed feast advised") - same icon-filename id lookup
-//     as .skill-inline, wraps an icon + its own name so the hoverable
-//     area covers the words too, not just the icon. Also reuses
-//     attachSkillInline (its no-data-skill-id branch).
+//     e.g. "Atk/Move Speed feast advised" - AND Stimulant/Atropine's own
+//     prose mentions on build pages now too, reused with no .food-req
+//     ancestor around them - see extra.css's "Inline skill reference for
+//     prose" comment for why those moved off .skill-inline onto this
+//     class instead of a bare icon) - same icon-filename id lookup as
+//     .skill-inline, wraps an icon + its own name so the hoverable area
+//     (and the hover brightness cue) covers the words too, not just the
+//     icon. Also reuses attachSkillInline (its no-data-skill-id branch).
 //   - Also exposes window.SkillTooltip.attach() for gem-dps-tooltip.js,
 //     which needs this file's same lookup/build/wire pipeline but with an
 //     extra damage-share line (Damage gems) and/or an author-supplied
@@ -56,9 +65,10 @@
 // a Skill Setup card's expanded body, PLUS the meter/stack value lines
 // essentials-table.js's reference table shows under a skill's name (all
 // three read the same DB_SKILL_DATA[family][id] entry) - no separate
-// copy of any of that text to keep in sync. A .skill-inline id with no
-// entry there (Atropine, Stimulant - consumables, not real skills) falls
-// back to DB_SKILL_EXTRAS[id] instead: a flat id -> note map with no
+// copy of any of that text to keep in sync. An id with no entry there
+// (Atropine, Stimulant - consumables, not real skills, wired via
+// attachBareIcon rather than attachSkillInline - see above) falls back
+// to DB_SKILL_EXTRAS[id] instead: a flat id -> note map with no
 // family split and no tags, just enough for the tooltip to show their
 // in-game effect text rather than nothing. An id with no match in EITHER
 // map gets no tooltip at all - fail quietly, same rule every widget on
@@ -79,10 +89,13 @@
 //   in skill-data.js, for any FUTURE non-skill .skill-inline mention that
 //   should show something too.
 //
-//   A .skill-inline span can also force a specific id with
-//   data-skill-id="id" on the span itself, instead of relying on the
-//   icon-filename guess - useful if a future mention's icon and the skill
-//   it's actually about ever diverge (e.g. a stand-in icon).
+//   Every current .skill-inline span carries data-skill-id="id" directly
+//   (see extra.css's comment on that class). A future .skill-inline
+//   mention that DOES add its own single <img> back is still picked up
+//   automatically by icon-filename guess instead, with no code change
+//   needed here - useful if a mention's icon and the skill it's actually
+//   about ever diverge (e.g. a stand-in icon), where an explicit
+//   data-skill-id overrides the guess either way.
 (function () {
   var el = window.SiteUtils.el;
 

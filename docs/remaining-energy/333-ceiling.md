@@ -387,7 +387,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
     Openers stack <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and apply synergies efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
 
-    *From 3 orbs (<span class="skill-inline">![](../assets/shared/icon-stimulant.png)<span class="skill-inline-name">Stimulant</span></span>):*
+    *From 3 orbs (<span class="food-req-item">![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant</span>):*
     { .lead }
 
     <div class="rotation-line" markdown>
@@ -399,8 +399,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     </script>
     </div>
 
-    1. If available, <span class="skill-inline">![](../assets/shared/icon-bladeassault.png)<span class="skill-inline-name">Blade Assault</span></span> + <span class="skill-inline">![](../assets/shared/icon-fatalwave.png)![](../assets/shared/icon-turningslash.png)![](../assets/shared/icon-fatalwave.png)<span class="skill-inline-name">FTF</span></span> is interchangeable with Cycle **2**.
-    2. It's efficient to use <span class="skill-inline">![](../assets/shared/icon-atropine.png)<span class="skill-inline-name">Atropine</span></span> after Deathly Slash, with Blade Assault available.
+    1. If available, <span class="skill-inline" data-skill-id="bladeassault"><span class="skill-inline-name">Blade Assault</span></span> + <span class="skill-inline"><span class="skill-inline-name">FTF</span></span> is interchangeable with Cycle **2**.
+    2. It's efficient to use <span class="food-req-item">![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine</span> after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs:*
     { .lead }
@@ -423,9 +423,9 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     </div>
     </div>
 
-    1. Use <span class="skill-inline">![](../assets/shared/icon-headhunt.png)<span class="skill-inline-name">Head Hunt</span></span> when a little short on orbs, just cast if unsure.
+    1. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> when a little short on orbs, just cast if unsure.
     2. Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
-    3. Use <span class="skill-inline">![](../assets/shared/icon-headhunt.png)<span class="skill-inline-name">Head Hunt</span></span> instead of <span class="skill-inline">![](../assets/shared/icon-twinshadows.png)<span class="skill-inline-name">Twin Shadows</span></span> for a cycle to recover stacks if they run out.
+    3. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> instead of <span class="skill-inline" data-skill-id="twinshadows"><span class="skill-inline-name">Twin Shadows</span></span> for a cycle to recover stacks if they run out.
     4. Use Maelstrom + FTF combo earlier if waiting on main orb generation skills.
     5. Hold Deathly Slash until the next Cycle **1** if it's out of sync. DPS loss, but easier.
 

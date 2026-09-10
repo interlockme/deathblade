@@ -330,7 +330,7 @@ Alternate between these two cycles as needed for ceiling DPS:
       - If you have 7+ stacks at the moment you activate Death Arts, you can skip it.
       - Be mindful of missed Maelstrom/Wind Cut hits from boss patterns and movement.
 
-It helps to think of everything within <span class="skill-inline">![](../assets/shared/icon-deathtrance.png)<span class="skill-inline-name">Death Trance</span></span> and <span class="skill-inline">![](../assets/shared/icon-deathlyslash.png)<span class="skill-inline-name">Deathly Slash</span></span> as 53 stacks, and the Wind Cut Precast or Surprise Attack finisher as flexible options that give you the 7+ stacks needed to complete a 60+ stack Surge.
+It helps to think of everything within <span class="skill-inline" data-skill-id="deathtrance"><span class="skill-inline-name">Death Trance</span></span> and <span class="skill-inline" data-skill-id="deathlyslash"><span class="skill-inline-name">Deathly Slash</span></span> as 53 stacks, and the Wind Cut Precast or Surprise Attack finisher as flexible options that give you the 7+ stacks needed to complete a 60+ stack Surge.
 </details>
 
 </div>
@@ -345,7 +345,7 @@ It helps to think of everything within <span class="skill-inline">![](../assets/
 *From zero orbs:*
 { .lead }
 
-1. Use a <span class="skill-inline">![](../assets/shared/icon-stimulant.png)<span class="skill-inline-name">Stimulant</span></span> (recommended) or proceed to #2.
+1. Use a <span class="food-req-item">![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant</span> (recommended) or proceed to #2.
 2. Generate one orb, build at least 40 stacks, then Surge to refill all 3 orbs.
 
 ## DPS Spread

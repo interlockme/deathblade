@@ -269,7 +269,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
     Openers stack <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and apply synergies efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
 
-    *From 3 orbs (<span class="skill-inline">![](../assets/shared/icon-stimulant.png)<span class="skill-inline-name">Stimulant</span></span>):*
+    *From 3 orbs (<span class="food-req-item">![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant</span>):*
     { .lead }
 
     <div class="rotation-line" markdown>
@@ -281,8 +281,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     </script>
     </div>
 
-    1. If available, <span class="skill-inline">![](../assets/shared/icon-bladeassault.png)<span class="skill-inline-name">Blade Assault</span></span> is interchangeable with Cycle **2**.
-    2. It's efficient to use <span class="skill-inline">![](../assets/shared/icon-atropine.png)<span class="skill-inline-name">Atropine</span></span> after Deathly Slash, with Blade Assault available.
+    1. If available, <span class="skill-inline" data-skill-id="bladeassault"><span class="skill-inline-name">Blade Assault</span></span> is interchangeable with Cycle **2**.
+    2. It's efficient to use <span class="food-req-item">![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine</span> after Deathly Slash, with Blade Assault available.
 
     *From zero/partial orbs:*
     { .lead }

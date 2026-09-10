@@ -611,26 +611,51 @@ h3 { color: var(--dbc-teal); }
    .rotation-line's own chips) - read as heavy and out of place sitting
    in the middle of a normal sentence, unlike .rotation-line/.cycle-card
    where every step IS a chip and the boxed language fits the whole row.
-   No box/background/border/padding here at all: just the icon (kept at
-   the same size, with the same ring/glow treatment used site-wide -
-   .food-option-icon, .skill-chip's old img rule - so it still reads as
-   a pulled-out game icon rather than a plain inline image) sitting next
-   to the name, which gets a modest color lift instead of a border so a
-   pivotal skill mention still stands out from surrounding body text
-   without a shape wrapped around it.
-   Usage: <span class="skill-inline">![](../assets/shared/icon-headhunt.png)Head Hunt</span>
-   Deliberately NOT display:inline-flex (the first version of this rule
-   was, and it was wrong): flexbox takes over vertical alignment of its
-   own children, so the img's own vertical-align below stopped doing
-   anything, and the whole unit's position against the surrounding line
-   was instead whatever vertical-align the flex container itself got -
-   which floated the icon+name noticeably above the sentence's baseline
-   instead of sitting on it. Plain inline flow (same as the bare
-   .skill-icon usages dotted through prose elsewhere, e.g. the
-   feast/consumable notes in essentials.md) lets the img's own
-   vertical-align do the alignment work directly against the actual
-   text, same as any other inline image next to text - see that
-   property's own comment below for how its value was tuned. */
+   Also used to lead with an icon before the name - dropped that too:
+   once the boxed chip was already gone, a pulled-out game icon sitting
+   mid-sentence in front of a bold/colored word was doing the same job
+   twice (both are "look here"), and reads as more decoration than a
+   plain skill name needs. The bold/lavender name alone is enough to
+   flag a pivotal mention without a shape OR an icon wrapped around it.
+   Usage now: <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span>
+   data-skill-id is required (no icon left to guess the id from - see
+   skill-tooltip.js's attachSkillInline, whose data-skill-id branch this
+   relies on) except for an ambiguous multi-skill combo mention (e.g.
+   "FTF" for Fatal Wave/Turning Slash/Fatal Wave), which still renders
+   name-only with no data-skill-id and, same as before, gets no tooltip.
+   Consumables (Stimulant, Atropine) used to share this exact class/
+   markup - moved OFF it entirely instead of just losing their icon:
+   a permanently bold/lavender name reads as "this is a skill", which a
+   potion isn't, and unlike a skill a reader can't act on a consumable
+   mention by learning its name alone the way they can a skill's. They
+   now use `.food-req-item` (see that class further down) instead of a
+   bare `![](icon.png){: .skill-icon }` icon: a bare icon's own
+   hover rule only rings the IMAGE (attachBareIcon wires just the <img>
+   as the trigger, so the trailing name sits outside it and never gets a
+   hover cue at all) - wrapping icon + name in .food-req-item makes the
+   whole phrase the trigger instead, same as every other food/consumable
+   mention dotted through prose elsewhere (essentials.md's feast notes),
+   so hovering ANYWHERE on "[icon] Stimulant" gives the same filter:
+   brightness(1.3) lift .skill-mention/.food-req-item already use for
+   "subtler, not a real skill" text elsewhere, not just a ring on the
+   icon. Icon kept (so a purely visual/game-familiar cue survives for
+   something a reader has to go pick up, unlike a skill they already
+   have on their bar), name left as completely plain text at rest.
+   .food-req-item's own rest-state styling (color/font-size) actually
+   comes from its .food-req ANCESTOR in essentials.md's food-req lines -
+   used bare here, outside any .food-req wrapper, it inherits normal
+   body/list text instead, which is exactly the plain-at-rest look
+   wanted in this prose context; only the hover/ring rules (defined on
+   .food-req-item itself, not scoped under .food-req) are actually being
+   reused. See that class's own comment further down for the full
+   rationale on the hover treatment being shared this way.
+   No img rule lives in this section anymore: every current .skill-inline
+   span is text-only, so there's nothing left to style. If some future
+   mention ever needs an icon back on THIS class specifically (as opposed
+   to moving to .food-req-item like the consumables above), that class's
+   own `img.skill-icon` handling further down is the closest reference
+   for sizing/ring/margin - don't resurrect a separate copy here from
+   scratch. */
 .md-typeset .skill-inline {
   white-space: nowrap;
 }
@@ -656,26 +681,6 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .skill-inline.skill-tip-anchor:hover .skill-inline-name,
 .md-typeset .skill-inline.skill-tip-anchor:focus-visible .skill-inline-name {
   color: var(--dbc-purple);
-}
-.md-typeset .skill-inline img {
-  height: 1.1em;
-  width: 1.1em;
-  object-fit: contain;
-  /* vertical-align: middle looked right in theory but sat low in practice:
-     the spec aligns the image's middle to a point only 0.5ex above the
-     baseline, which is well below the visual center of this font's bold
-     caps/x-height. Nudging up with a small negative length (offset from
-     middle, not a swap to a different keyword) corrects that without
-     touching line-height/row spacing - vertical-align never affects the
-     line box height, only where the inline box paints within it, so the
-     icon and name still can't push rows apart. -0.15em matched this font
-     at both sizes this is used at (prose ~15px, list items ~13-14px);
-     recheck against a couple of live .skill-inline instances if the base
-     font ever changes. */
-  vertical-align: -0.15em;
-  border-radius: 4px;
-  margin: 0 3px 0 4px;
-  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.3);
 }
 
 /* ---------- Bare prose mentions with no chip/icon at all ---------- */
@@ -2637,6 +2642,27 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .engraving-card-name.skill-tip-anchor:focus-visible {
   color: var(--dbc-purple);
 }
+/* Surge's "RC + MI" card (essentials.md) is the one engraving-card-name
+   that can't carry a single data-skill-id itself the way every other
+   card's name does: the title names TWO different engravings, so it
+   wraps two independent .skill-mention triggers (one per abbreviation)
+   instead. .skill-mention's own hover rule further up (filter:
+   brightness(1.3), no color set at rest) is right for a bare mention
+   sitting in ordinary body text, but wrong nested in here: it just
+   brightens .engraving-card-name's own white heading color instead of
+   shifting to purple like every other card name's hover does - reads
+   as "lit up white", not matching. Override color + cancel the
+   inherited filter (rather than layering purple UNDER a brightness
+   filter, which would still look off) so RC/MI hover identically to a
+   normal single-engraving card name. Scoped to .engraving-card-name
+   .skill-mention specifically - every other .skill-mention on the site
+   (Quick Tips, engraving card body text, Ark Passive node mentions)
+   keeps its normal brightness-only treatment. */
+.md-typeset .engraving-card-name .skill-mention.skill-tip-anchor:hover,
+.md-typeset .engraving-card-name .skill-mention.skill-tip-anchor:focus-visible {
+  color: var(--dbc-purple);
+  filter: none;
+}
 .md-typeset .engraving-card-badges {
   display: flex;
   flex-wrap: wrap;
@@ -2778,12 +2804,81 @@ h3 { color: var(--dbc-teal); }
    conflict between the two. Purple ring on the icon (not .food-option-
    icon's rose) to match img.skill-icon.skill-tip-anchor's own
    Engravings-section color - these food-req lines live inside
-   engraving cards, same section. */
+   engraving cards, same section.
+
+   This class is also reused bare - no .food-req ancestor at all - for
+   Stimulant/Atropine's own prose mentions on build pages (see "Inline
+   skill reference for prose" above). Deliberately not scoped under
+   .food-req anywhere in this rule or the two below it: with no ancestor
+   supplying --dbc-lavender/0.85em, a bare usage just inherits whatever
+   plain body/list-item text already surrounds it, which is exactly the
+   "not a real skill, don't oversell it" rest state wanted there too -
+   same filter:brightness(1.3)-on-the-whole-trigger hover this class
+   already gives a real .food-req line, for free, with zero extra CSS. */
 .md-typeset .food-req-item {
+  transition: filter 0.15s ease;
+}
+/* Row-scoped usage only (essentials.md's .food-req engraving-card food
+   notes): inline-flex + align-items: center to vertically center icon
+   and text against each other and supply gap spacing, matching the
+   sibling icons/spacing of that flex row.
+
+   Bare usage (no .food-req ancestor - Stimulant/Atropine's own prose
+   mentions) deliberately does NOT get display: inline-flex at all: an
+   inline-flex box's baseline is synthesized from flex layout rather than
+   read off its actual text content, and centering icon+text inside it
+   (align-items: center) put that synthesized baseline consistently
+   above the real text baseline of the surrounding line - vertical-align:
+   text-bottom on the span was tried first and only closed most of the
+   gap (still ~1-2px off; text-bottom pins the box's bottom edge to the
+   line's descender line, not the same position as the actual text
+   baseline, and italics make the two diverge further). Leaving bare
+   usage as plain (inline, not flex) sidesteps the mismatch entirely: the
+   icon and its text become ordinary inline siblings again, with no flex
+   baseline synthesis in the way. Icon-to-text spacing then comes from
+   img.skill-icon's own default L/R margin (extra.css's very first
+   .skill-icon rule) instead of flex gap, so no extra CSS is needed for
+   that either.
+
+   img.skill-icon's sitewide default is vertical-align: text-bottom,
+   though, which is itself not quite right for THIS bare case: text-
+   bottom pins the icon's bottom edge to the line's descender line (the
+   bottom of the font's em box), not to the actual glyph baseline the
+   surrounding letters sit on - normally invisible since most icon
+   usages elsewhere sit next to words with descenders (g/p/y) or inside
+   the Engravings section's own layout, but next to a word like
+   "Atropine" with no descender of its own to blur the difference, the
+   icon visibly hangs a couple px lower than the text baseline. True
+   vertical-align: baseline instead aligns a replaced element's own
+   bottom edge to that real baseline directly - overridden below,
+   specifically for .food-req-item (not the shared img.skill-icon rule
+   itself, which every OTHER bare icon usage on the site still wants
+   text-bottom for). */
+.md-typeset .food-req-item img.skill-icon {
+  vertical-align: baseline;
+  /* Baseline-anchoring the icon (above) is correct, but the base
+     img.skill-icon rule sizes every icon at a flat 1.1em - close to the
+     font's full line-height, versus a letter's own ascender-to-baseline
+     span (roughly half that). Anchored to the real baseline, a full
+     1.1em icon towers well above the surrounding cap-height/ascender
+     line instead of just reaching it - shrinking it here brings its top
+     back down to roughly where the tallest letter's ascender sits, so
+     it reads as "an icon sitting on the line" rather than "a badge
+     hovering over the line". Restored to the original 1.1em just below
+     for the .food-req row context, which never had this problem (flex
+     align-items: center there, not baseline-anchored against running
+     text) and was already sized for that row. */
+  height: 0.8em;
+  width: 0.8em;
+}
+.md-typeset .food-req .food-req-item img.skill-icon {
+  height: 1.1em;
+  width: 1.1em;
+}
+.md-typeset .food-req .food-req-item {
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
-  transition: filter 0.15s ease;
 }
 .md-typeset .food-req-item.skill-tip-anchor:hover,
 .md-typeset .food-req-item.skill-tip-anchor:focus-visible {
