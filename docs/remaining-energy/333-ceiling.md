@@ -259,7 +259,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="example" markdown>
 <summary><span class="setup-note-tag">Alt</span>Fatal Wealth<span class="setup-note-arrow"></span></summary>
 
-- <span class="skill-mention" data-rune-name="Wealth" data-rune-tier="epic">Wealth</span>  rune on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
+- <span class="skill-mention" data-rune-name="Wealth" data-rune-tier="epic">Epic Wealth</span>  rune on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
 - It won't cycle as smoothly, but the reduced stress and urgency may suit some people.
 - Honestly, don't play this; 333 with <span class="skill-mention" data-ap-id="orbcirculation" data-level="5">OC 5</span>, 313, or literally any Surge build will perform better.
 

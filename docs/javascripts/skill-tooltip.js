@@ -39,6 +39,11 @@
 //     (.food-option-icon standalone in Surge's alt line, .skill-icon
 //     standalone in both families' Engravings section) - the icon itself
 //     is the trigger. See attachBareIcon.
+//   - .food-req-item spans (Surge essentials' engraving-card food notes,
+//     e.g. "Atk/Move Speed feast advised") - same icon-filename id lookup
+//     as .skill-inline, wraps an icon + its own name so the hoverable
+//     area covers the words too, not just the icon. Also reuses
+//     attachSkillInline (its no-data-skill-id branch).
 //   - Also exposes window.SkillTooltip.attach() for gem-dps-tooltip.js,
 //     which needs this file's same lookup/build/wire pipeline but with an
 //     extra damage-share line this file doesn't itself compute.
@@ -220,7 +225,29 @@
   // re-renders, a stray extra MutationObserver pass) never double-wire
   // the same element - same idempotency instinct as skill-setup.js/
   // rotation-line.js's own render guards.
-  function wire(trigger, tip) {
+  // opts.fallbackTrigger: this trigger sits INSIDE another element that's
+  // also independently wired (currently only RE's Raid Captain chip's
+  // Feast icon, nested inside the chip itself - see attachBareIcon).
+  // mouseenter fires ancestor-first when the pointer lands directly on a
+  // nested trigger (crossing the outer element's boundary necessarily
+  // happens before crossing the inner one's), so the outer's tooltip
+  // flashes open for an instant and is then immediately closed by this
+  // trigger's own closeAllExcept below - that ordering is what makes the
+  // inner trigger "win" while the pointer is actually over it. The
+  // opposite direction isn't symmetric, though: moving off this trigger
+  // to elsewhere on the outer one doesn't re-cross the outer's boundary
+  // at all, so its mouseenter never refires, and without the explicit
+  // handoff in the mouseleave handler below both tooltips would just stay
+  // closed until the pointer left and re-entered the whole outer element.
+  function findEntry(t) {
+    for (var i = 0; i < openTips.length; i++) {
+      if (openTips[i].trigger === t) return openTips[i];
+    }
+    return null;
+  }
+
+  function wire(trigger, tip, opts) {
+    opts = opts || {};
     trigger.classList.add("skill-tip-anchor", "skill-tip-wired");
     trigger.setAttribute("tabindex", "0");
     document.body.appendChild(tip);
@@ -240,9 +267,24 @@
       positionTip(trigger, tip);
       refresh(entry);
     });
-    trigger.addEventListener("mouseleave", function () {
+    trigger.addEventListener("mouseleave", function (evt) {
       entry.state.hover = false;
       refresh(entry);
+      // See opts.fallbackTrigger's comment above wire(). Only hands the
+      // tooltip back if the pointer is still actually inside the outer
+      // trigger (relatedTarget) - if it left the outer element entirely
+      // too, that element's own mouseleave (registered separately, when
+      // IT was wired) already fired or is about to, and will correctly
+      // leave both closed.
+      if (opts.fallbackTrigger && evt.relatedTarget && opts.fallbackTrigger.contains(evt.relatedTarget)) {
+        var parentEntry = findEntry(opts.fallbackTrigger);
+        if (parentEntry) {
+          closeAllExcept(opts.fallbackTrigger);
+          parentEntry.state.hover = true;
+          positionTip(opts.fallbackTrigger, parentEntry.tip);
+          refresh(parentEntry);
+        }
+      }
     });
     trigger.addEventListener("focusin", function () {
       closeAllExcept(trigger);
@@ -279,6 +321,24 @@
   }
 
   function attachRotationSkill(trigger) {
+    if (trigger.classList.contains("skill-tip-wired")) return;
+    var id = trigger.getAttribute("data-skill-id");
+    if (!id) return;
+    var data = lookupData(id, resolveFamily(trigger));
+    if (!data) return;
+    wire(trigger, buildTip(id, data));
+  }
+
+  // rotation-line.js's multi-icon "pick whichever" step (e.g. Turning
+  // Slash/Surprise Attack joined by "or", name text dropped for space) -
+  // the step's own .skill chip has no data-skill-id (ambiguous, see that
+  // file's own comment), but it stamps one directly on each <img> inside
+  // it, since an individual icon IS still unambiguously one real skill.
+  // Same wire()/buildTip() as attachRotationSkill above, just keyed off
+  // the icon itself as the trigger instead of the whole chip, so hovering
+  // one icon shows only that icon's own tooltip, not a guess at which of
+  // the two the step "really" means.
+  function attachRotationIcon(trigger) {
     if (trigger.classList.contains("skill-tip-wired")) return;
     var id = trigger.getAttribute("data-skill-id");
     if (!id) return;
@@ -349,24 +409,35 @@
   function attachBareIcon(trigger) {
     if (trigger.classList.contains("skill-tip-wired")) return;
     if (trigger.closest(".food-option")) return;
-    // Same skip as .food-option just above, for the same reason: RE's
-    // Raid Captain chip (.engraving-chip-food) wraps its feast icon
-    // INSIDE the chip that's already wired as its own trigger
-    // (.engraving-chip[data-skill-id="raidcaptain"], via attachSkillInline).
-    // Without this, the icon became a second, independent, nested
-    // trigger - hovering it fired its own mouseenter, which calls
-    // closeAllExcept and immediately closes the chip's just-opened Raid
-    // Captain tooltip in favor of the icon's Feast one, so the outer
-    // chip's tooltip was only reachable by landing on the small sliver of
-    // chip NOT covered by the icon, never by hovering the icon itself.
-    if (trigger.closest(".engraving-chip[data-skill-id]")) return;
+    // Icon+text combos rewritten as .food-req-item spans (Surge
+    // essentials' engraving-card food notes, e.g. "Atk/Move Speed feast
+    // advised") are wired whole via attachSkillInline instead, so the
+    // words are part of the hoverable area too, not just the icon - skip
+    // here so the icon doesn't become a second, independent, nested
+    // trigger inside that span's own (same reason as the .food-option
+    // skip just above).
+    if (trigger.closest(".food-req-item")) return;
     var match = ICON_ID_RE.exec(trigger.getAttribute("src") || "");
     if (!match) return;
     var id = match[1];
     var data = lookupData(id, resolveFamily(trigger));
     if (!data) return;
     trigger.removeAttribute("title");
-    wire(trigger, buildTip(id, data));
+    // RE's Raid Captain chip (.engraving-chip-food) wraps its Feast icon
+    // INSIDE the chip that's already wired as its own trigger
+    // (.engraving-chip[data-skill-id="raidcaptain"], via attachSkillInline)
+    // - rather than skip the icon (which loses the Feast tooltip
+    // entirely) or leave it fully independent (which starves the chip's
+    // own Raid Captain tooltip down to the small sliver of chip not
+    // covered by the icon), pass that chip as a fallbackTrigger so wire()
+    // hands its tooltip back once the pointer moves off the icon but is
+    // still somewhere else on the chip. See wire()'s own comment for how
+    // that handoff works. Any OTHER bare .skill-icon with no enclosing
+    // chip (the Engravings-section food notes elsewhere, standalone
+    // .food-option-icon mentions) simply gets fallbackTrigger: null,
+    // i.e. today's plain behavior, unaffected.
+    var chip = trigger.closest(".engraving-chip[data-skill-id]");
+    wire(trigger, buildTip(id, data), { fallbackTrigger: chip || null });
   }
 
   // A fixed-position tip doesn't scroll with its trigger the way an
@@ -419,7 +490,8 @@
   });
 
   window.SiteUtils.registerRenderer(".rotation-line .skill[data-skill-id]", attachRotationSkill);
-  window.SiteUtils.registerRenderer(".skill-inline, .engraving-chip[data-skill-id], .engraving-card-name[data-skill-id], .skill-mention[data-skill-id]", attachSkillInline);
+  window.SiteUtils.registerRenderer(".rotation-line .skill img[data-skill-id]", attachRotationIcon);
+  window.SiteUtils.registerRenderer(".skill-inline, .food-req-item, .engraving-chip[data-skill-id], .engraving-card-name[data-skill-id], .skill-mention[data-skill-id]", attachSkillInline);
   window.SiteUtils.registerRenderer(".food-option", attachFoodOption);
   window.SiteUtils.registerRenderer(".food-option-icon, img.skill-icon", attachBareIcon);
 

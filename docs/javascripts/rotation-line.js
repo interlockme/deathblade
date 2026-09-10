@@ -49,7 +49,10 @@
 //     { "icons": ["turningslash", "surpriseattack"], "situational": true,
 //       "situational": "synergy/adrenaline" }
 //       - two icons joined by "or" or, with no name text - for a step
-//         that's really "pick whichever of these is up".
+//         that's really "pick whichever of these is up". The step as a
+//         whole has no single tooltip (nothing to attach it to - see
+//         buildStep below), but each icon still gets its own hover/
+//         focus/tap tooltip individually, same as a normal step's icon.
 //     { "cycleRef": 2, "title": "Soul Absorber + Blitz Rush Cycle" }
 //       - a pseudo-step pointing at a Cycle card above instead of a
 //         real skill (no icon). Renders the same cycle-num/cycle-title
@@ -95,7 +98,19 @@
     } else if (step.icons && step.icons.length) {
       step.icons.forEach(function (id, i) {
         if (i > 0) span.appendChild(document.createTextNode(" or "));
-        span.appendChild(buildIcon(id));
+        var icon = buildIcon(id);
+        // The outer .skill chip deliberately gets no data-skill-id here
+        // (see this function's own header comment - a multi-icon "pick
+        // whichever" step isn't one skill a single tooltip could
+        // describe), but each individual icon IS unambiguously one real
+        // skill on its own - the name text was only dropped for space,
+        // not because the icon stopped meaning anything. Stamping the id
+        // on the <img> itself lets skill-tooltip.js wire a per-icon
+        // tooltip (see its attachRotationIcon) the same way it already
+        // does for a plain single-id step's whole chip, just scoped to
+        // this one icon instead of the whole "A or B" span.
+        icon.setAttribute("data-skill-id", id);
+        span.appendChild(icon);
       });
     } else {
       span.appendChild(buildIcon(step.id));

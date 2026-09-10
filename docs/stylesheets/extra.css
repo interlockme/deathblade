@@ -255,12 +255,15 @@ h2 { color: var(--dbc-purple); } /* muted lavender, used sparingly as an accent,
 h3 { color: var(--dbc-teal); }
 
 /* ---------- Lead paragraph (opt-in) ---------- */
-/* A slightly larger, lighter-colored treatment for the first sentence
-   introducing a dense section - a softer entry point before a wall of
-   tabs/bullets/rotation-lines hits. Opt-in only, not automatic: add
-   `{ .lead }` on the line right after the paragraph you want it on. */
+/* A lighter-colored treatment for the first sentence introducing a
+   dense section - a softer entry point before a wall of tabs/bullets/
+   rotation-lines hits. Opt-in only, not automatic: add `{ .lead }` on
+   the line right after the paragraph you want it on.
+   No longer sized up (was font-size: 1.08em) - read as a different
+   text size from the rest of the page's body copy, not just a softer
+   intro; the lighter color alone already does the "softer entry point"
+   job without introducing a second body text size. */
 .md-typeset p.lead {
-  font-size: 1.08em;
   color: var(--md-default-fg-color--light);
   margin-bottom: 0.8em;
 }
@@ -702,16 +705,33 @@ h3 { color: var(--dbc-teal); }
    term rather than an incidental mention. Left as completely plain text
    until interacted with; cursor: help (from the shared .skill-tip-anchor
    rule below) is the only always-on cue that something's there. On
-   hover/focus only, a faint dotted underline in a muted, low-contrast
-   tone - same "found it" moment as the cursor already gives, just a
-   second confirmation once the mouse is actually on the word instead of
-   only in the cursor icon. No color shift on the text itself even then,
-   for the same over-emphasis reason as above. */
+   hover/focus only, a straightforward text color shift (no background
+   fill - read as a solid highlight-block sitting on top of the
+   sentence, too loud for an incidental mention; no ring either - fine
+   on an icon, where it echoes a game item's own glow, but a ring traced
+   around a word read as more decoration than a bare prose mention
+   needs; no dotted underline - read as a broken-link/typo indicator
+   more than a hover hint) - same "found it" moment as the cursor
+   already gives, just a second confirmation once the mouse is actually
+   on the word instead of only in the cursor icon.
+
+   filter: brightness() rather than a fixed swatch (a fixed color, first
+   attempt, was a mistake: this class inherits whatever color surrounds
+   it - default body text, a Tip admonition's lilac, etc - and every one
+   of those contexts is already lighter than --dbc-lavender, so hard-
+   coding that swatch made hover consistently DARKEN the word instead of
+   highlighting it, backwards from the intent). brightness(1.3) instead
+   scales whatever color is already there brighter, so the direction is
+   always correct regardless of context - it only ever falls short of a
+   visible bump where the base color is already close to white (where
+   brightening genuinely has nowhere left to go), never flips to a
+   darken. */
+.md-typeset .skill-mention {
+  transition: filter 0.15s ease;
+}
 .md-typeset .skill-mention.skill-tip-anchor:hover,
 .md-typeset .skill-mention.skill-tip-anchor:focus-visible {
-  text-decoration: underline dotted;
-  text-decoration-color: rgba(var(--dbc-lavender-rgb), 0.55);
-  text-underline-offset: 3px;
+  filter: brightness(1.3);
 }
 
 /* ---------- Skill role tags (Essentials skill tables) ---------- */
@@ -2704,6 +2724,67 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .food-req img.skill-icon {
   margin: 0;
+}
+
+/* An icon + its own name inside a .food-req line (e.g. "Atk/Move Speed
+   feast" or "Vernese Wine"), wrapped so the whole phrase is hoverable for
+   skill-tooltip.js's tooltip - not just the icon, the way a bare
+   .skill-icon usage elsewhere leaves it.
+
+   display: inline-flex + align-items: center matters here, not just for
+   consistency with the row it sits in: without it, the icon and its text
+   are plain inline siblings, and img.skill-icon's own vertical-align:
+   text-bottom (needed for OTHER bare-icon usages that sit directly in a
+   text line) pins the icon to this span's text baseline instead of its
+   center - visually different from how a lone icon used to line up
+   before this span existed (back then the icon was its own top-level
+   flex child of .food-req, centered directly against the row by THAT
+   flex context's align-items: center, with no surrounding text inside
+   its own box to set a baseline against). Making this span itself a
+   (small, inline) flex container re-centers the icon against ITS text
+   the same way, independent of font metrics, and the whole span still
+   behaves as one flex item within the outer .food-req row exactly as a
+   plain text run would. gap: 0.3em supplies the icon-to-text spacing
+   directly - needed because the shared `.food-req img.skill-icon {
+   margin: 0; }` rule just above zeroes out .skill-icon's own default L/R
+   margin for every icon inside a .food-req line, this one included, on
+   the assumption spacing comes from the row's own flex gap instead. True
+   for a bare icon sitting directly in that row, but this icon isn't a
+   direct child of THAT flex row anymore - it's one row down, inside this
+   span - so without its own gap it'd sit flush against its text.
+
+   Same understated, no-color-at-rest treatment as .skill-mention above
+   (a filter: brightness() lift that only appears on hover/focus, cursor:
+   help from the shared .skill-tip-anchor rule doing the always-on work;
+   see that rule's own comment for why a filled background, a ring, a
+   dotted underline, and a fixed hover swatch were all tried and dropped
+   for bare-prose text - a fixed swatch here would have been a literal
+   no-op besides: .food-req already sets this line's color to
+   --dbc-lavender at rest, so a hover rule hard-coding that same swatch
+   changed nothing at all) rather than .skill-inline's bold/colored name
+   - these already sit in a muted .food-req line, not normal prose, so
+   promoting them further would stand out too much against it. filter
+   applies to the whole span, icon included (unlike a plain `color`
+   change, which only paints text) - harmless here since the icon
+   brightening slightly on top of its own independent ring-intensify
+   rule below just reads as "the whole trigger perked up," not a
+   conflict between the two. Purple ring on the icon (not .food-option-
+   icon's rose) to match img.skill-icon.skill-tip-anchor's own
+   Engravings-section color - these food-req lines live inside
+   engraving cards, same section. */
+.md-typeset .food-req-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  transition: filter 0.15s ease;
+}
+.md-typeset .food-req-item.skill-tip-anchor:hover,
+.md-typeset .food-req-item.skill-tip-anchor:focus-visible {
+  filter: brightness(1.3);
+}
+.md-typeset .food-req-item.skill-tip-anchor:hover img.skill-icon,
+.md-typeset .food-req-item.skill-tip-anchor:focus-visible img.skill-icon {
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.65), 0 0 8px rgba(var(--dbc-purple-rgb), 0.4);
 }
 
 /* ---------- Pre-Ark Grid page option cards ---------- */
@@ -7050,6 +7131,7 @@ body.page-333-blitz input[type="text"] {
   border: 1px solid transparent;
   white-space: nowrap;
   flex-shrink: 0;
+  transition: border-color 0.15s ease;
 }
 .md-typeset .rune-chip.rune-uncommon {
   background-color: rgba(var(--dbc-green-rgb), 0.14);
@@ -7070,6 +7152,31 @@ body.page-333-blitz input[type="text"] {
   background-color: rgba(var(--dbc-violet-rgb), 0.16);
   color: var(--dbc-violet);
   border-color: rgba(var(--dbc-violet-rgb), 0.45);
+}
+/* Hover/focus cue - rune-tooltip.js wires every chip with resolved rune
+   data as a full .skill-tip-anchor, but like the Ark Passive node above,
+   nothing here reacted to hover/focus at all before this: the fill/
+   border already carries this chip's own tier color at rest, same
+   border-brighten language as .engraving-chip.skill-tip-anchor:hover
+   (brighten the tier's own border rather than jump to a flat accent, no
+   new background layered on top of the existing fill). Own rune-* class
+   in each selector so every tier brightens its own color, not just the
+   tier written last in the cascade. */
+.md-typeset .rune-chip.rune-uncommon.skill-tip-anchor:hover,
+.md-typeset .rune-chip.rune-uncommon.skill-tip-anchor:focus-visible {
+  border-color: rgba(var(--dbc-green-rgb), 0.8);
+}
+.md-typeset .rune-chip.rune-rare.skill-tip-anchor:hover,
+.md-typeset .rune-chip.rune-rare.skill-tip-anchor:focus-visible {
+  border-color: rgba(var(--dbc-blue-rgb), 0.8);
+}
+.md-typeset .rune-chip.rune-legendary.skill-tip-anchor:hover,
+.md-typeset .rune-chip.rune-legendary.skill-tip-anchor:focus-visible {
+  border-color: rgba(var(--dbc-orange-rgb), 0.85);
+}
+.md-typeset .rune-chip.rune-epic.skill-tip-anchor:hover,
+.md-typeset .rune-chip.rune-epic.skill-tip-anchor:focus-visible {
+  border-color: rgba(var(--dbc-violet-rgb), 0.85);
 }
 /* rune-tooltip.js's tooltip - same "muted label line under the title"
    idea as .ap-node-tip-level (see that rule's own comment), but tinted
@@ -7798,6 +7905,7 @@ body.page-333-blitz input[type="text"] {
   object-fit: cover;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.04);
+  transition: box-shadow 0.15s ease;
 }
 .md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-node-icon {
   box-shadow: 0 0 0 1px rgba(var(--dbc-orange-rgb), 0.45), 0 0 6px rgba(var(--dbc-orange-rgb), 0.25);
@@ -7817,6 +7925,47 @@ body.page-333-blitz input[type="text"] {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color 0.15s ease;
+}
+/* Hover/focus cue for the node row itself - ark-passive-tooltip.js wires
+   every node with real effect data as a full .skill-tip-anchor (cursor:
+   help, tooltip on hover/focus/tap), but until now nothing here gave it
+   any VISUAL cue on top of that shared cursor - the one tooltip trigger
+   on the site with no hover feedback at all. Brightens the icon's own
+   always-on column ring (same alpha jump as img.skill-icon.skill-tip-
+   anchor's hover elsewhere) and lifts the name to that same column
+   color, rather than introducing a new accent - a node's column
+   identity (orange/purple/teal) is core to reading this widget, so the
+   hover cue reinforces it instead of overriding it with a flat lavender/
+   purple the way .skill-inline-name does. No background fill, same
+   "ring, not a highlight block" language as .skill-mention/.food-req-
+   item above. Gated on .skill-tip-anchor so a node with no effect data
+   (nothing wired, no tooltip to promise) stays visually inert on hover -
+   same "don't promise what isn't there" rule as every other trigger on
+   the page. */
+.md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-node.skill-tip-anchor:hover .ark-passive-node-icon,
+.md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-node.skill-tip-anchor:focus-visible .ark-passive-node-icon {
+  box-shadow: 0 0 0 1px rgba(var(--dbc-orange-rgb), 0.8), 0 0 8px rgba(var(--dbc-orange-rgb), 0.45);
+}
+.md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-node.skill-tip-anchor:hover .ark-passive-node-name,
+.md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-node.skill-tip-anchor:focus-visible .ark-passive-node-name {
+  color: var(--dbc-orange);
+}
+.md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-node.skill-tip-anchor:hover .ark-passive-node-icon,
+.md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-node.skill-tip-anchor:focus-visible .ark-passive-node-icon {
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.8), 0 0 8px rgba(var(--dbc-purple-rgb), 0.45);
+}
+.md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-node.skill-tip-anchor:hover .ark-passive-node-name,
+.md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-node.skill-tip-anchor:focus-visible .ark-passive-node-name {
+  color: var(--dbc-purple);
+}
+.md-typeset .ark-passive-col[data-column="leap"] .ark-passive-node.skill-tip-anchor:hover .ark-passive-node-icon,
+.md-typeset .ark-passive-col[data-column="leap"] .ark-passive-node.skill-tip-anchor:focus-visible .ark-passive-node-icon {
+  box-shadow: 0 0 0 1px rgba(var(--dbc-teal-rgb), 0.8), 0 0 8px rgba(var(--dbc-teal-rgb), 0.45);
+}
+.md-typeset .ark-passive-col[data-column="leap"] .ark-passive-node.skill-tip-anchor:hover .ark-passive-node-name,
+.md-typeset .ark-passive-col[data-column="leap"] .ark-passive-node.skill-tip-anchor:focus-visible .ark-passive-node-name {
+  color: var(--dbc-teal);
 }
 /* Level shown as current/max (e.g. "2/2", "21/30") rather than the
    in-game screenshot's separate "10P" cost + "Lv 0/2" pairing - the point

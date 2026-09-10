@@ -107,7 +107,7 @@ Atk/Move Speed Feast
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/shared/icon-vernesewine.png){: .skill-icon } Vernese Wine advised
+<span class="food-req-item">![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast</span> + <span class="food-req-item">![](../assets/shared/icon-vernesewine.png){: .skill-icon } Vernese Wine</span> advised
 { .food-req }
 
 **Pros:**{: .best-for } Highest damage bonus.
@@ -148,7 +148,7 @@ Pair with <span class="skill-mention" data-skill-id="curseddoll">Cursed Doll</sp
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast + ![](../assets/shared/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing advised
+<span class="food-req-item">![](../assets/shared/icon-feast.png){: .skill-icon } Atk/Move Speed feast</span> + <span class="food-req-item">![](../assets/shared/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing</span> advised
 { .food-req }
 
 **Pros:**{: .best-for } Highest damage bonus.
@@ -169,10 +169,10 @@ Pair with <span class="skill-mention" data-skill-id="curseddoll">Cursed Doll</sp
 </summary>
 <div class="engraving-card-body" markdown>
 
-![](../assets/shared/icon-vernesewine.png){: .skill-icon } Vernese Wine advised with Bard or Paladin
+<span class="food-req-item">![](../assets/shared/icon-vernesewine.png){: .skill-icon } Vernese Wine</span> advised with Bard or Paladin
 { .food-req }
 
-![](../assets/shared/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing advised with Artist or Valkyrie
+<span class="food-req-item">![](../assets/shared/icon-ealynsblessing.png){: .skill-icon } Ealyn's Blessing</span> advised with Artist or Valkyrie
 { .food-req }
 
 **Pros:**{: .best-for } This is ceiling. Fewer drawbacks for [222](222-speedy.md).
