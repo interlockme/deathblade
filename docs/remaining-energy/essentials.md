@@ -234,7 +234,8 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 
 *Values recorded at 1830 Specialization with no runes or Maelstrom buff, 3 orbs are 30000 meter.*
 
-<!-- Per-row id/name - full schema is in javascripts/essentials-table.js's
+<!-- Per-row id (name auto-resolves from skill-names.js) - full schema is in
+     javascripts/essentials-table.js's
      "EASY EDIT GUIDE" comment. Tags, Notes, and the small italic value
      lines under each name are NOT authored here: they come from
      skill-data.js, so this table, every build page's Skill Setup card,
@@ -244,20 +245,20 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 <div class="skills-table" data-family="re" markdown>
 <script type="application/json">
 [
-  { "id": "maelstrom", "name": "Maelstrom" },
-  { "id": "voidstrike", "name": "Void Strike" },
-  { "id": "twinshadows", "name": "Twin Shadows" },
-  { "id": "deathlyslash", "name": "Deathly Slash" },
-  { "id": "turningslash", "name": "Turning Slash" },
-  { "id": "fatalwave", "name": "Fatal Wave" },
-  { "id": "surge", "name": "Surge" },
-  { "id": "soulabsorber", "name": "Soul Absorber" },
-  { "id": "blitzrush", "name": "Blitz Rush" },
-  { "id": "headhunt", "name": "Head Hunt" },
-  { "id": "bladeassault", "name": "Blade Assault" },
-  { "id": "earthcleaver", "name": "Earth Cleaver" },
-  { "id": "spincutter", "name": "Spincutter" },
-  { "id": "deathsentence", "name": "Death Sentence" }
+  { "id": "maelstrom" },
+  { "id": "voidstrike" },
+  { "id": "twinshadows" },
+  { "id": "deathlyslash" },
+  { "id": "turningslash" },
+  { "id": "fatalwave" },
+  { "id": "surge" },
+  { "id": "soulabsorber" },
+  { "id": "blitzrush" },
+  { "id": "headhunt" },
+  { "id": "bladeassault" },
+  { "id": "earthcleaver" },
+  { "id": "spincutter" },
+  { "id": "deathsentence" }
 ]
 </script>
 </div>

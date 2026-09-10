@@ -43,8 +43,8 @@
 // exist) - see the extra_javascript order in mkdocs.yml.
 //
 // EASY EDIT GUIDE: there is nothing to edit here. Once a build page's
-// <div class="dps-chart" data-labels="..." data-values="..."
-// data-ids="..."> is correct, matching gem cards in its "## Gems" ->
+// <div class="dps-chart" data-values="..." data-ids="..."> is correct,
+// matching gem cards in its "## Gems" ->
 // Damage column pick up the same numbers automatically by matching on
 // skill id - a gem-priority.js row's data-id (e.g. "fatalwave") against
 // the chart's data-ids at the same position. Falls back to comparing
@@ -64,17 +64,21 @@
     var values = (chart.getAttribute("data-values") || "")
       .split(",")
       .map(function (s) { return parseFloat(s.trim()); });
-    var labels = (chart.getAttribute("data-labels") || "")
-      .split(",")
-      .map(function (s) { return s.trim(); });
-    if (!values.length || values.length !== labels.length || values.some(isNaN)) {
-      return null; // malformed data - same "fail quietly" rule dps-chart.js follows
-    }
 
     var idsAttr = chart.getAttribute("data-ids");
     var ids = idsAttr
       ? idsAttr.split(",").map(function (s) { return s.trim(); })
       : null;
+
+    // Same resolution SiteUtils.resolveChartLabels gives dps-chart.js -
+    // sharing this (rather than re-deriving data-labels here too) is
+    // what keeps this file's damage-share lookup and dps-chart.js's own
+    // rendering from silently drifting apart if a chart's labels are
+    // ever resolved differently by one file than the other.
+    var labels = window.SiteUtils.resolveChartLabels(chart, ids) || [];
+    if (!values.length || values.length !== labels.length || values.some(isNaN)) {
+      return null; // malformed data - same "fail quietly" rule dps-chart.js follows
+    }
     if (ids && ids.length !== values.length) ids = null; // malformed - ignore, name fallback still applies
 
     var byId = {};

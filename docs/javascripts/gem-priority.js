@@ -31,7 +31,7 @@
 //   <div class="gem-priority" markdown>
 //   <script type="application/json">
 //   [
-//     { "col": "dmg", "label": "Damage", "items": [
+//     { "col": "dmg", "items": [
 //       "surge",
 //       "deathsentence",
 //       { "id": "soulabsorber", "alts": [
@@ -39,7 +39,7 @@
 //       ] },
 //       "turningslash"
 //     ] },
-//     { "col": "cd", "label": "Cooldown", "items": [
+//     { "col": "cd", "items": [
 //       "maelstrom",
 //       "blitzrush",
 //       "headhunt"
@@ -54,14 +54,13 @@
 //
 //   Per column:
 //     col   - REQUIRED. "dmg" | "cd" - picks the rose/teal accent
-//             styling (.gem-col-dmg / .gem-col-cd in extra.css) and
-//             which flavor of tooltip gem-dps-tooltip.js attaches: a
-//             Damage row leads with its damage-share figure (from the
-//             page's "## Trixion DPS" chart), a Cooldown row has no such
-//             figure (Cooldown gems aren't damage skills) and just gets
-//             its usual tags/note, plus this row's own "tip" text below
-//             if authored - see the "tip" field above.
-//     label - REQUIRED. Column header text, e.g. "Damage", "Cooldown".
+//             styling (.gem-col-dmg / .gem-col-cd in extra.css), which
+//             flavor of tooltip gem-dps-tooltip.js attaches (a Damage
+//             row leads with its damage-share figure from the page's
+//             "## Trixion DPS" chart, a Cooldown row doesn't), AND the
+//             default header text ("dmg" -> "Damage", "cd" -> "Cooldown").
+//     label - OPTIONAL override of the "dmg"/"cd" default header text
+//             above. Every column on this site uses the default as-is.
 //     items - REQUIRED array of gem entries, ROW ORDER IS RANK - the
 //             first entry is rank 1 (gets the gold treatment), the
 //             next rank 2, everything after that shares the quiet
@@ -104,6 +103,11 @@
 //   here.
 (function () {
   var SITE_ROOT = window.SiteUtils.detectSiteRoot("gem-priority.js");
+
+  // Every column on this site uses its "col" value's own obvious header
+  // text ("dmg" -> "Damage", "cd" -> "Cooldown") - col.label only needs
+  // authoring for a genuine one-off different header.
+  var DEFAULT_COL_LABELS = { dmg: "Damage", cd: "Cooldown" };
 
   var el = window.SiteUtils.el;
   var iconSrc = window.SiteUtils.iconSrc;
@@ -191,7 +195,7 @@
     var wrap = el("div", "gem-col gem-col-" + (col.col || "dmg"));
 
     var header = el("div", "gem-col-header");
-    header.appendChild(el("span", "gem-col-title", col.label || col.col));
+    header.appendChild(el("span", "gem-col-title", col.label || DEFAULT_COL_LABELS[col.col] || col.col));
     wrap.appendChild(header);
 
     var list = el("div", "gem-list");

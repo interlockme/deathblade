@@ -76,5 +76,14 @@
     massincrease: "Mass Increase",
     maxmp: "Max MP Increase",
     spiritabsorption: "Spirit Absorption",
+
+    // Also not a skill (it's a rune-proc DPS source, not something you
+    // slot/level) - exists here only so dps-chart.js's "## Trixion DPS"
+    // rows can resolve every id's label the same way as a real skill,
+    // with no separate escape hatch just for this one row. Distinct
+    // from rune-data.js's own "bleed" key (the rune's tooltip text by
+    // tier) - different table, different consumer, coincidentally the
+    // same id string.
+    bleed: "Bleed",
   };
 })();

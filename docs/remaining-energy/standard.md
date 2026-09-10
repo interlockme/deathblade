@@ -73,63 +73,42 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 ## Ark Setup
 
 <!-- ark-passives / ark-cores JSON below use the site-wide node/core id
-     vocabulary - full schema (node ids, tier shape, points) is documented in
-     javascripts/ark-passive-tree.js and ark-core-badge.js's "EASY EDIT GUIDE"
-     comments. A nested "Alt" details block (e.g. an easier/optional variant)
-     can carry its own compact ark-passives/skill-setup pair for that
-     alternative - copy the existing pattern rather than editing the main
-     tree in place. -->
+     vocabulary - each ark-passives node only needs its id + invested level,
+     tier/max/name/icon all resolve from ap-node-names.js. Full schema is
+     documented in javascripts/ark-passive-tree.js and ark-core-badge.js's
+     "EASY EDIT GUIDE" comments. A nested "Alt" details block (e.g. an
+     easier/optional variant) can carry its own compact ark-passives/
+     skill-setup pair for that alternative - copy the existing pattern
+     rather than editing the main tree in place. -->
 
 <div class="setup-panel" data-accent="lavender" markdown>
 
 <div class="ark-passives" data-family="re" markdown>
 <script type="application/json">
 [
-    { "id": "evolution", "label": "Evolution", "points": 140, "tiers": [
-      { "label": "Tier 1", "nodes": [
-        { "id": "crit", "level": 10, "max": 30 },
-        { "id": "specialization", "level": 30, "max": 30 }
-      ] },
-      { "label": "Tier 2", "nodes": [
-        { "id": "keensense", "level": 2, "max": 2 },
-        { "id": "limitbreakevo", "level": 1, "max": 3 }
-      ] },
-      { "label": "Tier 3", "nodes": [
-        { "id": "strike", "level": 2, "max": 2 }
-      ] },
-      { "label": "Tier 4", "nodes": [
-        { "id": "master", "level": 1, "max": 1 },
-        { "id": "pulverize", "level": 1, "max": 1 }
-      ] },
-      { "label": "Tier 5", "nodes": [
-        { "id": "standingstriker", "level": 2, "max": 2 }
-      ] }
+    { "id": "evolution", "nodes": [
+      { "id": "crit", "level": 10 },
+      { "id": "specialization", "level": 30 },
+      { "id": "keensense", "level": 2 },
+      { "id": "limitbreakevo", "level": 1 },
+      { "id": "strike", "level": 2 },
+      { "id": "master", "level": 1 },
+      { "id": "pulverize", "level": 1 },
+      { "id": "standingstriker", "level": 2 }
     ] },
-    { "id": "enlightenment", "label": "Enlightenment", "points": 100, "tiers": [
-      { "label": "Tier 1", "nodes": [
-        { "id": "swiftstrike", "level": 1, "max": 1 }
-      ] },
-      { "label": "Tier 2", "nodes": [
-        { "id": "remainingenergy", "level": 3, "max": 3 }
-      ] },
-      { "label": "Tier 3", "nodes": [
-        { "id": "firmwill", "level": 3, "max": 3 }
-      ] },
-      { "label": "Tier 4", "nodes": [
-        { "id": "extremebodymovement", "level": 3, "max": 3 },
-        { "id": "orbcirculation", "level": 2, "max": 5 }
-      ] }
+    { "id": "enlightenment", "nodes": [
+      { "id": "swiftstrike", "level": 1 },
+      { "id": "remainingenergy", "level": 3 },
+      { "id": "firmwill", "level": 3 },
+      { "id": "extremebodymovement", "level": 3 },
+      { "id": "orbcirculation", "level": 2 }
     ] },
-    { "id": "leap", "label": "Leap", "points": 70, "tiers": [
-      { "label": "Tier 1", "nodes": [
-        { "id": "transcendentpower", "level": 3, "max": 5 },
-        { "id": "awakeningamplifier", "level": 1, "max": 3 },
-        { "id": "unleashedpower", "level": 5, "max": 5 },
-        { "id": "instantspell", "level": 3, "max": 3 }
-      ] },
-      { "label": "Tier 2", "nodes": [
-        { "id": "danceofnightmares", "level": 3, "max": 3 }
-      ] }
+    { "id": "leap", "nodes": [
+      { "id": "transcendentpower", "level": 3 },
+      { "id": "awakeningamplifier", "level": 1 },
+      { "id": "unleashedpower", "level": 5 },
+      { "id": "instantspell", "level": 3 },
+      { "id": "danceofnightmares", "level": 3 }
     ] }
   ]
 </script>
@@ -218,11 +197,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <div class="gem-priority" markdown>
 <script type="application/json">
 [
-  { "col": "dmg", "label": "Damage", "items": [
+  { "col": "dmg", "items": [
     "surge", "soulabsorber", "deathsentence", "voidstrike",
     "earthcleaver", "twinshadows", "turningslash"
   ] },
-  { "col": "cd", "label": "Cooldown", "items": [
+  { "col": "cd", "items": [
     "soulabsorber", "deathsentence", "maelstrom", "voidstrike"
   ] }
 ]
@@ -286,6 +265,6 @@ The opener stacks <span class="skill-mention" data-skill-id="adrenaline">Adrenal
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-<div class="dps-chart" data-show-icons data-labels="Deathly Slash,Surge,Soul Absorber,Death Sentence,Void Strike,Earth Cleaver,Twin Shadows,Turning Slash,Bleed,Maelstrom" data-values="19.1,18.1,14.3,11.1,11.1,10,8.1,6.5,0.8,0.5" data-ids="deathlyslash,surge,soulabsorber,deathsentence,voidstrike,earthcleaver,twinshadows,turningslash,bleed,maelstrom"></div>
+<div class="dps-chart" data-show-icons data-values="19.1,18.1,14.3,11.1,11.1,10,8.1,6.5,0.8,0.5" data-ids="deathlyslash,surge,soulabsorber,deathsentence,voidstrike,earthcleaver,twinshadows,turningslash,bleed,maelstrom"></div>
 </div>
 </div>

@@ -62,7 +62,7 @@ extra_css:
 # scratch). See README.md's "Forking this for your own spin" section
 # for the full breakdown.
 extra_javascript:
-  - javascripts/site-utils.js?v=7
+  - javascripts/site-utils.js?v=8
   - javascripts/extra.js?v=2
   - javascripts/cpm-calculator.js?v=6
   - javascripts/bid-calculator.js?v=4
@@ -70,27 +70,27 @@ extra_javascript:
   - javascripts/bible-import.js?v=7
   - javascripts/build-data.js?v=4
   - javascripts/build-stats-badge.js?v=1
-  - javascripts/skill-data.js?v=7
-  - javascripts/skill-names.js?v=4
+  - javascripts/skill-data.js?v=8
+  - javascripts/skill-names.js?v=5
   - javascripts/rune-data.js?v=1
   - javascripts/skill-setup.js?v=8
-  - javascripts/essentials-table.js?v=4
+  - javascripts/essentials-table.js?v=5
   - javascripts/core-options-data.js?v=1
   - javascripts/ark-core-badge.js?v=4
-  - javascripts/ap-node-names.js?v=3
+  - javascripts/ap-node-names.js?v=4
   - javascripts/ap-node-effects.js?v=3
-  - javascripts/ark-passive-tree.js?v=5
-  - javascripts/gem-priority.js?v=5
+  - javascripts/ark-passive-tree.js?v=6
+  - javascripts/gem-priority.js?v=6
   - javascripts/pentagon-badge.js?v=4
   - javascripts/rotation-line.js?v=4
-  - javascripts/skill-tooltip.js?v=5
+  - javascripts/skill-tooltip.js?v=6
   - javascripts/ark-passive-tooltip.js?v=4
   - javascripts/rune-tooltip.js?v=4
-  - javascripts/glossary-data.js?v=1
+  - javascripts/glossary-data.js?v=2
   - javascripts/glossary-tooltip.js?v=1
   - javascripts/rotation-practice.js?v=3
-  - javascripts/dps-chart.js?v=5
-  - javascripts/gem-dps-tooltip.js?v=8
+  - javascripts/dps-chart.js?v=6
+  - javascripts/gem-dps-tooltip.js?v=9
   - javascripts/build-compare.js?v=5
   - javascripts/last-updated.js?v=3
   - javascripts/image-lightbox.js?v=1

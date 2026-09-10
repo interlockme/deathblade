@@ -20,9 +20,9 @@
 //   <div class="skills-table" data-family="re" markdown>
 //   <script type="application/json">
 //   [
-//     { "id": "maelstrom", "name": "Maelstrom" },
-//     { "id": "voidstrike", "name": "Void Strike" },
-//     { "id": "surge", "name": "Surge" }
+//     { "id": "maelstrom" },
+//     { "id": "voidstrike" },
+//     { "id": "surge" }
 //   ]
 //   </script>
 //   </div>
@@ -33,7 +33,12 @@
 //   Per row:
 //     id    - REQUIRED. Matches icon-<id>.png in assets/shared/ AND the
 //             key in skill-data.js. Same slug every icon-*.png asset uses.
-//     name  - REQUIRED. Bold skill name shown in the first text cell.
+//     name  - OPTIONAL. Bold skill name shown in the first text cell.
+//             Omit to resolve from DB_SKILL_NAMES[id] (skill-names.js) -
+//             every row on this site uses its skill-names.js name as-is,
+//             same default-and-override convention as skill-setup.js's
+//             "name" field. Only set this to override the display text
+//             for a genuine one-off case.
 //
 //   Tags, Notes, and the small italic value lines under the name (a
 //   meter/stack value, a cast-rate note, etc) are never authored here -
@@ -62,7 +67,7 @@
 
     var nameTd = document.createElement("td");
     var strong = document.createElement("strong");
-    strong.textContent = entry.name || entry.id;
+    strong.textContent = entry.name || (window.DB_SKILL_NAMES && window.DB_SKILL_NAMES[entry.id]) || entry.id;
     nameTd.appendChild(strong);
     (data.lines || []).forEach(function (line) {
       nameTd.appendChild(document.createElement("br"));

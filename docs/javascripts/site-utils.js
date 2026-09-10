@@ -222,6 +222,40 @@
       return window.SiteUtils.formatStat(n) + "%";
     },
 
+    // Resolves a ".dps-chart" element's per-row labels. data-labels is
+    // an OPTIONAL override - every row's label on this site is 100%
+    // identical to DB_SKILL_NAMES[id] (skill-names.js), so when
+    // data-labels is omitted, every label is derived from `ids`
+    // (data-ids) instead, the same "id-only, name auto-resolves"
+    // pattern as gem-priority.js/skill-setup.js/rotation-line.js.
+    // data-labels stays available as a whole-attribute escape hatch for
+    // a genuine future one-off id with no name-table entry - add the
+    // id to DB_SKILL_NAMES instead unless it's truly not worth a
+    // shared table entry.
+    //
+    // ids is the already-parsed data-ids array (or null if that
+    // attribute is missing/empty) - pass the same one you use
+    // everywhere else so this doesn't reparse it. Returns null if
+    // data-labels is absent AND ids is null, since there's then
+    // nothing to derive labels from at all.
+    //
+    // Centralized here because dps-chart.js (rendering the bars) and
+    // gem-dps-tooltip.js (matching gem cards to a damage-share %) both
+    // need this SAME chart's SAME resolved labels list - two separate
+    // copies of this logic could silently drift (e.g. one updated to
+    // treat an empty data-labels differently than the other), quietly
+    // breaking one of the two without the other showing any symptom.
+    resolveChartLabels: function (chart, ids) {
+      var labelsAttr = chart.getAttribute("data-labels");
+      if (labelsAttr) {
+        return labelsAttr.split(",").map(function (s) { return s.trim(); });
+      }
+      if (!ids) return null;
+      return ids.map(function (id) {
+        return (window.DB_SKILL_NAMES && window.DB_SKILL_NAMES[id]) || id;
+      });
+    },
+
     // Hide a broken/missing icon <img> instead of showing the browser's
     // default alt-text placeholder. mode "visibility" (default) keeps the
     // icon's layout box in place; mode "display" collapses it entirely.

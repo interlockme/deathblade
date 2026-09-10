@@ -235,7 +235,8 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 
 ## Surge Skills
 
-<!-- Per-row id/name - full schema is in javascripts/essentials-table.js's
+<!-- Per-row id (name auto-resolves from skill-names.js) - full schema is in
+     javascripts/essentials-table.js's
      "EASY EDIT GUIDE" comment. Tags, Notes, and the small italic value
      lines under each name are NOT authored here: they come from
      skill-data.js, so this table, every build page's Skill Setup card,
@@ -245,23 +246,23 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 <div class="skills-table" data-family="surge" markdown>
 <script type="application/json">
 [
-  { "id": "windcut", "name": "Wind Cut" },
-  { "id": "deathtrance", "name": "Death Trance" },
-  { "id": "maelstrom", "name": "Maelstrom" },
-  { "id": "surpriseattack", "name": "Surprise Attack" },
-  { "id": "breakingmoon", "name": "Breaking Moon" },
-  { "id": "surge", "name": "Surge" },
-  { "id": "bladedance", "name": "Blade Dance" },
-  { "id": "blitzrush", "name": "Blitz Rush" },
-  { "id": "headhunt", "name": "Head Hunt" },
-  { "id": "earthcleaver", "name": "Earth Cleaver" },
-  { "id": "spincutter", "name": "Spincutter" },
-  { "id": "turningslash", "name": "Turning Slash" },
-  { "id": "bladeassault", "name": "Blade Assault" },
-  { "id": "deathlyslash", "name": "Deathly Slash" },
-  { "id": "darkaxel", "name": "Dark Axel" },
-  { "id": "upperslash", "name": "Upper Slash" },
-  { "id": "fallstar", "name": "Fallstar" }
+  { "id": "windcut" },
+  { "id": "deathtrance" },
+  { "id": "maelstrom" },
+  { "id": "surpriseattack" },
+  { "id": "breakingmoon" },
+  { "id": "surge" },
+  { "id": "bladedance" },
+  { "id": "blitzrush" },
+  { "id": "headhunt" },
+  { "id": "earthcleaver" },
+  { "id": "spincutter" },
+  { "id": "turningslash" },
+  { "id": "bladeassault" },
+  { "id": "deathlyslash" },
+  { "id": "darkaxel" },
+  { "id": "upperslash" },
+  { "id": "fallstar" }
 ]
 </script>
 </div>
