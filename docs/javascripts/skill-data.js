@@ -118,7 +118,7 @@
         note: "Fast utility/backup with micro-mobility.",
       },
       earthcleaver: {
-        tags: [["dmg", "DAMAGE"], ["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NO PARA IMMUNE"]],
+        tags: [["util", "COUNTER"], ["util", "MOBILITY"], ["util", "WEAK POINT"], ["warn", "NO PARA IMMUNE"]],
         note: "Slow utility filler. Charges up to two stacks for \uD83E\uDD81.",
       },
       spincutter: {
@@ -134,7 +134,7 @@
         note: "Hold for damage and stack generation.",
       },
       deathlyslash: {
-        tags: [["dmg", "DAMAGE"], ["util", "MOBILITY"]],
+        tags: [["dmg", "DAMAGE"], ["util", "STACKS"], ["util", "MOBILITY"]],
         note: "Becomes empowered upon Destiny activation and subsequent normal skill use for \uD83D\uDC06.",
       },
       darkaxel: {
