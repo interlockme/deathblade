@@ -68,8 +68,8 @@ extra_javascript:
   - javascripts/bible-import.js?v=7
   - javascripts/build-data.js?v=4
   - javascripts/build-stats-badge.js?v=1
-  - javascripts/skill-data.js?v=4
-  - javascripts/skill-names.js?v=3
+  - javascripts/skill-data.js?v=5
+  - javascripts/skill-names.js?v=4
   - javascripts/skill-setup.js?v=7
   - javascripts/essentials-table.js?v=3
   - javascripts/core-options-data.js?v=1
@@ -80,7 +80,7 @@ extra_javascript:
   - javascripts/gem-priority.js?v=4
   - javascripts/pentagon-badge.js?v=4
   - javascripts/rotation-line.js?v=3
-  - javascripts/skill-tooltip.js?v=3
+  - javascripts/skill-tooltip.js?v=4
   - javascripts/ark-passive-tooltip.js?v=3
   - javascripts/rotation-practice.js?v=3
   - javascripts/dps-chart.js?v=5
