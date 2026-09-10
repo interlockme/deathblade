@@ -18,7 +18,7 @@
 
     ---
 
-    A faster, more punishing option once you have some Ark Grid.
+    A faster, more punishing option once you have some Ark Grid and are looking for a challenge.
 
     [111 (Head Hunt) guide →](111-head-hunt.md)
 

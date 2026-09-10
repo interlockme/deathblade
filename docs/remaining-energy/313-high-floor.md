@@ -152,7 +152,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
-- Raise Moon to 17p for increased QoL and damage when you can.
+- Raise Arts Core to 17p for increased QoL and damage when you can.
 
 </details>
 
@@ -172,7 +172,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 - Same as 313 but **without** the Fatal Wave reset.
 - Requires Lv 9+ Fatal Wave CD gem or <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training Lv 1</span>.
     - Avoid +CD% bracelet line for this core-limited variant.
-    - Check gem section to see which gems to replace from 313.
+    - See the Gem section for required adjustments relative to the 313 setup.
 
 </details>
 

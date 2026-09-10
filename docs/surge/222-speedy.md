@@ -18,8 +18,8 @@
 **Tradeoff:**{: .tradeoff } Increased back attack stress and uptime requirements.
 
 - Simple uptime-focused gameplay with no gimmicks.
-- Highest mobility of all Deathblade builds by far.
-- Tons of push immunity, excess stacks and skill expression.
+- Incorporates Dark Axel for higher mobility and utility.
+- Lots of push immunity, excess stacks and skill expression.
 - Very high gem efficiency, Surge and Deathly Slash are nearly all of your DPS.
 - Must constantly balance Surge and Deathly Slash back attack rate with Surge CPM.
 

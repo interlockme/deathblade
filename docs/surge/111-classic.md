@@ -13,11 +13,11 @@
      all update together from that one place. -->
 <div class="build-stats" data-build="111-classic" data-family="surge"></div>
 
-**Best For:**{: .best-for } Players who enjoy building up to one massive, satisfying Surge hit.
+**Best For:**{: .best-for } Players who enjoy building up to one massive, satisfying hit.
 
 **Tradeoff:**{: .tradeoff } All your eggs are in one basket (Surge).
 
-- Satisfying burst windows with the Breaking Moon → Surge combo.
+- Powerful burst windows with the Breaking Moon combo.
 - No need to hold Counter, it charges up to two stacks.
 - Very high gem efficiency, Surge is nearly all of your DPS.
 - Accessible from zero Ark Grid cores with minor adjustments.
@@ -158,7 +158,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
-- You can level Ark Grid cores to your preference, but 17p Moon grants a second Earth Cleaver stack. This lets you slot a cooldown gem into Blade Dance and use its Weak Point Detection tripod.
+- You can level Ark Grid cores to your preference, but 17p Surge Core grants a second Earth Cleaver stack. This lets you slot a cooldown gem into Blade Dance and use its Weak Point Detection tripod.
 
 </details>
 

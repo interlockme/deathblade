@@ -3,7 +3,7 @@
 <div class="setup-panel" data-accent="pink" markdown>
 <div class="setup-notes" markdown>
 
-<p class="food-required-lead">Atk/Move Speed food and feast is <strong>highly advised</strong> to play Surge optimally. Food is sold at Peyto Island.</p>
+<p class="food-required-lead">Atk/Move Speed food and feast are <strong>highly advised</strong> to play Surge optimally. Food is sold at Peyto Island.</p>
 
 <div class="food-options" markdown>
 

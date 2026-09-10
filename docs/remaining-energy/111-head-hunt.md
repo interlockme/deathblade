@@ -17,7 +17,7 @@
 
 - This is the final form of the old-school Remaining Energy gameplay.
 - Head Hunt is used in the rotation, so it may not be available for recovery or counter.
-- Similar rotation to Fatal Wave builds, but lower orb generation and fewer recovery options.
+- Lower orb generation and fewer recovery options than Fatal Wave builds.
 
 </div>
 <div class="pentagon-badge" data-build="111-head-hunt" data-family="re" markdown>

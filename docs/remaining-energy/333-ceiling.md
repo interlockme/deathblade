@@ -62,7 +62,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     D4D17B7F291340AAD2E9831A065E7F9870B3612FFA798E77FC1FFEE9E4D68E400597FDB2A3DCAA11D5DB53B85812DF1042A685249158B4E08BB87A614E428350
     ```
 
-    - This is ~3% weaker but more forgiving to play. Additionally, it uses <span class="skill-mention" data-rune-name="Wealth" data-rune-tier="legendary">Legendary Wealth</span> on Soul Absorber instead.
+    - Uses <span class="skill-mention" data-ap-id="orbcirculation" data-level="5">Orb Circulation 5</span>, which makes this build more forgiving at a ~3% DPS loss. 
+    - Additionally, it uses <span class="skill-mention" data-rune-name="Wealth" data-rune-tier="legendary">Legendary Wealth</span> on Soul Absorber, which would not be possible otherwise.
 
 ## Ark Setup
 
@@ -152,7 +153,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="note" markdown>
 <summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
-- Finish up Star to 17p when you can, Fatal Wave is your highest damage skill.
+- Finish up Death Sword Energy to 17p when you can, Fatal Wave is your highest damage skill.
 
 </details>
 
@@ -258,7 +259,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <details class="setup-note" data-kind="example" markdown>
 <summary><span class="setup-note-tag">Alt</span>Fatal Wealth<span class="setup-note-arrow"></span></summary>
 
-- <span class="skill-mention" data-rune-name="Wealth" data-rune-tier="epic">Wealth rune</span> on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
+- <span class="skill-mention" data-rune-name="Wealth" data-rune-tier="epic">Wealth</span>  rune on Fatal Wave can make this build more forgiving at a ~4% DPS loss.
 - It won't cycle as smoothly, but the reduced stress and urgency may suit some people.
 - Honestly, don't play this; 333 with <span class="skill-mention" data-ap-id="orbcirculation" data-level="5">OC 5</span>, 313, or literally any Surge build will perform better.
 

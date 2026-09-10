@@ -8,7 +8,7 @@
 
     ---
 
-    Similar to [111 (Classic)](111-classic.md), with minor skill and gem changes.
+    Essentially the same as [111 (Classic)](111-classic.md), with minor skill and gem changes.
 
     [Go to 111 (Classic) →](111-classic.md)
 
