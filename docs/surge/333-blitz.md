@@ -178,8 +178,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 <summary><span class="setup-note-tag">Tip</span>Runes<span class="setup-note-arrow"></span></summary>
 
 - Use <span class="skill-mention" data-rune-name="Purify">Purify</span> on Spincutter if needed.
-- Use <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> or <span class="skill-mention" data-rune-name="Poison" data-rune-tier="legendary">Poison</span> instead of <span class="skill-mention" data-rune-name="Rage" data-rune-tier="legendary">Rage</span> if you don't use <span class="skill-mention" data-skill-id="raidcaptain">RC</span> or <span class="skill-mention" data-skill-id="massincrease">MI</span> engravings.
-    - Each one is about 0.75% DPS in exchange for lower or no Rage buff uptime.
+- Use <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> or <span class="skill-mention" data-rune-name="Poison" data-rune-tier="legendary">Poison</span> instead of <span class="skill-mention" data-rune-name="Rage" data-rune-tier="legendary">Rage</span> if you don't need <span class="skill-mention" data-skill-id="raidcaptain">RC</span> or <span class="skill-mention" data-skill-id="massincrease">MI</span> engraving efficiency.
+    - Each one is around +0.75% DPS in exchange for lower or no <span class="skill-mention" data-rune-name="Rage">Rage</span> uptime.
     - Give the <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Bleed</span>/<span class="skill-mention" data-rune-name="Poison" data-rune-tier="legendary">Poison</span> to Maelstrom and Turning Slash if you use mana food.
 
 </details>
@@ -192,6 +192,13 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     - Increased cast speed, but greatly lowers mobility and damage.
 - Thick Sword Energy tripod increases Wind Cut range but builds less stacks.
 - Head Hunt can be used instead of Earth Cleaver at a DPS loss if you prefer.
+
+</details>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">ALT</span>🐆 vs 🐯<span class="setup-note-arrow"></span></summary>
+
+![222 vs 333](../assets/leopardvstiger.png){ .setup-note-image .zoomable-image loading=lazy }
 
 </details>
 

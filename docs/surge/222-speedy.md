@@ -56,7 +56,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 === "222 Speedy"
 
     ```
-    C06A3B47771F94196FF77A21B5E812E11A4022564D8CCFB777B5D3B6DD467A9D4E482691C148EE1DCF0F3AF2D77D3F6994614C0EF00BEC4F843D73B8E2D72180
+    0B3F87CE15C9FC0E93AA3F55462E42B3B69716F25C28C2009177C8A54B0D572C68290D5EC1658BBA7FC03FAD032FAD01F305026AC42034DC97A6C597AB3C6903
     ```
 
 ## Ark Setup
@@ -170,9 +170,10 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 - Use <span class="skill-mention" data-rune-name="Purify">Purify</span> on Head Hunt if needed.
 - Use <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> on Maelstrom if you don't experience mana issues.
-    - Bleed is about 0.75% DPS in exchange for playing skillfully or using mana food.
-- Use <span class="skill-mention" data-rune-name="Vision" data-rune-tier="legendary">Legendary Vision</span> on Surprise Attack if you don't use <span class="skill-mention" data-skill-id="raidcaptain">RC</span> or <span class="skill-mention" data-skill-id="massincrease">MI</span> engravings.
+    - Bleed is around +0.75% DPS in exchange for playing skillfully or using mana food.
+- Use <span class="skill-mention" data-rune-name="Vision" data-rune-tier="legendary">Legendary Vision</span> on Surprise Attack if you find it more useful.
     - Increases chance of getting an extra stack on Surprise Attack precast.
+    - Decreased <span class="skill-mention" data-skill-id="raidcaptain">Raid Captain</span>/<span class="skill-mention" data-skill-id="massincrease">Mass Increase</span> efficiency due to the loss of <span class="skill-mention" data-rune-name="Rage" data-rune-tier="legendary">Rage</span>.
     - Give Head Hunt the next best <span class="skill-mention" data-rune-name="Galewind">Galewind</span> or <span class="skill-mention" data-rune-name="Vision">Vision</span> rune that's available.
 
 </details>
@@ -184,13 +185,6 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 - Earth Cleaver can be used instead of Head Hunt if you prefer.
 - You can replace Dark Axel for Spincutter if you find it more useful.
 - You can use Wide Attack <span class="skill-mention" data-glossary-id="tripod">tripod</span> on Surprise Attack if your uptime with Turning Slash is good.
-
-</details>
-
-<details class="setup-note" data-kind="note" markdown>
-<summary><span class="setup-note-tag">Note</span>🐆 vs 🐯<span class="setup-note-arrow"></span></summary>
-
-![222 vs 333](../assets/leopardvstiger.png){ .setup-note-image .zoomable-image loading=lazy }
 
 </details>
 
@@ -214,10 +208,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     "surge",
     "bladedance",
     "turningslash",
-    "windcut",
-    { "id": "surpriseattack", "alts": [
-      { "id": "darkaxel", "note": "Use Dark Axel CD instead if you prefer, or even another character's Lv 10 gem... it doesn't matter." }
-    ] }
+    "windcut"
   ] },
   { "col": "cd", "items": [
     "upperslash",
@@ -225,7 +216,10 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
     "maelstrom",
     "bladedance",
     "windcut",
-    "turningslash"
+    "turningslash",
+    { "id": "darkaxel", "alts": [
+      { "id": "surpriseattack", "note": "Use Surprise Attack DMG instead if you prefer, or even another class's Lv 10 gem." }
+    ] }
   ] }
 ]
 </script>

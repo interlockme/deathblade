@@ -185,7 +185,7 @@
       },
       darkaxel: {
         tags: [["util", "MOBILITY"], ["immune", "PUSH IMMUNE"]],
-        note: "Jumps over bosses to facilitate a back attack.",
+        note: "Leap forward and directly over bosses to facilitate a back attack.",
         lines: ["2-3 stacks"],
       },
       upperslash: {
