@@ -47,7 +47,7 @@ window.DB_GLOSSARY = {
   },
   specializationstat: {
     term: "Specialization",
-    def: "A primary combat stat that drives Deathblade's Death Orb generation rate, Death Trance damage, and the cooldown reduction gained from activating Death Trance.",
+    def: "A primary combat stat that drives Deathblade's Death Orb generation rate, Surge damage, and the cooldown reduction gained from activating Death Trance.",
   },
   // Unlike every other entry here, this one keeps its numbers: back
   // attack's damage/crit bonus is a flat engine constant (not a per-skill
@@ -58,15 +58,15 @@ window.DB_GLOSSARY = {
   // Grid numbers have.
   backattack: {
     term: "Back Attack",
-    def: "A positional damage (+5%) and crit (+10%) bonus gained by attacking from behind the boss - a core requirement for both Surge and Remaining Energy Deathblades.",
+    def: "A positional damage (+5%) and crit (+10%) bonus gained by attacking from behind the boss.",
   },
   arkgrid: {
     term: "Ark Grid",
-    def: "A late-game progression system of Order (Sun/Moon/Star) and Chaos Core slots activated by Astrogems - build names refer to the Core choices selected in the UI.",
+    def: "A late-game progression system of Order (Sun/Moon/Star) and Chaos Core slots activated by Astrogems - build names refer to the Order Core choices selected.",
   },
   arkpassive: {
     term: "Ark Passive",
-    def: "A Tier 4 talent tree system (Evolution, Enlightenment, and Leap) that replaces traditional T3 gear sets and stat setups to shape your build's behavior.",
+    def: "A Tier 4 talent tree system (Evolution, Enlightenment, and Leap) that shape your build's behavior.",
   },
   dpsmeter: {
     term: "DPS Meter",
