@@ -63,8 +63,8 @@
 //   it over from the sibling re/surge folder if it's shared, like Death
 //   Trance) rather than special-casing the filename here.
 //
-//   data-accent is optional (defaults to the site's teal, matching the
-//   Trixion DPS stat-bar-fill-teal color used elsewhere).
+//   data-accent is optional (defaults to the site's rose, its existing
+//   damage accent - see .gem-col-dmg/.tag-legend-dmg).
 
 (function () {
   // Captured once, synchronously, while this script first loads -
@@ -103,12 +103,13 @@
       var lengthPct = maxVal > 0 ? (val / maxVal) * 100 : 0;
 
       var row = document.createElement("div");
-      row.className = "dps-chart-row";
+      // Modifier drops the row's icon column entirely (rather than
+      // rendering an empty one) when this chart wasn't given
+      // data-show-icons at all - see .dps-chart-row-no-icon below.
+      row.className = "dps-chart-row" + (showIcons ? "" : " dps-chart-row-no-icon");
       row.style.setProperty("--dps-target", lengthPct.toFixed(1) + "%");
       row.style.setProperty("--dps-delay", (i * 55) + "ms");
 
-      var labelWrap = document.createElement("span");
-      labelWrap.className = "dps-chart-label";
       if (showIcons) {
         var icon = document.createElement("img");
         icon.className = "dps-chart-icon";
@@ -121,28 +122,37 @@
         icon.alt = "";
         icon.loading = "lazy";
         // A missing icon file (skill without an icon-*.png yet) just
-        // collapses away instead of showing a broken-image glyph.
+        // collapses away instead of showing a broken-image glyph. Icon
+        // is now its own grid cell (not paired with the label in a
+        // flex wrapper) so collapsing it just shrinks that one auto
+        // column to 0, same end result as before.
         window.SiteUtils.hideOnError(icon, "display");
-        labelWrap.appendChild(icon);
+        row.appendChild(icon);
       }
-      var labelText = document.createElement("span");
-      labelText.className = "dps-chart-label-text";
-      labelText.textContent = label;
-      labelWrap.appendChild(labelText);
 
-      var track = document.createElement("div");
-      track.className = "dps-chart-track";
+      // Bar is now one wide pill (track + fill + label all in the same
+      // box, see .dps-chart-bar below) instead of a separate label
+      // column next to a thin track - the label sits inside the bar
+      // itself so it reads over the fill and, once the fill is short,
+      // over the empty track past it too.
+      var bar = document.createElement("div");
+      bar.className = "dps-chart-bar";
+
       var fill = document.createElement("div");
       fill.className = "dps-chart-fill";
       if (accent) fill.style.setProperty("--dps-accent", accent);
-      track.appendChild(fill);
+      bar.appendChild(fill);
+
+      var labelText = document.createElement("span");
+      labelText.className = "dps-chart-label-text";
+      labelText.textContent = label;
+      bar.appendChild(labelText);
 
       var valueEl = document.createElement("span");
       valueEl.className = "dps-chart-value";
       valueEl.textContent = fmtPct(val);
 
-      row.appendChild(labelWrap);
-      row.appendChild(track);
+      row.appendChild(bar);
       row.appendChild(valueEl);
       list.appendChild(row);
     });

@@ -82,6 +82,10 @@
   --dbc-muted-text-alt: #8a849a;   /* placeholder-style input text, shared by the CPM and bid calculators' "muted" fields */
   --dbc-muted-text-soft: #9c96a8;  /* soft gray label text, shared by an Ark Passive calc popover filename and a stat badge */
   --dbc-rose-text-soft: #f4c9d9;   /* soft pink text - an engraving food chip label and a loadout note's bolded text */
+  --dbc-rose-deep: #a8446b;        /* deep/muted rose - dark enough for the DPS
+    distribution chart's white overlay label to read clearly on top of it,
+    unlike the much lighter pastel --dbc-rose */
+  --dbc-rose-deep-rgb: 168, 68, 107;
 }
 
 [data-md-color-scheme="slate"] {
@@ -6489,71 +6493,126 @@ h3 { color: var(--dbc-teal); }
 }
 
 .md-typeset .dps-chart {
-  width: min(540px, 92vw);
+  width: min(620px, 92vw);
 }
 .md-typeset .dps-chart-list {
   display: flex;
   flex-direction: column;
-  gap: 0.7em;
+  /* Rows now carry their own padding + alternating background (zebra
+     striping, see .dps-chart-row:nth-child(even) below) instead of
+     being separated by a gap between bare rows - the striping needs the
+     rows touching (or nearly so) to read as one banded block instead of
+     a stack of separate floating tints. */
+  gap: 0.15em;
 }
+/* Row is icon | bar | value instead of the old label-column + thin-
+   track-column split - the bar itself is now one wide bar that carries
+   the label, the fill, AND the empty remainder all in one piece (see
+   .dps-chart-bar below), closer to a game damage-meter readout. Icon is
+   its own fixed column sized to match the bar's height (--dps-bar-height)
+   so the row reads as one aligned unit rather than a small icon floating
+   next to a much taller bar.
+   Even rows get a faint zebra tint (same rgba(255,255,255,0.02-0.04)
+   subtlety as every other translucent fill on the site, not a bold
+   stripe) so a long list of rows is easier to track across without
+   losing your place - the reference combat-log table leaned on the
+   same idea with its own row banding. */
 .md-typeset .dps-chart-row {
   --dps-target: 0%;
   --dps-delay: 0ms;
+  --dps-bar-height: 2.15em;
   display: grid;
-  grid-template-columns: 13.5em 1fr 3.6em;
+  grid-template-columns: var(--dps-bar-height) 1fr 3.6em;
   align-items: center;
-  gap: 0.85em;
+  gap: 0.7em;
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
 }
-/* Plain icon + text, no chip card around it - the icon alone (small,
-   flush with the label) carries the identification, matching how
-   .table-bar-cell and every other stat row on the page pairs a label
-   with a bar rather than boxing the label first. */
-.md-typeset .dps-chart-label {
-  display: flex;
-  align-items: center;
-  gap: 0.6em;
-  min-width: 0;
+.md-typeset .dps-chart-row:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.025);
+}
+/* Charts rendered without data-show-icons drop the icon column entirely
+   rather than reserving empty space for it. */
+.md-typeset .dps-chart-row.dps-chart-row-no-icon {
+  grid-template-columns: 1fr 3.6em;
 }
 .md-typeset .dps-chart-icon {
-  flex: 0 0 auto;
-  width: 1.75em;
-  height: 1.75em;
+  width: var(--dps-bar-height);
+  height: var(--dps-bar-height);
   object-fit: contain;
-  border-radius: 4px;
+  border-radius: 6px;
   /* Same thin ring the gem/skill icons wear elsewhere on the page
      (.gem-item-icon, .skill-card-icon) - without it this was the one
      icon spot left bare next to every other icon treatment on the site. */
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.28);
 }
-.md-typeset .dps-chart-label-text {
-  font-size: 1.02em;
-  font-weight: 500;
-  color: var(--dbc-lilac);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-/* Same thin track/fill shape as .stat-bar-track-teal elsewhere on the
-   page (Trixion multiplier bars) instead of a taller, more prominent
-   bar of its own - one visual language for "teal bar = Trixion number"
-   across the whole page. */
-.md-typeset .dps-chart-track {
-  height: 7px;
-  border-radius: 999px;
-  background-color: rgba(var(--dbc-teal-rgb), 0.15);
+/* The bar: a full-width track with the value's fill and the row's
+   label all layered inside it, rather than a separate label column next
+   to a thin standalone track. Neutral card-shell background (same
+   rgba(255,255,255,0.04)/hairline-border language as .cpm-calc and the
+   Ark Passive cards) rather than a tinted track, since the accent
+   now lives entirely in the fill - keeps a chart with a non-default
+   data-accent from having a mismatched tinted track under a
+   differently-colored fill. */
+.md-typeset .dps-chart-bar {
+  position: relative;
+  height: var(--dps-bar-height);
+  /* Was a full 999px pill - toned down to the same corner radius as the
+     site's other card shells (.dps-showcase-frame, .ark-passive-col)
+     rather than a pill/chip shape, since a full-width row reading as a
+     stretched pill (instead of a small rounded rectangle) was reading as
+     more "rounded" than anything else on the page. */
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   overflow: hidden;
 }
 .md-typeset .dps-chart-fill {
-  --dps-accent: var(--dbc-teal);
-  height: 100%;
+  /* Deep rose, not the lighter --dbc-rose pastel - the label text sits
+     directly on top of this fill (white, see .dps-chart-label-text
+     below), and the lighter rose wasn't dark enough for that text to
+     read clearly against it. Still this site's damage accent family
+     (.gem-col-dmg/.tag-legend-dmg use the lighter --dbc-rose), just the
+     deep end of it. */
+  --dps-accent: var(--dbc-rose-deep);
+  position: absolute;
+  inset: 0 auto 0 0;
   width: 0%;
-  border-radius: 999px;
+  /* No radius of its own (was 999px) - the bar's own overflow:hidden
+     mask above already rounds the two ends that actually reach a
+     corner (0% and 100%), so a partial fill just ends in a flat edge
+     rather than a little rounded pill floating inside the track,
+     matching the flatter, less bubbly look elsewhere on the row. */
   background-color: var(--dps-accent);
   transition: width 0.7s ease;
   transition-delay: var(--dps-delay);
 }
 .md-typeset .dps-chart-in-view .dps-chart-fill {
   width: var(--dps-target);
+}
+/* Label sits inside the bar rather than beside it, so it reads over the
+   fill (and, once the fill is short, over the empty track past it) the
+   same way a build's own damage-meter would label its bars. White text
+   with a soft shadow is a deliberate one-off here rather than the site's
+   usual palette text: this is the only label on the page that has to
+   stay legible over TWO different backgrounds at once (an arbitrary
+   accent fill and the neutral track), and no single palette color reads
+   well against both - the shadow is what keeps it readable over a light
+   accent (e.g. orange) without needing a per-accent text color. */
+.md-typeset .dps-chart-label-text {
+  position: absolute;
+  top: 50%;
+  left: 0.85em;
+  right: 0.85em;
+  transform: translateY(-50%);
+  font-size: 0.86em;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
 }
 .md-typeset .dps-chart-value {
   font-size: 1em;
