@@ -62,7 +62,7 @@ extra_css:
 # scratch). See README.md's "Forking this for your own spin" section
 # for the full breakdown.
 extra_javascript:
-  - javascripts/site-utils.js?v=8
+  - javascripts/site-utils.js?v=9
   - javascripts/extra.js?v=2
   - javascripts/cpm-calculator.js?v=6
   - javascripts/bid-calculator.js?v=4
@@ -79,7 +79,7 @@ extra_javascript:
   - javascripts/ark-core-badge.js?v=4
   - javascripts/ap-node-names.js?v=4
   - javascripts/ap-node-effects.js?v=3
-  - javascripts/ark-passive-tree.js?v=6
+  - javascripts/ark-passive-tree.js?v=7
   - javascripts/gem-priority.js?v=6
   - javascripts/pentagon-badge.js?v=4
   - javascripts/rotation-line.js?v=4

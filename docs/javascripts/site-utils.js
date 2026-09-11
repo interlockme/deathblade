@@ -290,8 +290,9 @@
     // during a drag, ...) and fn runs at most once per animation frame,
     // with no arguments. Previously this exact scheduled-flag +
     // requestAnimationFrame wrapper was copy-pasted identically into
-    // skill-setup.js's initMasonry and ark-passive-tree.js's
-    // watchRowWraps; centralized here per this file's own stated purpose.
+    // skill-setup.js's initMasonry and (formerly) ark-passive-tree.js's
+    // now-removed wrap-tracking code; centralized here per this file's
+    // own stated purpose.
     rafSchedule: function (fn) {
       var scheduled = false;
       return function () {
