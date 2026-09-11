@@ -14,8 +14,11 @@
 //
 // Keyed by rune name, lowercased, matching the same "lowercase, no
 // punctuation" id convention as every other lookup here (skill-names.js,
-// ap-node-names.js) even though a rune has no icon file of its own to
-// tie that convention to. Each entry is a flat tier -> effect text map -
+// ap-node-names.js) and matching assets/shared/rune-icons/<name>.png,
+// the icon file rune-tooltip.js's buildHeader reads by this same
+// lowercased key (see that file - NOT the icon-<id>.png convention
+// everything else uses, since a rune name can collide with an unrelated
+// icon-<id>.png, e.g. "bleed"). Each entry is a flat tier -> effect text map -
 // unlike ap-node-effects.js's `levels` (an open-ended 1-5 investment
 // count), a rune's "level" is just which of the 4 fixed rarities it
 // dropped as, so a flat lookup by that same tier string skill-setup.js

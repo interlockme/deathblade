@@ -142,6 +142,7 @@
   // in extra.css). Independent of opts.primary: a Cooldown gem passes
   // extra with no primary (no damage-share to show), a Damage gem could
   // in principle pass both. Omitted entirely when there's no tip text.
+  //
   function buildTip(id, data, opts) {
     opts = opts || {};
 
@@ -594,7 +595,7 @@
   // to a plain native title.
   window.SkillTooltip = {
     // opts.extra / opts.tapToggle: see buildTip's and wire's own comments
-    // above. Both optional - existing callers passing just (trigger, id,
+    // above. All optional - existing callers passing just (trigger, id,
     // primary) are unaffected (opts defaults to {}, extra is undefined,
     // tapToggle stays at its normal true).
     attach: function (trigger, id, primary, opts) {

@@ -21,11 +21,17 @@
 //
 // A card whose label has an entry in core-options-data.js (window.
 // DB_CORE_OPTIONS, keyed by exact label text) also gets a hover/focus/
-// tap tooltip reproducing that core's full in-game "Core Option" list
+// tap tooltip reproducing that core's full in-game "Core Options" list
 // (10P/14P/17P/18P/19P/20P), so a reader can check what a core actually
-// does without leaving the page. A label with no match (typo, or a core
-// core-options-data.js hasn't been given yet) just renders without a
-// tooltip - same "fail quietly" rule every other widget here follows.
+// does without leaving the page. The tooltip's header repeats the same
+// sun/moon/star icon the card itself already shows (see buildTooltip),
+// colored (along with the "Core Options" label itself) by that entry's
+// rarity tier - defaulting to Relic, since that's the only grade this
+// site's core-options-data.js currently transcribes, but overridable
+// per-entry via an optional `tier` field for a future non-Relic core.
+// A label with no match (typo, or a core core-options-data.js hasn't
+// been given yet) just renders without a tooltip - same "fail quietly"
+// rule every other widget here follows.
 //
 // EASY EDIT GUIDE:
 //   <div class="ark-cores" data-family="re" markdown>
@@ -87,15 +93,46 @@
 
   // Builds the hover/focus/tap tooltip panel for one core, or null if
   // core-options-data.js has no entry for this label (fails quietly).
-  function buildTooltip(label) {
+  // `core` ("sun"/"moon"/"star") picks the same CORE_ART icon buildItem
+  // already shows on the card itself - the card had the icon from the
+  // start, but the tooltip never did until now. Reuses skill-tooltip.js/
+  // ark-passive-tooltip.js's own .skill-tip-header/.skill-tip-icon CSS
+  // rather than inventing ark-core-specific classes, same "reuse the
+  // shared header row" convention as rune-tooltip.js's own buildHeader -
+  // .ark-core-tip-title keeps its own class/styling on the text itself,
+  // just wrapped in that shared flex row now instead of sitting bare.
+  function buildTooltip(label, core) {
     var data = window.DB_CORE_OPTIONS && window.DB_CORE_OPTIONS[label];
     if (!data || !data.options || !data.options.length) return null;
+
+    // Defaults to "relic" - every Order Core on this site is Relic grade
+    // (see core-options-data.js's own header comment) - but reads
+    // data.tier first so a future non-Relic entry (an explicit escape
+    // hatch, same "override wins over the fixed default" rule as every
+    // other DATA file on this site) colors both the icon and the
+    // "Core Options" label correctly instead of always painting Relic
+    // red.
+    var tier = data.tier || "relic";
 
     var tip = el("div", "ark-core-options-tip");
     tip.setAttribute("role", "tooltip");
 
-    tip.appendChild(el("div", "ark-core-tip-title", label));
-    tip.appendChild(el("div", "ark-core-tip-subtitle", "Core Option"));
+    var header = el("div", "skill-tip-header");
+    var icon = document.createElement("img");
+    // skill-tip-icon-rarity-<tier>: same shared "fill a transparent
+    // icon's background with its rarity color" treatment as
+    // rune-tooltip.js's own buildHeader (see extra.css's
+    // .skill-tip-icon-rarity-* comment) - sun.png/moon.png/star.png are
+    // transparent cutouts same as a rune's icon.
+    icon.className = "skill-tip-icon skill-tip-icon-rarity-" + tier;
+    icon.src = window.SiteUtils.iconSrc(SITE_ROOT, CORE_ART[core] || "sun.png");
+    icon.alt = "";
+    icon.loading = "lazy";
+    window.SiteUtils.hideOnError(icon, "display");
+    header.appendChild(icon);
+    header.appendChild(el("div", "ark-core-tip-title", label));
+    tip.appendChild(header);
+    tip.appendChild(el("div", "ark-core-tip-subtitle ark-core-tip-subtitle-" + tier, "Core Options"));
 
     var list = el("div", "ark-core-tip-list");
     data.options.forEach(function (opt) {
@@ -186,7 +223,7 @@
 
     item.appendChild(info);
 
-    var tip = buildTooltip(entry.label);
+    var tip = buildTooltip(entry.label, entry.core);
     if (tip) {
       item.classList.add("ark-core-item-tip");
       item.setAttribute("tabindex", "0");

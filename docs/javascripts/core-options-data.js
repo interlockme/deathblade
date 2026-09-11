@@ -18,6 +18,11 @@
 //   note - short caveat shown at the bottom of the tooltip, e.g.
 //          flagging a core that's a Korea-only placeholder for a
 //          not-yet-released replacement.
+//   tier - rarity grade for the tooltip's icon fill + "Core Options"
+//          label color (skill-tip-icon-rarity-<tier> / ark-core-tip-
+//          subtitle-<tier> in extra.css). Defaults to "relic" when
+//          omitted (every entry below is Relic-grade), so this only
+//          needs setting for a future non-Relic core.
 //
 // All option text below is written as-is (no more (KR)-tagged lines) -
 // the balance-patch values transcribed from Korea are now just treated

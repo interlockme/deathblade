@@ -7695,13 +7695,43 @@ body.page-333-blitz input[type="text"] {
   font-weight: 700;
   color: var(--md-default-fg-color);
 }
+/* Same "muted label line under the title" element as .rune-tip-tier
+   (see that rule's own comment), tinted per rarity tier instead of a
+   flat uppercase caption - a core's own grade (Relic, currently the
+   only one core-options-data.js ever transcribes - see that file's
+   header comment) now reads the same way a rune's tier does, via the
+   matching .ark-core-tip-subtitle-<tier> modifier ark-core-badge.js
+   applies (defaulting to "relic" when an entry has no explicit `tier`,
+   same optional-override-over-fixed-default rule as everywhere else on
+   this site - see project-context.md's DATA SIMPLIFICATION CONVENTION).
+   margin-top only (no margin-bottom) is a deliberate copy of
+   .rune-tip-tier's own spacing: that rule has no bottom margin at all,
+   and neither does .skill-tip-note sitting right under it, so the only
+   gap between a rune's tier line and its effect text is line-height
+   itself. The previous version here set a margin-BELOW the label
+   instead of matching that - visibly looser than the rune tooltip it
+   was meant to match despite the comment claiming otherwise. This
+   removes that stray margin so the two tooltip types finally share the
+   same "label, then content right under it, no extra air" rhythm. */
 .md-typeset .ark-core-tip-subtitle {
+  margin-top: 0.1em;
   font-size: 0.68em;
-  font-weight: 600;
-  color: var(--dbc-muted-text-soft);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.5em;
+  font-weight: 700;
+}
+.md-typeset .ark-core-tip-subtitle-uncommon {
+  color: #81c995;
+}
+.md-typeset .ark-core-tip-subtitle-rare {
+  color: var(--dbc-blue);
+}
+.md-typeset .ark-core-tip-subtitle-epic {
+  color: var(--dbc-violet);
+}
+.md-typeset .ark-core-tip-subtitle-legendary {
+  color: var(--dbc-orange);
+}
+.md-typeset .ark-core-tip-subtitle-relic {
+  color: var(--dbc-red);
 }
 .md-typeset .ark-core-tip-list {
   display: flex;
@@ -7812,6 +7842,47 @@ body.page-333-blitz input[type="text"] {
      (.gem-item-icon, .dps-chart-icon, .skill-card-icon). */
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.28);
   flex-shrink: 0;
+}
+/* Shared "fill a transparent icon's background with its rarity color"
+   modifier for .skill-tip-icon, used by rune-tooltip.js's buildHeader
+   (every tier) and ark-core-badge.js's buildTooltip (always -relic, see
+   that file's own comment on why cores never vary). Both a rune's
+   rune-icons/*.png and a core's sun/moon/star.png are transparent
+   cutouts with no rarity color baked into the art the way a skill/
+   engraving icon's own square frame already has - without this they sit
+   as bare grey-ish art on the tooltip's dark background with no visual
+   tie back to the chip/rarity system elsewhere on the site. Color names
+   match the Lost Ark rarity ladder itself (rune-data.js's own header
+   comment on why this convention exists), not the chip's cosmetic
+   display color, same rule .rune-chip.rune-* already follows - "epic"
+   here is violet for the same reason it's violet there. -relic reuses
+   --dbc-red (the site's one red accent, otherwise only seen on danger/
+   cursed-engraving accents) since Relic is the one rarity above
+   Legendary this site's Ark Grid cores are ever transcribed at.
+   -neutral (grey) is for a header with no single rarity to show at all
+   (rune-tooltip.js's buildAllTiersTip, listing every tier at once) -
+   picking any one tier's color there would misleadingly imply that tier
+   over the others. Stronger fill (0.55) than a chip's own 0.14-0.16
+   tint on purpose: a chip's color sits on TEXT with its own high-
+   contrast border doing most of the identification work, while this
+   fill is the only color cue an icon-only badge has. */
+.skill-tip-icon-rarity-uncommon {
+  background-color: rgba(var(--dbc-green-rgb), 0.55);
+}
+.skill-tip-icon-rarity-rare {
+  background-color: rgba(var(--dbc-blue-rgb), 0.55);
+}
+.skill-tip-icon-rarity-epic {
+  background-color: rgba(var(--dbc-violet-rgb), 0.55);
+}
+.skill-tip-icon-rarity-legendary {
+  background-color: rgba(var(--dbc-orange-rgb), 0.55);
+}
+.skill-tip-icon-rarity-relic {
+  background-color: rgba(var(--dbc-red-rgb), 0.55);
+}
+.skill-tip-icon-rarity-neutral {
+  background-color: rgba(var(--dbc-slate-rgb), 0.55);
 }
 .skill-tip-title {
   font-size: 0.78em;

@@ -57,6 +57,45 @@
 // load order.
 (function () {
   var el = window.SiteUtils.el;
+  var SITE_ROOT = window.SiteUtils.detectSiteRoot("rune-tooltip.js");
+
+  // EXPERIMENT: same icon+title header row as skill-tooltip.js's own
+  // buildTip and ark-passive-tooltip.js's own buildHeader, reusing the
+  // exact same .skill-tip-header/.skill-tip-icon CSS rather than
+  // inventing rune-specific classes - a rune's icon lives under its own
+  // assets/shared/rune-icons/<name>.png rather than the icon-<id>.png
+  // convention everything else here follows, since a rune name can
+  // collide with an unrelated icon-<id>.png that already exists for a
+  // different purpose (e.g. "bleed" is also a DB_SKILL_NAMES id for the
+  // Trixion DPS rune-proc row - see skill-names.js's own comment on
+  // that collision - so reusing icon-bleed.png here would show the
+  // wrong art). hideOnError still collapses the <img> to nothing if a
+  // given rune's icon file is ever missing, same fail-quietly rule as
+  // every other icon on the site.
+  // `tier` (optional) fills the icon's background with that tier's own
+  // rarity color (.skill-tip-icon-rarity-<tier> in extra.css, shared with
+  // ark-core-badge.js's own tooltip icon - see that file's comment) so a
+  // rune's real in-game rarity reads at a glance instead of the art
+  // floating on the tooltip's own dark background - every rune-icons/*.png
+  // is a transparent cutout with no rarity color baked in, unlike a skill
+  // icon's own square frame art. buildTip below always has a single real
+  // tier to pass; buildAllTiersTip's header describes every tier at once
+  // (see its own comment on why those can't be merged into one), so
+  // there's no single rarity to color it by - that call omits `tier`
+  // entirely and gets the flat neutral fill instead, same "no single
+  // answer, don't guess one" instinct as the rest of that fallback.
+  function buildHeader(name, tier) {
+    var header = el("div", "skill-tip-header");
+    var icon = document.createElement("img");
+    icon.className = "skill-tip-icon skill-tip-icon-rarity-" + (tier || "neutral");
+    icon.src = window.SiteUtils.iconSrc(SITE_ROOT, "rune-icons/" + name.toLowerCase() + ".png");
+    icon.alt = "";
+    icon.loading = "lazy";
+    window.SiteUtils.hideOnError(icon, "display");
+    header.appendChild(icon);
+    header.appendChild(el("div", "skill-tip-title", name));
+    return header;
+  }
 
   // Own "<tier>" label class rather than reusing ap-node-tooltip.js's
   // .ap-node-tip-level for the visually-similar muted-label-under-title
@@ -68,7 +107,7 @@
   function buildTip(name, tier, text) {
     var tip = el("div", "skill-tip md-typeset");
     tip.setAttribute("role", "tooltip");
-    tip.appendChild(el("div", "skill-tip-title", name));
+    tip.appendChild(buildHeader(name, tier));
     tip.appendChild(el("div", "rune-tip-tier rune-tip-tier-" + tier, tier.charAt(0).toUpperCase() + tier.slice(1)));
     tip.appendChild(el("p", "skill-tip-note", text));
     return tip;
@@ -99,7 +138,7 @@
   function buildAllTiersTip(name, entry) {
     var tip = el("div", "skill-tip md-typeset");
     tip.setAttribute("role", "tooltip");
-    tip.appendChild(el("div", "skill-tip-title", name));
+    tip.appendChild(buildHeader(name));
     TIER_ORDER.forEach(function (tier) {
       var text = entry[tier];
       if (!text) return;
