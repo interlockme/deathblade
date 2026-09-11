@@ -5932,34 +5932,45 @@ h3 { color: var(--dbc-teal); }
   background-color: rgba(var(--dbc-teal-rgb), 0.1);
   color: var(--dbc-teal);
 }
-/* Stronger sibling of .ap-brace-info-icon's mild "i" - solid amber fill
-   instead of just an outline, so the Spec row's "you're below the
-   recommended CDR floor" warning reads as a step up in urgency from the
-   plain informational note beside it, without going all the way to
-   .dbc-red (this is a recommendation, not an error state). */
+/* Stronger sibling of .ap-brace-info-icon's mild "i" - was a solid amber
+   circled "!", one step up from the plain informational note beside it
+   but deliberately short of .dbc-red (this is a recommendation, not an
+   error state). Recolored to .dbc-red and reshaped from a circle to a
+   labeled "WARN" pill (same rounded-pill/small-caps language as
+   .setup-note-tag's own "Warn" badge - see that class's comment) at the
+   request to make it read as more urgent: a bare "!" is easy to skim
+   past next to the row's other small circular icon, where a wider red
+   pill with an actual word on it draws the eye the way .setup-note-tag's
+   own Warn pill does elsewhere on the site. Auto width (not
+   .setup-note-tag's fixed 52px column - this isn't stacked in a column
+   of same-purpose siblings that need to align) sized from the "WARN"
+   text itself via padding. */
 .md-typeset .ap-brace-warn-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.2em;
-  height: 1.2em;
+  padding: 0.15em 0.55em;
   margin-left: 0.3em;
-  border-radius: 50%;
-  /* Same --dbc-gold consolidation as .ap-bvb-line-mainstat's border above -
-     was its own hardcoded rgba(224, 169, 64, ...)/#e0a940 amber. */
-  background: rgba(var(--dbc-gold-rgb), 0.85);
-  /* Paired dark text on a gold fill, same convention as .cycle-num-3
-     (background: var(--dbc-gold); color: var(--dbc-gold-dark)) - was its
-     own one-off #1a1410 instead of the token already meant for this. */
-  color: var(--dbc-gold-dark);
-  font-size: 0.8em;
+  border-radius: 999px;
+  background: rgba(var(--dbc-red-rgb), 0.85);
+  /* Dark-on-fill pairing, same convention .cycle-num-3/this class's own
+     prior gold version used (background: var(--dbc-gold); color:
+     var(--dbc-gold-dark)) - no separate --dbc-red-dark token exists, so a
+     near-black falls back to the same near-black .ap-brace-warn-icon's
+     gold version paired with (#1a1410 by way of --dbc-gold-dark) rather
+     than inventing a new one-off just for this. */
+  color: #1a1410;
+  font-size: 0.62em;
   font-weight: 700;
-  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  white-space: nowrap;
   cursor: help;
   vertical-align: middle;
 }
 .md-typeset .ap-brace-warn-icon:hover {
-  background: var(--dbc-gold);
+  background: var(--dbc-red);
 }
 /* Same `[hidden]` specificity fix as .ap-brace-info-icon above - without
    it this warning shows unconditionally regardless of the </83 check. */

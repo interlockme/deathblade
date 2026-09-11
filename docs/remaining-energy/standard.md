@@ -16,7 +16,7 @@
 **Tradeoff:**{: .tradeoff } Legacy build with some downtime and little to no recovery.
 
 - Last bastion of the classic Remaining Energy gameplay, now powercrept.
-- Counter is used in rotation often, you must hold it when necessary.
+- <span class="skill-mention" data-glossary-id="counter">Counter</span> is used in rotation often, you must hold it when necessary.
 - Simple to learn and execute, with better mobility than modern builds.
 
 </div>
@@ -220,7 +220,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "Ark Passive"
 
 Cast Spincutter to approach the boss, use the opener and continue to loop the main cycle afterwards.
 
-The opener stacks <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and applies synergies efficiently as you build up to the encounter's first Surge.
+The opener stacks <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and applies <span class="skill-mention" data-glossary-id="synergy">synergies</span> efficiently as you build up to the encounter's first Surge.
 
 *Opener from zero orbs:*
 { .lead }

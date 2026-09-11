@@ -73,7 +73,7 @@ Atk/Move Speed Feast
 <summary><span class="setup-note-tag">Warn</span>Balance Patch<span class="setup-note-arrow"></span></summary>
 
 - Blitz Rush gains a 27% cast speed tripod and 20% more attack range.
-- Turning Slash's after-effect now also applies Synergy.
+- Turning Slash's after-effect now also applies <span class="skill-mention" data-glossary-id="synergy">Synergy</span>.
 - Surge's buffed coefficient increases DPS for all RE builds by ~1%.
 - Buffed Ark Grid cores increase 111 HH DPS by ~2% and 313 DPS by ~1%.
 - See [333 (Ceiling)](333-ceiling.md) or [313 (High Floor)](313-high-floor.md) for build-specific <span class="skill-mention" data-glossary-id="tripod">tripod</span>/gem adjustments.
@@ -207,7 +207,7 @@ The cooldown reduction is the core of the class: the cycle resets so you can sta
 ### Party Synergies
 
 - Turning Slash: +4% outgoing and +5% directional damage for 12s.
-- Maelstrom: +12.8% Attack/Move Speed for 6s and improves orb generation.
+- <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>: +12.8% Attack/Move Speed for 6s and improves orb generation.
 
 ### Playstyle
 

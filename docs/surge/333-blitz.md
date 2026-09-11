@@ -17,9 +17,9 @@
 
 **Tradeoff:**{: .tradeoff } The juice is not worth the squeeze.
 
-- Uses Blitz Rush as two fast casts (BTB combo) via a skill reset.
+- Uses Blitz Rush as two fast casts (<span class="skill-mention" data-glossary-id="btbcombo">BTB</span> combo) via a skill reset.
 - High gem efficiency, Surge and Blitz Rush are most of your DPS.
-- Must balance Surge, Blitz Rush, and Deathly Slash <span class="skill-mention" data-glossary-id="backattack">back attack</span> rate with Surge CPM.
+- Must balance Surge, Blitz Rush, and Deathly Slash <span class="skill-mention" data-glossary-id="backattack">back attack</span> rate with Surge <span class="skill-mention" data-glossary-id="cpm">CPM</span>.
 
 </div>
 <div class="pentagon-badge" data-build="333-blitz" data-family="surge" markdown>
@@ -242,7 +242,7 @@ There's an optimal skill order, but you have flexibility when facing downtime or
 
 Spincutter is your main mobility skill and backup stack builder. Use it to guarantee back attacks on your major skills.
 
-Apply damage synergy if needed, then repeat the rotation cycle as best you can.
+Apply damage <span class="skill-mention" data-glossary-id="synergy">synergy</span> if needed, then repeat the rotation cycle as best you can.
 
 *From 3 orbs:*
 { .lead }

@@ -59,7 +59,7 @@ Atk/Move Speed Feast
 - Breaking Moon changes to a Normal skill and gives 60 stacks on hit.
 - Complete rework of 222 cores and playstyle. It's actually good now.
 - Blitz Rush gains a 27% cast speed <span class="skill-mention" data-glossary-id="tripod">tripod</span> and 20% more attack range.
-- Turning Slash and Surprise Attack's after-effects now also apply Synergy.
+- Turning Slash and Surprise Attack's after-effects now also apply <span class="skill-mention" data-glossary-id="synergy">Synergy</span>.
 - Overall damage increases, Surge is now competitive with RE.
 - Surge post-cast delay was removed, animation cancelling is no longer needed.
 
@@ -213,7 +213,7 @@ Aim to enter Death Trance with 3 orbs whenever possible.
 
 - Turning Slash: +4% outgoing and +5% directional damage for 12s.
 - Surprise Attack: +4% outgoing and +5% directional damage for 6s.
-- Maelstrom: +12.8% Attack/Move Speed for 6s.
+- <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>: +12.8% Attack/Move Speed for 6s.
 
 ### Playstyle
 
@@ -229,7 +229,7 @@ Knowing roughly how many stacks each skill generates is important for adapting y
 
 ### Combat Performance
 
-**Surge Casts Per Minute (CPM)** and <span class="skill-mention" data-glossary-id="backattack">back attack</span> rate are useful measures of how efficiently you cycle Surge.
+**Surge Casts Per Minute (<span class="skill-mention" data-glossary-id="cpm">CPM</span>)** and <span class="skill-mention" data-glossary-id="backattack">back attack</span> rate are useful measures of how efficiently you cycle Surge.
 
 Only compare CPM between the **same encounter and build**, as boss uptime and mechanics heavily affect it.
 

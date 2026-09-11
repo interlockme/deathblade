@@ -86,7 +86,7 @@ extra_javascript:
   - javascripts/skill-tooltip.js?v=8
   - javascripts/ark-passive-tooltip.js?v=4
   - javascripts/rune-tooltip.js?v=6
-  - javascripts/glossary-data.js?v=2
+  - javascripts/glossary-data.js?v=3
   - javascripts/glossary-tooltip.js?v=1
   - javascripts/rotation-practice.js?v=3
   - javascripts/dps-chart.js?v=8

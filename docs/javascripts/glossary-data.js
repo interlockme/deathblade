@@ -84,4 +84,28 @@ window.DB_GLOSSARY = {
     term: "Rune",
     def: "A skill modifier equipped directly to an individual skill slot to grant utility effects like cast speed, stagger, or bonus meter generation.",
   },
+  synergy: {
+    term: "Synergy",
+    def: "A party-wide buff or boss debuff applied by certain skills - identical synergies from the same class don't stack.",
+  },
+  counter: {
+    term: "Counter",
+    def: "A frontal skill hit landed while a boss glows blue, interrupting its attack pattern and stunning it.",
+  },
+  pushimmunity: {
+    term: "Push Immunity",
+    def: "Super armor that prevents knockbacks, knockups, and knockdowns - it doesn't protect against grabs, CC debuffs, or wipe mechanics.",
+  },
+  // BTB/FTF: each is a specific 3-skill combo (not a generic "recast
+  // twice" pattern - see the build pages' own prose for how it's used in
+  // a rotation), so kept as two separate entries with the exact sequence
+  // rather than one shared "double cast" definition.
+  btbcombo: {
+    term: "BTB",
+    def: "Short for the combo Blitz Rush → Turning Slash → Blitz Rush.",
+  },
+  ftfcombo: {
+    term: "FTF",
+    def: "Short for the combo Fatal Wave → Turning Slash → Fatal Wave.",
+  },
 };
