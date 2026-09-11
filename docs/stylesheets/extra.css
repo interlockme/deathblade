@@ -6512,11 +6512,12 @@ h3 { color: var(--dbc-teal); }
    its own fixed column sized to match the bar's height (--dps-bar-height)
    so the row reads as one aligned unit rather than a small icon floating
    next to a much taller bar.
-   Even rows get a faint zebra tint (same rgba(255,255,255,0.02-0.04)
-   subtlety as every other translucent fill on the site, not a bold
-   stripe) so a long list of rows is easier to track across without
-   losing your place - the reference combat-log table leaned on the
-   same idea with its own row banding. */
+   Even rows get a faint zebra tint, but it lives on .dps-chart-bar's
+   own background (see below) rather than here on the row - the bar is
+   almost the entire row's visual area, so a tint painted behind it
+   (on the row) was being fully masked and only ever showed in the
+   thin gutters between columns, which read as invisible rather than
+   as banding. */
 .md-typeset .dps-chart-row {
   --dps-target: 0%;
   --dps-delay: 0ms;
@@ -6527,9 +6528,6 @@ h3 { color: var(--dbc-teal); }
   gap: 0.7em;
   padding: 0.2em 0.4em;
   border-radius: 6px;
-}
-.md-typeset .dps-chart-row:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.025);
 }
 /* Charts rendered without data-show-icons drop the icon column entirely
    rather than reserving empty space for it. */
@@ -6566,6 +6564,15 @@ h3 { color: var(--dbc-teal); }
   background-color: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.09);
   overflow: hidden;
+}
+/* Zebra banding lives here, not on .dps-chart-row - the bar's own
+   background is nearly the whole row's visual footprint, so this is
+   where an alternating tint actually reads as banding instead of
+   disappearing into narrow gutters. Bumped well past the row tint it
+   replaced (0.025) since it now has to read clearly against the
+   track's own 0.04 base rather than against the page background. */
+.md-typeset .dps-chart-row:nth-child(even) .dps-chart-bar {
+  background-color: rgba(255, 255, 255, 0.075);
 }
 .md-typeset .dps-chart-fill {
   /* Deep rose, not the lighter --dbc-rose pastel - the label text sits
