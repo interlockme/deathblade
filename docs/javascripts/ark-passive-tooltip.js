@@ -62,6 +62,28 @@
 // extra_javascript order in mkdocs.yml.
 (function () {
   var el = window.SiteUtils.el;
+  var SITE_ROOT = window.SiteUtils.detectSiteRoot("ark-passive-tooltip.js");
+
+  // EXPERIMENT: shared header-row builder (icon + title), same markup/
+  // classes as skill-tooltip.js's own buildTip so it picks up the exact
+  // same .skill-tip-header/.skill-tip-icon CSS - a node's icon path is
+  // already known outright (DB_AP_NODE_NAMES[id].icon, e.g.
+  // "ap-icons/crit.png"), unlike a skill id's icon-<id>.png guess, so
+  // this resolves it directly instead of re-deriving a filename.
+  function buildHeader(name, iconRelPath) {
+    var header = el("div", "skill-tip-header");
+    if (iconRelPath) {
+      var icon = document.createElement("img");
+      icon.className = "skill-tip-icon";
+      icon.src = window.SiteUtils.iconSrc(SITE_ROOT, iconRelPath);
+      icon.alt = "";
+      icon.loading = "lazy";
+      window.SiteUtils.hideOnError(icon, "display");
+      header.appendChild(icon);
+    }
+    header.appendChild(el("div", "skill-tip-title", name));
+    return header;
+  }
 
   // Picks the effect text for whichever level this build actually
   // invested, out of an entry.levels list - not the whole list, see this
@@ -98,7 +120,7 @@
     tip.setAttribute("role", "tooltip");
 
     var known = window.DB_AP_NODE_NAMES && window.DB_AP_NODE_NAMES[id];
-    tip.appendChild(el("div", "skill-tip-title", (known && known.name) || id));
+    tip.appendChild(buildHeader((known && known.name) || id, known && known.icon));
 
     if (currentLevel != null) {
       tip.appendChild(el("div", "ap-node-tip-level", "Ark Passive Lv. " + currentLevel));
@@ -148,7 +170,7 @@
     tip.setAttribute("role", "tooltip");
 
     var known = window.DB_AP_NODE_NAMES && window.DB_AP_NODE_NAMES[id];
-    tip.appendChild(el("div", "skill-tip-title", (known && known.name) || id));
+    tip.appendChild(buildHeader((known && known.name) || id, known && known.icon));
 
     entry.levels.forEach(function (lvl) {
       var row = el("div", "skill-tip-all-row");

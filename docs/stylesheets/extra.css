@@ -7787,11 +7787,36 @@ body.page-333-blitz input[type="text"] {
   pointer-events: auto;
   transform: translateY(0);
 }
+/* EXPERIMENT: header row for skill-tooltip.js's optional icon (see
+   buildTip) - also reused as-is by ark-passive-tooltip.js's own
+   buildHeader for Ark Passive node tooltips (a node's icon path is
+   already known via DB_AP_NODE_NAMES, so that file resolves it directly
+   rather than going through icon-<id>.png). Flex so the icon and title
+   share one line regardless of whether the icon actually rendered
+   (hideOnError collapses it to nothing on a 404, and flex just closes
+   the gap rather than leaving a blank slot). Icon sized to sit
+   comfortably next to the title's own 0.78em text - small enough this
+   stays a tooltip, not a card. */
+.skill-tip-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  margin-bottom: 0.4em;
+}
+.skill-tip-icon {
+  width: 1.6em;
+  height: 1.6em;
+  object-fit: contain;
+  border-radius: 5px;
+  /* Same thin ring convention as every other icon on the site
+     (.gem-item-icon, .dps-chart-icon, .skill-card-icon). */
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.28);
+  flex-shrink: 0;
+}
 .skill-tip-title {
   font-size: 0.78em;
   font-weight: 700;
   color: var(--md-default-fg-color);
-  margin-bottom: 0.4em;
 }
 /* Only set by gem-dps-tooltip.js's damage-share figure (see buildTip's
    opts.primary in skill-tooltip.js) - rose to tie back to the Damage

@@ -98,6 +98,7 @@
 //   data-skill-id overrides the guess either way.
 (function () {
   var el = window.SiteUtils.el;
+  var SITE_ROOT = window.SiteUtils.detectSiteRoot("skill-tooltip.js");
 
   var ICON_ID_RE = /icon-([a-z0-9]+)\.png/i;
 
@@ -155,7 +156,23 @@
     tip.setAttribute("role", "tooltip");
 
     var name = (window.DB_SKILL_NAMES && window.DB_SKILL_NAMES[id]) || id;
-    tip.appendChild(el("div", "skill-tip-title", name));
+    // EXPERIMENT: same icon-<id>.png convention every other icon on the
+    // site already follows (see dps-chart.js's iconSlug/iconSrc) - "when
+    // available" means literally that: hideOnError collapses the <img>
+    // entirely (display:none) if that file doesn't exist, so an id with
+    // no icon (DB_SKILL_EXTRAS consumables, or anything not yet given
+    // one) just falls back to the old text-only title with no gap left
+    // behind.
+    var header = el("div", "skill-tip-header");
+    var icon = document.createElement("img");
+    icon.className = "skill-tip-icon";
+    icon.src = window.SiteUtils.iconSrc(SITE_ROOT, "icon-" + id + ".png");
+    icon.alt = "";
+    icon.loading = "lazy";
+    window.SiteUtils.hideOnError(icon, "display");
+    header.appendChild(icon);
+    header.appendChild(el("div", "skill-tip-title", name));
+    tip.appendChild(header);
 
     var body = tip;
     if (opts.primary) {
