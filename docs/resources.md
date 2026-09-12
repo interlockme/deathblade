@@ -38,6 +38,44 @@
 
 <div class="ap-calc">
 
+<!-- Master Build toggle - upstream of all three layers this calculator
+     has (the primary Ark Passive grid below, Bracelet Comparison, and
+     Engraving Comparison's derived Playstyle) rather than living inside
+     just one of them. Real pill-chip buttons, not a plain <select> or
+     radio dots, since "one vivid, rest muted" needs every option visible
+     at once - a collapsed <select> can't show that.
+     Two tiers, not one flat row of 6: Family (RE/Surge) plus Variant
+     (whichever family is active - 2 chips for RE since 111/313 merged
+     into one "111/313" chip, 3 for Surge). Every formula that reads
+     BRACE_SPEC_BUILDS was traced before doing this split - RE 111/313
+     are 100% computationally identical, everything else genuinely needs
+     its exact variant (see ark-passive-calculator.js's BRACE_SPEC_BUILDS
+     comment and normalizeBraceSpecBuild). Only one Variant tier is ever
+     shown; the other is hidden by syncBuildToggleUI, same
+     hidden-unless-active convention as the Breaking Moon summary row.
+     Writes to the real ap-brace-spec-build <select> further down (see
+     that select's own comment) and two-way syncs with its compact echo
+     copies inside Bracelet Comparison's and Engraving Comparison's own
+     headers. -->
+<div class="ap-build-toggle-row ap-build-toggle-row--master">
+  <span class="ap-build-toggle-label">Build</span>
+  <div class="ap-build-toggle ap-build-toggle--master" role="group" aria-label="Build">
+    <div class="ap-build-toggle-tier ap-build-toggle-tier--family">
+      <button type="button" class="ap-build-chip ap-build-family-chip" data-family="re">RE</button>
+      <button type="button" class="ap-build-chip ap-build-family-chip" data-family="surge">Surge</button>
+    </div>
+    <div class="ap-build-toggle-tier ap-build-toggle-tier--variant ap-build-toggle-tier--variant-re">
+      <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="re-111">111/313</button>
+      <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="re-333">333</button>
+    </div>
+    <div class="ap-build-toggle-tier ap-build-toggle-tier--variant ap-build-toggle-tier--variant-surge">
+      <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-111">111</button>
+      <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-222">222</button>
+      <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-333">333</button>
+    </div>
+  </div>
+</div>
+
 <div class="ap-calc-layout">
 
 <!-- Fixed Gear: filled out once to match your character, organized by
@@ -396,6 +434,7 @@
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--adddmg">Add Dmg</span><span class="ap-summary-base-adddmg ap-summary-value">—</span></div>
         <div class="ap-stat-card-row ap-stat-card-row--kbw-base ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg">KBW Dmg</span><span class="ap-summary-base-kbw ap-summary-value">—</span></div>
         <div class="ap-stat-card-row ap-stat-card-row--kbwstone-base ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg">KBW Stone Dmg</span><span class="ap-summary-base-kbwstone ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-stat-card-row--breakingmoon-base ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg">B. Moon CDmg</span><span class="ap-summary-base-breakingmoon ap-summary-value">—</span></div>
       </div>
 
       <div class="ap-stat-card ap-stat-card-best">
@@ -406,6 +445,7 @@
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--adddmg">Add Dmg</span><span class="ap-summary-best-adddmg ap-summary-value">—</span></div>
         <div class="ap-stat-card-row ap-stat-card-row--kbw-best ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg">KBW Dmg</span><span class="ap-summary-best-kbw ap-summary-value">—</span></div>
         <div class="ap-stat-card-row ap-stat-card-row--kbwstone-best ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg">KBW Stone Dmg</span><span class="ap-summary-best-kbwstone ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row ap-stat-card-row--breakingmoon-best ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg">B. Moon CDmg</span><span class="ap-summary-best-breakingmoon ap-summary-value">—</span></div>
       </div>
 
     </div>
@@ -747,29 +787,75 @@
 <details class="ap-brace-compare">
   <summary>Bracelet Comparison</summary>
   <div class="ap-brace-compare-body">
-    <p class="ap-brace-compare-intro">Candidate bracelet lines, valued as if each were the only line on your bracelet, against your Best Setup above.</p>
     <div class="ap-brace-compare-inputs">
-      <div class="ap-calc-field-row">
-        <label class="ap-calc-field-label" for="ap-brace-demon-dmg">Card Demon Dmg %</label>
-        <input type="number" id="ap-brace-demon-dmg" class="ap-brace-demon-dmg" min="0" max="15" step="0.1" value="7">
+      <!-- Compact echo copy of the master Build toggle at the top of the
+           calculator (same two-tier Family/Variant shape - see that
+           toggle's own comment) - two-way synced through the shared
+           ap-brace-spec-build select both write to. Lives in this
+           section's own header rather than the master's exact chip
+           style/size so switching build here, mid-Bracelet-Comparison,
+           doesn't require scrolling back up. Shares this row with the
+           Crit Stat field below (--inline strips its own standalone
+           row's margin/padding/border - see that class's own CSS
+           comment) rather than sitting on its own row above, since both
+           are compact controls and don't each need a full row. -->
+      <div class="ap-build-toggle-row ap-build-toggle-row--echo ap-build-toggle-row--inline">
+        <span class="ap-build-toggle-label">Build</span>
+        <div class="ap-build-toggle ap-build-toggle--echo" role="group" aria-label="Build">
+          <div class="ap-build-toggle-tier ap-build-toggle-tier--family">
+            <button type="button" class="ap-build-chip ap-build-family-chip" data-family="re">RE</button>
+            <button type="button" class="ap-build-chip ap-build-family-chip" data-family="surge">Surge</button>
+          </div>
+          <div class="ap-build-toggle-tier ap-build-toggle-tier--variant ap-build-toggle-tier--variant-re">
+            <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="re-111">111/313</button>
+            <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="re-333">333</button>
+          </div>
+          <div class="ap-build-toggle-tier ap-build-toggle-tier--variant ap-build-toggle-tier--variant-surge">
+            <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-111">111</button>
+            <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-222">222</button>
+            <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-333">333</button>
+          </div>
+        </div>
       </div>
       <div class="ap-calc-field-row">
         <label class="ap-calc-field-label" for="ap-brace-crit-stat-equipped">Current Bracelet's Crit Stat</label>
-        <span class="ap-brace-info-icon" title="Subtracted from your total Crit Stat to build the no-bracelet baseline, so this comparison doesn't double-count Crit Stat your current bracelet already grants.">i</span>
-        <input type="number" id="ap-brace-crit-stat-equipped" class="ap-brace-crit-stat-equipped" min="60" max="120" step="1" value="82">
+        <span class="ap-brace-info-icon" title="Subtracted from your total Crit Stat to build the no-bracelet baseline, so this comparison doesn't double-count Crit Stat your current bracelet already grants. Use 0 if your bracelet didn't roll a Crit stat line at all (a real Crit roll, when present, is always 60-120).">i</span>
+        <input type="number" id="ap-brace-crit-stat-equipped" class="ap-brace-crit-stat-equipped" min="0" max="120" step="1" value="82">
       </div>
-      <div class="ap-calc-field-row">
-        <label class="ap-calc-field-label" for="ap-brace-spec-build">Spec Scaling</label>
-        <select id="ap-brace-spec-build" class="ap-brace-spec-build">
-          <option value="re-111">RE 111</option>
-          <option value="re-313">RE 313</option>
-          <option value="re-333" selected>RE 333</option>
-          <option value="surge-111">Surge 111</option>
-          <option value="surge-222">Surge 222</option>
-          <option value="surge-333">Surge 333</option>
-        </select>
-      </div>
+
+      <!-- ap-brace-spec-build is the single real source of truth for the
+           active build (this Spec Scaling math, the primary Ark Passive
+           grid, and Engraving Comparison's derived RE/Surge Playstyle all
+           read it) - kept as a real <select> so the existing generic
+           input/select listener loop and the localStorage/Export/Import
+           machinery (both keyed by element id, see collectFieldData/
+           applyFieldData) keep working unmodified. Hidden because the
+           actual controls the reader sees/clicks are the master Build
+           toggle at the top of the calculator plus this section's and
+           Engraving Comparison's own compact echo copies - all real
+           <button>s (now two tiers, Family + Variant - see the master
+           toggle's own comment) that write into this select's value and
+           dispatch its "change" event (see initApCalcRoot's build-chip
+           wiring), so clicking any one of them recomputes the whole
+           calculator exactly as if this select had been changed
+           directly.
+           "re-313" is kept as a real option even though no chip writes
+           it anymore and BRACE_SPEC_BUILDS no longer has an entry for
+           it - purely so an old Export string or localStorage blob
+           saved before the Family/Variant redesign still resolves to a
+           real option instead of silently clearing to "" when assigned.
+           syncBuildToggleUI normalizes it to "re-111" (see
+           normalizeBraceSpecBuild) the first time it runs. -->
+      <select id="ap-brace-spec-build" class="ap-brace-spec-build" hidden>
+        <option value="re-111">RE 111/313</option>
+        <option value="re-313">RE 313</option>
+        <option value="re-333" selected>RE 333</option>
+        <option value="surge-111">Surge 111</option>
+        <option value="surge-222">Surge 222</option>
+        <option value="surge-333">Surge 333</option>
+      </select>
     </div>
+    <p class="ap-brace-compare-intro">Candidate bracelet lines, valued as if each were the only line on your bracelet, against your Best Setup above.</p>
     <table class="ap-brace-compare-table">
       <thead>
         <tr>
@@ -1072,20 +1158,34 @@
 <details class="ap-engr-compare">
   <summary>Engraving Comparison</summary>
   <div class="ap-brace-compare-body">
-    <p class="ap-brace-compare-intro">Competing engravings, searched for the best 2-slot combination. Inputs here are isolated to this section.</p>
-
-    <div class="ap-calc-field-row ap-engr-spec-row">
-      <label class="ap-calc-field-label">Playstyle</label>
-      <span class="ap-engr-spec-toggle">
-        <label class="ap-engr-radio-label"><input type="radio" name="ap-engr-spec" class="ap-engr-spec" value="re" checked> RE</label>
-        <label class="ap-engr-radio-label"><input type="radio" name="ap-engr-spec" class="ap-engr-spec" value="surge"> Surge</label>
-      </span>
+    <!-- Same compact echo copy of the master Build toggle as Bracelet
+         Comparison's own header (see that section's comment) - without
+         this, switching Build while working in Engraving Comparison
+         (collapsed lower on the page) meant scrolling all the way back
+         up to the master toggle and back down again. Doubles as the
+         RE/Surge Playstyle indicator that used to be its own derived-only
+         row here (the active chip's label and color already say RE vs
+         Surge, so a separate "Playstyle: RE" line next to it was
+         redundant once this toggle existed). -->
+    <div class="ap-build-toggle-row ap-build-toggle-row--echo">
+      <span class="ap-build-toggle-label">Build</span>
+      <div class="ap-build-toggle ap-build-toggle--echo" role="group" aria-label="Build">
+        <div class="ap-build-toggle-tier ap-build-toggle-tier--family">
+          <button type="button" class="ap-build-chip ap-build-family-chip" data-family="re">RE</button>
+          <button type="button" class="ap-build-chip ap-build-family-chip" data-family="surge">Surge</button>
+        </div>
+        <div class="ap-build-toggle-tier ap-build-toggle-tier--variant ap-build-toggle-tier--variant-re">
+          <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="re-111">111/313</button>
+          <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="re-333">333</button>
+        </div>
+        <div class="ap-build-toggle-tier ap-build-toggle-tier--variant ap-build-toggle-tier--variant-surge">
+          <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-111">111</button>
+          <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-222">222</button>
+          <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-333">333</button>
+        </div>
+      </div>
     </div>
-    <!-- .ap-engr-spec-row gets its own dashed bottom border (same
-         dashed-line language as .ap-brace-compare-inputs/.ap-gear-card-
-         subtitle elsewhere) so Playstyle reads as its own standalone
-         input, set apart from the Engravings/In-Raid Variables cards
-         below rather than blurring into them. -->
+    <p class="ap-brace-compare-intro">Competing engravings, searched for the best 2-slot combination. Inputs here are isolated to this section.</p>
 
     <!-- Engravings (Core + Competing Pool merged into one card) and
          In-Raid Variables as the two side-by-side cards, same visual
@@ -1545,6 +1645,27 @@
 <details class="ap-acc-compare">
   <summary>Accessory Comparison</summary>
   <div class="ap-brace-compare-body">
+    <!-- Compact echo copy of the master Build toggle - see Bracelet
+         Comparison's own copy above for the full comment (two-way
+         synced through the same shared ap-brace-spec-build select). -->
+    <div class="ap-build-toggle-row ap-build-toggle-row--echo">
+      <span class="ap-build-toggle-label">Build</span>
+      <div class="ap-build-toggle ap-build-toggle--echo" role="group" aria-label="Build">
+        <div class="ap-build-toggle-tier ap-build-toggle-tier--family">
+          <button type="button" class="ap-build-chip ap-build-family-chip" data-family="re">RE</button>
+          <button type="button" class="ap-build-chip ap-build-family-chip" data-family="surge">Surge</button>
+        </div>
+        <div class="ap-build-toggle-tier ap-build-toggle-tier--variant ap-build-toggle-tier--variant-re">
+          <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="re-111">111/313</button>
+          <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="re-333">333</button>
+        </div>
+        <div class="ap-build-toggle-tier ap-build-toggle-tier--variant ap-build-toggle-tier--variant-surge">
+          <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-111">111</button>
+          <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-222">222</button>
+          <button type="button" class="ap-build-chip ap-build-variant-chip" data-build="surge-333">333</button>
+        </div>
+      </div>
+    </div>
     <p class="ap-brace-compare-intro">Candidate accessory lines, valued as if each were the only line on that slot, against your Best Setup above.</p>
 
     <div class="ap-acc-panel ap-acc-necklace-panel">

@@ -4514,44 +4514,22 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-lavender);
   margin: 0 0 0.7em;
 }
-/* Engraving Comparison's Playstyle toggle sits alone above the
-   Engravings/In-Raid Variables cards - same dashed-line break the rest
-   of this section already uses (.ap-gear-card-subtitle's top border,
-   .ap-brace-compare-inputs' bottom border) rather than a new visual
-   language, so Playstyle reads as its own input instead of blurring
-   into the cards below it. */
-.md-typeset .ap-engr-spec-row {
-  padding-bottom: 0.7em;
-  margin-bottom: 0.8em;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-}
-/* RE/Surge radio pair sits to the right of the Playstyle label on the same
-   row - needs its own gap since the two <label>s have nothing else
-   separating them once .ap-engr-radio-label below stops being plain
-   inline text and becomes a flex item (flex items don't get the
-   whitespace-collapses-to-a-space gap plain inline elements do). */
-.md-typeset .ap-engr-spec-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 1em;
-}
-/* .ap-engr-checkbox-label/.ap-engr-radio-label (Rage Rune/Vernese Wine/
-   Mana Food/Ealyn's Blessing/Include Mass Increase, and the RE/Surge
-   toggle above) never actually had a CSS rule of their own - every other
-   label in this calculator either matches label.ap-calc-field-label (the
-   left-hand field name in a label+control row) or one of the dedicated
-   inline-checkbox classes elsewhere (.ap-calc-pair-check-label,
-   .ap-bvb-inline-check), but these five rows use a third, never-styled
-   pattern: one <label> wrapping BOTH its own checkbox/radio AND the full
-   description text, with no separate control to hand the color/size to.
-   Landing on neither shared rule, they fell through to the browser's
-   plain default text - full brightness, default size, no controlled gap
-   from the checkbox - reading as unstyled next to every properly-lilac
-   label around them. Same color/size treatment as the other inline-check
-   classes now, so all four ways of pairing a checkbox with a label read
-   as the same design language instead of one being the odd one out. */
-.md-typeset .ap-engr-checkbox-label,
-.md-typeset .ap-engr-radio-label {
+/* .ap-engr-checkbox-label (Rage Rune/Vernese Wine/Mana Food/Ealyn's
+   Blessing/Include Mass Increase) never actually had a CSS rule of its
+   own - every other label in this calculator either matches
+   label.ap-calc-field-label (the left-hand field name in a label+control
+   row) or one of the dedicated inline-checkbox classes elsewhere
+   (.ap-calc-pair-check-label, .ap-bvb-inline-check), but these rows use a
+   third, never-styled pattern: one <label> wrapping BOTH its own
+   checkbox AND the full description text, with no separate control to
+   hand the color/size to. Landing on neither shared rule, they fell
+   through to the browser's plain default text - full brightness, default
+   size, no controlled gap from the checkbox - reading as unstyled next
+   to every properly-lilac label around them. Same color/size treatment
+   as the other inline-check classes now, so every way of pairing a
+   checkbox with a label reads as the same design language instead of one
+   being the odd one out. */
+.md-typeset .ap-engr-checkbox-label {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
@@ -4559,8 +4537,7 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.82em;
   cursor: pointer;
 }
-.md-typeset .ap-engr-checkbox-label input[type="checkbox"],
-.md-typeset .ap-engr-radio-label input[type="radio"] {
+.md-typeset .ap-engr-checkbox-label input[type="checkbox"] {
   width: 1em;
   height: 1em;
   margin: 0;
@@ -4634,6 +4611,127 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-acc-combo-val {
   color: var(--dbc-slate);
   font-size: 0.92em;
+}
+/* Master Build toggle (top of calculator) and its compact echo copies in
+   Bracelet/Engraving Comparison - real pill-chip <button>s so every
+   option is visible and comparable at once ("one vivid, rest muted"),
+   unlike a plain <select> which only ever shows the current value
+   collapsed, or radio dots which don't carry a strong enough
+   active/inactive contrast at a glance. Two tiers per group (Family:
+   RE/Surge, Variant: 2 or 3 chips depending which family's active - see
+   .ap-build-toggle-tier below and resources.md's master toggle comment
+   for why RE only has 2). All three groups share the same .ap-build-chip
+   look; only size differs (see .ap-build-toggle--echo below) - see
+   ark-passive-calculator.js's syncBuildToggleUI for how the active
+   class/tier visibility gets applied to all three groups together from
+   the one real ap-brace-spec-build <select> they all write to. */
+.md-typeset .ap-build-toggle-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7em;
+}
+.md-typeset .ap-build-toggle-row--master {
+  margin: 0 0 1.1em;
+}
+.md-typeset .ap-build-toggle-row--echo {
+  margin-bottom: 0.9em;
+  padding-bottom: 0.7em;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.md-typeset .ap-build-toggle-label {
+  color: var(--dbc-lavender);
+  font-size: 0.85em;
+  font-weight: 600;
+}
+.md-typeset .ap-build-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+}
+/* Two-tier Family/Variant split (see resources.md's master Build toggle
+   comment for why: RE 111/313 collapse into one Variant chip, so Family
+   and Variant are separate control groups rather than one flat row of
+   6). Each tier is its own flex group so its chips stay visually
+   clustered; the divider between Family and Variant reuses the same
+   dashed-line language as the toggle row's own bottom border, just
+   vertical, so the two-level structure reads as one control at a
+   glance rather than two unrelated ones bolted together. */
+.md-typeset .ap-build-toggle-tier {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+.md-typeset .ap-build-toggle-tier--variant {
+  padding-left: 0.6em;
+  border-left: 1px dashed rgba(255, 255, 255, 0.15);
+}
+/* Only one Variant tier (RE's 2 chips or Surge's 3) is ever shown at
+   once - see syncBuildToggleUI, same hidden-unless-active convention as
+   the Breaking Moon summary row elsewhere in this calculator. */
+.md-typeset .ap-build-toggle-tier--hidden {
+  display: none;
+}
+.md-typeset .ap-build-chip {
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
+  background-color: var(--dbc-chip-surface);
+  color: var(--dbc-muted-text);
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.85em;
+  font-weight: 600;
+  padding: 0.35em 0.9em;
+  line-height: 1.3;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s ease, border-color 0.15s ease,
+    background-color 0.15s ease, color 0.15s ease;
+}
+.md-typeset .ap-build-chip:hover {
+  opacity: 0.9;
+  background-color: var(--dbc-chip-surface-hover);
+}
+/* Active chip: fully saturated/colored, RE builds in the site's primary
+   pink accent, Surge builds in teal - matching the RE/Surge color split
+   used everywhere else on the site (--dbc-teal's own comment: "Trixion
+   DPS bar... 'good'/on-track stat variant"), so the active chip's own
+   color hints which family is selected even before reading the label. */
+.md-typeset .ap-build-chip.ap-build-chip-active {
+  opacity: 1;
+  color: #1a1a1d;
+  background-color: var(--dbc-pink);
+  border-color: var(--dbc-pink);
+}
+.md-typeset .ap-build-chip.ap-build-chip-active[data-build^="surge-"],
+.md-typeset .ap-build-chip.ap-build-chip-active[data-family="surge"] {
+  background-color: var(--dbc-teal);
+  border-color: var(--dbc-teal);
+}
+/* Compact sizing - smaller chips, tighter gaps - now shared by the
+   master toggle at the top of the calculator AND its echo copies in
+   Bracelet/Accessory/Engraving Comparison, so all four read as the same
+   scale of control rather than the master looking like a separate,
+   larger widget. (Kept as a shared --echo rule rather than renaming the
+   class, since "echo" already describes what these copies are; the
+   master toggle just opts into the same look via the selector list
+   below instead of getting its own near-duplicate block.) */
+.md-typeset .ap-build-toggle--master,
+.md-typeset .ap-build-toggle--echo {
+  gap: 0.35em;
+}
+.md-typeset .ap-build-toggle--master .ap-build-chip,
+.md-typeset .ap-build-toggle--echo .ap-build-chip {
+  font-size: 0.72em;
+  padding: 0.2em 0.6em;
+}
+.md-typeset .ap-build-toggle--master .ap-build-toggle-tier,
+.md-typeset .ap-build-toggle--echo .ap-build-toggle-tier {
+  gap: 0.35em;
+}
+.md-typeset .ap-build-toggle--master .ap-build-toggle-tier--variant,
+.md-typeset .ap-build-toggle--echo .ap-build-toggle-tier--variant {
+  padding-left: 0.5em;
 }
 .md-typeset .ap-brace-compare-inputs {
   display: flex;
@@ -5216,7 +5314,7 @@ h3 { color: var(--dbc-teal); }
    without this the grid's last card ran straight into it with no
    breathing room. Plain margin alone read as "some gap" rather than "a
    section break" though, so this also gets the same dashed-line
-   language as .ap-engr-spec-row's own bottom border above and
+   language as .ap-build-toggle-row--echo's own bottom border above and
    .ap-gear-card-subtitle inside the card. This used to sit on the title
    <p> itself (back when it was .ap-gear-cards' immediate sibling on its
    own line) - now that the title lives inside Stone 1's row instead,
@@ -5404,6 +5502,20 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-brace-compare-inputs .ap-calc-field-row {
   flex: 0 0 auto;
   margin-bottom: 0;
+}
+/* Bracelet Comparison's compact Build toggle echo sits as one flex item
+   alongside the Crit Stat field on the SAME row, inside
+   .ap-brace-compare-inputs's own flex row, instead of a separate row
+   above it - saves vertical space now that both are compact controls
+   that don't need a full row each. Strips the standalone toggle row's
+   own bottom margin/padding/border-bottom since .ap-brace-compare-inputs
+   already supplies that shared divider for the whole combined row (see
+   its own rule above); .ap-build-toggle-row's flex/gap/align-items are
+   left alone so the label+chips still lay out correctly as one item. */
+.md-typeset .ap-build-toggle-row--inline {
+  margin: 0;
+  padding: 0;
+  border-bottom: none;
 }
 /* Attack Power % sources card no longer carries its own background tint
    (used to be its own visually distinct nested box inside one wide

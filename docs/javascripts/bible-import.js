@@ -85,20 +85,49 @@
   var LAST_ARK_GRID_CORES_RAW = null;
 
   // Ark Grid core icon background-color -> grade. See "KNOWN GAPS" above.
+  // Both hex and rgb() forms are listed: the page can serialize this
+  // gradient either way (rgb() is what a browser-normalized inline style
+  // comes back as), and rgb(61,51,37)/rgb(220,201,153) and
+  // rgb(52,26,9)/rgb(162,64,6) are exactly #3d3325/#dcc999 and
+  // #341a09/#a24006 in decimal - same two grades, not a third color.
   var CHAOS_GRADE_COLORS = {
     "#3d3325, #dcc999": "Ancient",
     "#341a09, #a24006": "Relic",
+    "rgb(61, 51, 37), rgb(220, 201, 153)": "Ancient",
+    "rgb(52, 26, 9), rgb(162, 64, 6)": "Relic",
   };
 
-  // base id -> slot, fixed by the game (not by which skill/effect is
-  // socketed) - confirmed against a real character's hydration data.
+  // base id -> slot. 10001-10003 (Order) are unused - Order cores aren't
+  // imported at all, see this file's KNOWN GAPS comment.
+  //
+  // 10004 reliably maps to "chaos_star" - confirmed matching the page
+  // text's Chaos Star points on two separate real characters (an earlier
+  // bug had this swapped with 10006, caught on a character with 17P Sun
+  // / 18P Star where the swap produced a mismatch).
+  //
+  // 10005/10006 are DELIBERATELY NOT mapped to chaos_moon/chaos_sun here.
+  // Unlike Star, which of these two base ids is "Sun" vs "Moon" is NOT a
+  // fixed per-account constant - confirmed on a second real character
+  // (Mikalo) where the assignment came out swapped in the opposite
+  // direction from the first character (Seol) it was fixed against:
+  // Seol needed 10005->moon/10006->sun to match her page text, Mikalo
+  // needed 10005->sun/10006->moon to match his. There is no single
+  // correct mapping to pick - whichever way this went, roughly half of
+  // real characters would silently get their Sun/Moon points swapped
+  // with no warning (the mismatch check below only catches a swap when
+  // the two slots' point totals actually differ).
+  // Leaving 10005/10006 unmapped means hydration.gridSlots never gets a
+  // "chaos_sun"/"chaos_moon" entry, so buildPayload's per-slot mismatch
+  // check and its "hydration shows points but no name read" sanity check
+  // (both keyed by CHAOS_SLOT_TO_KEY) simply skip Sun/Moon and always
+  // trust the page's visible text for their point totals instead - which
+  // is unambiguous per-slot and doesn't have this problem. Star keeps
+  // using hydration as before, since that mapping has held up so far.
   var GRID_BASE_TO_SLOT = {
     10001: "order_sun",
     10002: "order_moon",
     10003: "order_star",
-    10004: "chaos_sun",
-    10005: "chaos_moon",
-    10006: "chaos_star",
+    10004: "chaos_star",
   };
 
   function tierMatch(table, value) {
@@ -325,7 +354,9 @@
     var idx = rawHtml.indexOf("emoticon_arkgrid_" + slot);
     if (idx === -1) { LAST_CHAOS_GRADE_DEBUG[slot] = { markerFound: false }; return null; }
     var windowStr = rawHtml.slice(Math.max(0, idx - 1000), idx);
-    var matches = windowStr.match(/linear-gradient\(135deg, ([^)]+)\)/g);
+    var COLOR_STOP = "(?:rgb\\([^)]*\\)|#[0-9a-fA-F]{3,6})";
+    var GRADIENT_RE = new RegExp("linear-gradient\\(135deg, " + COLOR_STOP + "(?:, " + COLOR_STOP + ")*\\)", "g");
+    var matches = windowStr.match(GRADIENT_RE);
     if (!matches || !matches.length) {
       // Hasn't recurred since the marker fix above, but if it does: capture
       // a slice of windowStr's tail (rather than just the empty-array
@@ -335,7 +366,8 @@
       LAST_CHAOS_GRADE_DEBUG[slot] = { markerFound: true, gradientsInWindow: [], windowTail: windowStr.slice(-300) };
       return null;
     }
-    var lastColor = matches[matches.length - 1].match(/linear-gradient\(135deg, ([^)]+)\)/)[1];
+    var fullMatch = matches[matches.length - 1];
+    var lastColor = fullMatch.slice("linear-gradient(135deg, ".length, -1);
     var grade = CHAOS_GRADE_COLORS[lastColor] || null;
     LAST_CHAOS_GRADE_DEBUG[slot] = { markerFound: true, gradientsInWindow: matches, lastColor: lastColor, resolvedGrade: grade };
     return grade;
@@ -734,15 +766,32 @@
     // is actually equipped has to be read per-character, never assumed.
     // Rendered as "<name>\n<points>\n|\n<slot>" with no leading number
     // (Order slots have a leading skill-tripod-ish number Chaos slots
-    // don't). This part was already confirmed correct against real data -
-    // unchanged.
+    // don't, but this loop only ever looks BACKWARD 3 lines from the slot
+    // label itself - "|", points, name - so that extra leading number,
+    // wherever it sits further back, is never in range and needs no
+    // special-casing). This part was already confirmed correct against
+    // real data - unchanged.
+    //
+    // Order Sun/Moon are read with the exact same backward scan, added to
+    // this same loop rather than a separate one, and bucketed into their
+    // own out.orderCores instead of out.chaosCores. Order core NAMES here
+    // are only ever used for build auto-detection below (which named
+    // core sits in Sun/Moon - see ORDER_SUN_MOON_TO_BUILD) - the cores
+    // themselves stay unmodeled otherwise (see this file's own KNOWN GAPS
+    // comment: "Order Grid cores... aren't imported, the calculator
+    // doesn't model them at all" - still true for anything beyond this
+    // one build-guessing use). Order Star is deliberately never scanned -
+    // Sun+Moon together already fully discriminate all six builds.
     out.chaosCores = {};
-    ["Chaos Sun", "Chaos Moon", "Chaos Star"].forEach(function (slotLabel) {
+    out.orderCores = {};
+    ["Order Sun", "Order Moon", "Chaos Sun", "Chaos Moon", "Chaos Star"].forEach(function (slotLabel) {
       var slotIdx = idxOf(slotLabel, agIdx);
       if (slotIdx === -1 || lines[slotIdx - 1] !== "|") return;
       var ptM = (lines[slotIdx - 2] || "").match(/^(\d+)$/);
       var name = lines[slotIdx - 3];
-      if (ptM && name) out.chaosCores[slotLabel] = { name: name, points: +ptM[1] };
+      if (!ptM || !name) return;
+      var bucket = slotLabel.indexOf("Order") === 0 ? out.orderCores : out.chaosCores;
+      bucket[slotLabel] = { name: name, points: +ptM[1] };
     });
 
     // Engravings: the equipped-5 list, "Name" / "P/20" pairs (also
@@ -915,6 +964,12 @@
     // commonly rolls only one of the two Additional Damage types, or
     // neither, which hit gap (2) on every run for a large fraction of
     // real bracelets.
+    // "0" here is a real, valid reading (not a placeholder) - it means
+    // this bracelet has no Crit stat line at all (rolled a different
+    // flat stat instead), so there's nothing to subtract for it. See
+    // ap-brace-crit-stat-equipped's min="0" in resources.md and the
+    // matching clamp in ark-passive-calculator.js - a real Crit roll is
+    // always 60-120, but 0 has to be separately supported for this case.
     data["ap-brace-crit-stat-equipped"] = text.braceCritStat != null ? String(text.braceCritStat) : "0";
     data["ap-bracelet-rate"] = "None";
     data["ap-bracelet-rate-2"] = "None";
@@ -1020,6 +1075,10 @@
           // math is encoded for it, not that its points are suspect.
           return;
         }
+        // hydrationCore only ever exists for Chaos Star - GRID_BASE_TO_SLOT
+        // deliberately doesn't map Sun/Moon's base ids (see its comment),
+        // so this is a no-op for those two slots and their point totals
+        // always come straight from core.points (page text) below.
         var hydrationCore = hydration.gridSlots && hydration.gridSlots[CHAOS_SLOT_TO_KEY[slotLabel]];
         if (hydrationCore && hydrationCore.points != null && hydrationCore.points !== core.points) {
           warnings.push(slotLabel + ": page text says " + core.points + "P but the page's own data says " + hydrationCore.points + "P - used the page data (" + hydrationCore.points + "P), but this mismatch is worth a second look.");
@@ -1120,6 +1179,62 @@
       });
     }
 
+    // Sub-build auto-detection (RE 111/313/333, Surge 111/222/333) from
+    // Order Sun+Moon core names - see out.orderCores (parseVisibleText).
+    // RE vs Surge is checked implicitly by which table entry matches at
+    // all, since every Surge Sun/Moon pair is a completely different pair
+    // of skill names from every RE one - more clear-cut than trying to
+    // infer it from anything else on the page. Sun+Moon together fully
+    // discriminate all six named builds, even though RE 111/313 now
+    // write the same canonical id below (confirmed against the table
+    // each build's own guide page documents as its exact Order core
+    // names, and against a real pulled 333 character whose Sun/Moon/Star
+    // exactly matched docs/surge/333-blitz.md's spec) - Order Star is
+    // never needed and isn't scanned for this. This only sets which of
+    // the 5 options ap-brace-spec-build (the master Build toggle's real state -
+    // see resources.md) lands on; it doesn't model Order cores'
+    // mechanical effect at all (still unsupported, see this file's KNOWN
+    // GAPS comment).
+    var ORDER_SUN_MOON_TO_BUILD = {
+      "Deathblade Surge||Surge Core": "surge-111",
+      "Sword Reset||Destiny Core": "surge-222",
+      "Deathblade Rush||Death Blitz": "surge-333",
+      // RE 111 and RE 313 write the same canonical "re-111" id - the
+      // calculator merged them into one Build toggle chip since they're
+      // computationally identical (see normalizeBraceSpecBuild in
+      // ark-passive-calculator.js), so this detector no longer needs to
+      // tell them apart either.
+      "Art Master||Arts Core": "re-111",
+      "Levin Slash||Arts Core": "re-111",
+      "Levin Slash||Deathblade Wave": "re-333",
+    };
+    if (text.orderCores && text.orderCores["Order Sun"] && text.orderCores["Order Moon"]) {
+      var sunMoonKey = text.orderCores["Order Sun"].name + "||" + text.orderCores["Order Moon"].name;
+      var detectedBuild = ORDER_SUN_MOON_TO_BUILD[sunMoonKey];
+      if (detectedBuild) {
+        data["ap-brace-spec-build"] = detectedBuild;
+      } else {
+        // Not necessarily a bug - could be a genuinely unrecognized Sun/
+        // Moon pair (page format change, a future localization change to
+        // Surge 222's Order cores, etc), but it's actionable in a way the
+        // unmodeled-Chaos-core skip above isn't: this reader clearly IS
+        // running one of the 6 builds, this scan just failed to place
+        // them, so leave the master Build toggle wherever it already was
+        // and let them pick manually.
+        warnings.push("Order Sun/Moon (\"" + text.orderCores["Order Sun"].name + "\" / \"" + text.orderCores["Order Moon"].name + "\") didn't match a known build - Build wasn't auto-set, pick it manually.");
+      }
+    } else {
+      // No fallback value to write here (unlike Chaos cores/adrenaline/
+      // KBW, ap-brace-spec-build has no "None" option - it's always one
+      // of the 6 real builds per resources.md), but previously this
+      // silently skipped with no warning at all, leaving the toggle on
+      // whatever it already was (the page's own re-333 default, or a
+      // stale value from a previous import) with no signal that it
+      // wasn't touched. Warn instead, same as the unmatched-pair case
+      // above, so this doesn't look like a confirmed auto-detected build.
+      warnings.push("Couldn't find Order Sun/Moon cores on this page (Order Grid not equipped, or a read failure) - Build wasn't auto-set, verify it matches your actual build manually.");
+    }
+
     // Sanity check: if the raid loadout's own hydration data shows real
     // points invested in a Chaos slot, but the visible-text scan above
     // never managed to read a core NAME for that same slot (icon markup
@@ -1132,6 +1247,9 @@
     // on hasArkGrid so a character with genuinely no Ark Grid unlocked
     // (and no chaosCores at all) doesn't get warned about slots it was
     // never going to have data for.
+    // Same GRID_BASE_TO_SLOT caveat as above: this only ever fires for
+    // Chaos Star, since Sun/Moon have no hydration entry to compare
+    // against.
     if (text.hasArkGrid && hydration.gridSlots) {
       Object.keys(CHAOS_SLOT_TO_KEY).forEach(function (slotLabel) {
         var hydrationCore = hydration.gridSlots[CHAOS_SLOT_TO_KEY[slotLabel]];

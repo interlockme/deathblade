@@ -726,25 +726,113 @@
   // RE 313 the way the namesake skill's own share does.
   const RE_AWAKENING_SHARE = 0.015;
   const SURGE_AWAKENING_SHARE = 0.01;
-  // One entry per selectable build - the Spec Scaling dropdown (Bracelet
-  // section) picks one of these six directly, and its own `share` drives
-  // the Spec +80/100/120 row (and the Bracelet vs. Bracelet Spec input)
-  // straight from the dropdown. Used to be a 2-way RE/Surge radio backed
-  // by one class-level `share` (RE 333/Surge 111's own figures, before
-  // this dropdown existed to name them) plus a `builds` list of the other
-  // named variants shown only as small hover tags next to the row - now
-  // that every build is directly selectable, that split is gone and every
-  // build's share lives here on equal footing.
+  // One entry per selectable build - the master Build toggle at the top
+  // of the calculator (and its ap-brace-spec-build select, formerly
+  // labeled "Spec Scaling" as a plain dropdown here in Bracelet
+  // Comparison before the toggle existed) picks one of these five
+  // directly (RE 111 and RE 313 merged into one "re-111" entry - see
+  // normalizeBraceSpecBuild), and its own `share` drives the Spec
+  // +80/100/120 row (and the Bracelet vs. Bracelet Spec input) straight
+  // from that selection. Used to be a 2-way RE/Surge radio backed by one
+  // class-level `share` (RE 333/Surge 111's own figures, before either
+  // the dropdown or the toggle existed to name them) plus a `builds`
+  // list of the other named variants shown only as small hover tags next
+  // to the row - now that every build is directly selectable, that split
+  // is gone and every build's share lives here on equal footing.
   const BRACE_SPEC_BUILDS = {
-    "re-111": { label: "RE 111", isSurge: false, share: 0.20, awakeningShare: RE_AWAKENING_SHARE },
-    "re-313": { label: "RE 313", isSurge: false, share: 0.20, awakeningShare: RE_AWAKENING_SHARE },
+    "re-111": { label: "RE 111/313", isSurge: false, share: 0.20, awakeningShare: RE_AWAKENING_SHARE },
     "re-333": { label: "RE 333", isSurge: false, share: 0.17, awakeningShare: RE_AWAKENING_SHARE },
     "surge-111": { label: "Surge 111", isSurge: true, share: 0.75, awakeningShare: SURGE_AWAKENING_SHARE },
     "surge-222": { label: "Surge 222", isSurge: true, share: 0.50, awakeningShare: SURGE_AWAKENING_SHARE },
     "surge-333": { label: "Surge 333", isSurge: true, share: 0.45, awakeningShare: SURGE_AWAKENING_SHARE },
   };
+  // "re-313" is retired as its own entry: every formula that reads
+  // BRACE_SPEC_BUILDS was traced and RE 111/RE 313 turned out to be
+  // 100% computationally identical (same share, same awakeningShare,
+  // nothing anywhere else branches on which of the two is selected) -
+  // see the Family/Variant Build toggle redesign. "re-111" is now the
+  // one canonical id for both; this normalizes any lingering "re-313"
+  // (an old Export string, a pre-redesign localStorage blob, or a Bible
+  // import) to it. The hidden select's own <option value="re-313"> is
+  // deliberately kept (see resources.md) so an old saved value still
+  // resolves to a real option instead of silently clearing - this is
+  // the only place that needs to know "re-313" ever existed.
+  function normalizeBraceSpecBuild(id) {
+    return id === "re-313" ? "re-111" : id;
+  }
   function braceSpecConfig(inputs) {
     return BRACE_SPEC_BUILDS[inputs.braceSpecBuild] || BRACE_SPEC_BUILDS["re-333"];
+  }
+
+  // Reads the master Build toggle's real state (the ap-brace-spec-build
+  // select - see its own comment in resources.md) straight from the DOM,
+  // for the couple of call sites (Engraving Comparison's derived
+  // Playstyle, the Mana Food default listener) that need just the
+  // RE/Surge family bit before a full readInputs() has happened yet.
+  function isSurgeBuild(root) {
+    const buildId = normalizeBraceSpecBuild(getSelect(root, ".ap-brace-spec-build", "re-333"));
+    return !!(BRACE_SPEC_BUILDS[buildId] || BRACE_SPEC_BUILDS["re-333"]).isSurge;
+  }
+
+  // Fallback default for the Family chips (RE / Surge) in the two-tier
+  // Build toggle, used only when the target family has no remembered
+  // variant yet this session (see initApCalcRoot's familyVariantMemory,
+  // which takes priority - crossing families normally returns you to
+  // whichever variant you were last on within the target family, not
+  // always this fixed default). RE only has 2 variant slots (111/313
+  // merged, 333) against Surge's 3 (111, 222, 333), so this is a fixed
+  // lookup rather than a positional swap: 111<->111 keeps its obvious
+  // counterpart, and RE 333 pairs with Surge 222 (not 333) since 222 is
+  // Surge's own default/most common variant - Surge 333 has no distinct
+  // RE counterpart and is only ever reached by picking its own Variant
+  // chip directly, never by a Family crossing's default. Kept symmetric:
+  // RE 333 <-> Surge 222 works both directions, and Surge 333 -> RE
+  // still lands somewhere sane (RE 333) rather than falling through to
+  // the merged 111/313 chip.
+  const FAMILY_CROSSING_MAP = {
+    "re-111": "surge-111",
+    "re-333": "surge-222",
+    "surge-111": "re-111",
+    "surge-222": "re-333",
+    "surge-333": "re-333",
+  };
+
+  // Keeps every Build-toggle chip row (the master one at the top of the
+  // calculator, its Family/Variant tiers, and Bracelet/Engraving
+  // Comparison's compact echo copies) visually in sync with the real
+  // ap-brace-spec-build select's current value - called at the top of
+  // update() so every path that can change the select (a chip click,
+  // Import/Export, a preset load/switch/reset, or initial page load)
+  // re-applies the "one vivid, rest muted" look without each of those
+  // call sites needing to know about chips at all. Also self-heals a
+  // lingering "re-313" select value (see normalizeBraceSpecBuild) back
+  // onto the real select the first time this runs, so a legacy saved
+  // value converges to the canonical id going forward instead of
+  // silently mismatching every chip's data-build on every call.
+  function syncBuildToggleUI(root) {
+    const select = root.querySelector(".ap-brace-spec-build");
+    if (!select) return;
+    const normalized = normalizeBraceSpecBuild(select.value);
+    if (normalized !== select.value) select.value = normalized;
+    const active = normalized;
+    const family = isSurgeBuild(root) ? "surge" : "re";
+    root.querySelectorAll(".ap-build-family-chip").forEach((chip) => {
+      const isActive = chip.dataset.family === family;
+      chip.classList.toggle("ap-build-chip-active", isActive);
+      chip.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+    root.querySelectorAll(".ap-build-variant-chip").forEach((chip) => {
+      const isActive = chip.dataset.build === active;
+      chip.classList.toggle("ap-build-chip-active", isActive);
+      chip.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+    // Only one Variant tier (RE's 2 chips or Surge's 3) is ever shown at
+    // once - the other family's tier is hidden rather than removed, same
+    // hidden-unless-active convention as the Breaking Moon summary row.
+    root.querySelectorAll(".ap-build-toggle-tier--variant").forEach((tier) => {
+      const tierFamily = tier.classList.contains("ap-build-toggle-tier--variant-surge") ? "surge" : "re";
+      tier.classList.toggle("ap-build-toggle-tier--hidden", tierFamily !== family);
+    });
   }
 
   // RE and Surge use the identical formula now that the CDR-driven term
@@ -932,9 +1020,24 @@
       yearning: getCheckbox(root, ".ap-yearning", true),
       evoKarmaRank: parseInt(getSelect(root, ".ap-evo-karma", "6"), 10) || 6,
 
-      demonDmgPct: Math.max(0, Math.min(15, getNumber(root, ".ap-brace-demon-dmg", 7))),
-      braceCritStatEquipped: Math.max(60, Math.min(120, getNumber(root, ".ap-brace-crit-stat-equipped", 82))),
-      braceSpecBuild: getSelect(root, ".ap-brace-spec-build", "re-333"),
+      // Card Demon Dmg % used to be a direct input (.ap-brace-demon-dmg) -
+      // removed and hardcoded to the universal 7% value; every reader was
+      // just leaving it at the default anyway, so the input was pure
+      // clutter for a number that basically never varies.
+      demonDmgPct: 7,
+      // Clamped to 0-120, not 60-120: a real equipped bracelet's Crit
+      // Stat roll is always 60-120 when present, but plenty of real
+      // bracelets don't roll Crit at all (rolled Spec/Swiftness/etc
+      // instead) - for those, the correct value to subtract is 0, not
+      // 60. Flooring at 60 here used to silently force even a genuine
+      // "no Crit stat" 0 up to 60, over-subtracting 60 Crit Stat the
+      // bracelet never actually granted (and making 0 - a value bible-
+      // import.js writes on purpose for exactly this case - permanently
+      // unusable, since resources.md's own min="60" also rejected it as
+      // invalid input). 0 is now a legitimate, fully supported reading;
+      // anything above 0 still gets clamped up to a real roll's 60-120 range.
+      braceCritStatEquipped: Math.max(0, Math.min(120, getNumber(root, ".ap-brace-crit-stat-equipped", 82))),
+      braceSpecBuild: normalizeBraceSpecBuild(getSelect(root, ".ap-brace-spec-build", "re-333")),
 
       // Bracelet vs. Bracelet: two full 5-line candidate bracelets, read
       // separately - see readBvbSide/computeBraceletVsBracelet above.
@@ -1097,8 +1200,30 @@
     return Math.floor(x * f) / f;
   }
 
+  // Breaking Moon (Surge 111 only): every 4th Surge cast (1st, 5th, 9th...)
+  // gets +60% Crit Damage - a 25% empowered-cast rate. Surge 111's own
+  // `share` in BRACE_SPEC_BUILDS (0.75) already bakes in this elevated-
+  // cast-rate swing (confirmed real data, not re-derived here), so the
+  // average per-cast Crit Dmg contribution is just
+  // share * 0.25 (empowered-cast rate) * 0.60 (Breaking Moon's own bonus)
+  // - about +11.25 percentage points for Surge 111. Additive into
+  // critDmgTotal exactly like every other Crit Dmg source below, so it
+  // automatically flows through the keystone grid (getKeystoneComponents/
+  // combinedMultiplier), KBW/Adrenaline math, and Spec math with no
+  // separate keystone-specific branching - and because it shifts
+  // critDmgTotal, it can genuinely change which keystone pair comes out
+  // on top for Surge 111, so it's surfaced as its own labeled line (see
+  // renderGrid's Breaking Moon row) rather than silently folded into the
+  // combined Crit Dmg stat.
+  function breakingMoonContribution(inputs) {
+    const active = inputs.braceSpecBuild === "surge-111";
+    const spec = BRACE_SPEC_BUILDS["surge-111"];
+    return { active, add: active ? spec.share * 0.25 * 0.6 : 0 };
+  }
+
   // ----- Core computations -----
   function computeShared(inputs) {
+    const breakingMoon = breakingMoonContribution(inputs);
     const critDmgTotal =
       CRIT_DMG_BASE +
       (RING_DMG_TABLE[inputs.ring1Dmg] || 0) +
@@ -1108,7 +1233,8 @@
       (KBW_TABLE[inputs.kbw] || 0) +
       (KBW_STONE_TABLE[inputs.kbwStone] || 0) +
       STRIKE_CRIT_DMG +
-      (ARK_SWIFT_CDMG_TABLE[inputs.swiftCore] || 0);
+      (ARK_SWIFT_CDMG_TABLE[inputs.swiftCore] || 0) +
+      breakingMoon.add;
 
     // Base on-crit damage - each Crit Hit Damage Synergy toggle adds 8%
     // multiplicatively, same mechanism, independent sources (e.g. party
@@ -1143,6 +1269,8 @@
 
     return {
       critDmgTotal,
+      breakingMoonActive: breakingMoon.active,
+      breakingMoonAdd: breakingMoon.add,
       onCritDmgBase,
       onCritDmgCritical,
       addDmgBase,
@@ -1373,6 +1501,12 @@
       kbwUsed,
       kbwStoneUsed,
       kbwGain: kbwEngravingGainPct(baseEffCrit, shared.onCritDmgBase, shared.critDmgTotal, kbwValue, kbwStoneValue),
+      // Flat contribution, not a marginal DPS-gain ratio like kbwGain -
+      // Breaking Moon is a plain additive Crit Dmg source (see
+      // breakingMoonContribution), so unlike KBW it's identical between
+      // the Base and Best Setup cards rather than varying with effCrit.
+      breakingMoonActive: shared.breakingMoonActive,
+      breakingMoonAdd: shared.breakingMoonAdd * 100,
     };
 
     // Best Setup stats (only things affected by nodes)
@@ -1427,6 +1561,10 @@
       bestStats.kbwUsed = kbwUsed;
       bestStats.kbwStoneUsed = kbwStoneUsed;
       bestStats.kbwGain = kbwEngravingGainPct(best.effCrit, bestStats.onCritDmg / 100, shared.critDmgTotal, kbwValue, kbwStoneValue);
+      // Same flat add as baseStats.breakingMoonAdd - not keystone-dependent,
+      // so identical whichever pair the grid above picked as best.
+      bestStats.breakingMoonActive = shared.breakingMoonActive;
+      bestStats.breakingMoonAdd = shared.breakingMoonAdd * 100;
     }
 
     return { cells, best, baseStats, bestStats };
@@ -1464,14 +1602,15 @@
   //     comparable fixed-% stand-in, so they're left out entirely rather
   //     than guessed at.
   //   - Additional Damage vs Demon/Archdemon: the sheet's own Demon Dmg %
-  //     value is exposed as a direct input here (.ap-brace-demon-dmg)
-  //     instead of being derived.
+  //     value is hardcoded to 7% (see readInputs's demonDmgPct comment)
+  //     instead of being derived or left as a direct input.
   //   - Spec +80/100/120: the sheet ties this to your own profile's live
   //     Spec stat; fixed at SPEC_BASE (1735) here instead, since this
   //     calculator doesn't otherwise track Spec as a build stat. RE vs
   //     Surge Deathblade use structurally different formulas (see
-  //     SPEC_BASE and friends above) picked by the radio pair living
-  //     alongside Demon Dmg % / Crit Stat in .ap-brace-compare-inputs.
+  //     SPEC_BASE and friends above) picked by the master Build toggle
+  //     (see BRACE_SPEC_BUILDS) living alongside Crit Stat in
+  //     .ap-brace-compare-inputs.
   // Baseline: your actual Best Setup, but with every bracelet-sourced
   // Crit Rate/Crit Dmg/Additional Dmg field reset to None first -
   // including critRateDual/critDmgDual, since those two checkboxes ARE
@@ -1709,10 +1848,9 @@
 
     // Spec +80/100/120: RE and Surge Deathblade share the same formula
     // (see the constants/helper above), differing by damage share and
-    // Awakening share - both picked directly by the Spec Scaling dropdown
-    // sharing the Demon Dmg % / Crit Stat inputs row (one of the 6 named
-    // builds in BRACE_SPEC_BUILDS) rather than mixed into the rest of the
-    // crit-focused inputs.
+    // Awakening share - both picked directly by the master Build toggle
+    // (one of the 6 named builds in BRACE_SPEC_BUILDS) rather than mixed
+    // into the rest of the crit-focused inputs.
     {
       const cfg = braceSpecConfig(inputs);
       const k = specGainPerPoint(deathbladeSpecMultiplier, cfg.share, cfg.awakeningShare);
@@ -3749,7 +3887,10 @@
   // (backAttackRate, yearning, adrenaline*, kbw*).
   function readEngravingInputs(root) {
     return {
-      spec: getSelect(root, ".ap-engr-spec:checked", "re"),
+      // Derived from the master Build toggle (see isSurgeBuild) - Playstyle
+      // is no longer its own control here, it just echoes RE vs Surge from
+      // whichever 6-way build is currently selected up top.
+      spec: isSurgeBuild(root) ? "surge" : "re",
       grudgeLevel: getSelect(root, ".ap-engr-grudge-level", "4 Nodes"),
       ambushLevel: getSelect(root, ".ap-engr-ambush-level", "4 Nodes"),
       adrenalineLevel: getSelect(root, ".ap-engr-adrenaline-level", "4 Nodes"),
@@ -4415,6 +4556,15 @@
       const kbwEl = root.querySelector(".ap-summary-base-kbw");
       if (kbwRow) kbwRow.classList.toggle("ap-stat-card-row--hidden", !base.kbwUsed && !base.kbwStoneUsed);
       if (kbwEl) kbwEl.textContent = "+" + base.kbwGain.toFixed(2) + "%";
+
+      // Breaking Moon (Surge 111 only) - a flat Crit Dmg add already
+      // folded into critDmgTotal (see breakingMoonContribution), surfaced
+      // here as its own line since it can shift which keystone the grid
+      // above recommends. Hidden for every other build.
+      const bmRow = root.querySelector(".ap-stat-card-row--breakingmoon-base");
+      const bmEl = root.querySelector(".ap-summary-base-breakingmoon");
+      if (bmRow) bmRow.classList.toggle("ap-stat-card-row--hidden", !base.breakingMoonActive);
+      if (bmEl) bmEl.textContent = "+" + base.breakingMoonAdd.toFixed(2) + "%";
     }
 
     // Best Setup line (no Crit Dmg)
@@ -4442,6 +4592,12 @@
       const kbwEl = root.querySelector(".ap-summary-best-kbw");
       if (kbwRow) kbwRow.classList.toggle("ap-stat-card-row--hidden", !best.kbwUsed && !best.kbwStoneUsed);
       if (kbwEl) kbwEl.textContent = "+" + best.kbwGain.toFixed(2) + "%";
+
+      // Same flat Breaking Moon add as the Base card above.
+      const bmRow = root.querySelector(".ap-stat-card-row--breakingmoon-best");
+      const bmEl = root.querySelector(".ap-summary-best-breakingmoon");
+      if (bmRow) bmRow.classList.toggle("ap-stat-card-row--hidden", !best.breakingMoonActive);
+      if (bmEl) bmEl.textContent = "+" + best.breakingMoonAdd.toFixed(2) + "%";
     }
   }
 
@@ -5294,6 +5450,7 @@
   }
 
   function update(root) {
+    syncBuildToggleUI(root);
     enforcePartyCheckboxLimit(root);
     enforceKbwStoneDependency(root);
     enforceGearSupportUptimeGate(root);
@@ -5311,7 +5468,7 @@
     enforceEngravingStoneExclusivity(root);
     enforceStoneSlotExclusivity(root, "ap-esvs-a");
     enforceStoneSlotExclusivity(root, "ap-esvs-b");
-    enforceEngravingSvsSlotExclusivity(root, getSelect(root, ".ap-engr-spec:checked", "re") === "surge");
+    enforceEngravingSvsSlotExclusivity(root, isSurgeBuild(root));
     const inputs = readInputs(root);
     const result = computeGridAndSummary(inputs);
     renderGrid(root, result);
@@ -5804,24 +5961,96 @@
         });
       });
 
-      // Mana Food's sensible default flips with Playstyle: on RE it's
-      // purely informational (Main-Stat-only, doesn't compete with
-      // anything - see renderEngravingComparison), so defaulting it on
-      // costs nothing and saves the reader a click. On Surge it's one of
-      // 3 competing consumable choices above, so it stays off by default
-      // there like Wine/Ealyn's own untouched defaults - forcing it on
-      // would silently outcompete whichever of those the reader actually
-      // wants the moment they switch specs. Reselecting the SAME
-      // Playstyle radio doesn't fire "change" (browsers only fire it on
-      // an actual value change), so this can't repeatedly stomp a
-      // mid-session manual toggle - only an actual RE<->Surge switch
-      // re-applies the default.
-      const engrSpecEls = Array.from(root.querySelectorAll(".ap-engr-spec"));
-      if (manaFoodEl && engrSpecEls.length) {
-        engrSpecEls.forEach((el) => {
-          el.addEventListener("change", () => {
-            if (el.checked) manaFoodEl.checked = el.value === "re";
+      // Master Build toggle (top of calculator) and its compact echo
+      // copies inside Bracelet Comparison's and Engraving Comparison's
+      // own headers are all real <button>s, not the actual saved field -
+      // the real, saved state is still the ap-brace-spec-build <select>
+      // (see that select's own comment in resources.md). Each group is
+      // two tiers now (Family: RE/Surge, Variant: the 2 or 3 chips for
+      // whichever family is active - see syncBuildToggleUI). Both tiers
+      // ultimately just set that select's value and dispatch a real
+      // "change" event on it, so the existing generic input/select
+      // listener loop a bit further down (which already watches every
+      // input/select, this one included) picks it up and runs
+      // scheduleUpdate() exactly as if the select had been changed
+      // directly - no separate recompute path needed here, and a future
+      // 4th echo copy elsewhere would need zero new code either (this
+      // queries every .ap-build-variant-chip/.ap-build-family-chip on
+      // the page, not a fixed list of containers).
+      const buildSelectEl = root.querySelector(".ap-brace-spec-build");
+      if (buildSelectEl) {
+        // Per-family "last variant used" memory, kept in this closure so
+        // it's scoped to this one calculator instance and lives only for
+        // the page session (not persisted - a fresh load still falls
+        // back to FAMILY_CROSSING_MAP's fixed defaults below). Crossing
+        // a Family chip lands on whatever variant you were last on
+        // within the TARGET family, not always the same fixed
+        // counterpart - e.g. RE 333 -> Surge normally lands on Surge
+        // 222 (see FAMILY_CROSSING_MAP), but if you'd previously dialed
+        // in Surge 333 this session, crossing back to Surge returns you
+        // there instead. Seeded from whatever build is active on load so
+        // the very first cross (before either family has a remembered
+        // variant of its own) still has a sensible starting point via
+        // the fallback below.
+        const familyVariantMemory = { re: null, surge: null };
+        const familyOfBuild = (id) => (BRACE_SPEC_BUILDS[id] && BRACE_SPEC_BUILDS[id].isSurge) ? "surge" : "re";
+        const rememberVariant = (id) => {
+          familyVariantMemory[familyOfBuild(id)] = id;
+        };
+        rememberVariant(normalizeBraceSpecBuild(buildSelectEl.value));
+        buildSelectEl.addEventListener("change", () => {
+          rememberVariant(normalizeBraceSpecBuild(buildSelectEl.value));
+        });
+
+        root.querySelectorAll(".ap-build-variant-chip").forEach((chip) => {
+          chip.addEventListener("click", () => {
+            if (buildSelectEl.value === chip.dataset.build) return;
+            buildSelectEl.value = chip.dataset.build;
+            buildSelectEl.dispatchEvent(new Event("change", { bubbles: true }));
           });
+        });
+        // Family chip: no-ops if already on that family. Otherwise
+        // crosses to the target family's own remembered variant (see
+        // familyVariantMemory above) if this session has one, falling
+        // back to FAMILY_CROSSING_MAP's fixed default otherwise (see
+        // that map's own comment for the RE-has-fewer-slots handling).
+        root.querySelectorAll(".ap-build-family-chip").forEach((chip) => {
+          chip.addEventListener("click", () => {
+            const clickedIsSurge = chip.dataset.family === "surge";
+            if (isSurgeBuild(root) === clickedIsSurge) return;
+            const targetFamily = clickedIsSurge ? "surge" : "re";
+            const mapped = familyVariantMemory[targetFamily] || FAMILY_CROSSING_MAP[normalizeBraceSpecBuild(buildSelectEl.value)];
+            if (!mapped || mapped === buildSelectEl.value) return;
+            buildSelectEl.value = mapped;
+            buildSelectEl.dispatchEvent(new Event("change", { bubbles: true }));
+          });
+        });
+      }
+
+      // Mana Food's sensible default flips with Playstyle (RE vs Surge):
+      // on RE it's purely informational (Main-Stat-only, doesn't compete
+      // with anything - see renderEngravingComparison), so defaulting it
+      // on costs nothing and saves the reader a click. On Surge it's one
+      // of 3 competing consumable choices above, so it stays off by
+      // default there like Wine/Ealyn's own untouched defaults - forcing
+      // it on would silently outcompete whichever of those the reader
+      // actually wants the moment they switch specs. Playstyle itself is
+      // no longer its own control (used to be a dedicated RE/Surge radio
+      // pair here in Engraving Comparison) - it's derived from the master
+      // Build toggle above (see isSurgeBuild/readEngravingInputs), so this
+      // listens to that same ap-brace-spec-build select instead and only
+      // re-applies the default on an actual RE<->Surge CROSSING, not
+      // every build switch (e.g. RE 111 -> RE 313 must NOT stomp a
+      // mid-session manual Mana Food toggle, only crossing the RE/Surge
+      // boundary should).
+      if (manaFoodEl && buildSelectEl) {
+        let lastIsSurge = isSurgeBuild(root);
+        buildSelectEl.addEventListener("change", () => {
+          const nowIsSurge = isSurgeBuild(root);
+          if (nowIsSurge !== lastIsSurge) {
+            manaFoodEl.checked = !nowIsSurge;
+            lastIsSurge = nowIsSurge;
+          }
         });
       }
 
