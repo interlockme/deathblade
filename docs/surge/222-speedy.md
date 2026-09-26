@@ -275,11 +275,11 @@ Can replace Dark Axel if you find it more useful on bosses with a small hitbox o
 <details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Note</span>Gem Requirements<span class="setup-note-arrow"></span></summary>
 
-- To reach its ceiling, this build requires higher investment in cooldown gems than the others.
+- The gem priority list above assumes you will be using a rotation with the advanced skip cycles.
+    - Upper Slash and Surprise Attack CDs at Lv 9 are roughly enough, but higher is always better.
+    - Once Blade Dance and Maelstrom CDs are at Lv 9, Wind Cut CD overtakes them in priority.
     - <span class="skill-mention" data-skill-id="massincrease">Mass Increase</span> and/or <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training 1</span> help smooth things out at low investment levels.
-    - +CD% <span class="skill-mention" data-glossary-id="bracelet">bracelet</span> increases gem level requirements by 1, low <span class="skill-mention" data-glossary-id="specializationstat">Specialization</span> is not recommended.
-    - Once Blade Dance and Maelstrom CD are at Lv 9, Wind Cut CD priority increases significantly.
-    - The gem priority list above assumes you will be using a rotation with the advanced skip cycles.
+    - +CD% <span class="skill-mention" data-glossary-id="bracelet">bracelet</span> increases CD gem Lv requirements by 1, and low <span class="skill-mention" data-glossary-id="specializationstat">Specialization</span> makes it worse.
 
 </details>
 

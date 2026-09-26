@@ -230,6 +230,19 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 </script>
 </div>
 
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Note</span>Gem Requirements<span class="setup-note-arrow"></span></summary>
+
+- Surge DMG is the most important gem by far, and Blitz Rush CD should be at Lv 9 or higher.
+    - <span class="skill-mention" data-skill-id="massincrease">Mass Increase</span> and/or <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training 1</span> help smooth things out at low investment levels.
+    - +CD% <span class="skill-mention" data-glossary-id="bracelet">bracelet</span> increases CD gem Lv requirements by 1, and low <span class="skill-mention" data-glossary-id="specializationstat">Specialization</span> makes it worse.
+
+</details>
+
+</div>
+
 </div>
 
 ## Rotation
