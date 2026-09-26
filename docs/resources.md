@@ -2366,7 +2366,7 @@
 | Link | What it's for |
 |---|---|
 | [Arsonistic's Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) | *Tune KS/LB, bracelet, answers ALL gearing questions* |
-| [KR Calculator (Translated)](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) | *Simpler, only for Ark Passive settings* |
+| [Astrogem Calculator](https://www.loseii.com/loa-astrogem-calc/) | *Modern Astrogem calculator and advisor* |
 | [Astrogem Optimizer](https://airplaner.github.io/lostark-arkgrid-gem-locator-v2/) | *Screencapture auto-minmax for Ark Grid* |
 | [Lost Ark Bible](https://lostark.bible/) | *Logs and raid statistics* |
 | [LOA Logs](https://github.com/snoww/loa-logs) | *<span class="skill-mention" data-glossary-id="dpsmeter">DPS meter</span> download* |
