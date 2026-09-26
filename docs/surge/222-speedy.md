@@ -390,7 +390,7 @@ It helps to think of everything within <span class="skill-inline" data-skill-id=
      or a balance pass. Full schema is in javascripts/dps-chart.js's
      "EASY EDIT GUIDE" comment. -->
 
-<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
+<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems in Trixion</p>
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>

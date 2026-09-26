@@ -1,7 +1,7 @@
 # 111 (Classic) 🦁
 
 <div class="build-card-row" markdown>
-<div class="build-card" data-updated="2026-09-24" markdown>
+<div class="build-card" data-updated="2026-09-26" markdown>
 
 <!-- Difficulty/Trixion/Playstyle stats above, AND the pentagon badge below,
      both read from javascripts/build-data.js (window.DB_BUILD_DATA) - there is
@@ -54,13 +54,13 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 === "111 Classic ★"
 
     ```
-    2D89F44CB0B24806735E07C73478C083707228B4DA81D81F51074C802D5C5D795500F1C3281A6873549CD74ED4CB4E8BD59BE03D263B86A22C024C157D52B6F2
+    ABF9446190957C15BD886F30A6FD40CC444877615C7AEE0B02547E85FADE4942AC21E4D00BE0DDC14B6AF46A230491184E8BA39FA5437BE1AB2E2F01FFAAD4C2
     ```
 
 === "Pre-Ark Grid"
 
     ```
-    6E22435EC38A3B36B27F6EE93801A0ADC45A582A1D8C1F6C3B8D7052A57696552DA526A2AAE1EB722ED1F929BE107E3749DAB4E7C0737BCC237D520B3D040A34
+    E1A95A6967C7BABFA8E6A6AB76A237878F93F51F69D5FBB77EFD6E0DC091D1D11B7F6F5967ECC7BC918F382F2A164DBB7A018034141AA0A02380848DE18A8758
     ```
 
     - Adds Earth Cleaver CD instead of Wind Cut DMG to accommodate a lack of Ark Grid.
@@ -159,7 +159,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
   {"id": "windcut", "level": 10, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Galewind"}},
   {"id": "spincutter", "level": 10, "tripods": [3, 3, 1], "rune": {"tier": "epic", "name": "Galewind"}},
   {"id": "bladedance", "level": 14, "tripods": [1, 1, 2], "rune": {"tier": "epic", "name": "Galewind"}},
-  {"id": "earthcleaver", "level": 14, "tripods": [3, 3, 1], "rune": {"tier": "legendary", "name": "Vision"}},
+  {"id": "earthcleaver", "level": 14, "tripods": [3, 3, 2], "rune": {"tier": "legendary", "name": "Vision"}},
   {"id": "turningslash", "level": 14, "tripods": [1, 3, 1], "rune": {"tier": "legendary", "name": "Poison"}},
   {"id": "maelstrom", "level": 10, "tripods": [3, 1, 2], "rune": {"tier": "legendary", "name": "Focus"}},
   {"id": "blitzrush", "level": 14, "tripods": [1, 1, 2], "rune": {"tier": "legendary", "name": "Galewind"}},
@@ -189,8 +189,9 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 - You can use the Weak Point Detection <span class="skill-mention" data-glossary-id="tripod">tripod</span> on Blade Dance.
     - Requires Lv 10 CD gem and/or raid downtime for it not to become a bottleneck.
     - You must swap Wind Cut CD gem to Blade Dance CD, and it's a marginal DPS increase.
-- Earth Explosion tripod on Earth Cleaver is up to personal preference.
-    - Increased cast speed, but greatly lowers its mobility and damage.
+- Leap Attack vs Earth Explosion tripod on Earth Cleaver is up to personal preference.
+    - Earth Explosion is faster and may raise rotation consistency with an extra stack.
+    - Leap Attack is slower but increases overall DPS by ~1% and offers more mobility.
 - Dark Axel (1-1-2) can be used instead of Spincutter, but offers **no** recovery.
 
 </details>
@@ -212,7 +213,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 <script type="application/json">
 [
   { "col": "dmg", "items": [
-    "surge", "earthcleaver", "blitzrush", "bladedance", "turningslash", { "id": "windcut", "alts": [
+    "surge", "blitzrush", "bladedance","earthcleaver", "turningslash", { "id": "windcut", "alts": [
       { "id": "spincutter", "note": "Use Spincutter CD gem instead if you prefer, Wind Cut has a very low damage share." },
       { "id": "earthcleaver", "note": "Use Earth Cleaver CD gem instead pre-Ark Grid as you won't have its second stack." },
       { "id": "bladedance", "note": "Use Blade Dance CD gem instead if you set its tripod to Weak Point Detection or wish to have it available sooner as a safety net." }
@@ -220,9 +221,9 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
   ] },
   { "col": "cd", "items": [
     "blitzrush",
+    "surpriseattack",
     "windcut",
     "maelstrom",
-    "surpriseattack",
     "turningslash"
   ] }
 ]
@@ -294,9 +295,7 @@ Use the Breaking Moon cycle and its follow-up when available, then repeat the re
 </div>
 </div>
 
-1. Stack are tight in the follow-up: cast Maelstrom (if 2 stacks), the first Surprise Attack or Spincutter if needed.
-    - This mostly applies to the raid's first follow-up, you naturally gather spare stacks through the fight for the rest.
-    - Casting Turning Slash in the opener, or using the Awakening follow-up is also enough to create a safety buffer.
+1. In the follow-up cycles: cast Maelstrom if you have 2 stacks, otherwise just continue without it.
 2. Do NOT worry about Raid Captain efficiency; Keen Blunt Weapon is just as inefficient or worse!
     - Breaking Moon's Critical Damage bonus to the next Surge (biggest hit) is additive to Keen Blunt Weapon.
     - Raid Captain fully buffs the empowered Surge and can make use of <span class="skill-mention" data-rune-name="Rage" data-rune-tier="legendary">Rage</span>/<span class="skill-mention" data-skill-id="atropine">Atropine</span> for the follow-up.
@@ -376,10 +375,10 @@ An alternative to the default rotation. It builds a stack reserve, so you're nev
      or a balance pass. Full schema is in javascripts/dps-chart.js's
      "EASY EDIT GUIDE" comment. -->
 
-<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems</p>
+<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems in Trixion</p>
 
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
-<div class="dps-chart" data-show-icons data-values="75,6.5,4,2.7,2.6,2.6, 2.5" data-ids="surge,breakingmoon,earthcleaver,blitzrush,bladedance,turningslash,windcut"></div>
+<div class="dps-chart" data-show-icons data-values="76.5,6,3,2.8,2.8,2.7,2.4" data-ids="surge,breakingmoon,blitzrush,bladedance,earthcleaver,turningslash,windcut"></div>
 </div>
 </div>
