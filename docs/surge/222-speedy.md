@@ -170,6 +170,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 - Use <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> on Maelstrom if you experience mana issues.
 - Use <span class="skill-mention" data-rune-name="Vision" data-rune-tier="legendary">Legendary Vision</span> on Surprise Attack if you find it more useful than <span class="skill-mention" data-rune-name="Rage" data-rune-tier="legendary">Rage</span>.
     - Increases chance of getting an extra stack on Surprise Attack precast.
+    - This is the best and most efficient way to improve stagger contribution.
     - Give Head Hunt the next best <span class="skill-mention" data-rune-name="Galewind">Galewind</span> or <span class="skill-mention" data-rune-name="Vision">Vision</span> rune that's available.
 
 *Note: Don't equip <span class="skill-mention" data-rune-name="Galewind" data-rune-tier="legendary">Legendary Galewind</span> on Blade Dance for this build. It doesn't benefit from a rune rarity above Epic (or even above <span class="skill-mention" data-rune-name="Vision" data-rune-tier="legendary">Legendary Vision</span>) due to the way the game [rounds down](https://www.inven.co.kr/board/lostark/5497/175825) cast time reductions to 0.05s intervals.*
@@ -184,7 +185,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 - You can use Wide Attack <span class="skill-mention" data-glossary-id="tripod">tripod</span> on Surprise Attack for noticeably increased quality of life.
     - With Wide Attack, you **must** cast Turning Slash early on openers to apply synergy.
     - This is more viable than ever as Turning Slash's lingering hits now extend its uptime.
-- Earth Cleaver can be used instead of Head Hunt if you prefer its mobility or utility.
+- Earth Cleaver can be used instead of Head Hunt if you prefer its mobility or weak point.
     - It's a slower, more vulnerable skill cast that consumes significantly more mana.
     - Set Maelstrom and Upper Slash to Lv 10, then raise Earth Cleaver (3-3-1) to Lv 10.
 
