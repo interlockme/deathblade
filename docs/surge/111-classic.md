@@ -273,7 +273,7 @@ Use the Breaking Moon cycle and its follow-up when available, then repeat the re
 </div>
 <div class="rotation-line" markdown>
 <script type="application/json">
-[{ "stageLabel": "Follow-up >" }, "windcut", "deathtrance", { "id": "maelstrom", "situational": "used if you have 2 stacks" }, { "id": "surpriseattack", "situational": "safety stack buffer" }, "earthcleaver", "turningslash", "bladedance", "blitzrush", "surpriseattack", "surge"]
+[{ "stageLabel": "Follow-up >" }, "windcut", "deathtrance", { "id": "maelstrom", "situational": "used if you had 2 stacks" }, { "id": "surpriseattack", "situational": "safety stack buffer" }, "earthcleaver", "turningslash", "bladedance", "blitzrush", "surpriseattack", "surge"]
 </script>
 </div>
 <!-- Alternate Follow-up path, not a third stage: kept OUT of the Cycle ->
@@ -293,7 +293,7 @@ Use the Breaking Moon cycle and its follow-up when available, then repeat the re
 <summary markdown="span">Alternative &middot; Awakening Follow-Up<span class="cycle-alt-arrow"></span></summary>
 <div class="rotation-line" markdown>
 <script type="application/json">
-["windcut", "deathtrance", { "id": "maelstrom", "situational": "used if you have 2 stacks" }, "turningslash", "bladedance", "bladeassault", "surge"]
+["windcut", "deathtrance", { "id": "maelstrom", "situational": "used if you had 2 stacks" }, "turningslash", "bladedance", "bladeassault", "surge"]
 </script>
 </div>
 </details>
@@ -308,7 +308,7 @@ Use the Breaking Moon cycle and its follow-up when available, then repeat the re
 </div>
 </div>
 
-1. In the follow-up cycles: cast Maelstrom if you have 2 stacks, otherwise just continue without it.
+1. In the follow-up cycles: cast Maelstrom if you had 2 stacks, otherwise just continue without it.
 2. Do NOT worry about Raid Captain efficiency; Keen Blunt Weapon is just as inefficient or worse!
     - Breaking Moon's Critical Damage bonus to the next Surge (biggest hit) is additive to Keen Blunt Weapon.
     - Raid Captain fully buffs the empowered Surge and can make use of <span class="skill-mention" data-rune-name="Rage" data-rune-tier="legendary">Rage</span>/<span class="skill-mention" data-skill-id="atropine">Atropine</span> for the follow-up.
