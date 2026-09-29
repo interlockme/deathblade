@@ -500,13 +500,13 @@
     </div>
     <div class="ap-calc-result-row" data-rank="1">
       <span class="ap-result-rank">1</span>
-      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo\'s stats in the Best Setup card">—</span>
+      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Best Setup card">—</span>
       <span class="ap-result-delta">—</span>
       <span class="ap-result-pct">—</span>
     </div>
     <div class="ap-calc-result-row" data-rank="2">
       <span class="ap-result-rank">2</span>
-      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo\'s stats in the Best Setup card">—</span>
+      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Best Setup card">—</span>
       <span class="ap-result-delta">—</span>
       <span class="ap-result-pct">—</span>
       <!-- Actual thumbtack shape (Lucide's "pin" icon, MIT-licensed -
@@ -524,7 +524,7 @@
     </div>
     <div class="ap-calc-result-row" data-rank="3">
       <span class="ap-result-rank">3</span>
-      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo\'s stats in the Best Setup card">—</span>
+      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Best Setup card">—</span>
       <span class="ap-result-delta">—</span>
       <span class="ap-result-pct">—</span>
       <!-- Actual thumbtack shape (Lucide's "pin" icon, MIT-licensed -
@@ -542,7 +542,7 @@
     </div>
     <div class="ap-calc-result-row" data-rank="4">
       <span class="ap-result-rank">4</span>
-      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo\'s stats in the Best Setup card">—</span>
+      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Best Setup card">—</span>
       <span class="ap-result-delta">—</span>
       <span class="ap-result-pct">—</span>
       <!-- Actual thumbtack shape (Lucide's "pin" icon, MIT-licensed -
@@ -560,7 +560,7 @@
     </div>
     <div class="ap-calc-result-row" data-rank="5">
       <span class="ap-result-rank">5</span>
-      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo\'s stats in the Best Setup card">—</span>
+      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Best Setup card">—</span>
       <span class="ap-result-delta">—</span>
       <span class="ap-result-pct">—</span>
       <!-- Actual thumbtack shape (Lucide's "pin" icon, MIT-licensed -
