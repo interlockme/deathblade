@@ -62,8 +62,6 @@
 //     doesn't produce data for.
 
 (function () {
-  var SITE_ROOT = window.SiteUtils.detectSiteRoot("bible-import.js");
-
   // ----- Tier tables (must match resources.md's <option> values exactly -
   //       these are read from the calculator's real markup, not guessed) -----
   var NECKLACE_TABLE = { None: 0, Low: 0.7, Mid: 1.6, High: 2.6 };

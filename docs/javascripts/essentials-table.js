@@ -109,7 +109,15 @@
     var headRow = document.createElement("tr");
     ["", "Skill", "Tags", "Notes"].forEach(function (label) {
       var th = document.createElement("th");
-      th.textContent = label;
+      if (label) {
+        th.textContent = label;
+      } else {
+        // The icon column has no visible header; give screen readers one.
+        var hidden = document.createElement("span");
+        hidden.className = "dbc-sr-only";
+        hidden.textContent = "Icon";
+        th.appendChild(hidden);
+      }
       headRow.appendChild(th);
     });
     thead.appendChild(headRow);

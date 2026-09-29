@@ -566,7 +566,7 @@
     // tooltip of its own - it's decorative, and stashes its reason here
     // instead so it rides along as this skill's own opts.extra line
     // rather than a second, separate native-title tooltip stacked on top
-    // of this one. Already-formatted ("Situational" or "Situational \u2014
+    // of this one. Already-formatted ("Situational" or "Situational -
     // <reason>") by rotation-line.js, so this just passes it through
     // verbatim, same as gem-dps-tooltip.js's own opts.extra caller does.
     var reason = trigger.getAttribute("data-situational-reason");
@@ -648,7 +648,14 @@
     var id = match[1];
     var data = lookupData(id, resolveFamily(trigger));
     if (!data) return;
+    // These icons are markdown-authored with alt="" and (for the Surge
+    // food line) a native title as their only name. wire() below makes the
+    // image a focus stop, and removing the title would leave a focusable
+    // image with no name at all (axe: presentation-role-conflict), so
+    // carry the name over to alt first.
+    var iconName = (window.DB_SKILL_NAMES && window.DB_SKILL_NAMES[id]) || trigger.getAttribute("title") || "";
     trigger.removeAttribute("title");
+    if (trigger.tagName === "IMG" && !trigger.getAttribute("alt") && iconName) trigger.setAttribute("alt", iconName);
     // RE's Raid Captain chip (.engraving-chip-food) wraps its Feast icon
     // INSIDE the chip that's already wired as its own trigger
     // (.engraving-chip[data-skill-id="raidcaptain"], via attachSkillInline)

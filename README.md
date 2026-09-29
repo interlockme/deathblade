@@ -27,8 +27,8 @@ If you end up adding/removing/reordering scripts, there's a comment above `extra
 
 ### Other stuff to change
 
-- `mkdocs.yml` — `site_name`, `site_url` (→ `https://you.github.io/your-repo/`), and the `nav:` list
-- `docs/stylesheets/extra.css` — there's a rule excluding links to `interlockme.github.io` (my domain) from the external-link icon, swap that or delete it
+- `mkdocs.yml` - `site_name`, `site_url` (→ `https://you.github.io/your-repo/`), and the `nav:` list
+- `docs/stylesheets/extra.css` - there's a rule excluding links to `interlockme.github.io` (my domain) from the external-link icon, swap that or delete it
 - if you keep and adapt `ark-passive-calculator.js` or `cpm-calculator.js`, they save data under storage keys with "deathblade" hardcoded in the name (like `ap-calc-deathblade-v1`), rename those so your fork isn't quietly saving under my class's name
 - everything in `docs/` obviously, edit text to match your stuff and replace image assets with your own, maxroll builder and lost ark codex are useful sources
 

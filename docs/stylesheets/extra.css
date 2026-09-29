@@ -30,7 +30,7 @@
   --dbc-purple: #b39ddb;       /* h2 headings, Evolution-category accent */
   --dbc-purple-rgb: 179, 157, 219;
   --dbc-lilac: #cfc9dd;        /* light lavender body/label text */
-  --dbc-slate: #6f6a80;        /* muted purple-gray secondary text */
+  --dbc-slate: #9d99ab;        /* muted purple-gray secondary text. 4.5:1+ on the dark surfaces, including the lighter .skill-card surface (was #6f6a80, 2.6-3.1:1). --dbc-slate-rgb below is deliberately unchanged so tinted backgrounds/borders built from it look the same. */
   --dbc-slate-rgb: 111, 106, 128;
   --dbc-red: #e57373;          /* danger/error accent, replaces Material's default #ff1744 */
   --dbc-red-rgb: 229, 115, 115;
@@ -48,7 +48,7 @@
   --dbc-arrow: #cf99c7;        /* rotation-line chevron color (.arrow/.arrow-swap) */
   --dbc-green: #66bb6a;        /* rune-chip "uncommon" tier, tripod-chip tier 2 */
   --dbc-green-rgb: 102, 187, 106;
-  --dbc-violet: #c77dff;       /* rune-chip "epic" tier, .skill-card border/hover glow */
+  --dbc-violet: #cc89ff;       /* rune-chip "epic" tier, .skill-card border/hover glow. Nudged up from #c77dff so the epic chip text clears 4.5:1 on its hovered skill-card background; --dbc-violet-rgb is deliberately unchanged so tints/borders look the same. */
   --dbc-violet-rgb: 199, 125, 255;
   --dbc-header-footer-bg: #1d1d20; /* matches the rendered color of a lavender
     .setup-panel note (rgba(--dbc-purple-rgb, 0.045) over the page bg) - picked
@@ -77,9 +77,9 @@
     tooltip and the image-lightbox close button, both bordered in --dbc-purple */
   --dbc-chip-text: #cbb9e8;        /* text color paired with --dbc-chip-surface above */
   --dbc-chip-surface-hover: #232327; /* hover background for those same two --dbc-purple-bordered controls */
-  --dbc-muted-text: #7a7580;       /* faint gray label text - a "no diff" build-compare
+  --dbc-muted-text: #948fa0;       /* faint gray label text (kept at 4.5:1+ on the dark surfaces) - a "no diff" build-compare
     note, an engraving loadout hint, and an Ark Passive tier's point count */
-  --dbc-muted-text-alt: #8a849a;   /* placeholder-style input text, shared by the CPM and bid calculators' "muted" fields */
+  --dbc-muted-text-alt: #948ea4;   /* placeholder-style input text, shared by the CPM and bid calculators' "muted" fields */
   --dbc-muted-text-soft: #9c96a8;  /* soft gray label text, shared by an Ark Passive calc popover filename and a stat badge */
   --dbc-rose-text-soft: #f4c9d9;   /* soft pink text - an engraving food chip label and a loadout note's bolded text */
   --dbc-rose-deep: #a8446b;        /* deep/muted rose - dark enough for the DPS
@@ -147,12 +147,6 @@ html {
 .md-footer {
   background-color: var(--dbc-header-footer-bg); /* matches the lavender setup-note surface, see --dbc-header-footer-bg */
 }
-.md-footer-nav__link {
-  color: var(--md-default-fg-color);
-}
-.md-footer-nav__link:hover {
-  color: var(--dbc-pink); /* matches --md-accent-fg-color */
-}
 .md-footer-meta {
   background-color: var(--md-default-bg-color); /* page bg, so the generator-credit row (empty, generator: false) doesn't add a visible second stripe */
 }
@@ -213,8 +207,8 @@ html {
    focus state already correctly goes pink via --md-accent-fg-color - only
    the resting color was left on the generic blue). Given a plain
    secondary-nav-style link rather than a "you are here" indicator, this
-   one gets the neutral/pink-on-hover treatment (matching .md-footer-nav__link)
-   rather than the nav's purple "current location" treatment. */
+   one gets the neutral/pink-on-hover treatment (default text color, pink
+   via --md-accent-fg-color on hover) rather than the nav's purple "current location" treatment. */
 .md-search-result__more > summary > div {
   color: var(--md-default-fg-color);
 }
@@ -411,7 +405,7 @@ h3 { color: var(--dbc-teal); }
 
 /* Material gives the title bar its own top/bottom padding, then the first
    piece of content below it (a <p>, <ul>, etc.) adds its own browser/
-   Material default top margin on top of that — the two stack up into a
+   Material default top margin on top of that - the two stack up into a
    noticeably wasted gap. Tighten the title padding a bit and zero out
    whatever margin the first content block would otherwise contribute
    (same idea at the bottom, so a trailing block doesn't pad out the box). */
@@ -567,6 +561,20 @@ h3 { color: var(--dbc-teal); }
    No -webkit-overflow-scrolling here - see the removal note next to
    .quick-jump-pills further down in this file for why every horizontal
    scroller on the site had that declaration deliberately dropped. */
+/* Visually hidden but still read by screen readers. Used for column headers
+   that are intentionally blank on screen (an icon column, a row-label column)
+   so the <th> still has an accessible name. */
+.dbc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 .md-typeset .skills-table {
   overflow-x: auto;
 }
@@ -911,7 +919,7 @@ h3 { color: var(--dbc-teal); }
    <div class="gem-item-alts" markdown>
 
    <div class="gem-alt" markdown>
-   **Blitz Rush** — one-line reason this replaces the row above.
+   **Blitz Rush** - one-line reason this replaces the row above.
    </div>
 
    </div>
@@ -927,7 +935,7 @@ h3 { color: var(--dbc-teal); }
 
    Rank badge + skill icon + name sit on one fixed grid (1.7em/1.7em/1fr)
    shared by every row, so nothing shifts out of alignment as priority
-   drops — only color communicates rank (solid accent + tinted
+   drops - only color communicates rank (solid accent + tinted
    background for #1, a step down for #2, a shared quiet "floor" tone
    for #3 and below) and that floor is deliberately still legible, so a
    7-gem list never makes its last entry read as skippable. The column
@@ -1521,7 +1529,7 @@ h3 { color: var(--dbc-teal); }
    dashed border + reduced opacity + desaturated icon read as "lower
    priority" at a glance, same visual language a disabled/optional form
    control uses elsewhere. Was previously written inline as plain
-   italicized text: *( icon Name — situational )*, which didn't stand
+   italicized text: *( icon Name - situational )*, which didn't stand
    out from a real step in the sequence until you actually read it.
    This DOM is now built by rotation-line.js from a step like
    { "id": "headhunt", "situational": true } - see that file's EASY EDIT
@@ -2032,7 +2040,7 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.62rem;
   letter-spacing: 0.01em;
   color: var(--md-default-fg-color--light);
-  opacity: 0.38;
+  opacity: 0.65;
   transition: opacity 0.15s ease;
   white-space: nowrap;
   pointer-events: none;
@@ -4569,7 +4577,10 @@ h3 { color: var(--dbc-teal); }
    the JS. Dim the whole row so it's visually obvious why it won't
    respond, and swap the cursor so hovering doesn't imply it's clickable. */
 .md-typeset .ap-calc-field-row:has(input:disabled, select:disabled) {
-  opacity: 0.45;
+  /* 0.6, not lower: the label and any still-usable select in the row stay
+     >= 4.5:1 on the dark card (0.45 measured 3.2-3.9:1), while the row still
+     reads clearly dimmer than an active one. */
+  opacity: 0.6;
 }
 .md-typeset .ap-calc-field-row input:disabled,
 .md-typeset .ap-calc-field-row select:disabled {
@@ -4661,7 +4672,7 @@ h3 { color: var(--dbc-teal); }
   transition: background-color 0.12s ease;
 }
 .md-typeset .ap-calc-result-row:hover,
-.md-typeset .ap-calc-result-row:focus-visible,
+.md-typeset .ap-calc-result-row:has(.ap-result-combo:focus-visible),
 .md-typeset .ap-calc-result-row:active {
   background-color: rgba(255, 255, 255, 0.05);
 }
@@ -4675,13 +4686,24 @@ h3 { color: var(--dbc-teal); }
   cursor: default;
 }
 .md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned):hover,
-.md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned):focus-visible,
+.md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned):has(.ap-result-combo:focus-visible),
 .md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned):active {
   background-color: transparent;
 }
-.md-typeset .ap-calc-result-row:focus-visible {
+.md-typeset .ap-calc-result-row:has(.ap-result-combo:focus-visible) {
   outline: 1px solid rgba(var(--dbc-lavender-rgb), 0.6);
   outline-offset: -1px;
+}
+/* The combo label is the row's keyboard/screen-reader button (role=button,
+   tabindex=0 in resources.md); the row itself is a plain container so it can
+   hold the sibling pin button without nesting one interactive control in
+   another. The row-wide ring above is the focus indicator, so drop the
+   label's own outline wherever :has() is supported (elsewhere the default
+   outline stays, so focus is never invisible). */
+@supports selector(:has(*)) {
+  .md-typeset .ap-result-combo:focus-visible {
+    outline: none;
+  }
 }
 .md-typeset .ap-calc-result-row + .ap-calc-result-row {
   margin-top: 0.4em;
@@ -5450,12 +5472,12 @@ h3 { color: var(--dbc-teal); }
   padding: 0.35em 0.9em;
   line-height: 1.3;
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.9;
   transition: opacity 0.15s ease, border-color 0.15s ease,
     background-color 0.15s ease, color 0.15s ease;
 }
 .md-typeset .ap-build-chip:hover {
-  opacity: 0.9;
+  opacity: 1;
   background-color: var(--dbc-chip-surface-hover);
 }
 /* Active chip: fully saturated/colored, RE builds in the site's primary
@@ -6337,25 +6359,6 @@ h3 { color: var(--dbc-teal); }
   background-color: rgba(255, 255, 255, 0.04);
   color: var(--dbc-lilac);
 }
-/* Sub-group label inside a merged card - no longer used anywhere on the
-   page (Competing Pool, the last user of this, had its own subtitle
-   dropped too - see resources.md's own comment on the Engravings card
-   for why). Kept in place rather than deleted in case a future sub-
-   group inside a merged card needs the same treatment again: same text
-   treatment as .ap-gear-card-title but a fixed gold accent (Competing
-   Pool's old standalone-card color) rather than the card's own accent,
-   so it'd read as "a different thing inside this card" instead of a
-   second copy of the card's own title, plus a dashed top divider +
-   extra top margin to separate it from whatever field row comes above
-   it. */
-.md-typeset .ap-gear-card-subtitle {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--dbc-gold);
-  font-weight: 700;
-  margin: 0.75em 0 0.55em;
-}
 /* Stone 1+2's merged row (previously 2 separate .ap-engr-stone-row rows,
    see resources.md's own comment on .ap-engr-stone-row--first) directly
    follows this grid now that Raid Captain Variables moved into it instead of
@@ -6453,7 +6456,7 @@ h3 { color: var(--dbc-teal); }
   gap: 1em;
 }
 /* The general .ap-calc-field-row:has(input:disabled, select:disabled)
-   rule above (opacity: 0.45) dims the WHOLE row it's declared on - fine
+   rule above (opacity: 0.6) dims the WHOLE row it's declared on - fine
    everywhere else, since every other field row is one field. This row
    isn't: it holds Stone 1 and Stone 2's independently-disable-able level
    selects (see enforceStoneSlotExclusivity), each of which is expected
@@ -6468,7 +6471,7 @@ h3 { color: var(--dbc-teal); }
   opacity: 1;
 }
 .md-typeset .ap-engr-stone-label-group:has(select:disabled) {
-  opacity: 0.45;
+  opacity: 0.6; /* same value/reason as the general disabled-row rule above */
 }
 /* Below ~640px the title plus both Stones' labels and selects no longer
    fit one line without crushing something - stack the title above
@@ -7083,7 +7086,7 @@ h3 { color: var(--dbc-teal); }
    its math available on closer look, not five equally-weighted rows. */
 .md-typeset .ap-bvb-breakdown-row {
   font-size: 0.9em;
-  opacity: 0.75;
+  opacity: 0.85;
 }
 /* "Other Lines" groups its two per-side checkboxes (vs Demons, CD
    Estimate - see enforceBvbLineControls/braceletFlatLineGain) with the
@@ -7640,7 +7643,7 @@ h3 { color: var(--dbc-teal); }
 /* The custom link rule above overrides color and underline but not focus
    styling, which risks losing the visible indicator entirely for keyboard
    navigation depending on the browser's default. Links are the only
-   elements here that are natively focusable — tab labels and gem-chips
+   elements here that are natively focusable - tab labels and gem-chips
    are a <label>/<span>, not form controls, so they don't receive
    keyboard focus at all in their current markup. */
 .md-typeset a:focus-visible {
@@ -7673,7 +7676,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .tabbed-set > .tabbed-labels > label {
   font-weight: 400;
   color: var(--md-default-fg-color--light);
-  opacity: 0.55;
+  opacity: 0.75;
   text-decoration: none;
   transition: opacity 0.15s ease, color 0.15s ease;
 }
@@ -8292,7 +8295,7 @@ body.page-333-blitz input[type="text"] {
 }
 
 /* ==========================================================================
-   Skill Setup cards — native <details>, replaces static skillsetup-*.png
+   Skill Setup cards - native <details>, replaces static skillsetup-*.png
    ========================================================================== */
 /* Rendered by javascripts/skill-setup.js from a JSON blob (see that file's
    header comment for the authoring format), using tag/note text shared
@@ -8423,7 +8426,7 @@ body.page-333-blitz input[type="text"] {
   box-shadow: 0 0 0 1px rgba(var(--dbc-violet-rgb), 0.55), 0 0 10px rgba(var(--dbc-violet-rgb), 0.4);
 }
 /* Overrides the sitewide details:not([open]) opacity dimming (meant for
-   ??? admonitions) — a skill card is core reference content, not optional
+   ??? admonitions) - a skill card is core reference content, not optional
    depth, so it should read at full strength closed or open. */
 .md-typeset .skill-card:not([open]) {
   opacity: 1;
@@ -8573,7 +8576,7 @@ body.page-333-blitz input[type="text"] {
   flex-shrink: 0;
   margin-left: auto;
 }
-/* Tripod pick chips — flat placeholder squares (no tripod icon art yet),
+/* Tripod pick chips - flat placeholder squares (no tripod icon art yet),
    colored by tier so the tier ordering still reads at a glance. Tier
    colors intentionally match the in-game tier colors (blue/green/gold)
    so the mapping is instantly familiar rather than an arbitrary scheme.
@@ -8611,7 +8614,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .tripod-chip.tripod-chip-empty {
   visibility: hidden;
 }
-/* Rune chip — text pill instead of an icon (no rune icon set either),
+/* Rune chip - text pill instead of an icon (no rune icon set either),
    colored by the site's four rune tiers: uncommon < rare < epic <
    legendary (the actual Lost Ark rarity names - see rune-data.js's own
    header comment on why this file's class suffixes match those names
@@ -8712,7 +8715,7 @@ body.page-333-blitz input[type="text"] {
 .rune-tip-tier-legendary {
   color: var(--dbc-orange);
 }
-/* Disclosure arrow — same border-triangle technique as .ap-brace-compare,
+/* Disclosure arrow - same border-triangle technique as .ap-brace-compare,
    rotates open instead of using an image/glyph. */
 .md-typeset .skill-card-arrow {
   flex-shrink: 0;
@@ -9703,7 +9706,7 @@ body.page-333-blitz input[type="text"] {
 }
 
 /* ==========================================================================
-   Setup panel + setup notes — Ark Setup / Skill Setup sections
+   Setup panel + setup notes - Ark Setup / Skill Setup sections
    ========================================================================== */
 /* .setup-panel wraps a section's widget (.ark-cores or .skill-setup) AND
    its own follow-up notes in one shared card, e.g.:
@@ -9962,7 +9965,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .setup-note > summary::after {
   display: none !important;
 }
-/* Small caps kind label — same pill language as .rune-chip/.tag rather
+/* Small caps kind label - same pill language as .rune-chip/.tag rather
    than Material's left-border-stripe treatment, colored from the site's
    own accent set instead of admonition-default green/blue/purple/red.
    Fixed width (not padding-driven) so every pill occupies the same
@@ -10113,7 +10116,7 @@ body.page-333-blitz input[type="text"] {
 }
 
 /* ==========================================================================
-   Food/consumable requirement callout — Essentials page
+   Food/consumable requirement callout - Essentials page
    ========================================================================== */
 /* "Mana food is required" is the single most important line on this page
    (get it wrong and the whole build's mana sustain falls apart), so it
@@ -10426,7 +10429,7 @@ body.page-333-blitz input[type="text"] {
 
   /* Don't split a card, a rotation line or a heading across a page break. */
   .build-card, .skill-card, .cycle-card, .rotation-line, .setup-note,
-  .ap-gear-card, .dps-chart-row, .gem-priority-item, table, figure, img {
+  .ap-gear-card, .dps-chart-row, table, figure, img {
     break-inside: avoid;
     page-break-inside: avoid;
   }

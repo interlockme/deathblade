@@ -63,13 +63,10 @@
     return SITE_ROOT + FAMILY_FOLDER[family] + "/" + build.id + "/";
   }
 
-  // toPoint/pointsToAttr/svgEl/fmt1 used to be defined locally here -
-  // now shared with pentagon-badge.js via SiteUtils.pentagonPoint/
-  // pentagonPointsToAttr/svgEl/formatStat (see site-utils.js for why).
-  var toPoint = window.SiteUtils.pentagonPoint;
   var pointsToAttr = window.SiteUtils.pentagonPointsToAttr;
   var svgEl = window.SiteUtils.svgEl;
   var fmt1 = window.SiteUtils.formatStat;
+  var radar = window.SiteUtils.radar;
 
   // ---------- Overview table (this IS the old markdown table, just
   // generated from the same data array the picker below reads instead
@@ -185,11 +182,10 @@
   // instead of one solid one, so their silhouettes can be compared at a
   // glance instead of read as two separate numbers.
   function buildOverlaySvg(axisLabels, buildA, buildB) {
-    var cx = 100, cy = 98, rMax = 60;
-    var angles = axisLabels.map(function (_, i) { return (360 / axisLabels.length) * i; });
+    var angles = radar.angles(axisLabels.length);
 
     var svg = svgEl("svg", {
-      viewBox: "0 0 200 190",
+      viewBox: radar.VIEWBOX,
       class: "pentagon-svg build-compare-svg",
       role: "img",
       "aria-label":
@@ -202,24 +198,12 @@
           .join(", "),
     });
 
-    [0.33, 0.66, 1.0].forEach(function (frac, i) {
-      var pts = angles.map(function (a) { return toPoint(cx, cy, a, rMax * frac); });
-      svg.appendChild(
-        svgEl("polygon", { points: pointsToAttr(pts), class: "pentagon-ring" + (i === 2 ? " pentagon-ring-outer" : "") })
-      );
-    });
-    angles.forEach(function (a) {
-      var p = toPoint(cx, cy, a, rMax);
-      svg.appendChild(svgEl("line", { x1: cx, y1: cy, x2: p[0].toFixed(1), y2: p[1].toFixed(1), class: "pentagon-spoke" }));
-    });
+    radar.drawGrid(svg, angles);
 
     [buildB, buildA].forEach(function (build) {
       // Draw B first, then A on top, so A (the left/first dropdown) reads
       // as the "primary" shape when the two overlap heavily.
-      var dataPts = angles.map(function (a, i) {
-        var v = Math.max(0, Math.min(10, build.pentagon[i]));
-        return toPoint(cx, cy, a, rMax * (v / 10));
-      });
+      var dataPts = radar.dataPoints(angles, build.pentagon);
       svg.appendChild(
         svgEl("polygon", {
           points: pointsToAttr(dataPts),
@@ -236,20 +220,7 @@
       });
     });
 
-    var labelR = rMax + 15;
-    angles.forEach(function (a, i) {
-      var p = toPoint(cx, cy, a, labelR);
-      var x = p[0], y = p[1];
-      var anchor = "middle";
-      if (Math.abs(x - cx) >= 3) anchor = x < cx ? "end" : "start";
-      var dy = 0;
-      if (a === 0) dy = -2;
-      else if (a === 180 || (a >= 126 && a <= 234)) dy = 4;
-
-      var text = svgEl("text", { x: x.toFixed(1), y: (y + dy).toFixed(1), "text-anchor": anchor, class: "pentagon-label" });
-      text.textContent = axisLabels[i];
-      svg.appendChild(text);
-    });
+    radar.drawLabels(svg, angles, axisLabels);
 
     return svg;
   }

@@ -7,10 +7,10 @@
 //
 // Must load FIRST in extra_javascript - see mkdocs.yml.
 //
-// Kept intentionally tiny: this is not a framework, just the couple of
-// one-liners that were previously copy-pasted identically into every
-// widget file. If a bug shows up in one of these (e.g. the masonry
-// ResizeObserver leak), fix it here once instead of N times.
+// Kept intentionally tiny: this is not a framework, just the small
+// helpers every widget file needs. If a bug shows up in one of these
+// (e.g. the masonry ResizeObserver leak), fix it here once instead of
+// in every widget.
 //
 // ---------------------------------------------------------------------
 // CONVENTION: inline <script type="application/json"> data blocks
@@ -79,10 +79,8 @@
 // else. Getting the timing "right" for just one of those isn't safe to
 // assume - a wrong assumption here means the whole section silently
 // never renders until a manual reload, no visible error. Rather than
-// re-deriving and re-copy-pasting that trigger wiring into every new
-// widget (it WAS copy-pasted identically into all five files above
-// before this was centralized), call SiteUtils.registerRenderer()
-// once per widget instead - see its doc comment below for usage. Your
+// re-deriving that trigger wiring in every new widget, call
+// SiteUtils.registerRenderer() once per widget instead - see its doc comment below for usage. Your
 // renderContainer function just needs to be idempotent (safe to call
 // again on a container it already rendered), same as every existing
 // widget's already is.
@@ -213,10 +211,7 @@
     },
 
     // Create an SVG element in the correct namespace and set its
-    // attributes. Was copy-pasted identically into pentagon-badge.js and
-    // build-compare.js (both render the same pentagon-shaped stat
-    // graphic, just in different contexts - a per-build badge vs. a
-    // two-build overlay comparison) before being centralized here.
+    // attributes. Shared by pentagon-badge.js and build-compare.js.
     svgEl: function (tag, attrs) {
       var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
       for (var key in attrs) {
@@ -228,36 +223,99 @@
     // Convert a (center, angle, radius) polar coordinate into an [x, y]
     // pixel pair, angle measured clockwise from straight up (matches how
     // pentagon-badge.js/build-compare.js lay out their 5 axes starting
-    // at the top). Same pentagon-graphic dedup as svgEl above.
+    // at the top).
     pentagonPoint: function (cx, cy, angleDeg, r) {
       var a = (angleDeg * Math.PI) / 180;
       return [cx + r * Math.sin(a), cy - r * Math.cos(a)];
     },
 
     // Turn an array of [x, y] pairs (e.g. from pentagonPoint above) into
-    // an SVG points="..." attribute string. Same pentagon-graphic dedup
-    // as svgEl above.
+    // an SVG points="..." attribute string.
     pentagonPointsToAttr: function (pts) {
       return pts.map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" ");
     },
 
+    // Shared radar-chart geometry and drawing for pentagon-badge.js (one
+    // build) and build-compare.js (two builds overlaid). Both draw the
+    // same 200x190 viewBox with the same grid rings, spokes and axis
+    // labels and differ only in the data polygons drawn on top, so
+    // everything except those polygons lives here.
+    radar: {
+      VIEWBOX: "0 0 200 190",
+      CX: 100,
+      CY: 98,
+      R_MAX: 60,
+
+      // n axes evenly spaced, starting at the top, in degrees.
+      angles: function (n) {
+        var out = [];
+        for (var i = 0; i < n; i++) out.push((360 / n) * i);
+        return out;
+      },
+
+      // Grid rings (33%, 66%, 100%) plus one spoke per axis.
+      drawGrid: function (svg, angles) {
+        var U = window.SiteUtils, R = U.radar;
+        [0.33, 0.66, 1.0].forEach(function (frac, i) {
+          var pts = angles.map(function (a) { return U.pentagonPoint(R.CX, R.CY, a, R.R_MAX * frac); });
+          svg.appendChild(
+            U.svgEl("polygon", {
+              points: U.pentagonPointsToAttr(pts),
+              class: "pentagon-ring" + (i === 2 ? " pentagon-ring-outer" : ""),
+            })
+          );
+        });
+        angles.forEach(function (a) {
+          var p = U.pentagonPoint(R.CX, R.CY, a, R.R_MAX);
+          svg.appendChild(U.svgEl("line", { x1: R.CX, y1: R.CY, x2: p[0].toFixed(1), y2: p[1].toFixed(1), class: "pentagon-spoke" }));
+        });
+      },
+
+      // [x, y] vertices for a 0-10 value per axis (clamped to that range).
+      dataPoints: function (angles, values) {
+        var U = window.SiteUtils, R = U.radar;
+        return angles.map(function (a, i) {
+          var v = Math.max(0, Math.min(10, values[i]));
+          return U.pentagonPoint(R.CX, R.CY, a, R.R_MAX * (v / 10));
+        });
+      },
+
+      // One <text> per axis just outside the outer ring. decorate(textEl,
+      // i) is optional and runs before the text is appended, e.g. to add
+      // a <title> tooltip.
+      drawLabels: function (svg, angles, labels, decorate) {
+        var U = window.SiteUtils, R = U.radar;
+        angles.forEach(function (a, i) {
+          var p = U.pentagonPoint(R.CX, R.CY, a, R.R_MAX + 15);
+          var x = p[0], y = p[1];
+          var anchor = "middle";
+          if (Math.abs(x - R.CX) >= 3) anchor = x < R.CX ? "end" : "start";
+          var dy = 0;
+          if (a === 0) dy = -2;
+          else if (a === 180 || (a >= 126 && a <= 234)) dy = 4;
+          var text = U.svgEl("text", {
+            x: x.toFixed(1),
+            y: (y + dy).toFixed(1),
+            "text-anchor": anchor,
+            class: "pentagon-label",
+          });
+          text.textContent = labels[i];
+          if (decorate) decorate(text, i);
+          svg.appendChild(text);
+        });
+      },
+    },
+
     // Round a 0-10 pentagon stat to at most 1 decimal, dropping a
-    // trailing ".0" so whole numbers read as "8" instead of "8.0" -
-    // same rounding/display rule as dps-chart.js's own fmtPct, just
-    // without the trailing "%". Same pentagon-graphic dedup as svgEl
-    // above.
+    // trailing ".0" so whole numbers read as "8" instead of "8.0".
     formatStat: function (n) {
       var r = Math.round(n * 10) / 10;
       return r % 1 === 0 ? r.toFixed(0) : r.toFixed(1);
     },
 
     // Same rounding rule as formatStat above, with a trailing "%" - e.g.
-    // 34 -> "34%", 33.5 -> "33.5%". Was defined identically (byte-for-
-    // byte, including the comment explaining the rounding) in both
-    // dps-chart.js and gem-dps-tooltip.js before being centralized here;
-    // formatStat's own comment used to point at dps-chart.js's copy as
-    // the "same rule minus the %" reference, which is now circular -
-    // this is that copy, just parameterized.
+    // 34 -> "34%", 33.5 -> "33.5%". Used by dps-chart.js and
+    // gem-dps-tooltip.js.
     formatPct: function (n) {
       return window.SiteUtils.formatStat(n) + "%";
     },
@@ -296,6 +354,28 @@
       });
     },
 
+    // Parses a ".dps-chart" element's parallel data-values / data-ids /
+    // data-labels into { values, ids, labels }. Returns null when the
+    // data is malformed (no values, non-numeric values, or a values/
+    // labels length mismatch) so callers fail quietly instead of drawing
+    // a broken chart. ids is null when data-ids is absent or its length
+    // doesn't match, rather than half-applied. Shared by dps-chart.js
+    // (rendering) and gem-dps-tooltip.js (damage-share lookup) so the two
+    // always agree on what a chart contains.
+    parseChartData: function (chart) {
+      var values = (chart.getAttribute("data-values") || "")
+        .split(",")
+        .map(function (s) { return parseFloat(s.trim()); });
+      var idsAttr = chart.getAttribute("data-ids");
+      var ids = idsAttr
+        ? idsAttr.split(",").map(function (s) { return s.trim(); })
+        : null;
+      var labels = window.SiteUtils.resolveChartLabels(chart, ids) || [];
+      if (!values.length || values.length !== labels.length || values.some(isNaN)) return null;
+      if (ids && ids.length !== labels.length) ids = null;
+      return { values: values, ids: ids, labels: labels };
+    },
+
     // Hide a broken/missing icon <img> instead of showing the browser's
     // default alt-text placeholder. mode "visibility" (default) keeps the
     // icon's layout box in place; mode "display" collapses it entirely.
@@ -312,14 +392,9 @@
     // Resolve an icon's real URL. Every icon (skills, consumables, Ark
     // Passive nodes) lives under assets/shared/ regardless of which
     // build family (RE/Surge) uses it - relIcon is the path under that
-    // folder, e.g. "icon-surge.png" or "ap-icons/critical.png". There
-    // used to be a per-family assets/re/ and assets/surge/ icon split
-    // with a manually maintained list of which icons happened to be
-    // identical across both; that list is gone now that every icon file
-    // lives in one place, so this is just a path join. assets/re/ and
-    // assets/surge/ no longer exist at all - genuinely family-specific
-    // page media (tldr screenshots, memes) now lives flat under
-    // assets/ instead.
+    // folder, e.g. "icon-surge.png" or "ap-icons/critical.png". Just a
+    // path join: genuinely family-specific page media (tldr screenshots,
+    // memes) lives flat under assets/, not here.
     iconSrc: function (siteRoot, relIcon) {
       return siteRoot + "assets/shared/" + relIcon;
     },
@@ -328,11 +403,7 @@
     // invocation of fn. Returns a schedule() function - call it as often
     // as you like (resize events, ResizeObserver callbacks, input events
     // during a drag, ...) and fn runs at most once per animation frame,
-    // with no arguments. Previously this exact scheduled-flag +
-    // requestAnimationFrame wrapper was copy-pasted identically into
-    // skill-setup.js's initMasonry and (formerly) ark-passive-tree.js's
-    // now-removed wrap-tracking code; centralized here per this file's
-    // own stated purpose.
+    // with no arguments.
     rafSchedule: function (fn) {
       var scheduled = false;
       return function () {
@@ -350,10 +421,7 @@
     // (e.g. "gem-priority.js") - used only to find <script src="...">
     // if document.currentScript isn't available (it never is inside an
     // instant-nav re-render, only on the real initial page-load
-    // execution of this file). Previously an identical ~10-line
-    // function, differing only in that filename, was copy-pasted into
-    // skill-setup.js, essentials-table.js, ark-core-badge.js,
-    // ark-passive-tree.js, and rotation-line.js.
+    // execution of this file).
     detectSiteRoot: function (jsFileName) {
       var escaped = jsFileName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       var suffixRe = new RegExp("javascripts/" + escaped + "(\\?.*)?(#.*)?$");
@@ -442,11 +510,6 @@
     //   3) Belt-and-suspenders: a MutationObserver on the whole
     //      document watching for a matching container inserted by
     //      anything else, the moment it appears.
-    // Previously this exact ~30-line block (differing only in the
-    // selector and the render function) was copy-pasted identically
-    // into skill-setup.js, essentials-table.js, ark-core-badge.js,
-    // ark-passive-tree.js, and (in an equivalent single-element form)
-    // rotation-line.js.
     registerRenderer: function (selector, renderContainer) {
       function scanAndRender(root) {
         if (!root) return;

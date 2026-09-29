@@ -36,10 +36,11 @@
 //
 // CACHE-BUSTING - READ THIS
 // The five deferred files' `?v=N` versions live in LAZY_BUNDLE below, NOT in
-// mkdocs.yml, because mkdocs.yml no longer lists them. The project's usual
-// rule is unchanged in spirit, just relocated: after editing any of those
-// five, bump its number HERE. mkdocs.yml has a pointer comment where their
-// entries used to be. Everything else still bumps in mkdocs.yml as before.
+// mkdocs.yml, because mkdocs.yml doesn't list them. After editing any of
+// those five, bump its number HERE (and bump lazy-calculators.js itself in
+// mkdocs.yml, or returning visitors keep the old list). mkdocs.yml has a
+// pointer comment where their entries would go. Everything else bumps in
+// mkdocs.yml.
 
 (function () {
   // Captured at top level: document.currentScript is only valid during this
@@ -53,8 +54,8 @@
   var LAZY_BUNDLE = [
     "cpm-calculator.js?v=8",
     "bid-calculator.js?v=5",
-    "ark-passive-calculator.js?v=68",
-    "bible-import.js?v=15",   // must follow ark-passive-calculator.js
+    "ark-passive-calculator.js?v=70",
+    "bible-import.js?v=16",   // must follow ark-passive-calculator.js
     "ap-brace-tooltip.js?v=5", // needs skill-tooltip.js, which is still global
   ];
 

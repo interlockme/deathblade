@@ -2146,17 +2146,6 @@
     // matching Bracelet vs. Bracelet's own per-candidate search exactly.
     const baselineBest = bestComboFor(inputsNB, sharedNB);
     const baselineMult = baselineBest.mult;
-    // The Additional Damage candidates' denominator has to match whatever
-    // "add" the NO-BRACELET baseline's OWN winning pair actually used -
-    // Master keystones add a flat +8.5% Add Dmg on top of addDmgBase
-    // (addDmgMaster), non-Master pairs (crit+pulv) don't. Using addDmgBase
-    // unconditionally here was the bug that made these two rows disagree
-    // with the sheet whenever Master won the grid - confirmed against the
-    // sheet's cached Brace!C19:E19 (2.06/2.40/2.75%) vs the old
-    // 2.19/2.55/2.92%. Now tied to baselineBest.pair (the re-optimized
-    // baseline's own winner) rather than the reader's live Best Setup pair,
-    // for the same reason baselineMult itself moved off the fixed pair.
-    const addDmgBaseline = baselineBest.pair.indexOf("master") !== -1 ? sharedNB.addDmgMaster : sharedNB.addDmgBase;
 
     // Crit Rate/Crit Dmg candidates reuse the exact same computeShared +
     // critRateTotal + combinedMultiplier machinery as the grid above -
@@ -2947,7 +2936,6 @@
       // top of the total here, from before that fold-in existed).
       const percentApMult = 1 + gearAttackPowerPercentTotal(earringsNB) / 100;
       const wpPercentMult = 1 + gearWpPercentTotal(earringsNB) / 100;
-      const mainStatPercentMult = 1 + earringsNB.gearMainStatPercent / 100;
       const supApBuff = supportApBuff(earringsNB, wp, mainStat, baseApMult);
       const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
 
@@ -3853,12 +3841,10 @@
   // on Surprise Attack each grant the SAME numeric bonus to both Move
   // Speed and Attack Speed at once - not two separate effects that happen
   // to share a name. Named generically (not "_MOVE_SPEED") and reused by
-  // both raidCaptainMoveSpeed (below) and surgeEffectiveAttackSpeed
-  // (Attack Speed section further down) so the two tracks can never drift
-  // out of sync with each other.
+  // raidCaptainMoveSpeed (below) so both stats stay tied to one number.
   const SUPPORT_SPEED_BONUS = 9; // Passionate Dance - reused live from .ap-yearning above.
   const MAELSTROM_SPEED_BONUS = 12.8;
-  const RAID_CAPTAIN_WINE_MOVE_SPEED = 3; // Vernese Wine - Surge only, Move Speed only (see surgeEffectiveAttackSpeed's own comment for why it has no Attack Speed counterpart here).
+  const RAID_CAPTAIN_WINE_MOVE_SPEED = 3; // Vernese Wine - Surge only, Move Speed only (no Attack Speed counterpart).
   // Support: Artist/Valkyrie - a party-wide Move Speed buff, not a personal
   // consumable choice, so unlike Wine/Mana Food it isn't part of their
   // 2-way mutually-exclusive set (see that listener's own comment below)
@@ -4057,38 +4043,12 @@
     return foodMult / wineMult - 1;
   }
 
-  // ----- Attack Speed (sources reference, no live display) -----
-  // The live "Attack Speed: ...%" readout that used to sit under Raid
-  // Captain Efficiency in the Engraving Comparison card has been removed
-  // (it was purely informational, never fed into any DPS number on the
-  // page) - surgeEffectiveAttackSpeed below is no longer called from
-  // anywhere. Left in place, unused, purely as a record of every Attack
-  // Speed source and its value in case the readout needs to come back.
-  // Mass Increase is the only engraving on this whole page whose Attack
-  // Speed matters at all (its own -10% drawback, called out in the page
-  // banner as unmodeled in the DPS search above) - RE never runs Mass
-  // Increase, so RE never had a use for this readout to begin with.
-  const BASE_ATTACK_SPEED = 106.32; // Same base value the sheet gives Move Speed - not a typo, just how the base stat lines up for this class.
-  const SURGE_IDENTITY_ATTACK_SPEED = 20; // Surge's own Identity gauge, always on for Surge - not a togglable source.
-  const EALYN_ATTACK_SPEED = 3; // Ealyn's Blessing - Surge-only alternative to Vernese Wine/Mana Food, Attack Speed only (no Move Speed counterpart, unlike Wine). Its own checkbox was removed along with the readout below (it had no effect on anything else) - kept here as a source reference only.
-  const MASS_INCREASE_ATTACK_SPEED_PENALTY = 10;
-  const SURGE_ATTACK_SPEED_CAP = 140; // Same 140% AS/MS cap Raid Captain's Move Speed uses (RAID_CAPTAIN_MOVE_SPEED_CAP above) - Attack Speed shares the identical class cap, just tracked separately since nothing here multiplies against it.
-
-  function surgeEffectiveAttackSpeed(engrInputs, yearning) {
-    let atk = BASE_ATTACK_SPEED + SURGE_IDENTITY_ATTACK_SPEED;
-    atk += MAELSTROM_SPEED_BONUS * (engrInputs.maelstromUptime / 100);
-    if (yearning) atk += SUPPORT_SPEED_BONUS;
-    if (engrInputs.rageRune) atk += (RAGE_RUNE_MOVE_SPEED_UPTIME / 100) * RAGE_RUNE_SPEED_BONUS;
-    // Ealyn's Blessing's own checkbox is gone (see EALYN_ATTACK_SPEED's
-    // comment) so engrInputs no longer carries an ealynsBlessing flag -
-    // EALYN_ATTACK_SPEED is left unapplied here for the same reason.
-    // Mass Increase's drawback only actually applies to a reader who's
-    // running (or considering) Mass Increase - miOptIn is this section's
-    // own "include Mass Increase in the best-combo search" checkbox, the
-    // closest thing here to "am I looking at a Mass Increase loadout".
-    if (engrInputs.miOptIn) atk -= MASS_INCREASE_ATTACK_SPEED_PENALTY;
-    return Math.min(atk, SURGE_ATTACK_SPEED_CAP);
-  }
+  // ----- Attack Speed (not tracked) -----
+  // No Attack Speed readout exists: it never fed into any DPS number on the
+  // page. Mass Increase (-10% Attack Speed drawback, unmodeled in the DPS
+  // search - see the page banner) is the only engraving here where Attack
+  // Speed would matter, and it is Surge-only: RE never runs Mass Increase, so
+  // RE has no use for such a readout at all.
 
   // Resolves which Ability Stone level (if any) applies to a given
   // engraving key within the Engraving Comparison section only - either of
@@ -4795,12 +4755,11 @@
     const gridResult = computeGridAndSummary(inputs);
     const best = gridResult.best;
     if (!best) return null;
-    const shared = computeShared(inputs);
 
     // See engravingIsolatedGridInputs's comment - KBW's own row and stone
     // breakdown need their own grid+shared recompute, isolated from the
     // live Ark Passive section's KBW/Adrenaline state, instead of reusing
-    // gridResult/shared/best above (which everything else on this page
+    // gridResult/best above (which everything else on this page
     // still correctly uses, since only KBW's closed form is affected).
     const isolatedInputs = engravingIsolatedGridInputs(inputs, engrInputs);
     const isolatedGrid = computeGridAndSummary(isolatedInputs);
@@ -5424,6 +5383,14 @@
     // anything. The pinned row's own .ap-result-pin button is exempt
     // (see the CSS) since unpinning is still live.
     list.classList.toggle("ap-calc-results-pinned", !!pinnedCombo);
+    // Same signal for assistive tech: while a pin is active, every row's
+    // preview button is a no-op (see preview()'s early return), so say so
+    // instead of leaving them announced as live controls. The pin buttons
+    // stay live for unpinning.
+    list.querySelectorAll(".ap-calc-result-row .ap-result-combo").forEach((btn) => {
+      if (pinnedCombo) btn.setAttribute("aria-disabled", "true");
+      else btn.removeAttribute("aria-disabled");
+    });
 
     // Which cell's stats populate the Best Setup card, and what its title
     // reads: the pinned cell if one's active (pin always wins over a
@@ -5874,14 +5841,13 @@
 
     if (!result) return;
 
-    // Both readouts' base stats (RAID_CAPTAIN_BASE_MOVE_SPEED,
-    // BASE_ATTACK_SPEED above) assume the reader is already eating an
-    // Atk/Move Speed feast - the feast icon at the end of each line flags
-    // that assumption inline instead of leaving it as a silent premise
-    // the reader has to already know. Sits after the text (not before)
-    // so the line reads as plain text first, with the icon as a trailing
-    // annotation rather than competing with "Raid Captain Efficiency"/
-    // "Attack Speed" for the reader's first glance.
+    // The readout's base stat (RAID_CAPTAIN_BASE_MOVE_SPEED above) assumes
+    // the reader is already eating an Atk/Move Speed feast - the feast icon
+    // at the end of the line flags that assumption inline instead of leaving
+    // it as a silent premise the reader has to already know. Sits after the
+    // text (not before) so the line reads as plain text first, with the icon
+    // as a trailing annotation rather than competing with "Raid Captain
+    // Efficiency" for the reader's first glance.
     function appendFeastIcon(el) {
       const icon = document.createElement("img");
       icon.className = "skill-icon ap-engr-feast-icon";
@@ -5891,7 +5857,7 @@
       icon.loading = "lazy";
       // "display" mode (not the default visibility:hidden) - a missing
       // icon should collapse the gap entirely rather than leave a blank
-      // 1em space sitting after "Raid Captain Efficiency: ..."/"Attack Speed: ...".
+      // 1em space sitting after "Raid Captain Efficiency: ...".
       window.SiteUtils.hideOnError(icon, "display");
       el.appendChild(icon);
     }
@@ -6886,7 +6852,7 @@
   // avoids a slot silently reverting out from under whichever one the
   // reader touched second. Mass Increase is additionally disabled whenever the
   // live Playstyle toggle is on RE (it's Surge-only - see
-  // surgeEffectiveAttackSpeed's own comment on why RE has no use for it
+  // the "Attack Speed (not tracked)" comment for why RE has no use for it
   // at all), and a side already holding "mi" gets reset to "none" the
   // moment RE is selected so it can't stay silently equipped as an
   // engraving that doesn't exist in the actual RE math.
@@ -7208,41 +7174,37 @@
           update(root);
         };
         rowEl.addEventListener("click", preview);
-        rowEl.addEventListener("keydown", (ev) => {
-          if (ev.key === "Enter" || ev.key === " ") {
-            ev.preventDefault();
-            preview();
-          }
-        });
+        // Keyboard/screen-reader access lives on the combo label
+        // (role="button" in resources.md), not on the row: the row also
+        // holds the sibling pin <button>, and a role=button ancestor
+        // around another button is invalid nesting. The row's own click
+        // listener above still serves the mouse.
+        const previewBtn = rowEl.querySelector(".ap-result-combo");
+        if (previewBtn) {
+          previewBtn.addEventListener("keydown", (ev) => {
+            if (ev.key === "Enter" || ev.key === " ") {
+              ev.preventDefault();
+              preview();
+            }
+          });
+        }
       });
 
       // Top Combinations pin (2nd-5th rows only - see resources.md, rank
       // 1 already IS the default base so there's nothing for it to pin
-      // to). A real <button> nested inside the row's own clickable div,
-      // so stopPropagation is required or activating it would also fire
-      // the preview listener just above for the row itself - harmless
-      // either way (pinning sets previewRank to match, see below), but
-      // stopping it keeps the two actions' effects easy to reason about
-      // independently. Reads the row's current combo off
+      // to). A real <button> inside the row's clickable div (a sibling of
+      // the combo's role=button label, not nested in it), so the click
+      // handler's stopPropagation is still required or activating it would
+      // also fire the preview click listener just above for the row itself
+      // - harmless either way (pinning sets previewRank to match, see
+      // below), but stopping it keeps the two actions' effects easy to
+      // reason about independently. Reads the row's current combo off
       // data-combo-split/-pair (refreshed every renderGrid call) rather
       // than capturing it once here, since which combo sits in this row
       // can change between renders.
       root.querySelectorAll(".ap-result-pin").forEach((pinEl) => {
         const rowEl = pinEl.closest(".ap-calc-result-row");
         if (!rowEl) return;
-        // The row's own keydown listener (Enter/Space -> preview, added
-        // just above) also fires on a keydown that originates on this
-        // nested button and bubbles up - stopped here so a keyboard
-        // Enter/Space on the pin button doesn't ALSO trigger the row's
-        // preview handler racing against this button's own click handler
-        // below (confirmed by hand: without this, keyboard activation
-        // could leave previewRank set but pinnedCombo not, depending on
-        // event ordering - mouse clicks were never affected, only
-        // keyboard). Default behavior (the button synthesizing its own
-        // click on Enter/Space) is left alone - only bubbling is stopped.
-        pinEl.addEventListener("keydown", (ev) => {
-          ev.stopPropagation();
-        });
         pinEl.addEventListener("click", (ev) => {
           ev.stopPropagation();
           const splitKey = rowEl.dataset.comboSplit;

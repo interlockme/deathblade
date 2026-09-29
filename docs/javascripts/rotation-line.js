@@ -227,7 +227,7 @@
         // so the reason wouldn't surface anywhere - worth remembering
         // here specifically since that means missing data, not just a
         // missing icon/name.
-        var prefixedReason = reason === "Situational" ? reason : "Situational \u2014 " + reason;
+        var prefixedReason = reason === "Situational" ? reason : "Situational - " + reason;
         if (step.skills && step.skills.length) {
           span.querySelectorAll(".skill-part").forEach(function (part) {
             part.setAttribute("data-situational-reason", prefixedReason);

@@ -9,10 +9,12 @@ and it has been missed before: a returning visitor keeps serving a stale
 cached copy of a file you just edited, which looks like "my change didn't
 deploy" and is almost impossible to diagnose from the outside.
 
-The local working copy has no git history to diff against, which is why the
-manual workaround has been comparing file mtimes against mkdocs.yml's. In CI
-that limitation disappears: the Actions runner has real history, so this can
-compare the actual before/after of a push and be exact rather than heuristic.
+This compares the real before/after of a commit range, so it is exact rather
+than heuristic. It runs in CI (the Actions runner has full history) and works
+locally too: commit (or use two existing SHAs) and pass them in, e.g.
+`python3 scripts/check_cachebust.py HEAD~1 HEAD`. It needs a .git folder; with
+no git history there is nothing to diff, so bump ?v= by hand for every
+css/js file you touched.
 
 WHERE EACH FILE BUMPS
   - The five lazy calculator files bump in docs/javascripts/lazy-calculators.js

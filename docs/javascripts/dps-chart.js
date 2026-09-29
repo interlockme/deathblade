@@ -186,26 +186,9 @@
   }
 
   function renderChart(chart) {
-    var values = (chart.getAttribute("data-values") || "")
-      .split(",")
-      .map(function (s) { return parseFloat(s.trim()); });
-
-    var idsAttr = chart.getAttribute("data-ids");
-    var ids = idsAttr
-      ? idsAttr.split(",").map(function (s) { return s.trim(); })
-      : null;
-
-    var labels = window.SiteUtils.resolveChartLabels(chart, ids) || [];
-    if (!values.length || values.length !== labels.length || values.some(isNaN)) {
-      return; // malformed data - fail quietly rather than draw a broken chart
-    }
-
-    // Malformed (wrong length) data-ids just falls back to the
-    // label-derived slug for every row rather than half-applying it -
-    // same "fail quietly, don't half-draw" rule as the values/labels
-    // length check above. Doesn't apply when labels were themselves
-    // just derived FROM ids above (same length by construction).
-    if (ids && ids.length !== labels.length) ids = null;
+    var data = window.SiteUtils.parseChartData(chart);
+    if (!data) return; // malformed data - fail quietly rather than draw a broken chart
+    var values = data.values, labels = data.labels, ids = data.ids;
 
     var accent = chart.getAttribute("data-accent") || null;
     var showIcons = chart.hasAttribute("data-show-icons");

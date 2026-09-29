@@ -157,7 +157,7 @@
     row.appendChild(buildIcon(alt.id, "gem-alt-icon"));
     row.appendChild(el("strong", null, displayName(alt)));
     if (alt.note) {
-      row.appendChild(document.createTextNode(" \u2014 "));
+      row.appendChild(document.createTextNode(" - "));
       appendInlineBold(row, alt.note);
     }
     return row;

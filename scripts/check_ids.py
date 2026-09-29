@@ -88,6 +88,29 @@ def check():
                     line = text.count("\n", 0, m.start()) + 1
                     problems.append(f"{rel}:{line}: '{ref}' not found in {bucket} data ({m.group(0)})")
 
+    problems += check_missing_ids()
+    return problems
+
+
+# Opening tags that MUST carry an id attribute to get a tooltip at all. The
+# id-resolution pass above can only vouch for ids that are present; an
+# element that omits the id entirely renders as plain text with no tooltip
+# and never trips it (this is how a bare FTF span sat in 333-ceiling.md).
+ID_REQUIRED_TAGS = re.compile(
+    r'<span\s+class="(?:skill-inline|skill-mention)(?:\s[^"]*)?"([^>]*)>'
+)
+ID_ATTRS = ("data-skill-id=", "data-glossary-id=", "data-ap-id=", "data-rune-name=")
+
+
+def check_missing_ids():
+    problems = []
+    for md_file in MD:
+        text = md_file.read_text()
+        rel = md_file.relative_to(ROOT)
+        for m in ID_REQUIRED_TAGS.finditer(text):
+            if not any(a in m.group(1) for a in ID_ATTRS):
+                line = text.count("\n", 0, m.start()) + 1
+                problems.append(f"{rel}:{line}: tooltip span has no id attribute ({m.group(0)})")
     return problems
 
 

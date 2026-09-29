@@ -51,21 +51,16 @@
 //   for a one-off pentagon that isn't part of a build family.
 
 (function () {
-  var TAU = Math.PI * 2;
-  // toPoint/fmt/pointsToAttr/svgEl used to be defined locally here -
-  // now shared with build-compare.js via SiteUtils.pentagonPoint/
-  // formatStat/pentagonPointsToAttr/svgEl (see site-utils.js for why).
-  var toPoint = window.SiteUtils.pentagonPoint;
   var fmt = window.SiteUtils.formatStat;
   var pointsToAttr = window.SiteUtils.pentagonPointsToAttr;
   var svgEl = window.SiteUtils.svgEl;
+  var radar = window.SiteUtils.radar;
 
   function buildPentagonSvg(values, labels, accent, tooltipNote) {
-    var cx = 100, cy = 98, rMax = 60;
-    var angles = [0, 72, 144, 216, 288];
+    var angles = radar.angles(5);
 
     var svg = svgEl("svg", {
-      viewBox: "0 0 200 190",
+      viewBox: radar.VIEWBOX,
       class: "pentagon-svg",
       role: "img",
       "aria-label": labels
@@ -76,33 +71,14 @@
     var uid = "pentagon-" + Math.random().toString(36).slice(2, 9);
     var defs = svgEl("defs", {});
     var grad = svgEl("radialGradient", { id: "fill-" + uid, cx: "50%", cy: "45%", r: "65%" });
-    var stop1 = svgEl("stop", { offset: "0%", "stop-color": accent, "stop-opacity": "0.55" });
-    var stop2 = svgEl("stop", { offset: "100%", "stop-color": accent, "stop-opacity": "0.18" });
-    grad.appendChild(stop1);
-    grad.appendChild(stop2);
+    grad.appendChild(svgEl("stop", { offset: "0%", "stop-color": accent, "stop-opacity": "0.55" }));
+    grad.appendChild(svgEl("stop", { offset: "100%", "stop-color": accent, "stop-opacity": "0.18" }));
     defs.appendChild(grad);
     svg.appendChild(defs);
 
-    // Grid rings (33%, 66%, 100%) + spokes
-    [0.33, 0.66, 1.0].forEach(function (frac, i) {
-      var pts = angles.map(function (a) { return toPoint(cx, cy, a, rMax * frac); });
-      svg.appendChild(
-        svgEl("polygon", {
-          points: pointsToAttr(pts),
-          class: "pentagon-ring" + (i === 2 ? " pentagon-ring-outer" : ""),
-        })
-      );
-    });
-    angles.forEach(function (a) {
-      var p = toPoint(cx, cy, a, rMax);
-      svg.appendChild(svgEl("line", { x1: cx, y1: cy, x2: p[0].toFixed(1), y2: p[1].toFixed(1), class: "pentagon-spoke" }));
-    });
+    radar.drawGrid(svg, angles);
 
-    // Data shape
-    var dataPts = angles.map(function (a, i) {
-      var v = Math.max(0, Math.min(10, values[i]));
-      return toPoint(cx, cy, a, rMax * (v / 10));
-    });
+    var dataPts = radar.dataPoints(angles, values);
     svg.appendChild(
       svgEl("polygon", {
         points: pointsToAttr(dataPts),
@@ -117,34 +93,10 @@
       svg.appendChild(svgEl("circle", { cx: p[0].toFixed(1), cy: p[1].toFixed(1), r: "2.6", class: "pentagon-dot" }));
     });
 
-    // Labels
-    var labelR = rMax + 15;
-    angles.forEach(function (a, i) {
-      var p = toPoint(cx, cy, a, labelR);
-      var x = p[0], y = p[1];
-      var anchor = "middle";
-      if (Math.abs(x - cx) >= 3) anchor = x < cx ? "end" : "start";
-      var dy = 0;
-      if (a === 0) dy = -2;
-      else if (a === 180 || (a >= 126 && a <= 234)) dy = 4;
-
-      var text = svgEl("text", {
-        x: x.toFixed(1),
-        y: (y + dy).toFixed(1),
-        "text-anchor": anchor,
-        class: "pentagon-label",
-      });
-      text.textContent = labels[i];
-      if (tooltipNote && i === 3) {
-        var title = svgEl("title", {});
-        title.textContent = labels[i] + ": " + fmt(values[i]) + "/10 \u2014 " + tooltipNote;
-        text.appendChild(title);
-      } else {
-        var title2 = svgEl("title", {});
-        title2.textContent = labels[i] + ": " + fmt(values[i]) + "/10";
-        text.appendChild(title2);
-      }
-      svg.appendChild(text);
+    radar.drawLabels(svg, angles, labels, function (text, i) {
+      var title = svgEl("title", {});
+      title.textContent = labels[i] + ": " + fmt(values[i]) + "/10" + (tooltipNote && i === 3 ? " - " + tooltipNote : "");
+      text.appendChild(title);
     });
 
     return svg;

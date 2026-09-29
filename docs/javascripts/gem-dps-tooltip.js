@@ -10,10 +10,9 @@
 //   - Damage column: leads with that skill's damage share, reusing the
 //     numbers already authored for the "## Trixion DPS" chart further
 //     down the same page (see dps-chart.js) instead of hand-duplicating
-//     them onto the gem cards. Formerly a bare native `title` with just
-//     the percentage and no tags/note - upgraded for visual consistency
-//     with every other tooltip trigger on the site now (.skill-inline,
-//     rotation chips, Ark Grid cores).
+//     them onto the gem cards. Uses the same tooltip as every other
+//     trigger on the site (.skill-inline, rotation chips, Ark Grid
+//     cores).
 //   - Cooldown column: Cooldown gems aren't damage skills, so there's no
 //     meaningful "% of total damage" figure to lead with - these just
 //     get the skill's usual tags/note (same DB_SKILL_DATA a Skill Setup
@@ -61,25 +60,9 @@
   var fmtPct = window.SiteUtils.formatPct; // moved to site-utils.js - was identical to dps-chart.js's own copy
 
   function buildShareMap(chart) {
-    var values = (chart.getAttribute("data-values") || "")
-      .split(",")
-      .map(function (s) { return parseFloat(s.trim()); });
-
-    var idsAttr = chart.getAttribute("data-ids");
-    var ids = idsAttr
-      ? idsAttr.split(",").map(function (s) { return s.trim(); })
-      : null;
-
-    // Same resolution SiteUtils.resolveChartLabels gives dps-chart.js -
-    // sharing this (rather than re-deriving data-labels here too) is
-    // what keeps this file's damage-share lookup and dps-chart.js's own
-    // rendering from silently drifting apart if a chart's labels are
-    // ever resolved differently by one file than the other.
-    var labels = window.SiteUtils.resolveChartLabels(chart, ids) || [];
-    if (!values.length || values.length !== labels.length || values.some(isNaN)) {
-      return null; // malformed data - same "fail quietly" rule dps-chart.js follows
-    }
-    if (ids && ids.length !== values.length) ids = null; // malformed - ignore, name fallback still applies
+    var data = window.SiteUtils.parseChartData(chart);
+    if (!data) return null; // malformed - same "fail quietly" rule dps-chart.js follows
+    var values = data.values, labels = data.labels, ids = data.ids;
 
     var byId = {};
     var byName = {};
@@ -195,8 +178,7 @@
     });
   }
 
-  // Formerly a hand-rolled copy of the same three-trigger pattern
-  // SiteUtils.registerRenderer() now centralizes (direct/hard load,
+  // Registered through SiteUtils.registerRenderer() (direct/hard load,
   // Material instant-nav via document$, and a MutationObserver belt-and-
   // suspenders) - see that helper's doc comment in site-utils.js. Both
   // apply*Tooltips() functions scan the whole document rather than a
