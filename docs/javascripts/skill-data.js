@@ -149,7 +149,7 @@
       },
       bladedance: {
         tags: [["util", "STACKS"], ["dmg", "DAMAGE"]],
-        note: "Core builder, you can stop holding it about 90% of the way and still generate full stacks.",
+        note: "Core builder. You can stop holding it ~90% of the way and still generate full stacks; useful if you still need to reposition.",
         lines: ["9 stacks"],
       },
       blitzrush: {
