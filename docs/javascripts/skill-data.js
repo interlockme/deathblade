@@ -34,10 +34,9 @@
 // is already labeled "stacks", so a leading "up to" or a spelled-out "to"
 // just repeats/lengthens what the number next to it already says.
 // Omit entirely for skills with nothing extra to show (e.g. Death
-// Trance). Same values essentials-table.js used to have authored a
-// second time per-page in each essentials.md skills-table JSON block -
-// that per-row "lines" field now just pulls from here instead, so
-// there's one fewer place to remember to update. RE's values assume the
+// Trance). essentials-table.js's per-row "lines" field pulls from here
+// rather than being authored per-page in each essentials.md skills-table
+// JSON block, so there's one place to update. RE's values assume the
 // caveat stated once above that family's table (1830 Specialization, no
 // runes/Maelstrom buff) - not restated per skill here or in the tooltip.
 (function () {
@@ -226,13 +225,11 @@
   // panel (.food-option divs), Surge's "Mana Food + Maelstrom Bleed" alt
   // line (bare .food-option-icon images), and both families' Engravings
   // section food mentions (bare .skill-icon images/.engraving-chip-food
-  // /.engraving-loadout-note). All of that markup used to hand-carry this
-  // same text in its own `title` attribute (native tooltip, no styling,
-  // easy to drift out of sync across 3+ copies) - skill-tooltip.js now
-  // reads it from here instead for all of them, matching icon-<id>.png
-  // the same way every other lookup on this file does. Update the text
-  // here and every surface picks it up; there's no other copy left to
-  // remember to update.
+  // /.engraving-loadout-note). That markup carries no text of its own
+  // (a `title` attribute per copy would be unstyled and drift out of
+  // sync across 3+ places) - skill-tooltip.js reads it from here for all
+  // of them, matching icon-<id>.png the same way every other lookup on
+  // this file does. Update the text here and every surface picks it up.
   //
   // Engraving entries (grudge/ambushmaster/raidcaptain/adrenaline/
   // keenbluntweapon/curseddoll/massincrease/maxmp/spiritabsorption) below
@@ -247,9 +244,8 @@
   // `note` is a single flat string, same shape as every consumable entry
   // above - one min-max range per stat line rather than the game
   // tooltip's own Basic/Legendary/Relic/Ability Stone breakdown, which
-  // read as too many lines for what's meant to be a quick reference (an
-  // earlier version of this file spelled out all 4 tiers; simplified down
-  // after the fact). min = the flat Basic effect (what the engraving
+  // read as too many lines for what's meant to be a quick reference.
+  // min = the flat Basic effect (what the engraving
   // grants at any level, grade-independent). max = Basic + Legendary's
   // OWN max tier + Relic's OWN max tier + Ability Stone's own max tier,
   // ALL summed - Legendary and Relic are not alternate/exclusive paths,

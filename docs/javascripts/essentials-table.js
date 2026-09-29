@@ -98,7 +98,7 @@
     if (!result) return;
     var entries = result.data;
 
-    // Drop any previously-rendered table before rebuilding, same
+    // Drop any already-rendered table before rebuilding, same
     // idempotency reasoning as skill-setup.js (re-runs on nav swap and
     // shouldn't stack duplicates next to the kept, invisible script tag).
     var old = container.querySelector("table");

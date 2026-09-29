@@ -16,10 +16,8 @@
 //   - That gold is NOT returned to the winner - the loot-auction system
 //     takes its own cut (MARKET_FEE_PCT below) off the FULL bid before
 //     splitting what's left evenly across every OTHER party member. This
-//     is the fee's "full-bid application" - an earlier version of this
-//     file (and, it turns out, of the game itself) only taxed the item's
-//     eventual resale, not the bid on its way to teammates. That's no
-//     longer how it works:
+//     is the fee's "full-bid application" (it applies to the bid on its
+//     way to teammates, not only to the item's eventual resale):
 //       each other member's profit = (bid * (1 - fee)) / (raidSize - 1)
 //   - Separately, if the winner resells the item on the Auction House,
 //     that sale eats the same cut (Lost Ark uses one AH fee rate for
@@ -29,9 +27,8 @@
 //   - Outbidding raises the current bid by a fixed 10% (RAISE_FACTOR
 //     below), not a flat gold amount.
 //
-// Fee is no longer user-adjustable - it's fixed at MARKET_FEE_PCT. The
-// 0-20% field this file used to expose has been removed: matching a
-// reference calculator's own rebuild, which dropped the same field.
+// The fee is fixed at MARKET_FEE_PCT, not user-adjustable, matching the
+// reference calculator, which has no fee field either.
 //
 // The three Intents pick a bid off that same model:
 //   - Equal Profit: the bid where the winner's profit and each other
@@ -44,29 +41,23 @@
 //     bid above - i.e. being outbid on Max Profit just turns the auction
 //     into the Equal Profit scenario for whoever wins instead of you.
 //       B = equalBid / RAISE_FACTOR
-//     An earlier version of this file rounded Max Profit UP to the
-//     nearest 10 gold, matching a reference calculator's old behavior.
-//     That reference has since dropped the nearest-10 rounding - Max
-//     Profit is now rounded to the nearest gold like everything else, so
-//     this file follows suit.
+//     Max Profit is rounded to the nearest gold like everything else,
+//     matching the reference calculator (no nearest-10 rounding).
 //   - Profit & Punish Next Bidder: the LOWEST bid where a rational rival
 //     outbidding you at the mandatory +10% raise ends up with a profit
 //     at least PUNISH_MARGIN (15%) below what they'd have gotten as your
 //     party-share cut instead - or at least 1 gold worse off, whichever
 //     is bigger - so outbidding you is a losing move for them.
-//     An earlier version of this file hardcoded this as a magic ratio of
-//     market price per raid size (0.695 for 4-player, 0.78 for 8-player),
-//     lifted from a reference calculator that only supported those fixed
-//     sizes. That reference has since been rebuilt to solve this properly
-//     for ANY raid size >= 2 (confirmed against its own updated,
-//     still-unminified source) - punishBid() below ports that same
+//     This works for ANY raid size >= 2 rather than a fixed ratio per
+//     size (confirmed against the reference calculator's unminified
+//     source) - punishBid() below ports that same
 //     solve: start from an algebraic estimate, then walk to the exact
 //     integer gold value that satisfies the margin condition (rounding
 //     on both the bid and the rival's raised bid means the estimate can
 //     land a gold or two off in either direction, so there's no clean
 //     closed form).
 (function () {
-  var MARKET_FEE_PCT = 5; // fixed AH / loot-auction cut - no longer user-adjustable
+  var MARKET_FEE_PCT = 5; // fixed AH / loot-auction cut
   var FEE = 1 - MARKET_FEE_PCT / 100;
   var RAISE_FACTOR = 1.1; // minimum outbid = current bid x 1.10
   var PUNISH_MARGIN = 0.15; // Profit & Punish's target: rival nets >=15% less than your party share
@@ -171,7 +162,7 @@
 
   // ----- Raid size / Intent: real pill-chip <button>s -----
   // Same .ap-build-chip component the Ark Passive Calculator's Build
-  // toggle uses (one vivid, rest muted) instead of the old radio dots -
+  // toggle uses (one vivid, rest muted) rather than radio dots -
   // reused as-is rather than duplicated, with a .bid-calc-chip modifier
   // in extra.css only for the active-state color (lavender here, not
   // ap-build-chip's own RE/Surge pink/teal, which would carry the wrong
@@ -244,10 +235,9 @@
     var intent = intentInput ? intentInput.dataset.value : "equal";
 
     var priceValid = isFinite(price) && price > MARKET_PRICE_MIN && price <= MARKET_PRICE_MAX;
-    // priceInput lost its native min/max (type="number" only) when it
-    // became type="text" for comma support, so :out-of-range no longer
-    // fires on its own - this class is the JS equivalent, driven off the
-    // same priceValid check.
+    // priceInput is type="text" (for comma support), so it has no native
+    // min/max and :out-of-range never fires on its own - this class is
+    // the JS equivalent, driven off the same priceValid check.
     priceInput.classList.toggle("bid-calc-input-invalid", priceInput.value !== "" && !priceValid);
 
     var raidSizeValid = raidSize !== null;
@@ -355,8 +345,8 @@
   }
 
   function initRoot(root) {
-    // Unlike the JSON-data-driven widgets registerRenderer was originally
-    // written for, this attaches listeners directly onto the calculator's
+    // Unlike the JSON-data-driven widgets registerRenderer was designed
+    // for, this attaches listeners directly onto the calculator's
     // own static markup instead of rebuilding it from scratch each call -
     // so, unlike those widgets, calling this twice on the same root would
     // double-attach every listener below rather than harmlessly re-doing

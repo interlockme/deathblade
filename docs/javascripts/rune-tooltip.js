@@ -5,11 +5,11 @@
 // explaining what the equipped rune tier actually does - same instinct as
 // ark-passive-tooltip.js for Ark Passive nodes, reusing skill-tooltip.js's
 // body-fixed positioning/show-hide engine via window.SkillTooltip.wireCustom
-// rather than building a second one. A rune chip used to be the one
-// leftover spot on a Skill Setup card with no explanation at all (tags/
+// rather than building a second one. A rune chip is the one spot on a
+// Skill Setup card that would otherwise have no explanation at all (tags/
 // note cover the skill itself, tripod chips show their own tier number
-// plainly) - this closes that gap the same way ark-passive-tooltip.js
-// closed it for Ark Passive nodes.
+// plainly), so this fills that gap the same way ark-passive-tooltip.js
+// does for Ark Passive nodes.
 //
 // Also attaches to bare prose mentions of a rune outside any Skill Setup
 // card entirely (e.g. a Runes Quick Tip like "Use Legendary Purify on

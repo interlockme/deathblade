@@ -4,12 +4,10 @@
 // at your own data.
 //
 // Unified build comparison card, sits under each family's "## Build
-// Comparison" heading on essentials.md. Replaces what used to be a static
-// markdown table PLUS a separate pick-two-and-overlay widget below it with
-// one card: a real <table> up top (the table content, unchanged) and the
-// two-build picker underneath (pentagon overlay + a "Key Differences"
-// panel), so there's one visual unit instead of two that repeat the same
-// numbers and duplicate the same links.
+// Comparison" heading on essentials.md. One card: a real <table> up top
+// and the two-build picker underneath (pentagon overlay + a "Key
+// Differences" panel), so there's one visual unit rather than a table and
+// a separate widget repeating the same numbers and links.
 //
 // EASY EDIT GUIDE:
 //   All build data lives in build-data.js (window.DB_BUILD_DATA), NOT in
@@ -385,8 +383,7 @@
     container.appendChild(tableScroll);
 
     // Dropdowns and the share action share one row - no text label above
-    // them anymore, the picker + "vs" already reads as compare controls
-    // on its own. Just the divider/spacing that used to sit on the label.
+    // them, the picker + "vs" already reads as compare controls on its own.
     var headerRow = document.createElement("div");
     headerRow.className = "build-compare-header-row";
 

@@ -16,12 +16,12 @@
 // Formulas verified cell-for-cell against Ark_Passive_Calculator.xlsx's own
 // computed output - see the reference block at the bottom of this file.
 //
-// REMOVED: the sheet's trailing "0.85 * (1 + 12%/18% Damage Synergy)" scalar
-// (and the "6% Damage Synergy" checkbox that fed it) is gone. It's a constant
+// NOT MODELED: the sheet's trailing "0.85 * (1 + 12%/18% Damage Synergy)"
+// scalar (and the "6% Damage Synergy" checkbox that fed it). It's a constant
 // multiplied onto every one of the 9 grid cells equally, so it can never
 // change which cell is best or the %-of-best shown for any of them -
 // confirmed by direct computation (toggling it left every cell's pctOfBest
-// and the best-cell identity bit-for-bit identical) before removing it.
+// and the best-cell identity bit-for-bit identical).
 // Crit Syn 1/2 still do something real: their +10% Crit Rate feeds into
 // effCrit, which genuinely interacts with the Master keystone's crit-rate
 // cap, so they're kept as pure "+10% Crit Rate" toggles with nothing else
@@ -29,7 +29,7 @@
 //
 // ONE OPEN ACCURACY QUESTION, not yet confirmed - flagged rather than
 // silently trusted: "Crit Hit Damage Synergy 1" (ap-crit-hit-syn-1) is
-// modeled as a flat +8% on-crit damage multiplier, originally attributed to
+// modeled as a flat +8% on-crit damage multiplier, first attributed to
 // Glaivier's party synergy. A pass over current sources describes
 // Glaivier's actual party synergy ("Critical Spear") as a Crit Resistance
 // debuff on the target instead - i.e. a Crit RATE-side effect, not an
@@ -44,7 +44,7 @@
 // two separate Crit Rate lines (or two Crit Dmg lines) at once - the
 // "2nd line" bracelet fields assume yes. If a bracelet can only ever have
 // one line of a given stat type, those two fields double-count and should
-// be removed instead.
+// be dropped instead.
 //
 // The Bracelet Line Comparison's 5 Weapon Power / Attack Power rows
 // (STR/DEX/INT, Weapon Power, and the 3 hybrid on-hit/periodic/HP-gated
@@ -215,14 +215,12 @@
   // WP, MainStat, BaseAP%, FlatAP, and Attack Power% (PercentAP) are all
   // read from the .ap-gear-* inputs (see resources.md) - real personalized
   // stats/sums the player reads off their own character panel, same as
-  // the sheet's own Calc tab expects. Main Stat % (below) used to be
-  // hardcoded here as STAT_GRANT_QUALITY_BONUS on the mistaken read that
-  // Brace!Q6/Acc!M10 carried no source-list documentation, unlike Weapon
-  // Power% - they do (Legendary Pet Ranch +1%, Legendary Skins +2%
-  // each up to 4, Epic Skins +1% each up to 4), it's just recorded as a
-  // cell NOTE rather than a visible cell value, easy to miss reading the
-  // sheet's raw cell contents. Exposed as its own input now, same
-  // treatment as Weapon Power % - see .ap-gear-main-stat-pct.
+  // the sheet's own Calc tab expects. Main Stat % (below) is its own input,
+  // same treatment as Weapon Power % - see .ap-gear-main-stat-pct. Its
+  // source list (Brace!Q6/Acc!M10: Legendary Pet Ranch +1%, Legendary
+  // Skins +2% each up to 4, Epic Skins +1% each up to 4) is recorded in
+  // the sheet as a cell NOTE rather than a visible cell value, easy to
+  // miss reading the sheet's raw cell contents.
 
   // On-hit Weapon Power stacking line (Brace row 8, "max 6x"): fixed
   // assumption of 5 of a possible 6 stacks on average, matching the
@@ -235,8 +233,8 @@
   const ONHIT_WP_STACK_ASSUMPTION = 5;
 
   // Periodic Weapon Power line (Brace row 9, "30s CD, max 30x"): fixed
-  // fight-length assumption (sheet's own default, Brace!Q9) used to
-  // average the cooldown-gated stacks over a fight - see Brace!P9's
+  // fight-length assumption (sheet's own default, Brace!Q9) that
+  // averages the cooldown-gated stacks over a fight - see Brace!P9's
   // comment on the accumulation math this mirrors.
   const PERIODIC_WP_FIGHT_MINUTES = 10;
   function periodicWpAvgBonus(fightMinutes, perStackValue) {
@@ -258,8 +256,8 @@
   // whatever you enter - carrying:
   //   - the same Main Stat as you
   //   - the same Weapon Power as you (no assumed WP bump over your own
-  //     entered value - previously assumed supports itemize WP 5% harder
-  //     than you, dropped as an unfounded assumption)
+  //     entered value - assuming supports itemize WP harder than you
+  //     would be unfounded)
   //   - the same Base AP% multiplier as you
   //   - a fixed AP-buff-tier coefficient, calibrated against Arsonistic's
   //     own reference support profile (Awakening engraving + ArkGrid AP
@@ -297,19 +295,14 @@
   // list) so the two can never be double-counted; this is added on top of
   // gearAttackPowerPercentTotal instead, same as Atropine.
   //
-  // Now scaled by the same Adrenaline Uptime % slider as the Crit Rate
-  // side (reader's own request) - this used to deliberately NOT do that
-  // (see git history/prior comment here): a first pass tried deriving an
-  // estimated average stack count from Adrenaline Uptime (linear from
-  // half stacks at 0% up to full stacks at 100%), which was wrong (0%
-  // Crit uptime means near-0% actual uptime on the buff, not "half stacks
-  // on average") and was dropped in favor of always assuming full 6
-  // stacks. That reasoning still holds for "derive stack count from
-  // uptime" - but a plain linear scale of the full-stacks total by
-  // Uptime % isn't that; it's the simpler (and, per the reader, more
-  // useful) assumption that the AP component is only live as often as the
-  // buff itself is, same as every other uptime-gated source on this page
-  // (Atropine, Strength Orb, Maelstrom, etc.).
+  // Scaled by the same Adrenaline Uptime % slider as the Crit Rate side.
+  // It always assumes full 6 stacks and does NOT derive an average stack
+  // count from uptime (that would be wrong: 0% Crit uptime means near-0%
+  // actual uptime on the buff, not "half stacks on average"). What it
+  // does is a plain linear scale of the full-stacks total by Uptime %:
+  // the simple assumption that the AP component is only live as often as
+  // the buff itself is, same as every other uptime-gated source on this
+  // page (Atropine, Strength Orb, Maelstrom, etc.).
   const ADRENALINE_AP_PER_STACK = 0.009;
   const ADRENALINE_STACKS = 6;
   const ADRENALINE_STONE_AP_TABLE = { "0 Lv.": 0, "1 Lv.": 0.0048, "2 Lv.": 0.006, "3 Lv.": 0.0083, "4 Lv.": 0.0095 };
@@ -355,20 +348,18 @@
   // was built from). Each entry carries BOTH of the core's payouts -
   // pct (Atk. Power %) and flat (Flat AP) - since a single dropdown
   // selection determines both at once; gearFlatAp (the manual Flat AP
-  // input) now covers ONLY accessories, with this core's own flat
+  // input) covers ONLY accessories, with this core's own flat
   // contribution added in automatically wherever flatAp is computed
   // (see the two gearApTotal call sites below) rather than asking the
   // reader to hand-add it into that field themselves.
   // "Any|10P" covers the flat-only stage (10 Points, both grades give
   // the same +900 with no % yet), and "Any|14P" merges the 14P tier the
   // same way - grade doesn't actually diverge until 17P (Relic|14P and
-  // Ancient|14P were bit-identical, 0.55%/900, before this merge; see the
+  // Ancient|14P are bit-identical, 0.55%/900; see the
   // Ark Grid Core Comparison table's own header note in resources.md,
   // which already merged the same tier for the same reason). 17P+ values
   // are cumulative totals at each tier, matching how the core's own
-  // tooltip lists each breakpoint as additive. Ancient 20P's pct (2.68%) and flat (3600) both match this table's own
-  // prior single fixed constant/default exactly, which is what this
-  // table replaces.
+  // tooltip lists each breakpoint as additive.
   const GEAR_AP_CHAOS_STAR_TABLE = {
     "None|0P": { pct: 0, flat: 0 },
     "Any|10P": { pct: 0, flat: 900 },
@@ -537,12 +528,11 @@
     // (confirmed against Lv.1-5/35/38 screenshots: Lv.1's raw 0.03667%
     // shows in-game as "+0.03%", not "+0.04%" - a FLOOR, not a round).
     // Carrying the raw unrounded value into the AP total instead of this
-    // floored one was the source of a consistent ~5-7 point drift
-    // between this calculator's Attack Power readout and the real
-    // character sheet whenever Astrogem Atk. Power Level landed off a
-    // 30/60/90/120 checkpoint (e.g. Lv.35, Lv.38) - reader-reported and
-    // reproduced exactly (236,012 calc vs 236,005 real -> 0 diff once
-    // floored) before this fix.
+    // floored one causes a consistent ~5-7 point drift between this
+    // calculator's Attack Power readout and the real character sheet
+    // whenever Astrogem Atk. Power Level lands off a 30/60/90/120
+    // checkpoint (e.g. Lv.35, Lv.38) - reproduced exactly (236,012 with
+    // the raw value vs 236,005 real -> 0 diff once floored).
     return roundDown((inputs.gearAstrogemLv / GEAR_AP_ASTROGEM_MAX_LEVEL) * GEAR_AP_ASTROGEM_MAX, 2);
   }
 
@@ -769,18 +759,12 @@
   const RE_AWAKENING_SHARE = 0.015;
   const SURGE_AWAKENING_SHARE = 0.01;
   // One entry per selectable build - the master Build toggle at the top
-  // of the calculator (and its ap-brace-spec-build select, formerly
-  // labeled "Spec Scaling" as a plain dropdown here in Bracelet
-  // Comparison before the toggle existed) picks one of these five
-  // directly (RE 111 and RE 313 merged into one "re-111" entry - see
-  // normalizeBraceSpecBuild), and its own `share` drives the Spec
-  // +80/100/120 row (and the Bracelet vs. Bracelet Spec input) straight
-  // from that selection. Used to be a 2-way RE/Surge radio backed by one
-  // class-level `share` (RE 333/Surge 111's own figures, before either
-  // the dropdown or the toggle existed to name them) plus a `builds`
-  // list of the other named variants shown only as small hover tags next
-  // to the row - now that every build is directly selectable, that split
-  // is gone and every build's share lives here on equal footing.
+  // of the calculator (and its ap-brace-spec-build select) picks one of
+  // these five directly (RE 111 and RE 313 merged into one "re-111"
+  // entry - see normalizeBraceSpecBuild), and its own `share` drives the
+  // Spec +80/100/120 row (and the Bracelet vs. Bracelet Spec input)
+  // straight from that selection. Every build is directly selectable, so
+  // every build's share lives here on equal footing.
   const BRACE_SPEC_BUILDS = {
     "re-111": { label: "RE 111/313", isSurge: false, share: 0.20, awakeningShare: RE_AWAKENING_SHARE },
     "re-333": { label: "RE 333", isSurge: false, share: 0.17, awakeningShare: RE_AWAKENING_SHARE },
@@ -936,7 +920,7 @@
       if (isActive) activeVariantLabel = chip.textContent;
     });
     // Only one Variant tier (RE's 2 chips or Surge's 3) is ever shown at
-    // once - the other family's tier is hidden rather than removed, same
+    // once - the other family's tier is hidden rather than dropped, same
     // hidden-unless-active convention as the Breaking Moon summary row.
     root.querySelectorAll(".ap-build-toggle-tier--variant").forEach((tier) => {
       const tierFamily = tier.classList.contains("ap-build-toggle-tier--variant-surge") ? "surge" : "re";
@@ -997,7 +981,8 @@
   ];
   const OPTIMIZED_TRAINING_EVO_DMG = 0.05;
   // The one place that decides which split set is in play - every loop
-  // that used to read EVOLUTION_SPLITS directly goes through this instead.
+  // that needs the splits goes through this rather than reading
+  // EVOLUTION_SPLITS directly.
   function splitsFor(ot1Active) {
     return ot1Active ? EVOLUTION_SPLITS_OT1 : EVOLUTION_SPLITS;
   }
@@ -1229,10 +1214,9 @@
       optimizedTraining: getCheckbox(root, ".ap-ot1", false),
       evoKarmaRank: parseInt(getSelect(root, ".ap-evo-karma", "6"), 10) || 6,
 
-      // Card Demon Dmg % used to be a direct input (.ap-brace-demon-dmg) -
-      // removed and hardcoded to the universal 7% value; every reader was
-      // just leaving it at the default anyway, so the input was pure
-      // clutter for a number that basically never varies.
+      // Card Demon Dmg % is hardcoded to the universal 7% value rather
+      // than an input: it basically never varies, so a field would be
+      // pure clutter.
       demonDmgPct: 7,
       braceSpecBuild: normalizeBraceSpecBuild(getSelect(root, ".ap-brace-spec-build", "re-333")),
 
@@ -1246,11 +1230,11 @@
       // always treated as your real currently-equipped piece - its own
       // typed Main Stat, and Line 3 Flat AP/WP if set, get subtracted
       // from Gearing's totals to build the "no accessory" baseline, so
-      // the comparison doesn't double-count them. There used to be a
-      // "Slot Currently Empty" checkbox letting Accessory A be treated
-      // as a second hypothetical instead (nothing backed out) - removed
-      // since this tool's only real use is "should I replace what I
-      // have equipped", and that always means A really is equipped; the
+      // the comparison doesn't double-count them. There is no
+      // "Slot Currently Empty" option to treat Accessory A as a second
+      // hypothetical (nothing backed out): this tool's only real use is
+      // "should I replace what I have equipped", which always means A
+      // really is equipped; the
       // reference table above already covers "value one line in
       // isolation" for anyone who doesn't have a real current piece to
       // compare against. See computeAccessoryVsAccessory for how this
@@ -1294,10 +1278,9 @@
       // not real game limits - just enough headroom to keep a stray typo
       // from producing an absurd on-page number.
       gearWp: Math.max(0, Math.min(1000000, getNumber(root, ".ap-gear-wp", 259216))),
-      // Weapon Power % used to be one freeform field baking Karma/
-      // Enlightenment together with both earrings' WP% with nothing to
-      // zero out - see gearWpPercentTotal above for why it's now split
-      // into these two sources instead. Karmic Enlightenment is a Level
+      // Weapon Power % is split into separate sources (Karma/Enlightenment
+      // and both earrings' WP%) so each can be zeroed out - see
+      // gearWpPercentTotal above. Karmic Enlightenment is a Level
       // input (1-30, +0.1%/level) same as Astrogem's Level fields below;
       // the two Earring dropdowns match Attack Power's own Earrings row
       // exactly (gearApEarring1/2 below).
@@ -1310,9 +1293,8 @@
       // as Weapon Power % below, just for Main Stat. Sourced from
       // Legendary Pet Ranch (+1%) and costume set bonuses (Legendary
       // Skins +2% each up to 4, Epic Skins +1% each up to 4) - see the
-      // constants block near the top of this file for where this used to
-      // be a hardcoded constant. Default (9%) matches that constant's old
-      // value: Pet Ranch + 4 Legendary Skins.
+      // constants block near the top of this file. Default (9%): Pet
+      // Ranch + 4 Legendary Skins.
       gearMainStatPercent: Math.max(0, Math.min(15, getNumber(root, ".ap-gear-main-stat-pct", 9))),
       // Base AP % - split into its two separate sources (Gem total,
       // Ability Stone bonus) - see gearBaseApPercentTotal above for how
@@ -1330,11 +1312,10 @@
       // reflects a High-tier accessory roll rather than the old
       // default's Chaos Core figure.
       gearFlatAp: Math.max(0, Math.min(2000, getNumber(root, ".ap-gear-flat-ap", 0))),
-      // Attack Power % used to be one hand-summed field (mirroring the
-      // reference sheet's own Calc!N7, itself a hand-typed sum its
-      // author computed once and pasted in). Split into its individual
-      // sources instead - see gearAttackPowerPercentTotal below for how
-      // they're combined - so nobody has to add these up by hand anymore.
+      // Attack Power % is split into its individual sources (the
+      // reference sheet's own Calc!N7 is a single hand-typed sum) - see
+      // gearAttackPowerPercentTotal below for how they're combined, so
+      // nobody has to add these up by hand.
       gearApEarring1: getSelect(root, ".ap-gear-ap-earring1", "High"),
       gearApEarring2: getSelect(root, ".ap-gear-ap-earring2", "High"),
       gearApKazeros: getCheckbox(root, ".ap-gear-ap-kazeros", false),
@@ -1776,13 +1757,13 @@
       add = comps.master.add;
     }
 
-    // No trailing party-synergy scalar here (there was one - 0.85 * a
-    // 12%/18% "Damage Synergy" term swung by Crit Syn 1/2) - removed
-    // because it's a constant multiplied onto every one of the 9 cells
-    // equally, so it can never change which cell is best or the %-of-best
-    // shown for any of them. Confirmed by direct computation before
-    // removing: toggling it left every cell's pctOfBest and the best-cell
-    // identity bit-for-bit identical. Crit Syn 1/2 below still do
+    // No trailing party-synergy scalar here (the sheet has 0.85 * a
+    // 12%/18% "Damage Synergy" term swung by Crit Syn 1/2): it's a
+    // constant multiplied onto every one of the 9 cells equally, so it
+    // can never change which cell is best or the %-of-best shown for any
+    // of them. Confirmed by direct computation: toggling it left every
+    // cell's pctOfBest and the best-cell identity bit-for-bit identical.
+    // Crit Syn 1/2 below still do
     // something real - their +10% Crit Rate feeds into effCrit, which
     // genuinely interacts with the Master keystone's crit-rate cap.
     let mult = ((1 - effCrit) + effCrit * shared.critDmgTotal * (1 + onCrit)) * (1 + evo) * (1 + add);
@@ -1809,12 +1790,10 @@
   // Full stat card (Crit Dmg/Rate/onCrit/Evo/Add + Breaking Moon) for ONE
   // specific cell - factored out of computeGridAndSummary so it can run
   // for any cell, not just the true best. Two callers need this: the true
-  // best's own bestStats (below, same as before this was split out), and
+  // best's own bestStats (below), and
   // Top Combinations' per-row preview (renderGrid reads cell.stats for
   // whichever of the 3 visible rows the reader clicked, even when that
-  // row isn't the true best). Math is unchanged from the original inline
-  // version - only the "best." references became "cell." so any cell can
-  // be passed in.
+  // row isn't the true best). Takes any cell, not only the best one.
   function computeCellStats(inputs, shared, cell) {
     const { keenSense, limitBreak } = cell.split;
     // critRate/critRatePeak below reuse cell.effCrit/cell.peakCrit
@@ -1869,11 +1848,10 @@
     // Breaking Moon's flat average per-cast Crit Dmg add, straight from
     // shared - same value every cell shows (it doesn't depend on which
     // keystone pairing this cell is). (KBW's isolated Dmg contribution
-    // used to get its own row here too, via kbwRealizedGainPct - see that
-    // function's own comment for why it needs a real re-optimized
-    // with/without search rather than a closed form - moved to the
-    // Engraving Comparison section's reference table below instead, so
-    // it isn't duplicated on this card anymore.)
+    // lives in the Engraving Comparison section's reference table below,
+    // not on this card - see kbwRealizedGainPct's own comment for why it
+    // needs a real re-optimized with/without search rather than a closed
+    // form.)
     stats.breakingMoonActive = shared.breakingMoonActive;
     stats.breakingMoonAdd = shared.breakingMoonAdd;
     return stats;
@@ -1934,10 +1912,9 @@
     // capped effective Crit Rate; onCritDmgBase, the pre-Critical-keystone
     // on-crit multiplier), so the gain % is consistent with the rest of
     // the card.
-    // (KBW's isolated Dmg contribution used to get its own row here - moved
-    // to the Engraving Comparison section's reference table below, which
-    // already covers it via kbwContributionGain, so it isn't duplicated on
-    // this card anymore.)
+    // (KBW's isolated Dmg contribution isn't a row on this card - the
+    // Engraving Comparison section's reference table below covers it via
+    // kbwContributionGain.)
     const baseEffCrit = effectiveCritRate(inputs, 0, 0);
     const baseStats = {
       // critRate is the capped, uptime-weighted value DPS math actually
@@ -2009,10 +1986,10 @@
   //     Surge Deathblade use structurally different formulas (see
   //     SPEC_BASE and friends above) picked by the master Build toggle
   //     (see BRACE_SPEC_BUILDS) living in .ap-brace-compare-inputs.
-  //     Crit Stat +80/100/120 below now takes the same approach via
+  //     Crit Stat +80/100/120 below takes the same approach via
   //     CRIT_BASE (576) - no live "current bracelet's Crit Stat" input
-  //     either anymore, just the reader's own full .ap-crit-stat minus
-  //     the fixed CRIT_BASE.
+  //     either, just the reader's own full .ap-crit-stat minus the fixed
+  //     CRIT_BASE.
   // Baseline: your actual Best Setup, but with every bracelet-sourced
   // Crit Rate/Crit Dmg/Additional Dmg field reset to None first -
   // including critRateDual/critDmgDual, since those two checkboxes ARE
@@ -2025,7 +2002,7 @@
   // own comment above) rather than a second "current bracelet's Crit
   // Stat" input - without this, the Crit Stat +80/100/120 candidate below
   // would silently double-count whatever your equipped bracelet already
-  // grants, the same double-counting bug the dual checkboxes had before.
+  // grants, the same double-counting the dual checkboxes would cause.
   // Shared by computeBraceletComparison (one line at a time, against the
   // page's real Best Setup) and computeBraceletVsBracelet below (a whole
   // bracelet at a time, against each bracelet's OWN best keystone).
@@ -2064,8 +2041,7 @@
   // whose magnitude is tracked as a manual critDmgTotal delta rather than
   // a real inputs field (see ACC_RING_DMG_TABLE's own comment on why that
   // table stays uncoupled from candidateInputs). Omitted (undefined) by
-  // every other caller, which keeps this exactly the same as before this
-  // parameter existed.
+  // every other caller, which then gets a plain computeShared(candidateInputs).
   function bestComboFor(candidateInputs, sharedOverride) {
     const shared = sharedOverride || computeShared(candidateInputs);
     // Top Combinations pin (see activePinnedCombo's own comment): when a
@@ -2108,7 +2084,7 @@
   // deliberately never calls bestComboFor (see that function's own
   // comment - the Top Combinations RANKING has to stay pin-independent),
   // so any caller that grabs a grid's `.best`/`.bestStats` directly - the
-  // way this function's own isolatedBest/isolatedBestStats used to -
+  // way this function's own isolatedBest/isolatedBestStats would -
   // silently reads the TRUE best cell even while a different combo is
   // pinned. Falls back to fallbackCell (normally the grid's own `.best`)
   // when nothing's pinned, the pin doesn't resolve, or - defensively -
@@ -2125,8 +2101,8 @@
     const best = gridResult.best;
     if (!best) return [];
     // best.split/best.keystone (the reader's live Best Setup keenSense/
-    // limitBreak/pair) are deliberately NOT destructured here anymore -
-    // every row below now re-derives its own winning cell per candidate
+    // limitBreak/pair) are deliberately NOT destructured here -
+    // every row below re-derives its own winning cell per candidate
     // via bestComboFor instead of assuming the reader's fixed pair still
     // wins (see baselineBest's own comment just below), so nothing in
     // this function needs them. `best` itself is kept only for the
@@ -2467,7 +2443,7 @@
   //     summed before computing one ratio.
   // All four layers are then multiplied together for that bracelet's total
   // DPS gain vs running no bracelet at all - and each bracelet gets its own
-  // independently-searched "no bracelet" reference point removed, they're
+  // independently-searched "no bracelet" reference point - they're
   // both compared against the SAME no-bracelet baseline (also its own
   // bestComboFor search, since even that may not match the reader's real
   // Best Setup once the current bracelet's own lines are stripped out).
@@ -2502,9 +2478,8 @@
   //     line's literal value with no estimate layered on).
   //   - add_b: ctx.demons defaults to false (unchecked) and values ONLY
   //     the Additional Damage half, same treatment computeBraceletComparison's
-  //     own addB row now always uses (see that row's comment); checked
-  //     adds the vs Demon/Archdemon half back in via the same compounding
-  //     this used to always do unconditionally.
+  //     own addB row always uses (see that row's comment); checked adds
+  //     the vs Demon/Archdemon half back in via the same compounding.
   function braceletFlatLineGain(typeId, tier, ctx) {
     switch (typeId) {
       case "damage_cd":
@@ -2931,9 +2906,9 @@
       // rows above.
       const flatAp = earringsNB.gearFlatAp + gearChaosStarFlat(earringsNB.gearApChaosStar);
       // Atropine and Adrenaline's own AP contribution are folded into
-      // gearAttackPowerPercentTotal itself now - see that function's
-      // own comment for why (this used to double-add both manually on
-      // top of the total here, from before that fold-in existed).
+      // gearAttackPowerPercentTotal itself - see that function's own
+      // comment for why (adding both manually on top of the total here
+      // would double-count them).
       const percentApMult = 1 + gearAttackPowerPercentTotal(earringsNB) / 100;
       const wpPercentMult = 1 + gearWpPercentTotal(earringsNB) / 100;
       const supApBuff = supportApBuff(earringsNB, wp, mainStat, baseApMult);
@@ -3592,12 +3567,12 @@
     // Re-optimized baseline, not a fixed-pair eval - Flashy/Swift/
     // Crushing feed effCrit/critDmgTotal directly (the grid formula
     // itself), so the winning pair can genuinely differ once a candidate
-    // is added, same failure mode already fixed for Bracelet/Ring/
-    // Necklace above - confirmed to actually flip on Flashy specifically
+    // is added, same failure mode Bracelet/Ring/
+    // Necklace above already guard against - confirmed to actually flip on Flashy specifically
     // (Chaos Core: Flashy, Crit Hit Dmg: 228 flips out of ~180k synthetic
     // gear profiles tested); Swift/Crushing run through this exact same
-    // critLikeGain-shaped code (same formula, same fixed-pair call
-    // before this fix), so there's no reason to think they're exempt.
+    // critLikeGain-shaped code (same formula, so a fixed-pair call would
+    // fail the same way), so there's no reason to think they're exempt.
     const baselineArkBest = bestComboFor(arkNB, sharedNB);
     const baselineMult = baselineArkBest.mult;
     // Stable's Additional Dmg row feeds addDmgBase/addDmgMaster the same
@@ -3896,7 +3871,7 @@
   // gated on Raid Captain or any other engraving (any loadout running
   // Mana Food gets it), so it's its own row in the contribution table
   // (see manaFoodContributionGain/computeEngravingComparison) rather than
-  // folded into raidCaptainGain the way it used to be. Stacks
+  // folded into raidCaptainGain. Stacks
   // multiplicatively on top of Mana Food's own Main Stat AP ratio below,
   // same "AP ratio x flat Dmg layer" shape adrenalineContributionGain
   // already uses.
@@ -4160,10 +4135,10 @@
   // critRateTotal -> effCrit (see computeShared), which is part of the
   // 9-cell keystone+split grid formula itself, so removing it can flip
   // which cell wins - exactly the same failure mode a fixed-cell ratio has
-  // for KBW. This used to be a fixed-cell combinedMultiplier ratio (held
-  // one caller-supplied cell fixed on both the "with" and "without" side),
-  // which silently assumed that cell stayed optimal either way - not
-  // reliably true for the same reason it wasn't reliably true for KBW.
+  // for KBW. A fixed-cell combinedMultiplier ratio (holding one
+  // caller-supplied cell fixed on both the "with" and "without" side)
+  // would silently assume that cell stays optimal either way - not
+  // reliably true, for the same reason it isn't for KBW.
   // Returns a plain ratio (not a %), since adrenalineContributionGain below
   // still needs to multiply it against the AP-side ratio before converting
   // to a final gain. Returns the neutral ratio 1 when Adrenaline isn't
@@ -4184,14 +4159,13 @@
     // readEngravingInputs) and isolated Stone slot (engravingStoneLevel) -
     // never the live tracked Ark Passive value, so tweaking Adrenaline's
     // level here can't drift from what's actually equipped above. The
-    // caller now passes engravingIsolatedGridInputs' isolatedInputs here
+    // caller passes engravingIsolatedGridInputs' isolatedInputs here
     // (not the raw top-level inputs), so kbw/kbwStone riding along in
     // `inputs` are ALSO already this section's own isolated selections -
     // otherwise Adrenaline's gridRatio below (which depends on
     // shared.critDmgTotal, and KBW folds a flat add into that) would still
-    // silently track the live Ark Passive section's KBW state the same
-    // way kbwContributionGain used to (see engravingIsolatedGridInputs'
-    // own comment for that bug).
+    // silently track the live Ark Passive section's KBW state (see
+    // engravingIsolatedGridInputs' own comment for that failure mode).
     const full = Object.assign({}, inputs, {
       adrenaline: engrInputs.adrenalineLevel,
       adrenalineStone: engravingStoneLevel("adrenaline", engrInputs),
@@ -4280,12 +4254,10 @@
     return cloned;
   }
 
-  // Keen Blunt Weapon's -2% EV malus does NOT get layered in here anymore.
-  // It used to (see git history / prior comment here), because
-  // combinedMultiplier's shared grid formula didn't apply it and something
-  // had to. It now DOES get applied at the root, inside combinedMultiplier
-  // itself, gated on inputs.kbw being active (see that function's own
-  // comment) - and bestComboFor(candidateInputs) above already runs
+  // Keen Blunt Weapon's -2% EV malus does NOT get layered in here. It's
+  // applied at the root, inside combinedMultiplier itself, gated on
+  // inputs.kbw being active (see that function's own comment) - and
+  // bestComboFor(candidateInputs) above already runs
   // candidateInputs (which engravingCandidateInputs sets .kbw on whenever
   // flags.includeKbw is true) through combinedMultiplier. So combo.mult
   // already comes back with the malus baked in whenever this candidate
@@ -4297,12 +4269,12 @@
   //
   // Mana Food's own Main-Stat+Bleed contribution (manaFoodContributionGain)
   // deliberately does NOT belong here either, for the same reason the
-  // 0.85 party-synergy scalar got removed from combinedMultiplier (see
+  // 0.85 party-synergy scalar is absent from combinedMultiplier (see
   // that function's own comment): it's a flat bonus applied identically
   // regardless of which 2 engravings are in flags, so multiplying every
   // candidate (and "neither") by the same factor cancels out of every
   // ratio this page actually shows (vsNeither, aVsB, winner/runnerUp) and
-  // never changes sort order - it would be silent dead weight, not a fix.
+  // never changes sort order - it would be silent dead weight.
   // Food's only REAL lever on any of these numbers is Raid Captain's own
   // Move Speed conversion (raidCaptainGain, via raidCaptainMoveSpeedFraction
   // reading engrInputs.wine/manaFood/rageRune) - which already applies
@@ -4331,18 +4303,18 @@
   // Food would be there) but still lands correctly in each candidate's
   // own totalMult - which is what the "Ability Stone Base AP" row in
   // computeEngravingComparison's own `rows` reads back out.
-  // Adrenaline's own Ability Stone was missing from this function entirely
-  // until now: unlike Grudge/Ambush/RC/CD/MI's stones (which bump their
+  // Adrenaline's own Ability Stone needs its own term in this function:
+  // unlike Grudge/Ambush/RC/CD/MI's stones (which bump their
   // engraving's flat Dmg% Node value - a genuine flatMult layer) and
   // Keen Blunt Weapon's stone (which bumps the crit grid - handled
   // separately via nodeGridRatio/stoneGridRatio in
   // engravingCandidateBreakdown below), Adrenaline's Stone only ever adds
   // AP (ADRENALINE_STONE_AP_TABLE, via adrenalineApFraction ->
-  // gearAttackPowerPercentTotal) - a THIRD axis this function never
-  // touched, so slotting a stone into Adrenaline silently changed nothing
-  // anywhere in this section. adrenalineStoneMarginalGain already exists
-  // and does exactly this on/off AP ratio for the stone-preview table
-  // (see its own comment) - reusing it here with whichever stone is
+  // gearAttackPowerPercentTotal) - a THIRD axis, so without its own term
+  // slotting a stone into Adrenaline would silently change nothing
+  // anywhere in this section. adrenalineStoneMarginalGain does exactly
+  // this on/off AP ratio for the stone-preview table (see its own
+  // comment) - it's reused here with whichever stone is
   // actually assigned (engravingStoneLevel, "0 Lv." i.e. a no-op gain if
   // neither slot targets Adrenaline) plugs the same math into the real
   // totalMult candidates are ranked and compared on. It lands in
@@ -4368,27 +4340,25 @@
   // it, the same "headline number, then here's what it's made of" shape
   // computeBraceletComparison's Keystone/Crit+Spec+Other+WP/AP breakdown
   // already gives Bracelet vs. Bracelet - Best Combo/Runner-Up and Setup
-  // A/B only ever surfaced the single vsRunnerUp/vsNeither/stoneApGain
-  // numbers before this, with no way to tell how much of that total was
+  // A/B would otherwise surface only the single vsRunnerUp/vsNeither/
+  // stoneApGain numbers, with no way to tell how much of that total was
   // the engravings' own Node levels vs. the Ability Stone's marginal bump
   // to those same Nodes vs. the Stone's separate flat AP layer.
   //
-  // A 4th "Keystone/Crit" row (mirroring Bracelet vs. Bracelet's own grid
-  // ratio row) was tried first and pulled back out: Keen Blunt Weapon and
-  // Adrenaline both feed the crit grid (bestComboFor) rather than
-  // flatMult, so a naive combo.mult/neither.combo.mult ratio silently
-  // swept BOTH of their Node and Ability Stone contributions into that
-  // one generic bucket instead of "Engraving Bonus"/"Ability Stone
-  // Engraving Bonus" - the exact miscategorization this function now
-  // avoids. Once KBW/Adrenaline's own grid contribution is pulled out
+  // There is no 4th "Keystone/Crit" row (unlike Bracelet vs. Bracelet's
+  // grid ratio row): Keen Blunt Weapon and Adrenaline both feed the crit
+  // grid (bestComboFor) rather than flatMult, so a naive
+  // combo.mult/neither.combo.mult ratio would sweep BOTH of their Node
+  // and Ability Stone contributions into that one generic bucket instead
+  // of "Engraving Bonus"/"Ability Stone Engraving Bonus" - the exact
+  // miscategorization this function avoids. Once KBW/Adrenaline's own grid contribution is pulled out
   // (nodeGridRatio/stoneGridRatio below) and folded into the same 2
   // buckets the flat-layer engravings already use, nothing is left that
   // varies the crit grid on this page - a standalone "Keystone/Crit"
   // residual would read 0.00% on every candidate, always. The grid ratio
   // telescopes cleanly regardless (gNodeOnly/G0 * gFull/gNodeOnly =
   // gFull/G0 is exact algebra, not an approximation - see the `neither`
-  // block below), so nothing is lost by dropping it, only the
-  // misattribution is fixed.
+  // block below), so nothing is lost by omitting it.
   //
   // "Engraving Bonus" and the grid's own node-only ratio are BOTH taken
   // relative to the `neither` baseline (no competing engraving, no Stone
@@ -4496,7 +4466,7 @@
   function readEngravingInputs(root) {
     return {
       // Derived from the master Build toggle (see isSurgeBuild) - Playstyle
-      // is no longer its own control here, it just echoes RE vs Surge from
+      // is not its own control here, it just echoes RE vs Surge from
       // whichever 6-way build is currently selected up top.
       spec: isSurgeBuild(root) ? "surge" : "re",
       grudgeLevel: getSelect(root, ".ap-engr-grudge-level", "4 Nodes"),
@@ -4738,15 +4708,14 @@
     });
   }
 
-  // Now a thin wrapper around kbwRealizedGainPct's real re-optimized
+  // A thin wrapper around kbwRealizedGainPct's real re-optimized
   // with/without search, so this row matches Setup A/B's own "vs No Setup"
-  // methodology exactly instead of the old closed-form approximation (which
-  // held the isolated section's winning keystone/split fixed and could
-  // silently diverge from Setup A/B whenever removing KBW would actually
-  // flip which cell wins - see kbwRealizedGainPct's own comment for a
-  // confirmed live example of exactly that). Engraving + Ability Stone are
-  // still removed jointly (isolatedInputs already carries both kbwLevel and
-  // its Stone level, same as before), not as two separate marginals.
+  // methodology exactly (a closed form that held the isolated section's
+  // winning keystone/split fixed could silently diverge from Setup A/B
+  // whenever removing KBW would actually flip which cell wins - see
+  // kbwRealizedGainPct's own comment for a confirmed live example).
+  // Engraving + Ability Stone are removed jointly (isolatedInputs carries
+  // both kbwLevel and its Stone level), not as two separate marginals.
   function kbwContributionGain(isolatedInputs) {
     return kbwRealizedGainPct(isolatedInputs) / 100;
   }
@@ -4778,11 +4747,9 @@
     const isolatedBestStats = (isolatedBest && isolatedBest.stats) || gridResult.bestStats;
     const isolatedShared = computeShared(isolatedInputs);
 
-    // Raid Captain competes for its slot on both specs now - RE used to
-    // force includeRC: true into every candidate (only KBW vs CD actually
-    // competed), but RE has the same 2-competing-slot structure Surge
-    // does, so RC belongs in the same pool-of-2-combinations search
-    // rather than being pinned on. Mass Increase stays Surge-only (its
+    // Raid Captain competes for its slot on both specs: RE has the same
+    // 2-competing-slot structure Surge does, so RC belongs in the same
+    // pool-of-2-combinations search rather than being pinned on. Mass Increase stays Surge-only (its
     // -10% Attack Speed drawback isn't modeled - see the opt-in
     // checkbox's own tooltip - so it's never added to RE's pool
     // regardless of miOptIn).
@@ -5105,9 +5072,8 @@
     // BASE_AP_BONUS), shown next to its "9/7 or 10/6" checkbox when
     // checked and blank when not (setDisplay already treats a 0 value as
     // blank rather than "(0%)" - see its own comment above). Gem Base
-    // AP % no longer has a live display of its own now that this row is
-    // split out separately - the input box alone is enough information
-    // there.
+    // AP % has no live display of its own since this row is split out
+    // separately - the input box alone is enough information there.
     setDisplay(
       "#ap-gear-ability-stone-base-ap",
       inputs.gearAbilityStoneBaseAp ? ABILITY_STONE_BASE_AP_BONUS / 100 : 0
@@ -5379,8 +5345,8 @@
     // Marks every row's click-to-preview as inert while a pin is active
     // (see the preview() early-return in initApCalcRoot) - drops the
     // pointer cursor/hover tint from non-pinned rows via CSS so they
-    // don't keep advertising an interaction that no longer does
-    // anything. The pinned row's own .ap-result-pin button is exempt
+    // don't keep advertising an interaction that does
+    // nothing while pinned. The pinned row's own .ap-result-pin button is exempt
     // (see the CSS) since unpinning is still live.
     list.classList.toggle("ap-calc-results-pinned", !!pinnedCombo);
     // Same signal for assistive tech: while a pin is active, every row's
@@ -5466,9 +5432,9 @@
       if (evoEl) evoEl.textContent = base.evoDmg.toFixed(2) + "%";
       if (addEl) addEl.textContent = base.addDmg.toFixed(2) + "%";
 
-      // KBW's Dmg contribution used to get its own row here - removed, the
-      // Engraving Comparison section's reference table below already
-      // covers it (via kbwContributionGain), so it was a duplicate.
+      // KBW's Dmg contribution has no row here - the Engraving Comparison
+      // section's reference table below covers it (via
+      // kbwContributionGain), so a row here would duplicate it.
 
       // Breaking Moon (Surge 111 only) - a flat Crit Dmg add already
       // folded into critDmgTotal (see breakingMoonContribution), surfaced
@@ -5536,9 +5502,8 @@
       const tr = document.createElement("tr");
       // rows[] arrives already sorted descending (see the .sort() call in
       // each compute* function that feeds this renderer), so index 0 is
-      // always the top line - no best-row highlight anymore though (see
-      // extra.css's .ap-brace-compare-footer-note comment for why it was
-      // stripped rather than reshaped a third time).
+      // always the top line - there is no best-row highlight (see
+      // extra.css's .ap-brace-compare-footer-note comment for why).
 
       const labelTd = window.SiteUtils.el("td", "ap-brace-row-label");
       // row.label is an array of plain strings and colored-token objects
@@ -5626,11 +5591,9 @@
   // Spec" warning, RE + below 83 only) since those depend on the same
   // inputs this render pass already has in hand.
   //
-  // The "estimated" cd-note that used to sit beside vs No Bracelet is
-  // gone - now that CD Estimate is a real per-side checkbox (see
-  // enforceBvbLineControls), its own hover tooltip already explains the
-  // assumption, so a second icon repeating the same thing elsewhere was
-  // redundant.
+  // There is no "estimated" cd-note beside vs No Bracelet: CD Estimate is
+  // a real per-side checkbox (see enforceBvbLineControls) whose own hover
+  // tooltip already explains the assumption.
   const SPEC_NOTE_TEXT_RE = "This only reflects Spec's damage share on RE - it doesn't capture CDR or orb gen.";
   // Surge has no orb mechanic to omit in the first place - only CDR is
   // left uncaptured here, so the RE wording's "or orb gen" half is
@@ -5748,17 +5711,14 @@
       diffEl.textContent = "Accessory " + (aWins ? "A" : "B") + " wins by " + formatBvbPct(Math.abs(result.aVsB));
       // .ap-avb-diff's own base class is .ap-esvs-diff (see its markup in
       // resources.md), not .ap-bvb-diff - so the winner accent has to come
-      // from .ap-esvs-diff-a/-b, not .ap-bvb-diff-a/-b. An earlier version
-      // of this toggled the .ap-bvb-diff-a/-b pair instead: both families
-      // carry identical pink/teal values, but .ap-bvb-diff-a/-b are
-      // declared BEFORE .ap-esvs-diff's own base rule in extra.css, so at
-      // equal specificity .ap-esvs-diff's later border/background-color/
-      // color always won the cascade and silently overrode them - the
-      // pill rendered in its neutral lilac fallback color no matter which
-      // side actually won (confirmed via Playwright: classList showed
-      // "ap-esvs-diff ap-avb-diff ap-bvb-diff-b" applied, but the pill's
-      // computed color stayed lilac, not teal). .ap-esvs-diff-a/-b are
-      // declared AFTER .ap-esvs-diff, so they correctly win instead.
+      // from .ap-esvs-diff-a/-b, not .ap-bvb-diff-a/-b. Both families carry
+      // identical pink/teal values, but .ap-bvb-diff-a/-b are declared
+      // BEFORE .ap-esvs-diff's own base rule in extra.css, so at equal
+      // specificity .ap-esvs-diff's later border/background-color/color
+      // win the cascade and silently override them - the pill would render
+      // in its neutral lilac fallback color no matter which side won.
+      // .ap-esvs-diff-a/-b are declared AFTER .ap-esvs-diff, so they
+      // correctly win instead.
       diffEl.classList.toggle("ap-esvs-diff-a", aWins);
       diffEl.classList.toggle("ap-esvs-diff-b", !aWins);
     }
@@ -5812,8 +5772,8 @@
     const wineRow = root.querySelector(".ap-engr-wine-row");
     if (wineRow) wineRow.style.display = isSurge ? "" : "none";
     const manaFoodRow = root.querySelector(".ap-engr-manafood-row");
-    // Mana Food is no longer Surge-exclusive UI - RE gets the same
-    // checkbox/amount select now (see manaFoodContributionGain's own
+    // Mana Food is not Surge-exclusive UI - RE gets the same
+    // checkbox/amount select (see manaFoodContributionGain's own
     // comment for what it actually does on RE: Main-Stat-only, excluded
     // from calculations, purely informational). Row itself always shows;
     // only the label text below changes per spec/build.
@@ -5913,19 +5873,16 @@
       }
     }
 
-    // 222's own caveat used to be its own always-there row below the
-    // checkbox, shown/hidden by isSurge like the rest of this card's
-    // consumable rows - folded into the checkbox label's tooltip instead
-    // so a reader not on 222 doesn't pay for a row that's never relevant
-    // to them. Appended (not swapped in) since the label's base text -
+    // 222's own caveat lives in the checkbox label's tooltip rather than
+    // its own row below the checkbox, so a reader not on 222 doesn't pay
+    // for a row that's never relevant to them. Appended (not swapped in) since the label's base text -
     // the Main Stat double-counting caveat - applies to every spec/build;
     // only the 222 aside is build-specific info, not a spec-conditional
     // rewrite of the base text itself (contrast SPEC_NOTE_TEXT_RE/SURGE
     // above, which really are two different messages for the same
     // trigger). Gated on is222Build specifically (not isSurge) - it's the
-    // actual reason 222's own Mana Food is now Main-Stat-only above, so
-    // 111/333 Surge no longer need to carry an aside that was never about
-    // them. Lives on the checkbox label itself (not a dedicated icon) -
+    // actual reason 222's own Mana Food is Main-Stat-only above, so
+    // 111/333 Surge don't carry an aside that was never about them. Lives on the checkbox label itself (not a dedicated icon) -
     // see ap-brace-tooltip.js's own comment on why a persistent element
     // like this one needs its title kept in sync on every recompute
     // rather than just set once.
@@ -5952,13 +5909,12 @@
         if (row.note) {
           // Same .ap-brace-info-icon pattern as renderComparisonRows'
           // own identical use above (native `title` hover instead of a
-          // permanent note line) - used to be a dagger next to the label
-          // plus a full-width footnote <tr> below with its own colSpan
-          // (see git history), but that cost a whole extra row just for
-          // Mana Food's one Surge-only caveat. Consolidating onto the
-          // same icon the rest of the page already uses means Adrenaline/
-          // Ability Stone Base AP/Mana Food's notes all render the same
-          // way, and none of them cost vertical space unless hovered.
+          // permanent note line) - a dagger plus a full-width footnote <tr>
+          // would cost a whole extra row just for Mana Food's one
+          // Surge-only caveat. Using the same icon as the rest of the page
+          // means Adrenaline/Ability Stone Base AP/Mana Food's notes all
+          // render the same way, and none of them cost vertical space
+          // unless hovered.
           const infoIcon = window.SiteUtils.el("span", "ap-brace-info-icon", "i");
           infoIcon.title = row.note;
           infoIcon.setAttribute("role", "img");
@@ -6053,8 +6009,7 @@
     set(".ap-esvs-" + prefix + "-keystone", side.splitLabel + " + " + side.keystoneLabel);
     // Same 3-row breakdown as Best Combo/Runner-Up's fillCard (see
     // engravingCandidateBreakdown's own comment) - "Ability Stone Base AP"
-    // moves into this group too now (was previously the only breakdown
-    // row this card had, sitting right under vs No Setup on its own). No
+    // is part of this group (not a separate row under vs No Setup). No
     // separate "Keystone/Crit" row - see fillCard's own comment for why.
     set(".ap-esvs-" + prefix + "-engr-gain", formatBvbPct(side.breakdown.engravingGain));
     set(".ap-esvs-" + prefix + "-stone-engr-gain", formatBvbPct(side.breakdown.stoneEngravingGain));
@@ -6124,10 +6079,9 @@
   // is wrapped and failures are silently ignored - the calculator still
   // works perfectly without persistence, it just won't remember next time.
   //
-  // Presets: 3 independent storage slots rather than 1. Slot 1 reuses the
-  // original STORAGE_KEY unchanged, so anyone with data saved before this
-  // feature existed keeps it - it just becomes "Preset 1" instead of the
-  // only slot. Slots 2/3 are new, empty until the reader saves into them.
+  // Presets: 3 independent storage slots rather than 1. Slot 1 uses the
+  // original STORAGE_KEY, so data saved before presets existed loads as
+  // "Preset 1". Slots 2/3 are empty until the reader saves into them.
   // Which slot is "active" (currently loaded into the form) is itself
   // saved separately, so a reader who was on Preset 2 last visit comes
   // back to Preset 2, not always Preset 1.
@@ -6180,7 +6134,7 @@
   // skippedOut, if passed, collects every key from `data` that was NOT
   // applied - either a <select> value that doesn't match any current
   // option, or an id that doesn't correspond to any field on the page at
-  // all. Both cases used to fail completely silently (the localStorage
+  // all. Both cases fail silently by default (the localStorage
   // round-trip path wants that - a stale saved value quietly falling
   // back to the authored default is correct there), but for a pasted/
   // uploaded Import the person has no other way to find out a field
@@ -6522,7 +6476,7 @@
     const selection = getApCalcSelection(root);
     activePinnedCombo = resolvePinnedCombo(selection.pinnedCombo, getCheckbox(root, ".ap-ot1", false));
     // A pin made under the other split set (Optimized Training just got
-    // toggled) has no matching combo anymore. Drop it outright instead of
+    // toggled) has no matching combo. Drop it outright instead of
     // leaving a dead pin behind: renderGrid reads selection.pinnedCombo
     // directly, and a non-null-but-unresolvable pin would disable the
     // rows' click-to-preview with nothing actually pinned.
@@ -6701,18 +6655,18 @@
   // Same fix, same reason, as syncSpeedChoiceFamilyTracking above - but
   // for the per-family "last variant used" memory the Family chip
   // crossing listener reads (see initApCalcRoot's buildSelectEl block:
-  // rememberVariant/FAMILY_CROSSING_MAP). That memory used to live in a
-  // plain closure variable private to initApCalcRoot, which only ever
-  // updated on the build select's "change" event - but Reset to
+  // rememberVariant/FAMILY_CROSSING_MAP). That memory can't live in a
+  // plain closure variable private to initApCalcRoot, which would only
+  // update on the build select's "change" event - but Reset to
   // defaults/preset switch/import all set the select's value directly
   // via resetFieldsToDefaults WITHOUT dispatching "change" (same
   // no-dispatch fact that motivated lastFamilyIsSurge's own dataset
-  // move), so the closure never heard about it and kept remembering
+  // move), so such a closure would never hear about it and would keep remembering
   // whatever variant was last actually clicked. Concretely: click Surge
   // 333, hit Reset (form snaps back to the RE 333 / Surge 222 authored
   // defaults), then click the Surge Family chip again - the reader
   // would land back on 333, not the fixed 222 default, because nothing
-  // ever told the memory Reset had happened. Moving it onto
+  // ever told the memory Reset had happened. Keeping it on
   // buildSelectEl.dataset (reMemory/surgeMemory) instead of a closure
   // makes it reachable from here, so it can be wiped and reseeded from
   // whatever the select actually ends up at, same as the other tracker.
@@ -6730,13 +6684,13 @@
   // above, for Accessory vs. Accessory's per-slot "remember Main
   // Stat/Line 3/Other tier per slot" memory (see the full writeup on
   // this feature at the .ap-avb-slot change listener in
-  // initApCalcRoot). That memory used to live in plain closure
+  // initApCalcRoot). That memory can't live in plain closure
   // variables private to initApCalcRoot (avbMainStatMemory/
   // avbLine3Memory/avbOtherMemory/avbLastSlot), updated only via that
-  // listener's "change" event - but resetFieldsToDefaults (used by
+  // listener's "change" event - because resetFieldsToDefaults (used by
   // Reset to defaults, preset switch, AND Import) sets the AVB fields'
-  // values directly without dispatching "change", so the closure never
-  // found out and kept remembering pre-reset values under a now-stale
+  // values directly without dispatching "change", so such a closure would never
+  // find out and would keep remembering pre-reset values under a now-stale
   // avbLastSlot key. Concretely: dial in a real Ring value, switch to
   // Earring, hit Import (even importing back the SAME export - AVB
   // fields have no id attributes on purpose, see this project's own
@@ -6746,7 +6700,7 @@
   // switch back to Ring then saves the just-reset Necklace-shaped
   // default under the stale "Earring" key and hands back garbage for
   // Ring instead of the real value that was there before Import.
-  // Moved to a WeakMap keyed by root (mirrors buildSelectEl.dataset's
+  // Kept in a WeakMap keyed by root (mirrors buildSelectEl.dataset's
   // role for the Family/Surge fix - just structured data instead of
   // strings, so dataset itself doesn't fit) so it's reachable and
   // resettable from resetInputs/switchPreset/applyImportText/
@@ -6825,8 +6779,8 @@
     const t2 = root.querySelector("." + prefix + "-stone2-target");
     const l2 = root.querySelector("." + prefix + "-stone2-level");
     if (!t1 || !l1 || !t2 || !l2) return;
-    // Safety net only - shouldn't be reachable via the UI anymore now
-    // that duplicate options are disabled below, but a programmatic path
+    // Safety net only - shouldn't be reachable via the UI since
+    // duplicate options are disabled below, but a programmatic path
     // (preset load, Import, the bible-import bookmarklet) can still set
     // .value directly and skip the disabled check entirely.
     if (t1.value !== "None" && t1.value === t2.value) t2.value = "None";
@@ -6887,10 +6841,9 @@
   // focus via Tab), so picking STR/DEX/INT visibly swaps the dropdown for
   // an input right in place rather than adding a whole new row. The
   // Damage+CD line type's "estimated" caveat icon lives beside the card's
-  // vs No Bracelet result instead of here now (see renderBvbCard) - it
-  // used to sit inline in whichever row had Damage+CD selected, but that
-  // made that one row's type <select> shrink to fit the icon, so its box
-  // read as a different width than the other two rows.
+  // vs No Bracelet result instead of inline here (see renderBvbCard):
+  // inline, it would shrink that row's type <select> to fit the icon, so
+  // its box would read as a different width than the other two rows.
   // Also toggles the two per-side "Other Lines" checkboxes (vs Demons,
   // CD Estimate - see braceletFlatLineGain's own comment for what each
   // does) on/off alongside each line row's tier/mainstat swap: each only
@@ -6993,21 +6946,20 @@
     // Main Stat / Line 3's own row - only worth showing separately from
     // "vs No X" when there's a second axis (grid/flat) for it to be
     // distinguished FROM. See hasWpRow's own comment above AVB_SLOT_LABELS
-    // - true for all three slots now; the sequential mainStatLine3Ratio/
+    // - true for all three slots; the sequential mainStatLine3Ratio/
     // lineRatio split (evalSide) is what makes this a real, non-duplicate
-    // number for Earring rather than the flat-out duplicate of "vs No
-    // Earring" it used to be before that split existed.
+    // number for Earring rather than a flat-out duplicate of "vs No
+    // Earring".
     root.querySelectorAll(".ap-avb-wp-row").forEach((el) => {
       el.classList.toggle("ap-stat-card-row--hidden", !cfg.hasWpRow);
     });
     root.querySelectorAll(".ap-avb-lineratio-row").forEach((el) => {
       el.classList.toggle("ap-stat-card-row--hidden", !cfg.hasLineRatioRow);
     });
-    // "Currently Equipped" badge on Accessory A's card title is now
-    // always true (there's no more "Slot Currently Empty" toggle to make
-    // it not true - see readInputs' own comment on why that was
-    // removed), so it's just static markup now - nothing to enforce
-    // here anymore.
+    // "Currently Equipped" badge on Accessory A's card title is always
+    // true (there's no "Slot Currently Empty" toggle to make it not true -
+    // see readInputs' own comment), so it's just static markup - nothing
+    // to enforce here.
     ["a", "b"].forEach((prefix) => {
       setTierOptionValues(root.querySelector(".ap-avb-" + prefix + "-line1-tier"), cfg.line1Table, formatTierPct);
       setTierOptionValues(root.querySelector(".ap-avb-" + prefix + "-line2-tier"), cfg.line2Table, formatTierPct);
@@ -7124,8 +7076,8 @@
   // ----- Initialisation -----
   // initApCalcRoot() attaches listeners directly onto the calculator's own
   // static markup instead of rebuilding it from scratch each call - so,
-  // unlike the JSON-data-driven widgets registerRenderer was originally
-  // written for, calling this twice on the same root would double-attach
+  // unlike the JSON-data-driven widgets registerRenderer was designed
+  // for, calling this twice on the same root would double-attach
   // every listener below (duplicate localStorage writes, duplicate reset
   // confirms, duplicate popover opens, ...) rather than harmlessly re-doing
   // idempotent work. This guard is what makes it safe to hand to
@@ -7430,8 +7382,7 @@
       // default there like Wine's own untouched default - forcing it on
       // would silently outcompete Wine the moment the reader switches
       // specs. Playstyle itself is
-      // no longer its own control (used to be a dedicated RE/Surge radio
-      // pair here in Engraving Comparison) - it's derived from the master
+      // not its own control - it's derived from the master
       // Build toggle above (see isSurgeBuild/readEngravingInputs), so this
       // listens to that same ap-brace-spec-build select instead and only
       // re-applies the default on an actual RE<->Surge CROSSING, not
@@ -7571,7 +7522,7 @@
       // resetFieldsToDefaults (used by Reset-to-defaults, the preset
       // switcher, and Import - see resetAvbMemory's own comment at its
       // module-level definition above for the full failure mode and why
-      // this state now lives there instead of in this closure) sets
+      // this state lives there rather than in this closure) sets
       // these same fields' values directly rather than through user
       // interaction, so it never fires the "change" event the swap logic
       // above listens for. resetAvbMemory(root) is called from all 4
@@ -7951,8 +7902,8 @@
 // Ancient 17P Flashy Atk, Yearning on, Evo Karma 6, no Stable Atk/Crit Hit
 // Dmg Synergies, Back-Attack Rate 100%) at the LB1/KS2 split, the three
 // combined-keystone cells must equal (sheet's S35/S36/S37, divided by the
-// removed 0.85*1.12 scalar to account for that factor no longer being
-// part of the formula - see the note at the top of this file):
+// 0.85*1.12 scalar, which the formula omits - see the note at the top
+// of this file):
 //   Critical+Master    -> 7.902313487
 //   Critical+Pulverize -> 7.930274126
 //   Master+Pulverize   -> 7.947222029

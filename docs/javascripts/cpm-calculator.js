@@ -32,26 +32,15 @@
 //      FinalMultiplier = (RaidCPM / TrixionCPM) * AdjustedMultiplier
 
 (function () {
-  // Base Multiplier here used to be a second, hand-typed copy of
-  // build-data.js's own `trixion` field (same number, different name,
-  // two files, nothing cross-checking them - confirmed by audit: 333
-  // Ceiling's trixion:1.2 / baseMultiplier:1.2, 111 Classic's 1.23/1.23,
-  // 222 Speedy's 1.25/1.25, all identical). A balance patch is exactly
-  // the kind of event that updates one and leaves the other stale, so
-  // this now reads baseMultiplier from DB_BUILD_DATA instead of keeping
-  // its own copy - see findBuildMeta below. TRIXION_CPM stays local:
-  // it's the measured CPM count of an actual Trixion recording, a real
-  // number with no equivalent anywhere in build-data.js, not a
-  // duplicate of anything.
+  // Base Multiplier is read from DB_BUILD_DATA (build-data.js's `trixion`
+  // field) rather than kept as a second hand-typed copy here: a balance
+  // patch would update one and leave the other stale - see findBuildMeta
+  // below. TRIXION_CPM is local: it's the measured CPM count of an actual
+  // Trixion recording, a real number with no equivalent in build-data.js.
   //
   // Keys are build-data.js's own build ids (333-ceiling, 111-classic,
-  // 222-speedy) - NOT a third naming scheme. This file used to key its
-  // rows 333-re/111-surge/222-surge (build-data's own ids with the
-  // words swapped), a scheme that existed nowhere else and matched
-  // nothing else on the site. Since a build-data id lookup is needed
-  // here anyway now, the row's data-build attribute in resources.md
-  // was changed to just BE that id - one fewer naming scheme on the site,
-  // not one more.
+  // 222-speedy) - NOT a separate naming scheme. A row's data-build
+  // attribute in resources.md is that same id.
   const TRIXION_CPM = {
     "333-ceiling": 15,
     "111-classic": 10.952,
@@ -88,10 +77,10 @@
   // every other lookup on this site - if either half is missing, e.g. a
   // row's data-build doesn't match any TRIXION_CPM key or any
   // DB_BUILD_DATA build id. A console.warn here (rather than silent
-  // return) is deliberate: a typo'd/renamed key used to leave a CPM row
-  // permanently inert with zero visible symptom and zero console output -
-  // this is the one place that class of bug can be caught immediately
-  // instead of discovered by a confused bug report later.
+  // return) is deliberate: a typo'd/renamed key would otherwise leave a
+  // CPM row permanently inert with zero visible symptom and zero console
+  // output - this is the one place that class of bug can be caught
+  // immediately instead of discovered by a confused bug report later.
   function getBuild(id) {
     const trixionCPM = TRIXION_CPM[id];
     if (trixionCPM == null) {
@@ -278,7 +267,7 @@
     const raidCPM = parseFloat(raidCPMInput.value);
     // This is the raw Combat Analyzer "Back Attack Percentage" reading (a
     // ratio, not the actual back-attack rate) - always converted below,
-    // there's no separate rate-entry mode anymore.
+    // there's no separate rate-entry mode.
     const baValue = parseFloat(baInput.value);
     // Falls back to the known-correct constant if the reader clears the
     // field or types something invalid, rather than breaking the calc.
@@ -551,11 +540,10 @@
     if (build && baseMultInput && !baseMultInput.value) {
       baseMultInput.value = build.baseMultiplier.toFixed(2);
     }
-    // .cpm-calc-row-meta ("Trixion CPM 15 · Remaining Energy") used to be
-    // authored as literal text per row in resources.md - a third copy of
-    // numbers that already live in TRIXION_CPM/DB_BUILD_DATA above, and
-    // one more place a balance-patch update could be missed. Rendered
-    // from build here instead; the markup ships with an empty span.
+    // .cpm-calc-row-meta ("Trixion CPM 15 · Remaining Energy") is rendered
+    // from build here rather than authored as literal text per row in
+    // resources.md, so it can't drift from TRIXION_CPM/DB_BUILD_DATA
+    // above; the markup ships with an empty span.
     const metaEl = row.querySelector(".cpm-calc-row-meta");
     if (build && metaEl) {
       metaEl.textContent = "Trixion CPM " + build.trixionCPM + " \u00b7 " + build.familyLabel;

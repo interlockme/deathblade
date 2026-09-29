@@ -47,8 +47,7 @@
 // Damage column pick up the same numbers automatically by matching on
 // skill id - a gem-priority.js row's data-id (e.g. "fatalwave") against
 // the chart's data-ids at the same position. Falls back to comparing
-// rendered name text (old behavior) only if the chart has no data-ids
-// at all, for any chart that hasn't been given one yet. A Damage gem with
+// rendered name text only if the chart has no data-ids at all. A Damage gem with
 // no id/name match in the chart (e.g. it's absent from that build's
 // recorded split) still gets a tooltip off DB_SKILL_DATA - just without
 // the damage-share line, same as a Cooldown gem's. Cooldown gems need no
@@ -150,12 +149,11 @@
         // it's absent from that build's recorded split) still gets a
         // tooltip, just without the "% of total damage" opts.primary
         // line - same as a Cooldown gem's tags/note-only tooltip below,
-        // which never has a pct to begin with. This used to return here
-        // instead and leave the row with NO tooltip at all whenever a %
-        // wasn't found, which silently dropped that skill's tags/note/
-        // meter too (e.g. Turning Slash on 333 Blitz), even though all
-        // three come from DB_SKILL_DATA and never depended on the chart
-        // having this skill in the first place.
+        // which never has a pct to begin with. Returning early here would
+        // leave the row with NO tooltip whenever a % wasn't found, silently
+        // dropping that skill's tags/note/meter too (e.g. Turning Slash on
+        // 333 Blitz), even though all three come from DB_SKILL_DATA and
+        // never depend on the chart having this skill.
         attachOne(el, pct !== undefined ? fmtPct(pct) + " of total damage" : undefined, el.getAttribute("data-gem-tip") || undefined);
       });
     });

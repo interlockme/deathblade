@@ -23,16 +23,14 @@
 // target, so the fix is just swapping the tooltip engine under it, not
 // adding new visible markup.
 //
-// Widened a second time to also cover .cpm-calc and .bid-calc, once the
-// site settled on this as THE tooltip system rather than one local to
-// the Ark Passive Calculator - previously Bid Calculator's Intent chips
-// (now .bid-calc-intent's .ap-build-chip buttons - see bid-calculator.js)
-// and the Casts/Min scratch-pad's .cpm-rate-calc-info-icon (now itself an
-// .ap-brace-info-icon - see resources.md/extra.css) were deliberately
-// left on native title, back when this file was .ap-calc-only. Nothing
-// about attach() below is actually Ark-Passive-specific - it was already
-// a generic "wire whatever title exists" engine, so widening the
-// selector is the whole change; nothing else here needed touching.
+// Also covers .cpm-calc and .bid-calc: this is the site's one tooltip
+// system, not one local to the Ark Passive Calculator. Bid Calculator's
+// Intent chips (.bid-calc-intent's .ap-build-chip buttons - see
+// bid-calculator.js) and the Casts/Min scratch-pad's
+// .cpm-rate-calc-info-icon (an .ap-brace-info-icon - see
+// resources.md/extra.css) use it too. Nothing about attach() below is
+// Ark-Passive-specific - it's a generic "wire whatever title exists"
+// engine, so the selector is the only thing that scopes it.
 //
 // No data file/lookup table needed here, unlike those three sibling
 // files: the tooltip text isn't looked up by id, it's already sitting in

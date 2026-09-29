@@ -470,7 +470,7 @@
       refresh(entry);
     });
 
-    // Two independent concerns used to be conflated in one opts.tapToggle
+    // Two independent concerns, kept separate from the single opts.tapToggle
     // flag: (1) does a click on this trigger toggle the tooltip's own
     // open/closed state, and (2) does a click get kept from reaching the
     // document-level "tap outside closes everything" listener below.
@@ -483,7 +483,7 @@
     // click listener registered at all, both the real click AND the
     // label's forwarded second click - see opts.wrapsControl below -
     // bubble straight to that document listener unblocked and toggle
-    // everything closed, twice, within the same tap). So these are now
+    // everything closed, twice, within the same tap). So these are
     // separately gated: opts.tapToggle guards the open/close toggle
     // below, opts.wrapsControl guards only the suppression, and a trigger
     // can opt into either, both, or neither.
@@ -596,8 +596,8 @@
 
   // A Food Requirement pill (essentials.md's .food-option divs - the
   // Striploin/Herb Steak/Azena's/Feast row up top of each family's page)
-  // used to carry its effect text as a native `title` on the whole div.
-  // Same upgrade as .skill-inline: the div itself is the trigger (there's
+  // carries no text of its own; its effect text comes from the tooltip.
+  // Same wiring as .skill-inline: the div itself is the trigger (there's
   // exactly one .food-option-icon per pill, so no ambiguity the way a
   // multi-icon combo mention would have), text comes from
   // DB_SKILL_EXTRAS by icon id instead of the div's own title attribute -

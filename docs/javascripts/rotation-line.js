@@ -50,7 +50,7 @@
 //       - situational with a custom reason instead of the default
 //         "Situational" - shown in that same bottom line, not typed out
 //         on the chip (a spelled-out reason like "adrenaline/synergy"
-//         used to sit right on the chip and visibly widen/heighten it).
+//         would sit right on the chip and visibly widen/heighten it).
 //         Any "**word**" in the reason is stripped to plain "word" (the
 //         tooltip's extra line is plain text, no bold).
 //         Exception: a { "cycleRef": ... } pseudo-step (below) has no
@@ -106,24 +106,14 @@
   var hideOnError = window.SiteUtils.hideOnError;
 
   // Feather Icons "arrow-down" glyph - used by updateWrapArrows below to
-  // mark an arrow that sits at the end of a wrapped row. Went through
-  // two earlier versions before this one:
-  //   take 1 rotated .arrow's own border-corner chevron to a down-left
-  //     diagonal instead of using a real icon at all - read as a
-  //     meaningless stray mark ("looks like a short L"), because the
-  //     border-corner trick can only ever produce a STRAIGHT chevron at
-  //     45-degree steps, not an actual bent/turning arrow.
-  //   take 2 switched to a real icon, but picked Feather's
-  //     "corner-down-left" (a bent arrow whose head points LEFT, meant
-  //     to read as "drop down, continue from the left") - in practice
-  //     that read as pointing backward/undo rather than forward, since
-  //     the head's direction is what a reader clocks first, not the
-  //     bend leading into it.
-  // This plain straight-down arrow has no such ambiguity - the head
-  // points the one direction that matters (there's more content below),
-  // and the reader's own left-to-right reading habit already supplies
-  // "and it starts from the left" without needing the glyph to encode
-  // that too.
+  // mark an arrow that sits at the end of a wrapped row. A plain
+  // straight-down arrow on purpose: a rotated border-corner chevron can
+  // only make straight 45-degree chevrons and reads as a stray mark, and
+  // Feather's bent "corner-down-left" reads as pointing backward/undo
+  // because the head's direction is what a reader clocks first. Straight
+  // down points the one direction that matters (there's more content
+  // below), and the reader's own left-to-right habit already supplies
+  // "and it starts from the left".
   var WRAP_ARROW_ICON =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>';
 
@@ -177,8 +167,8 @@
 
     if (step.situational) {
       // Compact marker instead of spelling the reason out in the chip
-      // itself (the old appendInlineBold version made "adrenaline/synergy"-
-      // length reasons visibly widen/heighten the chip) - just a small "*"
+      // itself (inline bold text would visibly widen/heighten the chip
+      // for "adrenaline/synergy"-length reasons) - just a small "*"
       // glyph (CSS ::before, see extra.css's .skill-situational-tag::before)
       // that reads as "situational" at a glance.
       var tag = el("span", "skill-situational-tag");
@@ -207,8 +197,8 @@
         // focus/tap tooltip (attachRotationSkill, wired to data-skill-id
         // on `span` for a plain step, or on each .skill-part below for a
         // "skills" multi-step) covering this whole chip. A second,
-        // separate native `title` on the marker used to mean hovering
-        // the "*" itself popped a plain browser tooltip stacked on top
+        // separate native `title` on the marker would mean hovering
+        // the "*" itself pops a plain browser tooltip stacked on top
         // of that already-open custom one - two tooltips in one chip.
         // Stashing the reason here instead lets attachRotationSkill fold
         // it into that SAME tooltip via buildTip's opts.extra (the exact

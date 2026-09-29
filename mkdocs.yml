@@ -30,7 +30,7 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=92
+  - stylesheets/extra.css?v=93
 
 # Load order matters: several widgets read a shared data file
 # (build-data.js/skill-data.js/skill-names.js/ap-node-names.js) or the
@@ -69,16 +69,16 @@ extra_css:
 # scratch). See README.md's "Forking this for your own spin" section
 # for the full breakdown.
 extra_javascript:
-  - javascripts/site-utils.js?v=11
-  - javascripts/lazy-calculators.js?v=20
+  - javascripts/site-utils.js?v=12
+  - javascripts/lazy-calculators.js?v=21
   - javascripts/extra.js?v=2
   - javascripts/build-data.js?v=4
   - javascripts/build-stats-badge.js?v=1
-  - javascripts/skill-data.js?v=11
+  - javascripts/skill-data.js?v=12
   - javascripts/skill-names.js?v=6
-  - javascripts/rune-data.js?v=1
-  - javascripts/skill-setup.js?v=8
-  - javascripts/essentials-table.js?v=6
+  - javascripts/rune-data.js?v=2
+  - javascripts/skill-setup.js?v=9
+  - javascripts/essentials-table.js?v=7
   - javascripts/core-options-data.js?v=5
   - javascripts/ark-core-badge.js?v=8
   - javascripts/ap-node-names.js?v=5
@@ -86,16 +86,16 @@ extra_javascript:
   - javascripts/ark-passive-tree.js?v=7
   - javascripts/gem-priority.js?v=7
   - javascripts/pentagon-badge.js?v=6
-  - javascripts/rotation-line.js?v=15
-  - javascripts/skill-tooltip.js?v=16
+  - javascripts/rotation-line.js?v=16
+  - javascripts/skill-tooltip.js?v=17
   - javascripts/ark-passive-tooltip.js?v=4
-  - javascripts/rune-tooltip.js?v=6
+  - javascripts/rune-tooltip.js?v=7
   - javascripts/glossary-data.js?v=4
   - javascripts/glossary-tooltip.js?v=1
   - javascripts/rotation-practice.js?v=8
   - javascripts/dps-chart.js?v=9
-  - javascripts/gem-dps-tooltip.js?v=12
-  - javascripts/build-compare.js?v=8
+  - javascripts/gem-dps-tooltip.js?v=13
+  - javascripts/build-compare.js?v=9
   - javascripts/last-updated.js?v=3
   - javascripts/image-lightbox.js?v=1
 

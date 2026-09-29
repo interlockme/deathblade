@@ -89,10 +89,10 @@
   window.SiteUtils = {
     // Clamp a number input's value to [min, max] on blur, reformatting it
     // and re-running the caller's update function if the raw value needed
-    // clamping. Was copy-pasted near-identically into cpm-calculator.js
-    // and bid-calculator.js before this - both had the same "catch fat-
-    // finger/pasted-garbage entries on blur rather than block typing
-    // mid-keystroke" guardrail, just with different formatting needs.
+    // clamping. Shared by cpm-calculator.js and bid-calculator.js: both
+    // want the same "catch fat-finger/pasted-garbage entries on blur
+    // rather than block typing mid-keystroke" guardrail, just with
+    // different formatting needs.
     //
     // parse:  function(rawString) -> number. Defaults to parseFloat.
     //         Pass bid-calculator's comma-aware parseNumber here for

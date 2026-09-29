@@ -123,9 +123,7 @@
     },
     purify: {
       // Confirmed (screenshots) at all three - Purify drops as Uncommon,
-      // Epic or Legendary, no Rare version. (An earlier version of this
-      // file had only Legendary and a comment claiming Purify was
-      // single-rarity - that was wrong; fixed here.)
+      // Epic or Legendary, no Rare version.
       legendary: "80% chance to remove a debuff when skill is used.",
       epic: "70% chance to remove a debuff when skill is used.",
       uncommon: "50% chance to remove a debuff when skill is used.",

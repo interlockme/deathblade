@@ -410,8 +410,8 @@
   // see bible-import.js's git history for the raw dumps if this ever needs
   // re-deriving. Bible renders each stat as ONE combined line, e.g.
   // "Additional Damage +1.6%" or "Atk. Power +80" (never a bare label line
-  // followed by a separate value line - that was a wrong guess in an
-  // earlier version of this file and silently broke every field below).
+  // followed by a separate value line - assuming that shape would
+  // silently break every field below).
   // Each armor piece and its paired accessory render together as one row:
   // Head->Necklace, Shoulder/Chest->Earring x2, Pants/Gloves->Ring x2,
   // Weapon->Stone. Row shape is "<Slot> +N T4[ +refine]", quality number,
@@ -488,8 +488,8 @@
     // never appears even after successfully switching to Raid, so a check
     // built on it produces a false "couldn't confirm" warning on every
     // single run. Kept here as a diagnostic-only field (still logged to
-    // console) - buildPayload's actual onRaidLoadout decision no longer
-    // reads this; see bookmarkletBody, which instead checks whether the
+    // console) - buildPayload's actual onRaidLoadout decision does not
+    // read this; see bookmarkletBody, which instead checks whether the
     // "Raid Loadout" button itself is still present (that button's
     // presence/absence is what's actually confirmed reliable, since it's
     // the same signal findRaidLoadoutButton already uses to decide whether
@@ -625,8 +625,8 @@
     // calculator's own tooltip and cross-checked against a real loadout
     // (11x Lv.6 gems -> 4.95, matches). Levels 1-5 added from the same
     // tooltip (Lv.1: no bonus, Lv.2 +0.05%, Lv.3 +0.10%, Lv.4 +0.20%,
-    // Lv.5 +0.30%) - previously missing, so any gem below Lv.6 silently
-    // fell through the "|| 0" below and undercounted a character's real
+    // Lv.5 +0.30%) - without them any gem below Lv.6 would silently
+    // fall through the "|| 0" below and undercount a character's real
     // (if small) AP bonus instead of being a genuine 0. Not a rare case:
     // same "low investment / hasn't played in a while" characters that
     // hit the karma/bracelet-tier gaps above can just as easily be
@@ -801,7 +801,7 @@
     // extra "+N" line after it (a stone-boost indicator that only appears
     // when the boosted engraving happens to be in this equipped-5 list -
     // engravingStonePoints above is the complete, unconditional source,
-    // this "+N" is not used for that anymore).
+    // this "+N" is not used for that).
     var engHeaderIdx = idxOfNth("Engravings", 1); // 2nd occurrence = the real section, 1st is a stat total
     out.engravings = {};
     if (engHeaderIdx !== -1) {
@@ -1072,8 +1072,7 @@
         // so this is a no-op for those two slots and their point totals
         // always come straight from core.points (page text) below.
         //
-        // NEVER let hydrationCore override core.points here (it used to,
-        // see below) - hydration.gridSlots' points come from the
+        // NEVER let hydrationCore override core.points here - hydration.gridSlots' points come from the
         // "most_recent_raid"-classified loadout's battlePoint data, which
         // is a snapshot from whenever that character last actually entered
         // a raid, not a live read of what's currently equipped. A real
@@ -1086,8 +1085,8 @@
         // since. The earlier comment above GRID_BASE_TO_SLOT ("confirmed
         // matching on two separate real characters") just means neither of
         // those two happened to have this staleness - it was never a
-        // structural guarantee. Trust the page text unconditionally now
-        // (same as Sun/Moon already do) and only use hydration for the
+        // structural guarantee. Trust the page text unconditionally
+        // (same as Sun/Moon) and only use hydration for the
         // warning, not as an override.
         var hydrationCore = hydration.gridSlots && hydration.gridSlots[CHAOS_SLOT_TO_KEY[slotLabel]];
         if (hydrationCore && hydrationCore.points != null && hydrationCore.points !== core.points) {
@@ -1164,10 +1163,10 @@
           // findChaosGrade already stashed exactly why into
           // LAST_CHAOS_GRADE_DEBUG before returning null (marker not found
           // at all, vs. marker found but the color it decoded isn't in
-          // CHAOS_GRADE_COLORS) - previously that detail only reached the
-          // console dump, so diagnosing a future Bible UI change meant
-          // reopening devtools. Surface it in the warning itself instead,
-          // since it's already computed and free to include.
+          // CHAOS_GRADE_COLORS). It's surfaced in the warning itself, not
+          // only the console dump, so diagnosing a future Bible UI change
+          // doesn't mean reopening devtools; it's already computed and
+          // free to include.
           var gradeDebug = LAST_CHAOS_GRADE_DEBUG[gradeKey];
           var gradeDetail = "";
           if (gradeDebug && gradeDebug.lastColor) {
@@ -1211,7 +1210,7 @@
       // RE 111 and RE 313 write the same canonical "re-111" id - the
       // calculator merged them into one Build toggle chip since they're
       // computationally identical (see normalizeBraceSpecBuild in
-      // ark-passive-calculator.js), so this detector no longer needs to
+      // ark-passive-calculator.js), so this detector doesn't need to
       // tell them apart either.
       "Art Master||Arts Core": "re-111",
       "Levin Slash||Arts Core": "re-111",
@@ -1235,12 +1234,11 @@
     } else {
       // No fallback value to write here (unlike Chaos cores/adrenaline/
       // KBW, ap-brace-spec-build has no "None" option - it's always one
-      // of the 6 real builds per resources.md), but previously this
-      // silently skipped with no warning at all, leaving the toggle on
-      // whatever it already was (the page's own re-333 default, or a
-      // stale value from a previous import) with no signal that it
-      // wasn't touched. Warn instead, same as the unmatched-pair case
-      // above, so this doesn't look like a confirmed auto-detected build.
+      // of the 6 real builds per resources.md). A silent skip would leave
+      // the toggle on whatever it already was (the page's own re-333
+      // default, or a stale value from a previous import) with no signal
+      // that it wasn't touched, so this warns, same as the unmatched-pair
+      // case above, rather than look like a confirmed auto-detected build.
       warnings.push("Couldn't find Order Sun/Moon cores on this page (Order Grid not equipped, or a read failure) - Build wasn't auto-set, verify it matches your actual build manually.");
     }
 
@@ -1571,13 +1569,12 @@
         }, 400);
         return;
       }
-      // No "Raid Loadout" switch button found. This used to unconditionally
-      // finish(lines, true), which was the one genuinely SILENT wrong-data
-      // path left in this file: if the switch button's label ever varies
-      // in a way this file doesn't know about, the click never happens,
-      // nothing warns, and Chaos-loadout accessories/gems/engravings
-      // import as if they were confirmed raid data. Split into the real
-      // cases instead.
+      // No "Raid Loadout" switch button found. Finishing unconditionally
+      // with finish(lines, true) would be a SILENT wrong-data path: if the
+      // switch button's label ever varies in a way this file doesn't know
+      // about, the click never happens, nothing warns, and Chaos-loadout
+      // accessories/gems/engravings import as if they were confirmed raid
+      // data. So this splits into the real cases below.
       var loadoutTabs = findLoadoutTabButtons();
       if (window.console && console.log) {
         console.log("[Bible import] no \"Raid Loadout\" switch button; loadout-ish tab labels seen: " + JSON.stringify(loadoutTabs));

@@ -118,7 +118,7 @@
     // tripod tier yet (e.g. a level 7 skill with only tripods: [2, 2])
     // still gets a slot reserved for the tier it doesn't have; that slot
     // is rendered invisible (tripod-chip-empty) rather than just omitted.
-    // Omitting it outright used to pull every chip after the gap one slot
+    // Omitting it outright would pull every chip after the gap one slot
     // to the right (they sit right before the rune chip, which is itself
     // pinned to the row's right edge via .skill-card-chips' margin-left:
     // auto) - so a 2-tripod card's tier1/tier2 chips landed under where
@@ -205,19 +205,15 @@
   // .skill-setup-grid for the CSS half of this (position: relative on
   // the grid, position: absolute + a transform/width transition on each
   // .skill-card).
-  // NOTE: this used to be pinned 30px above a 380px threshold in
-  // .skill-card-main's @container query, back when a too-narrow card
-  // fell back to a stacked name/chips layout. That @container rule is
-  // gone now (see .skill-card-main's comment in extra.css) - a too-
-  // narrow card just ellipsis-truncates the name instead of stacking,
-  // so there's no CSS breakpoint left to stay clear of. 410 is kept as
-  // a floor purely on its own layout-quality merits: below that, a
-  // card's chip cluster (runes/tripods) starts crowding the name badly
-  // even with truncation helping. If you retune this, it no longer
-  // needs to track anything in extra.css - just eyeball card
+  // NOTE: no CSS breakpoint depends on this (see .skill-card-main's
+  // comment in extra.css) - a too-narrow card just ellipsis-truncates the
+  // name instead of stacking. 410 is a floor purely on layout quality:
+  // below that, a card's chip cluster (runes/tripods) starts crowding the
+  // name badly even with truncation helping. If you retune this, it
+  // doesn't need to track anything in extra.css - just eyeball card
   // readability at the new width.
   var MASONRY_MIN_WIDTH = 410;
-  var MASONRY_GAP = 11; // ~0.7em at the site's 16px root, matches the old CSS grid gap
+  var MASONRY_GAP = 11; // ~0.7em at the site's 16px root
 
   function layoutMasonry(grid) {
     var cards = cardsOf(grid);
@@ -314,7 +310,7 @@
     var entries = result.data;
 
     // Re-running on an instant-navigation page swap: drop any
-    // previously-rendered grid before rebuilding, rather than appending
+    // already-rendered grid before rebuilding, rather than appending
     // duplicates next to the (kept, invisible) <script> source. Also
     // makes it harmless for more than one of the three triggers below to
     // fire for the same container.
@@ -323,21 +319,17 @@
       if (old.__masonryObserver) old.__masonryObserver.disconnect();
       old.remove();
     }
-    // Legacy cleanup: an earlier version of this script rendered
-    // Identity/Technique/Awakening cards into a separate .skill-special-row
-    // container instead of the main grid. Nothing writes that element
-    // anymore, but on an instant-navigation swap the DOM could still be
-    // holding one from before this script last updated - drop it so it
-    // doesn't linger as an orphaned duplicate.
+    // Drop a stale .skill-special-row container if an instant-navigation
+    // swap left one in the DOM (nothing renders that element now).
     var oldSpecial = container.querySelector(".skill-special-row");
     if (oldSpecial) oldSpecial.remove();
 
     // All entries render as normal cards in one grid, in JSON order.
     // Skills with no tripods and no rune (Identity/Technique/Awakening -
     // Surge, Deathly Slash, Blade Assault) just get a card with no chips
-    // row - they used to be pulled into a separate row/container below
-    // the main grid, but that read as a visually distinct, lesser group
-    // instead of a normal part of the skill set.
+    // row - a separate row below the main grid would read as a
+    // visually distinct, lesser group instead of a normal part of the
+    // skill set.
     var grid = el("div", "skill-setup-grid");
     entries.forEach(function (entry) {
       var card = buildCard(entry, family);

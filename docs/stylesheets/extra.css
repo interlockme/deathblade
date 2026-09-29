@@ -2,10 +2,8 @@
 
 /* ---------- Site accent palette ---------- */
 /* Named custom properties for the site's own accent colors, each reused
-   in 4-51 places below as raw hex before this block existed - edit a
-   color HERE and every rule that references it updates, instead of
-   hunting every occurrence by hand (same problem the icon-asset/JS
-   dedup work already solved on the JS side).
+   in 4-51 places below - edit a color HERE and every rule that
+   references it updates, instead of hunting every occurrence by hand.
    Deliberately NOT exhaustive: colors used only 1-3 times are genuine
    one-offs, left as literals.
    Colors whose RGB triplet also gets reused inside rgba(...) for
@@ -55,11 +53,9 @@
     to make the header/tabs bar and footer read as the same "surface" as those
     notes instead of their own separate near-black shade */
 
-  /* Colors below were previously repeated as raw hex literals at 2-6
-     separate call sites each (found during a full-file audit) instead of
-     being named here like every other reused color on the site. No
-     rendered pixel changes from naming them - same values, just one
-     source of truth now instead of N copies that could drift apart. */
+  /* Colors below are named here like every other reused color on the site,
+     rather than repeated as raw hex literals at 2-6 call sites each: one
+     source of truth instead of N copies that could drift apart. */
   --dbc-gold-dark: #26210f;        /* dark gold tint - the
     2nd Pre-Ark Grid option card, and .page-banner-warning, pairs with --dbc-gold */
   --dbc-rose-dark: #241a20;        /* dark rose tint - the 1st
@@ -140,10 +136,9 @@ html {
   background-color: rgba(var(--dbc-purple-rgb), 0.55);
 }
 
-/* Footer now shows real Previous/Next page links (navigation.footer),
-   so style it to match the site instead of hiding it - it previously had
-   no content and rendered as an empty strip in Material's default
-   blue-indigo hue, which is why it was hidden outright before. */
+/* Footer shows real Previous/Next page links (navigation.footer), so it
+   is styled to match the site rather than hidden (Material's default
+   blue-indigo hue would otherwise show). */
 .md-footer {
   background-color: var(--dbc-header-footer-bg); /* matches the lavender setup-note surface, see --dbc-header-footer-bg */
 }
@@ -251,8 +246,8 @@ h1, h2, h3 {
    h1 on the site was showing Material's default light-gray instead of
    pink, undetected because nothing looked "broken", just muted. Uses
    --dbc-pink (the site's actual accent color, already on links/borders/
-   the difficulty bar everywhere else) rather than the orphaned #e64a89
-   this rule used to carry, which matched nothing else on the site. */
+   the difficulty bar everywhere else) rather than an off-palette pink
+   that matches nothing else on the site. */
 .md-typeset h1 { color: var(--dbc-pink); }
 h2 { color: var(--dbc-purple); } /* muted lavender, used sparingly as an accent, not a fill color */
 h3 { color: var(--dbc-teal); }
@@ -273,8 +268,8 @@ h3 { color: var(--dbc-teal); }
 
 /* ---------- Section breathing room (H2s read as chapter breaks) ---------- */
 /* Dense guide pages (Skill Codes -> Ark Setup -> Skill Setup -> Gems ->
-   Rotation) previously gave every H2 the same spacing as any other heading,
-   so a long page read as one continuous scroll of colored boxes. A little
+   Rotation) would otherwise give every H2 the same spacing as any other heading,
+   so a long page reads as one continuous scroll of colored boxes. A little
    extra top margin plus a faint top border makes each H2 read as the start
    of a new chapter instead. */
 .md-typeset h2 {
@@ -289,7 +284,7 @@ h3 { color: var(--dbc-teal); }
   /* First H2 right after the title/build-card - the build-card's own
      margin already separates it, so don't double up on top spacing.
      .build-card-row covers pages where the pentagon badge wraps the
-     card (the card no longer sits directly next to the H2 in that
+     card (the card doesn't sit directly next to the H2 in that
      case - the row does). */
   margin-top: 1.2em;
 }
@@ -311,9 +306,9 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---------- Nested bullet hierarchy ---------- */
-/* A sub-bullet like "However, Lv 7 is more practical..." previously read at
+/* A sub-bullet like "However, Lv 7 is more practical..." would otherwise read at
    the exact same size/weight/color as its parent point, so a caveat and a
-   main point looked equally important until you actually read both. Dimming
+   main point would look equally important until you actually read both. Dimming
    and slightly shrinking second-level (and deeper) bullets lets "main point
    -> caveat" register at a glance, without touching vertical spacing. */
 .md-typeset li li {
@@ -387,8 +382,8 @@ h3 { color: var(--dbc-teal); }
   margin: 0.6em 0;            /* tighter than default so a stacked sequence reads as one flow */
 }
 
-/* Closed (???) collapsibles vs always-open (!!!) tips previously looked
-   the same weight, so "core info" and "optional depth" were indistinguishable
+/* Closed (???) collapsibles vs always-open (!!!) tips would otherwise look
+   the same weight, so "core info" and "optional depth" would be indistinguishable
    before you opened anything. Quieten the closed state only - a details
    element without [open] is exactly the pymdownx.details ??? case, so this
    never touches !!! admonitions (which render as plain divs, not <details>). */
@@ -453,15 +448,14 @@ h3 { color: var(--dbc-teal); }
    language - a lavender border, a faint lavender-tinted body, and an
    uppercase tinted header row. This generic rule is what any bare
    markdown table gets with zero markup (no wrapper class, no `{: .foo }`
-   needed) - it's deliberately the DEFAULT now, not a fallback, so a new
+   needed) - it's deliberately the DEFAULT, not a fallback, so a new
    table just typed as plain markdown (like Useful Links below) already
    matches the site instead of reading as the one unstyled leftover.
    .skills-table/.food-alt-table/.build-compare still carry their own
    more specific rules on top of this for the things that actually vary
-   per-table (zebra striping, min-width, icon sizing) - those aren't
-   being removed, this rule just means their color/border imitates the
-   card language and this rule already gets those wrapper-less tables
-   there for free. */
+   per-table (zebra striping, min-width, icon sizing) - those stay.
+   This rule just sets the shared card language, so wrapper-less tables
+   get it for free. */
 .md-typeset table:not([class]) {
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: 8px;
@@ -671,55 +665,42 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---------- Inline skill reference for prose (outside rotation-lines) ---------- */
-/* Was a boxed/bordered "chip" (border + background tint, same language as
-   .rotation-line's own chips) - read as heavy and out of place sitting
-   in the middle of a normal sentence, unlike .rotation-line/.cycle-card
-   where every step IS a chip and the boxed language fits the whole row.
-   Also used to lead with an icon before the name - dropped that too:
-   once the boxed chip was already gone, a pulled-out game icon sitting
-   mid-sentence in front of a bold/colored word was doing the same job
-   twice (both are "look here"), and reads as more decoration than a
-   plain skill name needs. The bold/lavender name alone is enough to
-   flag a pivotal mention without a shape OR an icon wrapped around it.
-   Usage now: <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span>
-   data-skill-id is required (no icon left to guess the id from - see
+/* Inline skill mention in prose: just a bold/lavender name, with no chip
+   and no icon. A boxed chip reads as heavy in the middle of a sentence
+   (unlike .rotation-line/.cycle-card, where every step IS a chip), and
+   a game icon in front of a bold/colored word does the same "look here"
+   job twice.
+   Usage: <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span>
+   data-skill-id is required (there's no icon to guess the id from - see
    skill-tooltip.js's attachSkillInline, whose data-skill-id branch this
    relies on) except for an ambiguous multi-skill combo mention (e.g.
-   "FTF" for Fatal Wave/Turning Slash/Fatal Wave), which still renders
-   name-only with no data-skill-id and, same as before, gets no tooltip.
-   Consumables (Stimulant, Atropine) used to share this exact class/
-   markup - moved OFF it entirely instead of just losing their icon:
-   a permanently bold/lavender name reads as "this is a skill", which a
-   potion isn't, and unlike a skill a reader can't act on a consumable
-   mention by learning its name alone the way they can a skill's. They
-   now use `.food-req-item` (see that class further down) instead of a
-   bare `![](icon.png){: .skill-icon }` icon: a bare icon's own
-   hover rule only rings the IMAGE (attachBareIcon wires just the <img>
-   as the trigger, so the trailing name sits outside it and never gets a
-   hover cue at all) - wrapping icon + name in .food-req-item makes the
-   whole phrase the trigger instead, same as every other food/consumable
-   mention dotted through prose elsewhere (essentials.md's feast notes),
-   so hovering ANYWHERE on "[icon] Stimulant" gives the same filter:
-   brightness(1.3) lift .skill-mention/.food-req-item already use for
-   "subtler, not a real skill" text elsewhere, not just a ring on the
-   icon. Icon kept (so a purely visual/game-familiar cue survives for
-   something a reader has to go pick up, unlike a skill they already
-   have on their bar), name left as completely plain text at rest.
-   .food-req-item's own rest-state styling (color/font-size) actually
-   comes from its .food-req ANCESTOR in essentials.md's food-req lines -
-   used bare here, outside any .food-req wrapper, it inherits normal
-   body/list text instead, which is exactly the plain-at-rest look
-   wanted in this prose context; only the hover/ring rules (defined on
-   .food-req-item itself, not scoped under .food-req) are actually being
-   reused. See that class's own comment further down for the full
-   rationale on the hover treatment being shared this way.
-   No img rule lives in this section anymore: every current .skill-inline
-   span is text-only, so there's nothing left to style. If some future
-   mention ever needs an icon back on THIS class specifically (as opposed
-   to moving to .food-req-item like the consumables above), that class's
+   "FTF" for Fatal Wave/Turning Slash/Fatal Wave), which renders
+   name-only with no data-skill-id and gets no tooltip.
+   Consumables (Stimulant, Atropine) do NOT use this class: a
+   permanently bold/lavender name reads as "this is a skill", which a
+   potion isn't, and a reader can't act on a consumable mention by
+   learning its name alone the way they can a skill's. They use
+   `.food-req-item` (see that class further down): icon + name wrapped
+   so the whole phrase is the hover trigger. A bare
+   `![](icon.png){: .skill-icon }` only rings the IMAGE (attachBareIcon
+   wires just the <img>, so the trailing name never gets a hover cue).
+   The wrapper gives the same filter: brightness(1.3) lift
+   .skill-mention/.food-req-item use for "subtler, not a real skill"
+   text. The icon stays (a visual cue for something a reader has to go
+   pick up, unlike a skill already on their bar); the name is plain text
+   at rest.
+   .food-req-item's rest-state styling (color/font-size) comes from its
+   .food-req ANCESTOR in essentials.md's food-req lines. Used bare here,
+   outside any .food-req wrapper, it inherits normal body/list text,
+   which is the plain-at-rest look wanted in this prose context; only the
+   hover/ring rules (defined on .food-req-item itself, not scoped under
+   .food-req) are reused. See that class's own comment further down for
+   the rationale on the hover treatment being shared.
+   No img rule lives in this section: every .skill-inline span is
+   text-only. If a mention ever needs an icon on THIS class specifically
+   (rather than using .food-req-item like the consumables), that class's
    own `img.skill-icon` handling further down is the closest reference
-   for sizing/ring/margin - don't resurrect a separate copy here from
-   scratch. */
+   for sizing/ring/margin - don't write a separate copy from scratch. */
 .md-typeset .skill-inline {
   white-space: nowrap;
 }
@@ -940,11 +921,8 @@ h3 { color: var(--dbc-teal); }
    for #3 and below) and that floor is deliberately still legible, so a
    7-gem list never makes its last entry read as skippable. The column
    header itself is just its pink/teal-tinted title text (.gem-col-title
-   below) - there used to also be a small uploaded damage/cooldown icon
-   next to it (.gem-type-icon), but that never got carried over when
-   this section moved to gem-priority.js's JSON-driven rendering, and
-   the column title's own color already carries the dmg/cd distinction,
-   so the rule was dropped rather than reintroducing the icon.
+   below) - the title's own color already carries the dmg/cd
+   distinction, so there's no separate damage/cooldown icon.
 
    Rows that have a real alternative use <details> instead of <div> -
    same disclosure instinct as .setup-note/.engraving-card elsewhere on
@@ -1046,25 +1024,20 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.92em;
   color: #b8b2c0;
 }
-/* gem-dps-tooltip.js used to set a native `title` (damage-share on hover)
-   on plain, non-expandable rows, and this rule restored the cursor:help
-   affordance every other title/JS tooltip trigger on the site gets for
-   consistency. That row now gets a real .skill-tip via
-   window.SkillTooltip.attach() instead (see gem-dps-tooltip.js) - the
+/* No gem-item row carries a `title` attribute: gem-dps-tooltip.js gives
+   plain rows a real .skill-tip via window.SkillTooltip.attach(), and the
    shared ".md-typeset .skill-tip-anchor { cursor: help; }" rule further
-   down covers the cursor for that automatically, so this [title]-scoped
-   version is dead: no gem-item row carries a `title` attribute anymore.
+   down covers the cursor for that, so no [title]-scoped rule is needed.
    The expandable row's <summary> still correctly keeps cursor:pointer
-   despite ALSO becoming a .skill-tip-anchor now (tooltip AND click-to-
-   expand both apply to it) - its own more specific
+   despite ALSO being a .skill-tip-anchor (tooltip AND click-to-expand
+   both apply to it) - its own more specific
    ".gem-item-expandable > summary" rule further down wins on
    specificity over the shared anchor rule without needing an explicit
    override here. */
 
 /* Hover feedback, matching .rotation-line .skill/.skill-card elsewhere:
    border lift + a glow on the icon specifically. Applies to plain rows
-   too (not just expandable ones) - same as the old .gem-chip sparkle,
-   a decorative "this is a real list item" cue doesn't require the row
+   too (not just expandable ones) - a decorative "this is a real list item" cue doesn't require the row
    to be clickable. Tinted per column (rose/teal), not the sitewide
    generic purple .skill-card-icon glow uses - a gem row is already
    living inside its column's own color story, so the hover state
@@ -1368,9 +1341,9 @@ h3 { color: var(--dbc-teal); }
    Built from borders (no image/SVG needed), colored as a soft pink-to-
    lavender blend tying the two accent colors used elsewhere together.
    font-size: 0 hides the real "→" character completely (not just via
-   color) - a color-only hide was tried and reverted: the real text was
-   still selectable/drag-highlightable, and shared flex space with the
-   ::before chevron in a way that clipped it. font-size: 0 avoids both,
+   color) - a color-only hide leaves the real text
+   selectable/drag-highlightable, and it shares flex space with the
+   ::before chevron in a way that clips it. font-size: 0 avoids both,
    at the cost of needing fixed px below instead of em (a ::before
    pseudo-element inherits its trigger's computed font-size, so em
    sizing here would collapse to zero right along with it). */
@@ -1400,34 +1373,24 @@ h3 { color: var(--dbc-teal); }
   top: -4px;
 }
 
-/* Wrap-point variant, take 3: rotation-line.js's updateWrapArrows
-   toggles this class, at render time and again on every re-measure,
-   onto whichever plain .arrow currently sits at the end of a wrapped
-   row (the step right after it is starting a new visual line, not
-   sitting right next to it). A bare "→" there reads identically to
-   every other arrow sitting mid-row between two chips touching each
-   other, so there's no cue that the sequence actually continues below
-   rather than stopping - this is what makes that arrow specifically
-   look different.
-   Take 1 reused .arrow::before's own chevron shape rotated to a
-   down-left diagonal - reasoned as "same shape, just rotated" being
-   safer than a new glyph (the way .arrow-swap below avoided a wholly
-   different shape). In practice it didn't work: the border-corner trick
-   can only ever draw a STRAIGHT chevron at 45-degree steps, and a
-   diagonal one at this size read as a stray mark ("looks like a short
-   L") with no directional meaning, not as "turn".
-   Take 2 dropped the border trick for a real icon - Feather's
-   "corner-down-left" glyph, a genuinely bent arrow whose head points
-   left, meant to read as "drop down, continue from the left". That
-   still didn't land: a reader clocks the arrowHEAD's direction first,
-   and a left-pointing head reads as backward/undo regardless of the
-   bend leading into it.
-   This version (WRAP_ARROW_ICON in the JS, same SVG convention as the
-   cycle-repeat badge's icon) is a plain straight-down arrow instead -
-   no bend to misread, just "there's more below", which is the one
-   thing this glyph actually needs to say. Which direction the next
-   step starts from is left to the reader's own left-to-right reading
-   habit, not encoded in the glyph.
+/* Wrap-point variant: rotation-line.js's updateWrapArrows toggles this
+   class, at render time and again on every re-measure, onto whichever
+   plain .arrow currently sits at the end of a wrapped row (the step
+   right after it is starting a new visual line, not sitting right next
+   to it). A bare "→" there reads identically to every other arrow
+   sitting mid-row between two chips touching each other, so there's no
+   cue that the sequence actually continues below rather than stopping -
+   this is what makes that arrow specifically look different.
+   It's a plain straight-down arrow (WRAP_ARROW_ICON in the JS, same SVG
+   convention as the cycle-repeat badge's icon): no bend to misread, just
+   "there's more below", which is the one thing this glyph needs to say.
+   Rotating .arrow::before's border-corner chevron can only draw a
+   STRAIGHT chevron at 45-degree steps and reads as a stray mark, and a
+   bent icon with a left-pointing head (Feather's "corner-down-left")
+   reads as backward/undo, because a reader clocks the arrowHEAD's
+   direction first. Which direction the next step starts from is left to
+   the reader's own left-to-right reading habit, not encoded in the
+   glyph.
    This class (and its child .arrow-wrap-icon) are applied automatically
    - never set them by hand or from a build page's JSON. */
 .md-typeset .rotation-line .arrow-wrap {
@@ -1468,15 +1431,14 @@ h3 { color: var(--dbc-teal); }
   height: 100%;
 }
 
-/* Order-interchangeable variant, take 2: the first attempt (two
-   converging triangles, ▶◀) didn't read as a variant of the normal
-   chevron at all - different shape family, different track width - so
-   it looked broken/foreign next to real .arrow chevrons on the same
-   line instead of like "the same arrow, plus info". This version reuses
-   .arrow's exact chevron shape (7x7 box, 2px border, rotate(45deg)) and
-   its 10px track width unchanged, and just stacks a second chevron
-   facing backward directly above the normal forward one - same
-   size/weight, purely additive. Set via
+/* Order-interchangeable variant: two converging triangles (▶◀) would not
+   read as a variant of the normal chevron at all - different shape
+   family, different track width - so they'd look broken/foreign next to
+   real .arrow chevrons on the same line instead of like "the same
+   arrow, plus info". This reuses .arrow's exact chevron shape (7x7 box,
+   2px border, rotate(45deg)) and its 10px track width unchanged, and
+   just stacks a second chevron facing backward directly above the
+   normal forward one - same size/weight, purely additive. Set via
    { "id": "headhunt", "swapNext": true } on the step BEFORE this arrow -
    see rotation-line.js's EASY EDIT GUIDE. font-size: 0 and the hidden
    real "→" text are inherited from .arrow; only the flex direction and
@@ -1528,10 +1490,10 @@ h3 { color: var(--dbc-teal); }
    optional/conditional rather than a fixed part of the sequence -
    dashed border + reduced opacity + desaturated icon read as "lower
    priority" at a glance, same visual language a disabled/optional form
-   control uses elsewhere. Was previously written inline as plain
-   italicized text: *( icon Name - situational )*, which didn't stand
-   out from a real step in the sequence until you actually read it.
-   This DOM is now built by rotation-line.js from a step like
+   control uses elsewhere. Plain italicized text
+   (*( icon Name - situational )*) wouldn't stand out from a real step
+   in the sequence until you actually read it.
+   This DOM is built by rotation-line.js from a step like
    { "id": "headhunt", "situational": true } - see that file's EASY EDIT
    GUIDE rather than writing this markup by hand. */
 .md-typeset .rotation-line .skill-situational {
@@ -1740,8 +1702,8 @@ h3 { color: var(--dbc-teal); }
    (a small pill rendered inline in that rotation-line's own flex-wrap
    row - see rotation-line.js's buildStageTag and extra.css's .stage-tag
    rule above) rather than a separate labeled element between the two
-   rotation-lines. Two earlier approaches to that separate label were
-   tried and dropped: a pill absolutely positioned on the seam between
+   rotation-lines. A separate label between the two
+   rotation-lines has two failure modes: a pill absolutely positioned on the seam between
    stages (reserved no layout space, but a wrapped last row of the
    PREVIOUS stage could grow close enough to visibly overlap it), and a
    full-width bar above each stage (real height so it couldn't overlap,
@@ -2167,7 +2129,7 @@ h3 { color: var(--dbc-teal); }
 
 /* "Best For:" / "Tradeoff:" lead-in labels - arguably the two most
    important sentences on the page (what this build is for, what it costs
-   you), previously just bold text at the same weight/color as everything
+   you), otherwise just bold text at the same weight/color as everything
    else. Usage: wrap just the lead-in word, e.g.
    [Best For:]{ .best-for } Players who want ...
    [Tradeoff:]{ .tradeoff } Lower orb generation ... */
@@ -2465,11 +2427,11 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* Dropdown picker and copy-link icon share a single row - no text label
-   above them anymore. The icon is pulled out of normal flow (absolute,
+   above them. The icon is pulled out of normal flow (absolute,
    pinned to the row's right edge) instead of living in its own grid
    track, so the dropdowns get the row's full width to center in rather
    than losing a chunk of it to an empty column reserved just to balance
-   the icon - that reserved column was squeezing the selects enough to
+   the icon - such a column would squeeze the selects enough to
    clip long build names. */
 .md-typeset .build-compare-header-row {
   position: relative;
@@ -2646,7 +2608,7 @@ h3 { color: var(--dbc-teal); }
 /* ---------- Key Differences panel (sits beside the pentagon overlay) --------- */
 /* For each axis that isn't essentially tied, a small pill goes under
    whichever build wins it - see the comment above buildKeyDifferences()
-   in build-compare.js for why this replaced a bar chart. Reuses the same
+   in build-compare.js for why this is a pill rather than a bar chart. Reuses the same
    pill shape as .tag (padding/radius/border) but colored per-build via
    inline style instead of a fixed palette of classes. */
 .md-typeset .build-compare-diffcard {
@@ -3022,7 +2984,7 @@ h3 { color: var(--dbc-teal); }
    row" here, not a hardcoded card count - in this 2-col grid, the last
    card only ends up solo when the total count is odd (its row has no
    sibling), so nth-child(odd) on :last-child is true exactly then. Surge
-   went from 4 cards to 5 once Cursed Doll was added (odd now, RC+MI is the
+   has 5 cards (odd, so RC+MI is the
    one left alone), but this doesn't name that card specifically: it's
    whatever card happens to be last, so it keeps working unchanged if a
    card is ever added/removed/reordered again on either page. At the
@@ -3202,8 +3164,8 @@ h3 { color: var(--dbc-teal); }
   border-color: rgba(211, 150, 198, 0.4);
 }
 
-/* Cards no longer collapse (see the summary rule above), so the arrow
-   that used to signal "click to expand" is gone rather than left
+/* Cards don't collapse (see the summary rule above), so the arrow
+   that would signal "click to expand" is hidden rather than left
    pointing at a permanently-open state. The markup element is kept in
    the .md files (harmless, empty) so nothing else has to change. */
 .md-typeset .engraving-card-arrow {
@@ -3264,9 +3226,8 @@ h3 { color: var(--dbc-teal); }
    are plain inline siblings, and img.skill-icon's own vertical-align:
    text-bottom (needed for OTHER bare-icon usages that sit directly in a
    text line) pins the icon to this span's text baseline instead of its
-   center - visually different from how a lone icon used to line up
-   before this span existed (back then the icon was its own top-level
-   flex child of .food-req, centered directly against the row by THAT
+   center - visually different from a lone icon that is its own top-level
+   flex child of .food-req (centered directly against the row by THAT
    flex context's align-items: center, with no surrounding text inside
    its own box to set a baseline against). Making this span itself a
    (small, inline) flex container re-centers the icon against ITS text
@@ -3278,7 +3239,7 @@ h3 { color: var(--dbc-teal); }
    margin for every icon inside a .food-req line, this one included, on
    the assumption spacing comes from the row's own flex gap instead. True
    for a bare icon sitting directly in that row, but this icon isn't a
-   direct child of THAT flex row anymore - it's one row down, inside this
+   direct child of THAT flex row - it's one row down, inside this
    span - so without its own gap it'd sit flush against its text.
 
    Same understated, no-color-at-rest treatment as .skill-mention above
@@ -3808,8 +3769,8 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-teal);
 }
 /* Before either field has valid input, both values show a plain "—"
-   placeholder (see cpm-calculator.js). Left unstyled that placeholder
-   inherited the same bold teal treatment as a real Final Multiplier
+   placeholder (see cpm-calculator.js). Left unstyled, that placeholder
+   would inherit the same bold teal treatment as a real Final Multiplier
    result, which reads as "there's already an answer here" - toggled off
    via .cpm-calc-output-empty (added/removed by the JS alongside the
    textContent swap) so an empty row visually reads as empty. */
@@ -3877,9 +3838,9 @@ h3 { color: var(--dbc-teal); }
 
 /* ---------- Raid auction bid calculator ---------- */
 /* Same card shell as .cpm-calc - lavender border, dark panel, lavender
-   field/radio accents throughout. An earlier version tinted the whole
-   card amber to flag "this one's gold, not a damage stat" - looked like
-   a stray warning banner instead of a calculator, so gold is now used
+   field/radio accents throughout. Tinting the whole card amber to flag
+   "this one's gold, not a damage stat" would look like a stray warning
+   banner instead of a calculator, so gold is used
    the way it's used in-game: just on the headline number itself
    (.bid-calc-result-value) and the copy confirmation, not the card shell. */
 .md-typeset .bid-calc {
@@ -3961,9 +3922,9 @@ h3 { color: var(--dbc-teal); }
 /* Raid Size / Intent pickers - real .ap-build-chip pill <button>s, the
    same "one vivid, rest muted" component the Ark Passive Calculator's
    Build toggle uses (see that toggle's own comment in extra.css),
-   reused as-is instead of the old radio dots - see bid-calculator.js's
+   reused as-is instead of radio dots - see bid-calculator.js's
    initToggleGroup for the click wiring that stands in for native radio
-   mutual-exclusivity now. */
+   mutual-exclusivity. */
 .md-typeset .bid-calc-toggle,
 .md-typeset .bid-calc-intent {
   display: flex;
@@ -4206,7 +4167,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-calc-gear {
   display: grid;
-  /* Always a single column - a fixed 230px auto-fit here used to pack 2
+  /* Always a single column - a fixed 230px auto-fit would pack 2
      (sometimes momentarily 3) groups per row once the left column of
      .ap-calc-layout got wide enough (a roomy viewport, sidebar hidden,
      etc), squeezing each card's own field labels ("Bracelet" -> "Bra")
@@ -4303,7 +4264,7 @@ h3 { color: var(--dbc-teal); }
     /* The grid rule above sets align-items: start (each column sized to
        its own content, not stretched - correct for the 2-column grid,
        where .ap-calc-gear/.ap-calc-live sit side by side and shouldn't
-       match each other's height). That value was leaking straight into
+       match each other's height). That value leaks straight into
        this flex layout too, since this block only overrides display/
        flex-direction. For a single-column flex stack that's the wrong
        cross-axis behavior: align-items: start makes each column take a
@@ -4328,7 +4289,7 @@ h3 { color: var(--dbc-teal); }
   /* Same bare-track story as the BvB grid fix below (minmax(0,1fr)), just
      showing up as a flex item instead of a grid track here: switching to
      flex-direction:column above drops the minmax(260px,1fr)/minmax(300px,
-     1.15fr) tracks that used to cap these, but a flex item's own min-width
+     1.15fr) tracks that cap these in the grid layout, but a flex item's own min-width
      still defaults to auto (its content's intrinsic min width), not 0. On
      phone widths that let .ap-calc-gear's field rows (label + select/input
      side-by-side) force the whole column - and with it the page - wider
@@ -4363,7 +4324,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-calc-group--crit-dmg   { --ap-cat: var(--dbc-teal); }
 .md-typeset .ap-calc-group--oncrit-dmg { --ap-cat: var(--dbc-orange); }
 .md-typeset .ap-calc-group--add-dmg    { --ap-cat: var(--dbc-sky); }
-/* Evolution Damage has no full group anymore - its one field (Leap Rank)
+/* Evolution Damage has no full group - its one field (Leap Rank)
    lives in the .ap-calc-mini-field strip above instead, which carries its
    own --ap-cat: var(--dbc-purple). */
 
@@ -4459,7 +4420,7 @@ h3 { color: var(--dbc-teal); }
 }
 /* Mana Food's row pairs a checkbox label with a select (12000 DEX is the
    widest option) - inside the narrower Raid Captain Variables card (paired
-   2-up against Engravings now, not full-width) there's no longer enough
+   2-up against Engravings, not full-width) there isn't enough
    row width for both at their natural size, and the select was the one
    losing that fight: flex-shrink's default (1) let it get squeezed
    below the width its own text needs, clipping "6000 DEX" against the
@@ -4479,11 +4440,7 @@ h3 { color: var(--dbc-teal); }
 }
 /* ---- Paired rows: two controls that are the same slot on two different
    items (Ring 1/2, Bracelet line 1/2, the Crit Hit Dmg checkboxes)
-   sharing one row instead of one row each. These options now show their
-   actual percentage as the option text ("1.55%" instead of "High"), so
-   there's no separate live-value readout to fit alongside each control
-   anymore - that's what used to force a squeeze between the value text
-   and the select. Just two plain controls side by side now. ---- */
+   sharing one row instead of one row each. These options show their actual percentage as the option text ("1.55%" instead of "High"), so there's no separate live-value readout to fit alongside each control and squeeze the select. Just two plain controls side by side. ---- */
 .md-typeset .ap-calc-field-row-pair .ap-calc-field-label {
   flex: 0 0 auto;
   white-space: nowrap;
@@ -4679,7 +4636,7 @@ h3 { color: var(--dbc-teal); }
 /* While a pin is active, every OTHER row's click-to-preview is a no-op
    (see initApCalcRoot's preview() early-return) - drop the pointer
    cursor and hover/focus tint so they stop advertising an interaction
-   that no longer does anything. The pinned row itself keeps cursor:
+   that does nothing. The pinned row itself keeps cursor:
    pointer via the plain rule above (its .ap-result-pin button is still
    live for unpinning), this only mutes its NEIGHBORS. */
 .md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned) {
@@ -4807,8 +4764,7 @@ h3 { color: var(--dbc-teal); }
    hue from -best's teal and -active's lavender so pinned reads as its
    own distinct 3rd state at a glance.
 
-   Hidden (opacity: 0) at rest rather than the faint always-on 0.5 this
-   used to sit at - with a pin control on every one of rows 2-5, that
+   Hidden (opacity: 0) at rest rather than a faint always-on tack - with a pin control on every one of rows 2-5, that
    permanent thumbtack cluster competed with the actual rank/combo/%
    content for attention on every single row, all the time, even though
    it's only actionable on the row a reader is currently looking at.
@@ -5384,14 +5340,14 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-acc-combo-table {
   min-width: 640px;
 }
-/* Combo headers used to be plain slate text; the two letters now carry
+/* Combo headers' two letters carry
    their own Low/Mid/High tier colors (reusing .ap-brace-label-low/mid/
    high - see the comment by those below) so LL/ML/MM/HL/HM/HH read at a
    glance as "this row's tier + the paired line's tier" instead of
    needing the intro paragraph to explain it every time. Kept a bit
    smaller/lighter than Low/Mid/High's own column headers so the eye
    still lands there first - these are still secondary/derived columns,
-   just no longer colorless ones. */
+   just not colorless ones. */
 .md-typeset .ap-acc-th-combo {
   font-size: 0.92em;
   opacity: 0.85;
@@ -5417,7 +5373,7 @@ h3 { color: var(--dbc-teal); }
    why RE only has 2). See ark-passive-calculator.js's syncBuildToggleUI
    for how the active class/tier visibility is applied, and initBuildDock
    just below it for the sticky/collapse behavior this single instance
-   needs now that it's not duplicated per-section anymore. */
+   needs as the single shared instance. */
 .md-typeset .ap-build-toggle-row {
   display: flex;
   flex-wrap: wrap;
@@ -5661,25 +5617,12 @@ h3 { color: var(--dbc-teal); }
    panel keeps the empty transparent width from swallowing taps on
    whatever page content sits underneath it.
 
-   position: fixed here, NOT sticky - this used to be `position: sticky;
-   bottom: 0.8em` (inherited from the base .ap-build-dock rule further
-   up), which looks like the obvious choice but doesn't actually work
-   for this element: bottom-anchored sticky only pins a box while
+   position: fixed here, NOT sticky (the base .ap-build-dock rule further up uses sticky), which looks like the obvious choice but doesn't actually work for this element: bottom-anchored sticky only pins a box while
    scrolling UP INTO it (the classic case is an element sitting at the
    END of a container, catching itself against the viewport's bottom
    edge as you scroll back toward the top). .ap-build-dock sits at the
    very TOP of .ap-calc's DOM instead, and a reader scrolls DOWN through
-   it - the exact opposite direction bottom-sticky catches - so it just
-   never engaged at all; the "pill" was actually a perfectly ordinary
-   in-flow block the whole time, scrolling away with the page 1:1
-   (confirmed with a Playwright getBoundingClientRect() sweep: its
-   position tracked `staticY - scrollY` exactly, no pinning, at every
-   scroll offset tested). That also explains both symptoms reported:
-   nothing ever moved it TO the bottom of the screen (so it never read
-   as "docked"), and at the top of the page its ordinary in-flow
-   position sits right before .ap-calc-layout's first card with only
-   normal margin between them, which is easy to misread as an
-   overlapping border once you're expecting a floating bar there.
+   it - the exact opposite direction bottom-sticky catches - so it would never engage: the pill would be a perfectly ordinary in-flow block, scrolling away with the page 1:1 (confirmed with a Playwright getBoundingClientRect() sweep: its position tracks `staticY - scrollY` exactly, no pinning, at every scroll offset). Nothing would move it TO the bottom of the screen, so it would never read as "docked", and at the top of the page its in-flow position sits right before .ap-calc-layout's first card with only normal margin between them, which is easy to misread as an overlapping border once you're expecting a floating bar there.
 
    Fixed position needed the .md-content__inner transform bug fixed
    first (see that rule's own comment) - fixed-position elements anchor
@@ -5687,10 +5630,7 @@ h3 { color: var(--dbc-teal); }
    viewport, which was silently retargeting this to the whole article
    regardless of what position/inset values were used here.
 
-   left/right: 0 replaces sticky's old horizontal behavior (which was
-   just "stay in normal in-flow width" - sticky only had `bottom` set,
-   nothing horizontal, so the row naturally spanned .ap-calc's content
-   width and justify-content pushed the pill to its right edge). Fixed
+   left/right: 0 because fixed
    positioning has no in-flow width to inherit, so it needs an explicit
    span - full viewport width is fine here since Material's mobile
    layout has already dropped the sidebar/TOC by this breakpoint, so
@@ -5701,12 +5641,9 @@ h3 { color: var(--dbc-teal); }
    .ap-build-dock--stuck is on desktop (see updateDockStuckState in
    ark-passive-calculator.js) - fixed positioning has no native "release
    once my container scrolls past" behavior the way sticky does, so the
-   same scroll listener that already runs for the desktop shadow now
-   also hides this pill outside of .ap-calc's own vertical range,
+   same scroll listener that already runs for the desktop shadow also hides this pill outside of .ap-calc's own vertical range,
    keeping the ".ap-calc-scoped release" this dock was always meant to
-   have (see .ap-build-dock's own comment above) - just done in JS
-   instead of getting it for free from sticky, since sticky was never
-   actually capable of doing it here. */
+   have (see .ap-build-dock's own comment above) - done in JS instead of getting it for free from sticky, which can't do it here. */
 @media screen and (max-width: 900px) {
   .md-typeset .ap-build-dock {
     position: fixed;
@@ -5745,10 +5682,9 @@ h3 { color: var(--dbc-teal); }
   }
 }
 /* display isn't set here on purpose - it's fully governed by the two
-   media queries above (mobile: flex, desktop: none). This block used to
-   also declare `display: flex` unconditionally, which - being equal
+   media queries above (mobile: flex, desktop: none). Declaring `display: flex` unconditionally here would - being equal
    specificity to and later in the source than the desktop media query's
-   `display: none` above - silently won on desktop and left the trigger
+   `display: none` above - silently win on desktop and leave the trigger
    pill visible there at all times, alongside the panel that's ALSO
    force-visible on desktop (see that media query's own comment on why
    the panel doesn't need to fight [hidden] there - the trigger had the
@@ -5833,10 +5769,7 @@ h3 { color: var(--dbc-teal); }
 /* Gearing inputs (Weapon Power / Attack Power) - a top-level <details>,
    collapsed by default, shared by Bracelet Line Comparison below it (and
    eventually Accessories / Ark Grid) rather than owned by any one of
-   them. Used to live nested one level inside Bracelet Line Comparison's
-   own <details>; kept this compact bordered-box treatment instead of the
-   sitewide admonition-style <details> look (heavy padding/border,
-   dimmed-when-closed opacity) even after promoting it to top-level, since
+   them. It's a top-level <details> (not nested inside Bracelet Line Comparison's own <details>) and keeps a compact bordered-box treatment instead of the sitewide admonition-style <details> look (heavy padding/border, dimmed-when-closed opacity), since
    it reads as a small shared input strip rather than its own full
    section - same motivation as .gem-item-expandable above, but a plain
    title instead of that class's icon-grid layout. */
@@ -5871,7 +5804,7 @@ h3 { color: var(--dbc-teal); }
    versions, a stray ::after), separately from the browser's native
    <li>-style disclosure triangle. Hiding only the native marker
    (::-webkit-details-marker / ::marker) and then adding a fresh ::before
-   glyph on top - which is what this rule used to do - left Material's own
+   glyph on top - leaves Material's own
    icon still rendering underneath/beside it, i.e. two chevrons. Fix is
    the same one already proven on .ap-brace-compare: fully reset every
    property Material's default icon sets (not just add new content), and
@@ -5920,9 +5853,7 @@ h3 { color: var(--dbc-teal); }
 }
 /* Own flex item (rather than a bare text node) so it can wrap onto
    multiple lines at its own natural width instead of being squeezed into
-   a slim leftover column next to the badge - that squeeze is what made
-   the title wrap into a near-vertical ransom note on mobile before this
-   was split out. min-width: 0 is required for a flex item to actually
+   a slim leftover column next to the badge - that squeeze would make the title wrap into a near-vertical ransom note on mobile. min-width: 0 is required for a flex item to actually
    shrink/wrap instead of enforcing its content's intrinsic width. */
 .md-typeset .ap-gear-title {
   flex: 1 1 12em;
@@ -5995,14 +5926,7 @@ h3 { color: var(--dbc-teal); }
   overflow-x: auto;
 }
 /* Bracelet Comparison's own .ap-brace-compare-inputs (the OTHER usage
-   the comment above refers to) now wraps nothing but the hidden
-   ap-brace-spec-build select - the visible echo copy of the Build
-   toggle it used to hold was removed once the docked toggle became the
-   single source of truth (see resources.md's own comment on that
-   select). The base rule's margin-bottom/padding-bottom/border-bottom
-   was sized for that visible row; with nothing left to separate FROM,
-   it now renders as a stray dashed line floating above "Candidate
-   bracelet lines..." with nothing above it. Zero out spacing and the
+   the comment above refers to) wraps nothing but the hidden ap-brace-spec-build select (the docked toggle is the single source of truth - see resources.md's own comment on that select). The base rule's margin-bottom/padding-bottom/border-bottom is sized for a visible row; with nothing to separate FROM, it would render as a stray dashed line floating above "Candidate bracelet lines..." with nothing above it. Zero out spacing and the
    border here the same way the Character Data usage above already
    does, rather than deleting the wrapper div itself (still a real,
    non-hidden element in the DOM - the select inside it just is). */
@@ -6012,9 +5936,8 @@ h3 { color: var(--dbc-teal); }
   border-bottom: none;
 }
 /* Gear Comparisons group: the 5 boxes above (Character Data, Bracelet/
-   Engraving/Accessory/Chaos Core Comparison) used to each be a fully
-   independent bordered+rounded box with its own margin-top, so the
-   section read as 5 unrelated gray bars stacked with visible gaps
+   Engraving/Accessory/Chaos Core Comparison) would otherwise each be a fully
+   independent bordered+rounded box with its own margin-top, so the section would read as 5 unrelated gray bars stacked with visible gaps
    between them rather than one family of related "value this gear
    piece" tools grouped under the Gear Comparisons divider above.
    Wrapping them in .ap-gear-comp-group (see resources.md) and
@@ -6059,20 +5982,16 @@ h3 { color: var(--dbc-teal); }
      reserves above instead of adding a new one - see that rule's comment. */
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }
-/* Rows had no hover feedback at all before - just cursor:pointer - which
-   read as flat/dead next to the rest of the site's interactive controls
+/* Rows with no hover feedback beyond cursor:pointer would read as flat/dead next to the rest of the site's interactive controls
    (e.g. .gem-item-expandable:hover further up brightens its border on
-   hover). These rows no longer have individual borders to brighten once
+   hover). These rows have no individual borders to brighten once
    grouped, so a background tint on the summary instead. */
 .md-typeset .ap-gear-comp-group > details > summary:hover {
   background: rgba(var(--dbc-purple-rgb), 0.05);
 }
 /* Group's overflow:hidden (needed to clip rows to the outer radius) would
    otherwise clip a default browser focus ring drawn outside the row's
-   edge - pulled inside with a negative offset instead. Was previously
-   just an outline-offset tweak left on top of the browser/Material
-   default outline, which is `outline: auto` - an unstyled, slightly
-   hazy ring in the theme's pink accent color (mkdocs.yml's `accent:
+   edge - pulled inside with a negative offset instead. The browser/Material default outline is `outline: auto` - an unstyled, slightly hazy ring in the theme's pink accent color (mkdocs.yml's `accent:
    pink`) that doesn't match anything else on the site. Same explicit
    treatment as .md-typeset a:focus-visible below (2px solid
    var(--dbc-pink)) for a crisp, on-brand ring instead - just inset
@@ -6082,19 +6001,15 @@ h3 { color: var(--dbc-teal); }
   outline: 2px solid var(--dbc-pink);
   outline-offset: -2px;
 }
-/* Character Data (.ap-gear-inputs) used to be styled as its own smaller/
-   lighter thing - narrower gap, smaller font-size, no explicit
-   font-weight, and --dbc-lilac (a near-white lavender) instead of the
-   other 4 rows' --dbc-lavender/700-weight title - because it used to be
-   a standalone compact input strip rather than a peer of the other 4
-   rows. Now that it's grouped with them it read as a mismatched, more
-   prominent row rather than one of 5 equal options. Matching its title
-   to the shared .ap-brace-compare/.ap-acc-compare/.ap-arkgrid-compare/
-   .ap-engr-compare summary rule here (color/size/weight/gap only -
-   flex-wrap stays, still needed to let the Optional badge drop to its
-   own line on narrow widths) lets the "Optional" badge alone carry the
-   "this one's different" signal instead of the title styling doing it
-   too. */
+/* Character Data (.ap-gear-inputs) titles match the shared
+   .ap-brace-compare/.ap-acc-compare/.ap-arkgrid-compare/.ap-engr-compare
+   summary rule (color/size/weight/gap only - flex-wrap stays, still
+   needed to let the Optional badge drop to its own line on narrow
+   widths). It's a peer of the other 4 rows, so a smaller/lighter
+   treatment (narrower gap, smaller font-size, --dbc-lilac instead of
+   --dbc-lavender/700 weight) would read as a mismatched, more prominent
+   row rather than one of 5 equal options. That leaves the "Optional"
+   badge alone to carry the "this one's different" signal. */
 .md-typeset .ap-gear-comp-group > .ap-gear-inputs > summary {
   gap: 0.6em;
   color: var(--dbc-lavender);
@@ -6108,16 +6023,13 @@ h3 { color: var(--dbc-teal); }
    sources) stacked full-width, one after another - same visual language
    AND same single-column layout as the Ark Passive grid's own Crit Rate/
    Crit Damage/etc. category cards above (.ap-calc-group inside
-   .ap-calc-gear), rather than a 2-column grid. A 2-column version of this
-   used to exist and needed its own container-query breakpoints (to
+   .ap-calc-gear), rather than a 2-column grid. A 2-column version of this would need its own container-query breakpoints (to
    un-squeeze pair rows and long label/select rows once each card was
-   squeezed to half the box's width) that didn't line up with the grid's
+   squeezed to half the box's width) that wouldn't line up with the grid's
    own collapse-to-1-column breakpoint (a fixed 560px on the outer grid,
-   independent of the fixed 380px on each card) - so there was a wide
-   band of container widths where 2-up was still active but neither card
+   independent of the fixed 380px on each card) - so there'd be a wide band of container widths where 2-up was still active but neither card
    had reached its own comfortable width yet, and fields would visibly
-   jump between inline/stacked right as you resized through it. Rather
-   than replacing that with a second hand-picked pair of breakpoints,
+   jump between inline/stacked right as you resized through it. Rather than a second hand-picked pair of breakpoints,
    auto-fit below ties both decisions to the SAME number: it only ever
    gives a card less than minmax()'s minimum, so a card can't reach a
    "too narrow for its own content" state under this box's control at
@@ -6165,10 +6077,9 @@ h3 { color: var(--dbc-teal); }
      .quick-jump-pills' removal note further down for why. */
   overflow-x: auto;
 }
-/* No container-type here (there used to be one, for a per-card narrow-
-   mode breakpoint) - .ap-gear-cards' auto-fit above already keeps a
+/* No container-type here (no per-card narrow-mode breakpoint is needed) - .ap-gear-cards' auto-fit above already keeps a
    card from ever getting narrower than its own content needs (see that
-   rule's comment), so there's no "squeezed card" state left for a query
+   rule's comment), so there's no "squeezed card" state for a query
    on this element to respond to. */
 .md-typeset .ap-gear-card {
   border: 1px solid rgba(255, 255, 255, 0.07);
@@ -6189,14 +6100,9 @@ h3 { color: var(--dbc-teal); }
    Raid Captain Variables cards reuse the same .ap-gear-card shell as
    Character Data's pair above, just with their own accent colors so the
    two pairs don't read as the same specific cards when scrolling past
-   both sections. Core and Competing Pool used to be two separate cards
-   here (teal/gold) - merged into one .ap-gear-card--engr-core card
-   paired against Raid Captain Variables instead, since that pairing
+   both sections. Core and Competing Pool are one merged .ap-gear-card--engr-core card paired against Raid Captain Variables, since that pairing
    groups the section's two real "input" blocks together rather than
-   giving a 3-row always-on list its own full card. Competing Pool's own
-   sub-heading inside that merged card was dropped later too (see that
-   card's own comment in resources.md) - all 7 engravings now list
-   straight down with no visual split between the always-on 3 and the
+   giving a 3-row always-on list its own full card. There is no Competing Pool sub-heading inside that card (see its own comment in resources.md) - all 7 engravings list straight down with no visual split between the always-on 3 and the
    competing 4. Ability Stones below stays a plain .ap-acc-panel-title,
    not a card - it's a sandbox for trying things out (see this section's
    opening comment), not another input block worth the same visual
@@ -6359,19 +6265,14 @@ h3 { color: var(--dbc-teal); }
   background-color: rgba(255, 255, 255, 0.04);
   color: var(--dbc-lilac);
 }
-/* Stone 1+2's merged row (previously 2 separate .ap-engr-stone-row rows,
-   see resources.md's own comment on .ap-engr-stone-row--first) directly
-   follows this grid now that Raid Captain Variables moved into it instead of
-   sitting below it as its own full-width card. Used to carry a dashed-
-   line section-break treatment here (border-top + padding-top) instead
-   of a real card border, back when it was just a bare
-   .ap-acc-panel-title + row with no box around it - reader asked for
-   that dashed separator gone now that the row IS a card (see
-   .ap-gear-card--engr-stone below), so a visible border on the card
-   itself already does the "this is a new section" job the dashed line
-   used to. Just margin-top left, matching .ap-gear-cards' own 0.9em
-   inter-card gap so the spacing above this card reads the same as the
-   spacing between the two cards inside that grid. */
+/* Stone 1+2's merged row (see resources.md's own comment on
+   .ap-engr-stone-row--first) directly follows this grid, which now holds
+   Raid Captain Variables. The row is a real card (see
+   .ap-gear-card--engr-stone below), so its visible border already does
+   the "this is a new section" job a dashed-line break (border-top +
+   padding-top) would. Just margin-top, matching .ap-gear-cards' own
+   0.9em inter-card gap so the spacing above this card reads the same as
+   the spacing between the two cards inside that grid. */
 .md-typeset .ap-gear-cards + .ap-engr-stone-row--first {
   margin-top: 0.9em;
 }
@@ -6443,14 +6344,13 @@ h3 { color: var(--dbc-teal); }
   flex-shrink: 0;
   gap: 0.5em 1.4em;
 }
-/* Title vs. Stone 1+2 (now grouped as one .ap-engr-stone-groups unit,
-   see above) split across the row's full width - same reasoning as
-   every other .ap-calc-field-row's label-vs-control space-between,
-   just declared directly on .ap-engr-stone-row now that Stone 1 and 2
-   share this one row instead of needing the old .ap-engr-stone-row.
-   ap-engr-stone-row--first double-class tiebreak against a separate
-   Stone-2-only row (that row no longer exists - both classes are always
-   on this single element together now). */
+/* Title vs. Stone 1+2 (grouped as one .ap-engr-stone-groups unit, see
+   above) split across the row's full width - same reasoning as every
+   other .ap-calc-field-row's label-vs-control space-between, declared
+   directly on .ap-engr-stone-row since Stone 1 and 2 share this one
+   row. Both .ap-engr-stone-row and .ap-engr-stone-row--first are always
+   on this single element together (there's no separate Stone-2-only
+   row to tiebreak against). */
 .md-typeset .ap-engr-stone-row {
   justify-content: space-between;
   gap: 1em;
@@ -6475,7 +6375,7 @@ h3 { color: var(--dbc-teal); }
 }
 /* Below ~640px the title plus both Stones' labels and selects no longer
    fit one line without crushing something - stack the title above
-   Stone 1+2 instead (closer to the row's pre-merge look) rather than
+   Stone 1+2 instead rather than
    let .ap-engr-stone-groups's own flex-wrap above silently eat all the
    squeeze by cramming Stone 1 and Stone 2's selects narrower and
    narrower first. Querying .ap-brace-compare-body's own rendered width
@@ -6499,12 +6399,7 @@ h3 { color: var(--dbc-teal); }
    target select + level select enough room - stack each Stone's own
    label above its pair instead, same "give the group a much narrower
    natural width" fix .ap-engr-stone-pair's own flex-wrap already applies
-   one level down for the target/level selects themselves. Applies to
-   BOTH Stone 1 and Stone 2 alike now (pre-merge, this only had to cover
-   Stone 2's row - Stone 1's own title-carrying row got its own separate,
-   wider-triggering column fallback instead - but both stones share the
-   exact same .ap-engr-stone-label-group markup now, so one rule covers
-   both). */
+   one level down for the target/level selects themselves. Applies to BOTH Stone 1 and Stone 2 alike: both share the exact same .ap-engr-stone-label-group markup, so one rule covers both. */
 @container (max-width: 420px) {
   .md-typeset .ap-engr-stone-row .ap-engr-stone-label-group {
     flex-direction: column;
@@ -6582,9 +6477,7 @@ h3 { color: var(--dbc-teal); }
   flex: 0 0 auto;
   margin-bottom: 0;
 }
-/* Attack Power % sources card no longer carries its own background tint
-   (used to be its own visually distinct nested box inside one wide
-   Gearing strip) - now it's one of the two side-by-side .ap-gear-card
+/* Attack Power % sources card carries no background tint of its own - it's one of the two side-by-side .ap-gear-card
    cards (see .ap-gear-card above for the shared border/padding/title)
    and leaves .ap-gear-card's own background: none alone, so both cards
    read as the same kind of thing side by side, distinguished only by
@@ -6691,7 +6584,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-table th.ap-brace-th-low {
   color: var(--dbc-red);
 }
-/* The merged 14 Points column no longer needs the group-header center
+/* The merged 14 Points column doesn't need the group-header center
    treatment above - it's just one column (not a 2-column Relic/Ancient
    spread to center over), so it inherits the base th's right-align and
    lines up with the right-aligned % figures underneath it. */
@@ -6717,7 +6610,7 @@ h3 { color: var(--dbc-teal); }
    than the flat percentages in the Low/Mid/High columns on the right,
    which stay plain. Mid uses the calculator's own purple (matches
    .ap-calc-mini-field--evo-dmg's --ap-cat elsewhere in the calculator)
-   and Low uses the blue Mid used to use, so this reads consistently with
+   and Low uses blue, so this reads consistently with
    the rest of the calculator's color language. The Skill Cooldown line's
    "+2%" downside figure gets its own red instead, since it's not a
    Low/Mid/High tier at all - it's the fixed downside baked into that
@@ -6737,9 +6630,7 @@ h3 { color: var(--dbc-teal); }
 /* The fixed "+1.5%" Crit Hit Damage tag on the two Crit Rate/Crit Dmg
    dual lines, and the fixed "+2.5%" Dmg vs Demon/Archdemon tag on the
    Additional Damage B line, aren't Low/Mid/High tier figures either -
-   they're flat bonuses that don't change with tier. Colored with the
-   teal/green Low used to use (now freed up by Low's move to blue above)
-   so they still read as a distinct, called-out number. */
+   they're flat bonuses that don't change with tier. Colored teal/green (distinct from Low's blue above) so they still read as a distinct, called-out number. */
 .md-typeset .ap-brace-label-fixed {
   color: var(--dbc-teal);
 }
@@ -6796,7 +6687,7 @@ h3 { color: var(--dbc-teal); }
 }
 /* Small always-visible tag flagging that a row's number is damage-share
    only (currently the Spec row, for both RE and Surge - neither model has
-   a CDR term anymore). Sized to sit inline with the label text without
+   a CDR term). Sized to sit inline with the label text without
    growing the row's height: line-height 1 plus tight padding keeps its
    box shorter than the row's own text line, unlike a badge sized off the
    1.2em info-icon circle. The full explanation lives in this tag's own
@@ -6808,12 +6699,8 @@ h3 { color: var(--dbc-teal); }
   margin-left: 0.5em;
   padding: 0.02em 0.35em;
   border-radius: 3px;
-  /* Was a hardcoded rgba(224, 169, 64, ...)/#e0a940 gold, from before this
-     file's colors were consolidated onto the shared --dbc-* tokens (see
-     the site's --dbc-gold/--dbc-gold-rgb, already used for every other
-     warn/conditional accent) - this badge just never got swept up in that
-     pass, so it silently held its own slightly-off gold instead of the
-     one every other warn-styled element on the site actually uses. */
+  /* Uses the shared --dbc-gold/--dbc-gold-rgb tokens, the same warn accent
+     every other warn-styled element on the site uses. */
   background: rgba(var(--dbc-gold-rgb), 0.15);
   border: 1px solid rgba(var(--dbc-gold-rgb), 0.55);
   color: var(--dbc-gold);
@@ -6839,18 +6726,17 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-brace-row-situational .ap-brace-tier-val {
   color: var(--dbc-slate);
 }
-/* Best-row highlight for Bracelet-lines/Chaos Core was tried twice (a
-   left-accent stripe, then a box-shadow reproduction of
-   .ap-calc-result-row-best's border+tint formula) and rejected both
-   times - a <tr> can't take a real rounded border under border-collapse,
-   so the box-shadow version came out as a hard rectangular outline
-   around the row's <td>s instead of the soft rounded pill look every
-   other "promoted answer" treatment on the site uses, reading as "too
-   square" next to them. Stripped entirely rather than attempting a third
-   shape - these plain reference tables don't get a best-row highlight at
-   all now, same as Accessory-lines/Engraving DPS Contribution never did.
-   ap-brace-row-best is no longer added anywhere (see renderComparisonRows/
-   renderArkGridComparison in ark-passive-calculator.js).
+/* No best-row highlight on the Bracelet-lines/Chaos Core tables: a <tr>
+   can't take a real rounded border under border-collapse, so a
+   box-shadow reproduction of .ap-calc-result-row-best's border+tint
+   formula comes out as a hard rectangular outline around the row's
+   <td>s (a left-accent stripe was rejected too). That reads as "too
+   square" next to the soft rounded pill look every other "promoted
+   answer" treatment on the site uses. These plain reference tables get
+   no best-row highlight at all, same as Accessory-lines/Engraving DPS
+   Contribution. ap-brace-row-best is not added anywhere (see
+   renderComparisonRows/renderArkGridComparison in
+   ark-passive-calculator.js).
    Freeform explanatory note - e.g. why Weapon Power / Attack Power /
    Specialization lines aren't in this table - kept visually secondary
    (small, muted, separated by extra top margin) so it reads as an aside
@@ -6860,9 +6746,7 @@ h3 { color: var(--dbc-teal); }
    ap-bvb-keystone-note/ap-esvs-keystone-note in resources.md and their
    toggling in ark-passive-calculator.js) - kept as its own lightweight
    rule (no border-top, tighter margin) since it's a single aside line,
-   not a block-separated footer like .ap-brace-compare-footer-note below.
-   Used to also style the Bracelet Comparison table's own flip-footnote,
-   removed since that feature was dropped entirely. */
+   not a block-separated footer like .ap-brace-compare-footer-note below. */
 .md-typeset .ap-brace-compare-aside-note {
   font-size: 0.78em;
   color: var(--dbc-slate);
@@ -6944,18 +6828,12 @@ h3 { color: var(--dbc-teal); }
      already associate this color with "food requirement" elsewhere on
      the site, so it reads as the same signal here. Box-shadow, not a
      real border, so it doesn't add to the icon's own box or nudge row
-     height. Purple ring (matching .skill-card-icon) was tried first but
-     nearly invisible at this icon's small 1em/inline size - upped to a
-     visible ring + glow instead, matching .food-option-icon's own
-     opacities rather than the fainter 40px-icon ring. */
+     height. A purple ring (matching .skill-card-icon) would be nearly invisible at this icon's small 1em/inline size, so this is a visible ring + glow matching .food-option-icon's own opacities rather than the fainter 40px-icon ring. */
   box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.55), 0 0 5px rgba(var(--dbc-rose-rgb), 0.4);
 }
-/* Best Combo/Runner-Up used to have an explanatory note directly above
-   them (removed - reader found it redundant), which incidentally also
-   supplied the only spacing between the DPS Contribution table above
-   and this panel. Replaces that borrowed spacing with a rule of its
-   own, keyed off the table's wrapper rather than a sibling note that no
-   longer exists. */
+/* Spacing between the DPS Contribution table above and the Best
+   Combo/Runner-Up panel, keyed off the table's wrapper (no sibling note
+   sits between them to supply it). */
 .md-typeset .ap-engr-contrib-wrap + .ap-engr-best-panel {
   margin-top: 0.9em;
 }
@@ -7004,8 +6882,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-bvb-card-a { --ap-bvb-accent: var(--dbc-pink); }
 .md-typeset .ap-bvb-card-b { --ap-bvb-accent: var(--dbc-teal); }
 /* Best Combo vs. Runner-Up (Engraving Comparison's own use of this same
-   .ap-bvb-card shell) used to render identically apart from their title
-   text - no visual cue for which one is the actual answer. Teal +
+   .ap-bvb-card shell) would otherwise render identically apart from their title text, with no visual cue for which one is the actual answer. Teal +
    tinted background is the site's own established "promoted answer"
    language (same treatment as .ap-stat-card-best/.ap-calc-result-row-best
    elsewhere on this page), so Best Combo gets it here too; Runner-Up
@@ -7064,12 +6941,9 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-bvb-line-row .ap-bvb-line-mainstat {
   flex: 0 0 auto;
   width: 4.6em;
-  /* Was a hardcoded rgba(224, 169, 64, ...) amber, same near-duplicate of
-     --dbc-gold the .ap-brace-label-caveat badge and .ap-brace-warn-icon
-     below both used to carry independently - all three are the site's
-     "warn/conditional" role (--dbc-gold's own documented purpose), so all
-     three now share the actual token instead of three separate
-     hand-picked hexes that only looked the same by coincidence. */
+  /* Uses the shared --dbc-gold token (the site's "warn/conditional" role,
+     same as the .ap-brace-label-caveat badge and .ap-brace-warn-icon
+     below) rather than a hand-picked amber hex. */
   border-color: rgba(var(--dbc-gold-rgb), 0.5);
 }
 .md-typeset .ap-bvb-line-row .ap-bvb-line-mainstat:focus {
@@ -7193,8 +7067,7 @@ h3 { color: var(--dbc-teal); }
   margin-left: 0.3em;
   border-radius: 999px;
   background: rgba(var(--dbc-red-rgb), 0.85);
-  /* Dark-on-fill pairing, same convention .cycle-num-3/this class's own
-     prior gold version used (background: var(--dbc-gold); color:
+  /* Dark-on-fill pairing, same convention .cycle-num-3 uses (background: var(--dbc-gold); color:
      var(--dbc-gold-dark)) - no separate --dbc-red-dark token exists, so a
      near-black falls back to the same near-black .ap-brace-warn-icon's
      gold version paired with (#1a1410 by way of --dbc-gold-dark) rather
@@ -7715,24 +7588,17 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---------- Trixion DPS distribution chart ---------- */
-/* Was a single screenshot buried in a collapsible `??? example`
-   admonition at the bottom of Rotation - easy to miss, and read as an
-   afterthought rather than an actual part of the guide. Promoted to its
-   own H2 ("## Trixion DPS") so it's a real chapter (picks up the
-   standard H2 chapter-break treatment above, and shows up in the mobile
-   quick-jump pills / desktop section tracker like every other section),
-   then later swapped for a live-drawn chart so there's no screenshot to
-   retake after a balance pass.
+/* Trixion DPS is its own H2 chapter ("## Trixion DPS"): it picks up the
+   standard H2 chapter-break treatment above and shows up in the mobile
+   quick-jump pills / desktop section tracker like every other section.
+   The chart is drawn live, so there's no screenshot to retake after a
+   balance pass.
 
    Shell matches the site's standard flat card family (.cpm-calc,
    .build-compare) - a hairline lavender border + a faint lavender tint,
    nothing else - rather than a bespoke glow/hover-lift/gradient
-   treatment. This used to be built to frame a static screenshot (glow,
-   lift-on-hover, box-shadowed image) and later had its rows redone to
-   match glossy in-game skill-chip icons; both read as much more
-   decorated than every other panel on the page once the screenshot was
-   gone and this became a plain data readout - so it's flattened back
-   down to the same plain-card language as the rest of the site instead. */
+   treatment, which would read as much more decorated than every other
+   panel on the page for what is a plain data readout. */
 .md-typeset .dps-showcase {
   display: flex;
   flex-wrap: wrap;
@@ -7777,8 +7643,7 @@ h3 { color: var(--dbc-teal); }
      a stack of separate floating tints. */
   gap: 0.15em;
 }
-/* Row is icon | bar | value instead of the old label-column + thin-
-   track-column split - the bar itself is now one wide bar that carries
+/* Row is icon | bar | value - the bar itself is one wide bar that carries
    the label, the fill, AND the empty remainder all in one piece (see
    .dps-chart-bar below), closer to a game damage-meter readout. Icon is
    its own fixed column sized to match the bar's height (--dps-bar-height)
@@ -7787,9 +7652,7 @@ h3 { color: var(--dbc-teal); }
    Even rows get a faint zebra tint, but it lives on .dps-chart-bar's
    own background (see below) rather than here on the row - the bar is
    almost the entire row's visual area, so a tint painted behind it
-   (on the row) was being fully masked and only ever showed in the
-   thin gutters between columns, which read as invisible rather than
-   as banding. */
+   (on the row) would be fully masked and only ever show in the thin gutters between columns, which reads as invisible rather than as banding. */
 .md-typeset .dps-chart-row {
   --dps-target: 0%;
   --dps-delay: 0ms;
@@ -7840,8 +7703,7 @@ h3 { color: var(--dbc-teal); }
 /* Zebra banding lives here, not on .dps-chart-row - the bar's own
    background is nearly the whole row's visual footprint, so this is
    where an alternating tint actually reads as banding instead of
-   disappearing into narrow gutters. Bumped well past the row tint it
-   replaced (0.025) since it now has to read clearly against the
+   disappearing into narrow gutters. Set well past a row-level tint (0.025) since it has to read clearly against the
    track's own 0.04 base rather than against the page background. */
 .md-typeset .dps-chart-row:nth-child(even) .dps-chart-bar {
   background-color: rgba(255, 255, 255, 0.075);
@@ -7949,15 +7811,13 @@ h3 { color: var(--dbc-teal); }
    needed. Already covered by the prefers-reduced-motion block above for
    anyone who's turned that off.
 
-   Opacity only - deliberately does NOT also animate transform (this used
-   to include `transform: translateY(6px) -> translateY(0)` for a subtle
-   rise-in alongside the fade). fill-mode: both keeps whichever
+   Opacity only - deliberately does NOT also animate transform (a `translateY(6px) -> translateY(0)` rise-in alongside the fade would break position:fixed descendants, see below). fill-mode: both keeps whichever
    properties this animation touches "held" on .md-content__inner
    forever after the 0.35s finishes, not just during it - both/forwards
    bakes in the end state as a standing override rather than releasing
    the element once the animation completes. For `transform` specifically
    this is a real problem, and changing the "to" keyframe to
-   `transform: none` (an earlier attempt at fixing this) did NOT fix it:
+   `transform: none` does NOT fix it:
    a getComputedStyle read of a HELD (fill-mode: both/forwards, no longer
    actively ticking) transform animation reports the interpolated result
    as a resolved matrix even when the specified keyframe value is the
@@ -7969,16 +7829,12 @@ h3 { color: var(--dbc-teal); }
    with playState "finished", yet getComputedStyle().transform still
    read a matrix and a position:fixed test element inside it still
    tracked page scroll 1:1 instead of staying pinned to the viewport.
-   Dropping `transform` from the animation entirely (this version) was
-   the only thing that actually fixed it in that same repro - opacity
+   Dropping `transform` from the animation entirely is the only thing that actually fixes it (per that same repro) - opacity
    alone doesn't establish a containing block for fixed descendants, so
    nothing is fighting position:fixed once the property being animated
    isn't transform at all. This is also why the mobile Build dock pill
    (.ap-build-dock, position: fixed on mobile - see extra.css's own
-   comment on that rule) needed this fixed first: no amount of fixing
-   its own rules would have made it track the viewport while this was
-   still silently retargeting it to .md-content__inner instead. Loses
-   the 6px rise, keeping just the fade - a small trade for not silently
+   comment on that rule) depends on this: no amount of fixing its own rules would make it track the viewport if this silently retargeted it to .md-content__inner instead. Trade-off: no 6px rise, just the fade - a small price for not silently
    breaking every position:fixed element added to the page from here on. */
 .md-content__inner {
   animation: page-fade-in 0.35s ease both;
@@ -8026,10 +7882,7 @@ h3 { color: var(--dbc-teal); }
 .quick-jump-pills {
   display: none;
 }
-/* -webkit-overflow-scrolling: touch used to be here (and on every other
-   horizontal scroller in this file: .skills-table, .build-compare-table-scroll,
-   .ap-gear-cards' phone-width wrapper, and .ap-brace-compare-inputs) -
-   removed sitewide, all five, in the same pass. Root cause of the
+/* -webkit-overflow-scrolling: touch is deliberately absent from every horizontal scroller in this file (.skills-table, .build-compare-table-scroll, .ap-gear-cards' phone-width wrapper, .ap-brace-compare-inputs, and this one). Root cause of the
    "pinch-zoom on iPhone 12 leaves the header with a gap on the right,
    or on Essentials pages leaves the whole page zoomed way out and
    unable to snap back" bug report: -webkit-overflow-scrolling: touch is
@@ -8048,10 +7901,7 @@ h3 { color: var(--dbc-teal); }
    family (an essentials page embeds a .build-compare block too), so two
    of these layers stacked instead of one - consistent with a compositing
    bug that compounds with each extra touch-scroll layer on the page.
-   Quick-jump-pills is call it out here since it's the one every build
-   page has (hence "most pages" in the report vs. Essentials' harsher
-   variant), but the fix is the removal across all five, not just this
-   one. */
+   The quick-jump pills are called out here since they're on every build page (hence "most pages" in the report vs. Essentials' harsher variant), but the fix applies to all five scrollers, not just this one. */
 @media screen and (max-width: 768px) {
   .quick-jump-pills {
     display: flex;
@@ -8093,11 +7943,7 @@ h3 { color: var(--dbc-teal); }
    The current section's MARK stays visible at all times (bigger, filled,
    a soft glow) so you always know roughly where you are on the page at a
    glance. The LABEL is hover/focus-only for every mark, active section
-   included - it used to also stay parked on screen for the active
-   section, but on pages with real diagrams/images near the tracker (not
-   just prose) that meant a solid label sitting over actual page content
-   the whole time you were reading that section, not just when you
-   glanced over at the tracker. Hover-only means it only ever appears
+   included: a label parked on screen for the active section would sit over actual page content (on pages with real diagrams/images near the tracker, not just prose) the whole time you were reading that section, not just when you glanced over at the tracker. Hover-only means it only ever appears
    while your cursor is already over there on purpose. */
 .section-tracker {
   display: none;
@@ -8304,7 +8150,7 @@ body.page-333-blitz input[type="text"] {
    <script type="application/json">[...]</script></div> - the JS appends a
    .skill-setup-grid of .skill-card <details> elements next to the
    (invisible) script tag. */
-/* A CSS Grid (the old approach) shares one row TRACK across every card in
+/* A CSS Grid shares one row TRACK across every card in
    the same row - so opening card A grows that whole row, and card B next
    to it (even with align-items: start keeping B's own box short) still
    sits inside a now-taller row, leaving a dead gap under B before the
@@ -8397,10 +8243,7 @@ body.page-333-blitz input[type="text"] {
    Assault) render as normal .skill-card cards inline in the main
    .skill-setup-grid, just without a .skill-card-chips row (see
    skill-setup.js's buildCard - it only appends that row when there are
-   tripods and/or a rune to show). They used to be pulled into a separate
-   .skill-special-row container/grid below the main one; that grouped
-   them visually apart from the rest of the set, which read as a lesser/
-   different tier of card rather than a normal skill. The
+   tripods and/or a rune to show). A separate container below the main grid would group them visually apart from the rest of the set, reading as a lesser/different tier of card rather than a normal skill. The
    .skill-card-special class buildCard/renderContainer still add to
    these is just a hook for any future visual distinction - nothing
    currently keys off it. */
@@ -8513,18 +8356,10 @@ body.page-333-blitz input[type="text"] {
   flex: 1 1 auto;
   min-width: 0;
 }
-/* Chips never wrap below the name anymore - see .skill-card-name's
+/* Chips never wrap below the name - see .skill-card-name's
    comment for why. Row layout stays fixed at every card width; the
    name's own ellipsis is what absorbs a too-narrow card, not a stacked
-   second line. (Previously this had a `@container (max-width: 380px)`
-   rule that switched to a stacked column layout below that width, on
-   the theory that only a narrow sidebar-squeezed desktop column or a
-   genuinely tiny screen would ever hit it. In practice a plain single-
-   column mobile card is very often ALREADY narrower than 380px on its
-   own - e.g. an iPhone SE's 375px viewport minus page padding - so real
-   phones hit the stacked layout on every card, all the time, which is
-   the exact "cards grow tall" symptom this was supposed to only be a
-   rare fallback for.) */
+   second line. (A stacked-column @container fallback below 380px is deliberately not used: a plain single-column mobile card is very often ALREADY narrower than 380px on its own - e.g. an iPhone SE's 375px viewport minus page padding - so real phones would hit the stacked layout on every card, all the time, which is the exact "cards grow tall" symptom this was supposed to only be a rare fallback for.) */
 .md-typeset .skill-card-meta {
   min-width: 0;
   /* Meta (level+name) takes whatever space the chip cluster doesn't
@@ -8670,8 +8505,7 @@ body.page-333-blitz input[type="text"] {
 }
 /* Hover/focus cue - rune-tooltip.js wires every chip with resolved rune
    data as a full .skill-tip-anchor, but like the Ark Passive node above,
-   nothing here reacted to hover/focus at all before this: the fill/
-   border already carries this chip's own tier color at rest, same
+   the fill/ border alone gives no hover/focus cue: it already carries this chip's own tier color at rest, same
    border-brighten language as .engraving-chip.skill-tip-anchor:hover
    (brighten the tier's own border rather than jump to a flat accent, no
    new background layered on top of the existing fill). Own rune-* class
@@ -8821,9 +8655,8 @@ body.page-333-blitz input[type="text"] {
    builds actually invest in, each shown as an icon + name + which of its
    3 point breakpoints (10P/14P/17P) are reached.
    Accent matches .build-card/.setup-panel[data-accent="pink"] (var(--dbc-rose))
-   rather than the Relic-red this used to reach for from the core icon art
-   (sun.png/moon.png/star.png are Relic-quality gems) - the red read as an
-   unrelated, more saturated component bolted onto a page whose build
+   rather than the Relic-red of the core icon art
+   (sun.png/moon.png/star.png are Relic-quality gems) - the red would read as an unrelated, more saturated component bolted onto a page whose build
    cards and Ark Setup panel are both already pink, instead of a variant
    of them. */
 .md-typeset .ark-core-row {
@@ -8834,8 +8667,7 @@ body.page-333-blitz input[type="text"] {
      `repeat(3, 1fr)` here (with .ark-passives on auto-fit) still lines
      up at wide widths where both happen to render 3 columns, but drifts
      out of sync anywhere .ark-passives has already dropped to 2 or 1
-     column and this hadn't - this looked fine on a wide desktop and
-     broke in exactly the sidebar-reappearing range the rest of this
+     column and this hadn't - this would look fine on a wide desktop and break in exactly the sidebar-reappearing range the rest of this
      file is already wary of. Matching formulas keeps them locked
      together at every width instead of just the common desktop case. */
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -8843,12 +8675,11 @@ body.page-333-blitz input[type="text"] {
   margin: 0.9em 0 1.2em;
 }
 @media screen and (max-width: 480px) {
-  /* The grid-template-columns override that used to live here is gone -
-     auto-fit/minmax(220px, ...) above already reaches 1 column well
-     before a 480px viewport (three 220px cards plus gaps need ~686px of
-     container width), so forcing it again here was redundant once the
-     row itself went auto-fit. Only the item's own internal spacing
-     still needs a phone-specific tweak (see comment below). */
+  /* No grid-template-columns override here: auto-fit/minmax(220px, ...)
+     above already reaches 1 column well before a 480px viewport (three
+     220px cards plus gaps need ~686px of container width), so forcing it
+     again here would be redundant. Only the item's own internal spacing
+     needs a phone-specific tweak (see comment below). */
   /* The wider desktop gap and left padding (1.4em/1.3em) are there to
      center the icon between the border and the text on a card stretched
      to 1/3 of the row's width - stacked to full width on a phone, that
@@ -8884,10 +8715,7 @@ body.page-333-blitz input[type="text"] {
   min-width: 0;
   padding: 0.6em 0.8em 0.6em 1.1em;
   /* Same subtle-tint-over-hairline-border surface as .stat/.skill-card
-     rather than its own bespoke dark gradient - the gradient (and a much
-     stronger 0.3 border) previously made this the one component on the
-     site that looked like a separate skin instead of a variant of the
-     same card. */
+     rather than a bespoke dark gradient (and a much stronger 0.3 border), which would make this the one component on the site that looks like a separate skin instead of a variant of the same card. */
   border: 1px solid rgba(var(--dbc-rose-rgb), 0.22);
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.02);
@@ -8999,14 +8827,7 @@ body.page-333-blitz input[type="text"] {
 /* Horizontal position is set inline (as an exact `left` in px) by
    ark-core-badge.js's positionTip() right before the tooltip opens -
    centered under its own card by default, then clamped so it never
-   runs past the viewport's edges. This replaced a :first-child/
-   :last-child CSS-only split that flush-aligned the Sun and Star
-   cards' tooltips to their own card edge instead of centering them -
-   correct in that it kept them on-screen, but since the tooltip
-   (~320px) is wider than a card (~290px), flush-aligning made those
-   two visibly hang off to one side while the Moon card's centered one
-   looked right - all 3 now use the same centered-then-clamped logic,
-   so they match. `left: 0` below is just the pre-JS fallback so the
+   runs past the viewport's edges. All 3 cards use the same centered-then-clamped logic rather than a :first-child/:last-child CSS-only split: flush-aligning the Sun and Star tooltips to their own card edge would keep them on-screen, but since the tooltip (~320px) is wider than a card (~290px) they'd hang off to one side while the Moon card's centered one looked right. `left: 0` below is just the pre-JS fallback so the
    element has a valid box before the first hover/focus/tap fires. */
 .md-typeset .ark-core-options-tip {
   left: 0;
@@ -9372,9 +9193,7 @@ body.page-333-blitz input[type="text"] {
 /* ---------- Ark Passive tree (Evolution/Enlightenment/Leap) ---------- */
 /* Rendered by javascripts/ark-passive-tree.js from a JSON blob (same
    authoring pattern as .ark-cores/ark-core-badge.js - see that file's
-   header comment) - replaces the old argrid-tree*.png screenshot of the
-   FULL in-game grid (all three trees, every node, every 0/x slot still
-   showing) with just the nodes actually invested. A screenshot shows
+   header comment) - shows just the nodes actually invested instead of a screenshot of the FULL in-game grid (all three trees, every node, every 0/x slot still showing). A screenshot shows
    ~40 nodes to communicate ~15 real decisions; this shows the 15.
    Structure:
    <div class="ark-passives" markdown>
@@ -9765,13 +9584,7 @@ body.page-333-blitz input[type="text"] {
 }
 /* When both widgets share one setup-panel (Ark Passive tree above Ark
    Grid Order Cores - both are "Ark Setup" content, kept together instead
-   of two separate cards), previously divided with a hairline border like
-   .setup-notes gets from the widget above it. Dropped the divider (and
-   the extra padding-top it justified) so the core row instead sits the
-   same 0.8em away from the tree above it as the core cards already sit
-   from each other via .ark-core-row's own grid gap - one consistent
-   rhythm through the whole panel instead of a bigger jump before Ark
-   Grid Order specifically. */
+   of two separate cards), there is no hairline divider (like .setup-notes gets from the widget above it) and no extra padding-top: the core row sits the same 0.8em away from the tree above it as the core cards sit from each other via .ark-core-row's own grid gap - one consistent rhythm through the whole panel instead of a bigger jump before Ark Grid Order specifically. */
 .md-typeset .setup-panel > .ark-passives + .ark-cores {
   margin-top: 0.8em;
 }
@@ -9987,7 +9800,7 @@ body.page-333-blitz input[type="text"] {
   border: 1px solid transparent;
 }
 /* `> summary > .setup-note-tag`, not the descendant-combinator
-   `.setup-note-tag` these used to end in: a .setup-note's body can hold
+   `.setup-note-tag` (which would also match nested tags): a .setup-note's body can hold
    another .setup-note (e.g. 222-speedy's "Alt" Upper Slash card nesting
    a "Note" 🐆 vs 🐯 card), and the nested tag is still a *descendant* of
    the outer .setup-note - so the outer's data-kind selector matched it
@@ -10086,8 +9899,7 @@ body.page-333-blitz input[type="text"] {
 }
 
 /* An image dropped straight into a setup-note body (222-speedy's 🐆 vs 🐯
-   comparison, 333-blitz's "why male models" reveal) rendered as a bare,
-   full-width <img> with square corners - looked like a random png pasted
+   comparison, 333-blitz's "why male models" reveal) would render as a bare, full-width <img> with square corners - like a random png pasted
    in next to every other bordered/rounded component on the page. Same
    flat-card language as .dps-showcase-frame img elsewhere
    (thin purple-tinted border, rounded corners) plus a soft drop shadow
@@ -10147,11 +9959,11 @@ body.page-333-blitz input[type="text"] {
    </div>
    </div>
 
-   No `title` attribute needed on a .food-option div anymore -
+   No `title` attribute is needed on a .food-option div -
    skill-tooltip.js's attachFoodOption wires each pill as a real
    .skill-tip trigger, reading the effect text from DB_SKILL_EXTRAS by
    the wrapped icon's filename instead (skill-data.js). The hover/focus
-   glow below is unrelated to that tooltip and stays exactly as it was. */
+   glow below is unrelated to that tooltip. */
 .md-typeset .food-required-lead {
   margin: 0 0 0.7em;
   font-size: 1em;
@@ -10246,8 +10058,7 @@ body.page-333-blitz input[type="text"] {
   color: var(--dbc-lavender);
   white-space: nowrap;
 }
-/* "or"/"+" connectors between .food-options pills - the row used to be a
-   flat list of pills with no indication of which items are alternatives
+/* "or"/"+" connectors between .food-options pills - without them the row is a flat list of pills with no indication of which items are alternatives
    to each other (RE's mana food, Surge's Atk/Move Speed food) vs which
    are required alongside whatever you picked (feast, for both builds).
    Plain inline text rather than a bordered/boxed group: sized to its own
@@ -10420,10 +10231,7 @@ body.page-333-blitz input[type="text"] {
 
   /* NOTE: a collapsed <details> prints collapsed, same as it looks on
      screen. That's deliberate. CSS alone cannot force a <details> open -
-     an earlier version of this block tried `display: revert` on the
-     children and was verified to do nothing (measured: closed notes stay
-     42px tall under print media either way), so those rules were removed
-     rather than left in as decoration. Open the notes you want before
+     `display: revert` on the children does nothing (measured: closed notes stay 42px tall under print media either way). Open the notes you want before
      printing. Forcing every note, Alt and Balance Patch block open would
      also roughly double the page count of a build guide. */
 
