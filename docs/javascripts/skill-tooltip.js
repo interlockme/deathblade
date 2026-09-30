@@ -599,9 +599,13 @@
         // closed it, so it behaved inconsistently). Tap-toggle is for touch
         // and pen. The flag makes the document listener skip THIS click so
         // the hover-opened tooltip is not closed under the pointer.
+        // evt.pointerType alone is not trusted: iOS Safari can report a
+        // touch-generated click as "mouse", which made every tap here a
+        // no-op. A click only counts as a mouse click when the click, the
+        // pointerdown that started it, and the touch history all agree.
         // evt.pointerType is "" for the label-forwarded synthetic click and
         // undefined in older browsers; both fall through to the tap path.
-        if (evt.pointerType === "mouse") {
+        if (evt.pointerType === "mouse" && lastPointerType === "mouse" && !recentlyTouched()) {
           suppressNextDocumentClose = true;
           setTimeout(function () { suppressNextDocumentClose = false; }, 0);
           return;

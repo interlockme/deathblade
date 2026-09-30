@@ -87,7 +87,7 @@ extra_javascript:
   - javascripts/gem-priority.js?v=7
   - javascripts/pentagon-badge.js?v=6
   - javascripts/rotation-line.js?v=16
-  - javascripts/skill-tooltip.js?v=18
+  - javascripts/skill-tooltip.js?v=19
   - javascripts/ark-passive-tooltip.js?v=4
   - javascripts/rune-tooltip.js?v=7
   - javascripts/glossary-data.js?v=4
