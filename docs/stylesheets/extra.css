@@ -10381,3 +10381,12 @@ html.image-lightbox-open {
     margin: 0 -0.9em -0.6em 0;
   }
 }
+
+/* Material resets `input { outline: none }`, which also removes the browser's
+   own keyboard focus ring from checkboxes and radios (text fields and selects
+   swap their border colour instead, checkboxes have no border to swap). */
+.md-typeset input[type="checkbox"]:focus-visible,
+.md-typeset input[type="radio"]:focus-visible {
+  outline: 2px solid var(--dbc-pink);
+  outline-offset: 2px;
+}
