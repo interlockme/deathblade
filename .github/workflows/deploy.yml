@@ -49,10 +49,31 @@ jobs:
       - name: Check cache-bust versions were bumped
         run: python3 scripts/check_cachebust.py "${{ github.event.before }}" "${{ github.sha }}"
 
+      # Parses every source JS file before the build. minify_assets.py --verify
+      # below only checks the already-minified copies, so a syntax error would
+      # otherwise surface late and point at the stripped file, not your edit.
+      # node is preinstalled on ubuntu-latest. This catches syntax errors only,
+      # not typo'd variable names.
+      - name: Syntax-check JS
+        run: |
+          set -e
+          for f in docs/javascripts/*.js; do
+            node --check "$f" || { echo "::error file=$f::JS syntax error"; exit 1; }
+          done
+
       # ---- Build ----
 
+      # Strict makes the validation: block in mkdocs.yml (broken links/anchors,
+      # omitted files) fail the build. Not yet confirmed on a runner, so for
+      # now a strict failure only raises a warning annotation and the site is
+      # built normally. Once a run passes without the warning, replace this
+      # step with a plain `mkdocs build --strict --site-dir site`.
       - name: Build site
-        run: mkdocs build --site-dir site
+        run: |
+          if ! mkdocs build --strict --site-dir site; then
+            echo "::warning::mkdocs build --strict failed; rebuilding without --strict. Check the log above."
+            mkdocs build --site-dir site
+          fi
 
       # Strips comments from this site's own css/js in the BUILT output only.
       # docs/ is untouched, so local `mkdocs serve` still shows every comment.

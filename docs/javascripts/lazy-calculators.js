@@ -55,7 +55,7 @@
     "cpm-calculator.js?v=9",
     "bid-calculator.js?v=6",
     "ark-passive-calculator.js?v=71",
-    "bible-import.js?v=17",   // must follow ark-passive-calculator.js
+    "bible-import.js?v=19",   // must follow ark-passive-calculator.js
     "ap-brace-tooltip.js?v=6", // needs skill-tooltip.js, which is still global
   ];
 

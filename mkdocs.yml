@@ -70,11 +70,11 @@ extra_css:
 # for the full breakdown.
 extra_javascript:
   - javascripts/site-utils.js?v=12
-  - javascripts/lazy-calculators.js?v=21
+  - javascripts/lazy-calculators.js?v=23
   - javascripts/extra.js?v=2
   - javascripts/build-data.js?v=4
   - javascripts/build-stats-badge.js?v=1
-  - javascripts/skill-data.js?v=13
+  - javascripts/skill-data.js?v=12
   - javascripts/skill-names.js?v=6
   - javascripts/rune-data.js?v=2
   - javascripts/skill-setup.js?v=9
@@ -141,3 +141,14 @@ nav:
       - 222 Speedy: surge/222-speedy.md
       - 333 Blitz: surge/333-blitz.md
   - Additional Resources: resources.md
+
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: warn
+  links:
+    not_found: warn
+    absolute_links: warn
+    unrecognized_links: warn
+    anchors: warn

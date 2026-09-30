@@ -41,18 +41,14 @@
 //     calculation, only by the comparison-sandbox rows (which compute
 //     every grade/point combo regardless of what's actually equipped),
 //     so there's nothing to import it into.
-//   - Chaos Grid core GRADE (Relic vs Ancient) isn't in the page's text or
-//     hydration data anywhere - only encoded as an icon background-color
-//     gradient (see findChaosGrade). The two gradients below were decoded
-//     against one real character and cross-checked against this
-//     calculator's own already-filled-in defaults (ap-gear-ap-chaos-star
-//     was already "Relic|20P" - matches). Marker detection had a real bug
-//     early on (a stray trailing "_" meant the marker never matched at
-//     all - see findChaosGrade's own comment) which is now fixed and
-//     confirmed working against two separate real characters. If Bible
-//     ever ships a third grade or changes these colors, an unrecognized
-//     gradient is left as null and that core's grade is simply not
-//     imported (see CHAOS_GRADE_COLORS).
+//   - Chaos Grid core GRADE (Relic vs Ancient) is not in the page's text.
+//     It is read from the last digit of the core's id in the page's own
+//     data (5 = Relic, 6 = Ancient, see CHAOS_GRADE_BY_ID_DIGIT). The icon
+//     background-color gradient on the page (see findChaosGrade) is decoded
+//     as well: it is the cross-check that warns when it disagrees with the
+//     id, and the fallback when the character has no raid snapshot to read
+//     ids from. An unrecognized digit or gradient leaves that source unset,
+//     and if neither gives a grade the field is not imported.
 //   - Main Stat % (ap-gear-main-stat-pct - Stronghold Pet + Skins bonus,
 //     see its label in resources.md) is never written by this file at
 //     all, deliberately - it isn't shown anywhere on a Bible character
@@ -95,47 +91,18 @@
     "rgb(52, 26, 9), rgb(162, 64, 6)": "Relic",
   };
 
-  // base id -> slot. 10001-10003 (Order) are unused - Order cores aren't
-  // imported at all, see this file's KNOWN GAPS comment.
-  //
-  // 10004 reliably maps to "chaos_star" - confirmed matching the page
-  // text's Chaos Star points on two separate real characters (an earlier
-  // bug had this swapped with 10006, caught on a character with 17P Sun
-  // / 18P Star where the swap produced a mismatch). That's about the
-  // base-id -> slot NAME mapping only, though - it does NOT mean the
-  // hydration data's POINT VALUE for that slot can be trusted as more
-  // current than the page text. A third character (Meilu) later showed
-  // the "most_recent_raid" snapshot's Chaos Star points reading stale
-  // (matching her "most_recent_chaos_dungeon" snapshot instead) versus
-  // her actual current equip shown in the page text - see the comment
-  // above the hydrationCore mismatch check further down in this file for
-  // the full story. Point values from hydration are cross-checked against
-  // the page text and warned on, never used to override it.
-  //
-  // 10005/10006 are DELIBERATELY NOT mapped to chaos_moon/chaos_sun here.
-  // Unlike Star, which of these two base ids is "Sun" vs "Moon" is NOT a
-  // fixed per-account constant - confirmed on a second real character
-  // (Mikalo) where the assignment came out swapped in the opposite
-  // direction from the first character (Seol) it was fixed against:
-  // Seol needed 10005->moon/10006->sun to match her page text, Mikalo
-  // needed 10005->sun/10006->moon to match his. There is no single
-  // correct mapping to pick - whichever way this went, roughly half of
-  // real characters would silently get their Sun/Moon points swapped
-  // with no warning (the mismatch check below only catches a swap when
-  // the two slots' point totals actually differ).
-  // Leaving 10005/10006 unmapped means hydration.gridSlots never gets a
-  // "chaos_sun"/"chaos_moon" entry, so buildPayload's per-slot mismatch
-  // check and its "hydration shows points but no name read" sanity check
-  // (both keyed by CHAOS_SLOT_TO_KEY) simply skip Sun/Moon and always
-  // trust the page's visible text for their point totals instead - which
-  // is unambiguous per-slot and doesn't have this problem. Star keeps
-  // using hydration as before, since that mapping has held up so far.
-  var GRID_BASE_TO_SLOT = {
-    10001: "order_sun",
-    10002: "order_moon",
-    10003: "order_star",
-    10004: "chaos_star",
-  };
+  // Ark Grid core base ids: 10001-10003 are the Order Grid's cores (not
+  // imported, see KNOWN GAPS), 10004-10006 are the Chaos Grid's. The base id
+  // does NOT say which of Sun, Moon or Star a core sits in: that varies from
+  // character to character, so Chaos cores are paired with the slots read
+  // from the page text by points and grade instead (see matchChaosCore).
+  var CHAOS_GRID_BASES = [10004, 10005, 10006];
+
+  // Last digit of an Ark Grid core's id -> grade. Matches the icon colors on
+  // both saved pages checked so far (Ancient Chaos cores in every slot, and
+  // a Relic Chaos Star); a Relic Sun or Moon has not been seen yet. Other
+  // digits are left unmapped rather than guessed.
+  var CHAOS_GRADE_BY_ID_DIGIT = { 5: "Relic", 6: "Ancient" };
 
   function tierMatch(table, value) {
     if (value == null || isNaN(value)) return null;
@@ -232,12 +199,12 @@
     // page loaded fine and most of buildPayload's fields (accessories,
     // bracelet, gems, engravings) come from visible text and don't need
     // this object at all. Return an explicit sentinel with an empty-but-
-    // present shape (gridSlots included) so buildPayload can degrade
+    // present shape (chaosCores included) so buildPayload can degrade
     // gracefully - warn and continue - instead of hard-failing the whole
     // import over fields that were never going to be available anyway.
-    if (!raid) return { noRaidLoadout: true, mainStat: null, weaponPower: null, weaponQuality: null, karma: null, gridPoints: {}, gridSlots: {} };
+    if (!raid) return { noRaidLoadout: true, mainStat: null, weaponPower: null, weaponQuality: null, karma: null, gridPoints: {}, chaosCores: [] };
 
-    var result = { mainStat: null, weaponPower: null, weaponQuality: null, karma: null, gridPoints: {} };
+    var result = { mainStat: null, weaponPower: null, weaponQuality: null, karma: null, gridPoints: {}, chaosCores: [] };
 
     var bpIdx = raid.indexOf("battlePoint:{");
     if (bpIdx !== -1) {
@@ -259,24 +226,23 @@
       var agcEnd = findBalanced(raid, agcStart, "[", "]");
       try {
         var cores = JSON.parse(jsonish(raid.slice(agcStart, agcEnd)));
-        // Diagnostic only, same idea as LAST_LOADOUT_CANDIDATES above - the
-        // grade (Relic/Ancient) lookup below only has icon background-color
-        // to go on (see findChaosGrade/CHAOS_GRADE_COLORS), which is why it
-        // comes back null/unset for some cores. Grade is very likely just a
-        // field on each of these raw core objects already (game data - not
-        // guessing this, just haven't seen a real one to confirm the field
-        // name), so this exposes the FULL untouched objects (every field,
-        // not just base/id/points) to the console instead of only the
-        // slot/id/points this function actually keeps - if grade's in
-        // there, the field name should be visible directly instead of
-        // requiring another guess.
+        // Diagnostic only, same idea as LAST_LOADOUT_CANDIDATES above: the
+        // full untouched core objects, so a change in Bible's core shape
+        // (a new grade field, say) is visible in the console dump.
         LAST_ARK_GRID_CORES_RAW = cores;
-        result.gridSlots = {}; // slot name -> { id, points }
+        result.chaosCores = [];
         cores.forEach(function (c) {
-          var slot = GRID_BASE_TO_SLOT[c.base];
-          if (slot) result.gridSlots[slot] = { id: c.id, points: result.gridPoints[c.id] };
+          if (CHAOS_GRID_BASES.indexOf(c.base) === -1) return;
+          // The core's real points are the sum of its socketed gems'
+          // corePoints. gridPoints (the battlePoint entries) are NOT usable
+          // for this: they hold the highest effect breakpoint reached
+          // (10/14/17/18/19/20), so a 15P core reads 14, and a core under
+          // 10P has no entry at all.
+          var gemSum = 0, gemsOk = Array.isArray(c.gems);
+          if (gemsOk) c.gems.forEach(function (g) { if (typeof g.corePoints === "number") gemSum += g.corePoints; else gemsOk = false; });
+          result.chaosCores.push({ id: c.id, points: gemsOk ? gemSum : result.gridPoints[c.id], grade: CHAOS_GRADE_BY_ID_DIGIT[c.id % 10] || null });
         });
-      } catch (e) { result.gridSlots = {}; }
+      } catch (e) { result.chaosCores = []; }
     }
 
     var karmaM = raid.match(/karma:\{evolution:(\d+),enlightenment:(\d+),leap:(\d+)\}/);
@@ -336,28 +302,19 @@
     return result;
   }
 
-  // Diagnostic side-channel, same idea as LAST_ARK_GRID_CORES_RAW - the raw
-  // arkGridCores hydration objects confirmed to have NO grade/tier/rarity
-  // field at all (checked a real dump: each core is just {id, base, gems:
-  // [...]}), so Relic/Ancient really can only come from this icon-color
-  // decode, not from data. Kept for future debugging, not because this is
-  // currently failing - records, per slot, whether the marker string was
-  // even found, what gradient colors (if any) turned up in the 1000-char
-  // window before it, and what CHAOS_GRADE_COLORS did with the last one,
-  // so a future failure's exact point (marker not found vs. no gradient
-  // in range vs. an unrecognized color) is visible instead of just the
-  // pass/fail this function returns.
+  // Diagnostic side-channel for the icon-color grade decode: per slot,
+  // whether the marker string was found, what gradient colors (if any)
+  // turned up in the 1000-char window before it, and what
+  // CHAOS_GRADE_COLORS did with the last one, so a failure's exact point
+  // (marker not found vs. no gradient in range vs. an unrecognized color)
+  // is visible instead of just the null the decode returns. The decode is
+  // the cross-check for the core-id grade (CHAOS_GRADE_BY_ID_DIGIT) and the
+  // fallback when there is no raid snapshot.
   var LAST_CHAOS_GRADE_DEBUG = {};
   function findChaosGrade(rawHtml, slot) {
-    // Was "emoticon_arkgrid_" + slot + "_" (trailing underscore, expecting
-    // something like emoticon_arkgrid_chaos_sun_relic.png). Confirmed via
-    // dumpArkGridMarkers against a real page that the actual filename is
-    // "emoticon_arkgrid_chaos_sun.png" - slot name goes straight into
-    // ".png", no trailing underscore, no grade encoded in the filename
-    // itself. That extra "_" was the whole markerFound:false bug seen
-    // during the original investigation below - fixed here, and confirmed
-    // resolving correctly (markerFound:true, gradient found, grade
-    // resolved) against two separate real characters since.
+    // The marker is the slot name straight into ".png"
+    // ("emoticon_arkgrid_chaos_sun.png"): no trailing underscore, and no
+    // grade in the filename itself.
     var idx = rawHtml.indexOf("emoticon_arkgrid_" + slot);
     if (idx === -1) { LAST_CHAOS_GRADE_DEBUG[slot] = { markerFound: false }; return null; }
     var windowStr = rawHtml.slice(Math.max(0, idx - 1000), idx);
@@ -378,6 +335,30 @@
     var grade = CHAOS_GRADE_COLORS[lastColor] || null;
     LAST_CHAOS_GRADE_DEBUG[slot] = { markerFound: true, gradientsInWindow: matches, lastColor: lastColor, resolvedGrade: grade };
     return grade;
+  }
+
+  // Pairs a Chaos slot read from the page text with one of the raid
+  // snapshot's Chaos cores (extractLoadoutJSON's chaosCores). Neither the
+  // base id nor the id order says which core sits in Sun, Moon or Star, so
+  // the pairing goes by what the page text shows for the slot: points
+  // first, then grade when several unclaimed cores have those points.
+  // iconGrade is a function returning the icon-color grade (lazy, since it
+  // is only needed to break a tie). Returns null when no unclaimed core has
+  // those points, which is what a stale snapshot looks like. Otherwise
+  // returns { core, ambiguous }.
+  function matchChaosCore(cores, claimed, points, iconGrade) {
+    var open = cores.filter(function (c) { return claimed.indexOf(c) === -1 && c.points === points; });
+    if (open.length > 1) {
+      var g = iconGrade();
+      var same = g ? open.filter(function (c) { return c.grade === g; }) : [];
+      if (same.length) open = same;
+    }
+    if (!open.length) return null;
+    // Still several candidates with different grades (the icon decode
+    // failed or matched none of them): the pick is arbitrary, so flag it and
+    // the caller will not trust the picked core's grade.
+    var ambiguous = open.some(function (c) { return c.grade !== open[0].grade; });
+    return { core: open[0], ambiguous: ambiguous };
   }
 
   // Diagnostic only, kept for future debugging - not a sign of an open
@@ -857,7 +838,7 @@
   // no equipped title. When a title IS equipped, the layout is
   // "...Deathblade / <name> / <title> / Combat Power", so anchoring off
   // "Combat Power" grabs the title instead (confirmed from a real dump:
-  // ".../Deathblade/ẞroselike/Monarch of the Bitter Cold/Combat Power"
+  // ".../Deathblade/<name>/Monarch of the Bitter Cold/Combat Power"
   // was importing as "Monarch of the Bitter Cold"). Anchoring off
   // "Deathblade" instead works in both cases, since the name always comes
   // right after the class line whether or not a title follows it. Returns
@@ -901,7 +882,7 @@
     var warnings = [];
 
     if (hydration.noRaidLoadout) {
-      warnings.push("No raid loadout snapshot found for this character - Weapon Power, Main Stat, Crit Stat, and Karma couldn't be auto-filled from that source. Chaos Grid core grades are read independently from the page HTML, so they're unaffected. Accessories, bracelet, gems, engravings, and ability stone were still read from the page text below; fill in the rest manually.");
+      warnings.push("No raid loadout snapshot found for this character - Weapon Power, Main Stat, Crit Stat, and Karma couldn't be auto-filled from that source. Chaos Grid core grades fall back to the icon colors in the page HTML, so they are still read. Accessories, bracelet, gems, engravings, and ability stone were still read from the page text below; fill in the rest manually.");
     }
 
     if (hydration.weaponPower != null) data["ap-gear-wp"] = String(hydration.weaponPower);
@@ -1022,8 +1003,8 @@
     data["ap-gear-weapon-core"] = "None|0P";
 
     // Chaos Grid cores. Order cores are skill-based and unsupported (see
-    // parseVisibleText's comment) - hydration.gridSlots.order_* is never
-    // read here. For Chaos, slot position (Sun/Moon/Star) does NOT fix
+    // parseVisibleText's comment) - the Order cores in the raid snapshot are
+    // never read here. For Chaos, slot position (Sun/Moon/Star) does NOT fix
     // which core is equipped - each slot picks from its own set of 6
     // generic cores, and only some of the 18 total are modeled as
     // "currently equipped" fields (the rest, like Absorbing Strike, only
@@ -1038,6 +1019,25 @@
       "Weapon": { field: "ap-gear-weapon-core", format: "pipe", mergedAt10: true },
     };
     var CHAOS_SLOT_TO_KEY = { "Chaos Sun": "chaos_sun", "Chaos Moon": "chaos_moon", "Chaos Star": "chaos_star" };
+    // Pair each slot read from the page text with a core from the raid
+    // snapshot (see matchChaosCore). Done for every slot, modeled or not, so
+    // the leftover check further down knows which snapshot cores are
+    // accounted for.
+    var claimedCores = [];
+    var chaosMatch = {};
+    var chaosIconGrades = {};
+    var chaosIconGrade = function (key) {
+      if (!(key in chaosIconGrades)) chaosIconGrades[key] = findChaosGrade(rawHtml, key);
+      return chaosIconGrades[key];
+    };
+    if (text.hasArkGrid && text.chaosCores && hydration.chaosCores) {
+      ["Chaos Sun", "Chaos Moon", "Chaos Star"].forEach(function (slotLabel) {
+        var slotCore = text.chaosCores[slotLabel];
+        if (!slotCore) return;
+        var hit = matchChaosCore(hydration.chaosCores, claimedCores, slotCore.points, function () { return chaosIconGrade(CHAOS_SLOT_TO_KEY[slotLabel]); });
+        if (hit) { claimedCores.push(hit.core); chaosMatch[slotLabel] = hit; }
+      });
+    }
     if (text.hasArkGrid && text.chaosCores) {
       Object.keys(text.chaosCores).forEach(function (slotLabel) {
         var core = text.chaosCores[slotLabel];
@@ -1067,30 +1067,15 @@
           // math is encoded for it, not that its points are suspect.
           return;
         }
-        // hydrationCore only ever exists for Chaos Star - GRID_BASE_TO_SLOT
-        // deliberately doesn't map Sun/Moon's base ids (see its comment),
-        // so this is a no-op for those two slots and their point totals
-        // always come straight from core.points (page text) below.
-        //
-        // NEVER let hydrationCore override core.points here - hydration.gridSlots' points come from the
-        // "most_recent_raid"-classified loadout's battlePoint data, which
-        // is a snapshot from whenever that character last actually entered
-        // a raid, not a live read of what's currently equipped. A real
-        // character (Meilu) surfaced this: her page text (scanned from the
-        // "Raid Loadout" tab, i.e. her CURRENT equip) read Chaos Star at
-        // 20P, but the "most_recent_raid" hydration snapshot said 19P -
-        // which actually matched her "most_recent_chaos_dungeon" snapshot
-        // instead, evidently because she'd re-invested a point in that
-        // core after her last raid clear without having re-entered a raid
-        // since. The earlier comment above GRID_BASE_TO_SLOT ("confirmed
-        // matching on two separate real characters") just means neither of
-        // those two happened to have this staleness - it was never a
-        // structural guarantee. Trust the page text unconditionally
-        // (same as Sun/Moon) and only use hydration for the
-        // warning, not as an override.
-        var hydrationCore = hydration.gridSlots && hydration.gridSlots[CHAOS_SLOT_TO_KEY[slotLabel]];
-        if (hydrationCore && hydrationCore.points != null && hydrationCore.points !== core.points) {
-          warnings.push(slotLabel + ": page text says " + core.points + "P but the page's own data (most-recent-raid snapshot) says " + hydrationCore.points + "P - kept the page text's " + core.points + "P since that reflects what's currently equipped; the snapshot can be stale. Worth a second look if this doesn't match what you expect.");
+        // The page text always decides the points. The raid snapshot is from
+        // whenever the character last entered a raid, not a live read of
+        // what is equipped, so it can be stale: a core re-invested in since
+        // then has other points there than in the page text. matched is the
+        // snapshot core paired with this slot above; it supplies the grade
+        // (from its id) and, when there is none, this warning.
+        var matched = chaosMatch[slotLabel] || null;
+        if (!matched && hydration.chaosCores && hydration.chaosCores.length) {
+          warnings.push(slotLabel + ": page text says " + core.points + "P but no Chaos core in the page's own data (most-recent-raid snapshot) has that many points - kept the page text's " + core.points + "P since that reflects what's currently equipped; the snapshot can be stale. Worth a second look if this doesn't match what you expect.");
         }
         if (core.points < 10) {
           // The real investment tiers are 0/10/14/17/18/19/20 - nothing below
@@ -1158,7 +1143,12 @@
           return;
         }
         var gradeKey = CHAOS_SLOT_TO_KEY[slotLabel];
-        var grade = findChaosGrade(rawHtml, gradeKey);
+        var iconGrade = chaosIconGrade(gradeKey);
+        var idGrade = matched && !matched.ambiguous ? matched.core.grade : null;
+        var grade = idGrade || iconGrade;
+        if (idGrade && iconGrade && idGrade !== iconGrade) {
+          warnings.push(slotLabel + " (" + core.name + ", " + core.points + "P): the core id says " + idGrade + " but the icon colors say " + iconGrade + " - used " + idGrade + ". Worth a second look.");
+        }
         if (!grade) {
           // findChaosGrade already stashed exactly why into
           // LAST_CHAOS_GRADE_DEBUG before returning null (marker not found
@@ -1242,28 +1232,22 @@
       warnings.push("Couldn't find Order Sun/Moon cores on this page (Order Grid not equipped, or a read failure) - Build wasn't auto-set, verify it matches your actual build manually.");
     }
 
-    // Sanity check: if the raid loadout's own hydration data shows real
-    // points invested in a Chaos slot, but the visible-text scan above
-    // never managed to read a core NAME for that same slot (icon markup
-    // change, unexpected separator, etc - see the "|" check above),
-    // that slot silently keeps its "None|0P" default with no warning
-    // anywhere else in this function. Every other field in this file
-    // defaults-and-warns when it can't resolve something; core-name
-    // detection was the one silent exception, so close it here rather
-    // than only via a console dump nobody but a maintainer sees. Gated
-    // on hasArkGrid so a character with genuinely no Ark Grid unlocked
-    // (and no chaosCores at all) doesn't get warned about slots it was
-    // never going to have data for.
-    // Same GRID_BASE_TO_SLOT caveat as above: this only ever fires for
-    // Chaos Star, since Sun/Moon have no hydration entry to compare
-    // against.
-    if (text.hasArkGrid && hydration.gridSlots) {
-      Object.keys(CHAOS_SLOT_TO_KEY).forEach(function (slotLabel) {
-        var hydrationCore = hydration.gridSlots[CHAOS_SLOT_TO_KEY[slotLabel]];
-        if (hydrationCore && hydrationCore.points > 0 && !text.chaosCores[slotLabel]) {
-          warnings.push(slotLabel + ": the page's own data shows " + hydrationCore.points + "P invested here, but this file couldn't read a core name for it from the page text - left unset, pick it manually.");
-        }
-      });
+    // Sanity check: if the raid snapshot shows points invested in Chaos
+    // cores that no slot read from the page text accounts for, while some
+    // slot never got a core name (icon markup change, unexpected separator,
+    // etc - see the "|" check above), that slot silently keeps its "None|0P"
+    // default with no warning anywhere else in this function. Every other
+    // field in this file defaults-and-warns when it can't resolve
+    // something; core-name detection was the one silent exception. Gated on
+    // hasArkGrid so a character with genuinely no Ark Grid unlocked (and no
+    // chaosCores at all) doesn't get warned about slots it was never going
+    // to have data for.
+    if (text.hasArkGrid && hydration.chaosCores) {
+      var unreadSlots = Object.keys(CHAOS_SLOT_TO_KEY).filter(function (slotLabel) { return !text.chaosCores[slotLabel]; });
+      var unaccounted = hydration.chaosCores.filter(function (c) { return claimedCores.indexOf(c) === -1 && c.points > 0; });
+      if (unreadSlots.length && unaccounted.length) {
+        warnings.push(unreadSlots.join(", ") + ": the page's own data shows " + unaccounted.map(function (c) { return c.points + "P"; }).join(", ") + " invested in Chaos cores that no slot read from the page text accounts for, but this file couldn't read a core name for " + (unreadSlots.length > 1 ? "them" : "it") + " from the page text - left unset, pick it manually.");
+      }
     }
 
     // Engravings - only Adrenaline/Keen Blunt Weapon have equipped-node
@@ -1395,11 +1379,9 @@
         // character" report.
         console.log("[Bible import] page at scan time: " + location.href + " (title: " + document.title + ")");
         console.log("[Bible import] loadout candidates seen on this page:\n" + JSON.stringify(window.__lastLoadoutCandidates(), null, 2));
-        // Full, untouched Ark Grid core objects for the raid loadout - see
-        // where LAST_ARK_GRID_CORES_RAW is set for why (looking for a grade
-        // field to replace the icon-color decode in findChaosGrade/
-        // CHAOS_GRADE_COLORS, which is currently coming back null for some
-        // cores).
+        // Full, untouched Ark Grid core objects for the raid loadout, so a
+        // change in Bible's core shape shows up here (see where
+        // LAST_ARK_GRID_CORES_RAW is set).
         console.log("[Bible import] raw Ark Grid core objects (raid loadout):\n" + JSON.stringify(window.__lastArkGridCoresRaw(), null, 2));
         // Per-Chaos-slot breakdown of the icon-color grade decode - see
         // where LAST_CHAOS_GRADE_DEBUG is set for what each field means.
@@ -1676,7 +1658,7 @@
     // it (see stripComments' own comment for how that was confirmed).
     var extractionSrc = [
       findBalanced, jsonish, splitTopLevelObjects, extractLoadoutJSON,
-      findChaosGrade, dumpArkGridMarkers, parseStatLine, scanAccessoryBlock, firstPct,
+      findChaosGrade, matchChaosCore, dumpArkGridMarkers, parseStatLine, scanAccessoryBlock, firstPct,
       parseBraceClauses, parseVisibleText, tierMatch, tierMatchOrNone, checkDeathbladeClass, extractCharacterName, buildPayload,
     ].map(function (fn) { return stripComments(fn.toString()); }).join("\n");
     var tableSrc = [
@@ -1691,7 +1673,8 @@
       "var BRACE_ADD_A_TABLE=" + JSON.stringify(BRACE_ADD_A_TABLE) + ";",
       "var BRACE_ADD_B_TABLE=" + JSON.stringify(BRACE_ADD_B_TABLE) + ";",
       "var CHAOS_GRADE_COLORS=" + JSON.stringify(CHAOS_GRADE_COLORS) + ";",
-      "var GRID_BASE_TO_SLOT=" + JSON.stringify(GRID_BASE_TO_SLOT) + ";",
+      "var CHAOS_GRID_BASES=" + JSON.stringify(CHAOS_GRID_BASES) + ";",
+      "var CHAOS_GRADE_BY_ID_DIGIT=" + JSON.stringify(CHAOS_GRADE_BY_ID_DIGIT) + ";",
       "var LAST_LOADOUT_CANDIDATES=null;",
       "var LAST_ARK_GRID_CORES_RAW=null;",
       "var LAST_CHAOS_GRADE_DEBUG={};",
