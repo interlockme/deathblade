@@ -18,6 +18,21 @@
 //   gems, codes), not every time a typo or a link got fixed - that's a
 //   judgment call only you can make when you edit a page, not something
 //   git history can infer on its own.
+//
+// OPTIONAL CHANGE NOTE:
+//   Add data-update-note="Short sentence about the latest change" next to
+//   data-updated and the badge becomes a tooltip trigger (same panel,
+//   hover/focus/tap behavior as every other tooltip, via
+//   SkillTooltip.wireCustom). Manual for the same reason as the date:
+//   commit messages are written for you, and one commit that touches
+//   several pages would put the same message on all of them. No note =
+//   a plain badge with no tooltip. A note with no valid date renders
+//   nothing (there is no badge to hang it on); scripts/check_content.py
+//   flags that. Only the latest change is kept: overwrite the note when
+//   the date is bumped.
+//
+// Must load after skill-tooltip.js (needs window.SkillTooltip.wireCustom);
+// without it the badge still renders, just without the tooltip.
 
 (function () {
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -30,17 +45,44 @@
     return MONTHS[m - 1] + " " + d + ", " + y;
   }
 
-  function renderCard(card) {
-    var existing = card.querySelector(".last-updated-badge");
-    if (existing) existing.remove(); // re-render: rebuild rather than trust stale text
+  // Same shape as glossary-tooltip.js's buildTip, so the shared
+  // .skill-tip-title/.skill-tip-note rules in extra.css apply.
+  function buildTip(note) {
+    var tip = window.SiteUtils.el("div", "skill-tip md-typeset");
+    tip.setAttribute("role", "tooltip");
+    tip.appendChild(window.SiteUtils.el("div", "skill-tip-title", "Latest change"));
+    tip.appendChild(window.SiteUtils.el("p", "skill-tip-note", note));
+    return tip;
+  }
 
+  function renderCard(card) {
     var formatted = formatDate(card.getAttribute("data-updated"));
+    var note = (card.getAttribute("data-update-note") || "").trim();
+    var key = formatted ? formatted + "|" + note : "";
+
+    var existing = card.querySelector(".last-updated-badge");
+    // Idempotent: registerRenderer re-runs this on every nav/mutation, and a
+    // wired badge owns a tooltip panel appended to <body>, so rebuilding an
+    // unchanged badge would leave a duplicate panel behind each time.
+    if (existing && existing.getAttribute("data-key") === key) return;
+    if (existing) {
+      var oldTip = document.getElementById(existing.getAttribute("aria-describedby") || "");
+      if (oldTip) oldTip.remove();
+      existing.remove(); // attributes changed: rebuild rather than trust stale text
+    }
+
     if (!formatted) return; // malformed date - fail quietly, no badge
 
     var badge = document.createElement("span");
     badge.className = "last-updated-badge";
+    badge.setAttribute("data-key", key);
     badge.textContent = "Updated " + formatted;
     card.appendChild(badge);
+
+    if (note && window.SkillTooltip && window.SkillTooltip.wireCustom) {
+      badge.classList.add("has-note");
+      window.SkillTooltip.wireCustom(badge, buildTip(note));
+    }
   }
 
   // Was a lone document$ subscription - see site-utils.js's registerRenderer

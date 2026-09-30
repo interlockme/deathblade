@@ -30,7 +30,7 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=94
+  - stylesheets/extra.css?v=95
 
 # Load order matters: several widgets read a shared data file
 # (build-data.js/skill-data.js/skill-names.js/ap-node-names.js) or the
@@ -96,7 +96,7 @@ extra_javascript:
   - javascripts/dps-chart.js?v=9
   - javascripts/gem-dps-tooltip.js?v=13
   - javascripts/build-compare.js?v=9
-  - javascripts/last-updated.js?v=3
+  - javascripts/last-updated.js?v=4
   - javascripts/image-lightbox.js?v=1
 
 extra:

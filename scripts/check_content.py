@@ -17,6 +17,8 @@ CHECKS
      renders as "Updated Sep 16, 2026" to someone reading on the 15th, which
      reads as a mistake. last-updated.js has no guard for this on purpose
      (it fails quiet on a malformed date), so it has to be caught here.
+     A data-update-note must be non-empty and sit next to a data-updated, or
+     the tooltip it feeds never renders.
   2. In markdown, any element carrying BOTH id and class must have the id as
      its FIRST class token. ark-passive-calculator.js selects those fields by
      CLASS (".ap-gear-wp") while save/export/import matches by ID
@@ -94,6 +96,17 @@ def check():
             if d > today:
                 problems.append(f"{rel}:{line_of(m.start())}: data-updated {raw} is in the future "
                                 f"(today is {today.isoformat()})")
+
+        # 1b. a note needs a badge to hang on
+        for m in re.finditer(r'<div\b[^>]*\bdata-update-note="[^"]*"[^>]*>', text):
+            tag = m.group(0)
+            note = re.search(r'data-update-note="([^"]*)"', tag).group(1)
+            if not note.strip():
+                problems.append(f"{rel}:{line_of(m.start())}: empty data-update-note "
+                                f"(remove it, or write the note)")
+            if not re.search(r'\bdata-updated="', tag):
+                problems.append(f"{rel}:{line_of(m.start())}: data-update-note without data-updated "
+                                f"(no badge renders, so the note is never shown)")
 
         # 2. id / first-class pairing
         for m in re.finditer(r'id="([^"]+)"\s+class="([^"]+)"', text):

@@ -1,7 +1,7 @@
 # 111 (Classic) 🦁
 
 <div class="build-card-row" markdown>
-<div class="build-card" data-updated="2026-09-26" markdown>
+<div class="build-card" data-updated="2026-09-26" data-update-note="Earth Cleaver's Earth Explosion tripod is now the default for rotation consistency." markdown>
 
 <!-- Difficulty/Trixion/Playstyle stats above, AND the pentagon badge below,
      both read from javascripts/build-data.js (window.DB_BUILD_DATA) - there is

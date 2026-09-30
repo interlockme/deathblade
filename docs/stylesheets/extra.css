@@ -2010,6 +2010,28 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .build-card:hover .last-updated-badge {
   opacity: 0.85;
 }
+/* Badge with a data-update-note: last-updated.js wires it to the shared
+   tooltip engine, so it needs to receive pointer events (the plain badge is
+   pointer-events: none so it never eats clicks meant for the card). Same
+   no-layout-shift pill as .skill-mention: padding with an equal negative
+   margin on the two sides the badge is anchored from (right/bottom), so the
+   text stays exactly where the plain badge puts it. Full opacity on
+   hover/focus because the faint resting state is what made it easy to miss.
+   No dotted underline on purpose (site-wide preference); cursor: help is the
+   only always-on hint. */
+.md-typeset .last-updated-badge.has-note {
+  pointer-events: auto;
+  cursor: help;
+  padding: 0.2em 0.55em;
+  margin: 0 -0.55em -0.2em 0;
+  border-radius: 999px;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .last-updated-badge.has-note:hover,
+.md-typeset .last-updated-badge.has-note:focus-visible {
+  opacity: 1;
+  background-color: rgba(var(--dbc-rose-rgb), 0.16);
+}
 .md-typeset .build-stats {
   display: flex;
   flex-wrap: wrap;
@@ -10276,7 +10298,8 @@ body.page-333-blitz input[type="text"] {
 }
 
 /* ---- Touch screens: comfortable text size and tap targets in the Ark Passive
-   Calculator. Gated on (pointer: coarse) so mouse layouts are untouched.
+   Calculator, plus the build-card update-note badge at the end of the block.
+   Gated on (pointer: coarse) so mouse layouts are untouched.
    - Every input/select was 13.6px. iOS Safari zooms the whole page when a
      field under 16px is focused and does not zoom back, which makes typing
      into the calculator on an iPhone jump around. 16px stops that.
@@ -10303,5 +10326,11 @@ body.page-333-blitz input[type="text"] {
   .md-typeset .ap-result-pin {
     min-width: 32px;
     min-height: 32px;
+  }
+  /* Update-note badge: 0.62rem text is far below a usable tap target. Grow the
+     pill (negative margin keeps the text in place) instead of the text. */
+  .md-typeset .last-updated-badge.has-note {
+    padding: 0.6em 0.9em;
+    margin: 0 -0.9em -0.6em 0;
   }
 }
