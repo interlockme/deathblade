@@ -64,16 +64,10 @@ jobs:
       # ---- Build ----
 
       # Strict makes the validation: block in mkdocs.yml (broken links/anchors,
-      # omitted files) fail the build. Not yet confirmed on a runner, so for
-      # now a strict failure only raises a warning annotation and the site is
-      # built normally. Once a run passes without the warning, replace this
-      # step with a plain `mkdocs build --strict --site-dir site`.
+      # omitted files) fail the build, so a broken link blocks the deploy.
+      # Confirmed passing on a GitHub runner.
       - name: Build site
-        run: |
-          if ! mkdocs build --strict --site-dir site; then
-            echo "::warning::mkdocs build --strict failed; rebuilding without --strict. Check the log above."
-            mkdocs build --site-dir site
-          fi
+        run: mkdocs build --strict --site-dir site
 
       # Strips comments from this site's own css/js in the BUILT output only.
       # docs/ is untouched, so local `mkdocs serve` still shows every comment.
