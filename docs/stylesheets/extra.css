@@ -5260,6 +5260,16 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-brace-compare-body {
   padding: 0.7em 0.85em 0.85em;
+  /* Scroll sideways instead of clipping. Every comparison <details> hides
+     its own overflow (that is what rounds the corners), and its tables
+     have a min-content width wider than a phone's panel: at 320px the
+     Bracelet Comparison table measured 363px inside a 283px box, so the Mid
+     and High columns were cut off with no way to reach them (and ~10px of
+     High at 390px). This body is the single wrapper all of those sections
+     share (Bracelet, Accessory, Bracelet vs. Bracelet, Engraving), so one
+     rule here covers them all; on any screen wide enough to fit the table
+     nothing overflows and nothing changes. */
+  overflow-x: auto;
   /* Lets Ability Stone DPS Contribution's merged title+Stone-1 row (see
      .ap-engr-stone-row--first further down) query ITS OWN rendered width
      for its narrow-width stacked fallback, same reasoning as .bid-calc's
@@ -10262,5 +10272,36 @@ body.page-333-blitz input[type="text"] {
 
   @page {
     margin: 14mm;
+  }
+}
+
+/* ---- Touch screens: comfortable text size and tap targets in the Ark Passive
+   Calculator. Gated on (pointer: coarse) so mouse layouts are untouched.
+   - Every input/select was 13.6px. iOS Safari zooms the whole page when a
+     field under 16px is focused and does not zoom back, which makes typing
+     into the calculator on an iPhone jump around. 16px stops that.
+   - Checkboxes were 15px with a label row often under 30px tall, and the
+     toolbar buttons (presets, Export, Import, Reset, the result pins, the
+     build dock trigger) were under 30px tall. These get a bigger box, not a
+     new look. */
+@media (pointer: coarse) {
+  .md-typeset .ap-calc input:not([type="checkbox"]):not([type="radio"]),
+  .md-typeset .ap-calc select {
+    font-size: 16px;
+  }
+  .md-typeset .ap-calc input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+  .md-typeset .ap-calc-preset,
+  .md-typeset .ap-calc-export,
+  .md-typeset .ap-calc-import,
+  .md-typeset .ap-calc-reset,
+  .md-typeset .ap-build-dock-trigger {
+    min-height: 36px;
+  }
+  .md-typeset .ap-result-pin {
+    min-width: 32px;
+    min-height: 32px;
   }
 }

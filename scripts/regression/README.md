@@ -65,3 +65,12 @@ Then run `baseline` and commit `fixtures/` and `baselines/`.
 ## When the snapshot itself changes
 
 If a change to the calculator's markup makes the harness miss or misread controls (a renamed wrapper class, controls moved outside `.ap-calc`), everything will show as a diff. Fix `PAGE_JS` at the top of `regress.py`, rerun `baseline` on the OLD code first, then `check` on the new code.
+
+## Layout sweep (phone widths)
+
+The baselines record values and text, not layout, so a CSS change can break a phone layout without `check` noticing. For that:
+
+    python3 scripts/regression/sweep_mobile.py --site site_out
+    python3 scripts/regression/sweep_mobile.py --site site_out --widths 320,390 --verbose
+
+It opens /resources/ in touch emulation at 320 to 1400px, opens every `<details>` in the calculator, and fails (exit 1) if the page scrolls sideways, an element spills outside the viewport with no scroll container, or an overflow-hidden element is holding content wider than itself (columns cut off with no way to reach them). Small text (under 16px, which makes iOS Safari zoom on focus) and small tap targets are counted as warnings and listed with `--verbose`. Takes about a minute. Use `--page` / `--root` for another widget, and the `ALLOW` list at the top of the script for clipping you have decided is fine.
