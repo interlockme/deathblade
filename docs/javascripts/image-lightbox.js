@@ -18,8 +18,19 @@
   var overlay = null;
   var overlayImg = null;
 
+  var lastTrigger = null;
+  var closeButton = null;
+
   function closeLightbox() {
-    if (overlay) overlay.classList.remove("is-open");
+    if (!overlay || !overlay.classList.contains("is-open")) return;
+    overlay.classList.remove("is-open");
+    // Release the scroll lock and hand focus back to the image that opened
+    // it, so a keyboard user does not land back at the top of the page.
+    document.documentElement.classList.remove("image-lightbox-open");
+    if (lastTrigger && lastTrigger.isConnected) {
+      try { lastTrigger.focus({ preventScroll: true }); } catch (e) { /* older browsers */ }
+    }
+    lastTrigger = null;
   }
 
   function buildOverlay() {
@@ -37,6 +48,7 @@
     closeBtn.setAttribute("aria-label", "Close");
     closeBtn.textContent = "\u2715";
     overlay.appendChild(closeBtn);
+    closeButton = closeBtn;
 
     document.body.appendChild(overlay);
 
@@ -45,12 +57,30 @@
     // gesture either direction, so the image doesn't need its own
     // stopPropagation carve-out.
     overlay.addEventListener("click", closeLightbox);
+    // iOS Safari ignores overflow: hidden on <html> for touch scrolling in
+    // many versions, so the page could still be dragged behind the overlay.
+    // Cancel single-finger moves on the overlay itself; two-finger pinch is
+    // left alone so the image can still be zoomed.
+    overlay.addEventListener(
+      "touchmove",
+      function (e) {
+        if (e.touches && e.touches.length === 1) e.preventDefault();
+      },
+      { passive: false }
+    );
     closeBtn.addEventListener("click", function (e) {
       e.stopPropagation();
       closeLightbox();
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") closeLightbox();
+      // aria-modal only tells screen readers the page behind is inert; it
+      // does not stop Tab. The close button is the dialog's only control,
+      // so keeping focus on it is a complete focus trap.
+      if (e.key === "Tab" && overlay.classList.contains("is-open")) {
+        e.preventDefault();
+        closeButton.focus();
+      }
     });
   }
 
@@ -58,7 +88,14 @@
     buildOverlay();
     overlayImg.src = img.currentSrc || img.src;
     overlayImg.alt = img.alt || "";
+    lastTrigger = img;
+    overlay.setAttribute("aria-label", img.alt || "Image preview");
+    // Without this the page scrolled (wheel, touch, arrow keys) behind the
+    // overlay, and on a phone a swipe to look around a big image dragged
+    // the page instead.
+    document.documentElement.classList.add("image-lightbox-open");
     overlay.classList.add("is-open");
+    closeButton.focus({ preventScroll: true });
   }
 
   function wireImage(img) {
@@ -67,8 +104,19 @@
     // against double-binding the click handler.
     if (img.dataset.lightboxWired) return;
     img.dataset.lightboxWired = "true";
+    // A bare <img> is not reachable or operable by keyboard, so the
+    // zoomable screenshots could only be opened with a pointer.
+    if (!img.hasAttribute("tabindex")) img.setAttribute("tabindex", "0");
+    img.setAttribute("role", "button");
+    img.setAttribute("aria-label", "Enlarge image: " + (img.alt || "screenshot"));
     img.addEventListener("click", function () {
       openLightbox(img);
+    });
+    img.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openLightbox(img);
+      }
     });
   }
 

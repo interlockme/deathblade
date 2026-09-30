@@ -168,10 +168,39 @@
     var itemRect = item.getBoundingClientRect();
     var tipWidth = tip.getBoundingClientRect().width;
     var desiredLeft = itemRect.left + itemRect.width / 2 - tipWidth / 2;
-    var maxLeft = window.innerWidth - tipWidth - VIEWPORT_MARGIN;
+    // clientWidth (not innerWidth): innerWidth includes the vertical
+    // scrollbar, which let a clamped panel still poke ~15px past the
+    // visible page on desktop.
+    var maxLeft = document.documentElement.clientWidth - tipWidth - VIEWPORT_MARGIN;
     var clampedLeft = Math.min(Math.max(desiredLeft, VIEWPORT_MARGIN), maxLeft);
     tip.style.left = (clampedLeft - itemRect.left) + "px";
   }
+
+  // Every panel is clamped once at rest, and again on resize, not only right
+  // before it opens. A hidden (opacity 0) absolutely positioned panel still
+  // counts toward the page's scrollable width, so a card near the right edge
+  // with the pre-JS `left: 0` fallback made the whole page scroll sideways at
+  // tablet widths (measured: up to 64px at 760-940px, 91px at 1220px on
+  // build pages) even though the panel was invisible.
+  var clampQueued = false;
+  function clampAllTips() {
+    clampQueued = false;
+    document.querySelectorAll(".ark-core-item-tip").forEach(function (item) {
+      var tip = item.querySelector(".ark-core-options-tip");
+      if (tip) positionTip(item, tip);
+    });
+  }
+  function queueClampAll() {
+    if (clampQueued) return;
+    clampQueued = true;
+    window.requestAnimationFrame(clampAllTips);
+  }
+  window.addEventListener("resize", queueClampAll);
+  // The window resize event alone misses layout changes that move a card
+  // without the window's own resize handler seeing settled positions (the
+  // Material TOC sidebar appearing at ~1220px, a sidebar drawer, container-
+  // query reflows), so each row also watches its own size.
+  var rowObserver = window.ResizeObserver ? new ResizeObserver(queueClampAll) : null;
 
   // Tap-toggle-open (.ark-core-tip-open) is a JS-added class, so it stays
   // on an item independently of :hover/:focus-visible - closing it only
@@ -240,6 +269,13 @@
       // matching the ap-calc-popover open/close-on-outside-click pattern
       // elsewhere on the site rather than inventing a new one.
       item.addEventListener("click", function (evt) {
+        // A mouse click must not pin the panel open after the pointer leaves
+        // (hover already shows it); tap-toggle is for touch and pen only.
+        // Uses skill-tooltip.js's shared test instead of evt.pointerType:
+        // iOS Safari reports finger taps as "mouse", which turned every tap
+        // on a core into a no-op (same bug skill-tooltip.js had). Without
+        // SkillTooltip loaded, fall through to tap-toggle, the safe default.
+        if (window.SkillTooltip && window.SkillTooltip.isMouseClick && window.SkillTooltip.isMouseClick(evt)) return;
         if (item.classList.contains("ark-core-tip-open")) {
           item.classList.remove("ark-core-tip-open");
           return;
@@ -280,6 +316,8 @@
       row.appendChild(buildItem(entry));
     });
     container.appendChild(row);
+    if (rowObserver) rowObserver.observe(row);
+    queueClampAll();
   }
 
   window.SiteUtils.registerRenderer(".ark-cores", renderContainer);

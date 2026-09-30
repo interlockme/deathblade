@@ -217,6 +217,22 @@
     if (!activeLine || !document.contains(activeLine)) return;
     var tag = (e.target.tagName || "").toLowerCase();
     if (tag === "input" || tag === "textarea") return;
+    // Space/Escape belong to whatever interactive control has focus: Space
+    // was being swallowed on the focused "Exit" toggle (it advanced a step
+    // instead of exiting, so a keyboard user could only leave with Enter),
+    // and on any other focused button, select, link or summary on the page.
+    // A non-interactive target (body, a skill chip) still advances.
+    var interactive = e.target.closest
+      ? e.target.closest("button, a[href], select, summary, [contenteditable], [role=button]")
+      : null;
+    if (e.code === "Space" && interactive) return;
+    // Practice only makes sense while the rotation is on screen. Scrolled
+    // far away, Space went on advancing an invisible step and the page could
+    // not be paged down until the user found the Exit button again.
+    if (e.code === "Space") {
+      var rect = activeLine.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+    }
     if (e.code === "Space") {
       e.preventDefault();
       advance(activeLine);

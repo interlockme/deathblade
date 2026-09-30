@@ -382,6 +382,15 @@
   function recentlyTouched() {
     return Date.now() - lastTouchAt < TOUCH_MOUSE_WINDOW_MS;
   }
+  // iOS Safari can report a touch-generated click/pointerdown as "mouse", so
+  // pointerType alone is never trusted: it only counts as a real mouse when
+  // the pointerdown that started it says so AND no touch happened just before.
+  // Every "mouse vs touch" decision in this file (and ark-core-badge.js, via
+  // SkillTooltip.isMouseClick) goes through this one test.
+  function isRealMouse(evt) {
+    var clickSaysMouse = !evt || evt.pointerType === undefined || evt.pointerType === "mouse";
+    return clickSaysMouse && lastPointerType === "mouse" && !recentlyTouched();
+  }
 
   function setVisible(entry, visible) {
     entry.tip.classList.toggle("skill-tip-visible", visible);
@@ -532,7 +541,10 @@
       // MOUSE-initiated focus is ignored for those.
       try {
         if (evt.target && evt.target.matches && !evt.target.matches(":focus-visible")) {
-          if (!(opts.wrapsControl && lastPointerType !== "mouse")) return;
+          // isRealMouse, not a bare lastPointerType check: iOS can label a
+          // finger tap "mouse", which made a wrapped checkbox's tooltip
+          // never show on iPhone.
+          if (!(opts.wrapsControl && !isRealMouse())) return;
         }
       } catch (e) { /* unsupported selector: fall through */ }
       closeAllExcept(trigger);
@@ -605,7 +617,7 @@
         // pointerdown that started it, and the touch history all agree.
         // evt.pointerType is "" for the label-forwarded synthetic click and
         // undefined in older browsers; both fall through to the tap path.
-        if (evt.pointerType === "mouse" && lastPointerType === "mouse" && !recentlyTouched()) {
+        if (evt.pointerType === "mouse" && isRealMouse(evt)) {
           suppressNextDocumentClose = true;
           setTimeout(function () { suppressNextDocumentClose = false; }, 0);
           return;
@@ -886,6 +898,12 @@
   // attach* function above, so the caller knows whether to also fall back
   // to a plain native title.
   window.SkillTooltip = {
+    // True only for a genuine mouse click (see isRealMouse). ark-core-badge.js
+    // uses it so its tap handling matches this file's on iOS Safari.
+    isMouseClick: function (evt) {
+      return isRealMouse(evt);
+    },
+
     // opts.extra / opts.tapToggle: see buildTip's and wire's own comments
     // above. All optional - existing callers passing just (trigger, id,
     // primary) are unaffected (opts defaults to {}, extra is undefined,
