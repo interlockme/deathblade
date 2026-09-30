@@ -8990,14 +8990,21 @@ body.page-333-blitz input[type="text"] {
   text-align: left;
   white-space: normal;
   opacity: 0;
+  /* visibility (not just opacity) so the ~100-170 idle panels are out of the
+     accessibility tree and out of text search/selection. It still lays out,
+     so positionTip can measure it, and aria-describedby still resolves to a
+     hidden element. The delayed visibility flip lets the fade-out finish. */
+  visibility: hidden;
   pointer-events: none;
   transform: translateY(4px);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0.15s;
 }
 .skill-tip.skill-tip-visible {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
   transform: translateY(0);
+  transition-delay: 0s;
 }
 /* EXPERIMENT: header row for skill-tooltip.js's optional icon (see
    buildTip) - also reused as-is by ark-passive-tooltip.js's own

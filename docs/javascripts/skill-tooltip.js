@@ -245,6 +245,13 @@
     var needed = tipRect.height + TRIGGER_GAP + VIEWPORT_MARGIN;
     var placeAbove = spaceBelow < needed && itemRect.top >= needed;
     var top = placeAbove ? itemRect.top - tipRect.height - TRIGGER_GAP : itemRect.bottom + TRIGGER_GAP;
+    // Neither side has room (a short landscape phone, or a tall Ark Passive
+    // tip near mid-screen): without this the panel hung off the bottom edge
+    // with most of its text unreachable. Sliding it into the viewport may
+    // cover the trigger, which beats being clipped. A panel taller than the
+    // viewport itself pins to the top margin.
+    var maxTop = window.innerHeight - tipRect.height - VIEWPORT_MARGIN;
+    top = Math.max(VIEWPORT_MARGIN, Math.min(top, maxTop));
 
     var desiredLeft = itemRect.left + itemRect.width / 2 - tipRect.width / 2;
     var maxLeft = window.innerWidth - tipRect.width - VIEWPORT_MARGIN;
@@ -261,6 +268,49 @@
   // tooltip the tap explicitly asked to keep open.
   var openTips = []; // [{ trigger, tip, state }]
   var tipIdCounter = 0; // see wire()'s aria-describedby comment below
+
+  // Every wired trigger owns a panel appended to <body>. Widgets that rebuild
+  // their markup (the Ark Passive tree on load, every Ark Passive Calculator
+  // recompute that recreates a labelled field) throw the old triggers away but
+  // not their panels, so panels and openTips entries piled up for the life of
+  // the page (measured: ~15 orphans per pass over the calculator's selects,
+  // 38 on a fresh build page) and repositionVisible/refresh loop over all of
+  // them. A trigger is only dropped after it has stayed disconnected for
+  // PRUNE_GRACE_MS, so a node that is briefly detached and re-inserted keeps
+  // its tooltip. Runs from wire(), i.e. exactly when a re-render adds
+  // triggers, plus one trailing pass so the last batch is not left behind.
+  var PRUNE_GRACE_MS = 1000;
+  var pruneTimer = null;
+  function pruneDetached() {
+    var now = Date.now();
+    var pending = false;
+    openTips = openTips.filter(function (entry) {
+      if (entry.trigger.isConnected) {
+        entry.detachedAt = 0;
+        return true;
+      }
+      if (!entry.detachedAt) entry.detachedAt = now;
+      if (now - entry.detachedAt < PRUNE_GRACE_MS) {
+        pending = true;
+        return true;
+      }
+      entry.tip.remove();
+      return false;
+    });
+    if (pending && !pruneTimer) {
+      pruneTimer = setTimeout(function () {
+        pruneTimer = null;
+        pruneDetached();
+      }, PRUNE_GRACE_MS);
+    }
+  }
+  function schedulePrune() {
+    if (pruneTimer) return;
+    pruneTimer = setTimeout(function () {
+      pruneTimer = null;
+      pruneDetached();
+    }, PRUNE_GRACE_MS + 50);
+  }
 
   // Ark Passive Calculator-only bug this exists to fix (see ap-brace-
   // tooltip.js's blanket `.ap-calc [title]` selector): most of that
@@ -316,6 +366,16 @@
     "touchstart",
     function () {
       lastTouchAt = Date.now();
+    },
+    { capture: true, passive: true }
+  );
+  // Last pointer device that pressed anything, for the focusin filter in
+  // wire(): a click's focus is only "just a click" when it came from a mouse.
+  var lastPointerType = "";
+  document.addEventListener(
+    "pointerdown",
+    function (evt) {
+      lastPointerType = evt.pointerType || "";
     },
     { capture: true, passive: true }
   );
@@ -417,8 +477,9 @@
 
     document.body.appendChild(tip);
 
-    var entry = { trigger: trigger, tip: tip, state: { hover: false, focus: false, open: false } };
+    var entry = { trigger: trigger, tip: tip, state: { hover: false, focus: false, open: false }, detachedAt: 0, openScrollY: 0 };
     openTips.push(entry);
+    schedulePrune();
 
     trigger.addEventListener("mouseenter", function () {
       // See recentlyTouched()'s own comment above openTips - this
@@ -459,7 +520,21 @@
         }
       }
     });
-    trigger.addEventListener("focusin", function () {
+    trigger.addEventListener("focusin", function (evt) {
+      // A mouse click on a span/label/checkbox also focuses it, and that
+      // focus then pinned the tooltip open after the pointer left, until the
+      // next click elsewhere. Only keyboard focus (:focus-visible) or a text
+      // field's own focus should hold it open; hover already covers the mouse.
+      // Browsers without :focus-visible keep the old behavior.
+      // Exception: a <label> wrapping its own checkbox (opts.wrapsControl)
+      // has no tap-toggle of its own (see the click handler below), so on
+      // touch the checkbox's focus IS how a tap shows its tooltip. Only a
+      // MOUSE-initiated focus is ignored for those.
+      try {
+        if (evt.target && evt.target.matches && !evt.target.matches(":focus-visible")) {
+          if (!(opts.wrapsControl && lastPointerType !== "mouse")) return;
+        }
+      } catch (e) { /* unsupported selector: fall through */ }
       closeAllExcept(trigger);
       entry.state.focus = true;
       positionTip(trigger, tip);
@@ -518,6 +593,20 @@
           return;
         }
 
+        // A mouse click must not pin the tooltip: hover already shows it,
+        // and a pinned one stayed on screen after the pointer moved away,
+        // until the next click elsewhere (a second click on the trigger then
+        // closed it, so it behaved inconsistently). Tap-toggle is for touch
+        // and pen. The flag makes the document listener skip THIS click so
+        // the hover-opened tooltip is not closed under the pointer.
+        // evt.pointerType is "" for the label-forwarded synthetic click and
+        // undefined in older browsers; both fall through to the tap path.
+        if (evt.pointerType === "mouse") {
+          suppressNextDocumentClose = true;
+          setTimeout(function () { suppressNextDocumentClose = false; }, 0);
+          return;
+        }
+
         if (entry.state.open) {
           entry.state.open = false;
           refresh(entry);
@@ -525,6 +614,7 @@
         }
         closeAllExcept(trigger);
         entry.state.open = true;
+        entry.openScrollY = window.pageYOffset;
         positionTip(trigger, tip);
         refresh(entry);
         // See suppressNextDocumentClose's own comment above openTips - a
@@ -709,8 +799,22 @@
   // the window itself. Cheap to run: openTips is small (a handful of
   // rotation/inline mentions per page) and this only does real work for
   // whichever entries are actually visible.
+  // A tap-opened tooltip has no pointer leaving to close it, so it rode along
+  // with its trigger for the whole scroll and could only be dismissed by
+  // tapping elsewhere (after a long scroll it was simply off-screen, still
+  // "open"). Close it once the page has actually scrolled away from where it
+  // was opened; the threshold keeps the address-bar resize and the tiny
+  // scroll some browsers do on tap from dismissing it instantly. Only the
+  // tap-driven state closes here: a hovered or focused tooltip is still
+  // owned by hover/focus.
+  var TAP_SCROLL_DISMISS_PX = 60;
   function repositionVisible() {
+    var y = window.pageYOffset;
     openTips.forEach(function (entry) {
+      if (entry.state.open && Math.abs(y - entry.openScrollY) > TAP_SCROLL_DISMISS_PX) {
+        entry.state.open = false;
+        refresh(entry);
+      }
       if (entry.tip.classList.contains("skill-tip-visible")) positionTip(entry.trigger, entry.tip);
     });
   }

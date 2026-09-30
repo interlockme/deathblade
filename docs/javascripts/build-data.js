@@ -135,7 +135,7 @@
           id: "222-speedy",
           name: "222 (Speedy)",
           accent: "#4db6ac",
-          pentagon: [7, 9, 9, 8, 8],
+          pentagon: [7, 9.5, 9, 8, 8],
           difficulty: 7,
           trixion: 1.25,
           trixionConfirmed: true,
