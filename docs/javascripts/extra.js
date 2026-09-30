@@ -19,9 +19,8 @@
    - tab-title mischief on build pages while the tab is unfocused
    - a tiny click easter egg on the 333 Blitz page's title tiger
 
-   Flash-highlighting a jumped-to heading and the page fade-in are handled
-   in extra.css alone (:target and a plain keyframe animation) - no JS
-   needed for those, so they're not here.
+   The page fade-in is a plain keyframe animation in extra.css, so it is
+   not handled here.
 
    Everything below is wrapped in document$.subscribe so it re-runs after
    Material's instant-loading page swaps (navigation.instant), not just
@@ -145,6 +144,11 @@
     }
     sectionTrackerItems.forEach(function (it, i) {
       it.link.classList.toggle("is-active", i === activeIndex);
+      if (i === activeIndex) {
+        it.link.setAttribute("aria-current", "location");
+      } else {
+        it.link.removeAttribute("aria-current");
+      }
     });
   }
 
@@ -273,8 +277,9 @@
     }
   }
 
-  // Quick-jump pills and section tracker marks scroll in place instead of
-  // going through Material's instant navigation. Material treats the FIRST
+  // Every same-page #anchor link (pills, tracker marks, heading permalinks,
+  // TOC entries, in-content links) scrolls in place instead of going through
+  // Material's instant navigation. Material treats the FIRST
   // same-page anchor click after a full load as a navigation: it refetches the
   // page, swaps the content, re-runs every widget and lands the heading well
   // below the top (reproduced on a bare Material 9.7.6 site). Later clicks are
@@ -284,8 +289,10 @@
   function handleJumpLinkClick(e) {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     if (!(e.target instanceof Element)) return;
-    var link = e.target.closest(".quick-jump-pills a, .section-tracker-item");
+    var link = e.target.closest("a[href*='#']");
     if (!link || !link.hash || link.hash.length < 2) return;
+    if (link.origin !== window.location.origin || link.pathname !== window.location.pathname) return;
+    if (link.target === "_blank" || link.hasAttribute("download") || link.classList.contains("md-skip")) return;
     var id = link.hash.slice(1);
     try { id = decodeURIComponent(id); } catch (err) { /* keep raw id */ }
     var target = document.getElementById(id);

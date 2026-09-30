@@ -2998,8 +2998,10 @@ h3 { color: var(--dbc-teal); }
      ...)` term is the standard "auto-fit but capped" trick: forcing each
      column's minimum to be at least half the row's own width (minus the
      gap) makes a 3rd column mathematically unable to fit, regardless of
-     how wide the container gets - only 2 or 1 (narrow) are ever possible. */
-  grid-template-columns: repeat(auto-fit, minmax(max(320px, calc((100% - 0.8em) / 2)), 1fr));
+     how wide the container gets - only 2 or 1 (narrow) are ever possible.
+     The outer min(100%, ...) stops that 320px floor from exceeding the
+     container itself, which overflowed the page on 320px phones. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, max(320px, calc((100% - 0.8em) / 2))), 1fr));
   gap: 0.8em;
 }
 /* :last-child:nth-child(odd) is what actually detects "alone in the final
@@ -8867,6 +8869,18 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-core-options-tip {
   left: 0;
   transform: translateY(4px);
+}
+/* The panel sits 8px below its card. Without a bridge over that gap the
+   pointer leaves the card's :hover on the way to the panel and the panel
+   hides before it can be reached (WCAG 1.4.13 "hoverable"). The bridge is
+   part of the panel, so hovering it keeps the card hovered. */
+.md-typeset .ark-core-options-tip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -10px;
+  height: 10px;
 }
 .md-typeset .ark-core-item-tip:hover .ark-core-options-tip,
 .md-typeset .ark-core-item-tip:focus-visible .ark-core-options-tip,

@@ -417,9 +417,31 @@
   function closeAllExcept(keepTrigger) {
     openTips.forEach(function (entry) {
       if (entry.trigger === keepTrigger) return;
+      cancelHoverLeave(entry);
       entry.state.hover = entry.state.focus = entry.state.open = false;
       refresh(entry);
     });
+  }
+
+  // The pointer crosses an 8px gap (TRIGGER_GAP) between a trigger and its
+  // panel, so hover ends on a short delay and the panel itself counts as
+  // hover. That lets a pointer user move onto the panel to read or select
+  // its text (WCAG 1.4.13 "hoverable"). Entering another trigger still
+  // closes this one at once via closeAllExcept.
+  var HOVER_CLOSE_DELAY_MS = 250;
+  function cancelHoverLeave(entry) {
+    if (entry.leaveTimer) {
+      clearTimeout(entry.leaveTimer);
+      entry.leaveTimer = null;
+    }
+  }
+  function scheduleHoverLeave(entry) {
+    cancelHoverLeave(entry);
+    entry.leaveTimer = setTimeout(function () {
+      entry.leaveTimer = null;
+      entry.state.hover = false;
+      refresh(entry);
+    }, HOVER_CLOSE_DELAY_MS);
   }
 
   // Wires the hover/focus/tap-toggle behavior onto a trigger already
@@ -486,7 +508,7 @@
 
     document.body.appendChild(tip);
 
-    var entry = { trigger: trigger, tip: tip, state: { hover: false, focus: false, open: false }, detachedAt: 0, openScrollY: 0 };
+    var entry = { trigger: trigger, tip: tip, state: { hover: false, focus: false, open: false }, detachedAt: 0, openScrollY: 0, leaveTimer: null };
     openTips.push(entry);
     schedulePrune();
 
@@ -506,20 +528,36 @@
       // (this entry's own state.hover is set right after, so it's
       // unaffected by being excluded from that sweep).
       closeAllExcept(trigger);
+      cancelHoverLeave(entry);
       entry.state.hover = true;
       positionTip(trigger, tip);
       refresh(entry);
     });
-    trigger.addEventListener("mouseleave", function (evt) {
-      entry.state.hover = false;
+    tip.addEventListener("mouseenter", function () {
+      if (recentlyTouched()) return;
+      cancelHoverLeave(entry);
+      entry.state.hover = true;
       refresh(entry);
+    });
+    tip.addEventListener("mouseleave", function () {
+      scheduleHoverLeave(entry);
+    });
+    trigger.addEventListener("mouseleave", function (evt) {
+      var handoff = opts.fallbackTrigger && evt.relatedTarget && opts.fallbackTrigger.contains(evt.relatedTarget);
+      if (handoff) {
+        cancelHoverLeave(entry);
+        entry.state.hover = false;
+        refresh(entry);
+      } else {
+        scheduleHoverLeave(entry);
+      }
       // See opts.fallbackTrigger's comment above wire(). Only hands the
       // tooltip back if the pointer is still actually inside the outer
       // trigger (relatedTarget) - if it left the outer element entirely
       // too, that element's own mouseleave (registered separately, when
       // IT was wired) already fired or is about to, and will correctly
       // leave both closed.
-      if (opts.fallbackTrigger && evt.relatedTarget && opts.fallbackTrigger.contains(evt.relatedTarget)) {
+      if (handoff) {
         var parentEntry = findEntry(opts.fallbackTrigger);
         if (parentEntry) {
           closeAllExcept(opts.fallbackTrigger);
