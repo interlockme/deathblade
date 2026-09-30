@@ -29,6 +29,7 @@
 (function () {
   var scrollListenerBound = false;
   var delegatedClickListenersBound = false;
+  var jumpClickBound = false;
   var sectionTrackerItems = [];
   var blurTitleOriginal = null;
   // Minimum own-page H2 count for a page to count as "lengthy" enough to
@@ -237,8 +238,14 @@
     // Guards against a rapid double-click stacking two rains on top of
     // each other - just let the first one finish.
     if (document.querySelector(".tiger-rain")) return;
+    // The reduced-motion CSS collapses animation-duration but not the
+    // per-emoji delay, so the rain would just flash and park tigers. Skip
+    // the whole thing for visitors who asked for less motion.
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     var container = document.createElement("div");
     container.className = "tiger-rain";
+    // Purely decorative: keep 26 tiger emojis out of the accessibility tree.
+    container.setAttribute("aria-hidden", "true");
     var count = 26;
     for (var i = 0; i < count; i++) {
       var span = document.createElement("span");
@@ -266,6 +273,36 @@
     }
   }
 
+  // Quick-jump pills and section tracker marks scroll in place instead of
+  // going through Material's instant navigation. Material treats the FIRST
+  // same-page anchor click after a full load as a navigation: it refetches the
+  // page, swaps the content, re-runs every widget and lands the heading well
+  // below the top (reproduced on a bare Material 9.7.6 site). Later clicks are
+  // fine. Handled in the capture phase so Material's click listener never sees
+  // it; scroll-margin on the headings still positions the target under the
+  // sticky header.
+  function handleJumpLinkClick(e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (!(e.target instanceof Element)) return;
+    var link = e.target.closest(".quick-jump-pills a, .section-tracker-item");
+    if (!link || !link.hash || link.hash.length < 2) return;
+    var id = link.hash.slice(1);
+    try { id = decodeURIComponent(id); } catch (err) { /* keep raw id */ }
+    var target = document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    // Same bookkeeping Material does for a link click: remember where Back
+    // should return to, then add the hash entry.
+    window.history.replaceState({ x: window.scrollX, y: window.scrollY }, "");
+    window.history.pushState(null, "", link.hash);
+    // Material only applies its scroll-margin to :target, which a pushState
+    // does not set, so leave the same gap under the sticky header by hand.
+    var header = document.querySelector(".md-header");
+    var gap = (header ? header.offsetHeight : 0) + 20;
+    window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.scrollY - gap));
+  }
+
   if (window.document$) {
     document$.subscribe(function () {
       externalLinksNewTab();
@@ -291,6 +328,10 @@
       if (!delegatedClickListenersBound) {
         delegatedClickListenersBound = true;
         document.addEventListener("click", handleDelegatedClick);
+      }
+      if (!jumpClickBound) {
+        jumpClickBound = true;
+        document.addEventListener("click", handleJumpLinkClick, true);
       }
     });
   }
