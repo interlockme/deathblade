@@ -312,6 +312,16 @@
     var header = document.querySelector(".md-header");
     var gap = (header ? header.offsetHeight : 0) + 20;
     window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.scrollY - gap));
+    // Material's anchor tracking rewrites the URL on scroll and drops the
+    // hash for a heading that is not in the TOC (the page title), so the
+    // title's permalink would end up with no hash. Put it back once tracking
+    // has run, unless the visitor has scrolled on in the meantime.
+    var landedY = window.scrollY;
+    window.setTimeout(function () {
+      if (window.location.hash !== link.hash && Math.abs(window.scrollY - landedY) < 2) {
+        window.history.replaceState(window.history.state, "", link.hash);
+      }
+    }, 400);
   }
 
   if (window.document$) {

@@ -161,6 +161,7 @@
         exitPractice(line);
       } else {
         enterPractice(line);
+        releasePointerFocus(e, toggle);
       }
     });
 
@@ -199,6 +200,7 @@
         exitPractice(card);
       } else {
         enterPractice(card);
+        releasePointerFocus(e, toggle);
       }
     });
 
@@ -206,6 +208,15 @@
       if (!card.classList.contains("practice-mode")) return;
       advance(card);
     });
+  }
+
+  // A mouse or tap click leaves focus on the toggle, and Space on a focused
+  // button activates it (see the keydown handler below), so the first Space
+  // after starting practice would exit instead of advancing. Drop the focus
+  // for pointer activation only: a keyboard activation has detail 0 and keeps
+  // its focus, so keyboard users are not thrown back to the top of the page.
+  function releasePointerFocus(e, toggle) {
+    if (e.detail > 0) toggle.blur();
   }
 
   // Bound once at module scope, not per-render - this listener doesn't

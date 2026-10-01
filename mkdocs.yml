@@ -71,7 +71,7 @@ extra_css:
 extra_javascript:
   - javascripts/site-utils.js?v=12
   - javascripts/lazy-calculators.js?v=23
-  - javascripts/extra.js?v=6
+  - javascripts/extra.js?v=7
   - javascripts/build-data.js?v=5
   - javascripts/build-stats-badge.js?v=1
   - javascripts/skill-data.js?v=12
@@ -92,7 +92,7 @@ extra_javascript:
   - javascripts/rune-tooltip.js?v=7
   - javascripts/glossary-data.js?v=4
   - javascripts/glossary-tooltip.js?v=1
-  - javascripts/rotation-practice.js?v=9
+  - javascripts/rotation-practice.js?v=10
   - javascripts/dps-chart.js?v=9
   - javascripts/gem-dps-tooltip.js?v=13
   - javascripts/build-compare.js?v=9
