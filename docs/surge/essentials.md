@@ -35,6 +35,7 @@ Atk/Move Speed Feast
 <summary><span class="setup-note-tag">Alt</span>Mana Food + Maelstrom Bleed (111/333 ONLY)<span class="setup-note-arrow"></span></summary>
 
 - Otherwise, use ![](../assets/shared/icon-striploin.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-steak.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-azena.png){: .food-option-icon } <span class="food-option-connector food-option-connector-plus">+</span> ![](../assets/shared/icon-feast.png){: .food-option-icon } and equip <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> rune on <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>. Higher ceiling, lower floor.
+- Keep the <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> rune if you don't trust your or your support's uptime (spec bards), or for trixion-like content.
 
 </details>
 
