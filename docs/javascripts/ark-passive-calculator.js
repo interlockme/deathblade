@@ -842,6 +842,16 @@
   function is222Build(root) {
     return currentBraceSpecBuildId(root) === "surge-222";
   }
+  // The "Mana Food (Main Stat only)" choice (food without the Bleed rune on
+  // Maelstrom) is offered on the Surge builds where the regular Mana Food
+  // box means Bleed: 111 and 333. On 222 and RE the single Mana Food box
+  // already is the Main Stat only food, so there is nothing to choose
+  // there. This gates both the row and whether a ticked box is allowed to
+  // count (see readEngravingInputs).
+  function isSurgeBleedFoodBuild(root) {
+    const id = currentBraceSpecBuildId(root);
+    return id === "surge-111" || id === "surge-333";
+  }
 
   // Maelstrom Uptime's own sensible default varies by build: RE and
   // Surge 111/333 share a rotation shape close enough that one number
@@ -3973,9 +3983,11 @@
   // clear the Bleed rune's stat threshold without Mana Food, so treating
   // Mana Food as adding that Dmg there would double-count a bonus 222
   // likely already has regardless of the checkbox). False for RE, same
-  // as before - RE has no Bleed-rune-on-Maelstrom interaction at all.
+  // as before - RE has no Bleed-rune-on-Maelstrom interaction at all. Also
+  // false when the reader picked the Surge 111/333 "Main Stat only" food, which
+  // by definition skips the Bleed rune.
   function manaFoodBleedApplies(engrInputs, inputs) {
-    return engrInputs.spec === "surge" && inputs.braceSpecBuild !== "surge-222";
+    return engrInputs.spec === "surge" && inputs.braceSpecBuild !== "surge-222" && !engrInputs.manaFoodMainOnly;
   }
   // Short label for the food itself, used everywhere a "which food did
   // you eat" string gets built - "Mana Food" alone (no "+ Bleed") for RE
@@ -4464,6 +4476,7 @@
   // exported - see the HTML) or already covered live via `inputs` itself
   // (backAttackRate, yearning, adrenaline*, kbw*).
   function readEngravingInputs(root) {
+    const manaFoodMainOnly = isSurgeBleedFoodBuild(root) && getCheckbox(root, ".ap-engr-manafood-main", false);
     return {
       // Derived from the master Build toggle (see isSurgeBuild) - Playstyle
       // is not its own control here, it just echoes RE vs Surge from
@@ -4486,7 +4499,10 @@
       // own exclusivity just below.
       supportPaladin: getCheckbox(root, ".ap-engr-support-paladin", false),
       wine: getCheckbox(root, ".ap-engr-wine", true),
-      manaFood: getCheckbox(root, ".ap-engr-manafood", false),
+      // manaFood means "some Mana Food is eaten" (either box below);
+      // manaFoodMainOnly says which one, and only counts on Surge 111/333.
+      manaFood: getCheckbox(root, ".ap-engr-manafood", false) || manaFoodMainOnly,
+      manaFoodMainOnly,
       manaFoodAmount: getNumber(root, ".ap-engr-manafood-amount", 6000),
       stone1Target: getSelect(root, ".ap-engr-stone1-target", "None"),
       stone1Level: getSelect(root, ".ap-engr-stone1-level", "0 Lv."),
@@ -4845,7 +4861,9 @@
         // manaFoodContributionGain/engravingCandidateMultiplier), so
         // there's nothing for the tooltip to explain there.
         note: engrInputs.spec === "surge"
-          ? "Includes using the Bleed rune on Maelstrom. Not tied to any one engraving."
+          ? (engrInputs.manaFoodMainOnly
+            ? "Main Stat only, without the Bleed rune on Maelstrom. Not tied to any one engraving."
+            : "Includes using the Bleed rune on Maelstrom. Not tied to any one engraving.")
           : null,
       },
     ].filter(Boolean);
@@ -5766,12 +5784,14 @@
     // DOM's own build selector since this render function only gets
     // engrInputs (spec, no build id) rather than the full inputs object.
     // False for RE AND for Surge 222 (see is222Build's own comment).
-    const manaFoodHasBleed = isSurge && !is222Build(root);
+    const manaFoodHasBleed = isSurge && !is222Build(root) && !engrInputs.manaFoodMainOnly;
     const rageRuneRow = root.querySelector(".ap-engr-rage-rune-row");
     if (rageRuneRow) rageRuneRow.style.display = isSurge ? "" : "none";
     const wineRow = root.querySelector(".ap-engr-wine-row");
     if (wineRow) wineRow.style.display = isSurge ? "" : "none";
     const manaFoodRow = root.querySelector(".ap-engr-manafood-row");
+    const manaFoodMainRow = root.querySelector(".ap-engr-manafood-main-row");
+    if (manaFoodMainRow) manaFoodMainRow.style.display = isSurgeBleedFoodBuild(root) ? "" : "none";
     // Mana Food is not Surge-exclusive UI - RE gets the same
     // checkbox/amount select (see manaFoodContributionGain's own
     // comment for what it actually does on RE: Main-Stat-only, excluded
@@ -5780,7 +5800,7 @@
     if (manaFoodRow) manaFoodRow.style.display = "";
     const manaFoodLabelEl = root.querySelector(".ap-engr-manafood-label");
     if (manaFoodLabelEl) {
-      manaFoodLabelEl.textContent = manaFoodHasBleed
+      manaFoodLabelEl.textContent = isSurge && !is222Build(root)
         ? "Mana Food (+Maelstrom Bleed)"
         : "Mana Food (Main Stat only)";
     }
@@ -6609,11 +6629,19 @@
   // checked, matching the crossing listener's own choice to turn Mana
   // Food off (not Wine) on landing on Surge.
   function normalizeSpeedChoiceExclusivity(root) {
-    if (!isSurgeBuild(root)) return;
     const wineEl = root.querySelector(".ap-engr-wine");
     const manaFoodEl = root.querySelector(".ap-engr-manafood");
+    const manaFoodMainEl = root.querySelector(".ap-engr-manafood-main");
+    // The Main Stat only food exists on Surge 111 and 333 only. A tick left
+    // over anywhere else (build switched, stale export) folds into the
+    // regular Mana Food box, which is what that choice means on 222 and RE.
+    if (manaFoodMainEl && manaFoodMainEl.checked && !isSurgeBleedFoodBuild(root)) {
+      manaFoodMainEl.checked = false;
+      if (manaFoodEl && isSurgeBuild(root)) manaFoodEl.checked = true;
+    }
+    if (!isSurgeBuild(root)) return;
     let keptOne = false;
-    [wineEl, manaFoodEl].filter(Boolean).forEach((el) => {
+    [wineEl, manaFoodMainEl, manaFoodEl].filter(Boolean).forEach((el) => {
       if (!el.checked) return;
       if (keptOne) el.checked = false;
       else keptOne = true;
@@ -7234,8 +7262,9 @@
         });
       }
 
-      // Vernese Wine and Mana Food are a 2-way mutually exclusive set of
-      // Surge consumable choices - Wine feeds Raid Captain's isolated
+      // Vernese Wine, Mana Food (Main Stat only, Surge 111/333) and Mana Food
+      // (+Maelstrom Bleed) are a 3-way mutually exclusive set of Surge
+      // consumable choices - Wine feeds Raid Captain's isolated
       // Move Speed calc (see raidCaptainMoveSpeed), and Mana Food feeds
       // its own contribution-table row (manaFoodGain) - only one is ever
       // actually eaten at once. Same "dedicated listeners, checking one
@@ -7244,7 +7273,8 @@
       // side to fall back on for a plain update()-driven resolver.
       const wineEl = root.querySelector(".ap-engr-wine");
       const manaFoodEl = root.querySelector(".ap-engr-manafood");
-      const speedChoiceEls = [wineEl, manaFoodEl].filter(Boolean);
+      const manaFoodMainEl = root.querySelector(".ap-engr-manafood-main");
+      const speedChoiceEls = [wineEl, manaFoodMainEl, manaFoodEl].filter(Boolean);
       speedChoiceEls.forEach((el) => {
         el.addEventListener("change", () => {
           if (el.checked) {
@@ -7411,6 +7441,9 @@
           buildSelectEl.dataset.lastFamilyIsSurge = isSurgeBuild(root) ? "1" : "0";
         }
         buildSelectEl.addEventListener("change", () => {
+          // Leaving Surge 111/333 with the Main Stat only food ticked turns it
+          // into the regular Mana Food box before the crossing check below.
+          normalizeSpeedChoiceExclusivity(root);
           const nowIsSurge = isSurgeBuild(root);
           const lastIsSurge = buildSelectEl.dataset.lastFamilyIsSurge === "1";
           if (nowIsSurge !== lastIsSurge) {

@@ -1419,6 +1419,9 @@
           <label class="ap-calc-field-label" for="ap-engr-maelstrom-uptime" title="% of the fight Maelstrom's buffs are active as you attack the boss - a flat +12.8 Move Speed/Atk. Speed bonus.">Maelstrom Uptime %</label>
           <input type="number" id="ap-engr-maelstrom-uptime" class="ap-engr-maelstrom-uptime" min="0" max="100" step="1" value="85">
         </div>
+        <div class="ap-calc-field-row ap-engr-manafood-main-row">
+          <label class="ap-engr-checkbox-label" title="Mana Food for its Main Stat only, without equipping Bleed on Maelstrom. Uses the Mana Food amount selected below. Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus."><input type="checkbox" id="ap-engr-manafood-main" class="ap-engr-manafood-main"> Mana Food (Main Stat only)</label>
+        </div>
         <div class="ap-calc-field-row ap-engr-manafood-row">
           <label class="ap-engr-checkbox-label" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus."><input type="checkbox" id="ap-engr-manafood" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed)</span></label>
           <select id="ap-engr-manafood-amount" class="ap-engr-manafood-amount" aria-label="Mana Food Amount">
