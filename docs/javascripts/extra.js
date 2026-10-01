@@ -293,6 +293,10 @@
     if (!link || !link.hash || link.hash.length < 2) return;
     if (link.origin !== window.location.origin || link.pathname !== window.location.pathname) return;
     if (link.target === "_blank" || link.hasAttribute("download") || link.classList.contains("md-skip")) return;
+    // Material wraps each tab label's text in <a href="#__tabbed_N_M"> at
+    // runtime. The click has to reach the label so it checks its radio input;
+    // preventing it here is what stopped every tab from switching.
+    if (link.closest(".tabbed-labels, label")) return;
     var id = link.hash.slice(1);
     try { id = decodeURIComponent(id); } catch (err) { /* keep raw id */ }
     var target = document.getElementById(id);

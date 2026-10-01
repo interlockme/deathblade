@@ -71,7 +71,7 @@ extra_css:
 extra_javascript:
   - javascripts/site-utils.js?v=12
   - javascripts/lazy-calculators.js?v=23
-  - javascripts/extra.js?v=5
+  - javascripts/extra.js?v=6
   - javascripts/build-data.js?v=5
   - javascripts/build-stats-badge.js?v=1
   - javascripts/skill-data.js?v=12
