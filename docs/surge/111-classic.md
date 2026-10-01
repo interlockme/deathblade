@@ -188,7 +188,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
 - You can use the Weak Point Detection <span class="skill-mention" data-glossary-id="tripod">tripod</span> on Blade Dance.
     - Requires Lv 10 CD gem and/or raid downtime for it not to become a bottleneck.
-    - You must swap Wind Cut CD gem to Blade Dance CD, and it's a marginal DPS increase.
+    - You must swap Wind Cut DMG gem to Blade Dance CD, and it's a marginal DPS increase.
 - Leap Attack vs Earth Explosion tripod on Earth Cleaver is up to personal preference.
     - Earth Explosion is faster and may raise rotation consistency with an extra stack.
     - Leap Attack is slower but increases overall DPS by ~1% and offers more mobility.
