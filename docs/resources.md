@@ -791,7 +791,7 @@
           <input type="number" id="ap-gear-gem-base-ap" class="ap-gear-gem-base-ap ap-gear-input-narrow" min="0" max="13.2" step="0.1" value="13.2">
         </div>
         <div class="ap-calc-field-row ap-calc-field-row-pair">
-          <label class="ap-calc-field-label" title="Your Ability Stone's own Base AP % bonus - a flat +1.5% if you have a 9/7, 10/6, or better roll (at 5+ engraving levels).">Base Ability Stone %</label>
+          <label class="ap-calc-field-label" title="Your Ability Stone's own Base AP % bonus - a flat +1.5% if you have a 9/7, 10/6, or better roll (at 5+ engraving levels).">Ability Stone Base AP %</label>
           <div class="ap-calc-pair ap-gear-ability-stone-base-ap-pair">
             <span class="ap-value-display" data-for="ap-gear-ability-stone-base-ap"></span>
             <label class="ap-calc-pair-check">
