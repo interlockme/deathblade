@@ -585,6 +585,12 @@
           if (!(opts.wrapsControl && !isRealMouse())) return;
         }
       } catch (e) { /* unsupported selector: fall through */ }
+      // focusin bubbles. When the focused element is a DIFFERENT wired trigger nested inside this
+      // one (a bare Feast icon inside the Raid Captain chip), its own handler has just opened its
+      // own tooltip; letting this outer handler run too would close that and show the chip's
+      // instead, so a keyboard user could never read the icon's tooltip.
+      var inner = evt.target && evt.target !== trigger && evt.target.closest ? evt.target.closest(".skill-tip-wired") : null;
+      if (inner && inner !== trigger && trigger.contains(inner)) return;
       closeAllExcept(trigger);
       entry.state.focus = true;
       positionTip(trigger, tip);

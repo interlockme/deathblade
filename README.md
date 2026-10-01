@@ -23,7 +23,7 @@ This one's more work, since the class's skills, identity mechanic, and Ark Passi
 - **INFRA** files (`site-utils.js`, `bid-calculator.js`, `image-lightbox.js`, `extra.js`) are generic site stuff with nothing class-specific in them either, also fine to leave alone. `extra.js` has one small exception noted in its comment (a 333 Blitz easter egg you'll probably want to cut).
 - **DEATHBLADE-SPECIFIC** files (`ark-passive-calculator.js`, `cpm-calculator.js`) are hardcoded to Deathblade's own numbers and mechanics. Don't try to just edit the data in these, either delete them or rewrite the math for your class.
 
-If you end up adding/removing/reordering scripts, there's a comment above `extra_javascript` in `mkdocs.yml` explaining the load order (a few widgets need a data file or `site-utils.js` loaded before they run). Note that the five calculator files aren't listed there at all: they're only used by `resources.md`, so `lazy-calculators.js` pulls them in on demand instead of on every page. Their order and their `?v=` cache-bust numbers live in that file.
+If you end up adding/removing/reordering scripts, there's a comment above `extra_javascript` in `mkdocs.yml` explaining the load order (a few widgets need a data file or `site-utils.js` loaded before they run). Note that the five calculator files aren't listed there at all: they're only used by `resources.md`, so `lazy-calculators.js` pulls them in on demand instead of on every page. Their order lives in that file.
 
 ### Other stuff to change
 
@@ -51,18 +51,17 @@ never against `docs/`.
 `.github/workflows/deploy.yml` runs, in order:
 
 1. `scripts/check_ids.py` - every id referenced in markdown resolves against the DATA files.
-2. `scripts/check_content.py` - dates aren't in the future, `id`/`class` still match on calculator fields, display text hasn't drifted from the DATA files, `?v=` present on every asset.
-3. `scripts/check_cachebust.py` - if a `.js`/`.css` changed in this push, its `?v=` was bumped in the right place (`mkdocs.yml`, or `LAZY_BUNDLE` for the five lazy files).
-4. `mkdocs build`
-5. `scripts/minify_assets.py site --verify` - strips comments from the built css/js. `docs/` keeps every comment; only what ships gets stripped. Takes a guide page from ~237 KB to ~57 KB gzipped.
+2. `scripts/check_content.py` - dates aren't in the future, `id`/`class` still match on calculator fields, display text hasn't drifted from the DATA files, every JSON block has the shape its widget reads, no tab group has more than 8 tabs.
+3. `mkdocs build`
+4. `scripts/minify_assets.py site --verify` - strips comments from the built css/js. `docs/` keeps every comment; only what ships gets stripped. Takes a guide page from ~237 KB to ~57 KB gzipped.
+5. `scripts/hash_assets.py site` - adds a content hash to every own css/js URL (`?v=<hash>`), including the lazy calculator files. Nothing to bump by hand; it runs after minifying so the hash is of the bytes that ship.
 6. `ghp-import` to `gh-pages` (identical to what `mkdocs gh-deploy --force --no-history` does internally).
 
-Any of the three checks can be run locally too, they need nothing installed:
+Both checks can be run locally too, they need nothing installed:
 
 ```
 python3 scripts/check_ids.py
 python3 scripts/check_content.py
 ```
 
-If a check fails the deploy stops before publishing, so a broken id or a missed
-cache-bust can't reach the live site.
+If a check fails the deploy stops before publishing, so a broken id or a block in an old JSON shape can't reach the live site.

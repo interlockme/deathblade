@@ -2,7 +2,7 @@
 
 The verification playbook in `project-context.md`, as a script. It answers one question: did anything the calculator or the Bible importer shows or produces change, and if so, what exactly?
 
-It is a local tool, not a CI gate: it needs Playwright and Chromium. The three `check_*.py` scripts in `scripts/` stay the CI gates.
+It is a local tool, not a CI gate: it needs Playwright and Chromium. The `check_*.py` scripts in `scripts/` stay the CI gates.
 
 ## Setup
 
@@ -74,3 +74,12 @@ The baselines record values and text, not layout, so a CSS change can break a ph
     python3 scripts/regression/sweep_mobile.py --site site_out --widths 320,390 --verbose
 
 It opens /resources/ in touch emulation at 320 to 1400px, opens every `<details>` in the calculator, and fails (exit 1) if the page scrolls sideways, an element spills outside the viewport with no scroll container, or an overflow-hidden element is holding content wider than itself (columns cut off with no way to reach them). Small text (under 16px, which makes iOS Safari zoom on focus) and small tap targets are counted as warnings and listed with `--verbose`. Takes about a minute. Use `--page` / `--root` for another widget, and the `ALLOW` list at the top of the script for clipping you have decided is fine.
+
+## smoke.py: everything that is not the calculator
+
+`regress.py` pins the calculator and the importer. `smoke.py` drives the sitewide behaviour they cannot see: tabs, `<details>`, permalinks and jump links, tooltips (hover, click, keyboard, phone taps), Ark Cores, the lightbox, practice mode, and instant navigation between pages.
+
+    mkdocs build -d site_out
+    python3 scripts/regression/smoke.py --site site_out --workers 4
+
+Prints `OK` or one `FAIL` line per problem and exits 1. `--pages /surge/111-classic/` limits it to chosen pages, `--verbose` adds notes. It serves the site under the production path and rewrites `sitemap.xml` to the local origin, because Material only does instant navigation for links listed in the sitemap.

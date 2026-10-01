@@ -23,11 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          # Full history so check_cachebust.py can diff this push against the
-          # commit before it. Without this the runner gets a shallow clone and
-          # that check quietly skips itself.
-          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -38,16 +33,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # ---- Gates: all three are pure-stdlib scripts, no extra installs ----
+      # ---- Gates: pure-stdlib scripts, no extra installs ----
 
       - name: Check id references resolve
         run: python3 scripts/check_ids.py
 
       - name: Check content (dates, id/class pairing, name drift)
         run: python3 scripts/check_content.py
-
-      - name: Check cache-bust versions were bumped
-        run: python3 scripts/check_cachebust.py "${{ github.event.before }}" "${{ github.sha }}"
 
       # Parses every source JS file before the build. minify_assets.py --verify
       # below only checks the already-minified copies, so a syntax error would
@@ -76,6 +68,17 @@ jobs:
       # parsing.
       - name: Minify built assets
         run: python3 scripts/minify_assets.py site --verify
+
+      # Cache-busts every own css/js URL with a hash of its final bytes, so a
+      # changed file can never be served stale to a returning visitor and there
+      # is no ?v= to bump by hand. Must run AFTER minify_assets.py (it hashes
+      # what actually ships) and after the build.
+      - name: Hash asset URLs
+        run: python3 scripts/hash_assets.py site
+
+      # Self-test for the step above (stdlib only, runs in a second).
+      - name: Test asset hashing
+        run: python3 scripts/test_hash_assets.py
 
       # ---- Deploy ----
       # This is exactly what `mkdocs gh-deploy --force --no-history` does

@@ -30,8 +30,7 @@ theme:
     - search.highlight
 
 extra_css:
-  - stylesheets/extra.css?v=100
-
+  - stylesheets/extra.css
 # Load order matters: several widgets read a shared data file
 # (build-data.js/skill-data.js/skill-names.js/ap-node-names.js) or the
 # shared site-utils.js helpers, which must already exist on window
@@ -43,9 +42,11 @@ extra_css:
 #      bible-import.js, ap-brace-tooltip.js) on demand instead of on every
 #      page. They are deliberately NOT listed here: they were 543 KB of
 #      this site's 851 KB and no guide page uses any of them. Their load
-#      order, and their ?v= CACHE-BUST NUMBERS, live in that file's
-#      LAZY_BUNDLE array - bump them THERE after editing any of the five,
-#      not here. Everything still listed below bumps here as usual.
+#      order lives in that file's LAZY_BUNDLE array.
+#
+# No ?v= numbers anywhere: scripts/hash_assets.py adds a content hash to
+# every own css/js URL in the BUILT site (and inside LAZY_BUNDLE), so a
+# changed file always gets a new URL with nothing to bump by hand.
 #   2. extra.js - standalone, no cross-file deps
 #   3. data files: build-data.js, skill-data.js, skill-names.js,
 #      ap-node-names.js, ap-node-effects.js, core-options-data.js
@@ -69,36 +70,35 @@ extra_css:
 # scratch). See README.md's "Forking this for your own spin" section
 # for the full breakdown.
 extra_javascript:
-  - javascripts/site-utils.js?v=12
-  - javascripts/lazy-calculators.js?v=23
-  - javascripts/extra.js?v=7
-  - javascripts/build-data.js?v=5
-  - javascripts/build-stats-badge.js?v=1
-  - javascripts/skill-data.js?v=12
-  - javascripts/skill-names.js?v=6
-  - javascripts/rune-data.js?v=2
-  - javascripts/skill-setup.js?v=9
-  - javascripts/essentials-table.js?v=7
-  - javascripts/core-options-data.js?v=5
-  - javascripts/ark-core-badge.js?v=9
-  - javascripts/ap-node-names.js?v=5
-  - javascripts/ap-node-effects.js?v=4
-  - javascripts/ark-passive-tree.js?v=7
-  - javascripts/gem-priority.js?v=7
-  - javascripts/pentagon-badge.js?v=6
-  - javascripts/rotation-line.js?v=16
-  - javascripts/skill-tooltip.js?v=21
-  - javascripts/ark-passive-tooltip.js?v=4
-  - javascripts/rune-tooltip.js?v=7
-  - javascripts/glossary-data.js?v=4
-  - javascripts/glossary-tooltip.js?v=1
-  - javascripts/rotation-practice.js?v=10
-  - javascripts/dps-chart.js?v=9
-  - javascripts/gem-dps-tooltip.js?v=13
-  - javascripts/build-compare.js?v=9
-  - javascripts/last-updated.js?v=4
-  - javascripts/image-lightbox.js?v=2
-
+  - javascripts/site-utils.js
+  - javascripts/lazy-calculators.js
+  - javascripts/extra.js
+  - javascripts/build-data.js
+  - javascripts/build-stats-badge.js
+  - javascripts/skill-data.js
+  - javascripts/skill-names.js
+  - javascripts/rune-data.js
+  - javascripts/skill-setup.js
+  - javascripts/essentials-table.js
+  - javascripts/core-options-data.js
+  - javascripts/ark-core-badge.js
+  - javascripts/ap-node-names.js
+  - javascripts/ap-node-effects.js
+  - javascripts/ark-passive-tree.js
+  - javascripts/gem-priority.js
+  - javascripts/pentagon-badge.js
+  - javascripts/rotation-line.js
+  - javascripts/skill-tooltip.js
+  - javascripts/ark-passive-tooltip.js
+  - javascripts/rune-tooltip.js
+  - javascripts/glossary-data.js
+  - javascripts/glossary-tooltip.js
+  - javascripts/rotation-practice.js
+  - javascripts/dps-chart.js
+  - javascripts/gem-dps-tooltip.js
+  - javascripts/build-compare.js
+  - javascripts/last-updated.js
+  - javascripts/image-lightbox.js
 extra:
   generator: false
 

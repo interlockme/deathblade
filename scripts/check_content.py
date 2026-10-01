@@ -34,9 +34,17 @@ CHECKS
      skill in skill-names.js surfaces the pages still showing the old name.
   5. setup-note data-kind values that have no matching CSS rule (an unstyled
      note still renders, just with no accent, which is easy to miss).
-  6. Every extra_css / extra_javascript entry in mkdocs.yml carries a ?v=.
+  7. The SHAPE of every inline JSON block (ark-passives, ark-cores, skill-setup, gem-priority,
+     rotation-line, skills-table): right root type, required keys present, no key the engine does
+     not read (a stale pre-simplification key such as "tiers" or "label" on a node), values in range
+     (rune tier, core slot, points 0-3, a node level within its max, a tripod 1-3). The engines
+     skip what they do not recognise, so a block in an old shape renders blank, and when it sits
+     inside a collapsed <details> nobody sees it. check_ids.py only checks id membership.
+  8. No tab group with more than 8 tabs. extra.css pairs each tab's input with its label by
+     :nth-of-type(1..8) to colour the active tab, so a ninth tab would silently lose its styling.
 """
 import datetime
+import json
 import pathlib
 import re
 import sys
@@ -57,6 +65,224 @@ ALLOWED_SHORT_FORMS = {
 }
 
 
+# ---------------------------------------------------------------------------
+# 7. JSON block shapes. Allowed keys mirror what each engine actually reads;
+# anything else is a stale or mistyped key. Per-node/per-item overrides stay
+# allowed (project-context.md, DATA SIMPLIFICATION CONVENTION: the explicit
+# field wins over the table lookup).
+# ---------------------------------------------------------------------------
+JSON_BLOCK = re.compile(
+    r'<(\w+)\b([^>]*?\bclass="([^"]*)"[^>]*)>\s*<script type="application/json">(.*?)</script>', re.S)
+RUNE_TIERS = {"common", "uncommon", "rare", "epic", "legendary"}
+AP_COLUMNS = {"evolution", "enlightenment", "leap"}
+CORE_SLOTS = {"sun", "moon", "star"}
+
+
+def _keys(obj, allowed, required=()):
+    """Return problem strings for unknown / missing keys of one object."""
+    out = []
+    for k in obj:
+        if k not in allowed:
+            out.append(f"unknown key {k!r} (the engine does not read it; stale or mistyped?)")
+    for k in required:
+        if k not in obj:
+            out.append(f"missing required key {k!r}")
+    return out
+
+
+def _is_int(v):
+    return isinstance(v, int) and not isinstance(v, bool)
+
+
+def validate_block(kind, data, ap_max):
+    """Return a list of 'where: what' strings for one parsed JSON block."""
+    errs = []
+
+    def add(where, msg):
+        errs.append(f"{where}: {msg}")
+
+    if not isinstance(data, list):
+        return [f"root must be an array, got {type(data).__name__}"]
+
+    if kind == "ark-passives":
+        for ci, col in enumerate(data):
+            w = f"column {ci + 1}"
+            if not isinstance(col, dict):
+                add(w, "must be an object")
+                continue
+            for m in _keys(col, {"id", "nodes", "label", "points"}, ("id", "nodes")):
+                add(w, m)
+            if col.get("id") not in AP_COLUMNS:
+                add(w, f"id {col.get('id')!r} is not one of {sorted(AP_COLUMNS)}")
+            if not isinstance(col.get("nodes"), list):
+                add(w, "'nodes' must be an array")
+                continue
+            for ni, n in enumerate(col["nodes"]):
+                w2 = f"{col.get('id')} node {ni + 1}"
+                if not isinstance(n, dict):
+                    add(w2, "must be an object")
+                    continue
+                for m in _keys(n, {"id", "level", "max", "tier", "name"}, ("id", "level")):
+                    add(w2, m)
+                lvl = n.get("level")
+                if not _is_int(lvl) or lvl < 0:
+                    add(w2, f"level {lvl!r} must be a whole number, 0 or more")
+                    continue
+                cap = n.get("max", ap_max.get(n.get("id")))
+                if _is_int(cap) and lvl > cap:
+                    add(w2, f"{n.get('id')} level {lvl} is above its max {cap}")
+
+    elif kind == "ark-cores":
+        for i, c in enumerate(data):
+            w = f"core {i + 1}"
+            if not isinstance(c, dict):
+                add(w, "must be an object")
+                continue
+            for m in _keys(c, {"core", "label", "points"}, ("core", "points")):
+                add(w, m)
+            if c.get("core") not in CORE_SLOTS:
+                add(w, f"core {c.get('core')!r} is not one of {sorted(CORE_SLOTS)}")
+            if not _is_int(c.get("points")) or not 0 <= c.get("points", -1) <= 3:
+                add(w, f"points {c.get('points')!r} must be a whole number 0-3")
+
+    elif kind == "skill-setup":
+        for i, e in enumerate(data):
+            w = f"entry {i + 1} ({e.get('id') if isinstance(e, dict) else '?'})"
+            if not isinstance(e, dict):
+                add(w, "must be an object")
+                continue
+            if "subtitle" in e:  # a section header row
+                for m in _keys(e, {"id", "subtitle"}, ("id",)):
+                    add(w, m)
+                continue
+            for m in _keys(e, {"id", "level", "rune", "tripods", "name"}, ("id", "level")):
+                add(w, m)
+            lvl = e.get("level")
+            if not _is_int(lvl) or not 1 <= lvl <= 14:
+                add(w, f"level {lvl!r} must be a whole number 1-14")
+            if "rune" in e:
+                r = e["rune"]
+                if not isinstance(r, dict):
+                    add(w, "'rune' must be an object like {\"tier\": ..., \"name\": ...}")
+                else:
+                    for m in _keys(r, {"tier", "name"}, ("tier", "name")):
+                        add(w + " rune", m)
+                    if r.get("tier") not in RUNE_TIERS:
+                        add(w + " rune", f"tier {r.get('tier')!r} is not one of {sorted(RUNE_TIERS)}")
+            if "tripods" in e:
+                t = e["tripods"]
+                if not (isinstance(t, list) and 1 <= len(t) <= 3 and all(_is_int(x) and 1 <= x <= 3 for x in t)):
+                    add(w, f"tripods {t!r} must be 1-3 whole numbers, each 1-3")
+
+    elif kind == "gem-priority":
+        if len(data) != 2:
+            add("root", f"must have exactly 2 columns (dmg and cd), has {len(data)}")
+        for ci, col in enumerate(data):
+            w = f"column {ci + 1}"
+            if not isinstance(col, dict):
+                add(w, "must be an object")
+                continue
+            for m in _keys(col, {"col", "items", "label"}, ("col", "items")):
+                add(w, m)
+            if col.get("col") not in {"dmg", "cd"}:
+                add(w, f"col {col.get('col')!r} must be 'dmg' or 'cd'")
+            if not isinstance(col.get("items"), list):
+                add(w, "'items' must be an array")
+                continue
+            for ii, it in enumerate(col["items"]):
+                w2 = f"{col.get('col')} item {ii + 1}"
+                if isinstance(it, str):
+                    continue
+                if not isinstance(it, dict):
+                    add(w2, "must be an id string or an object")
+                    continue
+                for m in _keys(it, {"id", "alts", "tip", "label", "name"}, ("id",)):
+                    add(w2, m)
+                alts = it.get("alts", [])
+                if not isinstance(alts, list):
+                    add(w2, "'alts' must be an array")
+                    continue
+                for ai, a in enumerate(alts):
+                    if isinstance(a, str):
+                        continue
+                    if not isinstance(a, dict):
+                        add(f"{w2} alt {ai + 1}", "must be an id string or an object")
+                        continue
+                    for m in _keys(a, {"id", "note", "label", "name"}, ("id",)):
+                        add(f"{w2} alt {ai + 1}", m)
+
+    elif kind == "rotation-line":
+        step_keys = {"id", "swapNext", "situational", "cycleRef", "title", "suffix", "stageLabel", "skills"}
+        for i, st in enumerate(data):
+            w = f"step {i + 1}"
+            if isinstance(st, str):
+                continue
+            if not isinstance(st, dict):
+                add(w, "must be a skill id string or an object")
+                continue
+            for m in _keys(st, step_keys):
+                add(w, m)
+            if not ({"id", "cycleRef", "suffix", "stageLabel", "skills"} & set(st)):
+                add(w, "object has none of id / cycleRef / suffix / stageLabel / skills, so it renders nothing")
+            if "skills" in st and not isinstance(st["skills"], list):
+                add(w, "'skills' must be an array")
+
+    elif kind == "skills-table":
+        for i, e in enumerate(data):
+            w = f"row {i + 1}"
+            if not isinstance(e, dict):
+                add(w, "must be an object")
+                continue
+            for m in _keys(e, {"id", "name"}, ("id",)):
+                add(w, m)
+    return errs
+
+
+def check_json_blocks(text, rel, line_of, ap_max, problems):
+    for m in JSON_BLOCK.finditer(text):
+        kind = m.group(3).split()[0]
+        if kind not in {"ark-passives", "ark-cores", "skill-setup", "gem-priority", "rotation-line", "skills-table"}:
+            continue
+        try:
+            data = json.loads(m.group(4))
+        except ValueError as exc:
+            problems.append(f"{rel}:{line_of(m.start())}: {kind} block is not valid JSON ({exc})")
+            continue
+        for e in validate_block(kind, data, ap_max):
+            problems.append(f"{rel}:{line_of(m.start())}: {kind} block, {e}")
+
+
+# ---------------------------------------------------------------------------
+# 8. Tab groups: extra.css styles the active tab for the first 8 only.
+# ---------------------------------------------------------------------------
+MAX_TABS = 8
+TAB_HEADER = re.compile(r'^(\s*)=== "')
+
+
+def check_tab_limit(text, rel, problems):
+    groups = {}  # indent -> tabs counted so far in the group open at that indent
+    fence = False
+    for n, line in enumerate(text.splitlines(), 1):
+        if re.match(r"^\s*(```|~~~)", line):
+            fence = not fence
+            continue
+        if fence or not line.strip():
+            continue
+        indent = len(line) - len(line.lstrip(" "))
+        m = TAB_HEADER.match(line)
+        if m:
+            for k in [k for k in groups if k > indent]:
+                del groups[k]
+            groups[indent] = groups.get(indent, 0) + 1
+            if groups[indent] == MAX_TABS + 1:
+                problems.append(f"{rel}:{n}: tab group has more than {MAX_TABS} tabs; extra.css only styles "
+                                f"the active tab for the first {MAX_TABS} (extend the :nth-of-type list, "
+                                f"or split the group)")
+        else:
+            for k in [k for k in groups if k >= indent]:
+                del groups[k]
+
+
 def data_names(filename, pattern):
     return dict(re.findall(pattern, (JS / filename).read_text(), re.M))
 
@@ -73,6 +299,9 @@ def check():
             re.M | re.S,
         )
     )
+
+    ap_max = {k: int(v) for k, v in re.findall(
+        r'^\s*([a-zA-Z0-9]+):\s*\{[^}]*?\bmax:\s*(\d+)', (JS / "ap-node-names.js").read_text(), re.M)}
 
     css = (ROOT / "docs" / "stylesheets" / "extra.css").read_text()
     styled_kinds = set(re.findall(r'setup-note\[data-kind="([^"]+)"\]', css))
@@ -141,19 +370,16 @@ def check():
                     problems.append(f"{rel}:{line_of(m.start())}: ap node '{aid.group(1)}' shows "
                                     f"{shown!r}, expected {expect!r}")
 
+        # 7 + 8. JSON block shapes, tab limit
+        check_json_blocks(text, rel, line_of, ap_max, problems)
+        check_tab_limit(text, rel, problems)
+
         # 5. unstyled setup-note kinds
         for m in re.finditer(r'<details class="setup-note"[^>]*data-kind="([^"]+)"', text):
             if m.group(1) not in styled_kinds:
                 problems.append(f"{rel}:{line_of(m.start())}: setup-note data-kind="
                                 f"{m.group(1)!r} has no matching rule in extra.css "
                                 f"(renders with no accent). Known: {sorted(styled_kinds)}")
-
-    # 6. cache-bust present on every listed asset
-    mk = (ROOT / "mkdocs.yml").read_text()
-    for m in re.finditer(r"^\s*-\s*((?:javascripts|stylesheets)/[A-Za-z0-9._-]+)(\?v=(\d+))?\s*$",
-                         mk, re.M):
-        if not m.group(2):
-            problems.append(f"mkdocs.yml: '{m.group(1)}' has no ?v= cache-bust suffix")
 
     return problems
 

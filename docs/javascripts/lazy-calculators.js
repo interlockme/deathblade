@@ -34,13 +34,12 @@
 //    below, so arriving at resources.md via a Material instant-nav swap
 //    fires it exactly like a hard load does. Once loaded, it's a no-op.
 //
-// CACHE-BUSTING - READ THIS
-// The five deferred files' `?v=N` versions live in LAZY_BUNDLE below, NOT in
-// mkdocs.yml, because mkdocs.yml doesn't list them. After editing any of
-// those five, bump its number HERE (and bump lazy-calculators.js itself in
-// mkdocs.yml, or returning visitors keep the old list). mkdocs.yml has a
-// pointer comment where their entries would go. Everything else bumps in
-// mkdocs.yml.
+// CACHE-BUSTING
+// Nothing to bump by hand. scripts/hash_assets.py runs after the build and
+// rewrites every entry in LAZY_BUNDLE below to "name.js?v=<content hash>",
+// then hashes THIS file (so a change to any of the five also changes this
+// file's own URL on every page, and returning visitors refetch the list).
+// Keep entries as bare file names.
 
 (function () {
   // Captured at top level: document.currentScript is only valid during this
@@ -52,11 +51,11 @@
 
   // In load order. See the ordering note above before reordering.
   var LAZY_BUNDLE = [
-    "cpm-calculator.js?v=9",
-    "bid-calculator.js?v=6",
-    "ark-passive-calculator.js?v=71",
-    "bible-import.js?v=19",   // must follow ark-passive-calculator.js
-    "ap-brace-tooltip.js?v=6", // needs skill-tooltip.js, which is still global
+    "cpm-calculator.js",
+    "bid-calculator.js",
+    "ark-passive-calculator.js",
+    "bible-import.js",   // must follow ark-passive-calculator.js
+    "ap-brace-tooltip.js", // needs skill-tooltip.js, which is still global
   ];
 
   // The three calculator roots. Matching any one of them pulls the whole
