@@ -318,6 +318,7 @@ Use the Opener cycle and either loop it forever (easy) or continue on to the adv
 
 1. This opener chains into the cycles below, but it's fine by itself if you prefer simplicity and don't mind downtime.
 2. Surprise Attack always goes before Maelstrom on cycles with a Surprise Attack finisher so its CDs line up.
+3. On raid openers or after extended downtime, you can use Deathly Slash instead of Wind Cut as a precast.
 
 <div class="setup-panel" data-accent="lavender" markdown>
 <div class="setup-notes" markdown>
