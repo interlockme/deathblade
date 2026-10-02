@@ -4,3 +4,4 @@ site/
 .vscode/
 project-context.md
 Archive.zip
+__pycache__/

@@ -4076,6 +4076,16 @@ h3 { color: var(--dbc-teal); }
   opacity: 1;
   transform: translateY(0);
 }
+/* The bubble is opacity: 0 while idle, which still counts toward the page's scrollable width.
+   The button sits at about 200px from the left edge, so a left-anchored nowrap bubble ends past
+   a 320px viewport once Poppins is loaded (wider than a fallback font) and the whole page scrolls
+   sideways. Anchoring it to the button's right edge keeps it over the card, where there is room. */
+@media screen and (max-width: 480px) {
+  .md-typeset .bid-calc-copy-btn::after {
+    left: auto;
+    right: 0;
+  }
+}
 /* You / Next Bidder comparison - same card polish as .ap-brace-compare-table
    (tinted uppercase header, no vertical rules) rather than Material's
    default table style, so it reads as part of this component instead of
@@ -4482,7 +4492,7 @@ h3 { color: var(--dbc-teal); }
   align-items: center;
   gap: 0.6em;
 }
-/* Base Ability Stone % only: this pair's live-value .ap-value-display
+/* Ability Stone Base AP % only: this pair's live-value .ap-value-display
    plus the checkbox's own nowrap "9/7 or 10/6" label doesn't shrink to
    compensate (see the two shrink-guard comments above), so on a narrow
    card either could overflow past this container's own left edge and

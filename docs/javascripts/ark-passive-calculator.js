@@ -5081,7 +5081,7 @@
       spanAstro.textContent = formatPct(astrogemDmg);
     }
 
-    // Base Ability Stone % - the stone's own flat +1.5% (ABILITY_STONE_
+    // Ability Stone Base AP % - the stone's own flat +1.5% (ABILITY_STONE_
     // BASE_AP_BONUS), shown next to its "9/7 or 10/6" checkbox when
     // checked and blank when not (setDisplay already treats a 0 value as
     // blank rather than "(0%)" - see its own comment above). Gem Base

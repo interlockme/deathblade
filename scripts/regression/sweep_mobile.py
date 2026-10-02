@@ -125,28 +125,30 @@ JS = r"""(args) => {
         font.push(sig(e) + ' ' + cs.fontSize);
     }
   }
-  // The element scan above only covers the calculator. When the page itself is wider than the
-  // viewport, name what pushes it: anything in the whole document (the calculator's ancestors, the
-  // intro, the header) whose box or own content reaches past the right edge outside a scroller.
-  // Only the deepest such elements are kept, because every ancestor of a culprit reaches it too.
+  // The element scan above only covers the calculator, and a box can widen the page without any
+  // element's own rect leaving the viewport (an opacity: 0 tooltip pseudo-element, a nowrap row).
+  // So when the page scrolls sideways, find the cause by measurement: from <body> down, hide each
+  // child in turn, and descend into the first one whose removal shrinks the page.
   const wide = [];
   if (out.pageScrollW > vw + 1) {
-    const hits = [];
-    const held = (e) => {
-      for (let p = e.parentElement; p && p !== document.body; p = p.parentElement)
-        if (getComputedStyle(p).overflowX !== 'visible') return true;
-      return false;
+    const doc = document.documentElement;
+    const widthWithout = (e) => {
+      const old = e.style.getPropertyValue('display'), pri = e.style.getPropertyPriority('display');
+      e.style.setProperty('display', 'none', 'important');
+      const w = doc.scrollWidth;
+      e.style.removeProperty('display');
+      if (old) e.style.setProperty('display', old, pri);
+      return w;
     };
-    for (const e of document.body.querySelectorAll('*')) {
-      const cs = getComputedStyle(e);
-      // A fixed box follows the layout viewport (which the culprit widened) and adds no scrollable
-      // overflow, and a scroller or clipper holds its own overflow, so neither is a cause.
-      if (!visible(e) || held(e) || cs.position === 'fixed') continue;
-      const r = e.getBoundingClientRect();
-      if (r.right > vw + 1) hits.push([e, 'right=' + Math.round(r.right)]);
-      else if (e.scrollWidth > vw + 1 && cs.overflowX === 'visible') hits.push([e, 'content=' + e.scrollWidth]);
+    let cur = document.body;
+    for (let guard = 0; guard < 40 && cur; guard++) {
+      let next = null;
+      for (const ch of cur.children) {
+        const w = widthWithout(ch);
+        if (w < out.pageScrollW) { next = ch; wide.push(sig(ch) + ' (page ' + out.pageScrollW + ' -> ' + w + 'px without it)'); break; }
+      }
+      cur = next;
     }
-    for (const [e, why] of hits) if (!hits.some(([o]) => o !== e && e.contains(o))) wide.push(sig(e) + ' ' + why);
   }
   const uniq = (a) => [...new Set(a)];
   out.wide = uniq(wide); out.spill = uniq(spill); out.clipped = uniq(clipped); out.known = uniq(known); out.tap = uniq(tap); out.font = uniq(font);
@@ -205,7 +207,8 @@ def main():
     failed = False
     with sync_playwright() as p:
         browser = p.chromium.launch()
-        for w in [int(x) for x in a.widths.split(",")]:
+        widths = [int(x) for x in a.widths.split(",")]
+        for w in widths:
             touch = w < 800
             ctx = browser.new_context(viewport={"width": w, "height": 900}, has_touch=touch, is_mobile=touch)
             pg = ctx.new_page()
@@ -213,6 +216,9 @@ def main():
             pg.goto(base + a.page)
             pg.wait_for_selector(a.root, timeout=20000)
             pg.wait_for_timeout(1500)
+            if w == widths[0] and not pg.evaluate("[...document.fonts].some(f => f.family.includes('Poppins') && f.status === 'loaded')"):
+                print("note: Poppins did not load, so text is measured in a fallback font and runs narrower than in production "
+                      "(the privacy plugin only self-hosts the font on a build with network access)")
             for build in builds:
                 if build != "default":
                     select_build(pg, build)
@@ -225,8 +231,9 @@ def main():
                 failed |= bool(bad)
                 print(f"{'FAIL' if bad else 'ok  '} {w:>4}px {build:<10} page-scroll={'YES' if page_scroll else 'no'}  "
                       f"spill={len(r['spill'])}  clipped={len(clipped)}  known-cut={len(r['known'])}  small-font={len(r['font'])}  small-tap={len(r['tap'])}")
-                for it in r["wide"][:8]:
-                    print(f"        page-wide: {it}")
+                if r["wide"]:
+                    print(f"        page-wide cause: {r['wide'][-1]}")
+                    print(f"        page-wide path:  " + " > ".join(x.split(" (page ")[0] for x in r["wide"]))
                 limit = None if a.verbose else 5
                 for label, items in (("spill", r["spill"]), ("clipped", clipped)):
                     for it in items[:limit]:
