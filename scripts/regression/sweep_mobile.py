@@ -125,8 +125,31 @@ JS = r"""(args) => {
         font.push(sig(e) + ' ' + cs.fontSize);
     }
   }
+  // The element scan above only covers the calculator. When the page itself is wider than the
+  // viewport, name what pushes it: anything in the whole document (the calculator's ancestors, the
+  // intro, the header) whose box or own content reaches past the right edge outside a scroller.
+  // Only the deepest such elements are kept, because every ancestor of a culprit reaches it too.
+  const wide = [];
+  if (out.pageScrollW > vw + 1) {
+    const hits = [];
+    const held = (e) => {
+      for (let p = e.parentElement; p && p !== document.body; p = p.parentElement)
+        if (getComputedStyle(p).overflowX !== 'visible') return true;
+      return false;
+    };
+    for (const e of document.body.querySelectorAll('*')) {
+      const cs = getComputedStyle(e);
+      // A fixed box follows the layout viewport (which the culprit widened) and adds no scrollable
+      // overflow, and a scroller or clipper holds its own overflow, so neither is a cause.
+      if (!visible(e) || held(e) || cs.position === 'fixed') continue;
+      const r = e.getBoundingClientRect();
+      if (r.right > vw + 1) hits.push([e, 'right=' + Math.round(r.right)]);
+      else if (e.scrollWidth > vw + 1 && cs.overflowX === 'visible') hits.push([e, 'content=' + e.scrollWidth]);
+    }
+    for (const [e, why] of hits) if (!hits.some(([o]) => o !== e && e.contains(o))) wide.push(sig(e) + ' ' + why);
+  }
   const uniq = (a) => [...new Set(a)];
-  out.spill = uniq(spill); out.clipped = uniq(clipped); out.known = uniq(known); out.tap = uniq(tap); out.font = uniq(font);
+  out.wide = uniq(wide); out.spill = uniq(spill); out.clipped = uniq(clipped); out.known = uniq(known); out.tap = uniq(tap); out.font = uniq(font);
   return out;
 }"""
 
@@ -202,6 +225,8 @@ def main():
                 failed |= bool(bad)
                 print(f"{'FAIL' if bad else 'ok  '} {w:>4}px {build:<10} page-scroll={'YES' if page_scroll else 'no'}  "
                       f"spill={len(r['spill'])}  clipped={len(clipped)}  known-cut={len(r['known'])}  small-font={len(r['font'])}  small-tap={len(r['tap'])}")
+                for it in r["wide"][:8]:
+                    print(f"        page-wide: {it}")
                 limit = None if a.verbose else 5
                 for label, items in (("spill", r["spill"]), ("clipped", clipped)):
                     for it in items[:limit]:
