@@ -533,7 +533,7 @@
            round caps/joins). Replaces an earlier hand-rolled circle+line
            SVG that read as an ambiguous squiggle at this size instead of
            a recognizable pin - see the CSS comment on .ap-result-pin svg. -->
-      <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the base every comparison on this page (Bracelet, Accessory, ArkGrid, Engraving) is computed against, instead of the true best. Click again to unpin.">
+      <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the comparison base" title="Pin this combo as the base for every comparison on this page, instead of the true best. Click again to unpin.">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M12 17v5"></path>
           <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"></path>
@@ -551,7 +551,7 @@
            round caps/joins). Replaces an earlier hand-rolled circle+line
            SVG that read as an ambiguous squiggle at this size instead of
            a recognizable pin - see the CSS comment on .ap-result-pin svg. -->
-      <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the base every comparison on this page (Bracelet, Accessory, ArkGrid, Engraving) is computed against, instead of the true best. Click again to unpin.">
+      <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the comparison base" title="Pin this combo as the base for every comparison on this page, instead of the true best. Click again to unpin.">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M12 17v5"></path>
           <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"></path>
@@ -569,7 +569,7 @@
            round caps/joins). Replaces an earlier hand-rolled circle+line
            SVG that read as an ambiguous squiggle at this size instead of
            a recognizable pin - see the CSS comment on .ap-result-pin svg. -->
-      <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the base every comparison on this page (Bracelet, Accessory, ArkGrid, Engraving) is computed against, instead of the true best. Click again to unpin.">
+      <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the comparison base" title="Pin this combo as the base for every comparison on this page, instead of the true best. Click again to unpin.">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M12 17v5"></path>
           <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"></path>
