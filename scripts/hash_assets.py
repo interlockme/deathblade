@@ -6,12 +6,9 @@ hash_assets.py - cache-busts this site's OWN css/js with a content hash. CI-only
     python3 scripts/hash_assets.py site
 
 WHY
-Returning visitors keep a cached copy of a script until its URL changes. This used to be a
-hand-bumped ?v=N on 31 entries in mkdocs.yml plus the five lazy files inside LAZY_BUNDLE, with a
-CI gate (check_cachebust.py) to catch a missed bump, and a bump that cascaded: changing a lazy file
-did nothing unless lazy-calculators.js was ALSO bumped. A missed bump shipped stale code to
-returning visitors at least once. Now the URL carries a hash of the bytes that are actually
-served, so there is nothing to remember and nothing to forget.
+Returning visitors keep a cached copy of a script until its URL changes. The URL carries a hash
+of the bytes that are actually served, so there is no hand-bumped ?v=N to remember or forget, and
+no cascade where a lazy file only updates if lazy-calculators.js is ALSO bumped.
 
 WHAT IT DOES
   1. Hashes every own file under javascripts/ and stylesheets/ (not assets/, which is Material's

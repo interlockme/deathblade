@@ -1,0 +1,163 @@
+name: Verify (calculator regression + smoke)
+
+# The slow, browser-driven checks. Deliberately NOT part of the deploy path: deploy.yml stays
+# a fast build-and-publish gated on the stdlib scripts, and these run beside it.
+#
+#   regression  regress.py: drives every calculator control and the Bible importer in headless
+#               Chromium and diffs the readings against scripts/regression/baselines/. Any
+#               difference fails the job; the diff and the candidate new baseline are uploaded.
+#   smoke       smoke.py (sitewide interactions: tabs, tooltips, anchors, lightbox, practice
+#               mode, instant navigation) and sweep_mobile.py (320-1400px layout: sideways
+#               scroll, clipped text, tap targets, in the default, Surge 111 and Surge 333 builds).
+#
+# Runs on every push to main that touches the site or the tooling, on pull requests that do, and on
+# demand from the Actions tab. It is independent of deploy.yml (no `needs:`, its own concurrency
+# group), so the deploy publishes immediately and this reports its result a few minutes later. It
+# reports a problem after the fact; it does not hold a deploy back.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - "scripts/**"
+      - "mkdocs.yml"
+      - "requirements*.txt"
+      - ".github/workflows/verify.yml"
+  pull_request:
+    paths:
+      - "docs/**"
+      - "scripts/**"
+      - "mkdocs.yml"
+      - "requirements*.txt"
+      - ".github/workflows/verify.yml"
+  workflow_dispatch:
+    inputs:
+      fast:
+        description: "regress.py --fast (probes undo in place instead of reloading; about 3x quicker, but re-run without it before trusting a clean result)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# A newer push to the same PR supersedes the older run. Safe to cancel here (unlike a deploy):
+# these jobs only read the repo and upload artifacts.
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-verify.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-verify.txt
+
+      - name: Install Chromium
+        run: playwright install --with-deps chromium
+
+      # Same strict build the deploy runs, but NOT minified or hashed: the baselines were taken
+      # against `mkdocs build`, and comment stripping does not change behaviour.
+      - name: Build site
+        run: mkdocs build --strict --site-dir site_out
+
+      # node (for the importer half) is preinstalled on ubuntu-latest.
+      - name: Snapshot calculator and importer
+        run: python3 scripts/regression/regress.py snapshot --site site_out --out regress-out ${{ inputs.fast && '--fast' || '' }}
+
+      # Diff the fresh snapshot against the committed baselines. Exit 1 on ANY difference, so
+      # an unexplained change blocks the PR; every line must be either meant or fixed.
+      - name: Diff against baselines
+        run: |
+          set +e
+          python3 scripts/regression/regress.py diff scripts/regression/baselines regress-out | tee regress-diff.txt
+          rc=${PIPESTATUS[0]}
+          {
+            echo "### Calculator regression"
+            echo
+            echo '```'
+            head -c 50000 regress-diff.txt
+            echo '```'
+            if [ "$rc" -ne 0 ]; then
+              echo
+              echo "If every line above is intended, download the artifact and copy the files in \`regress-out/\` over \`scripts/regression/baselines/\`, then commit them with the code change."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$rc"
+
+      - name: Upload diff and candidate baseline
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-diff
+          path: |
+            regress-diff.txt
+            regress-out/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-verify.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-verify.txt
+
+      - name: Install Chromium
+        run: playwright install --with-deps chromium
+
+      - name: Build site
+        run: mkdocs build --strict --site-dir site_out
+
+      - name: Smoke test
+        run: |
+          set -o pipefail
+          python3 scripts/regression/smoke.py --site site_out --workers 4 | tee smoke.txt
+
+      # Runs even if the smoke test failed, so one run reports both.
+      - name: Mobile layout sweep
+        if: ${{ !cancelled() }}
+        run: |
+          set -o pipefail
+          python3 scripts/regression/sweep_mobile.py --site site_out --verbose | tee sweep.txt
+
+      - name: Summarize
+        if: ${{ !cancelled() }}
+        run: |
+          {
+            echo "### Smoke test"; echo '```'; tail -n 40 smoke.txt 2>/dev/null; echo '```'
+            echo "### Mobile sweep"; echo '```'; grep -E '^(FAIL|ok) ' sweep.txt 2>/dev/null; echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-logs
+          path: |
+            smoke.txt
+            sweep.txt
+          if-no-files-found: ignore
+          retention-days: 14

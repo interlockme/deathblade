@@ -2,11 +2,11 @@
 
 The verification playbook in `project-context.md`, as a script. It answers one question: did anything the calculator or the Bible importer shows or produces change, and if so, what exactly?
 
-It is a local tool, not a CI gate: it needs Playwright and Chromium. The `check_*.py` scripts in `scripts/` stay the CI gates.
+It needs Playwright and Chromium, so it is not part of the deploy path: the `check_*.py` scripts in `scripts/` are the fast gates in `deploy.yml`. The slow browser checks run in their own workflow, `.github/workflows/verify.yml`, on every push to `main` (and pull request) that touches the site or the tooling, and on demand from the Actions tab (Run workflow, with an optional `--fast` box). It runs `regress.py`, `smoke.py` and `sweep_mobile.py`, fails on any difference, and uploads `regress-diff.txt` plus the candidate new baseline (`regress-out/`) as an artifact. If every diff line is intended, copy those files over `baselines/` and commit them with the code change.
 
 ## Setup
 
-    pip install playwright
+    pip install -r requirements-verify.txt
     playwright install chromium
 
 Node is needed for the importer half.

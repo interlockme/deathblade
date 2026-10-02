@@ -1,0 +1,8 @@
+# Extra dependencies for the verification workflow only (.github/workflows/verify.yml) and for
+# running scripts/regression/ locally. The deploy workflow does not install these.
+#
+# Exact pin on purpose: each Playwright release bundles its own Chromium, and a different
+# Chromium can move a layout measurement or a computed value by a pixel, which would show up
+# as a regression diff that no code change caused. Bump it deliberately, run
+# `regress.py check` and `smoke.py` once, and re-baseline only if the diff is that bump.
+playwright==1.56.0
