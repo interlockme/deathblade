@@ -10,12 +10,19 @@ layout without `regress.py check` noticing. This is the check for that. Run it a
 markup change to a widget.
 
 It opens PAGE (default /resources/) in touch emulation at each width, opens every <details> inside
-ROOT (default .ap-calc), and reports:
+ROOT (default .ap-calc), and reports. The pass runs once per build in --builds (default: the page's
+default RE build, then Surge 111 and Surge 333, picked through the docked Build toggle), because the
+Surge-only rows (the Engraving section's Raid Captain Variables and its Mana Food checkboxes) are not
+in the DOM's visible layout under RE and were never measured:
 
   FAIL  page-scroll   the page itself scrolls sideways
   FAIL  spill         an element pokes outside the viewport with no scroll container to reach it
   FAIL  clipped       an element with overflow hidden / ellipsis is holding content wider than
-                      itself (this is the "columns cut off with no way to reach them" bug)
+                      itself (this is the "columns cut off with no way to reach them" bug), OR a
+                      piece of text sticks out past the edge of an ancestor that clips it (a card,
+                      or a sideways scroller that is not one of the deliberate table scrollers in
+                      SCROLL_OK). Text in a card narrower than its own content is cut off even when
+                      the card technically scrolls, which is why scrollers count here.
   warn  small-font    input/select text under 16px (iOS Safari zooms the page when one is focused)
   warn  small-tap     input/select/button under 30px in width or height
 
@@ -34,6 +41,16 @@ import sys
 import threading
 
 ALLOW = []  # substrings of an element signature that are allowed to clip, e.g. "ap-summary-value"
+# Substrings of an ANCESTOR's signature that are deliberate sideways scrollers: wide tables whose
+# columns are meant to be reached by scrolling. Text running past these is not a finding.
+SCROLL_OK = ["ap-acc-table-scroll", "ap-brace-compare-body"]
+# Ancestors that clip text today and are accepted for now, counted as known-cut instead of failing.
+# .ap-gear-cards: Character Data's two cards keep a hard 400px-per-card floor (their Base AP% row is
+# ~392px wide) and scroll sideways on a phone. Shrinking that floor is a layout decision, not a sweep
+# fix. The number is printed so it cannot grow unnoticed.
+KNOWN = ["ap-gear-cards"]
+# Selectors where nothing is excused: no SCROLL_OK, no KNOWN, and the box itself is a clip edge.
+STRICT = [".ap-gear-card--engr-variables"]
 
 JS = r"""(args) => {
   const root = document.querySelector(args.root);
@@ -50,7 +67,41 @@ JS = r"""(args) => {
   };
   const visible = (e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(e).visibility !== 'hidden'; };
   const sig = (e) => e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + '.' + [...e.classList].slice(0, 2).join('.');
-  const spill = [], clipped = [], tap = [], font = [];
+  const spill = [], clipped = [], known = [], tap = [], font = [];
+  const cutBy = (e) => {
+    // Extent of e's own text nodes (or, for a form control, its own box) vs every ancestor that clips
+    // sideways. Inside args.strict roots nothing is excused, and the root's own border box counts as a
+    // clip edge too, so a control poking out of a card is caught even though a card does not clip.
+    const rg = document.createRange();
+    let l = Infinity, r = -Infinity;
+    if (['INPUT', 'SELECT', 'BUTTON'].includes(e.tagName)) {
+      const q = e.getBoundingClientRect(); l = q.left; r = q.right;
+    } else {
+      for (const n of e.childNodes) {
+        if (n.nodeType !== 3 || !n.textContent.trim()) continue;
+        rg.selectNodeContents(n);
+        for (const q of rg.getClientRects()) { if (q.width > 0) { l = Math.min(l, q.left); r = Math.max(r, q.right); } }
+      }
+    }
+    if (r === -Infinity) return null;
+    const strict = args.strict.length ? e.closest(args.strict.join(',')) : null;
+    for (let a = e.parentElement; a && a !== root.parentElement; a = a.parentElement) {
+      const o = getComputedStyle(a).overflowX;
+      if (o === 'visible' && a !== strict) continue;
+      const ar = a.getBoundingClientRect();
+      if (ar.width === 0) continue;
+      if (r > ar.right + 1 || l < ar.left - 1) {
+        // A sideways scroller only reaches content that runs off its RIGHT edge. Anything left of its
+        // left edge can never be scrolled to, so that is a finding even under SCROLL_OK / KNOWN.
+        const reachable = !strict && l >= ar.left - 1;
+        const d = sig(a) + ' (' + (a === strict ? 'strict box' : o) + ') ' + (reachable ? 'edge=' + Math.round(ar.right) + ' item-right=' + Math.round(r)
+          : 'left-edge=' + Math.round(ar.left) + ' item-left=' + Math.round(l) + ' (unreachable)');
+        if (reachable && args.scrollOk.some(x => sig(a).includes(x))) return null;
+        return (reachable && args.known.some(x => sig(a).includes(x)) ? 'KNOWN ' : '') + d;
+      }
+    }
+    return null;
+  };
   for (const e of root.querySelectorAll('*')) {
     if (!visible(e)) continue;
     const r = e.getBoundingClientRect(), cs = getComputedStyle(e);
@@ -58,16 +109,48 @@ JS = r"""(args) => {
     if (e.scrollWidth > e.clientWidth + 2 && (cs.overflowX === 'hidden' || cs.textOverflow === 'ellipsis') &&
         e.clientWidth > 0 && !['SELECT', 'INPUT'].includes(e.tagName))
       clipped.push(sig(e) + ' content ' + e.scrollWidth + 'px in ' + e.clientWidth + 'px');
+    const cut = cutBy(e);
+    if (cut) (cut.startsWith('KNOWN ') ? known : clipped).push(sig(e) + ' \"' + e.textContent.trim().slice(0, 28) + '\" cut by ' + cut.replace('KNOWN ', ''));
     if (['INPUT', 'SELECT', 'BUTTON'].includes(e.tagName) && e.type !== 'hidden') {
-      if (r.height < 30 || r.width < 30) tap.push(sig(e) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height));
+      // A checkbox/radio is tapped through its label, so the label's box is the target.
+      let tr = r;
+      if (e.type === 'checkbox' || e.type === 'radio') {
+        const lab = e.closest('label') || (e.id && document.querySelector('label[for="' + e.id + '"]'));
+        if (lab) tr = lab.getBoundingClientRect();
+        else if (e.parentElement) tr = e.parentElement.getBoundingClientRect();
+      }
+      const min = (e.type === 'checkbox' || e.type === 'radio') ? 24 : 30;  // WCAG 2.5.8 for a label target
+      if (tr.height < min || tr.width < min) tap.push(sig(e) + ' ' + Math.round(tr.width) + 'x' + Math.round(tr.height));
       if (['INPUT', 'SELECT'].includes(e.tagName) && e.type !== 'checkbox' && e.type !== 'radio' && parseFloat(cs.fontSize) < 16)
         font.push(sig(e) + ' ' + cs.fontSize);
     }
   }
   const uniq = (a) => [...new Set(a)];
-  out.spill = uniq(spill); out.clipped = uniq(clipped); out.tap = uniq(tap); out.font = uniq(font);
+  out.spill = uniq(spill); out.clipped = uniq(clipped); out.known = uniq(known); out.tap = uniq(tap); out.font = uniq(font);
   return out;
 }"""
+
+
+def select_build(pg, build):
+    """Pick a build (re-111, surge-111, ...) through the docked Build toggle, the way a visitor does.
+
+    At phone widths the toggle sits behind a trigger pill that closes again after each choice, so it
+    is re-opened before every click. The family chip comes first because the variant chips of the
+    other family are hidden.
+    """
+    family = build.split("-")[0]
+    # The dock is display:none while the calculator is scrolled out of view (.ap-build-dock--offscreen),
+    # and at 320px the intro wraps enough to push the calculator below the first screen.
+    pg.evaluate("document.querySelector('.ap-calc').scrollIntoView({block: 'start'})")
+    pg.wait_for_timeout(500)
+    for sel in (f'.ap-build-family-chip[data-family="{family}"]', f'.ap-build-variant-chip[data-build="{build}"]'):
+        trig = pg.query_selector(".ap-build-dock-trigger")
+        if trig and trig.is_visible() and trig.get_attribute("aria-expanded") != "true":
+            trig.click()
+            pg.wait_for_timeout(300)
+        pg.click(sel)
+        pg.wait_for_timeout(500)
+    pg.wait_for_timeout(700)
 
 
 class _Quiet(http.server.SimpleHTTPRequestHandler):
@@ -81,8 +164,11 @@ def main():
     ap.add_argument("--page", default="/resources/")
     ap.add_argument("--root", default=".ap-calc")
     ap.add_argument("--widths", default="320,360,390,430,600,768,1024,1400")
+    ap.add_argument("--builds", default="default,surge-111,surge-333",
+                    help="comma list of builds to sweep in order: default (as loaded) or a data-build id")
     ap.add_argument("--verbose", action="store_true", help="list every finding, not just the first few")
     a = ap.parse_args()
+    builds = [x.strip() for x in a.builds.split(",") if x.strip()]
     site = pathlib.Path(a.site).resolve()
     if not (site / a.page.strip("/") / "index.html").exists():
         sys.exit(f"{site}{a.page}index.html not found; run mkdocs build -d {a.site} first")
@@ -104,24 +190,29 @@ def main():
             pg.goto(base + a.page)
             pg.wait_for_selector(a.root, timeout=20000)
             pg.wait_for_timeout(1500)
-            r = pg.evaluate(JS, {"root": a.root})
-            ctx.close()
-            if r.get("missing"):
-                sys.exit(f"root selector {a.root} not found on {a.page}")
-            clipped = [c for c in r["clipped"] if not any(x in c for x in ALLOW)]
-            page_scroll = r["pageScrollW"] > r["vw"] + 1
-            bad = page_scroll or r["spill"] or clipped
-            failed |= bool(bad)
-            print(f"{'FAIL' if bad else 'ok  '} {w:>4}px  page-scroll={'YES' if page_scroll else 'no'}  spill={len(r['spill'])}  "
-                  f"clipped={len(clipped)}  small-font={len(r['font'])}  small-tap={len(r['tap'])}")
-            limit = None if a.verbose else 5
-            for label, items in (("spill", r["spill"]), ("clipped", clipped)):
-                for it in items[:limit]:
-                    print(f"        {label}: {it}")
-            if a.verbose:
-                for label, items in (("small-font", r["font"]), ("small-tap", r["tap"])):
-                    for it in items:
+            for build in builds:
+                if build != "default":
+                    select_build(pg, build)
+                r = pg.evaluate(JS, {"root": a.root, "scrollOk": SCROLL_OK, "known": KNOWN, "strict": STRICT})
+                if r.get("missing"):
+                    sys.exit(f"root selector {a.root} not found on {a.page}")
+                clipped = [c for c in r["clipped"] if not any(x in c for x in ALLOW)]
+                page_scroll = r["pageScrollW"] > r["vw"] + 1
+                bad = page_scroll or r["spill"] or clipped
+                failed |= bool(bad)
+                print(f"{'FAIL' if bad else 'ok  '} {w:>4}px {build:<10} page-scroll={'YES' if page_scroll else 'no'}  "
+                      f"spill={len(r['spill'])}  clipped={len(clipped)}  known-cut={len(r['known'])}  small-font={len(r['font'])}  small-tap={len(r['tap'])}")
+                limit = None if a.verbose else 5
+                for label, items in (("spill", r["spill"]), ("clipped", clipped)):
+                    for it in items[:limit]:
                         print(f"        {label}: {it}")
+                if a.verbose:
+                    for label, items in (("small-font", r["font"]), ("small-tap", r["tap"])):
+                        for it in items:
+                            print(f"        {label}: {it}")
+                    for it in r["known"]:
+                        print(f"        known-cut: {it}")
+            ctx.close()
         browser.close()
     srv.shutdown()
     sys.exit(1 if failed else 0)

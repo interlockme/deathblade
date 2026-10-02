@@ -196,12 +196,10 @@
     earring: { min: 11806, max: 13889 },
     necklace: { min: 15178, max: 17857 },
   };
-  // Ring Crit Damage's own magnitude (Acc!O7:Q7). Previously documented
-  // here as "close to but not identical to RING_DMG_TABLE above" - that
-  // was wrong. RING_DMG_TABLE's Low was a mistranscription (0.012
-  // instead of 0.011); once corrected, the two tables are an exact match
-  // at every tier, confirmed against a real character's Ring Crit Damage
-  // (+1.1%, i.e. Low). Kept as a separate table anyway (see ringDmgGain
+  // Ring Crit Damage's own magnitude (Acc!O7:Q7). An exact match to
+  // RING_DMG_TABLE above at every tier (Low is 0.011 in both), confirmed
+  // against a real character's Ring Crit Damage (+1.1%, i.e. Low). Kept
+  // as a separate table anyway (see ringDmgGain
   // and otherCritDmgDelta below, which intentionally avoid reusing
   // RING_DMG_TABLE) since nothing depends on merging them and a second
   // confirmed source is good to keep around. Ring Crit Rate has no
@@ -510,19 +508,18 @@
   // Ark Grid side-node levels (what this field actually tracks) cap at
   // 120, not 100 - confirmed against 1.1%/2.2%/3.3%/4.4% checkpoints at
   // 30/60/90/120 (a flat 0.03667%/level), which only land on whole
-  // numbers at a 120 denominator. Previously divided by 100, matching
-  // the OTHER Astrogem field's 0-100 scale below instead of this one's
-  // real max - the reference sheet's own "up to 4.4%" note never states
-  // a level cap, so that assumption went unquestioned until checked
-  // against outside sources.
+  // numbers at a 120 denominator. The OTHER Astrogem field's 0-100 scale
+  // below does not apply here, and the reference sheet's own "up to 4.4%"
+  // note never states a level cap, so the 120 comes from the outside
+  // checkpoints above.
   const GEAR_AP_ASTROGEM_MAX_LEVEL = 120;
 
   // Astrogem Atk. Power Level is its OWN field (.ap-gear-ap-astrogem-lv),
   // separate from the Additional Damage group's Astrogem Level
   // (.ap-astrogem-lv) above - same source item, but Astrogem's Damage%
   // and Atk. Power% payouts are independently levelable, not two views
-  // of one number. Used to reuse the Additional Damage field directly,
-  // which silently forced the two to always match.
+  // of one number. Reusing the Additional Damage field here would
+  // silently force the two to always match.
   function gearAstrogemApPercent(inputs) {
     // Floored to 2 decimals, matching the in-game tile's own display
     // (confirmed against Lv.1-5/35/38 screenshots: Lv.1's raw 0.03667%
@@ -1365,11 +1362,10 @@
       // inside supportApBuff, since it feeds gearAttackPowerPercentTotal
       // instead). Defaults to 0 (not used).
       gearStrengthOrbUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-strength-orb-uptime", 0))),
-      // No longer its own checkbox - whether Support's AP buff applies at
-      // all is decided entirely by the Party & Positioning group's
-      // "Support: Passionate Dance" toggle (.ap-yearning); reading that
-      // directly means there's only one real checkbox for this fact
-      // instead of two kept in sync.
+      // Not its own checkbox - whether Support's AP buff applies at all
+      // is decided entirely by the Party & Positioning group's "Support:
+      // Passionate Dance" toggle (.ap-yearning); reading that directly
+      // keeps one real checkbox for this fact instead of two kept in sync.
       gearSupport: getCheckbox(root, ".ap-yearning", true),
       // Only matters while gearSupport is true (the field itself is
       // disabled in the UI otherwise, see enforceGearSupportUptimeGate).
@@ -4671,16 +4667,16 @@
     }
     // Each named setup picks its own best food scenario FIRST (Setup A's
     // better of Wine/Mana Food, Setup B's better of Wine/Mana Food), THEN
-    // those two per-setup bests are compared against each other. Previously
-    // this pooled all 4 Setup x Food combinations into one sorted list and
-    // compared the winner to literal 2nd place - which silently could be
-    // the SAME winning setup's OTHER food option (e.g. Setup A+Mana Food
-    // beating Setup A+Wine by a hair) whenever a setup's own two food
-    // choices were close, even though Setup B was miles behind both. That
-    // produced a "vs the next-best combination" % totally disconnected
-    // from the aVsB pill's own Setup A vs Setup B gap directly above it
-    // (e.g. a real 18% A-vs-B gap next to a misleading <1% here) since the
-    // two lines were silently answering different questions. Comparing
+    // those two per-setup bests are compared against each other. Pooling
+    // all 4 Setup x Food combinations into one sorted list and comparing
+    // the winner to literal 2nd place would silently pick the SAME winning
+    // setup's OTHER food option (e.g. Setup A+Mana Food beating Setup
+    // A+Wine by a hair) whenever a setup's own two food choices are close,
+    // even with Setup B miles behind both. That "vs the next-best
+    // combination" % would be disconnected from the aVsB pill's own Setup
+    // A vs Setup B gap directly above it (e.g. a real 18% A-vs-B gap next
+    // to a misleading <1% here), the two lines answering different
+    // questions. Comparing
     // each setup's own best-of-2 keeps this line answering the same
     // "Setup A vs Setup B" question as the rest of the section, just with
     // each side free to pick its own best food before the comparison.
@@ -4753,12 +4749,11 @@
     // (kbwOnCrit, marginalCritDmgGainPct's effCrit arg), which needs to
     // reflect whatever combo is actually pinned, the same as KBW's own
     // headline DPS Contribution row (kbwContributionGain -> bestComboFor)
-    // already correctly does. Previously read isolatedGrid.best directly,
-    // which - since computeGridAndSummary never calls bestComboFor -
-    // silently used the TRUE best cell even while a different combo was
-    // pinned, a real inconsistency within this same row (confirmed live:
-    // pinning a non-best combo left the headline % correctly following
-    // the pin while these 4 columns kept tracking the true best instead).
+    // already does. Reading isolatedGrid.best directly would not do that:
+    // computeGridAndSummary never calls bestComboFor, so it would use the
+    // TRUE best cell even while a different combo is pinned, an
+    // inconsistency within this same row (the headline % would follow the
+    // pin while these 4 columns kept tracking the true best instead).
     const isolatedBest = pinnedCellFrom(isolatedGrid, isolatedGrid.best) || best;
     const isolatedBestStats = (isolatedBest && isolatedBest.stats) || gridResult.bestStats;
     const isolatedShared = computeShared(isolatedInputs);
@@ -5494,8 +5489,6 @@
       if (onCritEl) onCritEl.textContent = best.onCritDmg.toFixed(2) + "%";
       if (evoEl) evoEl.textContent = best.evoDmg.toFixed(2) + "%";
       if (addEl) addEl.textContent = best.addDmg.toFixed(2) + "%";
-
-      // Same removal as the Base card above - no more KBW Dmg row here.
 
       // Same flat Breaking Moon add as the Base card above.
       const bmRow = root.querySelector(".ap-stat-card-row--breakingmoon-best");
@@ -7335,8 +7328,8 @@
         // Family chip lands on whatever variant you were last on within
         // the TARGET family, not always the same fixed counterpart -
         // e.g. RE 333 -> Surge normally lands on Surge 222 (see
-        // FAMILY_CROSSING_MAP), but if you'd previously dialed in Surge
-        // 333 this session, crossing back to Surge returns you there
+        // FAMILY_CROSSING_MAP), but if Surge 333 was already dialed in
+        // earlier this session, crossing back to Surge returns you there
         // instead. Seeded from whatever build is active on load (via
         // syncFamilyVariantMemory in initApCalcRoot) so the very first
         // cross still has a sensible starting point via the fallback

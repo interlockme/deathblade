@@ -10,7 +10,7 @@
 // skill-tooltip.js's tooltips read from skill-data.js (window.
 // DB_SKILL_DATA). Update a tag, note, or meter/stack line ONCE there and
 // this table, every build page's Skill Setup card, and every tooltip
-// that names the skill all pick it up - no more editing the same text
+// that names the skill all pick it up - the same text is never edited
 // in multiple places.
 //
 // Must load after skill-data.js - see the extra_javascript order in

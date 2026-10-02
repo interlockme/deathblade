@@ -24,8 +24,8 @@
 //          omitted (every entry below is Relic-grade), so this only
 //          needs setting for a future non-Relic core.
 //
-// All option text below is written as-is (no more (KR)-tagged lines) -
-// the balance-patch values transcribed from Korea are now just treated
+// All option text below is written as-is with no (KR)-tagged lines -
+// the balance-patch values transcribed from Korea are treated
 // as this core's values, full stop, ahead of the Global patch landing.
 (function () {
   window.DB_CORE_OPTIONS = {

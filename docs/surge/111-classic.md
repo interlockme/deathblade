@@ -283,10 +283,9 @@ Use the Breaking Moon cycle and its follow-up when available, then repeat the re
      by default (same <details>/<summary> instinct as .gem-item-expandable/
      .engraving-card elsewhere on the site) instead of always rendering its
      full chip row inside the card - closed, only the <summary>'s gold
-     "Alt \u00b7 Awakening Follow-Up" tag shows, in the exact same spot/size the
-     old always-open version's leading stageLabel pseudo-step used to sit;
-     open, it drops down into the identical rotation-line the old version
-     showed permanently. markdown="span" on <summary> is required for the
+     "Alt \u00b7 Awakening Follow-Up" tag shows, in the exact same spot/size a leading
+     stageLabel pseudo-step takes in an always-open rotation-line;
+     open, it drops down into the identical rotation-line. markdown="span" on <summary> is required for the
      "&middot;" entity to actually parse - see .gem-item-expandable's own
      comment on this same fix. -->
 <details class="cycle-alt-branch" markdown>

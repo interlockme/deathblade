@@ -42,6 +42,10 @@ CHECKS
      inside a collapsed <details> nobody sees it. check_ids.py only checks id membership.
   8. No tab group with more than 8 tabs. extra.css pairs each tab's input with its label by
      :nth-of-type(1..8) to colour the active tab, so a ninth tab would silently lose its styling.
+  9. Comments in docs/ source (markdown <!-- -->, JS // and /* */, CSS /* */) that narrate history
+     ("previously", "used to be", "no longer", "formerly", "no more"). Style policy: a comment states
+     how the code works now and why a rule exists; what it looked like before belongs in git. Visible
+     page text is not scanned, only comments.
 """
 import datetime
 import json
@@ -287,6 +291,26 @@ def data_names(filename, pattern):
     return dict(re.findall(pattern, (JS / filename).read_text(), re.M))
 
 
+HISTORY_WORDS = re.compile(
+    r"\bpreviously\b|\bformerly\b|\bno longer\b|\bno more\b|\bused to (?:be|have|sit|work|force|reuse|live|read)\b",
+    re.I)
+MD_COMMENT = re.compile(r"<!--(.*?)-->", re.S)
+BLOCK_COMMENT = re.compile(r"/\*(.*?)\*/", re.S)
+LINE_COMMENT = re.compile(r"^\s*//(.*)$", re.M)
+
+
+def check_history_comments(text, rel, kind, problems):
+    """9. Flag history-narrating wording inside comments only."""
+    patterns = {"md": [MD_COMMENT], "js": [BLOCK_COMMENT, LINE_COMMENT], "css": [BLOCK_COMMENT]}[kind]
+    for pat in patterns:
+        for m in pat.finditer(text):
+            hit = HISTORY_WORDS.search(m.group(1))
+            if hit:
+                line = text.count("\n", 0, m.start(1) + hit.start()) + 1
+                problems.append(f"{rel}:{line}: comment narrates history ({hit.group(0)!r}); "
+                                "state the current behaviour and why, history belongs in git")
+
+
 def check():
     problems = []
     today = datetime.date.today()
@@ -380,6 +404,14 @@ def check():
                 problems.append(f"{rel}:{line_of(m.start())}: setup-note data-kind="
                                 f"{m.group(1)!r} has no matching rule in extra.css "
                                 f"(renders with no accent). Known: {sorted(styled_kinds)}")
+
+    # 9. history-narrating comments (md comments, JS, CSS)
+    for path in MD:
+        check_history_comments(path.read_text(), str(path.relative_to(ROOT)), "md", problems)
+    for path in sorted(JS.glob("*.js")):
+        check_history_comments(path.read_text(), str(path.relative_to(ROOT)), "js", problems)
+    for path in sorted((DOCS / "stylesheets").glob("*.css")):
+        check_history_comments(path.read_text(), str(path.relative_to(ROOT)), "css", problems)
 
     return problems
 

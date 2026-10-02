@@ -257,7 +257,7 @@ h3 { color: var(--dbc-teal); }
    dense section - a softer entry point before a wall of tabs/bullets/
    rotation-lines hits. Opt-in only, not automatic: add `{ .lead }` on
    the line right after the paragraph you want it on.
-   No longer sized up (was font-size: 1.08em) - read as a different
+   Not sized up (a larger font-size read as a different
    text size from the rest of the page's body copy, not just a softer
    intro; the lighter color alone already does the "softer entry point"
    job without introducing a second body text size. */
@@ -2039,7 +2039,7 @@ h3 { color: var(--dbc-teal); }
   gap: 0.6em;
   margin-bottom: 0.9em;
 }
-/* Previously a fixed min-width, so 3 stats left a chunk of dead space on
+/* Not a fixed min-width: with one, 3 stats left a chunk of dead space on
    anything wider than a phone, and a stat with a bar (taller) didn't match
    the height of one without (e.g. Playstyle next to Difficulty). flex-grow
    lets them share the row evenly, align-items: stretch above evens out the
@@ -2965,8 +2965,8 @@ h3 { color: var(--dbc-teal); }
 
 /* Standalone "go check the calculator" plug at the bottom of an Essentials
    page's Engravings section - NOT paired with a chip, just a lone
-   sentence-with-link sitting on its own line. Used to reuse
-   .engraving-loadout-note for this (same muted-italic look), but that
+   sentence-with-link sitting on its own line. Does not reuse
+   .engraving-loadout-note for this (same muted-italic look), because that
    class's white-space: nowrap (deliberate for the SHORT chip-paired note
    it's actually meant for - see the usage comment above) forced this much
    longer sentence into one unbroken ~730px-wide line with no wrap, well
@@ -4452,9 +4452,14 @@ h3 { color: var(--dbc-teal); }
    fine at any width (it's inline text, no min-content floor worth
    preserving), so shrinking is safe to force entirely onto it instead -
    pinning the select at its natural size keeps its value readable at
-   every card width this grid can produce. */
+   every card width this grid can produce. flex-wrap on the row then
+   drops the select under the label when the card is too narrow for both
+   side by side, instead of letting it poke out past the card's border. */
 .md-typeset .ap-engr-manafood-amount {
   flex-shrink: 0;
+}
+.md-typeset .ap-engr-manafood-row {
+  flex-wrap: wrap;
 }
 .md-typeset .ap-calc-field-row input[type="checkbox"] {
   width: 1.1em;
@@ -4734,7 +4739,7 @@ h3 { color: var(--dbc-teal); }
   color: var(--md-default-fg-color);
   min-width: 0;
   /* At the narrowest supported widths this can be squeezed tight enough
-     that a single word ("Pulverize") no longer fits its own line;
+     that a single word ("Pulverize") does not fit its own line;
      without this it'll break mid-word ("Pulveriz"/"e") rather than
      overflow, which reads as broken. Wrapping between words (already
      the common case - "Critical + Pulverize" already spans 2-3 lines
@@ -4898,7 +4903,7 @@ h3 { color: var(--dbc-teal); }
    a viewport @media breakpoint: the row sizes itself from its own available
    width, so the sidebar/TOC coming and going can't leave it two cramped
    ~200px columns (a 480px viewport query did exactly that between 481px and
-   ~560px). Cards wrap to a stacked column once two no longer fit, and
+   ~560px). Cards wrap to a stacked column once two do not fit, and
    min-width: 0 lets a lone card shrink below 15em on very narrow phones
    instead of overflowing.
    Flex rather than a repeat(auto-fit, ...) grid on purpose: the optional
@@ -5256,10 +5261,10 @@ h3 { color: var(--dbc-teal); }
    its own top-level <details> rather than nested inside this one (it used
    to be nested here, and a descendant selector matching its <summary>
    caused a real bug - the chevron rotated whenever this OUTER panel was
-   open regardless of the inner one's own state). No longer load-bearing
-   against that specific bug now that they're siblings, but scoping to `>`
-   is still the correct, defensive choice for a summary::before rule like
-   this - no reason to widen it back to a descendant selector. */
+   open regardless of the inner one's own state). Not load-bearing
+   against that specific bug since they're siblings, but scoping to `>`
+   is the correct, defensive choice for a summary::before rule like
+   this - no reason to widen it to a descendant selector. */
 .md-typeset .ap-brace-compare[open] > summary::before,
 .md-typeset .ap-acc-compare[open] > summary::before,
 .md-typeset .ap-arkgrid-compare[open] > summary::before,
@@ -5824,13 +5829,12 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-gear-inputs:focus-within {
   box-shadow: none;
 }
-/* Used to force full opacity while collapsed, back when Character Data was
-   its own standalone compact strip and needed to read clearly on its own.
-   Now that it's grouped as a peer of the other 4 rows (all of which just
-   take the generic `details:not([open]) { opacity: 0.8 }` dimming further
-   up), this override made it the one row that stayed bright while
-   collapsed - reading as a mismatched, more prominent row rather than an
-   equal fifth option. Removed so it dims the same as its siblings. */
+/* Character Data takes no full-opacity override while collapsed. As a peer
+   of the other 4 rows (all of which just take the generic
+   `details:not([open]) { opacity: 0.8 }` dimming further up), an override
+   would make it the one row that stays bright while collapsed, reading as
+   a mismatched, more prominent row rather than an equal fifth option. It
+   dims the same as its siblings. */
 /* Same double-marker bug .ap-brace-compare's own comment documents above
    (search this file for "Two earlier attempts both left something
    floating"): Material draws its own default admonition icon on a bare
@@ -6111,6 +6115,15 @@ h3 { color: var(--dbc-teal); }
      .quick-jump-pills' removal note further down for why. */
   overflow-x: auto;
 }
+/* Engraving Comparison's own grid (Engravings + Raid Captain Variables) drops the 400px floor to the
+   container's own width. Its cards' content (a table inside its own scroller, plain checkbox labels
+   that wrap) fits a phone-width column, so the floor only made the Variables card 400px wide inside a
+   ~230px scrollport, cutting its labels off at the right edge with no cue that it scrolls. At 400px and
+   up the track is the same 400px as before, and the 2-up layout starts at the same width.
+   Character Data's pair keeps the hard floor above: its Base AP% row really is ~392px wide. */
+.md-typeset .ap-engr-compare .ap-gear-cards {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+}
 /* No container-type here (no per-card narrow-mode breakpoint is needed) - .ap-gear-cards' auto-fit above already keeps a
    card from ever getting narrower than its own content needs (see that
    rule's comment), so there's no "squeezed card" state for a query
@@ -6364,7 +6377,7 @@ h3 { color: var(--dbc-teal); }
    the left, both stones together on the right - instead of spreading 3
    children (title, Stone 1, Stone 2) evenly apart. flex-wrap: wrap here
    is what lets Stone 2 drop below Stone 1 on its own, with no extra
-   @container breakpoint needed, once both groups together no longer fit
+   @container breakpoint needed, once both groups together do not fit
    next to whatever width the title's flex-shrink left them - same
    "plain flex-wrap on the inner pairing, no breakpoint" precedent as
    .ap-engr-stone-pair just below. justify-content: flex-end keeps a
@@ -6407,7 +6420,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-engr-stone-label-group:has(select:disabled) {
   opacity: 0.6; /* same value/reason as the general disabled-row rule above */
 }
-/* Below ~640px the title plus both Stones' labels and selects no longer
+/* Below ~640px the title plus both Stones' labels and selects do not
    fit one line without crushing something - stack the title above
    Stone 1+2 instead rather than
    let .ap-engr-stone-groups's own flex-wrap above silently eat all the
@@ -6429,7 +6442,7 @@ h3 { color: var(--dbc-teal); }
   }
 }
 /* Below ~420px even Stone 1 and Stone 2 side by side (stacked under the
-   title per the 640px fallback above) no longer leave each label +
+   title per the 640px fallback above) do not leave each label +
    target select + level select enough room - stack each Stone's own
    label above its pair instead, same "give the group a much narrower
    natural width" fix .ap-engr-stone-pair's own flex-wrap already applies
@@ -6466,6 +6479,24 @@ h3 { color: var(--dbc-teal); }
    off the row's edge again. justify-content: flex-end keeps a wrapped
    second line right-aligned like the first, instead of the default
    flex-start snapping it to the opposite edge from the first line. */
+/* A native select is as wide as its widest option ("Keen Blunt Weapon"), not its current value. In the
+   right-aligned stone and Setup A/B rows that natural width can exceed a phone-width card, and because
+   the content sits against the right edge the overflow ran off the LEFT edge, where no scroller can
+   reach it (select starting at x=-46 at 320px). max-width: 100% caps every calculator select at its
+   container, and the stone groups may now shrink so the pair can wrap before the select has to. */
+.md-typeset .ap-calc select {
+  max-width: 100%;
+}
+.md-typeset .ap-engr-stone-groups,
+.md-typeset .ap-engr-stone-label-group,
+.md-typeset .ap-engr-stone-pair {
+  min-width: 0;
+  max-width: 100%;
+}
+.md-typeset .ap-engr-stone-groups,
+.md-typeset .ap-engr-stone-label-group {
+  flex-shrink: 1;
+}
 /* Every field row inside a Gearing card stacks as its own full-width
    line (label pushed left, control pushed to the row's far edge) instead
    of the old chip layout (each row sized to its own content, several per
@@ -7138,6 +7169,24 @@ h3 { color: var(--dbc-teal); }
   .md-typeset .ap-bvb-cards {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* The card sits inside two nested panels, so at 320px its rows are ~113px wide. A nowrap row gave
+     the label zero width (one letter per line), squeezed the Basic Effect number input to 18px and the
+     line selects to a single letter. Rows wrap instead: the label keeps its text on one line and the
+     controls drop under it at a usable width. */
+  .md-typeset .ap-bvb-card .ap-calc-field-row,
+  .md-typeset .ap-bvb-line-row {
+    flex-wrap: wrap;
+  }
+  .md-typeset .ap-bvb-card .ap-calc-field-label {
+    white-space: nowrap;
+  }
+  .md-typeset .ap-bvb-line-row .ap-bvb-line-type {
+    flex: 1 1 7em;
+    min-width: 7em;
+  }
+  .md-typeset .ap-bvb-card input[type="number"] {
+    min-width: 5em;
+  }
 }
 
 /* ---- Setup A vs. Setup B: nested <details> at the bottom of Engraving
@@ -7206,7 +7255,7 @@ h3 { color: var(--dbc-teal); }
    groups the two selects into their own flex unit. */
 /* Below ~380px (measured against .ap-brace-compare-body's own rendered
    width, same container-type/reasoning as .ap-engr-stone-row's fallback
-   above) the label and its pair no longer fit one line without crushing
+   above) the label and its pair do not fit one line without crushing
    the label to nothing - stack the label above its own pair instead,
    right-aligned to match every other stacked fallback in this file. The
    pair's own flex-wrap:wrap above is the second half of the fix: even
@@ -7852,7 +7901,7 @@ h3 { color: var(--dbc-teal); }
    the element once the animation completes. For `transform` specifically
    this is a real problem, and changing the "to" keyframe to
    `transform: none` does NOT fix it:
-   a getComputedStyle read of a HELD (fill-mode: both/forwards, no longer
+   a getComputedStyle read of a HELD (fill-mode: both/forwards, not
    actively ticking) transform animation reports the interpolated result
    as a resolved matrix even when the specified keyframe value is the
    `none` keyword, and Chromium treats that held animation as making
@@ -9282,7 +9331,7 @@ body.page-333-blitz input[type="text"] {
    width), not a media/container query breakpoint, so it needs no JS and
    no query at all: at comfortable widths all three columns fit on one
    line, and as the row narrows (sidebar reappearing, a phone screen),
-   columns that no longer fit their min width drop to their own line
+   columns that do not fit their min width drop to their own line
    automatically - down to a single column when only one fits. (The
    compact variant below overrides this to auto-fill instead of auto-fit
    for a different reason - see its own comment.)
@@ -10350,6 +10399,7 @@ html.image-lightbox-open {
    - Every input/select was 13.6px. iOS Safari zooms the whole page when a
      field under 16px is focused and does not zoom back, which makes typing
      into the calculator on an iPhone jump around. 16px stops that.
+   - The preset buttons were 9-11px wide digits and the Line Comparison selects 21px tall.
    - Checkboxes were 15px with a label row often under 30px tall, and the
      toolbar buttons (presets, Export, Import, Reset, the result pins, the
      build dock trigger) were under 30px tall. These get a bigger box, not a
@@ -10362,6 +10412,25 @@ html.image-lightbox-open {
   .md-typeset .ap-calc input[type="checkbox"] {
     width: 20px;
     height: 20px;
+  }
+  /* A checkbox is tapped through its label, which was 20-21px tall on single-line rows (WCAG 2.5.8
+     minimum is 24px). Grow the label, not the box; the flex centering keeps the text where it was. */
+  .md-typeset .ap-calc label:has(input[type="checkbox"]) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+  }
+  .md-typeset .ap-calc-field-row:has(> input[type="checkbox"]) > .ap-calc-field-label,
+  .md-typeset .ap-calc-field-row:has(.ap-ot1) > .ap-calc-field-label {
+    display: flex;
+    align-items: center;
+    min-height: 26px;
+  }
+  .md-typeset .ap-calc-footnote .ap-calc-preset {
+    min-width: 32px;
+  }
+  .md-typeset .ap-bvb-line-row select {
+    min-height: 32px;
   }
   .md-typeset .ap-calc-preset,
   .md-typeset .ap-calc-export,

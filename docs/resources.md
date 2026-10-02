@@ -106,7 +106,7 @@
 <!-- Fixed Gear: filled out once to match your character, organized by
      which final stat each field feeds - not by which item slot it's on,
      since a ring's Crit Rate roll and its Crit Dmg roll matter for
-     completely different totals and were previously scattered across
+     completely different totals, so they are not scattered across
      unrelated groups (Rings/Bracelet/Ark Grid/Engravings). -->
 <div class="ap-calc-gear">
 
@@ -703,9 +703,8 @@
      Passive setup above and don't need this expanded. Base AP% still
      folds together its few small sources rather than tracking each one
      separately (hover the label for the full source list); Attack
-     Power% used to work the same way but is now split into individual
-     source fields below instead, so the running total is derived
-     rather than hand-typed. -->
+     Power% is split into individual source fields below, so the
+     running total is derived rather than hand-typed. -->
 <details class="ap-gear-inputs">
   <summary>
     <span class="ap-gear-title">Character Data</span>
@@ -717,21 +716,16 @@
          (.ap-calc-group inside .ap-calc-gear) - title + border-left
          accent, fields stacked in a single column inside each card (see
          the .ap-gear-card rules for why the old chip-style field-row
-         layout was dropped in favor of that). The side-by-side placement
-         itself used to be a plain 2-column grid with its own fixed
-         collapse-to-1-column breakpoint, PLUS a second fixed breakpoint
-         on each card to un-squeeze its pair rows and long label/select
-         rows once narrow - two independently hand-picked numbers that
-         didn't line up, so there was a band of widths where 2-up was
-         still active but neither card had reached its own comfortable
-         width yet, and fields visibly jumped between inline/stacked
-         resizing through it (the same kind of threshold mismatch
-         flagged in skill-setup.js's MASONRY_MIN_WIDTH note). Replaced
-         with a single auto-fit grid (see .ap-gear-cards below) that
-         only ever gives a card its minmax() minimum or more - so a card
-         can never be squeezed narrower than its own content needs in
-         the first place, and the "drop to 1 column" case falls out of
-         that same rule instead of a second breakpoint to keep in sync. -->
+         layout is not used). The side-by-side placement is a single
+         auto-fit grid (see .ap-gear-cards below) that only ever gives a
+         card its minmax() minimum or more, so a card can never be squeezed
+         narrower than its own content needs, and the "drop to 1 column"
+         case falls out of that same rule. A fixed collapse breakpoint plus
+         a second per-card breakpoint would be two hand-picked numbers that
+         can disagree, leaving a band of widths where 2-up is active but
+         neither card is comfortable and fields jump between inline and
+         stacked (the same kind of threshold mismatch flagged in
+         skill-setup.js's MASONRY_MIN_WIDTH note). -->
     <div class="ap-gear-cards">
       <div class="ap-gear-card ap-gear-card--basics">
         <p class="ap-gear-card-title">Weapon Power / Main Stat / Misc</p>
@@ -812,10 +806,9 @@
 
       <!-- Attack Power % sources: every field that folds into the running
            Attack Power % total lives in this one card - Ability Stone:
-           Adrenaline and Atropine included, since they used to sit in a
-           separate area below purely as a leftover from how each was
-           implemented (its own toggle/table), not a real conceptual
-           difference from Kazeros/Guardian/etc (see
+           Adrenaline and Atropine included, since they differ from
+           Kazeros/Guardian/etc only in how each is implemented (its own
+           toggle/table), not conceptually (see
            gearAttackPowerPercentTotal's own comment in the JS for how they
            fold in). Support is deliberately NOT in this card: it buffs
            Attack Power through a completely different mechanism (a flat
@@ -949,9 +942,8 @@
   <div class="ap-brace-compare-body">
     <div class="ap-brace-compare-inputs">
       <!-- Build toggle now lives once, docked at the top of .ap-calc (see
-           that block's own comment) instead of an echo copy here -
-           removed so switching build mid-Bracelet-Comparison no longer
-           needed its own duplicate row.
+           that block's own comment) instead of an echo copy here, so
+           switching build mid-Bracelet-Comparison has no duplicate row.
            ap-brace-spec-build is the single real source of truth for the
            active build (this Spec Scaling math, the primary Ark Passive
            grid, and Engraving Comparison's derived RE/Surge Playstyle all
@@ -968,10 +960,10 @@
            calculator exactly as if this select had been changed
            directly.
            "re-313" is kept as a real option even though no chip writes
-           it anymore and BRACE_SPEC_BUILDS no longer has an entry for
-           it - purely so an old Export string or localStorage blob
-           saved before the Family/Variant redesign still resolves to a
-           real option instead of silently clearing to "" when assigned.
+           it and BRACE_SPEC_BUILDS has no entry for it - purely so an
+           old Export string or localStorage blob saved before the
+           Family/Variant redesign still resolves to a real option
+           instead of silently clearing to "" when assigned.
            syncBuildToggleUI normalizes it to "re-111" (see
            normalizeBraceSpecBuild) the first time it runs. -->
       <select id="ap-brace-spec-build" class="ap-brace-spec-build" hidden>
@@ -1277,10 +1269,8 @@
      every 2-slot pairing from: Raid Captain/Keen Blunt Weapon/Cursed Doll
      for RE, or those 3 plus Mass Increase for Surge (Mass Increase's
      Attack Speed drawback is Surge-only/unmodeled, so it's never in RE's
-     pool) - both specs pick 2 of their own pool now, see
-     computeEngravingComparison's own JS comment for the pool sizes and
-     history (RE used to force Raid Captain on and only let Keen Blunt
-     Weapon vs. Cursed Doll compete for the other slot).
+     pool) - both specs pick 2 of their own pool, see
+     computeEngravingComparison's own JS comment for the pool sizes.
      Adrenaline and Keen Blunt Weapon each get their OWN isolated Node
      selector here too (same as the other 5) rather than reading the Ark
      Passive section's live tracked value - this section is a sandbox, and
@@ -1309,10 +1299,9 @@
   <div class="ap-brace-compare-body">
     <!-- Build toggle now lives once, docked at the top of .ap-calc, and
          stays reachable (sticky) while this section is open, so no echo
-         copy is needed here anymore. It still doubles as the RE/Surge
-         Playstyle indicator that used to be its own derived-only row
-         here (the active chip's label and color already say RE vs
-         Surge, so a separate "Playstyle: RE" line next to it stays
+         copy is needed here. It doubles as the RE/Surge Playstyle
+         indicator (the active chip's label and color already say RE vs
+         Surge, so a separate "Playstyle: RE" line next to it would be
          redundant). -->
     <p class="ap-brace-compare-intro">Competing engravings, searched for the best 2-slot combination, against your Best Setup above.<span class="ap-brace-info-icon" title="This section's inputs are isolated from the rest of the calculator - nothing here affects your tracked setup above.">i</span></p>
 
@@ -1322,21 +1311,14 @@
          Power % cards above (.ap-gear-cards auto-fit grid of
          .ap-gear-card - title + border-left accent, see that section's
          own comment for why auto-fit beats a fixed 2-column grid here
-         too). Core and Competing Pool used to be their own separate
-         cards in this grid - reader found that split (one card just for
-         3 always-on rows) less useful than pairing Engravings against
-         Raid Captain Variables, the section's other real "inputs" block, so
-         they were merged into this single card. Core's own
-         ".ap-gear-card-subtitle">Core (always on)" label was dropped
-         first (reader found a heading for 3 rows that are never
-         anything but on redundant), and Competing Pool's own subtitle
-         was dropped in the same spirit later - all 7 engravings (Grudge/
-         Ambush Master/Adrenaline always-on, then Raid Captain/Keen Blunt
-         Weapon/Cursed Doll/Mass Increase competing) now just list
-         straight down with no sub-group heading breaking them up at
-         all. (The .ap-gear-card-subtitle class that styled those headings
-         was removed from extra.css; git history has it if a sub-group is
-         ever needed again.) -->
+         too). Core and Competing Pool are one card, paired with Raid
+         Captain Variables as the section's other real "inputs" block (a
+         separate card for 3 always-on rows read as less useful). The
+         card has no sub-group headings: a heading for 3 rows that are
+         never anything but on is redundant, and all 7 engravings
+         (Grudge/Ambush Master/Adrenaline always-on, then Raid
+         Captain/Keen Blunt Weapon/Cursed Doll/Mass Increase competing)
+         list straight down. -->
     <div class="ap-gear-cards">
       <div class="ap-gear-card ap-gear-card--engr-core">
         <p class="ap-gear-card-title">Engravings</p>
@@ -1446,26 +1428,21 @@
       </div>
     </div>
 
-    <!-- Stone 1 and Stone 2 merged into a single row (previously 2
-         separate .ap-engr-stone-row rows stacked on top of each other) -
-         the title itself shrank from "Engraving and Ability Stone Values"
-         to just "Ability Stone" in the same pass, which is what actually
-         made this fit: the old title's own length was most of what
-         forced Stone 1 onto a line by itself. Now a full .ap-gear-card
-         (see .ap-gear-card--engr-stone in extra.css) instead of a bare
-         dashed-separator row - since "Ability Stone" as a title already
-         says what both slots are, their own labels were shortened from
-         "Stone 1"/"Stone 2" down to just "1"/"2" in the same pass (the
+    <!-- Stone 1 and Stone 2 share a single row, titled just "Ability
+         Stone" (a longer title would force Stone 1 onto a line by
+         itself). It is a full .ap-gear-card (see
+         .ap-gear-card--engr-stone in extra.css) rather than a bare
+         dashed-separator row. Since "Ability Stone" as a title already
+         says what both slots are, their labels are just "1"/"2" (the
          tooltips still spell out "Ability Stone's first/second slot" in
-         full, so nothing readable is lost, just the redundant repeated
-         word in the visible label). .ap-engr-stone-groups wraps the 2
-         label+pair units (see .ap-engr-stone-label-group below) so the
-         row's own space-between only ever sees 2 children - title on
-         the left, both stones together on the right - instead of
-         spreading 3 children (title, Stone 1, Stone 2) evenly apart. See
+         full). .ap-engr-stone-groups wraps the 2 label+pair units (see
+         .ap-engr-stone-label-group below) so the row's own
+         space-between only ever sees 2 children - title on the left,
+         both stones together on the right - instead of spreading 3
+         children (title, Stone 1, Stone 2) evenly apart. See
          extra.css's own comment chain on .ap-engr-stone-row--first /
          .ap-engr-stone-groups for the responsive fallback once both
-         stones plus their selects no longer fit next to the title on one
+         stones plus their selects do not fit next to the title on one
          line. -->
     <div class="ap-calc-field-row ap-engr-stone-row ap-engr-stone-row--first ap-gear-card ap-gear-card--engr-stone">
       <p class="ap-acc-panel-title ap-engr-contrib-title">Ability Stone</p>
@@ -1797,8 +1774,7 @@
   <div class="ap-brace-compare-body">
     <!-- Build toggle now lives once, docked at the top of .ap-calc and
          sticky while this section is open - see Bracelet Comparison's
-         own comment for why the echo copy that used to sit here was
-         removed. -->
+         own comment for why there is no echo copy here. -->
     <p class="ap-brace-compare-intro">Candidate accessory lines, valued as if each were the only line on that slot, against your Best Setup above.</p>
 
     <div class="ap-acc-panel ap-acc-necklace-panel">

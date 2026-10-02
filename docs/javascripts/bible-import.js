@@ -991,10 +991,10 @@
     // of leaving the calculator's own HTML defaults - e.g.
     // ap-gear-ap-chaos-star's default is literally "Relic|20P" - sitting
     // there looking like real equipped data), then let the per-core loop
-    // below overwrite whichever ones are actually equipped. Previously
-    // these were only defaulted in the !hasArkGrid branch, so the same
+    // below overwrite whichever ones are actually equipped. Defaulting
+    // them only in the !hasArkGrid branch would leave the same
     // "Order cores but no Chaos cores yet" character (hasArkGrid true,
-    // text.chaosCores === {}) got none of these six fields set either.
+    // text.chaosCores === {}) with none of these six fields set either.
     data["ap-flashy-atk"] = "None";
     data["ap-stable-atk"] = "None|0P";
     data["ap-swift-core"] = "None|0P";
@@ -1133,7 +1133,7 @@
           // 17P - the only lower bucket selectable at all is "Epic-Leg 10P".
           // So below 17 points, write that bucket regardless of the core's
           // actual Relic/Ancient grade (mechanically identical to Epic/Leg
-          // at that point total, and there's no more precise option to pick
+          // at that point total, and there's no finer option to pick
           // anyway) - and skip grade detection entirely, since a genuinely
           // Legendary/Epic core here would otherwise always fail
           // findChaosGrade (CHAOS_GRADE_COLORS only has Relic/Ancient hexes)
@@ -1368,7 +1368,7 @@
       // catch it (the page navigates away right after).
       if (window.console && console.log) {
         // Logged first and separately from the rest: if hydration data ever
-        // carries over from a previously-viewed character (suspected cause -
+        // carries over from an earlier-viewed character (suspected cause -
         // a client-side route change on lostark.bible may not replace the
         // SSR-rendered hydration <script> tag that extractLoadoutJSON reads,
         // even though document.body.innerText does update), this line plus
