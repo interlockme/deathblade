@@ -172,6 +172,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
     - Increases chance of getting an extra stack on Surprise Attack precast.
     - This is the best and most efficient way to improve stagger contribution.
     - Give Head Hunt the next best <span class="skill-mention" data-rune-name="Galewind">Galewind</span> or <span class="skill-mention" data-rune-name="Vision">Vision</span> rune that's available.
+    - **Don't do this** if you have a +CDR% bracelet, you'll lose Maelstrom stacks.
 
 *Note: Don't equip <span class="skill-mention" data-rune-name="Galewind" data-rune-tier="legendary">Legendary Galewind</span> on Blade Dance for this build. It doesn't benefit from a rune rarity above Epic (or even above <span class="skill-mention" data-rune-name="Vision" data-rune-tier="legendary">Legendary Vision</span>) due to the way the game [rounds down](https://www.inven.co.kr/board/lostark/5497/175825) cast time reductions to 0.05s intervals.*
 
