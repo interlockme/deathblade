@@ -457,7 +457,7 @@ def check_ark_cores_desktop(pg, run, path):
     it.click()
     pg.mouse.move(*MOUSE_PARK)
     pg.wait_for_timeout(CLOSE_WAIT)
-    if it.evaluate(ARK_TIP_SHOWN_JS) or it.evaluate("e => e.classList.contains('ark-core-tip-open')"):
+    if it.evaluate(ARK_TIP_SHOWN_JS) or it.evaluate("e => e.classList.contains('skill-tip-open')"):
         run.fail(path, "Ark Core: a mouse click pinned the tooltip")
         return
     run.ok("ark-cores")

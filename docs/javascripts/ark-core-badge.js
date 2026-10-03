@@ -31,7 +31,9 @@
 // per-entry via an optional `tier` field for a future non-Relic core.
 // A label with no match (typo, or a core core-options-data.js hasn't
 // been given yet) just renders without a tooltip - same "fail quietly"
-// rule every other widget here follows.
+// rule every other widget here follows. The panel is wired through
+// skill-tooltip.js's SkillTooltip.wireCustom with opts.panelHost, so it stays
+// inside its card; this file must load after skill-tooltip.js.
 //
 // EASY EDIT GUIDE:
 //   <div class="ark-cores" data-family="re" markdown>
@@ -154,68 +156,6 @@
     return tip;
   }
 
-  // Centers `tip` under `item` and clamps it so it never runs past the
-  // viewport's left/right edges. Called right before the tooltip opens
-  // (hover, keyboard focus, or tap) rather than kept in sync continuously -
-  // matching the "recompute on the triggering event, don't chase it" pattern
-  // used elsewhere on this site (see skill-setup.js's masonry width check).
-  // Sets an inline `left` in px instead of the usual 50%/translateX centering
-  // trick because the clamped position is frequently NOT the true center -
-  // px is the only way to express "centered, unless that would clip, in
-  // which case slide over just enough to stay on screen."
-  var VIEWPORT_MARGIN = 8;
-  function positionTip(item, tip) {
-    var itemRect = item.getBoundingClientRect();
-    var tipWidth = tip.getBoundingClientRect().width;
-    var desiredLeft = itemRect.left + itemRect.width / 2 - tipWidth / 2;
-    // clientWidth (not innerWidth): innerWidth includes the vertical
-    // scrollbar, which let a clamped panel still poke ~15px past the
-    // visible page on desktop.
-    var maxLeft = document.documentElement.clientWidth - tipWidth - VIEWPORT_MARGIN;
-    var clampedLeft = Math.min(Math.max(desiredLeft, VIEWPORT_MARGIN), maxLeft);
-    tip.style.left = (clampedLeft - itemRect.left) + "px";
-  }
-
-  // Every panel is clamped once at rest, and again on resize, not only right
-  // before it opens. A hidden (opacity 0) absolutely positioned panel still
-  // counts toward the page's scrollable width, so a card near the right edge
-  // with the pre-JS `left: 0` fallback made the whole page scroll sideways at
-  // tablet widths (measured: up to 64px at 760-940px, 91px at 1220px on
-  // build pages) even though the panel was invisible.
-  var clampQueued = false;
-  function clampAllTips() {
-    clampQueued = false;
-    document.querySelectorAll(".ark-core-item-tip").forEach(function (item) {
-      var tip = item.querySelector(".ark-core-options-tip");
-      if (tip) positionTip(item, tip);
-    });
-  }
-  function queueClampAll() {
-    if (clampQueued) return;
-    clampQueued = true;
-    window.requestAnimationFrame(clampAllTips);
-  }
-  window.addEventListener("resize", queueClampAll);
-  // The window resize event alone misses layout changes that move a card
-  // without the window's own resize handler seeing settled positions (the
-  // Material TOC sidebar appearing at ~1220px, a sidebar drawer, container-
-  // query reflows), so each row also watches its own size.
-  var rowObserver = window.ResizeObserver ? new ResizeObserver(queueClampAll) : null;
-
-  // Tap-toggle-open (.ark-core-tip-open) is a JS-added class, so it stays
-  // on an item independently of :hover/:focus-visible - closing it only
-  // ever happened on another TAP, on outside-click, or Escape (below), so
-  // tapping one core then simply hovering a different one over it with
-  // the mouse left the first tip showing right alongside the newly
-  // hovered one. Called from mouseenter/focusin too now, not just click,
-  // so moving onto a different core by any means retires a tap-opened
-  // tooltip elsewhere on the page.
-  function closeOpenExcept(item) {
-    document.querySelectorAll(".ark-core-item.ark-core-tip-open").forEach(function (open) {
-      if (open !== item) open.classList.remove("ark-core-tip-open");
-    });
-  }
-
   function buildItem(entry) {
     var item = el("div", "ark-core-item");
 
@@ -253,56 +193,18 @@
     item.appendChild(info);
 
     var tip = buildTooltip(entry.label, entry.core);
-    if (tip) {
+    if (tip && window.SkillTooltip) {
       item.classList.add("ark-core-item-tip");
-      item.setAttribute("tabindex", "0");
-      item.appendChild(tip);
-
-      // CSS (:hover/:focus-visible) still drives showing/hiding the
-      // tooltip for mouse and keyboard - these two just reposition it
-      // right before that happens, so it's centered-and-clamped by the
-      // time it becomes visible.
-      item.addEventListener("mouseenter", function () { closeOpenExcept(item); positionTip(item, tip); });
-      item.addEventListener("focusin", function () { closeOpenExcept(item); positionTip(item, tip); });
-
-      // Tap-to-toggle for touch, which triggers neither hover nor focus -
-      // matching the ap-calc-popover open/close-on-outside-click pattern
-      // elsewhere on the site rather than inventing a new one.
-      item.addEventListener("click", function (evt) {
-        // A mouse click must not pin the panel open after the pointer leaves
-        // (hover already shows it); tap-toggle is for touch and pen only.
-        // Uses skill-tooltip.js's shared test instead of evt.pointerType:
-        // iOS Safari reports finger taps as "mouse", which turned every tap
-        // on a core into a no-op (same bug skill-tooltip.js had). Without
-        // SkillTooltip loaded, fall through to tap-toggle, the safe default.
-        if (window.SkillTooltip && window.SkillTooltip.isMouseClick && window.SkillTooltip.isMouseClick(evt)) return;
-        if (item.classList.contains("ark-core-tip-open")) {
-          item.classList.remove("ark-core-tip-open");
-          return;
-        }
-        closeOpenExcept(item);
-        positionTip(item, tip);
-        item.classList.add("ark-core-tip-open");
-        evt.stopPropagation();
-      });
+      // The panel stays inside its card (panelHost) and SkillTooltip owns
+      // hover, focus, tap-toggle, outside-click/Escape close, pruning and
+      // clamping. The card is the trigger, so it gets tabindex, cursor and
+      // aria-describedby from there. A label with no data, or a page without
+      // skill-tooltip.js, renders a plain card (fails quietly).
+      window.SkillTooltip.wireCustom(item, tip, { panelHost: item });
     }
 
     return item;
   }
-
-  // Tap-outside-to-close for the touch toggle above.
-  document.addEventListener("click", function () {
-    document.querySelectorAll(".ark-core-item.ark-core-tip-open").forEach(function (open) {
-      open.classList.remove("ark-core-tip-open");
-    });
-  });
-  document.addEventListener("keydown", function (evt) {
-    if (evt.key === "Escape") {
-      document.querySelectorAll(".ark-core-item.ark-core-tip-open").forEach(function (open) {
-        open.classList.remove("ark-core-tip-open");
-      });
-    }
-  });
 
   function renderContainer(container) {
     var result = window.SiteUtils.readInlineJSON(container, "ark-core-badge.js");
@@ -316,8 +218,6 @@
       row.appendChild(buildItem(entry));
     });
     container.appendChild(row);
-    if (rowObserver) rowObserver.observe(row);
-    queueClampAll();
   }
 
   window.SiteUtils.registerRenderer(".ark-cores", renderContainer);

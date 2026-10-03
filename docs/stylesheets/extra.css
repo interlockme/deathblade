@@ -8886,17 +8886,20 @@ body.page-333-blitz input[type="text"] {
 
 /* Hover/focus/tap tooltip reproducing a core's full in-game "Core
    Option" list (see core-options-data.js + ark-core-badge.js's
-   buildTooltip). Anchored to the card itself (position: relative) so it
-   floats above the page rather than pushing the row's layout around -
-   same floating-panel approach as .ap-calc-popover, reusing that same
-   dark-card background/border/shadow language rather than inventing a
-   new surface for it. cursor: help signals the card is hoverable for
-   more info, same convention as .ap-brace-info-icon elsewhere. */
+   buildTooltip). The panel is a child of its card (position: relative) and
+   absolutely positioned under it, so it floats above the page rather than
+   pushing the row's layout around - same floating-panel approach as
+   .ap-calc-popover, reusing that same dark-card background/border/shadow
+   language rather than inventing a new surface for it. It is wired through
+   skill-tooltip.js with opts.panelHost, which adds .skill-tip-visible while
+   it should show (no CSS :hover rule decides that) and sets `left`. cursor:
+   help signals the card is hoverable for more info, same convention as
+   .ap-brace-info-icon elsewhere. */
 .md-typeset .ark-core-item-tip {
   position: relative;
   cursor: help;
 }
-.md-typeset .ark-core-item-tip:focus-visible {
+.md-typeset .ark-core-item-tip.skill-tip-anchor:focus-visible {
   outline: 2px solid var(--dbc-rose);
   outline-offset: 2px;
 }
@@ -8921,29 +8924,24 @@ body.page-333-blitz input[type="text"] {
   transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0.15s;
 }
 /* Horizontal position is set inline (as an exact `left` in px) by
-   ark-core-badge.js's positionTip() right before the tooltip opens -
-   centered under its own card by default, then clamped so it never
-   runs past the viewport's edges. All 3 cards use the same centered-then-clamped logic rather than a :first-child/:last-child CSS-only split: flush-aligning the Sun and Star tooltips to their own card edge would keep them on-screen, but since the tooltip (~320px) is wider than a card (~290px) they'd hang off to one side while the Moon card's centered one looked right. `left: 0` below is just the pre-JS fallback so the
-   element has a valid box before the first hover/focus/tap fires. */
+   skill-tooltip.js's positionInHost() - centered under its own card by
+   default, then clamped so it never runs past the viewport's edges, at rest
+   and on resize, not only when it opens. All 3 cards use the same
+   centered-then-clamped logic rather than a :first-child/:last-child CSS-only
+   split: flush-aligning the Sun and Star tooltips to their own card edge
+   would keep them on-screen, but since the tooltip (~320px) is wider than a
+   card (~290px) they'd hang off to one side while the Moon card's centered
+   one looked right. `left: 0` below is just the pre-JS fallback so the
+   element has a valid box before the first clamp. */
 .md-typeset .ark-core-options-tip {
   left: 0;
   transform: translateY(4px);
 }
-/* The panel sits 8px below its card. Without a bridge over that gap the
-   pointer leaves the card's :hover on the way to the panel and the panel
-   hides before it can be reached (WCAG 1.4.13 "hoverable"). The bridge is
-   part of the panel, so hovering it keeps the card hovered. */
-.md-typeset .ark-core-options-tip::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -10px;
-  height: 10px;
-}
-.md-typeset .ark-core-item-tip:hover .ark-core-options-tip,
-.md-typeset .ark-core-item-tip:focus-visible .ark-core-options-tip,
-.md-typeset .ark-core-item-tip.ark-core-tip-open .ark-core-options-tip {
+/* The panel sits 8px below its card. skill-tooltip.js keeps hover alive for
+   HOVER_CLOSE_DELAY_MS after the pointer leaves the card and counts the
+   panel itself as hover, so the pointer can cross that gap and reach the
+   panel (WCAG 1.4.13 "hoverable") without any bridge element. */
+.md-typeset .ark-core-options-tip.skill-tip-visible {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;

@@ -51,15 +51,15 @@ extra_css:
 #   3. data files: build-data.js, skill-data.js, skill-names.js,
 #      ap-node-names.js, ap-node-effects.js, core-options-data.js
 #   4. renderer widgets that read those data files: build-stats-badge.js,
-#      skill-setup.js, essentials-table.js, ark-core-badge.js,
+#      skill-setup.js, essentials-table.js,
 #      ark-passive-tree.js, gem-priority.js, pentagon-badge.js,
 #      rotation-line.js, dps-chart.js, build-compare.js, last-updated.js,
 #      image-lightbox.js
 #   5. widgets that read the DOM step 4 just built: rotation-practice.js
 #      (after rotation-line.js), gem-dps-tooltip.js (after gem-priority.js
-#      AND dps-chart.js), ark-passive-tooltip.js AND rune-tooltip.js AND
-#      glossary-tooltip.js (each after skill-tooltip.js - all three reuse
-#      the latter's SkillTooltip.wireCustom; glossary-tooltip.js also
+#      AND dps-chart.js), ark-core-badge.js AND ark-passive-tooltip.js AND
+#      rune-tooltip.js AND glossary-tooltip.js (each after skill-tooltip.js -
+#      all four reuse the latter's SkillTooltip.wireCustom; glossary-tooltip.js also
 #      needs glossary-data.js loaded first). ap-brace-tooltip.js belongs to
 #      this group too but is lazy-loaded (see 1b) - skill-tooltip.js is
 #      global and therefore always in place well before it arrives.
@@ -81,7 +81,6 @@ extra_javascript:
   - javascripts/skill-setup.js
   - javascripts/essentials-table.js
   - javascripts/core-options-data.js
-  - javascripts/ark-core-badge.js
   - javascripts/ap-node-names.js
   - javascripts/ap-node-effects.js
   - javascripts/ark-passive-tree.js
@@ -89,6 +88,7 @@ extra_javascript:
   - javascripts/pentagon-badge.js
   - javascripts/rotation-line.js
   - javascripts/skill-tooltip.js
+  - javascripts/ark-core-badge.js
   - javascripts/ark-passive-tooltip.js
   - javascripts/rune-tooltip.js
   - javascripts/glossary-data.js

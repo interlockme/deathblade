@@ -4,15 +4,14 @@
 //
 // Adds a hover/focus/tap tooltip to each Ark Passive node ark-passive-
 // tree.js renders, describing what that node's invested level actually
-// does - reusing skill-tooltip.js's body-fixed positioning/show-hide
-// engine via window.SkillTooltip.wireCustom (same panel visual language
-// as .skill-inline mentions and rotation chips) rather than duplicating
-// that hover/focus/tap-toggle/viewport-clamping logic a second time.
-// ark-core-badge.js's own tooltip (CSS :hover-driven, anchored inside the
-// trigger) was the other option - not reused here since its content shape
-// (a fixed 10P/14P/17P/18P/19P/20P breakpoint list) doesn't fit a node's
-// variable level count (1-5 for most nodes, a flat/no-level text for a
-// handful of 1P Evolution keystones).
+// does - reusing skill-tooltip.js's positioning/show-hide engine via
+// window.SkillTooltip.wireCustom (same panel visual language as
+// .skill-inline mentions and rotation chips) rather than duplicating that
+// hover/focus/tap-toggle/viewport-clamping logic a second time. Its panel
+// content is built here and not shared with ark-core-badge.js's, since that
+// content shape (a fixed 10P/14P/17P/18P/19P/20P breakpoint list) doesn't
+// fit a node's variable level count (1-5 for most nodes, a flat/no-level
+// text for a handful of 1P Evolution keystones).
 //
 // Deliberately does NOT touch ark-passive-calculator.js's own separate
 // native-tooltip system (its own Ark Passive keystone comparison grid) -

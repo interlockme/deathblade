@@ -3,19 +3,22 @@
 // DB_SKILL_EXTRAS); no code changes needed here, just point those at your
 // own data.
 //
-// Attaches the same kind of hover/focus/tap tooltip ark-core-badge.js
-// gives the Ark Grid core cards to two existing surfaces, instead of
-// building new DOM for them - with one deliberate difference from that
-// file: the tooltip panel here is appended to <body> as position: fixed,
-// positioned/shown from JS, rather than living inside the trigger as a
-// CSS :hover-revealed absolutely-positioned child. .rotation-line sets
+// The one hover/focus/tap tooltip engine for the whole site (also used by
+// ark-core-badge.js, ark-passive-tooltip.js, rune-tooltip.js,
+// glossary-tooltip.js, gem-dps-tooltip.js and ap-brace-tooltip.js through
+// SkillTooltip.attach/wireCustom). By default a panel is appended to <body>
+// as position: fixed and positioned/shown from JS. .rotation-line sets
 // overflow: hidden on itself (see rotation-practice.js's own comment on
 // having to float ITS toggle pill in a separate wrapper for the same
 // reason) which would silently clip a tooltip anchored inside a .skill
 // chip - appending to <body> sidesteps that ancestor-clipping problem
 // entirely instead of chasing which containers on the site do or don't
 // clip. Same convention as .image-lightbox-overlay/.tiger-rain elsewhere
-// for a body-level fixed overlay (see extra.css).
+// for a body-level fixed overlay (see extra.css). A caller that wants its
+// panel to stay inside its own card passes opts.panelHost (see wire()); the
+// state, hover, tap, prune and clamping logic is the same either way.
+//
+// Attaches to two existing surfaces, instead of building new DOM for them:
 //
 //   - .rotation-line .skill chips that carry a data-skill-id (set by
 //     rotation-line.js for any plain single-skill step - see that file).
@@ -229,16 +232,20 @@
   // current viewport position - getBoundingClientRect is already
   // viewport-relative, matching position: fixed directly, no scrollX/
   // scrollY math needed the way an absolute-in-document tooltip would.
-  // Centers horizontally under the trigger, clamped to stay on screen
-  // (same instinct as ark-core-badge.js's positionTip), and prefers
-  // sitting below the trigger but flips above it when there isn't room
-  // below but there IS above - worth doing here (ark-core-badge doesn't
-  // bother) since a .skill-inline mention can land anywhere down a long
-  // page, including right at the bottom of the viewport, unlike the Ark
-  // Setup section's cores which are never that close to a page edge.
+  // Centers horizontally under the trigger, clamped to stay on screen,
+  // and prefers sitting below the trigger but flips above it when there
+  // isn't room below but there IS above - worth doing since a
+  // .skill-inline mention can land anywhere down a long page, including
+  // right at the bottom of the viewport. A hosted panel (opts.panelHost)
+  // skips all of this vertical logic: CSS puts it under its host.
   var VIEWPORT_MARGIN = 8;
   var TRIGGER_GAP = 8;
   function positionTip(trigger, tip) {
+    var host = hostedTips.get(tip);
+    if (host) {
+      positionInHost(host, tip);
+      return;
+    }
     var itemRect = trigger.getBoundingClientRect();
     var tipRect = tip.getBoundingClientRect(); // real size - opacity:0 still lays out, unlike display:none
     var spaceBelow = window.innerHeight - itemRect.bottom;
@@ -260,6 +267,46 @@
     tip.style.top = top + "px";
     tip.style.left = left + "px";
   }
+
+  // opts.panelHost (see wire): a panel that lives inside its host element
+  // instead of <body>. CSS places it (position: absolute under the host);
+  // the only thing JS sets is `left`, in px, relative to the host. The
+  // horizontal position is the host's centre, clamped so the panel never runs
+  // past the viewport's left/right edges. clientWidth (not innerWidth)
+  // because innerWidth includes the vertical scrollbar, which let a clamped
+  // panel poke about 15px past the visible page on desktop.
+  var hostedTips = new WeakMap(); // tip -> host element
+  function positionInHost(host, tip) {
+    var hostRect = host.getBoundingClientRect();
+    var tipWidth = tip.getBoundingClientRect().width;
+    var desiredLeft = hostRect.left + hostRect.width / 2 - tipWidth / 2;
+    var maxLeft = document.documentElement.clientWidth - tipWidth - VIEWPORT_MARGIN;
+    var clampedLeft = Math.min(Math.max(desiredLeft, VIEWPORT_MARGIN), maxLeft);
+    tip.style.left = (clampedLeft - hostRect.left) + "px";
+  }
+
+  // A hosted panel is clamped at rest, not only right before it opens: a
+  // hidden (opacity 0) absolutely positioned panel still counts toward the
+  // page's scrollable width, so a host near the right edge with an unclamped
+  // panel made the whole page scroll sideways at tablet widths (measured: up
+  // to 64px at 760-940px, 91px at 1220px on build pages) while the panel was
+  // invisible. Re-clamped on window resize and whenever a host or its parent
+  // changes size; window resize alone misses layout changes that move a host
+  // without resizing the window (the Material TOC sidebar appearing at about
+  // 1220px, a drawer, container-query reflows).
+  var hostClampQueued = false;
+  function clampHostedTips() {
+    hostClampQueued = false;
+    openTips.forEach(function (entry) {
+      if (entry.host && entry.trigger.isConnected) positionInHost(entry.host, entry.tip);
+    });
+  }
+  function queueHostClamp() {
+    if (hostClampQueued) return;
+    hostClampQueued = true;
+    window.requestAnimationFrame(clampHostedTips);
+  }
+  var hostObserver = window.ResizeObserver ? new ResizeObserver(queueHostClamp) : null;
 
   // Only one tooltip visible at a time. `state` tracks the three
   // independent reasons a given tip might need to stay open (mouse
@@ -385,8 +432,7 @@
   // iOS Safari can report a touch-generated click/pointerdown as "mouse", so
   // pointerType alone is never trusted: it only counts as a real mouse when
   // the pointerdown that started it says so AND no touch happened just before.
-  // Every "mouse vs touch" decision in this file (and ark-core-badge.js, via
-  // SkillTooltip.isMouseClick) goes through this one test.
+  // Every "mouse vs touch" decision in this file goes through this one test.
   function isRealMouse(evt) {
     var clickSaysMouse = !evt || evt.pointerType === undefined || evt.pointerType === "mouse";
     return clickSaysMouse && lastPointerType === "mouse" && !recentlyTouched();
@@ -484,6 +530,13 @@
   // a mouse user still gets the tooltip on hover same as any other
   // trigger, this only removes the SEPARATE forced-open-until-tapped-
   // elsewhere behavior tap/click would otherwise add on top of hover.
+  //
+  // opts.panelHost: an element to append the panel to instead of <body>. The
+  // panel is then position: absolute (CSS) inside that element and only its
+  // horizontal position comes from JS (positionInHost). For a trigger whose
+  // panel must stay inside its own card (ark-core-badge.js) rather than float
+  // over the page. Visibility is still driven by this file's state classes
+  // (.skill-tip-visible), never by :hover.
   function wire(trigger, tip, opts) {
     opts = opts || {};
     trigger.classList.add("skill-tip-anchor", "skill-tip-wired");
@@ -506,11 +559,20 @@
       trigger.setAttribute("aria-describedby", describedBy.join(" "));
     }
 
-    document.body.appendChild(tip);
+    var host = opts.panelHost || null;
+    if (host) hostedTips.set(tip, host);
+    (host || document.body).appendChild(tip);
 
-    var entry = { trigger: trigger, tip: tip, state: { hover: false, focus: false, open: false }, detachedAt: 0, openScrollY: 0, leaveTimer: null };
+    var entry = { trigger: trigger, tip: tip, host: host, state: { hover: false, focus: false, open: false }, detachedAt: 0, openScrollY: 0, leaveTimer: null };
     openTips.push(entry);
     schedulePrune();
+    if (host) {
+      if (hostObserver) {
+        hostObserver.observe(host);
+        if (host.parentElement) hostObserver.observe(host.parentElement);
+      }
+      queueHostClamp();
+    }
 
     trigger.addEventListener("mouseenter", function () {
       // See recentlyTouched()'s own comment above openTips - this
@@ -851,10 +913,9 @@
     wire(trigger, buildNoteTip(text));
   }
 
-  // A fixed-position tip doesn't scroll with its trigger the way an
-  // absolute-in-document one (e.g. ark-core-badge.js's) automatically
-  // would, so any tip currently showing needs an explicit reposition on
-  // scroll - capture: true so this also catches scrolling inside a
+  // A fixed-position tip doesn't scroll with its trigger the way a hosted
+  // (absolute, inside its host) one automatically does, so any body-level
+  // tip currently showing needs an explicit reposition on scroll - capture: true so this also catches scrolling inside a
   // nested scrollable container (a code block, a tabbed panel), not just
   // the window itself. Cheap to run: openTips is small (a handful of
   // rotation/inline mentions per page) and this only does real work for
@@ -875,11 +936,12 @@
         entry.state.open = false;
         refresh(entry);
       }
-      if (entry.tip.classList.contains("skill-tip-visible")) positionTip(entry.trigger, entry.tip);
+      if (!entry.host && entry.tip.classList.contains("skill-tip-visible")) positionTip(entry.trigger, entry.tip);
     });
   }
   window.addEventListener("scroll", repositionVisible, { passive: true, capture: true });
   window.addEventListener("resize", repositionVisible);
+  window.addEventListener("resize", queueHostClamp);
 
   // practiceBlocked() above only changes an entry's OWN visibility the
   // next time hover/focus fires on ITS trigger - it does nothing for a
@@ -942,12 +1004,6 @@
   // attach* function above, so the caller knows whether to also fall back
   // to a plain native title.
   window.SkillTooltip = {
-    // True only for a genuine mouse click (see isRealMouse). ark-core-badge.js
-    // uses it so its tap handling matches this file's on iOS Safari.
-    isMouseClick: function (evt) {
-      return isRealMouse(evt);
-    },
-
     // opts.extra / opts.tapToggle: see buildTip's and wire's own comments
     // above. All optional - existing callers passing just (trigger, id,
     // primary) are unaffected (opts defaults to {}, extra is undefined,
@@ -984,12 +1040,12 @@
     // of looking one up via DB_SKILL_DATA/DB_SKILL_EXTRAS, for a caller
     // with its own data source and tip layout (ark-passive-tooltip.js's
     // per-node/per-level effect text, rune-tooltip.js's tier text) that
-    // still wants the same body-fixed, hover/focus/tap-toggle, viewport-
-    // clamped positioning engine this file already built for skill
-    // mentions - see wire()'s own comment. opts is optional and forwarded
-    // to wire() as-is (currently just tapToggle - see rune-tooltip.js's
-    // own use of it for a rune chip nested inside a Skill Setup card's
-    // <summary>). Returns false without wiring anything if trigger is
+    // still wants the same hover/focus/tap-toggle, viewport-clamped engine
+    // this file already built for skill mentions - see wire()'s own
+    // comment. opts is optional and forwarded to wire() as-is (tapToggle -
+    // see rune-tooltip.js's own use of it for a rune chip nested inside a
+    // Skill Setup card's <summary>; wrapsControl; panelHost - see
+    // ark-core-badge.js). Returns false without wiring anything if trigger is
     // already wired (same idempotency guard as attach()), true otherwise.
     wireCustom: function (trigger, tip, opts) {
       if (trigger.classList.contains("skill-tip-wired")) return false;
