@@ -5958,19 +5958,11 @@ h3 { color: var(--dbc-teal); }
      breathing room, reading as overlapping it. */
   padding: 0.5em 0.85em 0.7em;
   border-bottom: none;
-  /* .ap-gear-cards below is a deliberate auto-fit grid with a hard
-     minmax(400px, 1fr) floor per card (see that rule's own comment for
-     why - squeezing either card below its ~392px min-content crushes
-     labels/selects). Nothing was actually honoring that floor on phones
-     narrower than ~400px, though: this div had no width constraint of
-     its own, so the grid just pushed it - and the whole page - wider
-     than the viewport instead. Same fix as .ap-acc-table-scroll further
-     down (a real, pre-existing bug in the same family, not one this
-     session introduced): scroll sideways here instead of overflowing
-     the page. No-op at the other .ap-brace-compare-inputs usage further
-     down (Bracelet Line Comparison's plain field rows), which never has
-     anything wide enough to scroll. No -webkit-overflow-scrolling - see
-     .quick-jump-pills' removal note further down for why. */
+  /* Safety net only: .ap-gear-cards below caps its tracks at this
+     container's own width, so nothing here normally overflows. The
+     scroller stays so an unexpectedly wide row is reachable sideways
+     instead of widening the whole page. No -webkit-overflow-scrolling -
+     see .quick-jump-pills' removal note further down for why. */
   overflow-x: auto;
 }
 /* Bracelet Comparison's own .ap-brace-compare-inputs (the OTHER usage
@@ -6103,41 +6095,42 @@ h3 { color: var(--dbc-teal); }
      it claim the full row like a normal block child would. */
   flex: 1 1 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
   gap: 0.9em;
   align-content: start;
   align-items: start;
-  /* Character Data's own usage of this grid sits inside a wrapper
-     (.ap-gear-inputs > .ap-brace-compare-inputs, see that rule's own
-     comment) that already turns into a horizontal scroller once the
-     400px-per-card floor above can't fit the viewport - a real,
-     necessary escape hatch given that hard floor is never relaxed.
-     Engraving Comparison's own two cards (Engravings/Raid Captain Variables)
-     reuse this exact same grid but sit directly in .ap-brace-compare-body
-     instead, with no such wrapper - so on any phone narrower than the
-     grid's own two-card minimum (~800px) the cards were simply
-     overflowing past the panel's right edge with no way to reach the
-     clipped half at all. Putting the scroll escape hatch on the grid
-     itself instead of relying on an ancestor wrapper fixes that
-     directly and is a no-op for Character Data's usage (that wrapper
-     already scrolls first, so this box itself never overflows within
-     its own bounds there). No -webkit-overflow-scrolling - see
-     .quick-jump-pills' removal note further down for why. */
+  /* Safety net only, same as the wrapper above: both usages (Character
+     Data inside .ap-gear-inputs, Engraving Comparison directly in
+     .ap-brace-compare-body) cap each track at the container width, so
+     the cards never overflow; a row that is somehow wider than its card
+     scrolls here instead of clipping. No -webkit-overflow-scrolling -
+     see .quick-jump-pills' removal note further down for why. */
   overflow-x: auto;
 }
-/* Engraving Comparison's own grid (Engravings + Raid Captain Variables) drops the 400px floor to the
-   container's own width. Its cards' content (a table inside its own scroller, plain checkbox labels
-   that wrap) fits a phone-width column, so the floor only made the Variables card 400px wide inside a
-   ~230px scrollport, cutting its labels off at the right edge with no cue that it scrolls. At 400px and
-   up the track is the same 400px as before, and the 2-up layout starts at the same width.
-   Character Data's pair keeps the hard floor above: its Base AP% row really is ~392px wide. */
-.md-typeset .ap-engr-compare .ap-gear-cards {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+/* Both cards in either usage get the track from the rule above: 400px wide when the container has the room (the 2-up layout
+   starts at the same width), the container's own width when it does not. Engraving Comparison's cards need nothing more: a
+   table inside its own scroller and plain checkbox labels that wrap fit a phone-width column.
+   Character Data's rows are wider than a phone-width card (the Base AP% row's Gem input plus its Ability Stone checkbox label
+   is ~392px as one line), so each Character Data card is its own query container and its rows wrap below the width where
+   they stop fitting. A card's content box is 372px wide at the 400px track, so 371px and under is exactly the range of
+   cards narrower than that track. Wrapping applies to every row, not only the select rows: the label keeps an 8.5em
+   floor, and whatever does not fit beside it drops under it, right-aligned like every other stacked fallback in this file.
+   Rows that fit on one line never wrap. */
+.md-typeset .ap-gear-inputs .ap-gear-card {
+  container-type: inline-size;
 }
-/* No container-type here (no per-card narrow-mode breakpoint is needed) - .ap-gear-cards' auto-fit above already keeps a
-   card from ever getting narrower than its own content needs (see that
-   rule's comment), so there's no "squeezed card" state for a query
-   on this element to respond to. */
+@container (max-width: 371px) {
+  .md-typeset .ap-gear-inputs .ap-calc-field-row {
+    flex-wrap: wrap;
+    row-gap: 0.3em;
+  }
+  .md-typeset .ap-gear-inputs .ap-calc-field-row label.ap-calc-field-label {
+    min-width: 8.5em;
+  }
+  .md-typeset .ap-gear-inputs .ap-calc-field-row > :last-child {
+    margin-left: auto;
+  }
+}
 .md-typeset .ap-gear-card {
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-left: 3px solid var(--ap-gear-card-accent, rgba(255, 255, 255, 0.15));
@@ -6606,12 +6599,12 @@ h3 { color: var(--dbc-teal); }
 /* Chaos Core: Attack, Ability Stone: Adrenaline, and Ability Stone AP
    Debuff have a longer label + longer select than this card's other
    fields, and Base AP%'s own pair row (Gem input + Ability Stone
-   checkbox) is a similar shape - but with each card now guaranteed at
-   least .ap-gear-cards' 400px auto-fit floor (see that rule above,
-   picked specifically because it clears this row's own min-content
-   width), these fit on one line the same way the Crit Rate/Crit
-   Damage/etc. cards' own pair rows do at full width, with no narrow-mode
-   stacking fallback needed here. */
+   checkbox) is a similar shape - but with each card at
+   least .ap-gear-cards' 400px track wide (see that rule above, picked
+   because it clears this row's own min-content width), these fit on one
+   line the same way the Crit Rate/Crit Damage/etc. cards' own pair rows
+   do at full width. Below that width the @container rule next to
+   .ap-gear-cards wraps the row instead. */
 .md-typeset .ap-brace-compare-table {
   width: 100%;
   border-collapse: collapse;
