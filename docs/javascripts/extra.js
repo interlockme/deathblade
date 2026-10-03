@@ -46,6 +46,51 @@
     });
   }
 
+  // Keyboard users tab through every control in a section before reaching the
+  // next one (144 stops on a build page, about 90 in the calculator). Each
+  // section's heading is followed by a link to the next section, and the
+  // page opens with one to the first section. Links are visually hidden until
+  // they take focus (extra.css) and only exist on pages with at least two
+  // sections. Activating one is handled in handleJumpLinkClick, which also
+  // moves focus to the target heading so the next Tab starts in that section.
+  function buildSectionSkipLinks() {
+    document.querySelectorAll(".section-skip").forEach(function (a) { a.remove(); });
+    var article = document.querySelector(".md-content__inner");
+    if (!article) return;
+    var headings = Array.prototype.filter.call(
+      article.querySelectorAll(":scope > h2"),
+      function (h) { return h.id; }
+    );
+    if (headings.length < 2) return;
+
+    function headingText(h) {
+      return h.textContent.replace(/\s*¶\s*$/, "");
+    }
+    function makeLink(target) {
+      var a = document.createElement("a");
+      a.className = "section-skip";
+      a.href = "#" + target.id;
+      a.textContent = "Skip to " + headingText(target);
+      // Park the focused link just under the sticky header and tab row (their
+      // height changes with the viewport and with scrolling), at the article's left edge, so it
+      // never covers the logo, title, search or nav.
+      a.addEventListener("focus", function () {
+        var top = 0;
+        document.querySelectorAll(".md-header, .md-tabs").forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          if (r.height > 0 && r.bottom > top) top = r.bottom;
+        });
+        a.style.top = top + 8 + "px";
+        a.style.left = Math.max(article.getBoundingClientRect().left, 8) + "px";
+      });
+      return a;
+    }
+    article.insertBefore(makeLink(headings[0]), article.firstChild);
+    headings.forEach(function (h, i) {
+      if (i + 1 < headings.length) h.insertAdjacentElement("afterend", makeLink(headings[i + 1]));
+    });
+  }
+
   function buildQuickJumpPills() {
     var old = document.querySelector(".quick-jump-pills");
     if (old) old.remove();
@@ -312,6 +357,13 @@
     var header = document.querySelector(".md-header");
     var gap = (header ? header.offsetHeight : 0) + 20;
     window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.scrollY - gap));
+    // A skip link has to move keyboard focus too, or the next Tab continues
+    // from the link and walks the section the visitor just skipped. Headings
+    // are not focusable by default, so give the target a tabindex of -1.
+    if (link.classList.contains("section-skip")) {
+      if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: true });
+    }
     // Material's anchor tracking rewrites the URL on scroll and drops the
     // hash for a heading that is not in the TOC (the page title), so the
     // title's permalink would end up with no hash. Put it back once tracking
@@ -327,6 +379,7 @@
   if (window.document$) {
     document$.subscribe(function () {
       externalLinksNewTab();
+      buildSectionSkipLinks();
       buildQuickJumpPills();
       buildSectionTracker();
       wrapEmojisForWiggle();

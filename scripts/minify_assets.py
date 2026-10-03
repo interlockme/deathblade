@@ -28,6 +28,14 @@ instead: it touches only the output directory, so local previews are
 completely unaffected and need no extra packages. It is also stdlib-only, so
 CI installs nothing beyond mkdocs-material itself.
 
+HTML COMMENTS
+Comments in the markdown sources (<!-- ... -->) end up verbatim in the built
+pages (about 35 KB raw on /resources/). They are stripped from every .html
+file, except inside <script>, <style>, <pre> and <textarea>, where the text is
+content. A comment that sits alone on its line takes the line with it. With
+--verify, each stripped page is tokenised before and after and must produce
+the same tags, attributes and (whitespace-collapsed) text.
+
 SAFETY
 The js stripper is a character state machine that tracks single/double quoted
 strings, template literals (including nested ${} interpolation), and regex
@@ -45,6 +53,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from html.parser import HTMLParser
 
 
 def strip_js(src):
@@ -195,6 +204,80 @@ def strip_css(src):
     return _tidy("".join(out))
 
 
+_HTML_TOKEN = re.compile(r"<!--|<(script|style|pre|textarea)\b[^>]*>", re.I)
+
+
+def strip_html(src):
+    """Remove <!-- --> comments from HTML. The bodies of script, style, pre and
+    textarea elements are copied verbatim. An unterminated comment is left as
+    it is."""
+    out = []
+    i = 0
+    while True:
+        m = _HTML_TOKEN.search(src, i)
+        if not m:
+            out.append(src[i:])
+            break
+        chunk = src[i:m.start()]
+        if m.group(1):
+            close = re.compile(r"</%s\s*>" % m.group(1), re.I).search(src, m.end())
+            end = close.end() if close else len(src)
+            out.append(chunk)
+            out.append(src[m.start():end])
+            i = end
+            continue
+        j = src.find("-->", m.end())
+        if j < 0:
+            out.append(chunk)
+            out.append(src[m.start():])
+            break
+        i = j + 3
+        alone_before = re.search(r"(^|\n)[ \t]*$", chunk)
+        alone_after = re.match(r"[ \t]*\n", src[i:i + 80])
+        if alone_before and alone_after:
+            chunk = chunk[:alone_before.start() + len(alone_before.group(1))]
+            i += alone_after.end()
+        out.append(chunk)
+    return "".join(out)
+
+
+class _Events(HTMLParser):
+    """Collects tags, attributes and whitespace-collapsed text, ignoring
+    comments, so two renderings of the same page compare equal."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.events = []
+
+    def _text(self, data):
+        data = re.sub(r"\s+", " ", data)
+        if self.events and self.events[-1][0] == "text":
+            self.events[-1] = ("text", self.events[-1][1] + data)
+        else:
+            self.events.append(("text", data))
+
+    def handle_starttag(self, tag, attrs):
+        self.events.append(("start", tag, tuple(attrs)))
+
+    def handle_startendtag(self, tag, attrs):
+        self.events.append(("start", tag, tuple(attrs)))
+        self.events.append(("end", tag))
+
+    def handle_endtag(self, tag):
+        self.events.append(("end", tag))
+
+    def handle_data(self, data):
+        self._text(data)
+
+
+def html_events(text):
+    p = _Events()
+    p.feed(text)
+    p.close()
+    # Whitespace-only text between tags is layout-neutral in normal flow.
+    return [e for e in p.events if not (e[0] == "text" and e[1].strip() == "")]
+
+
 def _tidy(s):
     """Collapse the blank lines comment removal leaves behind. Deliberately
     conservative: trailing horizontal whitespace and repeated newlines only,
@@ -236,7 +319,7 @@ def process(site_dir, verify):
     failures = []
 
     for path in sorted(site.rglob("*")):
-        if not path.is_file() or path.suffix not in (".css", ".js"):
+        if not path.is_file() or path.suffix not in (".css", ".js", ".html"):
             continue
         if path.name.endswith((".min.css", ".min.js")):
             continue
@@ -244,7 +327,15 @@ def process(site_dir, verify):
             continue
 
         original = path.read_text(encoding="utf-8")
-        stripped = strip_js(original) if path.suffix == ".js" else strip_css(original)
+        if path.suffix == ".js":
+            stripped = strip_js(original)
+        elif path.suffix == ".css":
+            stripped = strip_css(original)
+        else:
+            stripped = strip_html(original)
+            if verify and html_events(stripped) != html_events(original):
+                failures.append(f"{path.relative_to(site)}: html changed beyond comments")
+                continue
 
         if verify and path.suffix == ".js":
             err = node_check(stripped)

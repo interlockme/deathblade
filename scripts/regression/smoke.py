@@ -19,6 +19,8 @@ Per page, at desktop width:
   details    click every <details> summary open and shut
   anchors    click heading permalinks, quick-jump pills, section tracker marks, TOC links: the hash
              lands, the page is not refetched, the heading sits under the sticky header
+  skip-links Tab to a section's skip link (shown on focus), Enter: focus lands on the next heading and the
+             next Tab continues inside that section
   tooltips   hover, click and keyboard-focus a sample of triggers: panel shows with content and stays
              inside the viewport, a mouse click does not pin it, it closes again
   ark cores  hover opens, click does not pin
@@ -348,6 +350,74 @@ def check_anchors(pg, run, path, tag):
                 anchor_click(pg, run, path, el, f"{name} {i + 1}", tag)
 
 
+def check_skip_links(pg, run, path):
+    """Section skip links: one before the first section and one after each section's heading except the
+    last, hidden at rest, shown on keyboard focus, and activating one moves focus to the target heading
+    so the next Tab starts inside that section."""
+    info = pg.evaluate("""() => {
+      const heads = [...document.querySelectorAll('.md-content__inner > h2[id]')];
+      const links = [...document.querySelectorAll('.md-content__inner .section-skip')];
+      return { heads: heads.map(h => h.id), links: links.map(a => a.getAttribute('href')),
+               firstIsIntro: !!links.length && links[0].parentElement.firstElementChild === links[0] };
+    }""")
+    n = len(info["heads"])
+    if n < 2:
+        if info["links"]:
+            run.fail(path, f"skip links: {len(info['links'])} links on a page with {n} sections")
+        return
+    want = ["#" + info["heads"][0]] + ["#" + h for h in info["heads"][1:]]
+    if info["links"] != want:
+        run.fail(path, f"skip links: expected targets {want}, found {info['links']}")
+        return
+    if not info["firstIsIntro"]:
+        run.fail(path, "skip links: the intro link is not the first element of the article")
+    # Hidden at rest: no visible box, no effect on the page width.
+    rest = pg.evaluate("""() => { const a = document.querySelector('.section-skip'); const r = a.getBoundingClientRect();
+      return { w: r.width, h: r.height, sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }; }""")
+    if rest["w"] > 2 or rest["h"] > 2:
+        run.fail(path, f"skip links: a link is visible at rest ({rest['w']:.0f}x{rest['h']:.0f})")
+    if rest["sw"] > rest["cw"]:
+        run.fail(path, f"skip links: page scrolls sideways ({rest['sw']}px in {rest['cw']}px)")
+    # Drive the middle link (or the first section's when there are two) with the keyboard only.
+    i = max(1, n // 2) - 1 if n > 2 else 0
+    head_id, next_id = info["heads"][i], info["heads"][i + 1]
+    pg.evaluate("(id) => { const h = document.getElementById(id); h.scrollIntoView({block: 'center'}); h.querySelector('.headerlink').focus(); }", head_id)
+    pg.keyboard.press("Tab")
+    pg.wait_for_timeout(400)  # past the link's colour transition, so fg/bg are the settled values
+    st = pg.evaluate("""(id) => { const a = document.activeElement; const r = a.getBoundingClientRect(); const cs = getComputedStyle(a);
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      const lum = (c) => { const v = c.match(/[\\d.]+/g).slice(0, 3).map(Number).map(x => { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); }); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
+      const l1 = lum(cs.color), l2 = lum(cs.backgroundColor);
+      return { cls: a.className, href: a.getAttribute('href'), w: r.width, h: r.height, left: r.left, right: r.right, top: r.top,
+               vw: document.documentElement.clientWidth, bg: cs.backgroundColor, fg: cs.color,
+               onTop: hit === a, contrast: (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05) }; }""", head_id)
+    if "section-skip" not in st["cls"] or st["href"] != "#" + next_id:
+        run.fail(path, f"skip links: Tab from the {head_id} heading did not reach its skip link (got {st['cls']!r} {st['href']!r})")
+        return
+    if st["w"] < 50 or st["h"] < 20 or st["left"] < 0 or st["right"] > st["vw"] or st["top"] < 0:
+        run.fail(path, f"skip links: the focused link is not fully visible ({st['w']:.0f}x{st['h']:.0f} at {st['left']:.0f},{st['top']:.0f})")
+    if not st["onTop"]:
+        run.fail(path, "skip links: the focused link is covered by another element (stacking context below the header?)")
+    if st["contrast"] < 4.5:
+        run.fail(path, f"skip links: the focused link text has contrast {st['contrast']:.1f}:1 ({st['fg']} on {st['bg']})")
+    pg.keyboard.press("Enter")
+    pg.wait_for_timeout(500)
+    after = pg.evaluate("""(id) => { const t = document.getElementById(id); const r = t.getBoundingClientRect();
+      return { onTarget: document.activeElement === t, top: r.top, hash: location.hash }; }""", next_id)
+    if not after["onTarget"]:
+        run.fail(path, f"skip links: Enter did not move focus to the {next_id} heading")
+        return
+    if not (0 <= after["top"] <= 260) or after["hash"] != "#" + next_id:
+        run.fail(path, f"skip links: after Enter the heading is at {after['top']:.0f}px with hash {after['hash']!r}")
+    pg.keyboard.press("Tab")
+    nxt = pg.evaluate("""(id) => { const t = document.getElementById(id); const a = document.activeElement;
+      return { after: a !== t && !!(t.compareDocumentPosition(a) & Node.DOCUMENT_POSITION_FOLLOWING), cls: a.className }; }""", next_id)
+    if not nxt["after"]:
+        run.fail(path, f"skip links: Tab after the jump did not continue from the {next_id} heading")
+        return
+    run.ok("skip-links")
+
+
 def safe(fn, pg, run, path, *a):
     """Run one check; a Playwright timeout or error becomes a FAIL line, not a crash."""
     try:
@@ -658,6 +728,7 @@ def check_instant_nav(pg, run, base, hops):
           const panels = [...document.querySelectorAll('body > [role=tooltip]')];
           return { marker: window.__smoke, trackers: document.querySelectorAll('#section-tracker').length,
                    pills: document.querySelectorAll('.quick-jump-pills').length,
+                   skips: document.querySelectorAll('.section-skip').length, h2s: document.querySelectorAll('.md-content__inner > h2[id]').length,
                    orphans: panels.filter(p => !described.has(p.id)).length,
                    blank: [...document.querySelectorAll('.skill-setup[data-family], .ark-passives, .gem-priority')].filter(e => !(e.textContent || '').trim()).length };
         }""")
@@ -665,6 +736,8 @@ def check_instant_nav(pg, run, base, hops):
             run.fail("(instant nav)", f"hop to {h} did a full page load (Material instant navigation is off or broken)")
         if st["trackers"] > 1 or st["pills"] > 1:
             run.fail("(instant nav)", f"after hop to {h}: {st['trackers']} section trackers, {st['pills']} pill rows (expected at most 1 each)")
+        if st["skips"] > max(st["h2s"], 0):
+            run.fail("(instant nav)", f"after hop to {h}: {st['skips']} skip links for {st['h2s']} sections (duplicated?)")
         if st["orphans"]:
             run.fail("(instant nav)", f"after hop to {h}: {st['orphans']} orphaned tooltip panels")
         if st["blank"]:
@@ -733,6 +806,7 @@ def main():
             safe(check_tabs, pg, run, path)
             safe(check_details, pg, run, path)
             safe(check_anchors, pg, run, path, "1300")
+            safe(check_skip_links, pg, run, path)
             safe(check_tooltips_desktop, pg, run, path)
             safe(check_ark_cores_desktop, pg, run, path)
             safe(check_lightbox, pg, run, path)

@@ -7897,33 +7897,22 @@ h3 { color: var(--dbc-teal); }
    needed. Already covered by the prefers-reduced-motion block above for
    anyone who's turned that off.
 
-   Opacity only - deliberately does NOT also animate transform (a `translateY(6px) -> translateY(0)` rise-in alongside the fade would break position:fixed descendants, see below). fill-mode: both keeps whichever
-   properties this animation touches "held" on .md-content__inner
-   forever after the 0.35s finishes, not just during it - both/forwards
-   bakes in the end state as a standing override rather than releasing
-   the element once the animation completes. For `transform` specifically
-   this is a real problem, and changing the "to" keyframe to
-   `transform: none` does NOT fix it:
-   a getComputedStyle read of a HELD (fill-mode: both/forwards, not
-   actively ticking) transform animation reports the interpolated result
-   as a resolved matrix even when the specified keyframe value is the
-   `none` keyword, and Chromium treats that held animation as making
-   .md-content__inner the containing block for every position:fixed
-   descendant on the page regardless of the resolved value being the
-   identity - confirmed with a throwaway repro: getAnimations() showed
-   the held effect's final keyframe as literally `transform: "none"`
-   with playState "finished", yet getComputedStyle().transform still
-   read a matrix and a position:fixed test element inside it still
-   tracked page scroll 1:1 instead of staying pinned to the viewport.
-   Dropping `transform` from the animation entirely is the only thing that actually fixes it (per that same repro) - opacity
-   alone doesn't establish a containing block for fixed descendants, so
-   nothing is fighting position:fixed once the property being animated
-   isn't transform at all. This is also why the mobile Build dock pill
-   (.ap-build-dock, position: fixed on mobile - see extra.css's own
-   comment on that rule) depends on this: no amount of fixing its own rules would make it track the viewport if this silently retargeted it to .md-content__inner instead. Trade-off: no 6px rise, just the fade - a small price for not silently
-   breaking every position:fixed element added to the page from here on. */
+   Opacity only, and fill-mode backwards (not both/forwards). A held
+   (forwards) animation keeps applying its end state to the element for the
+   rest of the page's life, and Chromium treats that as a standing effect:
+   - a held `transform` animation makes .md-content__inner the containing
+     block for every position:fixed descendant, even when the final keyframe
+     is `none` (the mobile Build dock, .ap-build-dock, would track page
+     scroll instead of the viewport);
+   - a held `opacity` animation makes it a stacking context, which traps the
+     z-index of every descendant below the sticky header (z-index 4), so a
+     fixed element inside the article (the section skip links) can never
+     paint above the header whatever z-index it has.
+   With backwards the element is released once the 0.35s fade ends, so
+   neither applies afterwards. Keep the animation opacity-only: a transform
+   here would break position:fixed descendants for the 0.35s it runs. */
 .md-content__inner {
-  animation: page-fade-in 0.35s ease both;
+  animation: page-fade-in 0.35s ease backwards;
 }
 @keyframes page-fade-in {
   from { opacity: 0; }
@@ -10459,4 +10448,48 @@ html.image-lightbox-open {
 .md-typeset input[type="radio"]:focus-visible {
   outline: 2px solid var(--dbc-pink);
   outline-offset: 2px;
+}
+
+/* Section skip links (buildSectionSkipLinks in extra.js). Hidden clip-style so
+   the link stays focusable and readable by screen readers; on focus it floats
+   fixed just under the sticky header at the article's left edge (the script
+   sets top and left on focus, since the header height varies), so showing it
+   never moves the page or covers the header controls. position: fixed also
+   keeps the hidden link out of the page's scrollable width. */
+.md-typeset a.section-skip {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.md-typeset a.section-skip:focus {
+  width: auto;
+  height: auto;
+  max-width: calc(100vw - 1rem);
+  padding: 0.5rem 0.9rem;
+  overflow: visible;
+  clip-path: none;
+  border-radius: 999px;
+  background: var(--dbc-pink);
+  color: #111;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+/* The skip target is focused by script only, so it needs no ring. */
+.md-typeset h2[tabindex="-1"]:focus {
+  outline: none;
+}
+@media print {
+  .md-typeset a.section-skip {
+    display: none;
+  }
 }
