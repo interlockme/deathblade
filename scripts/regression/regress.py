@@ -55,6 +55,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 BASELINES = HERE / "baselines"
 FIXTURES = HERE / "fixtures"
 PAGE_PATH = "/resources/"
+STORAGE_KEY = "ap-calc-deathblade-v1"   # the calculator's localStorage key; presets 2 and 3 add "-preset2" / "-preset3"
 
 # Support is on at defaults (the Passionate Dance checkbox is checked), but the checkbox pass
 # turns it off for every state after it. These hand-picked values, set with Support on, pin the
@@ -241,6 +242,70 @@ def delta(base, after):
     return out
 
 
+# Exclusive groups: Wine / Mana Food (Main Stat only) / Mana Food (+Bleed) on Surge, Chaos Core slot 1
+# (Flashy / Stable / Swift), Chaos Core slot 2 (Attack / Weapon), Kazeros / Guardian, Support Artist-
+# Valkyrie / Paladin. Controls are named by the same keys dump() uses.
+FOOD = {"W": "input#ap-engr-wine:0", "M": "input#ap-engr-manafood-main:0", "F": "input#ap-engr-manafood:0"}
+BUILD_SELECT = "select#ap-brace-spec-build:0"
+
+# Which food clicks a reader can actually make on each build: Wine's row is hidden on RE, and the Main
+# Stat only row exists on Surge 111 and 333 only (on RE and 222 the regular box already is that food).
+FOOD_CLICKABLE = {
+    "re-333": "F",
+    "surge-222": "WF",
+    "surge-111": "WMF",
+    "surge-333": "WMF",
+}
+
+# Stored field data (id -> value, what localStorage and Export hold) that contradicts an exclusive group.
+# Loading it must resolve each group the same way before and after any refactor of that logic.
+CHAOS_FLASHY, CHAOS_STABLE, CHAOS_STAR = "Epic-Leg 10P", "Relic|20P", "Relic|20P"
+STALE_FIELD_SETS = {
+    "all three foods ticked on surge-111": {"ap-brace-spec-build": "surge-111", "ap-engr-wine": True, "ap-engr-manafood-main": True, "ap-engr-manafood": True},
+    "main + regular food ticked on surge-333": {"ap-brace-spec-build": "surge-333", "ap-engr-wine": False, "ap-engr-manafood-main": True, "ap-engr-manafood": True},
+    "main food ticked on surge-222": {"ap-brace-spec-build": "surge-222", "ap-engr-wine": False, "ap-engr-manafood-main": True, "ap-engr-manafood": False},
+    "main food + wine ticked on surge-222": {"ap-brace-spec-build": "surge-222", "ap-engr-wine": True, "ap-engr-manafood-main": True, "ap-engr-manafood": False},
+    "main food ticked on re-333": {"ap-brace-spec-build": "re-333", "ap-engr-wine": False, "ap-engr-manafood-main": True, "ap-engr-manafood": False},
+    "wine + regular food ticked on re-333": {"ap-brace-spec-build": "re-333", "ap-engr-wine": True, "ap-engr-manafood-main": False, "ap-engr-manafood": True},
+    "flashy + stable + swift chosen": {"ap-flashy-atk": CHAOS_FLASHY, "ap-stable-atk": CHAOS_STABLE, "ap-swift-core": CHAOS_STABLE},
+    "flashy + swift chosen": {"ap-flashy-atk": CHAOS_FLASHY, "ap-stable-atk": "None|0P", "ap-swift-core": CHAOS_STABLE},
+    "stable + swift chosen": {"ap-flashy-atk": "None", "ap-stable-atk": CHAOS_STABLE, "ap-swift-core": CHAOS_STABLE},
+    "chaos star + weapon core chosen": {"ap-gear-ap-chaos-star": CHAOS_STAR, "ap-gear-weapon-core": CHAOS_STAR},
+    "kazeros + guardian ticked": {"ap-gear-ap-kazeros": True, "ap-gear-ap-guardian": True},
+    "support artist-valkyrie + paladin ticked": {"ap-engr-support-av": True, "ap-engr-support-paladin": True},
+}
+# Every contradiction at once, on a build where all of them can occur.
+STALE_ALL = {}
+for _n in ("all three foods ticked on surge-111", "flashy + stable + swift chosen", "chaos star + weapon core chosen",
+           "kazeros + guardian ticked", "support artist-valkyrie + paladin ticked"):
+    STALE_ALL.update(STALE_FIELD_SETS[_n])
+
+# Food sequences: clicks on the three food boxes ("W", "M", "F") and build switches ("@surge-222"), each
+# starting from the named build. These pin the RE <-> Surge crossing default (regular food off on Surge, on
+# on RE) and the Main Stat only food folding into the regular box when it leaves 111/333.
+FOOD_CROSSINGS = [
+    ("surge-111", ["M", "@surge-222"]), ("surge-111", ["M", "@re-333"]), ("surge-111", ["M", "@surge-333"]),
+    ("surge-111", ["F", "@surge-222"]), ("surge-111", ["F", "@re-333"]), ("surge-111", ["W", "@re-333"]),
+    ("surge-111", ["W", "@surge-222"]), ("surge-111", ["F", "@re-333", "@surge-333"]),
+    ("surge-111", ["M", "@re-333", "@surge-111"]), ("re-333", ["F", "@surge-111"]),
+    ("surge-222", ["F", "@surge-333"]), ("surge-222", ["W", "@surge-111"]),
+    ("surge-333", ["M", "@surge-111"]), ("surge-333", ["W", "@surge-222", "F"]),
+]
+
+
+def food_sequences():
+    """(start build, steps) for every ordered pair of clicks per build, every ordering of all three boxes
+    on 111/333, then the crossings above."""
+    import itertools
+    out = []
+    for build, boxes in FOOD_CLICKABLE.items():
+        seqs = [[c] for c in boxes] + [list(t) for t in itertools.product(boxes, repeat=2)]
+        if len(boxes) == 3:
+            seqs += [list(t) for t in itertools.permutations(boxes)]
+        out += [(build, q) for q in seqs]
+    return out + FOOD_CROSSINGS
+
+
 def run_calculator(base_url, payloads, fast=False):
     from playwright.sync_api import sync_playwright
     errors = []
@@ -393,6 +458,62 @@ def run_calculator(base_url, payloads, fast=False):
         for n, label in enumerate(chips):
             probe(f"chip[{n}] {label}", lambda n=n: s.ev("n => window.__rg.clickChip(n)", n))
         probe("dock trigger click", lambda: s.ev("sel => window.__rg.clickSel(sel)", ".ap-build-dock-trigger"))
+
+        # ---- exclusive groups: sequences and stale combinations -------------------------------
+        # The one-control-at-a-time probes above only ever click a food box on RE, so the Surge food
+        # choices (Wine / Main Stat only / +Bleed), the crossing default and the stale-state
+        # normalizers had no coverage. Same pure-mode rule: every probe starts from a clean page.
+        index = {m["k"]: m["i"] for m in meta}
+
+        def go_build(build):
+            return s.ev("([k, v]) => window.__rg.setByKey(k, v)", [BUILD_SELECT, build])
+
+        def run_steps(build, steps):
+            # A clean page already sits on re-333, so only the other starting builds need a switch;
+            # an "@build" step always switches, re-333 included.
+            if build != "re-333" and not go_build(build):
+                return False
+            for step in steps:
+                if step.startswith("@"):
+                    if not go_build(step[1:]):
+                        return False
+                elif not s.ev("i => window.__rg.toggle(i)", index[FOOD[step]]):
+                    return False
+            return True
+
+        for build, steps in food_sequences():
+            if not probe(f"food {build}: " + " > ".join(steps), lambda b=build, q=steps: run_steps(b, q)):
+                skipped.append(f"food {build}: " + " > ".join(steps))
+                restart()
+
+        stale_fields = dict(STALE_FIELD_SETS)
+        stale_fields["every contradiction at once on surge-111"] = dict(STALE_ALL, **{"ap-brace-spec-build": "surge-111"})
+
+        def load_stored(data):
+            s.fresh(ls={STORAGE_KEY: json.dumps(data)})
+            return True
+
+        for name, data in stale_fields.items():
+            probe(f"stale at load: {name}", lambda d=data: load_stored(d))
+
+        def switch_to_stored_preset(data):
+            s.fresh(ls={STORAGE_KEY + "-preset2": json.dumps(data)})
+            s.click('.ap-calc-preset[data-preset="2"]')
+            return True
+
+        def import_stored(data):
+            ex = snap["checks"].get("export") or {}
+            if "unparseable" in ex or "data" not in ex:
+                return False
+            s.click(".ap-calc-import")
+            s.ev("t => window.__rg.fillImport(t)", json.dumps({"format": ex.get("format"), "version": ex.get("version"), "data": data}))
+            s.click(".ap-calc-popover[data-popover=import] .ap-calc-popover-load")
+            return True
+
+        every = stale_fields["every contradiction at once on surge-111"]
+        probe("stale on preset switch: every contradiction at once on surge-111", lambda: switch_to_stored_preset(every))
+        probe("stale on import: every contradiction at once on surge-111", lambda: import_stored(every))
+        probe("stale on import: main food ticked on re-333", lambda: import_stored(stale_fields["main food ticked on re-333"]))
         snap["checks"]["probe_skipped_disabled_at_defaults"] = sorted(skipped)
         print(f"probes: {len(P)} ({stats['reloads']} page reloads, {'fast' if fast else 'pure'} mode)")
 

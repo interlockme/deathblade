@@ -1190,7 +1190,7 @@
       // tracked-field treatment as Flashy/Stable just above, and the same
       // equipment-slot exclusivity with them - Flashy, Stable, and Swift
       // are three options for the SAME Chaos Core slot, so only one can
-      // ever be a real tier at once (see normalizeChaosCoreExclusivity).
+      // ever be a real tier at once (see EXCLUSIVE_GROUPS).
       swiftCore: getSelect(root, ".ap-swift-core", "None|0P"),
 
       critSyn1: getCheckbox(root, ".ap-crit-syn1", false),
@@ -3842,9 +3842,9 @@
   // Support, same exclusivity idea as Wine/Mana Food's "only one thing is
   // actually being eaten" but for "only one Support's kit is actually in
   // the raid": Artist/Valkyrie and Paladin can never both be true at once
-  // (enforced by normalizeSupportMoveSpeedExclusivity and the dedicated
-  // "change" listener pair, same shape as Wine/Mana Food's own), so at
-  // most one of engrInputs.supportAv/supportPaladin is ever true here.
+  // (enforced by the supportMoveSpeed group in EXCLUSIVE_GROUPS, same as
+  // Wine/Mana Food's own), so at most one of
+  // engrInputs.supportAv/supportPaladin is ever true here.
   // Unlike Artist/Valkyrie's near-permanent Identity uptime though,
   // Paladin's Move Speed comes from low-uptime skills (per the checkbox's
   // own tooltip) - modeling it as a flat 100%-uptime add the way
@@ -4489,10 +4489,9 @@
       maelstromUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-engr-maelstrom-uptime", 85))),
       rageRune: getCheckbox(root, ".ap-engr-rage-rune", true),
       supportAv: getCheckbox(root, ".ap-engr-support-av", false),
-      // Mutually exclusive with supportAv above - see
-      // normalizeSupportMoveSpeedExclusivity and the dedicated "change"
-      // listener pair in initApCalcRoot, same shape as Wine/Mana Food's
-      // own exclusivity just below.
+      // Mutually exclusive with supportAv above - see the
+      // supportMoveSpeed group in EXCLUSIVE_GROUPS, enforced the same way
+      // as Wine/Mana Food's own exclusivity just below.
       supportPaladin: getCheckbox(root, ".ap-engr-support-paladin", false),
       wine: getCheckbox(root, ".ap-engr-wine", true),
       // manaFood means "some Mana Food is eaten" (either box below);
@@ -6227,7 +6226,7 @@
       /* storage unavailable - nothing to clear */
     }
     resetFieldsToDefaults(root);
-    normalizeSpeedChoiceExclusivity(root);
+    normalizeExclusiveGroup(root, SPEED_FOOD_GROUP);
     syncSpeedChoiceFamilyTracking(root);
     syncFamilyVariantMemory(root);
     syncMaelstromUptimeGroupTracking(root);
@@ -6246,11 +6245,7 @@
     resetFieldsToDefaults(root);
     loadInputs(root, newId);
     setActivePresetId(newId);
-    normalizeChaosCoreExclusivity(root);
-    normalizeWeaponCoreExclusivity(root);
-    normalizeRaidContributionExclusivity(root);
-    normalizeSupportMoveSpeedExclusivity(root);
-    normalizeSpeedChoiceExclusivity(root);
+    normalizeExclusiveGroups(root);
     syncSpeedChoiceFamilyTracking(root);
     syncFamilyVariantMemory(root);
     syncMaelstromUptimeGroupTracking(root);
@@ -6374,11 +6369,7 @@
     const skipped = [];
     resetFieldsToDefaults(root);
     applyFieldData(root, data, skipped);
-    normalizeChaosCoreExclusivity(root);
-    normalizeWeaponCoreExclusivity(root);
-    normalizeRaidContributionExclusivity(root);
-    normalizeSupportMoveSpeedExclusivity(root);
-    normalizeSpeedChoiceExclusivity(root);
+    normalizeExclusiveGroups(root);
     syncSpeedChoiceFamilyTracking(root);
     syncFamilyVariantMemory(root);
     syncMaelstromUptimeGroupTracking(root);
@@ -6528,124 +6519,131 @@
     }
   }
 
-  // Chaos Core: Flashy Attack, Chaos Core: Stable Attack, and Chaos
-  // Core: Swift are all the same Chaos Core equipment slot, so only one
-  // can ever actually be equipped - picking a real option in one resets
-  // the other two back to "None" rather than letting more than one
-  // count as active at once. Priority when normalizing a possibly-stale
-  // set (load/preset-switch/import, where more than one could already
-  // be non-None): Stable wins over Flashy, which wins over Swift - the
-  // same Stable-over-Flashy priority this function always had, just
-  // extended one level further now that a third option shares the slot.
-  function normalizeChaosCoreExclusivity(root) {
-    const flashyEl = root.querySelector(".ap-flashy-atk");
-    const stableEl = root.querySelector(".ap-stable-atk");
-    const swiftEl = root.querySelector(".ap-swift-core");
-    if (!flashyEl || !stableEl || !swiftEl) return;
-    if (stableEl.value !== "None|0P") {
-      flashyEl.value = "None";
-      swiftEl.value = "None|0P";
-    } else if (flashyEl.value !== "None") {
-      swiftEl.value = "None|0P";
-    }
-  }
-
-  // Same idea as normalizeChaosCoreExclusivity above, for the OTHER
-  // Chaos Core slot: Attack and Weapon can't both be real tiers on a
-  // loaded/imported setup either. Called wherever normalizeChaosCore
-  // Exclusivity is (init, preset switch, import) rather than only via
-  // the live change-listener pair, so a stale/hand-edited export with
-  // both set can't slip past.
-  function normalizeWeaponCoreExclusivity(root) {
-    const chaosStarEl = root.querySelector(".ap-gear-ap-chaos-star");
-    const weaponCoreEl = root.querySelector(".ap-gear-weapon-core");
-    if (!chaosStarEl || !weaponCoreEl) return;
-    if (chaosStarEl.value !== "None|0P" && weaponCoreEl.value !== "None|0P") {
-      weaponCoreEl.value = "None|0P";
-    }
-  }
-
-  // Kazeros Raid Contribution and Guardian Raid Contribution are both
-  // "which raid am I in" buffs - you're only ever in one raid at a time,
-  // so only one of these two can actually be active. Checking one un-
-  // checks the other rather than letting both count as active at once,
-  // same idea as normalizeChaosCoreExclusivity above (checkboxes instead
-  // of selects, so there's no "None" value to reset to - just uncheck
-  // the OTHER box directly).
-  function normalizeRaidContributionExclusivity(root) {
-    const kazerosEl = root.querySelector(".ap-gear-ap-kazeros");
-    const guardianEl = root.querySelector(".ap-gear-ap-guardian");
-    if (!kazerosEl || !guardianEl) return;
-    if (kazerosEl.checked && guardianEl.checked) {
-      guardianEl.checked = false;
-    }
-  }
-
-  // Same idea again, for Engraving Comparison's own Support: Artist/
-  // Valkyrie vs Support: Paladin - only one Support's kit is ever
-  // actually in the raid, so only one of these two party-wide Move Speed
-  // sources can really be active at once. Called from the same bulk-
-  // mutation points as normalizeRaidContributionExclusivity above
-  // (switchPreset/applyImportText/initApCalcRoot, NOT resetInputs - both
-  // boxes default unchecked, so a plain reset can never leave a
-  // conflict); the live "change" listener pair further down (next to
-  // Wine/Mana Food's own) catches a real user click instead. Artist/
-  // Valkyrie wins on a stale/hand-edited conflict - arbitrary tie-break,
-  // same "pick one and document it" precedent as Wine winning over Mana
-  // Food.
-  function normalizeSupportMoveSpeedExclusivity(root) {
-    const avEl = root.querySelector(".ap-engr-support-av");
-    const paladinEl = root.querySelector(".ap-engr-support-paladin");
-    if (!avEl || !paladinEl) return;
-    if (avEl.checked && paladinEl.checked) {
-      paladinEl.checked = false;
-    }
-  }
-
-  // Same idea as normalizeChaosCoreExclusivity/normalizeRaidContribution
-  // Exclusivity above, for Vernese Wine / Mana Food's own 2-way
-  // exclusivity (see the live "change" listener pair's own comment near
-  // speedChoiceEls). That listener pair only fires on a real user click,
-  // so it can't catch a conflict left behind by a bulk field mutation
-  // that sets .checked directly without dispatching "change" -
-  // resetFieldsToDefaults in particular, whose raw HTML defaults have
-  // BOTH Wine and Mana Food starting checked at once (Wine for Surge,
-  // Mana Food for RE - see the Mana-Food-default crossing listener's own
-  // comment for why). Called wherever the other normalize* functions are
-  // (reset, preset switch, import, init) so a stale/hand-edited export -
-  // or a Reset landing back on Surge - can't leave both actually counted
-  // in the calc. Only matters on Surge: RE never treats these as
-  // competing picks (Mana Food is purely informational there, Wine's row
-  // is hidden and its flag is ignored - see raidCaptainMoveSpeed's own
-  // spec check), so leaving them both checked while on RE is harmless
-  // and intentionally left alone. Wine wins over Mana Food when both are
-  // checked, matching the crossing listener's own choice to turn Mana
-  // Food off (not Wine) on landing on Surge.
-  function normalizeSpeedChoiceExclusivity(root) {
-    const wineEl = root.querySelector(".ap-engr-wine");
-    const manaFoodEl = root.querySelector(".ap-engr-manafood");
-    const manaFoodMainEl = root.querySelector(".ap-engr-manafood-main");
+  // Mutually exclusive controls. Each entry is a set of controls of which at
+  // most one can count as active at once; one table drives both ways that
+  // can be enforced:
+  //   - wireExclusiveGroups: a real "change" on a member clears the others,
+  //     so the member just touched wins.
+  //   - normalizeExclusiveGroups: bulk mutations set fields without
+  //     dispatching "change" (init, preset switch, import), so a stale or
+  //     hand-edited save can arrive with several members active. Each group
+  //     is resolved by keeping the first active member in `members` order
+  //     and clearing the rest - that order is the tie-break.
+  // A member is a checkbox (active = checked) or, when it has `none`, a
+  // select whose `none` value means "not chosen".
+  //   - chaosCoreSlot: Flashy / Stable / Swift are the same Chaos Core
+  //     equipment slot, so only one can be a real tier. Stable wins over
+  //     Flashy, which wins over Swift.
+  //   - chaosCoreGear: Chaos Core: Attack and Chaos Core: Weapon are the same
+  //     slot too; Attack wins.
+  //   - raidContribution: Kazeros and Guardian are "which raid am I in"
+  //     buffs, and only one raid is ever active; Kazeros wins.
+  //   - supportMoveSpeed: only one Support's kit is in the raid, so Artist/
+  //     Valkyrie and Paladin are never both a party-wide Move Speed source;
+  //     Artist/Valkyrie wins.
+  //   - speedFood: Vernese Wine, Mana Food (Main Stat only, Surge 111/333) and
+  //     Mana Food (+Maelstrom Bleed) are three consumable choices - only one
+  //     is eaten at once. Wine feeds Raid Captain's isolated Move Speed calc
+  //     (see raidCaptainMoveSpeed), Mana Food feeds its own contribution-table
+  //     row (manaFoodGain). Wine wins over Mana Food, matching the crossing
+  //     listener's choice to turn Mana Food off (not Wine) on landing on Surge.
+  //     Only Surge treats them as competing picks: on RE, Mana Food is purely
+  //     informational and Wine's row is hidden with its flag ignored (see
+  //     raidCaptainMoveSpeed's spec check), so a normalize pass leaves both
+  //     alone there (normalizeWhen). A live click still clears the others.
+  // Resetting to defaults needs only the speedFood pass: its raw HTML defaults
+  // tick both Wine and Mana Food (Wine for Surge, Mana Food for RE - see the
+  // crossing listener in initApCalcRoot), while every other group's defaults
+  // are conflict-free.
+  const SPEED_FOOD_GROUP = {
+    name: "speedFood",
+    members: [{ sel: ".ap-engr-wine" }, { sel: ".ap-engr-manafood-main" }, { sel: ".ap-engr-manafood" }],
     // The Main Stat only food exists on Surge 111 and 333 only. A tick left
     // over anywhere else (build switched, stale export) folds into the
     // regular Mana Food box, which is what that choice means on 222 and RE.
-    if (manaFoodMainEl && manaFoodMainEl.checked && !isSurgeBleedFoodBuild(root)) {
-      manaFoodMainEl.checked = false;
-      if (manaFoodEl && isSurgeBuild(root)) manaFoodEl.checked = true;
-    }
-    if (!isSurgeBuild(root)) return;
+    beforeNormalize(root) {
+      const mainEl = root.querySelector(".ap-engr-manafood-main");
+      const foodEl = root.querySelector(".ap-engr-manafood");
+      if (mainEl && mainEl.checked && !isSurgeBleedFoodBuild(root)) {
+        mainEl.checked = false;
+        if (foodEl && isSurgeBuild(root)) foodEl.checked = true;
+      }
+    },
+    normalizeWhen: isSurgeBuild,
+  };
+  const EXCLUSIVE_GROUPS = [
+    {
+      name: "chaosCoreSlot",
+      members: [
+        { sel: ".ap-stable-atk", none: "None|0P" },
+        { sel: ".ap-flashy-atk", none: "None" },
+        { sel: ".ap-swift-core", none: "None|0P" },
+      ],
+    },
+    {
+      name: "chaosCoreGear",
+      members: [
+        { sel: ".ap-gear-ap-chaos-star", none: "None|0P" },
+        { sel: ".ap-gear-weapon-core", none: "None|0P" },
+      ],
+    },
+    { name: "raidContribution", members: [{ sel: ".ap-gear-ap-kazeros" }, { sel: ".ap-gear-ap-guardian" }] },
+    { name: "supportMoveSpeed", members: [{ sel: ".ap-engr-support-av" }, { sel: ".ap-engr-support-paladin" }] },
+    SPEED_FOOD_GROUP,
+  ];
+
+  // The members of a group that exist in this root, as { el, member } pairs.
+  function exclusiveMembers(root, group) {
+    return group.members
+      .map((member) => ({ el: root.querySelector(member.sel), member }))
+      .filter((m) => m.el);
+  }
+  function isExclusiveMemberActive(m) {
+    return m.member.none === undefined ? m.el.checked : m.el.value !== m.member.none;
+  }
+  function clearExclusiveMember(m) {
+    if (m.member.none === undefined) m.el.checked = false;
+    else m.el.value = m.member.none;
+  }
+
+  function normalizeExclusiveGroup(root, group) {
+    if (group.beforeNormalize) group.beforeNormalize(root);
+    if (group.normalizeWhen && !group.normalizeWhen(root)) return;
     let keptOne = false;
-    [wineEl, manaFoodMainEl, manaFoodEl].filter(Boolean).forEach((el) => {
-      if (!el.checked) return;
-      if (keptOne) el.checked = false;
+    exclusiveMembers(root, group).forEach((m) => {
+      if (!isExclusiveMemberActive(m)) return;
+      if (keptOne) clearExclusiveMember(m);
       else keptOne = true;
+    });
+  }
+  // Called wherever fields are set in bulk without a "change" event (init,
+  // preset switch, import).
+  function normalizeExclusiveGroups(root) {
+    EXCLUSIVE_GROUPS.forEach((group) => normalizeExclusiveGroup(root, group));
+  }
+
+  // Attached before the generic input/select loop in initApCalcRoot, so the
+  // opposing members are already cleared by the time that loop's own "change"
+  // listener runs update()/saveInputs() for the touched member.
+  function wireExclusiveGroups(root) {
+    EXCLUSIVE_GROUPS.forEach((group) => {
+      const members = exclusiveMembers(root, group);
+      members.forEach((m) => {
+        m.el.addEventListener("change", () => {
+          if (!isExclusiveMemberActive(m)) return;
+          members.forEach((other) => {
+            if (other !== m) clearExclusiveMember(other);
+          });
+        });
+      });
     });
   }
 
   // Resyncs the "last known family" tracker the Mana Food crossing
   // listener above keys off of (buildSelectEl.dataset.lastFamilyIsSurge)
   // to whatever the build select actually ends up at after a bulk field
-  // mutation. Needed alongside normalizeSpeedChoiceExclusivity, not
-  // instead of it: that function fixes up a conflict already left behind
+  // mutation. Needed alongside the speedFood normalizer (see
+  // EXCLUSIVE_GROUPS), not instead of it: that pass fixes up a conflict already left behind
   // in the checkboxes' own state, while this one fixes up the crossing
   // listener's memory of what family it last saw, so the reader's VERY
   // NEXT real RE<->Surge click still gets detected as a crossing instead
@@ -6778,7 +6776,7 @@
   // Only 2 Ability Stone slots exist in-game, so any section's own 2
   // isolated slots can't both target the same engraving. Originally this
   // let you pick a duplicate and then reset the OTHER slot back to
-  // "None" after the fact (the same pattern normalizeChaosCoreExclusivity
+  // "None" after the fact (the same pattern normalizeExclusiveGroups
   // uses) - fine for the old 2-separate-rows layout, but once Stone 1 and
   // Stone 2 sat side by side in one merged row it read as a bug (you
   // could select Stone 2 = Grudge while Stone 1 was already Grudge, and
@@ -7078,7 +7076,7 @@
       // free line still stuck on it gets reset back to None instead of
       // silently staying selected-but-disabled and still double-counted
       // (same "reset the stale side" precedent as
-      // normalizeChaosCoreExclusivity).
+      // normalizeExclusiveGroups).
       const effect2TypeEl = root.querySelector(".ap-bvb-" + prefix + "-effect2-type");
       const effect2IsMain = !!effect2TypeEl && effect2TypeEl.value === "main";
       const usedValues = typeEls.map((el) => el.value);
@@ -7111,11 +7109,7 @@
     {
       const activeId = getActivePresetId();
       loadInputs(root, activeId);
-      normalizeChaosCoreExclusivity(root);
-      normalizeWeaponCoreExclusivity(root);
-      normalizeRaidContributionExclusivity(root);
-      normalizeSupportMoveSpeedExclusivity(root);
-      normalizeSpeedChoiceExclusivity(root);
+      normalizeExclusiveGroups(root);
       syncSpeedChoiceFamilyTracking(root);
       syncFamilyVariantMemory(root);
       syncMaelstromUptimeGroupTracking(root);
@@ -7198,105 +7192,10 @@
         });
       });
 
-      const flashyEl = root.querySelector(".ap-flashy-atk");
-      const stableEl = root.querySelector(".ap-stable-atk");
-      const swiftEl = root.querySelector(".ap-swift-core");
-      if (flashyEl && stableEl && swiftEl) {
-        // Attached before the generic input/select loop below, so the
-        // opposing selects are already reset by the time that loop's own
-        // "change" listener runs update()/saveInputs() for this element.
-        flashyEl.addEventListener("change", () => {
-          if (flashyEl.value !== "None") {
-            stableEl.value = "None|0P";
-            swiftEl.value = "None|0P";
-          }
-        });
-        stableEl.addEventListener("change", () => {
-          if (stableEl.value !== "None|0P") {
-            flashyEl.value = "None";
-            swiftEl.value = "None|0P";
-          }
-        });
-        swiftEl.addEventListener("change", () => {
-          if (swiftEl.value !== "None|0P") {
-            flashyEl.value = "None";
-            stableEl.value = "None|0P";
-          }
-        });
-      }
-
-      const chaosStarEl = root.querySelector(".ap-gear-ap-chaos-star");
-      const weaponCoreEl = root.querySelector(".ap-gear-weapon-core");
-      if (chaosStarEl && weaponCoreEl) {
-        // Same "attached before the generic loop" timing as flashy/
-        // stable above - Chaos Core: Attack and Chaos Core: Weapon are
-        // the same equipment slot, so only one can ever be a real tier
-        // at once.
-        chaosStarEl.addEventListener("change", () => {
-          if (chaosStarEl.value !== "None|0P") weaponCoreEl.value = "None|0P";
-        });
-        weaponCoreEl.addEventListener("change", () => {
-          if (weaponCoreEl.value !== "None|0P") chaosStarEl.value = "None|0P";
-        });
-      }
-
-      const kazerosEl = root.querySelector(".ap-gear-ap-kazeros");
-      const guardianEl = root.querySelector(".ap-gear-ap-guardian");
-      if (kazerosEl && guardianEl) {
-        // Same "attached before the generic loop" timing as flashy/
-        // stable above, so the opposing checkbox is already unchecked
-        // by the time that loop's own "change" listener runs update()/
-        // saveInputs() for this element.
-        kazerosEl.addEventListener("change", () => {
-          if (kazerosEl.checked) guardianEl.checked = false;
-        });
-        guardianEl.addEventListener("change", () => {
-          if (guardianEl.checked) kazerosEl.checked = false;
-        });
-      }
-
-      // Vernese Wine, Mana Food (Main Stat only, Surge 111/333) and Mana Food
-      // (+Maelstrom Bleed) are a 3-way mutually exclusive set of Surge
-      // consumable choices - Wine feeds Raid Captain's isolated
-      // Move Speed calc (see raidCaptainMoveSpeed), and Mana Food feeds
-      // its own contribution-table row (manaFoodGain) - only one is ever
-      // actually eaten at once. Same "dedicated listeners, checking one
-      // unchecks the other" shape as Kazeros/Guardian just above, since
-      // (unlike the 2 Ability Stone slots) there's no natural "primary"
-      // side to fall back on for a plain update()-driven resolver.
-      const wineEl = root.querySelector(".ap-engr-wine");
+      // Live enforcement of every mutually exclusive group (see
+      // EXCLUSIVE_GROUPS for the groups and what each one means).
+      wireExclusiveGroups(root);
       const manaFoodEl = root.querySelector(".ap-engr-manafood");
-      const manaFoodMainEl = root.querySelector(".ap-engr-manafood-main");
-      const speedChoiceEls = [wineEl, manaFoodMainEl, manaFoodEl].filter(Boolean);
-      speedChoiceEls.forEach((el) => {
-        el.addEventListener("change", () => {
-          if (el.checked) {
-            speedChoiceEls.forEach((other) => {
-              if (other !== el) other.checked = false;
-            });
-          }
-        });
-      });
-
-      // Support: Artist/Valkyrie and Support: Paladin are another 2-way
-      // mutually exclusive pair - only one Support's kit is ever actually
-      // in the raid, so only one of these two party-wide Move Speed
-      // sources can be checked at once. Same "dedicated listeners,
-      // checking one unchecks the other" shape as Wine/Mana Food just
-      // above (see normalizeSupportMoveSpeedExclusivity for the bulk-
-      // mutation counterpart this pairs with).
-      const supportAvEl = root.querySelector(".ap-engr-support-av");
-      const supportPaladinEl = root.querySelector(".ap-engr-support-paladin");
-      const supportMoveSpeedEls = [supportAvEl, supportPaladinEl].filter(Boolean);
-      supportMoveSpeedEls.forEach((el) => {
-        el.addEventListener("change", () => {
-          if (el.checked) {
-            supportMoveSpeedEls.forEach((other) => {
-              if (other !== el) other.checked = false;
-            });
-          }
-        });
-      });
 
       // Master Build toggle (top of calculator) and its compact echo
       // copies inside Bracelet Comparison's and Engraving Comparison's
@@ -7417,7 +7316,7 @@
       // (not a private closure variable) specifically so it can be
       // resynced from outside this listener - see
       // syncSpeedChoiceFamilyTracking below, called alongside
-      // normalizeSpeedChoiceExclusivity from every bulk field mutation
+      // the speedFood normalizer from every bulk field mutation
       // (Reset to defaults, preset switch, import, init). Those all set
       // the build select's value directly via resetFieldsToDefaults
       // without dispatching "change", so a closure here would go stale
@@ -7436,7 +7335,7 @@
         buildSelectEl.addEventListener("change", () => {
           // Leaving Surge 111/333 with the Main Stat only food ticked turns it
           // into the regular Mana Food box before the crossing check below.
-          normalizeSpeedChoiceExclusivity(root);
+          normalizeExclusiveGroup(root, SPEED_FOOD_GROUP);
           const nowIsSurge = isSurgeBuild(root);
           const lastIsSurge = buildSelectEl.dataset.lastFamilyIsSurge === "1";
           if (nowIsSurge !== lastIsSurge) {
