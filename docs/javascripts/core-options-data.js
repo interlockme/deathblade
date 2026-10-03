@@ -16,17 +16,16 @@
 //
 // Optional per-entry fields:
 //   note - short caveat shown at the bottom of the tooltip, e.g.
-//          flagging a core that's a Korea-only placeholder for a
-//          not-yet-released replacement.
+//          flagging a placeholder core for a not-yet-released
+//          replacement.
 //   tier - rarity grade for the tooltip's icon fill + "Core Options"
 //          label color (skill-tip-icon-rarity-<tier> / ark-core-tip-
 //          subtitle-<tier> in extra.css). Defaults to "relic" when
 //          omitted (every entry below is Relic-grade), so this only
 //          needs setting for a future non-Relic core.
 //
-// All option text below is written as-is with no (KR)-tagged lines -
-// the balance-patch values transcribed from Korea are treated
-// as this core's values, full stop, ahead of the Global patch landing.
+// All option text below is the Global (NA) tooltip text, written as-is
+// with no region tags.
 (function () {
   window.DB_CORE_OPTIONS = {
     "Levin Slash": {
