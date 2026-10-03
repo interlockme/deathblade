@@ -6465,9 +6465,13 @@
     enforceAvbSlotUI(root);
     enforceAvbLineControls(root);
     enforceEngravingStoneExclusivity(root);
-    enforceStoneSlotExclusivity(root, "ap-esvs-a");
-    enforceStoneSlotExclusivity(root, "ap-esvs-b");
+    // Slots first: the stone targets of a Setup side depend on which
+    // engravings its two Option slots hold after this pass.
     enforceEngravingSvsSlotExclusivity(root, isSurgeBuild(root));
+    enforceSvsStoneTargets(root, "ap-esvs-a");
+    enforceSvsStoneTargets(root, "ap-esvs-b");
+    enforceStoneSlotExclusivity(root, "ap-esvs-a", svsAllowedStoneTargets(root, "ap-esvs-a"));
+    enforceStoneSlotExclusivity(root, "ap-esvs-b", svsAllowedStoneTargets(root, "ap-esvs-b"));
 
     // Top Combinations pin: resolve this root's stored { splitKey, pair }
     // (if any) and make it the active pin for bestComboFor - see
@@ -6792,7 +6796,7 @@
   // Setup A vs Setup B's two independent pairs (ap-esvs-a-stone1/2-*,
   // ap-esvs-b-stone1/2-*) can all share one implementation instead of
   // three copies of the same function.
-  function enforceStoneSlotExclusivity(root, prefix) {
+  function enforceStoneSlotExclusivity(root, prefix, allowed) {
     const t1 = root.querySelector("." + prefix + "-stone1-target");
     const l1 = root.querySelector("." + prefix + "-stone1-level");
     const t2 = root.querySelector("." + prefix + "-stone2-target");
@@ -6810,12 +6814,35 @@
     [[t1, t2], [t2, t1]].forEach(([self, other]) => {
       Array.from(self.options).forEach((opt) => {
         if (opt.value === "None") { opt.disabled = false; return; }
-        opt.disabled = other.value === opt.value;
+        opt.disabled = other.value === opt.value || (allowed ? !allowed.has(opt.value) : false);
       });
     });
   }
   function enforceEngravingStoneExclusivity(root) {
     enforceStoneSlotExclusivity(root, "ap-engr");
+  }
+
+  // A Setup A/B side equips 5 engravings: the 3 core ones plus its 2 Option
+  // slots. An Ability Stone slot can only boost one of those, so a stone
+  // target outside that set would be a 6th engraving. svsAllowedStoneTargets
+  // returns that set; enforceSvsStoneTargets resets a target that fell out of
+  // it (an Option changed after the stone was picked, a programmatic load)
+  // to None, and enforceStoneSlotExclusivity disables the options outside it.
+  const SVS_CORE_STONE_TARGETS = ["grudge", "ambush", "adrenaline"];
+  function svsAllowedStoneTargets(root, prefix) {
+    const allowed = new Set(SVS_CORE_STONE_TARGETS);
+    [1, 2].forEach((n) => {
+      const slot = root.querySelector("." + prefix + "-slot" + n + "-type");
+      if (slot && slot.value !== "none") allowed.add(slot.value);
+    });
+    return allowed;
+  }
+  function enforceSvsStoneTargets(root, prefix) {
+    const allowed = svsAllowedStoneTargets(root, prefix);
+    [1, 2].forEach((n) => {
+      const target = root.querySelector("." + prefix + "-stone" + n + "-target");
+      if (target && target.value !== "None" && !allowed.has(target.value)) target.value = "None";
+    });
   }
 
   // Setup A vs Setup B's two engraving-slot selects (one competing

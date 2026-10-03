@@ -293,6 +293,43 @@ FOOD_CROSSINGS = [
 ]
 
 
+# Setup A vs Setup B stone targets: a side's Ability Stones can only boost the 3 core engravings or the
+# 2 competing engravings in its own Option slots (5 engravings total). Steps are (control, value) pairs
+# set in order (a programmatic set skips the disabled-option check on purpose, like a preset load or an
+# import would) or "@build" switches. "A" / "B" name the side.
+def svs_key(side, part):
+    return f"select.ap-esvs-{side}-{part}:0"
+
+
+SVS_STONE_SEQUENCES = []
+for _side in ("a", "b"):
+    SVS_STONE_SEQUENCES += [
+        (f"svs {_side}: mi+rc options, stone on mi", "surge-111", [
+            (svs_key(_side, "slot1-type"), "mi"), (svs_key(_side, "slot2-type"), "rc"),
+            (svs_key(_side, "stone1-target"), "mi"), (svs_key(_side, "stone1-level"), "3 Lv.")]),
+        (f"svs {_side}: stone on mi, option 1 then changed to kbw", "surge-111", [
+            (svs_key(_side, "slot1-type"), "mi"), (svs_key(_side, "slot2-type"), "rc"),
+            (svs_key(_side, "stone1-target"), "mi"), (svs_key(_side, "stone1-level"), "3 Lv."),
+            (svs_key(_side, "slot1-type"), "kbw")]),
+        (f"svs {_side}: stone on rc with no Option equipped (programmatic)", "surge-111", [
+            (svs_key(_side, "stone1-target"), "rc")]),
+        (f"svs {_side}: stone on kbw with cd + rc equipped (programmatic)", "surge-111", [
+            (svs_key(_side, "slot1-type"), "cd"), (svs_key(_side, "slot2-type"), "rc"),
+            (svs_key(_side, "stone2-target"), "kbw")]),
+        (f"svs {_side}: both stones on core engravings, no Options", "surge-111", [
+            (svs_key(_side, "stone1-target"), "adrenaline"), (svs_key(_side, "stone1-level"), "2 Lv."),
+            (svs_key(_side, "stone2-target"), "grudge"), (svs_key(_side, "stone2-level"), "4 Lv.")]),
+        (f"svs {_side}: stones on both Options, then option 2 cleared", "surge-111", [
+            (svs_key(_side, "slot1-type"), "kbw"), (svs_key(_side, "slot2-type"), "cd"),
+            (svs_key(_side, "stone1-target"), "kbw"), (svs_key(_side, "stone1-level"), "4 Lv."),
+            (svs_key(_side, "stone2-target"), "cd"), (svs_key(_side, "stone2-level"), "1 Lv."),
+            (svs_key(_side, "slot2-type"), "none")]),
+        (f"svs {_side}: stone on mi, then switch to RE", "surge-111", [
+            (svs_key(_side, "slot1-type"), "mi"), (svs_key(_side, "stone1-target"), "mi"),
+            (svs_key(_side, "stone1-level"), "2 Lv."), "@re-333"]),
+    ]
+
+
 def food_sequences():
     """(start build, steps) for every ordered pair of clicks per build, every ordering of all three boxes
     on 111/333, then the crossings above."""
@@ -484,6 +521,22 @@ def run_calculator(base_url, payloads, fast=False):
         for build, steps in food_sequences():
             if not probe(f"food {build}: " + " > ".join(steps), lambda b=build, q=steps: run_steps(b, q)):
                 skipped.append(f"food {build}: " + " > ".join(steps))
+                restart()
+
+        def run_kv(build, steps):
+            if build != "re-333" and not go_build(build):
+                return False
+            for step in steps:
+                if isinstance(step, str):
+                    if not go_build(step[1:]):
+                        return False
+                elif not s.ev("([k, v]) => window.__rg.setByKey(k, v)", list(step)):
+                    return False
+            return True
+
+        for name, build, steps in SVS_STONE_SEQUENCES:
+            if not probe(name, lambda b=build, q=steps: run_kv(b, q)):
+                skipped.append(name)
                 restart()
 
         stale_fields = dict(STALE_FIELD_SETS)
