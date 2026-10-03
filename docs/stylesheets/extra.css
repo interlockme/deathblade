@@ -248,7 +248,7 @@ h1, h2, h3 {
    --dbc-pink (the site's actual accent color, already on links/borders/
    the difficulty bar everywhere else) rather than an off-palette pink
    that matches nothing else on the site. */
-.md-typeset h1 { color: var(--dbc-pink); }
+.md-typeset h1 { color: var(--dbc-pink); font-weight: 400; }
 h2 { color: var(--dbc-purple); } /* muted lavender, used sparingly as an accent, not a fill color */
 h3 { color: var(--dbc-teal); }
 
@@ -273,6 +273,10 @@ h3 { color: var(--dbc-teal); }
    extra top margin plus a faint top border makes each H2 read as the start
    of a new chapter instead. */
 .md-typeset h2 {
+  /* Regular weight at 1.75em: Material's light 1.5625em sections read weaker than
+     the bold card text under them. Poppins loads 300, 400 and 700 only. */
+  font-size: 1.75em;
+  font-weight: 400;
   margin-top: 1.9em;
   padding-top: 0.7em;
   border-top: 1px solid transparent;
@@ -431,6 +435,12 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .highlight pre {
   margin: 0;
+  background-color: var(--md-code-bg-color);
+}
+/* The copy button sits in its own strip at the right edge, so a long import
+   string scrolls inside the code box instead of running underneath the icon. */
+.md-typeset .highlight pre > code {
+  margin-right: 2.4rem;
 }
 /* The copy-to-clipboard button (content.code.copy) inherits Material's
    default gray icon color - recolor to the site's lavender accent so it
@@ -2356,6 +2366,50 @@ h3 { color: var(--dbc-teal); }
     min-width: 600px;
   }
 }
+/* Phone width and up: the build profile badge is a row (radar left, video chips and
+   note right). Below 360px the right column is too narrow for the chip labels, so
+   narrower screens keep the stacked badge above. */
+@media screen and (min-width: 360px) and (max-width: 720px) {
+  .md-typeset .pentagon-badge {
+    /* Radar on the left, video chips and the note on the right: about half
+       the height of the stacked version, so the quick-jump pills and the
+       first section start higher up the screen. */
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 150px) minmax(0, 1fr);
+    column-gap: 0.9em;
+    align-items: center;
+    max-width: 460px;
+    align-self: center;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 1.5em;
+    padding: 0.7em 0.8em;
+  }
+  .md-typeset .pentagon-badge-title {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+  .md-typeset .pentagon-svg-mount {
+    grid-column: 1;
+    grid-row: 2 / 4;
+  }
+  .md-typeset .pentagon-badge-extra {
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 0;
+    padding-top: 0;
+    align-self: end;
+  }
+  .md-typeset .pentagon-badge-caption {
+    grid-column: 2;
+    grid-row: 3;
+    margin-top: 0.4em;
+    text-align: left;
+    align-self: start;
+  }
+}
+
 
 /* ---------- Build compare widget (essentials.md, replaces the old
    "## Build Comparison" markdown table) ---------- */
