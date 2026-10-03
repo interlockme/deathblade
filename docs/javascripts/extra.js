@@ -282,7 +282,7 @@
   // Material's instant navigation. Material treats the FIRST
   // same-page anchor click after a full load as a navigation: it refetches the
   // page, swaps the content, re-runs every widget and lands the heading well
-  // below the top (reproduced on a bare Material 9.7.6 site). Later clicks are
+  // below the top (reproduced on a bare Material site). Later clicks are
   // fine. Handled in the capture phase so Material's click listener never sees
   // it; scroll-margin on the headings still positions the target under the
   // sticky header.

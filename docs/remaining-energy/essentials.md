@@ -68,7 +68,6 @@ Atk/Move Speed Feast
 
 </details>
 
-<!-- TODO: drop this whole block once the September balance patch ships -->
 <details class="setup-note" data-kind="danger" markdown>
 <summary><span class="setup-note-tag">Warn</span>09/16/26 Balance Patch<span class="setup-note-arrow"></span></summary>
 

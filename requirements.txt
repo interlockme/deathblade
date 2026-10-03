@@ -4,9 +4,9 @@
 # still work exactly as before - nothing here has to be installed on your machine.
 #
 # Why a range instead of nothing:
-#   Material 9.x is actively maintained, not end-of-life, and MkDocs itself
-#   prints a warning during every build about breaking changes coming in
-#   MkDocs 2.0. That is precisely the risk worth fencing off: with no bound at
+#   Material 9.x is in maintenance mode (critical bug and security fixes only,
+#   end of life scheduled for 2026-11-05), and MkDocs itself prints a warning
+#   during every build about breaking changes coming in MkDocs 2.0. That is precisely the risk worth fencing off: with no bound at
 #   all, the day those majors land, a push that changed nothing but a typo
 #   would deploy a broken site, or fail to build, with no local change to
 #   point at.
@@ -17,3 +17,8 @@
 #   bumping forever. The range takes patches automatically and blocks only
 #   the known-breaking major.
 mkdocs-material>=9.7,<10
+
+# deploy.yml publishes with `ghp-import` directly. mkdocs pulls it in today, but
+# that is a transitive accident, and a different generator (Zensical) would not
+# install it. Declared here so the publish step does not depend on it.
+ghp-import>=2.1,<3

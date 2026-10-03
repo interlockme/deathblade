@@ -5,3 +5,8 @@ site/
 project-context.md
 Archive.zip
 __pycache__/
+site_out/
+regress-out/
+regress-diff.txt
+smoke.txt
+sweep.txt
