@@ -1626,7 +1626,7 @@ h3 { color: var(--dbc-teal); }
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.32);
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.035);
-  font-size: 0.92em;
+  font-size: 0.94em;
   line-height: 1.55;
 }
 .md-typeset .rotation-notes > :first-child { margin-top: 0.3em; }
@@ -1673,7 +1673,9 @@ h3 { color: var(--dbc-teal); }
    centred on a fixed line height instead and drifts off the text when a line
    holds inline icons (the Mana Food alt line on Surge Essentials). Component
    lists set list-style: none and draw their own markers; ::marker does not
-   apply to them. Numbered lists keep their badges (.rotation-notes > ol). */
+   apply to them. Numbered lists keep their badges (.rotation-notes > ol,
+   also inside a .setup-note such as Leopard Mode); bullets nested under
+   those numbered items use the marker rules below. */
 .md-typeset ul > li::marker {
   color: var(--dbc-lavender);
   font-size: 1.15em;
@@ -1685,8 +1687,6 @@ h3 { color: var(--dbc-teal); }
 .md-typeset ul ul {
   list-style-type: disc;
 }
-/* A numbered list in a setup-note keeps its own badges (see .rotation-notes
-   > ol above); its nested bullets use the rules here. */
 /* A rotation-notes card inside a tab sits after a Material-generated empty
    paragraph in some layouts; keep its top margin the same either way. */
 .md-typeset .tabbed-block > p:empty + .rotation-notes { margin-top: 0.6em; }
@@ -2934,6 +2934,7 @@ h3 { color: var(--dbc-teal); }
   margin: 0;
   padding: 0.5em 0;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.95em;
   overflow-wrap: anywhere;
 }
 .md-typeset .link-group > ul > li:first-child {
@@ -2942,7 +2943,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .link-group .link-desc {
   display: block;
   margin-top: 0.15em;
-  font-size: 0.8em;
+  font-size: 0.84em;
   font-style: italic;
   color: var(--dbc-muted-text-soft);
 }
@@ -2960,6 +2961,10 @@ h3 { color: var(--dbc-teal); }
      leading bold value (**10/15/20%**) is picked out in the accent color.
    .gameplay-flow - an ordered list shown as a row of steps joined by arrows.
      The last step (Repeat) is dashed to read as the loop back to the start.
+
+   The chips are a notch smaller than the cards (0.82em vs 0.9em) on purpose:
+   five chips have to fit one row of the 938px content column, and at 0.9em
+   they need about 994px.
 
    All three keep the real <ul>/<ol> underneath, so the order and the text
    read the same to a screen reader. minmax(min(100%, 15rem), 1fr) keeps a
@@ -2985,7 +2990,7 @@ h3 { color: var(--dbc-teal); }
   border: 1px solid rgba(var(--gp-rgb), 0.32);
   border-radius: 10px;
   background-color: rgba(var(--gp-rgb), 0.05);
-  font-size: 0.85em;
+  font-size: 0.9em;
   line-height: 1.5;
 }
 .md-typeset .gameplay-cards > ul > li > strong:first-child {
@@ -3035,7 +3040,7 @@ h3 { color: var(--dbc-teal); }
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.45);
   border-radius: 8px;
   background-color: rgba(var(--dbc-purple-rgb), 0.1);
-  font-size: 0.85em;
+  font-size: 0.9em;
   font-weight: 700;
 }
 .md-typeset .gameplay-flow > ol > li:not(:last-child)::after {
