@@ -2275,6 +2275,24 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .build-card ul {
   margin: 0.4em 0 0.7em;
 }
+/* Material's 0.5em li gap spaces these bullets about 37px apart, loose next
+   to the 0.2em gap in .setup-note lists on the same page. The tighter gap
+   also shortens the card, and the badge beside it is stretched to the card's
+   height, so a shorter card means less empty space above the video chips. */
+.md-typeset .build-card ul > li {
+  margin-bottom: 0.2em;
+}
+.md-typeset .build-card ul > li:last-child {
+  margin-bottom: 0;
+}
+/* Best For / Tradeoff paragraphs: Material's 1em paragraph margin left about
+   16px between each line and before the first bullet, loose next to the
+   bullets' 0.2em gap. 0.5em keeps the two lines and the list reading as one
+   block. The gap under the stat boxes (their own 0.9em bottom margin wins the
+   margin collapse) stays larger so the boxes still read as a separate group. */
+.md-typeset .build-card > p {
+  margin: 0.5em 0;
+}
 .md-typeset a.video-chip {
   display: inline-flex;
   align-items: center;
@@ -2338,14 +2356,18 @@ h3 { color: var(--dbc-teal); }
   margin: 0;
 }
 .md-typeset .pentagon-badge {
-  flex: 0 0 168px;
+  /* Wide enough that the radar (about 187px inside the padding) draws its
+     10-unit labels at about 8.7px on screen; see .pentagon-label. Wider
+     starts costing the .build-card beside it a wrapped bullet, which makes
+     the whole row taller than the narrower badge saves. */
+  flex: 0 0 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   border: 1px solid rgba(var(--dbc-rose-rgb), 0.3);
   background-color: rgba(var(--dbc-rose-rgb), 0.045);
   border-radius: 10px;
-  padding: 0.8em 0.6em 0.6em;
+  padding: 0.8em 0.35em 0.6em;
 }
 .md-typeset .pentagon-badge-title {
   font-size: 0.6rem;
@@ -2358,6 +2380,11 @@ h3 { color: var(--dbc-teal); }
 }
 .pentagon-svg-mount {
   width: 100%;
+  /* The badge is stretched to the .build-card's height, so on a tall card
+     there is spare height. Auto block margins split it above and below the
+     radar (the chips below are pinned to the bottom) instead of leaving it
+     all in one gap under the radar. */
+  margin: auto 0;
 }
 .pentagon-svg {
   width: 100%;
@@ -2365,16 +2392,19 @@ h3 { color: var(--dbc-teal); }
   overflow: visible;
   display: block;
 }
+/* The data polygon is drawn over the grid with a translucent fill, which
+   dims the inner rings and spokes under it. These strengths keep them
+   readable through that fill without competing with the data outline. */
 .pentagon-ring {
   fill: none;
-  stroke: rgba(var(--dbc-purple-rgb), 0.16);
+  stroke: rgba(var(--dbc-purple-rgb), 0.28);
   stroke-width: 1;
 }
 .pentagon-ring-outer {
-  stroke: rgba(var(--dbc-purple-rgb), 0.28);
+  stroke: rgba(var(--dbc-purple-rgb), 0.5);
 }
 .pentagon-spoke {
-  stroke: rgba(var(--dbc-purple-rgb), 0.16);
+  stroke: rgba(var(--dbc-purple-rgb), 0.28);
   stroke-width: 1;
 }
 .pentagon-dot {
@@ -2383,7 +2413,10 @@ h3 { color: var(--dbc-teal); }
 }
 .pentagon-label {
   font-family: "Poppins", sans-serif;
-  font-size: 8.5px;
+  /* SVG user units, not screen px: the on-screen size is this times the
+     SVG's rendered width / viewBox width (about 0.9 on the badge, about
+     1.1 on the compare widget), so 10 lands near 9px and 11px. */
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.03em;
   fill: var(--dbc-lavender);
@@ -2472,7 +2505,7 @@ h3 { color: var(--dbc-teal); }
        first section start higher up the screen. */
     flex: 1 1 auto;
     display: grid;
-    grid-template-columns: minmax(0, 150px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, min(172px, 52%)) minmax(0, 1fr);
     column-gap: 0.9em;
     align-items: center;
     max-width: 460px;
@@ -2489,6 +2522,7 @@ h3 { color: var(--dbc-teal); }
   .md-typeset .pentagon-svg-mount {
     grid-column: 1;
     grid-row: 2 / 4;
+    margin: 0;
   }
   .md-typeset .pentagon-badge-extra {
     grid-column: 2;
@@ -2563,17 +2597,26 @@ h3 { color: var(--dbc-teal); }
   background-color: rgba(var(--dbc-purple-rgb), 0.1);
   font-size: 0.68rem;
 }
+/* Cells match the header size (13.6px). The sitewide table size is 0.64rem
+   (12.8px), which read small next to the 16px build-card text this table
+   sits under. */
+.md-typeset .build-compare table td {
+  font-size: 0.68rem;
+}
 .md-typeset .build-compare table th:nth-child(1),
 .md-typeset .build-compare table td:nth-child(1) {
   width: 20%;
 }
 .md-typeset .build-compare table th:nth-child(2),
 .md-typeset .build-compare table td:nth-child(2) {
-  width: 13%;
+  width: 12%;
 }
 .md-typeset .build-compare table th:nth-child(3),
 .md-typeset .build-compare table td:nth-child(3) {
-  width: 13%;
+  /* 16% so the "Trixion DPS" header (about 129px with its padding) stays on
+     one line from roughly 810px of viewport up; narrower than that it wraps
+     as before. Taken from the Difficulty and Best For columns. */
+  width: 16%;
 }
 /* Widened from 15% - "Fast & Punishing" (the longest playstyle value)
    was wrapping to two lines at the old width. */
@@ -2584,7 +2627,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .build-compare table th:nth-child(5),
 .md-typeset .build-compare table td:nth-child(5) {
-  width: 34%;
+  width: 32%;
 }
 .md-typeset .build-compare-name {
   display: inline-flex;
@@ -2766,7 +2809,9 @@ h3 { color: var(--dbc-teal); }
   border-right: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
 }
 .md-typeset .build-compare-svg-mount svg {
-  width: min(230px, 100%);
+  /* About 1.12 screen px per viewBox unit here, so the 10-unit axis labels
+     draw at about 11px. */
+  width: min(240px, 100%);
 }
 /* Two overlapping translucent polygons - fill-opacity is set inline per
    build (JS) rather than here since it's paired with each build's own
@@ -2804,7 +2849,9 @@ h3 { color: var(--dbc-teal); }
   letter-spacing: 0.05em;
   color: var(--dbc-lavender);
   font-weight: 700;
-  margin-top: 0.85em;
+  /* Lands level with the radar's "Difficulty" label, which sits about 2
+     viewBox units below the SVG's top edge (see SiteUtils.radar.VIEWBOX). */
+  margin-top: 0.2em;
   margin-bottom: 0.9em;
   text-align: center;
 }

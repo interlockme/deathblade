@@ -216,7 +216,7 @@ Aim to always cast Surge with 3 orbs for the strongest buffs and cooldown reduct
 <div class="gameplay-cards" data-accent="teal" markdown>
 
 - **Turning Slash** +4% outgoing and +5% directional damage for 12s.
-- **<span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>** +12.8% Attack/Move Speed for 6s and improves orb generation.
+- **<span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>** +12.8% Attack/Move Speed for 6s.
 
 </div>
 

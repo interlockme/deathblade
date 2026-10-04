@@ -85,9 +85,9 @@ extra_javascript:
   - javascripts/ap-node-effects.js
   - javascripts/ark-passive-tree.js
   - javascripts/gem-priority.js
-  - javascripts/pentagon-badge.js
   - javascripts/rotation-line.js
   - javascripts/skill-tooltip.js
+  - javascripts/pentagon-badge.js
   - javascripts/ark-core-badge.js
   - javascripts/ark-passive-tooltip.js
   - javascripts/rune-tooltip.js

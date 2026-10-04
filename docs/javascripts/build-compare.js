@@ -185,7 +185,7 @@
     var svg = svgEl("svg", {
       viewBox: radar.VIEWBOX,
       class: "pentagon-svg build-compare-svg",
-      role: "img",
+      role: "group",
       "aria-label":
         buildA.name +
         " vs " +
@@ -218,7 +218,12 @@
       });
     });
 
-    radar.drawLabels(svg, angles, axisLabels);
+    radar.drawLabels(svg, angles, axisLabels, function (text, i) {
+      text.setAttribute(
+        "data-radar-tip",
+        axisLabels[i] + ": " + buildA.name + " " + fmt1(buildA.pentagon[i]) + " vs " + buildB.name + " " + fmt1(buildB.pentagon[i])
+      );
+    });
 
     return svg;
   }
@@ -446,7 +451,9 @@
 
       var svgMount = document.createElement("div");
       svgMount.className = "build-compare-svg-mount";
-      svgMount.appendChild(buildOverlaySvg(data.axisLabels, buildA, buildB));
+      var overlay = buildOverlaySvg(data.axisLabels, buildA, buildB);
+      svgMount.appendChild(overlay);
+      radar.wireLabelTips(overlay);
       body.appendChild(svgMount);
 
       body.appendChild(buildKeyDifferences(data.axisLabels, data.invert, buildA, buildB));

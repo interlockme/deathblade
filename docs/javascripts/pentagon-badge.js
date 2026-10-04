@@ -4,6 +4,9 @@
 // at your own data.
 //
 // Build-profile pentagon badge, drawn next to .build-card on build pages.
+// Each axis label shows its value in the site tooltip (SiteUtils.radar.
+// wireLabelTips), so this file loads after skill-tooltip.js (see mkdocs.yml
+// extra_javascript).
 //
 // EASY EDIT GUIDE (read this before touching a build's numbers):
 //   Each badge is just a <div class="pentagon-badge" data-build="..."
@@ -39,8 +42,8 @@
 //   is better - more self-sustain). Surge builds don't really have a
 //   Recovery stat, so that axis is repurposed as "Exposure" (back-attack
 //   / positional risk) where HIGHER IS WORSE. The family-level axisNote
-//   in build-data.js (Surge only) supplies the hover tooltip + caption
-//   line reminding readers that axis is inverted, so it doesn't read as
+//   in build-data.js (Surge only) supplies the caption line under the
+//   badge reminding readers that axis is inverted, so it doesn't read as
 //   "bigger = stronger" like the other four do.
 //
 //   To add a badge to a new build page: add the build's entry to
@@ -56,13 +59,13 @@
   var svgEl = window.SiteUtils.svgEl;
   var radar = window.SiteUtils.radar;
 
-  function buildPentagonSvg(values, labels, accent, tooltipNote) {
+  function buildPentagonSvg(values, labels, accent) {
     var angles = radar.angles(5);
 
     var svg = svgEl("svg", {
       viewBox: radar.VIEWBOX,
       class: "pentagon-svg",
-      role: "img",
+      role: "group",
       "aria-label": labels
         .map(function (l, i) { return l + " " + values[i] + " out of 10"; })
         .join(", "),
@@ -94,9 +97,7 @@
     });
 
     radar.drawLabels(svg, angles, labels, function (text, i) {
-      var title = svgEl("title", {});
-      title.textContent = labels[i] + ": " + fmt(values[i]) + "/10" + (tooltipNote && i === 3 ? " - " + tooltipNote : "");
-      text.appendChild(title);
+      text.setAttribute("data-radar-tip", labels[i] + ": " + fmt(values[i]) + "/10");
     });
 
     return svg;
@@ -155,7 +156,9 @@
     if (!resolved) return;
 
     mount.innerHTML = "";
-    mount.appendChild(buildPentagonSvg(resolved.values, resolved.labels, resolved.accent, resolved.caption));
+    var svg = buildPentagonSvg(resolved.values, resolved.labels, resolved.accent);
+    mount.appendChild(svg);
+    radar.wireLabelTips(svg);
 
     if (resolved.caption && !badge.querySelector(".pentagon-badge-caption")) {
       var captionEl = document.createElement("div");

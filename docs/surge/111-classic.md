@@ -19,7 +19,7 @@
 - No need to hold <span class="skill-mention" data-glossary-id="counter">Counter</span>, it charges up to two stacks.
 - Very high gem efficiency: Surge is nearly all of your DPS.
 - Accessible from zero <span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span> cores with minor adjustments.
-- Must constantly balance Surge <span class="skill-mention" data-glossary-id="backattack">back attack</span> rate with Surge <span class="skill-mention" data-glossary-id="cpm">CPM</span>.
+- Must constantly balance Surge <span class="skill-mention" data-glossary-id="backattack">back attack</span> rate with <span class="skill-mention" data-glossary-id="cpm">CPM</span>.
 
 </div>
 <div class="pentagon-badge" data-build="111-classic" data-family="surge" markdown>

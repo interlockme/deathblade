@@ -237,11 +237,17 @@
 
     // Shared radar-chart geometry and drawing for pentagon-badge.js (one
     // build) and build-compare.js (two builds overlaid). Both draw the
-    // same 200x190 viewBox with the same grid rings, spokes and axis
-    // labels and differ only in the data polygons drawn on top, so
-    // everything except those polygons lives here.
+    // same viewBox with the same grid rings, spokes and axis labels and
+    // differ only in the data polygons drawn on top, so everything except
+    // those polygons lives here.
+    //
+    // The viewBox is cropped to the drawn content: the five axis labels
+    // (10 user units, see .pentagon-label in extra.css) reach about x -7 to
+    // 201 and y 10 to 167, so a box around that wastes no height and keeps
+    // the labels inside it. Widths in CSS (the badge, the compare mount) are
+    // chosen against this aspect ratio, which sets the on-screen label size.
     radar: {
-      VIEWBOX: "0 0 200 190",
+      VIEWBOX: "-10 8 214 161",
       CX: 100,
       CY: 98,
       R_MAX: 60,
@@ -302,6 +308,24 @@
           text.textContent = labels[i];
           if (decorate) decorate(text, i);
           svg.appendChild(text);
+        });
+      },
+
+      // Gives every .pentagon-label that carries data-radar-tip the site's
+      // own tooltip (skill-tooltip.js) instead of a native SVG <title>,
+      // which never shows on touch and looks unlike every other tooltip.
+      // Call after the svg is in the DOM. The wired labels are focus stops,
+      // so callers draw the svg as role="group", not "img" (an img role
+      // hides its children from assistive tech). No-op if skill-tooltip.js
+      // has not loaded.
+      wireLabelTips: function (svg) {
+        var U = window.SiteUtils, ST = window.SkillTooltip;
+        if (!ST) return;
+        svg.querySelectorAll(".pentagon-label[data-radar-tip]").forEach(function (text) {
+          var tip = U.el("div", "skill-tip md-typeset");
+          tip.setAttribute("role", "tooltip");
+          tip.appendChild(U.el("p", "skill-tip-note", text.getAttribute("data-radar-tip")));
+          ST.wireCustom(text, tip);
         });
       },
     },
