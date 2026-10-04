@@ -2219,7 +2219,7 @@
       },
       {
         label: ["Outgoing Damage +", ...trip("4.5", "5", "5.5"), "% & Skill Cooldown +", { downside: true, text: "2" }, "%"],
-        note: "Estimated damage accounts for +CDR% penalty.",
+        note: "Estimated damage accounts for +CD% penalty.",
         // Surge uses the temporary flat -1 override (see
         // DAMAGE_CD_SURGE_TABLE above) instead of the divided-by-penalty
         // figures RE still uses. isSurge comes from the selected build's

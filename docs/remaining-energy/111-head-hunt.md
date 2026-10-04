@@ -172,7 +172,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 - You can use Swift Fingers <span class="skill-mention" data-glossary-id="tripod">tripod</span> on Blitz Rush for increased DPS and QoL.
     - It's a DPC loss unless you can make use of the increased CPM/comfort.
     - It's not compatible with very low Specialization or a +CD% bracelet line.
-    - Because of the above reasons, it's **recommended** but not set by default.
+    - For the above reasons, it's **recommended** but not set by default.
     - Set Void Strike to Lv 13 and Blitz Rush to Lv 12 if you decide to use this tripod.
 
 </details>
@@ -264,7 +264,7 @@ Alternating cycles
 
 1. Aim to fit up to Cycle **2**'s Twin Shadows under Cycle **1**'s Maelstrom to reach 3 orbs without recasting it or using recovery options. If you don't, an extra Head Hunt cast is required at the end of Cycle **2**.
 2. Using Head Hunt in Cycle **2** may force you to cast it at the end of the next Cycle **1**, which creates downtime.
-3. Maelstrom management is extremely important when the rotation fails, you should cast it as it expires if needed.
+3. Maelstrom management is extremely important when the rotation fails: cast it as it expires if needed.
 
 </div>
 

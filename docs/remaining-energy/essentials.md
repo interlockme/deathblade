@@ -163,11 +163,11 @@ Atk/Move Speed Feast
 <span class="stat-label">Breakpoint</span><span class="stat-value">1818+</span><span class="food-req">No downtime on [333 (Ceiling)](333-ceiling.md)</span>
 </div>
 <div class="stat" data-kind="warn" markdown="span">
-<span class="stat-label">Raises CD leap/gem Requirements</span><span class="stat-value">+CD% bracelet</span><span class="food-req"><span class="skill-mention" data-ap-id="releasepotential" data-level="4">RP 4</span> needed for Fatal Wave builds</span>
+<span class="stat-label">Raises CD leap/gem requirements</span><span class="stat-value">+CD% bracelet</span><span class="food-req"><span class="skill-mention" data-ap-id="releasepotential" data-level="4">RP 4</span> needed for Fatal Wave builds</span>
 </div>
 </div>
 
-Lower values are fine, but may experience some downtime.
+Lower values are fine, but you may experience some downtime.
 { .food-req }
 
 <div class="setup-notes" markdown>
@@ -251,7 +251,7 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 
 ## Remaining Energy Skills
 
-*Values recorded at 1830 Specialization with no runes or Maelstrom buff, 3 orbs are 30000 meter.*
+*Values recorded at 1830 Specialization with no runes or Maelstrom buff, 3 orbs = 30000 meter.*
 
 <!-- Per-row id (name auto-resolves from skill-names.js) - full schema is in
      javascripts/essentials-table.js's

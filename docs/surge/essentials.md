@@ -35,7 +35,7 @@ Atk/Move Speed Feast
 <summary><span class="setup-note-tag">Alt</span>Mana Food + Maelstrom Bleed (111/333 ONLY)<span class="setup-note-arrow"></span></summary>
 
 - Otherwise, use ![](../assets/shared/icon-striploin.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-steak.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-azena.png){: .food-option-icon } <span class="food-option-connector food-option-connector-plus">+</span> ![](../assets/shared/icon-feast.png){: .food-option-icon } and equip <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> rune on <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>. Higher ceiling, lower floor.
-- Keep the <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> rune if you don't trust your or your support's uptime (spec bards), or for trixion-like content.
+- Keep the <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> rune if you don't trust your or your support's uptime (spec bards), or for Trixion-like content.
 
 </details>
 
@@ -194,7 +194,7 @@ Not the end of the world if you're forced to use it
 
 **Pros:**{: .best-for } This is ceiling. Efficient damage scaling for 111; 222's short cycles also lessen the burden of its penalties.
 
-**Cons:**{: .tradeoff } Doubles up on <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span> and situational shackles, only recommended if you know what you're doing.
+**Cons:**{: .tradeoff } Doubles up on <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span> and situational shackles. Only recommended if you know what you're doing.
 
 </div>
 </details>
@@ -258,7 +258,7 @@ Surge is a repeating cycle:
 
 </div>
 
-Build toward 60 stacks using your multi-hit skills, then land Surge as a <span class="skill-mention" data-glossary-id="backattack">Back Attack</span>.
+Build toward 60 stacks using your multi-hit skills, then land Surge as a <span class="skill-mention" data-glossary-id="backattack">back attack</span>.
 
 The 80-stack cap and rollover give you flexibility. You don't need to stop or force a skill just to hit exactly 60.
 

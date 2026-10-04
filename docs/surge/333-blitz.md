@@ -187,7 +187,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
 - You can use the Weak Point Detection <span class="skill-mention" data-glossary-id="tripod">tripod</span> on Blade Dance.
     - Requires Lv 10 CD gem and/or raid downtime for it not to become a bottleneck.
-    - You must swap Wind Cut CD gem to Blade Dance CD, it's a marginal DPS increase.
+    - You must swap Wind Cut DMG gem to Blade Dance CD, and it's a marginal DPS increase.
 - Earth Explosion tripod on Earth Cleaver is up to personal preference.
     - Increased cast speed, but greatly lowers its mobility and damage.
 
@@ -218,7 +218,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 [
   { "col": "dmg", "items": [
     "surge", "blitzrush", "earthcleaver", "bladedance", "turningslash", { "id": "windcut", "alts": [
-      { "id": "spincutter", "note": "Use Spincutter CD gem instead if you prefer, Wind Cut has a very low damage share." },
+      { "id": "spincutter", "note": "Use Spincutter CD gem instead if you prefer, as Wind Cut has a very low damage share." },
       { "id": "bladedance", "note": "Use Blade Dance CD gem instead if you set its tripod to Weak Point Detection." }
     ] }
   ] },

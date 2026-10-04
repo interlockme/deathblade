@@ -132,7 +132,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 <details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Note</span><span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span><span class="setup-note-arrow"></span></summary>
 
-- Finish up Death Sword Energy to 17p when you can, Fatal Wave is your highest damage skill.
+- Finish up Death Sword Energy to 17p when you can; Fatal Wave is your highest damage skill.
 
 </details>
 
@@ -170,9 +170,9 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 <summary><span class="setup-note-tag">Alt</span>NA/EU 333 Standard<span class="setup-note-arrow"></span></summary>
 
 - Alternative that aims to keep a similar playstyle to Standard RE, with Spincutter and excess meter.
-    - It's an improvement over Standard RE, but playstyle is incompatible with modern RE and falls short in DPS.
+    - It's an improvement over Standard, but its playstyle is incompatible with modern RE and falls short in DPS.
     - Recommended if you cannot perform as well with other builds or prefer the familiar legacy gameplay.
-    - Its guide and all relevant information are maintained [here](https://docs.google.com/document/d/1vs1YC_7adaYwtfN9cHO3x2KuMPq6GcKRlGo5vnsN4Lk/edit) and neither hosted nor supported on this site.
+    - Its guide and all relevant information are maintained on this [google docs page](https://docs.google.com/document/d/1vs1YC_7adaYwtfN9cHO3x2KuMPq6GcKRlGo5vnsN4Lk/edit) and not on this site.
 
 </details>
 
@@ -378,7 +378,7 @@ Recovery
 <div class="rotation-notes" markdown>
 
 1. Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
-2. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> whenever you're a little short on orbs, just cast if unsure.
+2. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> whenever you're a little short on orbs. Just cast it if unsure.
 3. Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
 4. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> instead of <span class="skill-inline" data-skill-id="twinshadows"><span class="skill-inline-name">Twin Shadows</span></span> for a cycle to recover its stacks if needed.
 5. Use Maelstrom + <span class="skill-mention" data-glossary-id="ftfcombo">FTF</span> combo earlier if you're waiting on main orb generation skills.

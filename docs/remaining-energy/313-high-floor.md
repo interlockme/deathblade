@@ -203,7 +203,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 - You can use Swift Fingers tripod on Blitz Rush for increased DPS and QoL.
     - It's a DPC loss unless you can make use of the increased CPM/comfort.
     - It's not compatible with very low Specialization or a +CD% bracelet line.
-    - Because of the above reasons, it's **recommended** but not set by default.
+    - For the above reasons, it's **recommended** but not set by default.
     - Set Void Strike to Lv 13 and Blitz Rush to Lv 12 if you decide to use this tripod.
 
 </details>
@@ -232,11 +232,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
     "maelstrom",
     "turningslash",
     { "id": "soulabsorber", "tip": "Swap to Blitz Rush when running 113 (Arts).", "alts": [
-      { "id": "blitzrush", "note": "Faster recovery from smaller mistakes, pairs with Twin Shadows or Fatal Wave below." }
+      { "id": "blitzrush", "note": "Faster recovery from smaller mistakes. Pairs with Twin Shadows or Fatal Wave below." }
     ] },
     { "id": "voidstrike", "tip": "Swap to Fatal Wave when running 113 (Arts).", "alts": [
       { "id": "twinshadows", "note": "Pairs with Blitz Rush above for the skilled-player recovery route." },
-      { "id": "fatalwave", "note": "Required for 113 (Arts) or when sharing gems with 333 (Ceiling), pairs with Blitz Rush." }
+      { "id": "fatalwave", "note": "Required for 113 (Arts) or when sharing gems with 333 (Ceiling). Pairs with Blitz Rush." }
     ] }
   ] }
 ]
@@ -323,7 +323,7 @@ Recovery
 
 1. Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
       - 313 plays very similarly, just Turning Slash → Fatal Wave instead of <span class="skill-mention" data-glossary-id="ftfcombo">FTF</span>.
-2. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> whenever you're a little short on orbs, just cast if unsure.
+2. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> whenever you're a little short on orbs. Just cast it if unsure.
 3. Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
 4. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> instead of <span class="skill-inline" data-skill-id="twinshadows"><span class="skill-inline-name">Twin Shadows</span></span> for a cycle to recover its stacks if needed.
 5. Use Maelstrom + Fatal Wave earlier if you're waiting on main orb generation skills.

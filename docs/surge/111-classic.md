@@ -178,7 +178,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
 - Use <span class="skill-mention" data-rune-name="Purify">Purify</span> on Spincutter if needed.
 - <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> on Maelstrom + wine handles most mana needs, since Breaking Moon cycles restore it.
-    - Use mana food instead if you don't trust your or your support's uptime (spec bards), or for trixion-like content.
+    - Use mana food instead if you don't trust your or your support's uptime (spec bards), or for Trixion-like content.
 - Alternatively, <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> on Maelstrom + mana food: higher ceiling/lower floor, even with Raid Captain.
 
 </details>
@@ -214,7 +214,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 [
   { "col": "dmg", "items": [
     "surge", "blitzrush", "bladedance","earthcleaver", "turningslash", { "id": "windcut", "alts": [
-      { "id": "spincutter", "note": "Use Spincutter CD gem instead if you prefer, Wind Cut has a very low damage share." },
+      { "id": "spincutter", "note": "Use Spincutter CD gem instead if you prefer, as Wind Cut has a very low damage share." },
       { "id": "earthcleaver", "note": "Use Earth Cleaver CD gem instead pre-Ark Grid as you won't have its second stack." },
       { "id": "bladedance", "note": "Use Blade Dance CD gem instead if you set its tripod to Weak Point Detection or wish to have it available sooner as a safety net." }
     ] }
@@ -315,7 +315,7 @@ From 3 orbs
     - Raid Captain fully buffs the empowered Surge and can make use of <span class="skill-mention" data-rune-name="Rage" data-rune-tier="legendary">Rage</span>/<span class="skill-mention" data-skill-id="atropine">Atropine</span> for the follow-up.
 3. <span class="skill-mention" data-skill-id="bladeassault">Blade Assault</span> scales much worse on Surge than on Remaining Energy and takes too long to cast.
       - It's still useful for <span class="skill-mention" data-skill-id="atropine">Atropine</span> openers, or it can be saved to greed with <span class="skill-mention" data-glossary-id="pushimmunity">push immunity</span>/Hyper Awakening.
-4. It seems more complicated than it really is, watch [this video](https://www.youtube.com/watch?v=4bwhDT--0fo) to see how a full rotation plays out.
+4. It seems more complicated than it really is, so watch [this video](https://www.youtube.com/watch?v=4bwhDT--0fo) to see how a full rotation plays out.
 
 </div>
 
@@ -386,7 +386,7 @@ Atropine usage
 
 <div class="rotation-notes" markdown>
 
-1. Fit three Surges into a 10 second window. Use <span class="skill-mention" data-skill-id="atropine">Atropine</span> right before the first Surge hits.
+1. Fit three Surges into a 10-second window. Use <span class="skill-mention" data-skill-id="atropine">Atropine</span> right before the first Surge hits.
 2. The second or third Surge must be part of a Breaking Moon cycle or you won't make it.
 3. Stacks and the environment vary, so a fixed rotation would just be a shackle.
 

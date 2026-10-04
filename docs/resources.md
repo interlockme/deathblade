@@ -30,7 +30,7 @@
     FB388C4F19F70DE5311D21E59D93BE5D1B9935691AB3B6F2457D466875600C7A581AE3DFA172017D17440BEC09FB7A05BEE420C68F6788139A428497A91B802E
     ```
 
-    - Alternative to Standard RE, KR guide available in Useful Links below.
+    - Alternative to Standard RE. KR guide is available in Useful Links section.
 
 ## Ark Passive Calculator
 
@@ -181,7 +181,7 @@
       </select>
     </div>
     <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-adrenaline-uptime" title="% of the fight spent at a full Adrenaline stacks - scales both the Crit Rate bonus above and the Ability Stone's AP bonus.">Adrenaline Uptime %</label>
+      <label class="ap-calc-field-label" for="ap-adrenaline-uptime" title="% of the fight spent at full Adrenaline stacks. Scales both the Crit Rate bonus above and an Ability Stone's Adrenaline AP bonus.">Adrenaline Uptime %</label>
       <input type="number" id="ap-adrenaline-uptime" class="ap-adrenaline-uptime" min="0" max="100" step="1" value="97">
     </div>
   </div>
@@ -586,7 +586,7 @@
       <div class="ap-stat-card">
         <div class="ap-stat-card-title">Base Setup</div>
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critrate" title="The capped, uptime-weighted Crit Rate the DPS math actually uses (accounts for buffs overlapping and hitting the 100% cap).">Eff. Crit Rate</span><span class="ap-summary-base-critrate ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critrate" title="Crit rate if Adrenaline and Back Attack both hit at full value, uncapped - can read over 100%. Flash Orb stays uptime-scaled.">Peak Crit Rate</span><span class="ap-summary-base-critrate-peak ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critrate" title="Crit Rate if Adrenaline and Back Attack both hit at full value, uncapped - can read over 100%. Flash Orb stays uptime-scaled.">Peak Crit Rate</span><span class="ap-summary-base-critrate-peak ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critdmg">Crit Dmg</span><span class="ap-summary-base-critdmg ap-summary-value">—</span></div>
         <div class="ap-stat-card-row ap-stat-card-row--breakingmoon-base ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg" title="Breaking Moon's average per-cast Crit Dmg bonus (applies to 111 Surge only).">T→Z CDmg</span><span class="ap-summary-base-breakingmoon ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--oncrit">Crit Hit Dmg</span><span class="ap-summary-base-oncrit ap-summary-value">—</span></div>
@@ -597,7 +597,7 @@
       <div class="ap-stat-card ap-stat-card-best">
         <div class="ap-stat-card-title">Best Setup</div>
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critrate" title="The capped, uptime-weighted Crit Rate the DPS math actually uses (accounts for buffs overlapping and hitting the 100% cap).">Eff. Crit Rate</span><span class="ap-summary-best-crit ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critrate" title="Crit rate if Adrenaline and Back Attack both hit at full value, uncapped - can read over 100%. Flash Orb stays uptime-scaled.">Peak Crit Rate</span><span class="ap-summary-best-crit-peak ap-summary-value">—</span></div>
+        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critrate" title="Crit Rate if Adrenaline and Back Attack both hit at full value, uncapped - can read over 100%. Flash Orb stays uptime-scaled.">Peak Crit Rate</span><span class="ap-summary-best-crit-peak ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critdmg">Crit Dmg</span><span class="ap-summary-best-critdmg ap-summary-value">—</span></div>
         <div class="ap-stat-card-row ap-stat-card-row--breakingmoon-best ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg" title="Breaking Moon's average per-cast Crit Dmg bonus (applies to 111 Surge only).">T→Z CDmg</span><span class="ap-summary-best-breakingmoon ap-summary-value">—</span></div>
         <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--oncrit">Crit Hit Dmg</span><span class="ap-summary-best-oncrit ap-summary-value">—</span></div>
@@ -639,7 +639,7 @@
        dragged to a bookmarks bar, so the icon has to live outside it or
        every saved bookmark would be titled "⠿ Bible Import". -->
   <span class="bible-import-control">
-    <a href="#" class="bible-import-bookmarklet" title="Drag to your bookmarks bar, then click it on a loaded lostark.bible character page. Doesn't capture Main Stat % (Stronghold Pet + Skins), set them manually. Only as accurate as your Raid Loadout is.">Bible Import</a>
+    <a href="#" class="bible-import-bookmarklet" title="Drag to your bookmarks bar, then click it on a loaded lostark.bible character page. Doesn't capture Main Stat % (Stronghold Pet + Skins), so set them manually. Only as accurate as your Raid Loadout is.">Bible Import</a>
     <span class="bible-import-status" aria-live="polite"></span>
     <ul class="bible-import-warnings" hidden></ul>
   </span>
@@ -1398,7 +1398,7 @@
       <div class="ap-gear-card ap-gear-card--engr-variables">
         <p class="ap-gear-card-title">Raid Captain Variables</p>
         <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-engr-maelstrom-uptime" title="% of the fight Maelstrom's buffs are active as you attack the boss - a flat +12.8 Move Speed/Atk. Speed bonus.">Maelstrom Uptime %</label>
+          <label class="ap-calc-field-label" for="ap-engr-maelstrom-uptime" title="% of the fight Maelstrom's buffs are active as you attack the boss - a flat +12.8% Move Speed/Atk. Speed bonus.">Maelstrom Uptime %</label>
           <input type="number" id="ap-engr-maelstrom-uptime" class="ap-engr-maelstrom-uptime" min="0" max="100" step="1" value="85">
         </div>
         <div class="ap-calc-field-row ap-engr-manafood-main-row">
@@ -2355,7 +2355,7 @@
 
 - [Arsonistic's Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) <span class="link-desc">Tune KS/LB, bracelet, answers ALL gearing questions</span>
 - [Astrogem Calculator](https://www.loseii.com/loa-astrogem-calc/) <span class="link-desc">Modern Astrogem calculator and advisor</span>
-- [Astrogem Optimizer](https://airplaner.github.io/lostark-arkgrid-gem-locator-v2/) <span class="link-desc">Screencapture auto-minmax for Ark Grid</span>
+- [Astrogem Optimizer](https://airplaner.github.io/lostark-arkgrid-gem-locator-v2/) <span class="link-desc">Screen-capture min-maxing for Ark Grid</span>
 
 </div>
 
