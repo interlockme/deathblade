@@ -153,7 +153,7 @@
           trixion: 1.2,
           trixionConfirmed: false,
           playstyle: "Skill Reset",
-          bestFor: "\uD83D\uDC2F Waiting for buffs",
+          bestFor: "\uD83D\uDC2F Not a viable build",
           recommended: false,
           compareEnabled: true,
         },
