@@ -122,7 +122,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
 </details>
 
-<details class="setup-note" data-kind="note" markdown>
+<details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Note</span><span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span><span class="setup-note-arrow"></span></summary>
 
 - Damage and QoL will be seriously lacking if you settle for the minimum core requirements.
@@ -171,10 +171,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 - Use <span class="skill-mention" data-rune-name="Vision" data-rune-tier="legendary">Legendary Vision</span> on Surprise Attack if you find it more useful than <span class="skill-mention" data-rune-name="Rage" data-rune-tier="legendary">Rage</span>.
     - Increases chance of getting an extra stack on Surprise Attack precast.
     - This is the best and most efficient way to improve stagger contribution.
-    - Give Head Hunt the next best <span class="skill-mention" data-rune-name="Galewind">Galewind</span> or <span class="skill-mention" data-rune-name="Vision">Vision</span> rune that's available.
     - **Don't do this** if you have a +CDR% bracelet, you'll lose Maelstrom stacks.
-
-*Note: Don't equip <span class="skill-mention" data-rune-name="Galewind" data-rune-tier="legendary">Legendary Galewind</span> on Blade Dance for this build. It doesn't benefit from a rune rarity above Epic (or even above <span class="skill-mention" data-rune-name="Vision" data-rune-tier="legendary">Legendary Vision</span>) due to the way the game [rounds down](https://www.inven.co.kr/board/lostark/5497/175825) cast time reductions to 0.05s intervals.*
 
 </details>
 
@@ -186,13 +183,13 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 - You can use Wide Attack <span class="skill-mention" data-glossary-id="tripod">tripod</span> on Surprise Attack for noticeably increased quality of life.
     - With Wide Attack, you **must** cast Turning Slash early on openers to apply synergy.
     - This is more viable than ever as Turning Slash's lingering hits now extend its uptime.
-- Earth Cleaver can be used instead of Head Hunt if you prefer its mobility or weak point.
+- Earth Cleaver can be used instead of Head Hunt if you prefer its mobility or utility.
     - It's a slower, more vulnerable skill cast that consumes significantly more mana.
     - Set Maelstrom and Upper Slash to Lv 10, then raise Earth Cleaver (3-3-1) to Lv 10.
 
 </details>
 
-<details class="setup-note" data-kind="example" open markdown>
+<details class="setup-note" data-kind="example" markdown>
 <summary><span class="setup-note-tag">Alt</span>Dark Axel vs Spincutter<span class="setup-note-arrow"></span></summary>
 
 <div class="skill-compare-row" markdown>
@@ -277,7 +274,7 @@ Can replace Dark Axel if you find it more useful on bosses with a small hitbox o
 <details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Note</span>Gem Requirements<span class="setup-note-arrow"></span></summary>
 
-- The gem priority list above assumes you will be using a rotation with the advanced skip cycles.
+- The gem priority list assumes you will be using a rotation with the advanced skip cycles.
     - Upper Slash and Surprise Attack CDs at Lv 9 are roughly enough, but higher is always better.
     - Once Blade Dance and Maelstrom CDs are at Lv 9, Wind Cut CD overtakes them in priority.
     - <span class="skill-mention" data-skill-id="massincrease">Mass Increase</span> and/or <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training 1</span> help smooth things out at low investment levels.
@@ -305,8 +302,8 @@ Use Dark Axel to guarantee back attacks on Deathly Slash and Surge if needed.
 
 Use the Opener cycle and either loop it forever (easy) or continue on to the advanced skip cycles (ceiling DPS).
 
-*From 3 orbs:*
-{ .lead }
+From 3 orbs
+{ .rotation-stage }
 
 <div class="cycle-card" markdown>
 <div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Opener/Overstack Cycle - 68 Stacks</span></div>
@@ -317,9 +314,12 @@ Use the Opener cycle and either loop it forever (easy) or continue on to the adv
 </div>
 </div>
 
+<div class="rotation-notes" markdown>
+
 1. This opener chains into the cycles below, but it's fine by itself if you prefer simplicity and don't mind downtime.
-2. Surprise Attack always goes before Maelstrom on cycles with a Surprise Attack finisher so its CDs line up.
-3. On raid openers or after extended downtime, you can use Deathly Slash instead of Wind Cut as a precast.
+2. On raid openers or after extended downtime, you can use Deathly Slash instead of Wind Cut as a precast.
+
+</div>
 
 <div class="setup-panel" data-accent="lavender" markdown>
 <div class="setup-notes" markdown>
@@ -347,6 +347,8 @@ After the opener, alternate between these two cycles as needed for ceiling DPS:
 </div>
 </div>
 
+<div class="rotation-notes" markdown>
+
 1. Cycle **2** offers safety by leaving Surprise Attack as a recovery option; Cycle **3** offers higher CPM.
 2. Rotating **2>3>2>3** is ideal, but based on boss patterns, variations like **2>3>3>2** or **2>2>3>3** are valid.
       - Cycle **3** is preferred during risky boss patterns because Wind Cut lacks Paralysis Immunity.
@@ -355,36 +357,53 @@ After the opener, alternate between these two cycles as needed for ceiling DPS:
       - Same for 40+ stacks before Blade Dance, 30+ stacks before Upper Slash, and so on.
       - If you have 8+ stacks before you activate Death Trance, you can skip both WC precast and SA finisher.
       - At 15+ stacks before Death Trance, you can skip both the WC precast and SA finisher for two cycles in a row.
-4. It seems more complicated than it really is, watch [this video](https://www.youtube.com/watch?v=V1UQhE37Yjs) to see how a full rotation plays out.
+4. Surprise Attack always goes before Maelstrom on cycles with a Surprise Attack finisher so its CD aligns.
+5. It seems more complicated than it really is, watch [this video](https://www.youtube.com/watch?v=V1UQhE37Yjs) to see how a full rotation plays out.
 
 It helps to think of everything within <span class="skill-inline" data-skill-id="deathtrance"><span class="skill-inline-name">Death Trance</span></span> and <span class="skill-inline" data-skill-id="deathlyslash"><span class="skill-inline-name">Deathly Slash</span></span> as 53 stacks, and the Wind Cut Precast or Surprise Attack finisher as flexible options that give you the 7+ stacks needed to complete a 60+ stack Surge.
+
+</div>
 </details>
 
 </div>
 </div>
 
+All cycles
+{ .rotation-stage }
+
+<div class="rotation-notes" markdown>
+
 1. Depending on attack speed/latency, your Wind Cut precast may grant 7 stacks instead of 8.
-2. With lower Attack Speed (<span class="skill-mention" data-skill-id="massincrease">Mass Increase</span>), Deathly Slash may grant 12 stacks instead of 11.
-3. It's better to cast a ~59 stack Surge if the alternative is waiting more than 1.5 seconds.
-4. Delaying Deathly Slash + Surge by more than 1.75 seconds to ensure a back attack is a DPS loss.
-5. Delaying *only* Surge by more than 1 second to ensure a back attack is also a DPS loss.
-6. <span class="skill-mention" data-skill-id="bladeassault">Blade Assault</span> scales much worse on Surge than on Remaining Energy and takes too long to cast.
+2. It's better to cast a ~59 stack Surge if the alternative is waiting more than 1.5 seconds.
+3. Delaying Deathly Slash + Surge by more than 1.75 seconds to ensure a back attack is a DPS loss.
+4. Delaying *only* Surge by more than 1 second to ensure a back attack is also a DPS loss.
+5. <span class="skill-mention" data-skill-id="bladeassault">Blade Assault</span> scales much worse on Surge than on Remaining Energy and takes too long to cast.
       - It's still useful for openers, or it can be saved to greed with <span class="skill-mention" data-glossary-id="pushimmunity">push immunity</span>/Hyper Awakening.
 
 *Note: The timing to enter Death Trance in cycles without a precast is right as Surge hits. It's unforgiving but it can be improved with a macro that fires the Identity key 2-3x very quickly without any downsides, increasing CPM/QoL.*
 
-*From zero orbs:*
-{ .lead }
+</div>
 
-1. Use a <span class="food-req-item">![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant</span> (recommended) or proceed to #2.
+From zero orbs
+{ .rotation-stage }
+
+<div class="rotation-notes" markdown>
+
+1. Use a <span class="skill-mention" data-skill-id="stimulant">Stimulant</span> (recommended) or proceed to #2.
       - Rat Pack: Use Maelstrom's Orb Control tripod and <span class="skill-mention" data-skill-id="flashblink">Flash Blink</span> awakening.
 2. Generate one orb, build at least 40 stacks, then Surge to refill all 3 orbs.
 
-*Atropine usage:*
-{ .lead }
+</div>
 
-1. Use <span class="food-req-item">![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine</span> right before Deathly Slash, and fit two Deathly Slash + Surge pairs in a 10 second window.
+Atropine usage
+{ .rotation-stage }
+
+<div class="rotation-notes" markdown>
+
+1. Use <span class="skill-mention" data-skill-id="atropine">Atropine</span> right before Deathly Slash, and fit two Deathly Slash + Surge pairs in a 10 second window.
 2. Execute your fastest cycles while adapting to your stack count and boss patterns.
+
+</div>
 
 ## DPS Spread
 

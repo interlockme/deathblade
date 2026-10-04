@@ -133,7 +133,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
 </details>
 
-<details class="setup-note" data-kind="note" markdown>
+<details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Note</span><span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span><span class="setup-note-arrow"></span></summary>
 
 - Damage will be lacking if you settle for the minimum core requirements.
@@ -245,8 +245,8 @@ Spincutter is your main mobility skill and backup stack builder. Use it to guara
 
 Apply damage <span class="skill-mention" data-glossary-id="synergy">synergy</span> if needed, then repeat the rotation cycle as best you can.
 
-*From 3 orbs:*
-{ .lead }
+From 3 orbs
+{ .rotation-stage }
 
 <div class="rotation-line" markdown>
 <script type="application/json">
@@ -256,10 +256,14 @@ Apply damage <span class="skill-mention" data-glossary-id="synergy">synergy</spa
 </script>
 </div>
 
+<div class="rotation-notes" markdown>
+
 1. The final Surprise Attack can often be skipped with surplus stacks and expected raid downtime.
 2. Consider delaying Maelstrom by 1 to 3 skills when uptime drops to ensure it covers Surge (<span class="skill-mention" data-skill-id="raidcaptain">Raid Captain</span>).
 3. <span class="skill-mention" data-skill-id="bladeassault">Blade Assault</span> scales much worse on Surge than on Remaining Energy and takes too long to cast.
       - It's still useful for <span class="skill-mention" data-skill-id="atropine">Atropine</span> openers, or it can be saved to greed with <span class="skill-mention" data-glossary-id="pushimmunity">push immunity</span>/Hyper Awakening.
+
+</div>
 
 <div class="setup-panel" data-accent="lavender" markdown>
 <div class="setup-notes" markdown>
@@ -272,12 +276,16 @@ Apply damage <span class="skill-mention" data-glossary-id="synergy">synergy</spa
 </div>
 </div>
 
-*From zero orbs:*
-{ .lead }
+From zero orbs
+{ .rotation-stage }
 
-1. Use a <span class="food-req-item">![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant</span> (recommended) or proceed to #2.
+<div class="rotation-notes" markdown>
+
+1. Use a <span class="skill-mention" data-skill-id="stimulant">Stimulant</span> (recommended) or proceed to #2.
       - Rat Pack: Use Maelstrom's Orb Control tripod and <span class="skill-mention" data-skill-id="flashblink">Flash Blink</span> awakening.
 2. Generate one orb, build at least 40 stacks, then Surge to refill all 3 orbs.
+
+</div>
 
 ## DPS Spread
 

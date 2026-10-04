@@ -2342,16 +2342,50 @@
 
 ## Useful Links
 
-| Link | What it's for |
-|---|---|
-| [Arsonistic's Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) | *Tune KS/LB, bracelet, answers ALL gearing questions* |
-| [Astrogem Calculator](https://www.loseii.com/loa-astrogem-calc/) | *Modern Astrogem calculator and advisor* |
-| [Astrogem Optimizer](https://airplaner.github.io/lostark-arkgrid-gem-locator-v2/) | *Screencapture auto-minmax for Ark Grid* |
-| [Lost Ark Bible](https://lostark.bible/) | *Logs and raid statistics* |
-| [LOA Logs](https://github.com/snoww/loa-logs) | *<span class="skill-mention" data-glossary-id="dpsmeter">DPS meter</span> download* |
-| [Lost Ark Nexus](https://lostark-nexus-archive.pages.dev/guides/deathblade/) | *For pre-Ark Grid Standard RE build* |
-| [Fatal Wave Dump](https://docs.google.com/document/d/1vs1YC_7adaYwtfN9cHO3x2KuMPq6GcKRlGo5vnsN4Lk/edit) | *For 333 Standard (spincutter) NA build* |
-| [Maxroll](https://maxroll.gg/lost-ark) | *Resources for beginners* |
-| [Inven RE Guide](https://www.inven.co.kr/board/lostark/5497/140080) | *Korean guide for 333, 111 HH and Void Skip* |
-| [Inven 313 Guide](https://www.inven.co.kr/board/lostark/5497/171285) | *Korean guide for 313 RE* |
-| [Inven 222 Guide](https://www.inven.co.kr/board/lostark/5497/175796) | *Korean guide for 222 Surge* |
+<!-- Four link groups. Each .link-group is one card: a title, then one item
+     per link (name as the link, a short description under it). The accent
+     (pink, teal, lavender, gold) only tints the card; pick any. Descriptions
+     may hold a glossary span like any other inline text. -->
+
+<div class="link-groups" markdown>
+
+<div class="link-group" data-accent="pink" markdown>
+
+<p class="link-group-title">Calculators</p>
+
+- [Arsonistic's Calculator](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) <span class="link-desc">Tune KS/LB, bracelet, answers ALL gearing questions</span>
+- [Astrogem Calculator](https://www.loseii.com/loa-astrogem-calc/) <span class="link-desc">Modern Astrogem calculator and advisor</span>
+- [Astrogem Optimizer](https://airplaner.github.io/lostark-arkgrid-gem-locator-v2/) <span class="link-desc">Screencapture auto-minmax for Ark Grid</span>
+
+</div>
+
+<div class="link-group" data-accent="teal" markdown>
+
+<p class="link-group-title">Logs and Tools</p>
+
+- [Lost Ark Bible](https://lostark.bible/) <span class="link-desc">Logs and raid statistics</span>
+- [LOA Logs](https://github.com/snoww/loa-logs) <span class="link-desc"><span class="skill-mention" data-glossary-id="dpsmeter">DPS meter</span> download</span>
+
+</div>
+
+<div class="link-group" data-accent="lavender" markdown>
+
+<p class="link-group-title">Guides</p>
+
+- [Lost Ark Nexus](https://lostark-nexus-archive.pages.dev/guides/deathblade/) <span class="link-desc">For pre-Ark Grid Standard RE build</span>
+- [Fatal Wave Dump](https://docs.google.com/document/d/1vs1YC_7adaYwtfN9cHO3x2KuMPq6GcKRlGo5vnsN4Lk/edit) <span class="link-desc">For 333 Standard (spincutter) NA build</span>
+- [Maxroll](https://maxroll.gg/lost-ark) <span class="link-desc">Resources for beginners</span>
+
+</div>
+
+<div class="link-group" data-accent="gold" markdown>
+
+<p class="link-group-title">Korean Guides (Inven)</p>
+
+- [Inven RE Guide](https://www.inven.co.kr/board/lostark/5497/140080) <span class="link-desc">Korean guide for 333, 111 HH and Void Skip</span>
+- [Inven 313 Guide](https://www.inven.co.kr/board/lostark/5497/171285) <span class="link-desc">Korean guide for 313 RE</span>
+- [Inven 222 Guide](https://www.inven.co.kr/board/lostark/5497/175796) <span class="link-desc">Korean guide for 222 Surge</span>
+
+</div>
+
+</div>

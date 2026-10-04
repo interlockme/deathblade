@@ -211,8 +211,8 @@
   };
 
   // SINGLE SOURCE OF TRUTH for skill-tooltip.js's fallback lookup, for the
-  // couple of .food-req-item prose mentions (see extra.css's "Inline skill
-  // reference for prose" section) that aren't a real skill at all -
+  // couple of plain-name .skill-mention[data-skill-id] prose mentions
+  // (Stimulant, Atropine) that aren't a real skill at all -
   // Atropine and Stimulant are consumable items, so they have no tripods/
   // rune/family split to speak of and don't belong in DB_SKILL_DATA above.
   // Flat id -> note (no tags array - a tag pill would misrepresent a

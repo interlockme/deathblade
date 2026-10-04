@@ -190,31 +190,52 @@ Lower values are fine, but may experience some downtime.
 
 ### Identity
 
-- Orb Generation: Skills generate Death Orbs when they hit.
-- Surge: Press (Z) with 1+ orbs to consume them and activate the skill.
-- 3 Orbs: Aim to always Surge with 3 orbs for the strongest buffs and cooldown reduction.
+<div class="gameplay-cards" data-accent="pink" markdown>
+
+- **Orb Generation** Normal skills generate Death Orbs when they hit.
+- **Surge** Press (Z) with 1+ orbs to consume them and activate Surge.
+
+</div>
 
 ### Identity Buffs
 
-- +12% Attack Speed.
-- +12% Move Speed.
-- Attack Power based on orbs consumed.
-- Cooldown Reduction and Mana Restoration based on orbs consumed.
+<div class="gameplay-chips" markdown>
 
-The cooldown reduction is the core of the class: the cycle resets so you can start generating your next set of orbs.
+- **+12%** Attack Speed
+- **+12%** Move Speed
+- **14/28/42%** Attack Power
+- **15/25/45%** Mana
+- **10/30/50%** Cooldown Reduction
+
+</div>
+
+Aim to always cast Surge with 3 orbs for the strongest buffs and cooldown reduction.
+
 
 ### Party Synergies
 
-- Turning Slash: +4% outgoing and +5% directional damage for 12s.
-- <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>: +12.8% Attack/Move Speed for 6s and improves orb generation.
+<div class="gameplay-cards" data-accent="teal" markdown>
+
+- **Turning Slash** +4% outgoing and +5% directional damage for 12s.
+- **<span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>** +12.8% Attack/Move Speed for 6s and improves orb generation.
+
+</div>
 
 ### Playstyle
 
 Remaining Energy is a continuous cycle:
 
-Generate Orbs → 3 Orbs → Surge → Repeat.
+<div class="gameplay-flow" markdown>
 
-Prioritize consistent uptime and good use of Maelstrom's buffs over <span class="skill-mention" data-glossary-id="backattack">back attacks</span>. Use Surge to reposition.
+1. Generate Orbs
+2. 3 Orbs
+3. Surge
+4. Repeat
+
+</div>
+
+Cooldown reduction is the core of this class; it resets your rotation so you can generate your next set of Orbs.
+Prioritize consistent uptime and good Maelstrom buff coverage over <span class="skill-mention" data-glossary-id="backattack">back attacks</span>, using Surge to reposition to the back.
 
 ### Combat Performance
 

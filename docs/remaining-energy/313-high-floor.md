@@ -128,7 +128,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
 </details>
 
-<details class="setup-note" data-kind="note" markdown>
+<details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Note</span><span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span><span class="setup-note-arrow"></span></summary>
 
 - Raise Arts Core to 17p for increased QoL and damage when you can.
@@ -287,16 +287,20 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
     </div>
 
+    <div class="rotation-notes">
+
     Aim to fit up to Cycle **2**'s Twin Shadows under Cycle **1**'s Maelstrom to reach 3 orbs without recasting or using recovery options. If you only landed up to Soul Absorber, an extra Head Hunt cast is usually enough.
 
     The Maelstrom in Cycle **2** is only cast if you'd otherwise miss 3 orbs. Use your judgment. If cast, it lasts at least until Cycle **1**'s Void Strike; recasting it as it expires aligns cooldowns. If it wasn't needed or it didn't last, nothing changes.
+
+    </div>
 
 === "Openers"
 
     Openers stack <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and apply <span class="skill-mention" data-glossary-id="synergy">synergies</span> efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
 
-    *From 3 orbs (<span class="food-req-item">![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant</span>):*
-    { .lead }
+    From 3 orbs (<span class="skill-mention" data-skill-id="stimulant">Stimulant</span>)
+    { .rotation-stage }
 
     <div class="rotation-line">
 
@@ -309,14 +313,22 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
     </div>
 
-    1. If available, <span class="skill-inline" data-skill-id="bladeassault"><span class="skill-inline-name">Blade Assault</span></span> is interchangeable with Cycle **2**.
-    2. It's efficient to use <span class="food-req-item">![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine</span> after Deathly Slash, with Blade Assault available.
+    <div class="rotation-notes">
 
-    *From zero/partial orbs:*
-    { .lead }
+    1. If available, <span class="skill-inline" data-skill-id="bladeassault"><span class="skill-inline-name">Blade Assault</span></span> is interchangeable with Cycle **2**.
+    2. It's efficient to use <span class="skill-mention" data-skill-id="atropine">Atropine</span> after Deathly Slash, with Blade Assault available.
+
+    </div>
+
+    From zero/partial orbs
+    { .rotation-stage }
+
+    <div class="rotation-notes">
 
     1. Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
     2. Prioritize Turning Slash earlier for synergy and Deathly Slash last for <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span>/RE buff.
+
+    </div>
 
 === "Recovery"
 
@@ -336,11 +348,15 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
     </div>
 
+    <div class="rotation-notes">
+
     1. 313 plays similarly, just Turning Slash → Fatal Wave instead of <span class="skill-mention" data-glossary-id="ftfcombo">FTF</span>.
     2. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> when a little short on orbs, just cast if unsure.
     3. Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
     4. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> instead of <span class="skill-inline" data-skill-id="twinshadows"><span class="skill-inline-name">Twin Shadows</span></span> for a cycle to recover stacks if they run out.
     5. Use Maelstrom + Fatal Wave earlier if waiting on main orb generation skills.
+
+    </div>
 
 === "TL;DR:"
 

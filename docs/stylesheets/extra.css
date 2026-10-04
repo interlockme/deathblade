@@ -686,29 +686,13 @@ h3 { color: var(--dbc-teal); }
    relies on) except for an ambiguous multi-skill combo mention (e.g.
    "FTF" for Fatal Wave/Turning Slash/Fatal Wave), which renders
    name-only with no data-skill-id and gets no tooltip.
-   Consumables (Stimulant, Atropine) do NOT use this class: a
-   permanently bold/lavender name reads as "this is a skill", which a
-   potion isn't, and a reader can't act on a consumable mention by
-   learning its name alone the way they can a skill's. They use
-   `.food-req-item` (see that class further down): icon + name wrapped
-   so the whole phrase is the hover trigger. A bare
-   `![](icon.png){: .skill-icon }` only rings the IMAGE (attachBareIcon
-   wires just the <img>, so the trailing name never gets a hover cue).
-   The wrapper gives the same filter: brightness(1.3) lift
-   .skill-mention/.food-req-item use for "subtler, not a real skill"
-   text. The icon stays (a visual cue for something a reader has to go
-   pick up, unlike a skill already on their bar); the name is plain text
-   at rest.
-   .food-req-item's rest-state styling (color/font-size) comes from its
-   .food-req ANCESTOR in essentials.md's food-req lines. Used bare here,
-   outside any .food-req wrapper, it inherits normal body/list text,
-   which is the plain-at-rest look wanted in this prose context; only the
-   hover/ring rules (defined on .food-req-item itself, not scoped under
-   .food-req) are reused. See that class's own comment further down for
-   the rationale on the hover treatment being shared.
+   Consumables (Stimulant, Atropine) are written as a plain-name
+   `.skill-mention` with data-skill-id (no icon, no wrapper), same as a
+   skill: the tooltip text comes from DB_SKILL_EXTRAS. `.food-req-item`
+   (icon + name, further down) is only for the food notes in essentials.md.
    No img rule lives in this section: every .skill-inline span is
    text-only. If a mention ever needs an icon on THIS class specifically
-   (rather than using .food-req-item like the consumables), that class's
+   (rather than using .food-req-item), that class's
    own `img.skill-icon` handling further down is the closest reference
    for sizing/ring/margin - don't write a separate copy from scratch. */
 .md-typeset .skill-inline {
@@ -1594,6 +1578,118 @@ h3 { color: var(--dbc-teal); }
   overflow: hidden;
   margin: 0.8em 0 0.6em;
 }
+/* ---------- Rotation stages and notes ---------- */
+/* Two components that organise everything under a build page's Rotation
+   heading, so every page reads the same way:
+
+   .rotation-stage - the small heading that names a situation ("From 3 orbs",
+     "From zero orbs", "Atropine usage", "Main repeating cycle"). One style for
+     all of them, whatever the label says. A fading rule runs to the right edge.
+     It always sits ABOVE the rotation or notes it names. Authored as a
+     paragraph plus `{ .rotation-stage }` on the next line.
+   .rotation-notes - one card holding the numbered list or paragraphs that
+     explain the rotation directly above it. It hugs that rotation (small top
+     margin) and leaves a larger gap below, so the eye groups it upward, not
+     with whatever comes next. The box matches .cycle-card (same border,
+     radius and fill) so it reads as part of the same family, including when
+     it sits inside a .setup-note such as Leopard Mode. Ordered lists keep their real <ol> and get
+     round number badges; nested bullets stay plain.
+
+   Rule when authoring: put a .rotation-notes right after the cycle cards or
+   rotation-line it describes, and a .rotation-stage before the next situation.
+   Never put notes below an unrelated panel. */
+.md-typeset .rotation-stage {
+  display: block;
+  overflow: hidden;
+  margin: 1.7em 0 0.3em;
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dbc-lavender);
+}
+/* The rule is an inline-block that is 100% wide and pulled back by -100%, so
+   it fills whatever is left of the line after the label. A flex row would
+   split a label that holds inline icons into separate items. */
+.md-typeset .rotation-stage::after {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+  height: 1px;
+  margin: 0 -100% 0 0.7em;
+  background: linear-gradient(90deg, rgba(var(--dbc-purple-rgb), 0.16), transparent 85%);
+}
+.md-typeset .rotation-notes {
+  margin: 0.6em 0 1.2em;
+  padding: 0.55em 1em;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.32);
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.035);
+  font-size: 0.92em;
+  line-height: 1.55;
+}
+.md-typeset .rotation-notes > :first-child { margin-top: 0.3em; }
+.md-typeset .rotation-notes > :last-child { margin-bottom: 0.3em; }
+.md-typeset .rotation-notes > p { margin: 0.55em 0; }
+.md-typeset .rotation-notes > ol {
+  margin: 0.3em 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: rotnote;
+}
+.md-typeset .rotation-notes > ol > li {
+  position: relative;
+  margin: 0;
+  padding: 0.3em 0 0.3em 2em;
+  counter-increment: rotnote;
+}
+.md-typeset .rotation-notes > ol > li::before {
+  content: counter(rotnote);
+  position: absolute;
+  left: 0;
+  /* Centres the badge on the first text line: the li's 0.3em top padding
+     plus half its 1.55 line-height, minus half the badge, all in the badge's
+     own 0.82em units. */
+  top: 0.58em;
+  width: 1.45em;
+  height: 1.45em;
+  border-radius: 50%;
+  background-color: rgba(var(--dbc-purple-rgb), 0.18);
+  color: var(--dbc-lavender);
+  font-size: 0.82em;
+  font-weight: 700;
+  line-height: 1.45em;
+  text-align: center;
+}
+.md-typeset .rotation-notes > ol > li > ul { margin: 0.25em 0 0.1em; }
+.md-typeset .rotation-notes li > ul > li { margin-bottom: 0.2em; }
+/* ---------- Bullet markers (all prose lists) ---------- */
+/* One marker style for every prose bullet list on the site, in note cards and
+   at page level alike: a small lavender dot, one step dimmer and smaller when
+   nested. It is the browser's own list marker, only recoloured and resized
+   through ::marker, so it sits on the first line's text baseline however tall
+   that line is. A marker drawn by an absolutely positioned ::before is
+   centred on a fixed line height instead and drifts off the text when a line
+   holds inline icons (the Mana Food alt line on Surge Essentials). Component
+   lists set list-style: none and draw their own markers; ::marker does not
+   apply to them. Numbered lists keep their badges (.rotation-notes > ol). */
+.md-typeset ul > li::marker {
+  color: var(--dbc-lavender);
+  font-size: 1.15em;
+}
+.md-typeset ul ul > li::marker {
+  color: rgba(var(--dbc-purple-rgb), 0.85);
+  font-size: 1em;
+}
+.md-typeset ul ul {
+  list-style-type: disc;
+}
+/* A numbered list in a setup-note keeps its own badges (see .rotation-notes
+   > ol above); its nested bullets use the rules here. */
+/* A rotation-notes card inside a tab sits after a Material-generated empty
+   paragraph in some layouts; keep its top margin the same either way. */
+.md-typeset .tabbed-block > p:empty + .rotation-notes { margin-top: 0.6em; }
 .md-typeset .cycle-card-header {
   display: flex;
   align-items: center;
@@ -2782,6 +2878,179 @@ h3 { color: var(--dbc-teal); }
   background-color: var(--dbc-teal-card-bg);
   border-color: var(--dbc-teal);
 }
+/* A third card takes the gold accent, the same trio as .prearc-cards. On the
+   home page it is the Additional Resources card, which is not a playstyle
+   path, so .home-cards stretches it across the whole row under the two
+   path cards instead of leaving it alone in a half-empty second row. */
+.md-typeset .grid.cards > ul > li:nth-child(3) {
+  background-color: var(--dbc-gold-dark);
+  border-color: var(--dbc-gold);
+}
+.md-typeset .grid.cards.home-cards > ul > li:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+/* ==========================================================================
+   Useful Links (resources page)
+   ========================================================================== */
+/* Four .link-group cards in a responsive grid. Each card is a title plus a
+   list whose items hold the link and a .link-desc line under it. The accent
+   comes from data-accent and only tints the border, background and title,
+   the same quiet treatment as .setup-panel. minmax(min(100%, 17rem), 1fr)
+   keeps a card from overflowing a 320px phone. */
+.md-typeset .link-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 0.9em;
+  margin: 0.9em 0 1.2em;
+}
+.md-typeset .link-group {
+  --link-accent-rgb: var(--dbc-purple-rgb);
+  min-width: 0;
+  padding: 0.9em 1.1em 0.7em;
+  border: 1px solid rgba(var(--link-accent-rgb), 0.35);
+  border-radius: 10px;
+  background-color: rgba(var(--link-accent-rgb), 0.05);
+}
+.md-typeset .link-group[data-accent="pink"] { --link-accent-rgb: var(--dbc-rose-rgb); }
+.md-typeset .link-group[data-accent="teal"] { --link-accent-rgb: var(--dbc-teal-rgb); }
+.md-typeset .link-group[data-accent="gold"] { --link-accent-rgb: var(--dbc-gold-rgb); }
+.md-typeset .link-group-title {
+  margin: 0 0 0.5em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid rgba(var(--link-accent-rgb), 0.25);
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(var(--link-accent-rgb));
+}
+.md-typeset .link-group > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.md-typeset .link-group > ul > li {
+  margin: 0;
+  padding: 0.5em 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  overflow-wrap: anywhere;
+}
+.md-typeset .link-group > ul > li:first-child {
+  border-top: 0;
+}
+.md-typeset .link-group .link-desc {
+  display: block;
+  margin-top: 0.15em;
+  font-size: 0.8em;
+  font-style: italic;
+  color: var(--dbc-muted-text-soft);
+}
+
+/* ==========================================================================
+   Gameplay section (Essentials pages)
+   ========================================================================== */
+/* Three small components that replace the plain bullet lists and the one-line
+   cycle under each Gameplay subsection:
+
+   .gameplay-cards[data-accent] - a list of "**Label** text" items shown as a
+     grid of small cards. data-accent is pink or teal. The bold label leads
+     the card; a skill-mention span may sit inside it.
+   .gameplay-chips - a list of short stat items shown as wrapping chips. A
+     leading bold value (**10/15/20%**) is picked out in the accent color.
+   .gameplay-flow - an ordered list shown as a row of steps joined by arrows.
+     The last step (Repeat) is dashed to read as the loop back to the start.
+
+   All three keep the real <ul>/<ol> underneath, so the order and the text
+   read the same to a screen reader. minmax(min(100%, 15rem), 1fr) keeps a
+   card from overflowing a 320px phone. */
+.md-typeset .gameplay-cards {
+  --gp-rgb: var(--dbc-rose-rgb);
+}
+.md-typeset .gameplay-cards[data-accent="teal"] {
+  --gp-rgb: var(--dbc-teal-rgb);
+}
+.md-typeset .gameplay-cards > ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.6em;
+  margin: 0.8em 0 1em;
+  padding: 0;
+  list-style: none;
+}
+.md-typeset .gameplay-cards > ul > li {
+  min-width: 0;
+  margin: 0;
+  padding: 0.7em 0.95em;
+  border: 1px solid rgba(var(--gp-rgb), 0.32);
+  border-radius: 10px;
+  background-color: rgba(var(--gp-rgb), 0.05);
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+.md-typeset .gameplay-cards > ul > li > strong:first-child {
+  display: block;
+  margin-bottom: 0.2em;
+  font-weight: 700;
+  color: rgb(var(--gp-rgb));
+}
+
+.md-typeset .gameplay-chips > ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45em;
+  margin: 0.8em 0 1em;
+  padding: 0;
+  list-style: none;
+}
+.md-typeset .gameplay-chips > ul > li {
+  min-width: 0;
+  margin: 0;
+  padding: 0.3em 0.85em;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
+  border-radius: 999px;
+  background-color: rgba(var(--dbc-purple-rgb), 0.08);
+  font-size: 0.82em;
+}
+.md-typeset .gameplay-chips > ul > li > strong:first-child {
+  color: var(--dbc-pink-bright);
+}
+
+.md-typeset .gameplay-flow > ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em 1.7em;
+  margin: 0.9em 0 1.1em;
+  /* The arrow after a step sits in the gap to its right, which for the last
+     step on a wrapped line is past the row's edge; this padding keeps it
+     inside the row so it never adds page width. */
+  padding: 0 1.4em 0 0;
+  list-style: none;
+}
+.md-typeset .gameplay-flow > ol > li {
+  position: relative;
+  margin: 0;
+  padding: 0.35em 0.9em;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.45);
+  border-radius: 8px;
+  background-color: rgba(var(--dbc-purple-rgb), 0.1);
+  font-size: 0.85em;
+  font-weight: 700;
+}
+.md-typeset .gameplay-flow > ol > li:not(:last-child)::after {
+  content: "\2192";
+  position: absolute;
+  top: 50%;
+  right: -1.35em;
+  transform: translateY(-50%);
+  font-size: 1.15em;
+  font-weight: 400;
+  color: var(--dbc-arrow);
+}
+.md-typeset .gameplay-flow > ol > li:last-child {
+  border-style: dashed;
+}
 
 /* ==========================================================================
    Engraving loadout + choice cards (Essentials page)
@@ -3338,77 +3607,15 @@ h3 { color: var(--dbc-teal); }
    conflict between the two. Purple ring on the icon (not .food-option-
    icon's rose) to match img.skill-icon.skill-tip-anchor's own
    Engravings-section color - these food-req lines live inside
-   engraving cards, same section.
-
-   This class is also reused bare - no .food-req ancestor at all - for
-   Stimulant/Atropine's own prose mentions on build pages (see "Inline
-   skill reference for prose" above). Deliberately not scoped under
-   .food-req anywhere in this rule or the two below it: with no ancestor
-   supplying --dbc-lavender/0.85em, a bare usage just inherits whatever
-   plain body/list-item text already surrounds it, which is exactly the
-   "not a real skill, don't oversell it" rest state wanted there too -
-   same filter:brightness(1.3)-on-the-whole-trigger hover this class
-   already gives a real .food-req line, for free, with zero extra CSS. */
+   engraving cards, same section. */
 .md-typeset .food-req-item {
   transition: filter 0.15s ease;
 }
-/* Row-scoped usage only (essentials.md's .food-req engraving-card food
-   notes): inline-flex + align-items: center to vertically center icon
-   and text against each other and supply gap spacing, matching the
-   sibling icons/spacing of that flex row.
-
-   Bare usage (no .food-req ancestor - Stimulant/Atropine's own prose
-   mentions) deliberately does NOT get display: inline-flex at all: an
-   inline-flex box's baseline is synthesized from flex layout rather than
-   read off its actual text content, and centering icon+text inside it
-   (align-items: center) put that synthesized baseline consistently
-   above the real text baseline of the surrounding line - vertical-align:
-   text-bottom on the span was tried first and only closed most of the
-   gap (still ~1-2px off; text-bottom pins the box's bottom edge to the
-   line's descender line, not the same position as the actual text
-   baseline, and italics make the two diverge further). Leaving bare
-   usage as plain (inline, not flex) sidesteps the mismatch entirely: the
-   icon and its text become ordinary inline siblings again, with no flex
-   baseline synthesis in the way. Icon-to-text spacing then comes from
-   img.skill-icon's own default L/R margin (extra.css's very first
-   .skill-icon rule) instead of flex gap, so no extra CSS is needed for
-   that either.
-
-   img.skill-icon's sitewide default is vertical-align: text-bottom,
-   though, which is itself not quite right for THIS bare case: text-
-   bottom pins the icon's bottom edge to the line's descender line (the
-   bottom of the font's em box), not to the actual glyph baseline the
-   surrounding letters sit on - normally invisible since most icon
-   usages elsewhere sit next to words with descenders (g/p/y) or inside
-   the Engravings section's own layout, but next to a word like
-   "Atropine" with no descender of its own to blur the difference, the
-   icon visibly hangs a couple px lower than the text baseline. True
-   vertical-align: baseline instead aligns a replaced element's own
-   bottom edge to that real baseline directly - overridden below,
-   specifically for .food-req-item (not the shared img.skill-icon rule
-   itself, which every OTHER bare icon usage on the site still wants
-   text-bottom for). */
-.md-typeset .food-req-item img.skill-icon {
-  vertical-align: baseline;
-  /* Baseline-anchoring the icon (above) is correct, but the base
-     img.skill-icon rule sizes every icon at a flat 1.1em - close to the
-     font's full line-height, versus a letter's own ascender-to-baseline
-     span (roughly half that). Anchored to the real baseline, a full
-     1.1em icon towers well above the surrounding cap-height/ascender
-     line instead of just reaching it - shrinking it here brings its top
-     back down to roughly where the tallest letter's ascender sits, so
-     it reads as "an icon sitting on the line" rather than "a badge
-     hovering over the line". Restored to the original 1.1em just below
-     for the .food-req row context, which never had this problem (flex
-     align-items: center there, not baseline-anchored against running
-     text) and was already sized for that row. */
-  height: 0.8em;
-  width: 0.8em;
-}
-.md-typeset .food-req .food-req-item img.skill-icon {
-  height: 1.1em;
-  width: 1.1em;
-}
+/* .food-req-item only appears inside a .food-req row (essentials.md's
+   engraving-card food notes): inline-flex + align-items: center vertically
+   centres icon and text against each other and supplies the gap, matching
+   the sibling icons/spacing of that flex row. The icon keeps the base
+   img.skill-icon size (1.1em). */
 .md-typeset .food-req .food-req-item {
   display: inline-flex;
   align-items: center;

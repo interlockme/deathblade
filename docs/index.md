@@ -2,7 +2,7 @@
 
 ![Deathblade path flowchart](assets/shared/flowchart-deathblade-paths.svg)
 
-<div class="grid cards" markdown>
+<div class="grid cards home-cards" markdown>
 
 -   🌸 **Remaining Energy**
 
@@ -20,15 +20,19 @@
 
     [Get started →](surge/essentials.md)
 
+-   📚 **Additional Resources**
+
+    ---
+
+    Shared by both playstyles: bonus skill codes, calculators and useful links.
+
+    [Open resources →](resources.md)
+
 </div>
 
 ---
 
 **What do the build names mean?** Names like 333, 313, 111, and 222 are shorthand for each build's Ark Grid Core assignment, not a difficulty rating. Choose a build for more information.
-
-## Additional Resources
-
-*(Shared by both playstyles, see [Additional Resources](resources.md) for links, calculators, and bonus content.)*
 
 ---
 

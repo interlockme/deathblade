@@ -209,34 +209,54 @@ Not the end of the world if you're forced to use it
 
 ### Identity
 
-- Orb Generation: Normal skills generate Death Orbs when they hit.
-- Death Trance: Press (Z) with 1+ orbs to enter Death Trance.
-- Stack Generation: Skills generate Surge stacks while in Death Trance.
-- Stack Cap: You can hold up to 80 stacks.
-- Surge: Press (Z) to consume 60 stacks. Extra stacks roll over to the next cycle.
-- Stack Requirement: Surge must be cast with 40+ stacks to refund all 3 Death Orbs.
+<div class="gameplay-cards" data-accent="pink" markdown>
+
+- **Orb Generation** Skills generate Death Orbs when they hit.
+- **Death Trance** Press (Z) with 1+ orbs to enter the Death Trance identity state.
+- **Stack Generation** Skills generate Surge stacks while in Death Trance.
+- **Stack Cap** You can hold up to 80 stacks. Stacks not consumed roll over to the next cycle.
+- **Surge** Press (Z) to consume 60 stacks, deal damage and end Death Trance.
+- **Stack Requirement** Surge must be cast with at least 40+ stacks to refund all 3 Death Orbs.
+
+</div>
 
 ### Identity Buffs
 
-- 10/15/20% Attack Speed.
-- 10% Move Speed.
-- 8/16/24% Attack Power.
-- 15/25/45% Mana Restoration.
-- 10/30/50% Cooldown Reduction.
+<div class="gameplay-chips" markdown>
 
-Aim to enter Death Trance with 3 orbs whenever possible.
+- **10/15/20%** Attack Speed
+- **10%** Move Speed
+- **8/16/24%** Attack Power
+- **15/25/45%** Mana
+- **10/30/50%** Cooldown Reduction
+
+</div>
+
+Aim to enter Death Trance with 3 orbs whenever possible to receive the highest level buffs.
 
 ### Party Synergies
 
-- Turning Slash: +4% outgoing and +5% directional damage for 12s.
-- Surprise Attack: +4% outgoing and +5% directional damage for 6s.
-- <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>: +12.8% Attack/Move Speed for 6s.
+<div class="gameplay-cards" data-accent="teal" markdown>
+
+- **Turning Slash** +4% outgoing and +5% directional damage for 12s.
+- **Surprise Attack** +4% outgoing and +5% directional damage for 6s.
+- **<span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>** +12.8% Attack/Move Speed for 6s.
+
+</div>
 
 ### Playstyle
 
 Surge is a repeating cycle:
 
-3 Orbs → Death Trance → Build Stacks → Surge → Repeat.
+<div class="gameplay-flow" markdown>
+
+1. 3 Orbs
+2. Death Trance
+3. Build Stacks
+4. Surge
+5. Repeat
+
+</div>
 
 Build toward 60 stacks using your multi-hit skills, then land Surge as a <span class="skill-mention" data-glossary-id="backattack">Back Attack</span>.
 

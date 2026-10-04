@@ -132,7 +132,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
 </details>
 
-<details class="setup-note" data-kind="note" markdown>
+<details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
 - You can level Ark Grid cores to your preference, but 17p Surge Core grants a second Earth Cleaver stack. This frees up a gem slot and allows you to cast Earth Cleaver without needing to hold it for an upcoming raid mechanic.
@@ -261,8 +261,8 @@ Spincutter is your mobility skill and backup stack builder. Use it to guarantee 
 
 Use the Breaking Moon cycle and its follow-up when available, then repeat the regular cycle otherwise.
 
-*From 3 orbs:*
-{ .lead }
+From 3 orbs
+{ .rotation-stage }
 
 <div class="cycle-card cycle-card-multi" markdown>
 <div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Breaking Moon Cycle + Follow-Up</span></div>
@@ -307,6 +307,8 @@ Use the Breaking Moon cycle and its follow-up when available, then repeat the re
 </div>
 </div>
 
+<div class="rotation-notes" markdown>
+
 1. In the follow-up cycles: cast Maelstrom if you had 2 stacks, otherwise just continue without it.
 2. Do NOT worry about Raid Captain efficiency; Keen Blunt Weapon is just as inefficient or worse!
     - Breaking Moon's Critical Damage bonus to the next Surge (biggest hit) is additive to Keen Blunt Weapon.
@@ -314,6 +316,8 @@ Use the Breaking Moon cycle and its follow-up when available, then repeat the re
 3. <span class="skill-mention" data-skill-id="bladeassault">Blade Assault</span> scales much worse on Surge than on Remaining Energy and takes too long to cast.
       - It's still useful for <span class="skill-mention" data-skill-id="atropine">Atropine</span> openers, or it can be saved to greed with <span class="skill-mention" data-glossary-id="pushimmunity">push immunity</span>/Hyper Awakening.
 4. It seems more complicated than it really is, watch [this video](https://www.youtube.com/watch?v=4bwhDT--0fo) to see how a full rotation plays out.
+
+</div>
 
 <!-- Community-contributed alternative: a full replacement for both cycles
      above (not a recommendation over them), for players who'd rather keep
@@ -366,19 +370,27 @@ An alternative to the default rotation. It builds a stack reserve, so you're nev
 </div>
 </div>
 
-*From zero orbs:*
-{ .lead }
+From zero orbs
+{ .rotation-stage }
 
-1. Use a <span class="food-req-item">![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant</span> (recommended) or proceed to #2.
+<div class="rotation-notes" markdown>
+
+1. Use a <span class="skill-mention" data-skill-id="stimulant">Stimulant</span> (recommended) or proceed to #2.
       - Rat Pack: Use Maelstrom's Orb Control tripod and <span class="skill-mention" data-skill-id="flashblink">Flash Blink</span> awakening.
 2. Generate one orb, build at least 40 stacks, then Surge to refill all 3 orbs.
 
-*Atropine usage:*
-{ .lead }
+</div>
 
-1. Fit three Surges into a 10 second window. Use <span class="food-req-item">![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine</span> right before the first Surge hits.
+Atropine usage
+{ .rotation-stage }
+
+<div class="rotation-notes" markdown>
+
+1. Fit three Surges into a 10 second window. Use <span class="skill-mention" data-skill-id="atropine">Atropine</span> right before the first Surge hits.
 2. The second or third Surge must be part of a Breaking Moon cycle or you won't make it.
 3. Stacks and the environment vary, so a fixed rotation would just be a shackle.
+
+</div>
 
 ## DPS Spread
 

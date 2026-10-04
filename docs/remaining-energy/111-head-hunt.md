@@ -119,7 +119,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
 </details>
 
-<details class="setup-note" data-kind="note" markdown>
+<details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Note</span><span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span><span class="setup-note-arrow"></span></summary>
 
 - Playable with zero Ark Grid investment, but not recommended.
@@ -248,6 +248,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
     </div>
 
+    <div class="rotation-notes">
+
     Aim to fit up to Cycle **2**'s Twin Shadows under Cycle **1**'s Maelstrom to reach 3 orbs without recasting or using recovery options. If you don't, an extra Head Hunt cast is required at the end of Cycle **2**.
 
     Using Head Hunt in Cycle **2** may force you to cast it at the end of the next Cycle **1**, which creates downtime.
@@ -256,12 +258,14 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
     Due to limited orb generation, Turning Slash's after-effects may need to carry over to the following cycle.
 
+    </div>
+
 === "Openers"
 
     Openers stack <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and apply <span class="skill-mention" data-glossary-id="synergy">synergies</span> efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
 
-    *From 3 orbs (<span class="food-req-item">![](../assets/shared/icon-stimulant.png){: .skill-icon } Stimulant</span>):*
-    { .lead }
+    From 3 orbs (<span class="skill-mention" data-skill-id="stimulant">Stimulant</span>)
+    { .rotation-stage }
 
     <div class="rotation-line">
 
@@ -274,13 +278,21 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
     </div>
 
-    1. If available, <span class="skill-inline" data-skill-id="bladeassault"><span class="skill-inline-name">Blade Assault</span></span> is interchangeable with Cycle **2**.
-    2. It's efficient to use <span class="food-req-item">![](../assets/shared/icon-atropine.png){: .skill-icon } Atropine</span> after Deathly Slash, with Blade Assault available.
+    <div class="rotation-notes">
 
-    *From zero/partial orbs:*
-    { .lead }
+    1. If available, <span class="skill-inline" data-skill-id="bladeassault"><span class="skill-inline-name">Blade Assault</span></span> is interchangeable with Cycle **2**.
+    2. It's efficient to use <span class="skill-mention" data-skill-id="atropine">Atropine</span> after Deathly Slash, with Blade Assault available.
+
+    </div>
+
+    From zero/partial orbs
+    { .rotation-stage }
+
+    <div class="rotation-notes">
 
     1. Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
+
+    </div>
 
 === "Recovery"
 
@@ -300,7 +312,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
     </div>
 
+    <div class="rotation-notes">
+
     1. Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
+
+    </div>
 
 ## DPS Spread
 

@@ -123,7 +123,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 
 </details>
 
-<details class="setup-note" data-kind="note" markdown>
+<details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Note</span>Ark Grid<span class="setup-note-arrow"></span></summary>
 
 <div class="ark-cores" data-family="re" markdown>
@@ -222,8 +222,8 @@ Cast Spincutter to approach the boss, use the opener and continue to loop the ma
 
 The opener stacks <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and applies <span class="skill-mention" data-glossary-id="synergy">synergies</span> efficiently as you build up to the encounter's first Surge.
 
-*Opener from zero orbs:*
-{ .lead }
+Opener from zero orbs
+{ .rotation-stage }
 
 <div class="rotation-line" markdown>
 <script type="application/json">
@@ -231,8 +231,8 @@ The opener stacks <span class="skill-mention" data-skill-id="adrenaline">Adrenal
 </script>
 </div>
 
-*Main repeating cycle:*
-{ .lead }
+Main repeating cycle
+{ .rotation-stage }
 
 <div class="rotation-line" markdown>
 <script type="application/json">
@@ -242,17 +242,25 @@ The opener stacks <span class="skill-mention" data-skill-id="adrenaline">Adrenal
 </script>
 </div>
 
+<div class="rotation-notes" markdown>
+
 1. <span class="skill-inline" data-skill-id="deathlyslash"><span class="skill-inline-name">Deathly Slash</span></span> is only available every other rotation. Just keep going if it's on cooldown.
 2. Use Spincutter during downtime to reposition, or hold it to dodge upcoming attacks.
 3. Use <span class="skill-inline" data-skill-id="bladeassault"><span class="skill-inline-name">Blade Assault</span></span> for damage, or hold it for Hyper Awakening or a clutch recovery.
 4. The rotation is bottlenecked entirely by Soul Absorber's cooldown. It is what it is.
     - You can skip Earth Cleaver if Soul Absorber's off cooldown already.
 
-*Recovery:*
-{ .lead }
+</div>
+
+Recovery
+{ .rotation-stage }
+
+<div class="rotation-notes" markdown>
 
 1. Use spare Twin Shadows or Maelstrom stacks to recover if it'll help you reach 3 orbs.
     - If not, just AFK or Surge with 2 orbs and AFK. Welcome to Standard Remaining Energy.
+
+</div>
 
 ## DPS Spread
 

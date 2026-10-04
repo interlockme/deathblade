@@ -48,14 +48,12 @@
 //     standalone in both families' Engravings section) - the icon itself
 //     is the trigger. See attachBareIcon.
 //   - .food-req-item spans (Surge essentials' engraving-card food notes,
-//     e.g. "Atk/Move Speed feast advised" - AND Stimulant/Atropine's own
-//     prose mentions on build pages now too, reused with no .food-req
-//     ancestor around them - see extra.css's "Inline skill reference for
-//     prose" comment for why those moved off .skill-inline onto this
-//     class instead of a bare icon) - same icon-filename id lookup as
-//     .skill-inline, wraps an icon + its own name so the hoverable area
+//     e.g. "Atk/Move Speed feast advised") - same icon-filename id lookup
+//     as .skill-inline, wraps an icon + its own name so the hoverable area
 //     (and the hover brightness cue) covers the words too, not just the
 //     icon. Also reuses attachSkillInline (its no-data-skill-id branch).
+//     Stimulant/Atropine in build-page prose are plain-name
+//     .skill-mention[data-skill-id] spans instead, no icon.
 //   - Also exposes window.SkillTooltip.attach() for gem-dps-tooltip.js,
 //     which needs this file's same lookup/build/wire pipeline but with an
 //     extra damage-share line (Damage gems) and/or an author-supplied
@@ -69,8 +67,8 @@
 // essentials-table.js's reference table shows under a skill's name (all
 // three read the same DB_SKILL_DATA[family][id] entry) - no separate
 // copy of any of that text to keep in sync. An id with no entry there
-// (Atropine, Stimulant - consumables, not real skills, wired via
-// attachBareIcon rather than attachSkillInline - see above) falls back
+// (Atropine, Stimulant - consumables, not real skills, written as plain-name
+// .skill-mention[data-skill-id] spans and wired by attachSkillInline) falls back
 // to DB_SKILL_EXTRAS[id] instead: a flat id -> note map with no
 // family split and no tags, just enough for the tooltip to show their
 // in-game effect text rather than nothing. An id with no match in EITHER
