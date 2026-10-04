@@ -171,7 +171,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 - Use <span class="skill-mention" data-rune-name="Vision" data-rune-tier="legendary">Legendary Vision</span> on Surprise Attack if you find it more useful than <span class="skill-mention" data-rune-name="Rage" data-rune-tier="legendary">Rage</span>.
     - Increases chance of getting an extra stack on Surprise Attack precast.
     - This is the best and most efficient way to improve stagger contribution.
-    - **Don't do this** if you have a +CDR% bracelet, you'll lose Maelstrom stacks.
+    - Not recommended with a +CDR% bracelet, you may lose Maelstrom stacks.
 
 </details>
 
