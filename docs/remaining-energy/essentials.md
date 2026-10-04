@@ -192,7 +192,7 @@ Lower values are fine, but may experience some downtime.
 
 <div class="gameplay-cards" data-accent="pink" markdown>
 
-- **Orb Generation** Normal skills generate Death Orbs when they hit.
+- **Orb Generation** Normal skills generate Death Orbs when they hit a target.
 - **Surge** Press (Z) with 1+ orbs to consume them and activate Surge.
 
 </div>
@@ -210,7 +210,6 @@ Lower values are fine, but may experience some downtime.
 </div>
 
 Aim to always cast Surge with 3 orbs for the strongest buffs and cooldown reduction.
-
 
 ### Party Synergies
 

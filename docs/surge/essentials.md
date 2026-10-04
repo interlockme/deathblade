@@ -211,12 +211,12 @@ Not the end of the world if you're forced to use it
 
 <div class="gameplay-cards" data-accent="pink" markdown>
 
-- **Orb Generation** Skills generate Death Orbs when they hit.
+- **Orb Generation** Normal skills generate Death Orbs when they hit a target.
 - **Death Trance** Press (Z) with 1+ orbs to enter the Death Trance identity state.
 - **Stack Generation** Skills generate Surge stacks while in Death Trance.
 - **Stack Cap** You can hold up to 80 stacks. Stacks not consumed roll over to the next cycle.
 - **Surge** Press (Z) to consume 60 stacks, deal damage and end Death Trance.
-- **Stack Requirement** Surge must be cast with at least 40+ stacks to refund all 3 Death Orbs.
+- **Stack Requirement** Surge must be cast with at least 40 stacks to refund all 3 Death Orbs.
 
 </div>
 
