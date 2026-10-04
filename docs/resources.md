@@ -1,6 +1,6 @@
 # Additional Resources
 
-![313 sticker](assets/shared/sticker-313.png)
+![313 sticker](assets/shared/sticker-313.png){: .page-sticker }
 
 ## Bonus Skill Codes
 

@@ -823,6 +823,29 @@ h3 { color: var(--dbc-teal); }
   white-space: normal;
   min-width: 140px;
 }
+/* Column balance for the reference table: the icon column hugs the 48px
+   icon, the Skill column shrinks to its longest name or value line
+   ("Surprise Attack", "Death Trance" stay on one line), and Tags gets
+   enough room for most rows to fit their badges on one line. Notes takes
+   the remainder. Percentages are preferred widths only (the table
+   stays table-layout: auto), so under the 560px min-width the columns fall
+   back to their content minimums and the wrapper scrolls sideways. */
+.md-typeset .skills-table th:nth-child(1),
+.md-typeset .skills-table td:nth-child(1) {
+  width: 1%;
+  padding-left: 0.9em;
+  padding-right: 0.5em;
+}
+.md-typeset .skills-table th:nth-child(2) {
+  width: 1%;
+}
+.md-typeset .skills-table td:nth-child(2) {
+  white-space: nowrap;
+  padding-right: 1.2em;
+}
+.md-typeset .skills-table th:nth-child(3) {
+  width: 31%;
+}
 
 /* ---------- Links: more visibly clickable ---------- */
 .md-typeset a:not(.md-button) {
@@ -2022,24 +2045,47 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .rotation-practice-toggle {
   position: absolute;
-  top: -0.7em;
-  right: 0.5em;
+  top: -0.85em;
+  right: 0.8em;
   z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
+  /* Opaque (tint over the card surface) because the floating variant
+     overlaps the rotation box's own border; the header variant below
+     swaps this for a plain translucent tint. */
   background-color: var(--dbc-chip-surface);
+  background-image: linear-gradient(rgba(var(--dbc-purple-rgb), 0.16), rgba(var(--dbc-purple-rgb), 0.16));
   color: var(--dbc-chip-text);
   border-radius: 999px;
-  font-size: 0.68em;
+  font-size: 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   font-family: inherit;
-  padding: 0.2em 0.65em;
-  line-height: 1.5;
+  padding: 0.15em 0.85em;
+  line-height: 1.3;
+  white-space: nowrap;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+/* The play triangle is drawn here instead of with a "\25B6" character:
+   that glyph comes from a fallback font, so it sat off the text's
+   baseline and centre. A clip-path triangle in a flex row centres exactly.
+   Hidden while the toggle shows its "n / m \00B7 Exit" label. */
+.md-typeset .rotation-practice-toggle:not(.is-active)::before {
+  content: "";
+  flex: none;
+  width: 0.62em;
+  height: 0.7em;
+  background-color: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 .md-typeset .rotation-practice-toggle:hover {
-  border-color: rgba(var(--dbc-purple-rgb), 0.75);
-  background-color: var(--dbc-chip-surface-hover);
+  border-color: rgba(var(--dbc-pink-rgb), 0.7);
+  background-image: linear-gradient(rgba(var(--dbc-pink-rgb), 0.14), rgba(var(--dbc-pink-rgb), 0.14));
+  color: var(--dbc-pink-bright);
 }
 /* Inside a cycle-card header, the toggle is an ordinary flex item (not
    absolutely positioned) pinned to the row's far right - the header's
@@ -2048,6 +2094,11 @@ h3 { color: var(--dbc-teal); }
   position: static;
   margin-left: auto;
   box-shadow: none;
+  background-color: rgba(var(--dbc-purple-rgb), 0.14);
+  background-image: none;
+}
+.md-typeset .cycle-card-header .rotation-practice-toggle:hover {
+  background-color: rgba(var(--dbc-pink-rgb), 0.14);
 }
 .md-typeset .rotation-line.practice-mode {
   cursor: pointer;
@@ -2809,9 +2860,10 @@ h3 { color: var(--dbc-teal); }
   border-right: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
 }
 .md-typeset .build-compare-svg-mount svg {
-  /* About 1.12 screen px per viewBox unit here, so the 10-unit axis labels
-     draw at about 11px. */
-  width: min(240px, 100%);
+  /* About 1.2 screen px per viewBox unit here, so the 10-unit axis labels
+     draw at about 12px, close to the Key Differences title and pills
+     beside it. */
+  width: min(264px, 100%);
 }
 /* Two overlapping translucent polygons - fill-opacity is set inline per
    build (JS) rather than here since it's paired with each build's own
@@ -10493,6 +10545,32 @@ body.page-333-blitz input[type="text"] {
   font-size: 1.1em;
   font-style: normal;
   color: var(--dbc-pink);
+}
+
+/* Decorative sticker under a page title (Resources): centered in the
+   content column instead of left-aligned beside empty space. */
+.md-typeset img.page-sticker {
+  display: block;
+  margin: 0.4em auto 1em;
+}
+
+/* Icon runs inside running text (a list item such as Surge's "Mana Food +
+   Maelstrom Bleed" alt line): the 22px icons are centered on the text's
+   x-height instead of sitting on the baseline, and the connectors get a
+   little breathing room and a size close to the body text so "or" and "+"
+   read as part of the sentence. Pills inside .food-options are flex items
+   and keep their own alignment above. */
+.md-typeset li > .food-option-icon {
+  vertical-align: middle;
+  margin: -0.15em 0.1em 0 0.1em;
+}
+.md-typeset li > .food-option-connector {
+  margin: 0 0.3em;
+  font-size: 0.9em;
+  vertical-align: middle;
+}
+.md-typeset li > .food-option-connector-plus {
+  font-size: 1.15em;
 }
 
 /* ---------- Click-to-zoom lightbox for standalone content images ---------- */

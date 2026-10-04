@@ -92,6 +92,7 @@
     });
     if (unit._practiceToggle) {
       unit._practiceToggle.textContent = toggleLabel(idx, steps.length);
+      unit._practiceToggle.classList.add("is-active");
     }
   }
 
@@ -110,7 +111,10 @@
     getSteps(unit).forEach(function (step) {
       step.classList.remove("practice-current");
     });
-    if (unit._practiceToggle) unit._practiceToggle.textContent = "▶ Practice";
+    if (unit._practiceToggle) {
+      unit._practiceToggle.textContent = "Practice";
+      unit._practiceToggle.classList.remove("is-active");
+    }
     if (activeLine === unit) activeLine = null;
   }
 
@@ -136,7 +140,7 @@
     var toggle = document.createElement("button");
     toggle.type = "button";
     toggle.className = "rotation-practice-toggle";
-    toggle.textContent = "▶ Practice";
+    toggle.textContent = "Practice";
     toggle.setAttribute("aria-label", "Practice this rotation step by step");
     line._practiceToggle = toggle;
 
@@ -187,7 +191,7 @@
     var toggle = document.createElement("button");
     toggle.type = "button";
     toggle.className = "rotation-practice-toggle";
-    toggle.textContent = "▶ Practice";
+    toggle.textContent = "Practice";
     toggle.setAttribute("aria-label", "Practice this rotation step by step");
     card._practiceToggle = toggle;
 

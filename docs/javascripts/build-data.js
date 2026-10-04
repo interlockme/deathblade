@@ -96,7 +96,7 @@
         {
           id: "standard",
           name: "Standard",
-          accent: "#8d8b93",
+          accent: "#e6b422",
           pentagon: [6, 6, 8.5, 4, 6],
           difficulty: 6,
           trixion: null,
