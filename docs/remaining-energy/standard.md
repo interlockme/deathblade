@@ -136,8 +136,8 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
 </script>
 </div>
 
-- Standard is playable without Ark Grid by design, but you can use the 111 core setup if you already have it.
-- Save your Ark Grid cores for when you're ready to transition to a modern Deathblade build.
+- Standard is a pre-Ark Grid build, but you can use the 111 core setup if you already have it.
+- Save your Ark Grid core selectors for when you're ready to play a modern Deathblade build.
 
 </details>
 
@@ -218,11 +218,11 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
      cycleRef, trailing suffix, etc.) is in javascripts/rotation-line.js's
      "EASY EDIT GUIDE" comment. -->
 
-Cast Spincutter to approach the boss, use the opener and continue to loop the main cycle afterwards.
+Approach the boss, use the opener and continue to loop the regular cycle afterwards.
 
 The opener stacks <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and applies <span class="skill-mention" data-glossary-id="synergy">synergies</span> efficiently as you build up to the encounter's first Surge.
 
-Opener from zero orbs
+Opener from 0 orbs
 { .rotation-stage }
 
 <div class="rotation-line" markdown>
@@ -231,7 +231,7 @@ Opener from zero orbs
 </script>
 </div>
 
-Main repeating cycle
+Regular cycle
 { .rotation-stage }
 
 <div class="rotation-line" markdown>
@@ -248,7 +248,6 @@ Main repeating cycle
 2. Use Spincutter during downtime to reposition, or hold it to dodge upcoming attacks.
 3. Use <span class="skill-inline" data-skill-id="bladeassault"><span class="skill-inline-name">Blade Assault</span></span> for damage, or hold it for Hyper Awakening or a clutch recovery.
 4. The rotation is bottlenecked entirely by Soul Absorber's cooldown. It is what it is.
-    - You can skip Earth Cleaver if Soul Absorber's off cooldown already.
 
 </div>
 

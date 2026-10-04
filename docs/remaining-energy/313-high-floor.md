@@ -253,114 +253,98 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
      cycleRef, trailing suffix, etc.) is in javascripts/rotation-line.js's
      "EASY EDIT GUIDE" comment. -->
 
-=== "Cycles"
+Use an opener (optional), then alternate between Cycle **1** and Cycle **2** as needed for the rest of the encounter.
 
-    Use an **Opener**, then alternate between these two cycles as needed:
+The opener stacks <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and applies <span class="skill-mention" data-glossary-id="synergy">synergies</span> efficiently. If it feels overwhelming, just apply synergy and Surge.
 
-    <div class="cycle-card">
+Opener from 3 orbs (<span class="skill-mention" data-skill-id="stimulant">Stimulant</span>)
+{ .rotation-stage }
 
-    <div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Void Strike + Deathly Slash Cycle</span></div>
+<div class="rotation-line" markdown>
+<script type="application/json">
+[{ "id": "headhunt", "swapNext": true }, "twinshadows", "maelstrom", "turningslash", "deathlyslash", "surge",
+ { "cycleRef": 2, "title": "Soul Absorber + Blitz Rush Cycle" },
+ { "cycleRef": 1, "title": "Void Strike + Deathly Slash Cycle" },
+ { "suffix": "etc." }]
+</script>
+</div>
 
-    <div class="rotation-line">
+<div class="rotation-notes" markdown>
 
-    <script type="application/json">
-    ["maelstrom", "voidstrike", "twinshadows", "deathlyslash", "turningslash", "fatalwave", "surge"]
-    </script>
+1. If available, <span class="skill-inline" data-skill-id="bladeassault"><span class="skill-inline-name">Blade Assault</span></span> is interchangeable with Cycle **2**.
+2. It's efficient to use <span class="skill-mention" data-skill-id="atropine">Atropine</span> after Deathly Slash, with Blade Assault available.
 
-    </div>
+</div>
 
-    </div>
+Alternating cycles
+{ .rotation-stage }
 
-    <div class="cycle-card">
+<div class="cycle-card" markdown>
+<div class="cycle-card-header"><span class="cycle-num cycle-num-1">1</span><span class="cycle-title">Void Strike + Deathly Slash Cycle</span></div>
+<div class="rotation-line" markdown>
+<script type="application/json">
+["maelstrom", "voidstrike", "twinshadows", "deathlyslash", "turningslash", "fatalwave", "surge"]
+</script>
+</div>
+</div>
 
-    <div class="cycle-card-header"><span class="cycle-num cycle-num-2">2</span><span class="cycle-title">Soul Absorber + Blitz Rush Cycle</span></div>
+<div class="cycle-card" markdown>
+<div class="cycle-card-header"><span class="cycle-num cycle-num-2">2</span><span class="cycle-title">Soul Absorber + Blitz Rush Cycle</span></div>
+<div class="rotation-line" markdown>
+<script type="application/json">
+["soulabsorber", "blitzrush", "twinshadows",
+ { "id": "maelstrom", "situational": "recovery" },
+ "turningslash", "fatalwave", "surge"]
+</script>
+</div>
+</div>
 
-    <div class="rotation-line">
+<div class="rotation-notes" markdown>
 
-    <script type="application/json">
-    ["soulabsorber", "blitzrush", "twinshadows",
-     { "id": "maelstrom", "situational": "recovery" },
-     "turningslash", "fatalwave", "surge"]
-    </script>
+1. Aim to fit up to Cycle **2**'s Twin Shadows under Cycle **1**'s Maelstrom to reach 3 orbs without recasting it or using recovery options. If you only landed up to Soul Absorber, an extra Head Hunt cast is usually enough.
+2. The Maelstrom in Cycle **2** is only cast if you'd otherwise miss 3 orbs. Use your judgment. If cast, it lasts at least until Cycle **1**'s Void Strike; recasting it as it expires aligns cooldowns. If it wasn't needed or it didn't last, nothing changes.
 
-    </div>
+</div>
 
-    </div>
+Opener from 0-2 orbs
+{ .rotation-stage }
 
-    <div class="rotation-notes">
+<div class="rotation-notes" markdown>
 
-    Aim to fit up to Cycle **2**'s Twin Shadows under Cycle **1**'s Maelstrom to reach 3 orbs without recasting or using recovery options. If you only landed up to Soul Absorber, an extra Head Hunt cast is usually enough.
+1. Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
+2. Prioritize Turning Slash earlier for synergy and Deathly Slash last for <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span>/RE buff.
 
-    The Maelstrom in Cycle **2** is only cast if you'd otherwise miss 3 orbs. Use your judgment. If cast, it lasts at least until Cycle **1**'s Void Strike; recasting it as it expires aligns cooldowns. If it wasn't needed or it didn't last, nothing changes.
+</div>
 
-    </div>
+Recovery
+{ .rotation-stage }
 
-=== "Openers"
+<div class="rotation-notes" markdown>
 
-    Openers stack <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span> and apply <span class="skill-mention" data-glossary-id="synergy">synergies</span> efficiently. If it feels overwhelming, just apply synergy and Surge at full orbs; that's all you need to start the alternating cycles.
+1. Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
+      - 313 plays very similarly, just Turning Slash → Fatal Wave instead of <span class="skill-mention" data-glossary-id="ftfcombo">FTF</span>.
+2. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> whenever you're a little short on orbs, just cast if unsure.
+3. Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
+4. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> instead of <span class="skill-inline" data-skill-id="twinshadows"><span class="skill-inline-name">Twin Shadows</span></span> for a cycle to recover its stacks if needed.
+5. Use Maelstrom + Fatal Wave earlier if you're waiting on main orb generation skills.
 
-    From 3 orbs (<span class="skill-mention" data-skill-id="stimulant">Stimulant</span>)
-    { .rotation-stage }
+</div>
 
-    <div class="rotation-line">
+TL;DR
+{ .rotation-stage }
 
-    <script type="application/json">
-    [{ "id": "headhunt", "swapNext": true }, "twinshadows", "maelstrom", "turningslash", "deathlyslash", "surge",
-     { "cycleRef": 2, "title": "Soul Absorber + Blitz Rush Cycle" },
-     { "cycleRef": 1, "title": "Void Strike + Deathly Slash Cycle" },
-     { "suffix": "etc." }]
-    </script>
+<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-notes" markdown>
 
-    </div>
+<details class="setup-note" data-kind="tip" markdown>
+<summary><span class="setup-note-tag">Tip</span>313 for Dummies<span class="setup-note-arrow"></span></summary>
 
-    <div class="rotation-notes">
+![313 TL;DR flowchart](../assets/tldr-313.png){ .zoomable-image loading=lazy }
 
-    1. If available, <span class="skill-inline" data-skill-id="bladeassault"><span class="skill-inline-name">Blade Assault</span></span> is interchangeable with Cycle **2**.
-    2. It's efficient to use <span class="skill-mention" data-skill-id="atropine">Atropine</span> after Deathly Slash, with Blade Assault available.
+</details>
 
-    </div>
-
-    From zero/partial orbs
-    { .rotation-stage }
-
-    <div class="rotation-notes">
-
-    1. Cycle **1** if Deathly Slash is available, otherwise start from Maelstrom + Cycle **2**.
-    2. Prioritize Turning Slash earlier for synergy and Deathly Slash last for <span class="skill-mention" data-skill-id="adrenaline">Adrenaline</span>/RE buff.
-
-    </div>
-
-=== "Recovery"
-
-    <div class="setup-panel" data-accent="lavender">
-
-    <div class="setup-notes">
-
-    <details class="setup-note" data-kind="tip" open>
-
-    <summary><span class="setup-note-tag">Tip</span>Recovery Video<span class="setup-note-arrow"></span></summary>
-
-    Watch this 2-minute [333 recovery video](https://www.youtube.com/watch?v=4478vFVX4VA) and read the segment titles.
-
-    </details>
-
-    </div>
-
-    </div>
-
-    <div class="rotation-notes">
-
-    1. 313 plays similarly, just Turning Slash → Fatal Wave instead of <span class="skill-mention" data-glossary-id="ftfcombo">FTF</span>.
-    2. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> when a little short on orbs, just cast if unsure.
-    3. Use spare Twin Shadows/Maelstrom stacks and/or Blitz Rush if you miss major skills.
-    4. Use <span class="skill-inline" data-skill-id="headhunt"><span class="skill-inline-name">Head Hunt</span></span> instead of <span class="skill-inline" data-skill-id="twinshadows"><span class="skill-inline-name">Twin Shadows</span></span> for a cycle to recover stacks if they run out.
-    5. Use Maelstrom + Fatal Wave earlier if waiting on main orb generation skills.
-
-    </div>
-
-=== "TL;DR:"
-
-    ![313 TL;DR flowchart](../assets/tldr-313.png){ .zoomable-image loading=lazy }
+</div>
+</div>
 
 ## DPS Spread
 

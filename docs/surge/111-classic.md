@@ -370,7 +370,7 @@ An alternative to the default rotation. It builds a stack reserve, so you're nev
 </div>
 </div>
 
-From zero orbs
+From 0 orbs
 { .rotation-stage }
 
 <div class="rotation-notes" markdown>

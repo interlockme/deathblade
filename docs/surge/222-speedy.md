@@ -384,7 +384,7 @@ All cycles
 
 </div>
 
-From zero orbs
+From 0 orbs
 { .rotation-stage }
 
 <div class="rotation-notes" markdown>

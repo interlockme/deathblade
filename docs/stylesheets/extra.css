@@ -1710,9 +1710,6 @@ h3 { color: var(--dbc-teal); }
 .md-typeset ul ul {
   list-style-type: disc;
 }
-/* A rotation-notes card inside a tab sits after a Material-generated empty
-   paragraph in some layouts; keep its top margin the same either way. */
-.md-typeset .tabbed-block > p:empty + .rotation-notes { margin-top: 0.6em; }
 .md-typeset .cycle-card-header {
   display: flex;
   align-items: center;
@@ -10147,8 +10144,8 @@ body.page-333-blitz input[type="text"] {
    start, the gap after </summary>, the end of each </details>/</div>)
    spawns one of these, and each one still carries .md-typeset p's real
    margin - stacking into the extra top/bottom padding seen on any
-   setup-note nested this way (e.g. the Recovery tab's video tip, 222-
-   speedy's Beast Mode alt). Unlike .rotation-line (pure widget markup, no
+   setup-note nested this way (e.g. the Recovery video tip on the RE
+   build pages, 222-speedy's Beast Mode alt). Unlike .rotation-line (pure widget markup, no
    real prose, so a blanket `p { display: contents }` was safe), a
    setup-note's body can contain genuine paragraph text, so this can't
    reuse .rotation-line's blanket `p { display: contents }` - it's scoped
@@ -10164,31 +10161,6 @@ body.page-333-blitz input[type="text"] {
    admonition, list item, ...) that can trigger this. */
 .md-typeset p:empty {
   display: none;
-}
-/* Side effect of the fix above: a .rotation-line/.cycle-card that's the
-   very first thing inside a tab (nothing above it - e.g. "Opener Cycle"
-   tabs) always had one of these auto-closed empty <p>s immediately
-   before it too, for the exact same md_in_html reason. It was empty, but
-   it wasn't invisible - it still rendered the browser's default <p> top
-   margin (~1em), which collapsed with the box's own smaller margin-top
-   and read as "a bit of breathing room under the tab bar". Hiding the
-   stray p above removed that spacer along with the ones it was meant to
-   remove, leaving the box almost flush against the tab labels. Restore
-   just that margin, scoped narrowly to this exact pattern (an empty p
-   directly followed by the box, inside a tab) so nothing else moves.
-
-   A standalone .rotation-line (not inside a .cycle-card) is also, at
-   runtime, wrapped by rotation-practice.js in a zero-margin
-   .rotation-practice-float div (see that section below) - that wrapper
-   becomes the actual element sitting next to the empty p in the live
-   DOM, so it needs its own arm of this selector; the plain .rotation-line
-   arm still matters as the no-JS/pre-hydration fallback. .cycle-card
-   never gets that wrapper (its practice toggle joins the card header
-   instead), so it only needs the one selector. */
-.md-typeset .tabbed-block > p:empty + .rotation-line,
-.md-typeset .tabbed-block > p:empty + .rotation-practice-float,
-.md-typeset .tabbed-block > p:empty + .cycle-card {
-  margin-top: 1em;
 }
 /* Material's `.md-typeset details:focus-within` (specificity 0,2,1) sets
    a glowing blue `box-shadow: 0 0 0 .2rem #448aff1a` ring on the whole
