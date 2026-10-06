@@ -5051,32 +5051,9 @@ h3 { color: var(--dbc-teal); }
   margin: 0 -0.4rem 0.4rem;
   padding: 0.5rem var(--ap-pad-x);
 }
-/* Optimized Training 1's DPS cost: in the Base / Best card's header row, just
-   left of the Diff title, so it adds no height and never competes with the Top
-   Combinations header's pin button and state chip. Hidden (no space) while OT1
-   is off. */
-.md-typeset .ap-ot1-indicator {
-  margin: 0 0.9rem 0 auto;
-  white-space: nowrap;
-  color: var(--dbc-red);
-  cursor: help;
-}
-.md-typeset .ap-ot1-indicator[hidden] {
-  display: none;
-}
-/* The header's title never wraps; on a narrow card the indicator gives up its
-   "DPS" unit and some spacing instead, so the row stays one line. */
+/* The Base / Best card's header title never wraps. */
 .md-typeset .ap-stat-head-label {
   white-space: nowrap;
-}
-@container (max-width: 329px) {
-  .md-typeset .ap-ot1-indicator {
-    margin-right: 0.5rem;
-    letter-spacing: 0.02em;
-  }
-  .md-typeset .ap-ot1-unit {
-    display: none;
-  }
 }
 /* Optimized Training 1's readout + checkbox, kept together at the right
    end of the row. */
@@ -5313,8 +5290,49 @@ h3 { color: var(--dbc-teal); }
   line-height: 1.3;
   font-weight: 700;
 }
-.md-typeset .ap-result-readout-split {
+/* Title line: red "OT1/" (only while Optimized Training 1 is on), the split,
+   and the DPS-cost tag. On a card too narrow for all three the tag wraps to a
+   line of its own. */
+.md-typeset .ap-result-readout-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.35rem;
+}
+.md-typeset .ap-result-readout-split,
+.md-typeset .ap-result-readout-ot1 {
   font-size: 0.7rem;
+}
+.md-typeset .ap-result-readout-ot1 {
+  margin-right: -0.35rem;
+  color: var(--dbc-red);
+}
+.md-typeset .ap-result-readout-ot1::after {
+  content: "/";
+}
+.md-typeset .ap-result-readout-ot1[hidden] {
+  display: none;
+}
+/* Same box as the T→Z and ORB tags, in the site's red. */
+.md-typeset .ap-ot1-tag {
+  padding: 0 0.25rem;
+  border: 1px solid rgba(var(--dbc-red-rgb), 0.45);
+  border-radius: 5px;
+  background-color: rgba(var(--dbc-red-rgb), 0.16);
+  color: var(--dbc-red);
+  font-size: var(--ap-fs-cap);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  white-space: nowrap;
+  cursor: help;
+  /* Centred on the capital letters beside it, which sit above the middle of
+     their line box. */
+  position: relative;
+  top: -0.11rem;
+}
+.md-typeset .ap-ot1-tag[hidden] {
+  display: none;
 }
 .md-typeset .ap-result-readout-pair {
   font-size: var(--ap-fs-base);
@@ -5592,27 +5610,21 @@ h3 { color: var(--dbc-teal); }
   font-size: var(--ap-fs-sm);
   color: var(--dbc-lilac);
 }
-.md-typeset .ap-stat-tiles .ap-stat-row .ap-summary-label::before {
-  content: "";
-  flex: none;
-  width: 0.3rem;
-  height: 0.3rem;
-  border-radius: 50%;
-  background-color: var(--ap-dot, var(--dbc-lavender));
-}
-.md-typeset .ap-stat-row .ap-summary-label--critrate { --ap-dot: var(--dbc-pink); }
-.md-typeset .ap-stat-row .ap-summary-label--critdmg  { --ap-dot: var(--dbc-teal); }
-.md-typeset .ap-stat-row .ap-summary-label--oncrit   { --ap-dot: var(--dbc-orange); }
-.md-typeset .ap-stat-row .ap-summary-label--adddmg   { --ap-dot: var(--dbc-sky); }
-.md-typeset .ap-stat-row .ap-summary-label--evodmg   { --ap-dot: var(--dbc-purple); }
+/* The label text itself carries the stat's category colour. */
+.md-typeset .ap-stat-tiles .ap-stat-row .ap-summary-label--critrate { color: var(--dbc-pink); }
+.md-typeset .ap-stat-tiles .ap-stat-row .ap-summary-label--critdmg  { color: var(--dbc-teal); }
+.md-typeset .ap-stat-tiles .ap-stat-row .ap-summary-label--oncrit   { color: var(--dbc-orange); }
+.md-typeset .ap-stat-tiles .ap-stat-row .ap-summary-label--adddmg   { color: var(--dbc-sky); }
+.md-typeset .ap-stat-tiles .ap-stat-row .ap-summary-label--evodmg   { color: var(--dbc-purple); }
 .md-typeset .ap-stat-tiles .ap-stat-row > :nth-child(2) {
   grid-area: best;
   font-size: 0.75rem;
   font-weight: 700;
-  color: rgb(var(--ap-st-rgb));
-}
-.md-typeset .ap-stat-tiles .ap-stat-row.ap-stat-row--zero > :nth-child(2) {
   color: var(--md-default-fg-color);
+}
+/* A stat the combo does not change reads muted; only the Diff carries colour. */
+.md-typeset .ap-stat-tiles .ap-stat-row.ap-stat-row--zero > :nth-child(2) {
+  color: var(--dbc-muted-text);
 }
 .md-typeset .ap-stat-tiles .ap-stat-row > .ap-stat-delta {
   grid-area: delta;

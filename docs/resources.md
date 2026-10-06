@@ -428,7 +428,7 @@
          EVOLUTION_SPLITS_OT1 in ark-passive-calculator.js) and adds a fixed
          +5% Evo Dmg. Its cooldown reduction is deliberately not modeled.
          Same muted row + WARN pill as Flash Orb Uptime in Party & Positioning. The Top
-         Combinations Base / Best card shows .ap-ot1-indicator while this is on. -->
+         Combinations readout shows .ap-ot1-tag while this is on. -->
     <div class="ap-calc-field-row ap-calc-field-row-muted">
       <label class="ap-calc-field-label" for="ap-ot1" title="Takes 1 of the 3 combined Keen Sense/Limit Break levels, and adds a fixed +5% Evo Dmg. Its Cooldown Reduction isn't modeled.">Optimized Training 1</label>
       <span class="ap-brace-warn-icon ap-ot1-warn" title="Only check this if you'd run Optimized Training 1 for its cooldown reduction. That reduction isn't calculated here, so this just locks in the split and the +5% Evo Dmg.">WARN</span>
@@ -562,7 +562,7 @@
     </div>
     </div>
     <div class="ap-result-readout">
-      <div class="ap-result-readout-name"><span class="ap-result-readout-split">—</span><span class="ap-result-readout-pair">—</span></div>
+      <div class="ap-result-readout-name"><span class="ap-result-readout-head"><span class="ap-result-readout-ot1" hidden>OT1</span><span class="ap-result-readout-split">—</span><span class="ap-ot1-tag" hidden title="Optimized Training 1 is enabled. The DPS figure is your best setup with it vs. your best setup without it. Its CDR isn't modeled.">—</span></span><span class="ap-result-readout-pair">—</span></div>
       <div class="ap-result-readout-pct"><span class="ap-result-pct">—</span><span class="ap-result-delta">—</span></div>
     </div>
   </div>
@@ -574,13 +574,12 @@
        "2nd Best", "Pinned") and the card carries the previewed/pinned state
        classes. The Crit Dmg tile includes Breaking Moon's Crit Dmg add on
        Surge 111, flagged by .ap-tz-tag (hidden on every other build).
-       .ap-ot1-indicator sits in the header row, left of the Diff title, and
-       shows the Optimized Training 1 DPS cost while that option is on. -->
+       The Optimized Training 1 DPS cost lives in the Top Combinations readout
+       (.ap-ot1-tag), not here. -->
   <div class="ap-calc-summary">
     <div class="ap-stat-card ap-stat-card-best ap-stat-table">
       <div class="ap-stat-row ap-stat-row--head">
         <span class="ap-stat-head-label">Base → <span class="ap-stat-card-title">Best</span></span>
-        <span class="ap-ot1-indicator" hidden title="Optimized Training 1 is on: only 2 levels of Keen Sense/Limit Break are available, and +5% Evo Dmg is included in every combo below. The DPS figure is your best setup here vs. your best setup without it. Its cooldown reduction isn't counted.">OT1<span class="ap-ot1-cost"></span></span>
         <span class="ap-stat-col-title">Diff</span>
       </div>
       <div class="ap-stat-tiles">

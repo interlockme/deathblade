@@ -973,6 +973,13 @@
     { key: "lb2ks1", limitBreak: 2, keenSense: 1, label: "LB2/KS1" },
     { key: "lb1ks2", limitBreak: 1, keenSense: 2, label: "LB1/KS2" },
   ];
+  // Top Combinations tabs and readout show the split without the leading
+  // "OT1/" (the readout draws OT1 separately), so a long label cannot overflow
+  // a tab.
+  function splitLabelWithoutOt1(label) {
+    return String(label).replace(/^OT1\//, "");
+  }
+
   // Optimized Training Lv 1 (the .ap-ot1 checkbox) takes one of the same 3
   // keystone levels Limit Break/Keen Sense share, so with it on only 2 are
   // left to split between them. Only its fixed +5% Evo Dmg is modeled - its
@@ -5254,36 +5261,6 @@
     const list = root.querySelector(".ap-calc-results");
     if (!list) return;
 
-    // Optimized Training 1 badge, a line in the Base / Best card - shown
-    // whenever the 2-level OT1 split set is what these rows were ranked
-    // from (see EVOLUTION_SPLITS_OT1).
-    // Also shows what that costs: best-with-OT1 vs best-without, as a %
-    // DPS change (see computeOt1CostPct).
-    const ot1Badge = root.querySelector(".ap-ot1-indicator");
-    if (ot1Badge) {
-      ot1Badge.hidden = !result.ot1;
-      const costEl = ot1Badge.querySelector(".ap-ot1-cost");
-      if (costEl) {
-        const c = result.ot1CostPct;
-        // The figure and the "DPS" unit are their own spans: a narrow
-        // header drops the unit, and the figure stays a leaf element the
-        // regression dump reads.
-        const pct = (c == null || !isFinite(c)) ? null : (c > 0 ? "+" : "") + c.toFixed(2) + "%";
-        costEl.textContent = pct === null ? "" : " (";
-        if (pct !== null) {
-          const figure = document.createElement("span");
-          figure.className = "ap-ot1-pct";
-          figure.textContent = pct;
-          const unit = document.createElement("span");
-          unit.className = "ap-ot1-unit";
-          unit.textContent = " DPS";
-          costEl.appendChild(figure);
-          costEl.appendChild(unit);
-          costEl.appendChild(document.createTextNode(")"));
-        }
-      }
-    }
-
     const state = getApCalcSelection(root);
     const pinnedCombo = state.pinnedCombo;
     const allRanked = result.cells.slice().sort((a, b) => b.pctOfBest - a.pctOfBest);
@@ -5320,7 +5297,7 @@
       const pairEl = rowEl.querySelector(".ap-result-pair");
       const isPinnedRow = !!(pinnedCombo && pinnedCombo.splitKey === cell.split.key && pinnedCombo.pair === cell.keystone);
 
-      if (splitEl) splitEl.textContent = cell.split.label;
+      if (splitEl) splitEl.textContent = splitLabelWithoutOt1(cell.split.label);
       if (pairEl) pairEl.textContent = KEYSTONE_LABELS[cell.keystone] || cell.keystone;
       rowEl.classList.toggle("ap-calc-result-row-best", rank === 1);
       rowEl.classList.toggle("ap-calc-result-row-active", state.previewRank === rank);
@@ -5400,7 +5377,19 @@
       const rdPair = list.querySelector(".ap-result-readout-pair");
       const rdPct = list.querySelector(".ap-result-pct");
       const rdDelta = list.querySelector(".ap-result-delta");
-      if (rdSplit) rdSplit.textContent = cardCell.split.label;
+      if (rdSplit) rdSplit.textContent = splitLabelWithoutOt1(cardCell.split.label);
+      // Optimized Training 1 is in every combo while it is on, so the tabs
+      // leave it out and the readout carries it: coral "OT1" before the split
+      // and a tag with what it costs (best with it vs. best without it).
+      const rdOt1 = list.querySelector(".ap-result-readout-ot1");
+      const rdOt1Tag = list.querySelector(".ap-ot1-tag");
+      if (rdOt1) rdOt1.hidden = !result.ot1;
+      if (rdOt1Tag) {
+        const c = result.ot1CostPct;
+        const shown = !!result.ot1 && c != null && isFinite(c);
+        rdOt1Tag.hidden = !shown;
+        rdOt1Tag.textContent = shown ? (c > 0 ? "+" : "") + c.toFixed(1) + "% DPS" : "\u2014";
+      }
       if (rdPair) rdPair.textContent = KEYSTONE_LABELS[cardCell.keystone] || cardCell.keystone;
       if (rdPct) rdPct.textContent = cardCell.pctOfBest.toFixed(2) + "%";
       if (rdDelta) {

@@ -68,10 +68,19 @@ JS = r"""(args) => {
   const visible = (e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(e).visibility !== 'hidden'; };
   const sig = (e) => e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + '.' + [...e.classList].slice(0, 2).join('.');
   const spill = [], clipped = [], known = [], tap = [], font = [];
+  // Text deliberately pushed out of its own box with a text-indent of one box width or more (an icon
+  // that keeps a text node for assistive tech while a mask paints the glyph) is not content that is
+  // being cut off, so neither the overflow check nor the clip-edge check should read it.
+  const textHidden = (e) => {
+    const ti = getComputedStyle(e).textIndent;
+    const n = parseFloat(ti);
+    return n > 0 && (ti.endsWith('%') ? n >= 100 : n >= e.clientWidth);
+  };
   const cutBy = (e) => {
     // Extent of e's own text nodes (or, for a form control, its own box) vs every ancestor that clips
     // sideways. Inside args.strict roots nothing is excused, and the root's own border box counts as a
     // clip edge too, so a control poking out of a card is caught even though a card does not clip.
+    if (textHidden(e)) return null;
     const rg = document.createRange();
     let l = Infinity, r = -Infinity;
     if (['INPUT', 'SELECT', 'BUTTON'].includes(e.tagName)) {
@@ -107,7 +116,7 @@ JS = r"""(args) => {
     const r = e.getBoundingClientRect(), cs = getComputedStyle(e);
     if ((r.right > vw + 1 || r.left < -1) && !scroller(e)) spill.push(sig(e) + ' right=' + Math.round(r.right));
     if (e.scrollWidth > e.clientWidth + 2 && (cs.overflowX === 'hidden' || cs.textOverflow === 'ellipsis') &&
-        e.clientWidth > 0 && !['SELECT', 'INPUT'].includes(e.tagName))
+        e.clientWidth > 0 && !['SELECT', 'INPUT'].includes(e.tagName) && !textHidden(e))
       clipped.push(sig(e) + ' content ' + e.scrollWidth + 'px in ' + e.clientWidth + 'px');
     const cut = cutBy(e);
     if (cut) (cut.startsWith('KNOWN ') ? known : clipped).push(sig(e) + ' \"' + e.textContent.trim().slice(0, 28) + '\" cut by ' + cut.replace('KNOWN ', ''));
