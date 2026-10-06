@@ -428,7 +428,7 @@
          EVOLUTION_SPLITS_OT1 in ark-passive-calculator.js) and adds a fixed
          +5% Evo Dmg. Its cooldown reduction is deliberately not modeled.
          Same muted row + WARN pill as Flash Orb Uptime in Party & Positioning. The Top
-         Combinations header below shows .ap-ot1-indicator while this is on. -->
+         Combinations Base / Best card shows .ap-ot1-indicator while this is on. -->
     <div class="ap-calc-field-row ap-calc-field-row-muted">
       <label class="ap-calc-field-label" for="ap-ot1" title="Takes 1 of the 3 combined Keen Sense/Limit Break levels, and adds a fixed +5% Evo Dmg. Its Cooldown Reduction isn't modeled.">Optimized Training 1</label>
       <span class="ap-brace-warn-icon ap-ot1-warn" title="Only check this if you'd run Optimized Training 1 for its cooldown reduction. That reduction isn't calculated here, so this just locks in the split and the +5% Evo Dmg.">WARN</span>
@@ -535,7 +535,6 @@
   <div class="ap-calc-results">
     <div class="ap-calc-results-title">
       <span>Top Combinations</span>
-      <span class="ap-ot1-indicator" hidden title="Optimized Training 1 is on: only 2 levels of Keen Sense/Limit Break are available, and +5% Evo Dmg is included in every combo below. The DPS figure is your best setup here vs. your best setup without it. Its cooldown reduction isn't counted.">OT1<span class="ap-ot1-cost"></span></span>
       <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the base for every comparison on this page, instead of the true best. Click again to unpin." disabled>
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M12 17v5"></path>
@@ -574,11 +573,14 @@
        The header's .ap-stat-card-title is the title the JS rewrites ("Best",
        "2nd Best", "Pinned") and the card carries the previewed/pinned state
        classes. The Crit Dmg tile includes Breaking Moon's Crit Dmg add on
-       Surge 111, flagged by .ap-tz-tag (hidden on every other build). -->
+       Surge 111, flagged by .ap-tz-tag (hidden on every other build).
+       .ap-ot1-indicator sits in the header row, left of the Diff title, and
+       shows the Optimized Training 1 DPS cost while that option is on. -->
   <div class="ap-calc-summary">
     <div class="ap-stat-card ap-stat-card-best ap-stat-table">
       <div class="ap-stat-row ap-stat-row--head">
         <span class="ap-stat-head-label">Base → <span class="ap-stat-card-title">Best</span></span>
+        <span class="ap-ot1-indicator" hidden title="Optimized Training 1 is on: only 2 levels of Keen Sense/Limit Break are available, and +5% Evo Dmg is included in every combo below. The DPS figure is your best setup here vs. your best setup without it. Its cooldown reduction isn't counted.">OT1<span class="ap-ot1-cost"></span></span>
         <span class="ap-stat-col-title">Diff</span>
       </div>
       <div class="ap-stat-tiles">
@@ -1349,8 +1351,14 @@
           </span>
         </div>
         <div class="ap-calc-field-row ap-engr-manafood-main-row">
-          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood-main" title="Mana Food for its Main Stat only, without equipping Bleed on Maelstrom. Uses the Mana Food type selected above.">Mana Food (Main Stat only)</label>
+          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood-main" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus.">Mana Food (Main Stat only)</label>
+          <span class="ap-engr-controls">
           <input type="checkbox" id="ap-engr-manafood-main" class="ap-engr-manafood-main">
+          <select id="ap-engr-manafood-main-amount" class="ap-engr-manafood-main-amount" aria-label="Mana Food (Main Stat only) Amount">
+            <option value="6000" selected>6000 DEX</option>
+            <option value="12000">12000 DEX</option>
+          </select>
+          </span>
         </div>
         <div class="ap-calc-field-row ap-engr-rage-rune-row">
           <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-rage-rune" title="16% chance per skill cast for +16% Move Speed and +16% Atk. Speed for 6s.">Rage Rune on Surprise Attack</label>

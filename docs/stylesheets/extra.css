@@ -4896,7 +4896,8 @@ h3 { color: var(--dbc-teal); }
    every card width this grid can produce. flex-wrap on the row then
    drops the select under the label when the card is too narrow for both
    side by side, instead of letting it poke out past the card's border. */
-.md-typeset .ap-engr-manafood-amount {
+.md-typeset .ap-engr-manafood-amount,
+.md-typeset .ap-engr-manafood-main-amount {
   flex-shrink: 0;
 }
 .md-typeset .ap-engr-manafood-row {
@@ -5050,17 +5051,32 @@ h3 { color: var(--dbc-teal); }
   margin: 0 -0.4rem 0.4rem;
   padding: 0.5rem var(--ap-pad-x);
 }
+/* Optimized Training 1's DPS cost: in the Base / Best card's header row, just
+   left of the Diff title, so it adds no height and never competes with the Top
+   Combinations header's pin button and state chip. Hidden (no space) while OT1
+   is off. */
 .md-typeset .ap-ot1-indicator {
-  color: var(--dbc-red);
-  text-align: right;
-  /* Never breaks mid-text; on a narrow card the flex-wrap above drops the
-     whole thing to its own line instead. */
+  margin: 0 0.9rem 0 auto;
   white-space: nowrap;
-  margin-left: 0.25rem;
+  color: var(--dbc-red);
   cursor: help;
 }
 .md-typeset .ap-ot1-indicator[hidden] {
   display: none;
+}
+/* The header's title never wraps; on a narrow card the indicator gives up its
+   "DPS" unit and some spacing instead, so the row stays one line. */
+.md-typeset .ap-stat-head-label {
+  white-space: nowrap;
+}
+@container (max-width: 329px) {
+  .md-typeset .ap-ot1-indicator {
+    margin-right: 0.5rem;
+    letter-spacing: 0.02em;
+  }
+  .md-typeset .ap-ot1-unit {
+    display: none;
+  }
 }
 /* Optimized Training 1's readout + checkbox, kept together at the right
    end of the row. */
@@ -5083,8 +5099,8 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-calc-results.ap-calc-results-pinned {
   --ap-st-rgb: var(--dbc-red-rgb);
 }
-/* Header: title, the OT1 badge when on, then the pin button and the state
-   chip, which is the rightmost item. The pin button always takes its space
+/* Header: title, then the pin button and the state chip, which is the
+   rightmost item. The pin button always takes its space
    (it is only disabled and hidden while rank 1 is selected), so the header
    and everything below it keep their height when the selection changes. */
 .md-typeset .ap-calc-results-title {
@@ -5591,7 +5607,7 @@ h3 { color: var(--dbc-teal); }
   align-items: center;
   gap: 0.3rem;
   min-width: 0;
-  font-size: var(--ap-fs-cap);
+  font-size: var(--ap-fs-sm);
   color: var(--dbc-lilac);
 }
 .md-typeset .ap-stat-tiles .ap-stat-row .ap-summary-label::before {
@@ -6008,11 +6024,13 @@ h3 { color: var(--dbc-teal); }
 /* On a phone the controls drop under the label instead of squeezing it into
    a mid-word break. */
 .md-typeset .ap-engr-mi-row,
-.md-typeset .ap-engr-manafood-row {
+.md-typeset .ap-engr-manafood-row,
+.md-typeset .ap-engr-manafood-main-row {
   flex-wrap: wrap;
 }
 .md-typeset .ap-engr-mi-row label.ap-calc-field-label,
-.md-typeset .ap-engr-manafood-row label.ap-calc-field-label {
+.md-typeset .ap-engr-manafood-row label.ap-calc-field-label,
+.md-typeset .ap-engr-manafood-main-row label.ap-calc-field-label {
   min-width: max-content;
 }
 /* Accessory Line Comparison's 4 slot panels (Necklace/Earrings/Rings/Any

@@ -3936,7 +3936,7 @@
   }
 
   // Isolated Main Stat AP ratio for Mana Food - mainStatAmount is whichever
-  // of the two Mana Food tiers (6000 or 12000, see engrInputs.manaFoodAmount)
+  // of the two Mana Food tiers (6000 or 12000, see manaFoodAmountFor)
   // the reader picked - reusing the exact same gearApTotal inputs/shape as
   // the Gearing section's own "STR/DEX/INT +12000/14000/16000" Bracelet
   // line (see that row above) - requires real Weapon Power/Main Stat like
@@ -3985,6 +3985,12 @@
   function manaFoodBleedApplies(engrInputs, inputs) {
     return engrInputs.spec === "surge" && inputs.braceSpecBuild !== "surge-222" && !engrInputs.manaFoodMainOnly;
   }
+  // The Main Stat amount of whichever food is eaten: the Surge 111/333 Main
+  // Stat only food has its own amount select, every other case (the regular
+  // box, which on RE and 222 is the Main Stat only food) reads the regular one.
+  function manaFoodAmountFor(engrInputs) {
+    return engrInputs.manaFoodMainOnly ? engrInputs.manaFoodMainAmount : engrInputs.manaFoodAmount;
+  }
   // Short label for the food itself, used everywhere a "which food did
   // you eat" string gets built - "Mana Food" alone (no "+ Bleed") for RE
   // and for 222, matching manaFoodBleedApplies exactly so the label never
@@ -4005,7 +4011,7 @@
   // checkbox itself is off, regardless of spec.
   function manaFoodContributionGain(engrInputs, inputs) {
     if (!engrInputs.manaFood) return 0;
-    return manaFoodGain(inputs, engrInputs.manaFoodAmount, manaFoodBleedApplies(engrInputs, inputs));
+    return manaFoodGain(inputs, manaFoodAmountFor(engrInputs), manaFoodBleedApplies(engrInputs, inputs));
   }
 
   // Which of Wine/Mana Food is currently better to eat, and by how much -
@@ -4022,7 +4028,7 @@
     const wineFrac = raidCaptainMoveSpeedFraction(Object.assign({}, engrInputs, { wine: true, manaFood: false }), inputs.yearning);
     const foodFrac = raidCaptainMoveSpeedFraction(Object.assign({}, engrInputs, { wine: false, manaFood: true }), inputs.yearning);
     const wineMult = 1 + rcBase * wineFrac;
-    const foodMult = (1 + rcBase * foodFrac) * (1 + manaFoodGain(inputs, engrInputs.manaFoodAmount, manaFoodBleedApplies(engrInputs, inputs)));
+    const foodMult = (1 + rcBase * foodFrac) * (1 + manaFoodGain(inputs, manaFoodAmountFor(engrInputs), manaFoodBleedApplies(engrInputs, inputs)));
     return foodMult / wineMult - 1;
   }
 
@@ -4499,6 +4505,7 @@
       manaFood: getCheckbox(root, ".ap-engr-manafood", false) || manaFoodMainOnly,
       manaFoodMainOnly,
       manaFoodAmount: getNumber(root, ".ap-engr-manafood-amount", 6000),
+      manaFoodMainAmount: getNumber(root, ".ap-engr-manafood-main-amount", 6000),
       stone1Target: getSelect(root, ".ap-engr-stone1-target", "None"),
       stone1Level: getSelect(root, ".ap-engr-stone1-level", "0 Lv."),
       stone2Target: getSelect(root, ".ap-engr-stone2-target", "None"),
@@ -5248,20 +5255,27 @@
     const list = root.querySelector(".ap-calc-results");
     if (!list) return;
 
-    // Optimized Training 1 badge in the Top Combinations header - shown
+    // Optimized Training 1 badge, a line in the Base / Best card - shown
     // whenever the 2-level OT1 split set is what these rows were ranked
     // from (see EVOLUTION_SPLITS_OT1).
     // Also shows what that costs: best-with-OT1 vs best-without, as a %
     // DPS change (see computeOt1CostPct).
-    const ot1Badge = list.querySelector(".ap-ot1-indicator");
+    const ot1Badge = root.querySelector(".ap-ot1-indicator");
     if (ot1Badge) {
       ot1Badge.hidden = !result.ot1;
       const costEl = ot1Badge.querySelector(".ap-ot1-cost");
       if (costEl) {
         const c = result.ot1CostPct;
-        costEl.textContent = (c == null || !isFinite(c))
-          ? ""
-          : " (" + (c > 0 ? "+" : "") + c.toFixed(2) + "% DPS)";
+        // The "DPS" unit is its own span so a narrow header can drop it.
+        const pct = (c == null || !isFinite(c)) ? null : (c > 0 ? "+" : "") + c.toFixed(2) + "%";
+        costEl.textContent = pct === null ? "" : " (" + pct;
+        if (pct !== null) {
+          const unit = document.createElement("span");
+          unit.className = "ap-ot1-unit";
+          unit.textContent = " DPS";
+          costEl.appendChild(unit);
+          costEl.appendChild(document.createTextNode(")"));
+        }
       }
     }
 
