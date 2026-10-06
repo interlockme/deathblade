@@ -1349,7 +1349,7 @@
           </span>
         </div>
         <div class="ap-calc-field-row ap-engr-manafood-main-row">
-          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood-main" title="Mana Food for its Main Stat only, without equipping Bleed on Maelstrom. Uses the Mana Food amount selected below. Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus.">Mana Food (Main Stat only)</label>
+          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood-main" title="Mana Food for its Main Stat only, without equipping Bleed on Maelstrom. Uses the Mana Food type selected above.">Mana Food (Main Stat only)</label>
           <input type="checkbox" id="ap-engr-manafood-main" class="ap-engr-manafood-main">
         </div>
         <div class="ap-calc-field-row ap-engr-rage-rune-row">

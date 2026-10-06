@@ -5808,7 +5808,7 @@
   // 222's own gearing more easily clears the Bleed rune's stat threshold
   // without Mana Food's help - worth flagging, but only for the one build
   // it's actually about, so it's appended rather than said unconditionally.
-  const MANAFOOD_TIP_222_SUFFIX = " 222 may not need Mana Food to equip Maelstrom Bleed.";
+  const MANAFOOD_TIP_222_SUFFIX = " 222 does not need Mana Food to equip Maelstrom Bleed.";
   // Contribution rows are a single value per engraving (not a Low/Mid/
   // High trio), so this doesn't reuse renderComparisonRows - closer to
   // renderArkGridComparison's own bespoke-shape renderer just above.
