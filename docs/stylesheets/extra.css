@@ -4568,6 +4568,9 @@ h3 { color: var(--dbc-teal); }
      would come out lighter than the same card in the main grid. */
   --ap-surface: #1c1d1f;
   --ap-surface-2: #232426;
+  /* Table header bars are flat like the card titles: the card body colour,
+     separated from the rows by the header's bottom rule. */
+  --ap-surface-head: var(--ap-surface);
   --ap-line: rgba(255, 255, 255, 0.09);
   --ap-line-strong: rgba(var(--dbc-purple-rgb), 0.35);
   margin: 1em 0 1.5em;
@@ -4718,7 +4721,6 @@ h3 { color: var(--dbc-teal); }
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--ap-cat);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--ap-cat) 14%, transparent), transparent 70%);
   border-bottom: 1px solid var(--ap-line);
 }
 .md-typeset .ap-calc-group--crit-rate  { --ap-cat: var(--dbc-pink); }
@@ -5019,8 +5021,13 @@ h3 { color: var(--dbc-teal); }
      reads clearly dimmer than an active one. */
   opacity: 0.6;
 }
-.md-typeset .ap-calc-field-row input:disabled,
+.md-typeset .ap-calc-field-row input:disabled:not([type="checkbox"]),
 .md-typeset .ap-calc-field-row select:disabled {
+  cursor: not-allowed;
+  /* A dashed edge tells a disabled field from an enabled one that is merely empty or at its lowest value. */
+  border-style: dashed;
+}
+.md-typeset .ap-calc-field-row input[type="checkbox"]:disabled {
   cursor: not-allowed;
 }
 
@@ -6622,6 +6629,16 @@ h3 { color: var(--dbc-teal); }
   .md-typeset .ap-gear-inputs .ap-calc-field-row > :last-child {
     margin-left: auto;
   }
+  /* The live value, such as 3.00%, belongs to the label, so it sits right after it
+     instead of at the far edge of the line the control dropped away from. */
+  .md-typeset .ap-gear-inputs .ap-calc-field-row:has(> .ap-value-display) > label.ap-calc-field-label {
+    margin-right: 0;
+  }
+  .md-typeset .ap-gear-inputs .ap-calc-field-row > .ap-value-display {
+    min-width: 0;
+    margin-right: auto;
+    text-align: left;
+  }
 }
 .md-typeset .ap-gear-card {
   min-width: 0;
@@ -6773,6 +6790,31 @@ h3 { color: var(--dbc-teal); }
   background-color: var(--ap-surface-2);
   color: var(--md-default-fg-color);
 }
+/* In a narrow column (a phone) the whole readout is wider than the card, so
+   it wrapped its last arrow onto a line of its own. The label takes its own
+   centered line and the numbers sit together on the line below at a slightly
+   smaller size, so the arrows always stay next to their values. */
+.md-typeset .ap-gear-card-stack {
+  container-type: inline-size;
+}
+@container (max-width: 380px) {
+  .md-typeset .ap-gear-ap-readout {
+    gap: 0.25em 0.3em;
+    font-size: 0.85em;
+    padding-inline: 0.25rem;
+  }
+  .md-typeset .ap-gear-ap-readout-label {
+    flex-basis: 100%;
+    margin-right: 0;
+    text-align: center;
+  }
+  .md-typeset .ap-gear-ap-readout-adrenaline-stage {
+    gap: 0.3em;
+  }
+  .md-typeset .ap-gear-ap-readout-final {
+    padding: 0.1rem 0.5rem;
+  }
+}
 /* Stone 1+2's merged row (see resources.md's own comment on
    .ap-engr-stone-row--first) directly follows this grid, which now holds
    Raid Captain Variables. The row is a real card (see
@@ -6790,17 +6832,34 @@ h3 { color: var(--dbc-teal); }
   gap: var(--ap-gap);
   min-width: 0;
 }
-.md-typeset .ap-gear-cards + .ap-engr-stone-row--first {
+.md-typeset .ap-gear-cards + .ap-engr-contrib-panel {
   margin-top: var(--ap-gap);
 }
-/* Ability Stone is one compact row (title plus both stone pickers) that is
-   also a field row, so it needs its own padding rather than the panel's
-   header-and-body padding. */
-.md-typeset .ap-gear-card--engr-stone {
-  padding: 0.35rem var(--ap-pad-x);
-  /* Same gap as between any two cards, so the table below does not butt
-     up against the card. */
-  margin-bottom: var(--ap-gap);
+/* The Ability Stone pickers and the contribution table are one card: the
+   panel carries the border and radius, the picker row is its title bar and
+   the table below drops its own frame. */
+.md-typeset .ap-engr-contrib-panel {
+  --ap-cat: var(--dbc-lavender);
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius-lg);
+  background-color: var(--ap-surface);
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.md-typeset .ap-engr-contrib-panel .ap-engr-stone-row {
+  /* Left padding equals the table cells' (0.7rem) so the title lines up with
+     the Engraving column header and the names under it. */
+  padding: 0.35rem var(--ap-pad-x) 0.35rem 0.7rem;
+  border-bottom: 1px solid var(--ap-line);
+}
+.md-typeset .ap-engr-contrib-panel .ap-brace-compare-table {
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+}
+.md-typeset .ap-engr-contrib-panel .ap-brace-compare-table th,
+.md-typeset .ap-engr-contrib-panel .ap-brace-compare-table td {
+  border-radius: 0;
 }
 /* Title loses the old standalone-heading treatment (centered text, its
    own top margin/padding/border, a bumped size to carry a header on its
@@ -6821,7 +6880,12 @@ h3 { color: var(--dbc-teal); }
   border-top: none;
   text-align: left;
   font-size: var(--ap-fs-cap);
-  letter-spacing: 0.09em;
+  font-weight: 700;
+  text-transform: uppercase;
+  /* Same type as the table's header cells below, so the two read as one
+     header system. */
+  letter-spacing: 0.08em;
+  color: var(--dbc-muted-text);
   flex: 1 1 auto;
   min-width: 0;
 }
@@ -6888,16 +6952,15 @@ h3 { color: var(--dbc-teal); }
   opacity: 0.6; /* same value/reason as the general disabled-row rule above */
 }
 /* Below ~640px the title plus both Stones' labels and selects do not
-   fit one line without crushing something - stack the title above
-   Stone 1+2 instead rather than
-   let .ap-engr-stone-groups's own flex-wrap above silently eat all the
-   squeeze by cramming Stone 1 and Stone 2's selects narrower and
+   fit one line without crushing something, so the title stacks above the
+   Stones. Each Stone is then one full-width line, its label on the left and
+   its selects on the right like every other field row; the selects wrap
+   under each other only when the line is too narrow for both, rather than
+   .ap-engr-stone-groups's own flex-wrap squeezing the selects narrower and
    narrower first. Querying .ap-brace-compare-body's own rendered width
    (container-type set there) rather than the viewport, per this file's
    usual reasoning: the sidebar/TOC coming and going shifts this panel's
-   actual width at a given viewport size. align-self: flex-end on the
-   stone-groups keeps them right-aligned even stacked, matching every
-   other field row's control-on-the-right convention. */
+   actual width at a given viewport size. */
 @container (max-width: 640px) {
   .md-typeset .ap-engr-stone-row {
     flex-direction: column;
@@ -6905,20 +6968,26 @@ h3 { color: var(--dbc-teal); }
     gap: 0.4em;
   }
   .md-typeset .ap-engr-stone-row .ap-engr-stone-groups {
-    align-self: flex-end;
-  }
-}
-/* Below ~420px even Stone 1 and Stone 2 side by side (stacked under the
-   title per the 640px fallback above) do not leave each label +
-   target select + level select enough room - stack each Stone's own
-   label above its pair instead, same "give the group a much narrower
-   natural width" fix .ap-engr-stone-pair's own flex-wrap already applies
-   one level down for the target/level selects themselves. Applies to BOTH Stone 1 and Stone 2 alike: both share the exact same .ap-engr-stone-label-group markup, so one rule covers both. */
-@container (max-width: 420px) {
-  .md-typeset .ap-engr-stone-row .ap-engr-stone-label-group {
+    align-self: stretch;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 0.3em;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+  .md-typeset .ap-engr-stone-row .ap-engr-stone-label-group {
+    justify-content: space-between;
+  }
+  /* The engraving select takes the room the level select leaves and ends in
+     an ellipsis if its text is longer, so the pair stays on one line. */
+  .md-typeset .ap-engr-stone-row .ap-engr-stone-pair {
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+  }
+  .md-typeset .ap-engr-stone-row .ap-engr-stone-pair > select:first-child {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .md-typeset .ap-engr-stone-row .ap-engr-stone-pair > select:last-child {
+    flex: 0 0 auto;
   }
 }
 /* Stone 1/2's own target (engraving) + level selects grouped into one
@@ -6935,9 +7004,7 @@ h3 { color: var(--dbc-teal); }
   align-items: center;
   gap: 0.5em;
 }
-/* flex-wrap: wrap above is the narrow-phone half of this fix (paired
-   with the 420px @container fallback above stacking the label above
-   this pair): even alone on its own full-width line, the target
+/* flex-wrap: wrap above is the narrow-phone fix: even alone on its own full-width line, the target
    select's native rendered width follows its WIDEST option ("Keen Blunt
    Weapon"), not just its current value - on phones under ~340px that's
    still wider than the row has room for combined with the level select
@@ -7090,7 +7157,7 @@ h3 { color: var(--dbc-teal); }
   letter-spacing: 0.08em;
   color: var(--dbc-muted-text);
   padding: 0.5rem 0.7rem;
-  background-color: var(--ap-surface-2);
+  background-color: var(--ap-surface-head);
   border-bottom: 1px solid var(--ap-line);
 }
 .md-typeset .ap-brace-compare-table thead tr:first-child th:first-child {
@@ -7444,16 +7511,40 @@ h3 { color: var(--dbc-teal); }
 /* Spacing between the DPS Contribution table above and the Best
    Combo/Runner-Up panel, keyed off the table's wrapper (no sibling note
    sits between them to supply it). */
-.md-typeset .ap-engr-contrib-wrap + .ap-engr-best-panel {
+.md-typeset .ap-engr-contrib-panel + .ap-engr-best-panel {
   margin-top: 0.9em;
 }
 @media screen and (max-width: 600px) {
   .md-typeset .ap-brace-compare-table {
     font-size: 0.86em;
   }
+  .md-typeset .ap-engr-contrib-panel .ap-engr-stone-row {
+    padding-left: calc(var(--ap-fs-cap) * 0.4);
+  }
   .md-typeset .ap-brace-compare-table th,
   .md-typeset .ap-brace-compare-table td {
     padding: 0.35em 0.4em;
+  }
+}
+
+/* The Engraving contribution table is wider than a phone-width panel and
+   scrolls sideways inside its wrapper. The engraving names stay pinned at
+   the left edge while the Ability Stone levels scroll under them, so every
+   figure keeps its row label. Sticky cells need an opaque fill. */
+@container (max-width: 480px) {
+  .md-typeset .ap-engr-contrib-table th:first-child,
+  .md-typeset .ap-engr-contrib-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    min-width: 7.6em;
+    border-right: 1px solid var(--ap-line);
+  }
+  .md-typeset .ap-engr-contrib-table td:first-child {
+    background-color: var(--ap-surface);
+  }
+  .md-typeset .ap-engr-contrib-table th:first-child {
+    background-color: var(--ap-surface-head);
   }
 }
 

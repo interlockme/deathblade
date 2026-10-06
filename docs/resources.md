@@ -1422,9 +1422,9 @@
 
     <!-- Stone 1 and Stone 2 share a single row, titled just "Ability
          Stone" (a longer title would force Stone 1 onto a line by
-         itself). It is a full .ap-gear-card (see
-         .ap-gear-card--engr-stone in extra.css) rather than a bare
-         dashed-separator row. Since "Ability Stone" as a title already
+         itself). It is the title bar of the
+         .ap-engr-contrib-panel that also holds the contribution table
+         (one card, see extra.css). Since "Ability Stone" as a title already
          says what both slots are, their labels are just "1"/"2" (the
          tooltips still spell out "Ability Stone's first/second slot" in
          full). .ap-engr-stone-groups wraps the 2 label+pair units (see
@@ -1436,7 +1436,8 @@
          .ap-engr-stone-groups for the responsive fallback once both
          stones plus their selects do not fit next to the title on one
          line. -->
-    <div class="ap-calc-field-row ap-engr-stone-row ap-engr-stone-row--first ap-gear-card ap-gear-card--engr-stone">
+    <div class="ap-engr-contrib-panel">
+    <div class="ap-calc-field-row ap-engr-stone-row ap-engr-stone-row--first">
       <p class="ap-acc-panel-title ap-engr-contrib-title">Ability Stone</p>
       <span class="ap-engr-stone-groups">
         <span class="ap-engr-stone-label-group">
@@ -1485,26 +1486,21 @@
         </span>
       </span>
     </div>
-
     <div class="ap-acc-table-scroll ap-engr-contrib-wrap">
       <table class="ap-brace-compare-table ap-engr-contrib-table">
         <thead>
           <tr>
             <th class="ap-brace-th-label">Engraving</th>
             <th>DPS Contribution</th>
-            <th colspan="4">Ability Stone</th>
-          </tr>
-          <tr>
-            <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
-            <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
-            <th>Lv.1</th>
-            <th>Lv.2</th>
-            <th>Lv.3</th>
-            <th>Lv.4</th>
+            <th>Stone Lv.1</th>
+            <th>Stone Lv.2</th>
+            <th>Stone Lv.3</th>
+            <th>Stone Lv.4</th>
           </tr>
         </thead>
         <tbody class="ap-engr-contrib-rows"></tbody>
       </table>
+    </div>
     </div>
 
     <div class="ap-bvb-cards ap-engr-best-panel">
