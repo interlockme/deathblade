@@ -5351,9 +5351,8 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---- Inline skill/tripod comparison (left vs right) ---- */
-/* Same side-by-side-cards idiom as .ap-calc-stat-cards below, but generic
-   and hand-authored in markdown for a quick "A vs B" inside a setup note,
-   rather than JS-generated. Flex-wrap with a 15em basis per card instead of
+/* Side-by-side cards, generic and hand-authored in markdown for a quick
+   "A vs B" inside a setup note, rather than JS-generated. Flex-wrap with a 15em basis per card instead of
    a viewport @media breakpoint: the row sizes itself from its own available
    width, so the sidebar/TOC coming and going can't leave it two cramped
    ~200px columns (a 480px viewport query did exactly that between 481px and
@@ -5413,29 +5412,12 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---- Fixed-setup / best-combo verification panel ---- */
-/* Two cards side by side: what your gear gives you unconditionally (Base),
-   and what the top-ranked combo above adds on top of it (Best). Same
-   label:value row shape in both so they read as directly comparable, with
-   the Best card visually promoted (teal border, same treatment as the #1
-   row in the results list above) so the eye lands on it first. */
+/* One card compares what your gear gives you unconditionally (Base) with
+   what the top-ranked combo above adds on top of it (Best), with the card
+   promoted (teal border, same treatment as the #1 row in the results list
+   above) so the eye lands on it first. */
 .md-typeset .ap-calc-summary {
   margin: 0;
-}
-.md-typeset .ap-calc-stat-cards {
-  display: grid;
-  /* minmax(0, 1fr) rather than bare 1fr in both rules below - same bare-
-     track story as .ap-calc-gear and the BvB grid: a bare 1fr's default
-     minimum is its content's min-content, not 0, so on phone widths this
-     grid (and the .ap-calc-live column it lives in) was refusing to
-     shrink below its widest stat card's content instead of fitting the
-     viewport. */
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 0.8em;
-}
-@media screen and (max-width: 480px) {
-  .md-typeset .ap-calc-stat-cards {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 .md-typeset .ap-stat-card {
   border: 1px solid var(--ap-line);
@@ -6006,11 +5988,6 @@ h3 { color: var(--dbc-teal); }
     margin-left: auto;
   }
 }
-.md-typeset .ap-brace-compare-intro {
-  font-size: var(--ap-fs-sm);
-  color: var(--dbc-muted-text);
-  margin: 0 0 0.8rem;
-}
 /* Engraving option rows (Mass Increase, the Mana Food, Support and Rage Rune
    rows) follow the shared label-left, control-right pattern. A row with a
    checkbox plus a select keeps both in .ap-engr-controls on the right. */
@@ -6136,8 +6113,8 @@ h3 { color: var(--dbc-teal); }
   border: 1px solid var(--ap-line);
   border-radius: 10px;
 }
-/* Only one Variant tier is ever shown at once, same hidden-unless-active
-   convention as the Breaking Moon row in the stat table. */
+/* Only one Variant tier is ever shown at once; the other family's tier is
+   hidden rather than dropped. */
 .md-typeset .ap-build-toggle-tier--hidden {
   display: none;
 }

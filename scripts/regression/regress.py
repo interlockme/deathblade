@@ -293,6 +293,25 @@ FOOD_CROSSINGS = [
 ]
 
 
+# Main Stat only food amount: its own select (ap-engr-manafood-main-amount) feeds the Main Stat only food,
+# the regular select (ap-engr-manafood-amount) feeds the regular food, and neither moves the other. Steps are
+# (control, value) pairs, a ("toggle", control) click, or an "@build" switch.
+MAIN_AMOUNT = "select#ap-engr-manafood-main-amount:0"
+REG_AMOUNT = "select#ap-engr-manafood-amount:0"
+MAIN_BOX = "input#ap-engr-manafood-main:0"
+MAIN_AMOUNT_SEQUENCES = [
+    ("main amount: surge-111, main food on, main 12000", "surge-111", [("toggle", MAIN_BOX), (MAIN_AMOUNT, "12000")]),
+    ("main amount: surge-111, main food on, regular 12000 only", "surge-111", [("toggle", MAIN_BOX), (REG_AMOUNT, "12000")]),
+    ("main amount: surge-111, main food on, both 12000", "surge-111",
+     [("toggle", MAIN_BOX), (MAIN_AMOUNT, "12000"), (REG_AMOUNT, "12000")]),
+    ("main amount: surge-333, main food on, main 12000", "surge-333", [("toggle", MAIN_BOX), (MAIN_AMOUNT, "12000")]),
+    ("main amount: surge-111, main 12000 set, then food on and back through 222", "surge-111",
+     [(MAIN_AMOUNT, "12000"), ("toggle", MAIN_BOX), "@surge-222", "@surge-111"]),
+    ("main amount: surge-222, regular 12000, regular box is the main food", "surge-222",
+     [(REG_AMOUNT, "12000"), ("toggle", "input#ap-engr-manafood:0")]),
+]
+
+
 # Setup A vs Setup B stone targets: a side's Ability Stones can only boost the 3 core engravings or the
 # 2 competing engravings in its own Option slots (5 engravings total). Steps are (control, value) pairs
 # set in order (a programmatic set skips the disabled-option check on purpose, like a preset load or an
@@ -530,11 +549,14 @@ def run_calculator(base_url, payloads, fast=False):
                 if isinstance(step, str):
                     if not go_build(step[1:]):
                         return False
+                elif step[0] == "toggle":
+                    if not s.ev("i => window.__rg.toggle(i)", index[step[1]]):
+                        return False
                 elif not s.ev("([k, v]) => window.__rg.setByKey(k, v)", list(step)):
                     return False
             return True
 
-        for name, build, steps in SVS_STONE_SEQUENCES:
+        for name, build, steps in SVS_STONE_SEQUENCES + MAIN_AMOUNT_SEQUENCES:
             if not probe(name, lambda b=build, q=steps: run_kv(b, q)):
                 skipped.append(name)
                 restart()

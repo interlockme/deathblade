@@ -927,8 +927,7 @@
       if (isActive) activeVariantLabel = chip.textContent;
     });
     // Only one Variant tier (RE's 2 chips or Surge's 3) is ever shown at
-    // once - the other family's tier is hidden rather than dropped, same
-    // hidden-unless-active convention as the Breaking Moon summary row.
+    // once - the other family's tier is hidden rather than dropped.
     root.querySelectorAll(".ap-build-toggle-tier--variant").forEach((tier) => {
       const tierFamily = tier.classList.contains("ap-build-toggle-tier--variant-surge") ? "surge" : "re";
       tier.classList.toggle("ap-build-toggle-tier--hidden", tierFamily !== family);
@@ -1426,9 +1425,9 @@
   // combinedMultiplier), KBW/Adrenaline math, and Spec math with no
   // separate keystone-specific branching - and because it shifts
   // critDmgTotal, it can genuinely change which keystone pair comes out
-  // on top for Surge 111, so it's surfaced as its own labeled line (see
-  // renderGrid's Breaking Moon row) rather than silently folded into the
-  // combined Crit Dmg stat.
+  // on top for Surge 111, so renderGrid folds it into the Crit Dmg tile's
+  // total and says so in the tile's T\u2192Z tag tooltip rather than leaving
+  // it silent.
   function breakingMoonContribution(inputs) {
     const active = inputs.braceSpecBuild === "surge-111";
     const spec = BRACE_SPEC_BUILDS["surge-111"];
@@ -5266,13 +5265,19 @@
       const costEl = ot1Badge.querySelector(".ap-ot1-cost");
       if (costEl) {
         const c = result.ot1CostPct;
-        // The "DPS" unit is its own span so a narrow header can drop it.
+        // The figure and the "DPS" unit are their own spans: a narrow
+        // header drops the unit, and the figure stays a leaf element the
+        // regression dump reads.
         const pct = (c == null || !isFinite(c)) ? null : (c > 0 ? "+" : "") + c.toFixed(2) + "%";
-        costEl.textContent = pct === null ? "" : " (" + pct;
+        costEl.textContent = pct === null ? "" : " (";
         if (pct !== null) {
+          const figure = document.createElement("span");
+          figure.className = "ap-ot1-pct";
+          figure.textContent = pct;
           const unit = document.createElement("span");
           unit.className = "ap-ot1-unit";
           unit.textContent = " DPS";
+          costEl.appendChild(figure);
           costEl.appendChild(unit);
           costEl.appendChild(document.createTextNode(")"));
         }
