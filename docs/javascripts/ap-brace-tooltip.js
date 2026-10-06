@@ -85,10 +85,10 @@
 // ark-passive-calculator.js itself updates in place on a later recompute
 // rather than recreating the node - the Accessory Comparison's Main Stat
 // input (enforceAvbSlotUI, title changes with the Necklace/Earring/Ring
-// slot dropdown), the Engraving Comparison's Mana Food checkbox label
-// (title's Surge-222 aside changes with the build toggle), and the
-// Bracelet Comparison's Spec Stat icon (RE-vs-Surge aside) are the three
-// currently in resources.md. registerRenderer's MutationObserver
+// slot dropdown), the Engraving Comparison's first Mana Food pill (its
+// title swaps between the Maelstrom Bleed and Main Stat texts with the
+// build toggle), and the Bracelet Comparison's Spec Stat icon
+// (RE-vs-Surge aside) are the three currently in resources.md. registerRenderer's MutationObserver
 // only fires on newly ADDED nodes, so a plain "wire once, strip title"
 // would leave the ORIGINAL tip text frozen forever once one of these
 // updates its title post-wiring - worse, since the freshly-reapplied

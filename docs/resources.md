@@ -1340,7 +1340,7 @@
           <input type="number" id="ap-engr-maelstrom-uptime" class="ap-engr-maelstrom-uptime" min="0" max="100" step="1" value="85">
         </div>
         <div class="ap-calc-field-row ap-engr-manafood-row">
-          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus."><span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed)</span></label>
+          <span class="ap-engr-food-label-group"><label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus."><span class="ap-engr-manafood-label">Mana Food</span></label><span class="ap-engr-food-tag" title="Also counts the DPS gain from equipping the Bleed rune on Maelstrom.">Mael Bleed</span></span>
           <span class="ap-engr-controls">
           <input type="checkbox" id="ap-engr-manafood" class="ap-engr-manafood" checked>
           <select id="ap-engr-manafood-amount" class="ap-engr-manafood-amount" aria-label="Mana Food Amount">
@@ -1350,7 +1350,7 @@
           </span>
         </div>
         <div class="ap-calc-field-row ap-engr-manafood-main-row">
-          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood-main" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus.">Mana Food (Main Stat only)</label>
+          <span class="ap-engr-food-label-group"><label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood-main" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus."><span class="ap-engr-manafood-main-label">Mana Food</span></label><span class="ap-engr-food-tag" title="Only counts the Main Stat from Mana Food.">Main Stat</span></span>
           <span class="ap-engr-controls">
           <input type="checkbox" id="ap-engr-manafood-main" class="ap-engr-manafood-main">
           <select id="ap-engr-manafood-main-amount" class="ap-engr-manafood-main-amount" aria-label="Mana Food (Main Stat only) Amount">

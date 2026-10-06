@@ -833,7 +833,7 @@
     return !!currentBuildConfig(root).isSurge;
   }
   // 222's own gearing more easily clears the Bleed rune's stat threshold
-  // without Mana Food's help (see MANAFOOD_TIP_222_SUFFIX below), so 222
+  // without Mana Food's help, so 222
   // is the one Surge build whose Mana Food is treated as Main-Stat-only,
   // same as RE - see manaFoodBleedApplies, the actual gate this feeds.
   function is222Build(root) {
@@ -5812,11 +5812,10 @@
   }
 
   // ----- Engraving Comparison rendering -----
-  const MANAFOOD_TIP_BASE_TEXT = "Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus.";
-  // 222's own gearing more easily clears the Bleed rune's stat threshold
-  // without Mana Food's help - worth flagging, but only for the one build
-  // it's actually about, so it's appended rather than said unconditionally.
-  const MANAFOOD_TIP_222_SUFFIX = " 222 does not need Mana Food to equip Maelstrom Bleed.";
+  // The Mana Food label's own tooltip is static in resources.md; these are
+  // the two pill tooltips, swapped with the pill's text.
+  const MANAFOOD_TAG_BLEED_TIP = "Also counts the DPS gain from equipping the Bleed rune on Maelstrom.";
+  const MANAFOOD_TAG_MAIN_TIP = "Only counts the Main Stat from Mana Food.";
   // Contribution rows are a single value per engraving (not a Low/Mid/
   // High trio), so this doesn't reuse renderComparisonRows - closer to
   // renderArkGridComparison's own bespoke-shape renderer just above.
@@ -5841,11 +5840,14 @@
     // from calculations, purely informational). Row itself always shows;
     // only the label text below changes per spec/build.
     if (manaFoodRow) manaFoodRow.style.display = "";
-    const manaFoodLabelEl = root.querySelector(".ap-engr-manafood-label");
-    if (manaFoodLabelEl) {
-      manaFoodLabelEl.textContent = isSurge && !is222Build(root)
-        ? "Mana Food (+Maelstrom Bleed)"
-        : "Mana Food (Main Stat only)";
+    const manaFoodTagEl = root.querySelector(".ap-engr-manafood-row .ap-engr-food-tag");
+    if (manaFoodTagEl) {
+      const kind = isSurge && !is222Build(root) ? "bleed" : "main";
+      if (manaFoodTagEl.dataset.tagKind !== kind) {
+        manaFoodTagEl.dataset.tagKind = kind;
+        manaFoodTagEl.textContent = kind === "bleed" ? "Mael Bleed" : "Main Stat";
+        manaFoodTagEl.title = kind === "bleed" ? MANAFOOD_TAG_BLEED_TIP : MANAFOOD_TAG_MAIN_TIP;
+      }
     }
     const miRow = root.querySelector(".ap-engr-mi-row");
     if (miRow) miRow.style.display = isSurge ? "" : "none";
@@ -5934,24 +5936,6 @@
         foodNoteEl.textContent =
           winner + " beats " + loser + " by " + Math.abs(pct).toFixed(2) + "%.";
       }
-    }
-
-    // 222's own caveat lives in the checkbox label's tooltip rather than
-    // its own row below the checkbox, so a reader not on 222 doesn't pay
-    // for a row that's never relevant to them. Appended (not swapped in) since the label's base text -
-    // the Main Stat double-counting caveat - applies to every spec/build;
-    // only the 222 aside is build-specific info, not a spec-conditional
-    // rewrite of the base text itself (contrast SPEC_NOTE_TEXT_RE/SURGE
-    // above, which really are two different messages for the same
-    // trigger). Gated on is222Build specifically (not isSurge) - it's the
-    // actual reason 222's own Mana Food is Main-Stat-only above, so
-    // 111/333 Surge don't carry an aside that was never about them. Lives on the checkbox label itself (not a dedicated icon) -
-    // see ap-brace-tooltip.js's own comment on why a persistent element
-    // like this one needs its title kept in sync on every recompute
-    // rather than just set once.
-    const manaFoodCheckboxLabelEl = root.querySelector(".ap-engr-manafood-row .ap-engr-checkbox-label");
-    if (manaFoodCheckboxLabelEl) {
-      manaFoodCheckboxLabelEl.title = MANAFOOD_TIP_BASE_TEXT + (is222Build(root) ? MANAFOOD_TIP_222_SUFFIX : "");
     }
 
     const rowsContainer = root.querySelector(".ap-engr-contrib-rows");
