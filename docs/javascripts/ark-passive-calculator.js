@@ -5226,8 +5226,8 @@
     // all. UI-only state (see apCalcSelection) - never saved/exported,
     // resets to "auto" (rank 1) on reload.
     //
-    // The 2nd-5th rows additionally carry a pin control (.ap-result-pin -
-    // see initApCalcRoot's own listener): pinning goes a step further
+    // The header's pin control (.ap-result-pin - see initApCalcRoot's own
+    // listener) pins the selected combo: pinning goes a step further
     // than previewing - it also becomes the fixed combo every
     // bestComboFor() search on the rest of the page resolves to (see
     // activePinnedCombo). Identity is tracked by combo (split key +
@@ -5240,11 +5240,11 @@
     // FORCED into the 5th row slot (bumping the true 5th place out of
     // view) rather than silently vanishing - it's still the thing every
     // panel below is computed against, so it stays visible with its own
-    // real, live numbers (pct/delta both still read straight off its own
-    // cell, same as any other row - nothing about those is faked). The
-    // row's rank badge shows its true overall rank (e.g. "7") instead of
-    // "5" in that case, rather than falsely claiming 5th. Unpinning reverts
-    // the row to whichever combo is truly 5th again.
+    // real, live numbers (the readout's pct/gap read straight off its own
+    // cell, same as any other combo - nothing about those is faked). The
+    // header chip shows its true overall rank (e.g. "Pinned \u00B7 7th")
+    // rather than claiming 5th. Unpinning reverts the slot to whichever
+    // combo is truly 5th again.
     const list = root.querySelector(".ap-calc-results");
     if (!list) return;
 
@@ -5291,62 +5291,33 @@
     const pinnedForcedIn = !!pinnedCell && !ranked.some((c) => sameCombo(c, pinnedCell));
     if (pinnedForcedIn) displayRows[displayRows.length - 1] = pinnedCell;
 
-    // Each row carries a faint fill behind it (--ap-fill) so the spread
-    // between combos reads at a glance. A plain "pct of 100" would put every
-    // row at 99-100% and look identical, so the scale is stretched to the
-    // visible spread: the best row is full and the lowest shown row sits at
-    // about a third, whatever the actual gap is. Purely visual; the numbers
-    // in the row are the real values.
-    const shownPcts = displayRows.filter(Boolean).map((c) => c.pctOfBest);
-    const fillSpan = Math.max(0.5, (100 - Math.min.apply(null, shownPcts)) * 1.5);
-
     displayRows.forEach((cell, i) => {
       if (!cell) return;
       const rank = i + 1;
       const rowEl = list.querySelector('.ap-calc-result-row[data-rank="' + rank + '"]');
       if (!rowEl) return;
 
-      const rankEl = rowEl.querySelector(".ap-result-rank");
-      const comboEl = rowEl.querySelector(".ap-result-combo");
-      const pctEl = rowEl.querySelector(".ap-result-pct");
-      const deltaEl = rowEl.querySelector(".ap-result-delta");
+      const splitEl = rowEl.querySelector(".ap-result-split");
+      const pairEl = rowEl.querySelector(".ap-result-pair");
+      const isPinnedRow = !!(pinnedCombo && pinnedCombo.splitKey === cell.split.key && pinnedCombo.pair === cell.keystone);
 
-      const forcedHere = rank === displayRows.length && pinnedForcedIn;
-      if (rankEl) rankEl.textContent = forcedHere ? String(pinnedTrueRank) : String(rank);
-
-      if (comboEl) {
-        comboEl.textContent = cell.split.label + " \u00B7 " + (KEYSTONE_LABELS[cell.keystone] || cell.keystone);
-      }
-      if (pctEl) pctEl.textContent = cell.pctOfBest.toFixed(2) + "%";
-      if (deltaEl) {
-        deltaEl.textContent = rank === 1 ? "Best" : (cell.pctOfBest - ranked[0].pctOfBest).toFixed(2) + "%";
-      }
-      const fillPct = Math.max(0, Math.min(100, 100 - ((100 - cell.pctOfBest) / fillSpan) * 100));
-      rowEl.style.setProperty("--ap-fill", fillPct.toFixed(1) + "%");
+      if (splitEl) splitEl.textContent = cell.split.label;
+      if (pairEl) pairEl.textContent = KEYSTONE_LABELS[cell.keystone] || cell.keystone;
       rowEl.classList.toggle("ap-calc-result-row-best", rank === 1);
       rowEl.classList.toggle("ap-calc-result-row-active", state.previewRank === rank);
-      rowEl.classList.toggle("ap-calc-result-row-forced", forcedHere);
+      rowEl.classList.toggle("ap-calc-result-row-selected", pinnedCombo ? isPinnedRow : state.previewRank === rank);
+      rowEl.classList.toggle("ap-calc-result-row-pinned", isPinnedRow);
 
       // Refreshed every render so the pin click handler (which reads
       // these back off the DOM at click time) always toggles whatever
       // combo is CURRENTLY sitting in this row, not whatever was there
       // when the listener was first attached. This is exactly why
-      // force-displaying the pinned combo in row 3 is safe: the row's
-      // own identity is refreshed to match it, so the row's pin button
+      // force-displaying the pinned combo in row 5 is safe: the row's
+      // own identity is refreshed to match it, so the pin button
       // still toggles the right combo and the click-to-preview handler
       // still previews the right stats.
       rowEl.dataset.comboSplit = cell.split.key;
       rowEl.dataset.comboPair = cell.keystone;
-
-      const pinEl = rowEl.querySelector(".ap-result-pin");
-      if (pinEl) {
-        const isPinned = !!(pinnedCombo && pinnedCombo.splitKey === cell.split.key && pinnedCombo.pair === cell.keystone);
-        pinEl.classList.toggle("ap-result-pin-active", isPinned);
-        pinEl.setAttribute("aria-pressed", isPinned ? "true" : "false");
-        rowEl.classList.toggle("ap-calc-result-row-pinned", isPinned);
-      } else {
-        rowEl.classList.remove("ap-calc-result-row-pinned");
-      }
     });
 
     // Marks every row's click-to-preview as inert while a pin is active
@@ -5356,6 +5327,7 @@
     // nothing while pinned. The pinned row's own .ap-result-pin button is exempt
     // (see the CSS) since unpinning is still live.
     list.classList.toggle("ap-calc-results-pinned", !!pinnedCombo);
+    list.classList.toggle("ap-calc-results-previewed", !pinnedCombo && Math.min(Math.max(state.previewRank || 1, 1), ranked.length || 1) !== 1);
     // Same signal for assistive tech: while a pin is active, every row's
     // preview button is a no-op (see preview()'s early return), so say so
     // instead of leaving them announced as live controls. The pin buttons
@@ -5372,6 +5344,51 @@
     // currently previewing.
     const cardRank = Math.min(Math.max(state.previewRank || 1, 1), ranked.length || 1);
     const cardCell = pinnedCell || ranked[cardRank - 1] || ranked[0] || null;
+
+    // Header chip, pin button and readout all describe the same cell the
+    // Base / Best card below shows. The chip names its rank ("Pinned" adds
+    // the combo's true overall rank, since a pinned combo can sit outside
+    // the top 5); rank 1 has nothing to pin, so its button is disabled
+    // (and invisible, see the CSS) rather than removed, which keeps the
+    // header's height constant.
+    const ordinals = { 1: "Best", 2: "2nd", 3: "3rd", 4: "4th", 5: "5th" };
+    const stateEl = list.querySelector(".ap-result-state");
+    if (stateEl) {
+      if (pinnedCell) {
+        const tr = pinnedTrueRank || 0;
+        stateEl.textContent = "Pinned";
+        if (tr) {
+          // The rank is its own span so a narrow card can drop it (CSS).
+          const rankEl = document.createElement("span");
+          rankEl.className = "ap-result-state-rank";
+          rankEl.textContent = " \u00B7 " + (ordinals[tr] || tr + "th");
+          stateEl.appendChild(rankEl);
+        }
+      } else {
+        stateEl.textContent = ordinals[cardRank] || "Best";
+      }
+    }
+    const headPinEl = list.querySelector(".ap-result-pin");
+    if (headPinEl) {
+      headPinEl.disabled = !pinnedCell && cardRank === 1;
+      headPinEl.classList.toggle("ap-result-pin-active", !!pinnedCell);
+      headPinEl.setAttribute("aria-pressed", pinnedCell ? "true" : "false");
+      const pinTextEl = headPinEl.querySelector(".ap-result-pin-text");
+      if (pinTextEl) pinTextEl.textContent = pinnedCell ? "Unpin" : "Pin";
+    }
+    if (cardCell) {
+      const rdSplit = list.querySelector(".ap-result-readout-split");
+      const rdPair = list.querySelector(".ap-result-readout-pair");
+      const rdPct = list.querySelector(".ap-result-pct");
+      const rdDelta = list.querySelector(".ap-result-delta");
+      if (rdSplit) rdSplit.textContent = cardCell.split.label;
+      if (rdPair) rdPair.textContent = KEYSTONE_LABELS[cardCell.keystone] || cardCell.keystone;
+      if (rdPct) rdPct.textContent = cardCell.pctOfBest.toFixed(2) + "%";
+      if (rdDelta) {
+        const gap = cardCell.pctOfBest - ranked[0].pctOfBest;
+        rdDelta.textContent = Math.abs(gap) < 0.005 ? "Best" : gap.toFixed(2) + "% vs best";
+      }
+    }
 
     const cardEl = root.querySelector(".ap-stat-card-best");
     const titleEl = cardEl && cardEl.querySelector(".ap-stat-card-title");
@@ -5427,15 +5444,15 @@
         ratePeakEl.textContent = peak.toFixed(2) + "%";
         ratePeakEl.classList.toggle("ap-summary-value-warn", peak > 100);
         const peakRow = ratePeakEl.closest(".ap-stat-row");
-        if (peakRow) peakRow.classList.toggle("ap-stat-row--orb-warn", !!base.peakIncludesFlashOrb);
+        if (peakRow) {
+          peakRow.classList.toggle("ap-stat-row--orb-warn", !!base.peakIncludesFlashOrb);
+          const orbTag = peakRow.querySelector(".ap-orb-tag");
+          if (orbTag) orbTag.hidden = !base.peakIncludesFlashOrb;
+        }
       }
-      // Displayed Crit Dmg excludes Breaking Moon's own add when active -
-      // base.critDmg itself stays the real shared.critDmgTotal (the DPS
-      // math's actual number, unchanged), this just subtracts it back out
-      // for THIS row's text so it isn't shown twice now that the T→Z CDmg
-      // row below surfaces it on its own. critDmg is only ever read here
-      // for display (not reused in any further calc), so this is safe.
-      const baseCritDmgDisplay = base.critDmg - (base.breakingMoonActive ? base.breakingMoonAdd : 0);
+      // Crit Dmg is the setup's full total, Breaking Moon's add included on
+      // Surge 111 (the Crit Dmg tile's T\u2192Z tag says so, see below).
+      const baseCritDmgDisplay = base.critDmg;
       if (dmgEl) dmgEl.textContent = (baseCritDmgDisplay * 100).toFixed(2) + "%";
       if (onCritEl) onCritEl.textContent = base.onCritDmg.toFixed(2) + "%";
       if (evoEl) evoEl.textContent = base.evoDmg.toFixed(2) + "%";
@@ -5444,17 +5461,6 @@
       // KBW's Dmg contribution has no row here - the Engraving Comparison
       // section's reference table below covers it (via
       // kbwContributionGain), so a row here would duplicate it.
-
-      // Breaking Moon (Surge 111 only) - a flat Crit Dmg add already
-      // folded into critDmgTotal (see breakingMoonContribution), surfaced
-      // here as its own line since it can shift which keystone the grid
-      // above recommends AND because the Crit Dmg row above now excludes
-      // it (see baseCritDmgDisplay above) to avoid showing it twice.
-      // Hidden for every other build.
-      const bmRow = root.querySelector(".ap-stat-card-row--breakingmoon-base");
-      const bmEl = root.querySelector(".ap-summary-base-breakingmoon");
-      if (bmRow) bmRow.classList.toggle("ap-stat-card-row--hidden", !base.breakingMoonActive);
-      if (bmEl) bmEl.textContent = (base.breakingMoonAdd * 100).toFixed(2) + "%";
     }
 
     // Best Setup line - shows whichever cell cardCell above resolved to
@@ -5479,18 +5485,26 @@
         critPeakEl.textContent = peak.toFixed(2) + "%";
         critPeakEl.classList.toggle("ap-summary-value-warn", peak > 100);
       }
-      // Same Breaking Moon exclusion as the Base card above.
-      const bestCritDmgDisplay = best.critDmg - (best.breakingMoonActive ? best.breakingMoonAdd : 0);
+      const bestCritDmgDisplay = best.critDmg;
       if (dmgEl) dmgEl.textContent = (bestCritDmgDisplay * 100).toFixed(2) + "%";
       if (onCritEl) onCritEl.textContent = best.onCritDmg.toFixed(2) + "%";
       if (evoEl) evoEl.textContent = best.evoDmg.toFixed(2) + "%";
       if (addEl) addEl.textContent = best.addDmg.toFixed(2) + "%";
 
-      // Same flat Breaking Moon add as the Base card above.
-      const bmRow = root.querySelector(".ap-stat-card-row--breakingmoon-best");
-      const bmEl = root.querySelector(".ap-summary-best-breakingmoon");
-      if (bmRow) bmRow.classList.toggle("ap-stat-card-row--hidden", !best.breakingMoonActive);
-      if (bmEl) bmEl.textContent = (best.breakingMoonAdd * 100).toFixed(2) + "%";
+      // Breaking Moon (Surge 111 only) is a flat Crit Dmg add already folded
+      // into critDmgTotal (see breakingMoonContribution); it can shift which
+      // keystone the grid above recommends. The Crit Dmg tile carries a tag
+      // whose tooltip names the add. Hidden for every other build.
+      const tzTag = root.querySelector(".ap-tz-tag");
+      if (tzTag) {
+        tzTag.hidden = !best.breakingMoonActive;
+        if (best.breakingMoonActive) {
+          tzTag.setAttribute(
+            "title",
+            "Includes Breaking Moon: +" + (best.breakingMoonAdd * 100).toFixed(2) + "%."
+          );
+        }
+      }
     }
 
     updateStatDeltas(root);
@@ -5509,6 +5523,7 @@
       const base = parseFloat(baseEl.textContent);
       const best = parseFloat(bestEl.textContent);
       deltaEl.classList.remove("ap-stat-delta--pos", "ap-stat-delta--neg", "ap-stat-delta--zero");
+      row.classList.remove("ap-stat-row--zero");
       if (!isFinite(base) || !isFinite(best)) {
         deltaEl.textContent = "—";
         return;
@@ -5517,6 +5532,7 @@
       if (diff === 0) {
         deltaEl.textContent = "0.00";
         deltaEl.classList.add("ap-stat-delta--zero");
+        row.classList.add("ap-stat-row--zero");
       } else {
         deltaEl.textContent = (diff > 0 ? "+" : "-") + Math.abs(diff).toFixed(2);
         deltaEl.classList.add(diff > 0 ? "ap-stat-delta--pos" : "ap-stat-delta--neg");
@@ -7251,40 +7267,35 @@
         }
       });
 
-      // Top Combinations pin (2nd-5th rows only - see resources.md, rank
-      // 1 already IS the default base so there's nothing for it to pin
-      // to). A real <button> inside the row's clickable div (a sibling of
-      // the combo's role=button label, not nested in it), so the click
-      // handler's stopPropagation is still required or activating it would
-      // also fire the preview click listener just above for the row itself
-      // - harmless either way (pinning sets previewRank to match, see
-      // below), but stopping it keeps the two actions' effects easy to
-      // reason about independently. Reads the row's current combo off
-      // data-combo-split/-pair (refreshed every renderGrid call) rather
-      // than capturing it once here, since which combo sits in this row
-      // can change between renders.
-      root.querySelectorAll(".ap-result-pin").forEach((pinEl) => {
-        const rowEl = pinEl.closest(".ap-calc-result-row");
-        if (!rowEl) return;
-        pinEl.addEventListener("click", (ev) => {
-          ev.stopPropagation();
+      // Top Combinations pin: one button in the card header that pins the
+      // selected combo (rank 1 is already the default base, so the button
+      // is disabled while it is selected). Pinning goes a step further
+      // than previewing: the combo becomes the fixed base every
+      // comparison panel below computes against. Reads the selected row's
+      // combo off data-combo-split/-pair (refreshed every renderGrid call)
+      // rather than capturing it once here, since which combo sits in a row
+      // can change between renders. A click while pinned unpins.
+      const headPinEl = root.querySelector(".ap-calc-results .ap-result-pin");
+      if (headPinEl) {
+        headPinEl.addEventListener("click", () => {
+          const state = getApCalcSelection(root);
+          if (state.pinnedCombo) {
+            state.pinnedCombo = null;
+            state.previewRank = 1;
+            update(root);
+            return;
+          }
+          const rank = state.previewRank || 1;
+          if (rank < 2) return;
+          const rowEl = root.querySelector('.ap-calc-result-row[data-rank="' + rank + '"]');
+          if (!rowEl) return;
           const splitKey = rowEl.dataset.comboSplit;
           const pair = rowEl.dataset.comboPair;
           if (!splitKey || !pair) return;
-          const state = getApCalcSelection(root);
-          const alreadyPinned =
-            state.pinnedCombo && state.pinnedCombo.splitKey === splitKey && state.pinnedCombo.pair === pair;
-          if (alreadyPinned) {
-            state.pinnedCombo = null;
-            state.previewRank = 1;
-          } else {
-            state.pinnedCombo = { splitKey, pair };
-            const rank = parseInt(rowEl.dataset.rank, 10);
-            if (rank) state.previewRank = rank;
-          }
+          state.pinnedCombo = { splitKey, pair };
           update(root);
         });
-      });
+      }
 
       // Live enforcement of every mutually exclusive group (see
       // EXCLUSIVE_GROUPS for the groups and what each one means).

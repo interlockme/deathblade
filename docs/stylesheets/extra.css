@@ -42,6 +42,7 @@
   --dbc-blue-rgb: 100, 181, 246;
   --dbc-blue-bright: #448aff;  /* Material's default admonition/info blue */
   --dbc-sky: #7ec4e8;          /* additional damage category accent */
+  --dbc-sky-rgb: 126, 196, 232;
   --dbc-pink-bright: #ffb3cf;  /* hover/active state pink - links, tabs, chips, section tracker */
   --dbc-arrow: #cf99c7;        /* rotation-line chevron color (.arrow/.arrow-swap) */
   --dbc-green: #66bb6a;        /* rune-chip "uncommon" tier, tripod-chip tier 2 */
@@ -5055,7 +5056,7 @@ h3 { color: var(--dbc-teal); }
   /* Never breaks mid-text; on a narrow card the flex-wrap above drops the
      whole thing to its own line instead. */
   white-space: nowrap;
-  margin-left: auto;
+  margin-left: 0.25rem;
   cursor: help;
 }
 .md-typeset .ap-ot1-indicator[hidden] {
@@ -5069,270 +5070,255 @@ h3 { color: var(--dbc-teal); }
   gap: 0.6em;
   flex: 0 0 auto;
 }
-.md-typeset .ap-calc-result-row {
-  position: relative;
-  /* Rank, combo name, the gap to the best combo, then the percentage. The
-     faint fill behind the row (--ap-fill, set by renderGrid in the JS) is
-     a background image rather than an extra element, so the row's own
-     state colours (hover, best, previewed) still layer on top of it. */
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0.45rem 0.6rem;
-  --ap-fill-rgb: var(--dbc-teal-rgb);
-  background-image: linear-gradient(
-    90deg,
-    rgba(var(--ap-fill-rgb), 0.11) var(--ap-fill, 0%),
-    transparent var(--ap-fill, 0%)
-  );
-  /* The gradient is sized to the padding box and would otherwise tile into
-     the transparent border, drawing a 1px sliver of the fill colour down
-     the right edge. */
-  background-repeat: no-repeat;
-  border-radius: var(--ap-radius);
-  border: 1px solid transparent;
-  /* Clickable (preview that rank's stats in the Best Setup card) - see
-     renderGrid/initApCalcRoot's own comments. Cursor + a hover/focus tint
-     are the "you can click this" affordance, since nothing else about
-     the row otherwise looks interactive. transition is background-color
-     only (not border, which flips instantly with -best/-active below to
-     stay legible) so hover doesn't feel laggy. */
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
-  transition: background-color 0.12s ease;
+/* Selected-combo accent for the whole Top Combinations card: teal for the
+   true best, lavender for a previewed rank, coral for a pinned combo (the
+   JS toggles .ap-calc-results-previewed and .ap-calc-results-pinned). The
+   state chip, the selected tab and the readout all read --ap-st-rgb. */
+.md-typeset .ap-calc-results {
+  --ap-st-rgb: var(--dbc-teal-rgb);
 }
-.md-typeset .ap-calc-result-row:hover,
-.md-typeset .ap-calc-result-row:has(.ap-result-combo:focus-visible),
-.md-typeset .ap-calc-result-row:active {
-  background-color: rgba(255, 255, 255, 0.05);
+.md-typeset .ap-calc-results.ap-calc-results-previewed {
+  --ap-st-rgb: var(--dbc-lavender-rgb);
 }
-/* While a pin is active, every OTHER row's click-to-preview is a no-op
-   (see initApCalcRoot's preview() early-return) - drop the pointer
-   cursor and hover/focus tint so they stop advertising an interaction
-   that does nothing. The pinned row itself keeps cursor:
-   pointer via the plain rule above (its .ap-result-pin button is still
-   live for unpinning), this only mutes its NEIGHBORS. */
-.md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned) {
-  cursor: default;
+.md-typeset .ap-calc-results.ap-calc-results-pinned {
+  --ap-st-rgb: var(--dbc-red-rgb);
 }
-.md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned):hover,
-.md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned):has(.ap-result-combo:focus-visible),
-.md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned):active {
-  background-color: transparent;
+/* Header: title, the OT1 badge when on, then the pin button and the state
+   chip, which is the rightmost item. The pin button always takes its space
+   (it is only disabled and hidden while rank 1 is selected), so the header
+   and everything below it keep their height when the selection changes. */
+.md-typeset .ap-calc-results-title {
+  min-height: 2.3rem;
+  box-sizing: border-box;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  padding-block: 0.3rem;
+  margin-bottom: 0.4rem;
 }
-.md-typeset .ap-calc-result-row:has(.ap-result-combo:focus-visible) {
-  outline: 1px solid rgba(var(--dbc-lavender-rgb), 0.6);
-  outline-offset: -1px;
+/* The card is a size container: below 340px the pin button drops its text
+   (the icon, the chip and the coral accent still say what it is). */
+.md-typeset .ap-calc-results {
+  container-type: inline-size;
 }
-/* The combo label is the row's keyboard/screen-reader button (role=button,
-   tabindex=0 in resources.md); the row itself is a plain container so it can
-   hold the sibling pin button without nesting one interactive control in
-   another. The row-wide ring above is the focus indicator, so drop the
-   label's own outline wherever :has() is supported (elsewhere the default
-   outline stays, so focus is never invisible). */
-@supports selector(:has(*)) {
-  .md-typeset .ap-result-combo:focus-visible {
-    outline: none;
-  }
-}
-.md-typeset .ap-calc-result-row + .ap-calc-result-row {
-  margin-top: 0.15rem;
-}
-.md-typeset .ap-calc-result-row-best {
-  border-color: rgba(var(--dbc-teal-rgb), 0.5);
-  background-color: rgba(var(--dbc-teal-rgb), 0.09);
-  background-image: none; /* already full-width tinted */
-}
-/* Previewed (clicked) - a 2nd/3rd-best row whose stats are currently
-   populating the Best Setup card below. Deliberately a fainter lavender
-   tint rather than reusing -best's teal: teal still means "this IS the
-   true best" (rank 1 keeps it even while another row is being
-   previewed), this just marks "you're currently looking at this one".
-   :not(.ap-calc-result-row-pinned) is required, not optional: a pinned
-   row is virtually always also -active (pinning sets previewRank to
-   match, see initApCalcRoot), and two class selectors here outrank
-   -pinned's one class selector below regardless of source order - so
-   without this exclusion, lavender silently wins over coral on every
-   pinned row despite -pinned being defined later "to take priority" (see
-   its own comment). This exclusion is what actually gives -pinned
-   priority; the later source position alone was never enough. */
-.md-typeset .ap-calc-result-row-active:not(.ap-calc-result-row-best):not(.ap-calc-result-row-pinned) {
-  --ap-fill-rgb: var(--dbc-lavender-rgb);
-  border-color: rgba(var(--dbc-lavender-rgb), 0.6);
-  background-color: rgba(var(--dbc-lavender-rgb), 0.12);
-}
-.md-typeset .ap-result-rank {
-  flex-shrink: 0;
-  width: 1.5em;
-  height: 1.5em;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--ap-fs-cap);
-  font-weight: 700;
-  color: var(--dbc-lilac);
-  background-color: rgba(255, 255, 255, 0.07);
-}
-.md-typeset .ap-calc-result-row-best .ap-result-rank {
-  color: #0f1210;
-  background-color: var(--dbc-teal);
-}
-.md-typeset .ap-result-combo {
-  flex: 1 1 0;
-  font-size: var(--ap-fs-base);
-  font-weight: 600;
-  color: var(--md-default-fg-color);
-  min-width: 0;
-  /* At the narrowest supported widths this can be squeezed tight enough
-     that a single word ("Pulverize") does not fit its own line;
-     without this it'll break mid-word ("Pulveriz"/"e") rather than
-     overflow, which reads as broken. Wrapping between words (already
-     the common case - "Critical + Pulverize" already spans 2-3 lines
-     at these widths) stays untouched; only mid-word breaking is ruled
-     out. */
-  overflow-wrap: normal;
-  word-break: normal;
-}
-.md-typeset .ap-calc-result-row-best .ap-result-combo {
-  color: var(--dbc-teal);
-}
-.md-typeset .ap-result-pct {
-  flex: none;
-  min-width: 3.2rem;
-  font-size: var(--ap-fs-base);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--md-default-fg-color);
-  text-align: right;
-}
-.md-typeset .ap-calc-result-row-best .ap-result-pct {
-  color: var(--dbc-teal);
-}
-.md-typeset .ap-result-delta {
-  flex: none;
-  font-size: var(--ap-fs-sm);
-  font-variant-numeric: tabular-nums;
-  color: var(--dbc-muted-text);
-  text-align: right;
-}
-.md-typeset .ap-calc-result-row-best .ap-result-delta {
-  color: var(--dbc-teal);
-  font-weight: 600;
-}
-@media screen and (max-width: 480px) {
-  .md-typeset .ap-result-delta {
+@container (max-width: 340px) {
+  .md-typeset .ap-result-pin-text {
     display: none;
   }
+  .md-typeset .ap-calc-results .ap-result-state {
+    letter-spacing: 0;
+    min-width: 3.6rem;
+  }
+  .md-typeset .ap-result-state-rank {
+    display: none;
+  }
+  .md-typeset .ap-result-split {
+    font-size: var(--ap-fs-cap);
+  }
 }
-
-/* Pin control (2nd/3rd rows only) - see bestComboFor/update's own
-   comments in the JS for what pinning actually does. A small thumbtack,
-   overlaid on the row's own top-right corner via position:absolute
-   rather than sitting inline with rank/combo/delta/pct - it never
-   competes with them for flex space this way, so every row's % lands in
-   the same column whether or not that row even has a pin control (see
-   resources.md's own comment). The backing circle matches the page
-   background (--md-default-bg-color - same convention as the other
-   corner-knockout badges in this file, e.g. avatar borders above) so it
-   reads as a tack actually stuck into the card's corner rather than a
-   layered rectangle. Coral (--dbc-red) reuses the same "warn" accent as
-   .ap-brace-warn-icon's WARN pill elsewhere in the calculator, rather
-   than inventing a new one-off color, and is a deliberately different
-   hue from -best's teal and -active's lavender so pinned reads as its
-   own distinct 3rd state at a glance.
-
-   Hidden (opacity: 0) at rest rather than a faint always-on tack - with a pin control on every one of rows 2-5, that
-   permanent thumbtack cluster competed with the actual rank/combo/%
-   content for attention on every single row, all the time, even though
-   it's only actionable on the row a reader is currently looking at.
-   Revealed on: row hover (mouse), the row being -active (previewed via
-   click, or tapped-once on touch where hover doesn't exist - see
-   renderGrid's own comment on click-to-preview), the pin button itself
-   gaining keyboard focus, or the pin actually being active (pinned) -
-   that last one is opacity: 1 unconditionally via .ap-result-pin-active
-   below regardless of hover/active state, so a genuinely pinned row's
-   tack never disappears just because the pointer moved elsewhere. */
-.md-typeset .ap-result-pin {
-  position: absolute;
-  top: -5px;
-  right: -7px;
-  z-index: 1;
-  display: flex;
+.md-typeset .ap-result-state {
+  flex: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.25em;
-  height: 1.25em;
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  background: var(--md-default-bg-color);
-  color: var(--md-default-fg-color--light);
-  opacity: 0;
+  box-sizing: border-box;
+  height: 1.3rem;
+  /* Wide enough for the longest state ("Pinned · 2nd"), so the chip and the
+     pin button beside it never change width or move between states. */
+  min-width: 5.4rem;
+  padding: 0 0.55rem;
+  border-radius: var(--ap-radius);
+  border: 1px solid rgba(var(--ap-st-rgb), 0.6);
+  background-color: rgba(var(--ap-st-rgb), 0.12);
+  color: rgb(var(--ap-st-rgb));
+  font-size: var(--ap-fs-cap);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: none;
+  white-space: nowrap;
+}
+.md-typeset .ap-result-pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: none;
+  margin-left: auto;
+  box-sizing: border-box;
+  justify-content: center;
+  height: 1.3rem;
+  /* Fits "Unpin" so the label swap does not resize the button; the icon
+     stays put and the word is centred in the space beside it. */
+  min-width: 3.9rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--md-default-fg-color);
+  font: inherit;
+  font-size: var(--ap-fs-cap);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
-  transition: opacity 0.12s ease, color 0.12s ease;
+  transition: color 0.12s ease, border-color 0.12s ease, background-color 0.12s ease;
+}
+.md-typeset .ap-result-pin-text {
+  flex: 1;
+  text-align: center;
+}
+.md-typeset .ap-result-pin:disabled {
+  visibility: hidden;
 }
 .md-typeset .ap-result-pin svg {
-  width: 0.85em;
-  height: 0.85em;
+  width: 0.7rem;
+  height: 0.7rem;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transform: rotate(18deg);
 }
-.md-typeset .ap-calc-result-row:hover .ap-result-pin,
-.md-typeset .ap-calc-result-row-active .ap-result-pin,
-.md-typeset .ap-result-pin:hover,
-.md-typeset .ap-result-pin:focus-visible {
-  opacity: 0.85;
+.md-typeset .ap-result-pin:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 .md-typeset .ap-result-pin:focus-visible {
   outline: 1px solid rgba(var(--dbc-red-rgb), 0.6);
   outline-offset: 1px;
 }
-/* Two classes on the element itself (0,0,2,0), same specificity as the
-   .ap-calc-result-row-active .ap-result-pin reveal rule above (also
-   0,0,2,0) - needs to actually TIE it, not just come later, since a
-   pinned row is virtually always also -active (pinning sets
-   previewRank to match - see renderGrid's own comment) and a lower-
-   specificity .ap-result-pin-active alone would lose that tie despite
-   its later source position, leaving a pinned-but-unhovered row stuck
-   at 0.85 instead of fully opaque. Source order then breaks the tie in
-   this rule's favor since it's declared after. */
 .md-typeset .ap-result-pin.ap-result-pin-active {
-  opacity: 1;
+  border-color: rgba(var(--dbc-red-rgb), 0.6);
+  background-color: rgba(var(--dbc-red-rgb), 0.1);
   color: var(--dbc-red);
 }
-/* Pinned row - a stronger/warmer treatment than plain -active (preview
-   only, see above), since a pinned row is also driving every other
-   comparison panel on the page, not just what's shown in the Best Setup
-   card. Takes priority visually over -active because -active now
-   explicitly excludes :not(.ap-calc-result-row-pinned) - source order
-   alone does NOT do this (a plain .ap-calc-result-row-pinned selector is
-   lower specificity than -active's two-class selector and would lose to
-   it despite coming later - this was a real bug, fixed at -active's
-   selector, not here). -best still loses to -pinned the "soft" way
-   (source order, equal specificity), which is fine since a pinned row
-   is never simultaneously -best (rank 1 has no pin control). */
-.md-typeset .ap-calc-result-row-pinned {
-  --ap-fill-rgb: var(--dbc-red-rgb);
-  border-color: rgba(var(--dbc-red-rgb), 0.55);
-  background-color: rgba(var(--dbc-red-rgb), 0.08);
+/* Tabs: one per ranked combo, split over keystone pair. */
+.md-typeset .ap-result-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.3rem;
 }
-/* Row 3 forced to show a pinned combo that's actually drifted below true
-   3rd place (see renderGrid's own comment on pinnedForcedIn) - the rank
-   badge itself already swaps from "3" to the combo's real overall rank
-   (e.g. "5"), this just tints that badge the same coral as the pin icon
-   so the "this number looks unusual" cue reads as "because it's pinned",
-   not as a bug. Deliberately just a color shift on the existing circle -
-   no new icon, no layout change, keeps the row visually identical to any
-   other row otherwise. */
-.md-typeset .ap-calc-result-row-forced .ap-result-rank {
-  color: var(--dbc-red);
-  background-color: rgba(var(--dbc-red-rgb), 0.16);
+.md-typeset .ap-calc-result-row {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  min-width: 0;
+  padding: 0.3rem 0.15rem 0.35rem;
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius);
+  background-color: var(--ap-surface-2);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+.md-typeset .ap-calc-result-row:hover,
+.md-typeset .ap-calc-result-row:active {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+/* While a pin is active every other tab is inert (see the preview()
+   early-return in initApCalcRoot): no pointer cursor, no hover tint, dimmed. */
+.md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned) {
+  cursor: default;
+  opacity: 0.55;
+}
+.md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned):hover,
+.md-typeset .ap-calc-results-pinned .ap-calc-result-row:not(.ap-calc-result-row-pinned):active {
+  background-color: var(--ap-surface-2);
+}
+.md-typeset .ap-calc-result-row.ap-calc-result-row-selected {
+  border-color: rgba(var(--ap-st-rgb), 0.7);
+  background-color: rgba(var(--ap-st-rgb), 0.12);
+}
+/* Keyboard focus ring on the row that holds the focused combo button; the
+   button's own outline is dropped where :has() is supported. */
+.md-typeset .ap-calc-result-row:has(.ap-result-combo:focus-visible) {
+  outline: 1px solid rgba(var(--dbc-lavender-rgb), 0.6);
+  outline-offset: -1px;
+}
+@supports selector(:has(*)) {
+  .md-typeset .ap-result-combo:focus-visible {
+    outline: none;
+  }
+}
+.md-typeset .ap-calc-result-row-pinned::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--ap-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e57373' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 17v5'/%3E%3Cpath d='M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z'/%3E%3C/svg%3E") center / 10px no-repeat;
+  pointer-events: none;
+}
+.md-typeset .ap-result-combo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  color: var(--md-default-fg-color);
+}
+.md-typeset .ap-result-split {
+  font-size: var(--ap-fs-sm);
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.md-typeset .ap-result-pair {
+  font-size: var(--ap-fs-cap);
+  line-height: 1.2;
+  color: var(--dbc-lilac);
+  text-wrap: balance;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.md-typeset .ap-calc-result-row-selected .ap-result-pair {
+  color: var(--md-default-fg-color);
+}
+/* Readout for the selected combo: split over pair on the left, % of best
+   and the gap to the best on the right. */
+.md-typeset .ap-result-readout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgba(var(--ap-st-rgb), 0.5);
+  border-radius: var(--ap-radius);
+  background-image: linear-gradient(135deg, rgba(var(--ap-st-rgb), 0.15), rgba(var(--ap-st-rgb), 0.04));
+}
+.md-typeset .ap-result-readout-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.3;
+  font-weight: 700;
+}
+.md-typeset .ap-result-readout-split {
+  font-size: 0.7rem;
+}
+.md-typeset .ap-result-readout-pair {
+  font-size: var(--ap-fs-base);
+}
+.md-typeset .ap-result-readout-pct {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex: none;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.md-typeset .ap-result-pct {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: rgb(var(--ap-st-rgb));
+}
+.md-typeset .ap-result-delta {
+  font-size: var(--ap-fs-cap);
+  color: var(--dbc-muted-text);
 }
 
 /* ---- Live "what this field is contributing" tags ---- */
@@ -5507,28 +5493,12 @@ h3 { color: var(--dbc-teal); }
   font-weight: 700;
   color: var(--md-default-fg-color);
 }
-/* Peak Crit Rate row while Flash Orb Uptime is above 0: the figure counts the
-   orb at full value, so it is only reached while the orb is active. Gold
-   values and a circled "!" after the label (the same size as the "i" icons);
-   the red over-100% state below wins on the values. */
+/* Peak Crit Rate tile while Flash Orb Uptime is above 0: the figure counts
+   the orb at full value, so it is only reached while the orb is active. Gold
+   values and an ORB tag on the label line (styled like the Crit Dmg tile's
+   T→Z tag, in gold); the red over-100% state below wins on the values. */
 .md-typeset .ap-stat-row--orb-warn .ap-summary-value {
   color: var(--dbc-gold);
-}
-.md-typeset .ap-stat-row--orb-warn .ap-summary-label::after {
-  content: "!";
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: 16px;
-  height: 16px;
-  border: 1px solid rgba(var(--dbc-gold-rgb), 0.7);
-  border-radius: 50%;
-  color: var(--dbc-gold);
-  font-size: var(--ap-fs-cap);
-  font-weight: 700;
-  line-height: 1;
 }
 /* Toggled by JS instead of an inline color when a raw (uncapped) Crit Rate
    total exceeds 100% - a clear warning that points are being wasted past
@@ -5542,116 +5512,93 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-stat-card-row--hidden {
   display: none;
 }
-/* Base / Best / Diff table in the results column. It reuses the Best card's
-   state classes (.ap-stat-card-previewed, .ap-stat-card-pinned) that the JS
-   toggles, but shows them as a tint on the Best column and its title rather
-   than recolouring the whole card. */
+/* Base / Best / Diff card in the results column: a header (Base -> title,
+   Diff) over one tile per stat. It reuses the Best card's state classes
+   (.ap-stat-card-previewed, .ap-stat-card-pinned) that the JS toggles, shown
+   as the accent on the title and the Best values rather than recolouring
+   the whole card. The summary wrapper is a size container: three tiles per
+   row from 430px up (the narrowest a tile can be and still fit the "from"
+   value beside a tag), two below. */
+.md-typeset .ap-calc-summary {
+  container-type: inline-size;
+}
 .md-typeset .ap-stat-table,
 .md-typeset .ap-stat-table.ap-stat-card-best,
 .md-typeset .ap-stat-table.ap-stat-card-best.ap-stat-card-previewed,
 .md-typeset .ap-stat-table.ap-stat-card-best.ap-stat-card-pinned {
-  padding: var(--ap-stat-inset) 0;
+  --ap-st-rgb: var(--dbc-teal-rgb);
+  display: block;
+  padding: 0;
   overflow: hidden;
   background-color: var(--ap-surface);
   border-color: var(--ap-line);
   border-radius: var(--ap-radius-lg);
-}
-/* The Best column is drawn as an inset rounded card (tint plus border)
-   whose colour follows the state: teal for the true best, lavender while
-   previewing another row, coral while a combo is pinned. Set on the same
-   selector the shared rule above uses, so no later rule can reset it. */
-.md-typeset .ap-stat-table {
-  --ap-stat-inset: 0.4rem;
-  --ap-stat-base-w: 4.6rem;
-  --ap-stat-best-w: 5.4rem;
-  --ap-stat-diff-w: 4rem;
-}
-.md-typeset .ap-stat-table.ap-stat-card-best {
-  --ap-best-tint: rgba(var(--dbc-teal-rgb), 0.07);
-  --ap-best-edge: rgba(var(--dbc-teal-rgb), 0.5);
-}
-.md-typeset .ap-stat-table.ap-stat-card-best.ap-stat-card-previewed {
-  --ap-best-tint: rgba(var(--dbc-lavender-rgb), 0.09);
-  --ap-best-edge: rgba(var(--dbc-lavender-rgb), 0.5);
-}
-.md-typeset .ap-stat-table.ap-stat-card-best.ap-stat-card-pinned {
-  --ap-best-tint: rgba(var(--dbc-red-rgb), 0.1);
-  --ap-best-edge: rgba(var(--dbc-red-rgb), 0.5);
-}
-/* The table is the grid and each row is display: contents, so the three
-   number columns size to their widest cell and line up down the whole
-   table (per-row grids would size each row on its own). The three number
-   columns have fixed widths, so the Best card never shifts or resizes
-   whichever title or values it shows. */
-.md-typeset .ap-stat-table {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--ap-stat-base-w) var(--ap-stat-best-w) var(--ap-stat-diff-w);
   font-size: var(--ap-fs-base);
   font-variant-numeric: tabular-nums;
 }
-.md-typeset .ap-stat-row {
-  display: contents;
+.md-typeset .ap-stat-table.ap-stat-card-best.ap-stat-card-previewed {
+  --ap-st-rgb: var(--dbc-lavender-rgb);
 }
-.md-typeset .ap-stat-row.ap-stat-card-row--hidden {
-  display: none;
+.md-typeset .ap-stat-table.ap-stat-card-best.ap-stat-card-pinned {
+  --ap-st-rgb: var(--dbc-red-rgb);
 }
-.md-typeset .ap-stat-row > span {
+.md-typeset .ap-stat-row--head {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: 0;
-  padding: 0.38rem 0.6rem;
-  white-space: nowrap;
-}
-.md-typeset .ap-stat-row > span:first-child {
-  justify-content: flex-start;
-}
-.md-typeset .ap-stat-row + .ap-stat-row > span {
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-.md-typeset .ap-stat-row > :nth-child(3) {
-  background-color: var(--ap-best-tint);
-  border-left: 1px solid var(--ap-best-edge);
-  border-right: 1px solid var(--ap-best-edge);
-}
-.md-typeset .ap-stat-row--head > :nth-child(3) {
-  border-top: 1px solid var(--ap-best-edge);
-  border-radius: var(--ap-radius) var(--ap-radius) 0 0;
-}
-.md-typeset .ap-stat-row:last-child > :nth-child(3) {
-  border-bottom: 1px solid var(--ap-best-edge);
-  border-radius: 0 0 var(--ap-radius) var(--ap-radius);
-}
-.md-typeset .ap-stat-row--head > span {
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0.6rem 0.8rem 0.15rem;
   font-size: var(--ap-fs-cap);
   font-weight: 700;
   letter-spacing: 0.08em;
   line-height: 1.25;
   text-transform: uppercase;
   color: var(--dbc-muted-text);
-  border-bottom: 1px solid var(--ap-line);
 }
-/* The Best column title is rewritten by the JS ("2nd Best", "Pinned"); the
-   fixed column width fits the longest on one line. */
-.md-typeset .ap-stat-row--head .ap-stat-card-title {
+.md-typeset .ap-stat-table.ap-stat-card-best .ap-stat-card-title {
+  display: inline;
   margin: 0;
-  white-space: nowrap;
-  text-align: right;
-  color: var(--dbc-teal);
+  font-size: inherit;
+  letter-spacing: inherit;
+  color: rgb(var(--ap-st-rgb));
 }
-.md-typeset .ap-stat-row .ap-summary-label {
-  white-space: normal;
+.md-typeset .ap-stat-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem 0.35rem;
+  padding: 0.5rem 0.45rem 0.55rem;
+}
+@container (max-width: 429px) {
+  .md-typeset .ap-stat-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.md-typeset .ap-stat-tiles .ap-stat-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "label label" "best delta" "base base";
+  align-items: baseline;
+  column-gap: 0.25rem;
+  row-gap: 0.22rem;
+  min-width: 0;
+  padding: 0.75rem 0.5rem 0.75rem;
+  border-radius: var(--ap-radius);
+  background-color: var(--ap-surface-2);
+  line-height: 1.25;
+}
+.md-typeset .ap-stat-tiles .ap-stat-row .ap-summary-label {
+  grid-area: label;
+  display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.3rem;
+  min-width: 0;
+  font-size: var(--ap-fs-cap);
   color: var(--dbc-lilac);
 }
-/* Category dot before each stat label, in the same five colours as the gear
-   groups. */
-.md-typeset .ap-stat-row .ap-summary-label::before {
+.md-typeset .ap-stat-tiles .ap-stat-row .ap-summary-label::before {
   content: "";
   flex: none;
-  width: 0.4rem;
-  height: 0.4rem;
+  width: 0.3rem;
+  height: 0.3rem;
   border-radius: 50%;
   background-color: var(--ap-dot, var(--dbc-lavender));
 }
@@ -5660,27 +5607,67 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-stat-row .ap-summary-label--oncrit   { --ap-dot: var(--dbc-orange); }
 .md-typeset .ap-stat-row .ap-summary-label--adddmg   { --ap-dot: var(--dbc-sky); }
 .md-typeset .ap-stat-row .ap-summary-label--evodmg   { --ap-dot: var(--dbc-purple); }
-/* On a phone the padding tightens so "+15.00" never wraps and the number
-   columns narrow so the label column keeps room. */
-@media screen and (max-width: 480px) {
-  .md-typeset .ap-stat-table {
-    --ap-stat-base-w: 4rem;
-    --ap-stat-best-w: 4.6rem;
-    --ap-stat-diff-w: 3.5rem;
-  }
-  .md-typeset .ap-stat-row > span {
-    padding: 0.38rem 0.45rem;
-  }
+.md-typeset .ap-stat-tiles .ap-stat-row > :nth-child(2) {
+  grid-area: best;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgb(var(--ap-st-rgb));
 }
-@media screen and (max-width: 380px) {
-  .md-typeset .ap-stat-table {
-    --ap-stat-base-w: 3.6rem;
-    --ap-stat-best-w: 4.4rem;
-    --ap-stat-diff-w: 3.2rem;
-  }
-  .md-typeset .ap-stat-row > span {
-    padding-inline: 0.3rem;
-  }
+.md-typeset .ap-stat-tiles .ap-stat-row.ap-stat-row--zero > :nth-child(2) {
+  color: var(--md-default-fg-color);
+}
+.md-typeset .ap-stat-tiles .ap-stat-row > .ap-stat-delta {
+  grid-area: delta;
+  justify-self: end;
+  font-size: var(--ap-fs-cap);
+}
+.md-typeset .ap-stat-tiles .ap-stat-row > :nth-child(4) {
+  grid-area: base;
+  font-size: var(--ap-fs-cap);
+  font-weight: 400;
+  white-space: nowrap;
+  color: var(--dbc-muted-text);
+}
+.md-typeset .ap-stat-tiles .ap-stat-row > :nth-child(4)::before {
+  content: "from ";
+}
+.md-typeset .ap-stat-tiles .ap-stat-row--orb-warn > :nth-child(2) {
+  color: var(--dbc-gold);
+}
+.md-typeset .ap-stat-tiles .ap-stat-row .ap-summary-value.ap-summary-value-warn {
+  color: var(--dbc-red);
+}
+/* Tags on a tile's "from" line, at the right: T→Z on Surge 111's Crit Dmg
+   tile (the total includes Breaking Moon's add; the title is set by
+   renderGrid) and ORB on the Peak Crit Rate tile while Flash Orb Uptime is
+   above 0. Same box, different accent. A tag shares the "from" cell with the
+   value (value left, tag right) so a hidden tag takes no room. */
+.md-typeset .ap-tz-tag,
+.md-typeset .ap-orb-tag {
+  --ap-tag-rgb: var(--dbc-sky-rgb);
+  grid-area: base;
+  /* Baseline-aligned with the "from" text beside it; the negative margin
+     keeps the tag's box from making that line taller than its text. */
+  align-self: baseline;
+  justify-self: end;
+  margin-block: -0.2rem;
+  padding: 0 0.2rem;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(var(--ap-tag-rgb), 0.45);
+  border-radius: 5px;
+  background-color: rgba(var(--ap-tag-rgb), 0.16);
+  color: rgb(var(--ap-tag-rgb));
+  font-size: 0.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  cursor: help;
+}
+.md-typeset .ap-orb-tag {
+  --ap-tag-rgb: var(--dbc-gold-rgb);
+}
+.md-typeset .ap-tz-tag[hidden],
+.md-typeset .ap-orb-tag[hidden] {
+  display: none;
 }
 /* Diff column: written by updateStatDeltas in the JS. Zero reads as
    quiet, a gain as teal, a loss as red. */
@@ -5966,8 +5953,8 @@ h3 { color: var(--dbc-teal); }
      rule here covers them all; on any screen wide enough to fit the table
      nothing overflows and nothing changes. */
   overflow-x: auto;
-  /* Lets Ability Stone DPS Contribution's merged title+Stone-1 row (see
-     .ap-engr-stone-row--first further down) query ITS OWN rendered width
+  /* Lets Ability Stone DPS Contribution's merged title+stones row (see
+     .ap-engr-stone-row--foot further down) query ITS OWN rendered width
      for its narrow-width stacked fallback, same reasoning as .bid-calc's
      own container-type above: the sidebar/TOC coming and going changes
      this panel's actual available width at a given viewport size, so a
@@ -6680,7 +6667,7 @@ h3 { color: var(--dbc-teal); }
    on a container query rather than applied unconditionally so it
    doesn't kick in below the width where "Other Earring Equipped" (this
    card's longest label) plus its checkbox would get cramped - picked
-   480px, just above .ap-engr-stone-row--first's own 460px stacked-
+   480px, just above .ap-engr-stone-row--foot's own stacked-
    fallback threshold nearby, so the two breakpoints don't fight over
    the same narrow range. */
 @container (min-width: 480px) {
@@ -6815,14 +6802,6 @@ h3 { color: var(--dbc-teal); }
     padding: 0.1rem 0.5rem;
   }
 }
-/* Stone 1+2's merged row (see resources.md's own comment on
-   .ap-engr-stone-row--first) directly follows this grid, which now holds
-   Raid Captain Variables. The row is a real card (see
-   .ap-gear-card--engr-stone below), so its visible border already does
-   the "this is a new section" job a dashed-line break (border-top +
-   padding-top) would. Just margin-top, matching .ap-gear-cards' own
-   0.9em inter-card gap so the spacing above this card reads the same as
-   the spacing between the two cards inside that grid. */
 /* A grid cell holding a card plus a line under it (the Attack Power %
    card and the Attack Power readout), so the pair is one column of the
    grid and the readout fills the space the shorter card leaves free. */
@@ -6835,9 +6814,11 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-gear-cards + .ap-engr-contrib-panel {
   margin-top: var(--ap-gap);
 }
-/* The Ability Stone pickers and the contribution table are one card: the
-   panel carries the border and radius, the picker row is its title bar and
-   the table below drops its own frame. */
+/* The contribution table and the Ability Stone pickers are one card: the
+   panel carries the border and radius, the table sits at its top with no
+   frame of its own, and the picker row (.ap-engr-stone-row--foot) is its
+   footer bar. The panel directly follows the gear card grid, so its margin-top
+   matches that grid's inter-card gap (rule above). */
 .md-typeset .ap-engr-contrib-panel {
   --ap-cat: var(--dbc-lavender);
   border: 1px solid var(--ap-line);
@@ -6848,9 +6829,11 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-engr-contrib-panel .ap-engr-stone-row {
   /* Left padding equals the table cells' (0.7rem) so the title lines up with
-     the Engraving column header and the names under it. */
+     the Engraving column header and the names above it. The footer bar's
+     rule is its top edge; the panel's overflow: hidden rounds its bottom
+     corners. */
   padding: 0.35rem var(--ap-pad-x) 0.35rem 0.7rem;
-  border-bottom: 1px solid var(--ap-line);
+  border-top: 1px solid var(--ap-line);
 }
 .md-typeset .ap-engr-contrib-panel .ap-brace-compare-table {
   border: none;
@@ -6861,19 +6844,22 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-engr-contrib-panel .ap-brace-compare-table td {
   border-radius: 0;
 }
-/* Title loses the old standalone-heading treatment (centered text, its
-   own top margin/padding/border, a bumped size to carry a header on its
-   own line) now that it rides along as a flex child in this row instead
-   of a full-width block above it - the row above takes over the
-   section-break job, and left-aligned inline text reads better next to
-   the label+selects than centered text would. flex: 1 1 auto + min-
-   width: 0 (same reasoning as .ap-calc-field-row's own label rule) lets
-   it shrink/wrap instead of shoving Stone 1/2's selects out of the row
-   before the @container fallback below kicks in. Shortened from
-   "Engraving and Ability Stone Values" to just "Ability Stone" in the
-   same pass that merged Stone 1 and 2 into one row - the old text's own
-   length was most of what forced Stone 1 onto a line by itself, so
-   trimming it is a big part of why the merge fits at all. */
+/* The table's own first-row/last-row corner rounding (for a framed table)
+   would round the hover fill of the last row against the footer bar's
+   straight rule, so it is cleared inside the card; the panel rounds the
+   outer corners. */
+.md-typeset .ap-engr-contrib-panel .ap-brace-compare-table thead tr:first-child th:first-child,
+.md-typeset .ap-engr-contrib-panel .ap-brace-compare-table thead tr:first-child th:last-child,
+.md-typeset .ap-engr-contrib-panel .ap-brace-compare-table tbody tr:last-child td:first-child,
+.md-typeset .ap-engr-contrib-panel .ap-brace-compare-table tbody tr:last-child td:last-child {
+  border-radius: 0;
+}
+/* The title is a flex child of the footer row, left-aligned next to the
+   label+selects, with no margin, padding or border of its own. flex: 1 1
+   auto + min-width: 0 (same reasoning as .ap-calc-field-row's own label
+   rule) lets it shrink/wrap instead of shoving Stone 1/2's selects out of
+   the row before the @container fallback below kicks in. Kept as short as
+   "Ability Stone" so both stones fit one line next to it. */
 .md-typeset .ap-acc-panel-title.ap-engr-contrib-title {
   margin: 0;
   padding: 0;
@@ -6926,7 +6912,7 @@ h3 { color: var(--dbc-teal); }
    above) split across the row's full width - same reasoning as every
    other .ap-calc-field-row's label-vs-control space-between, declared
    directly on .ap-engr-stone-row since Stone 1 and 2 share this one
-   row. Both .ap-engr-stone-row and .ap-engr-stone-row--first are always
+   row. Both .ap-engr-stone-row and .ap-engr-stone-row--foot are always
    on this single element together (there's no separate Stone-2-only
    row to tiebreak against). */
 .md-typeset .ap-engr-stone-row {

@@ -511,131 +511,84 @@
        not fit a laptop-height viewport. -->
   <div class="ap-calc-live-sticky">
 
-  <!-- Top 3 combinations, ranked by % of the best. Replaces the old 3x3
-       grid + progress bars: with 9 cells the only things that mattered
-       were "what's my best combo" and "what am I giving up if I run
-       something else", so a ranked list answers both directly instead of
-       asking the reader to scan a matrix for the highlighted cell. -->
-  <!-- Each row is clickable (tabindex/role="button") to preview that
-       rank's own stats in the Best Setup card below without changing any
-       calculation - see renderGrid's own comment. Not saved/exported -
-       see apCalcSelection's own comment in the JS. -->
-  <!-- The 2nd-5th rows additionally carry a pin button
-       (.ap-result-pin), overlaid on the row's own top-right corner
-       (position:absolute - see the CSS) rather than sitting inline with
-       rank/combo/pct, so it never competes with those for flex space and
-       every row's % stays aligned regardless of whether its neighbor
-       has a pin control at all. Unlike the plain row-click preview
-       above, pinning makes that combo the fixed base every comparison
-       panel below (Bracelet, Accessory, ArkGrid, Engraving) computes
-       against, instead of the true best - see bestComboFor/update's own
-       comments in the JS. Rank 1 has no pin control since it's already
-       the default base with nothing to pin to. -->
+  <!-- Top Combinations: the 5 best Evolution split x Keystone pair
+       combos, ranked by % of the best. The header carries the state chip
+       (Best, 2nd ... 5th, or Pinned) and the pin button; the tabs hold one
+       combo each (split over keystone pair); the readout below shows the
+       selected combo's % of best and its gap. The rows are fixed in the
+       markup (data-rank 1-5) and JS re-sorts and re-labels them in place
+       each update, since which combo ranks where changes with the inputs. -->
+  <!-- A tab click previews that rank's stats in the Base / Best card below
+       without changing any calculation - see renderGrid's own comment. Not
+       saved/exported - see apCalcSelection's own comment in the JS. The
+       keyboard/screen-reader control is the role="button" label inside each
+       row, not the row itself. -->
+  <!-- The single pin button (.ap-result-pin) pins the selected combo:
+       pinning makes it the fixed base every comparison panel below
+       (Bracelet, Accessory, ArkGrid, Engraving) computes against, instead of
+       the true best - see bestComboFor/update's own comments in the JS. It
+       stays in the header (disabled and invisible while rank 1 is selected,
+       so the header never changes height) since rank 1 is already the
+       default base with nothing to pin to. Lucide's "pin" icon (MIT-licensed,
+       https://lucide.dev), same stroke-icon convention as the copy icon
+       elsewhere in this file. -->
   <div class="ap-calc-results">
     <div class="ap-calc-results-title">
       <span>Top Combinations</span>
       <span class="ap-ot1-indicator" hidden title="Optimized Training 1 is on: only 2 levels of Keen Sense/Limit Break are available, and +5% Evo Dmg is included in every combo below. The DPS figure is your best setup here vs. your best setup without it. Its cooldown reduction isn't counted.">OT1<span class="ap-ot1-cost"></span></span>
+      <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the base for every comparison on this page, instead of the true best. Click again to unpin." disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 17v5"></path>
+          <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"></path>
+        </svg>
+        <span class="ap-result-pin-text">Pin</span>
+      </button>
+      <span class="ap-result-state">Best</span>
     </div>
+    <div class="ap-result-tabs">
     <div class="ap-calc-result-row" data-rank="1">
-      <span class="ap-result-rank">1</span>
-      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Best Setup card">—</span>
-      <span class="ap-result-delta">—</span>
-      <span class="ap-result-pct">—</span>
+      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Base / Best card"><span class="ap-result-split">—</span><span class="ap-result-pair">—</span></span>
     </div>
     <div class="ap-calc-result-row" data-rank="2">
-      <span class="ap-result-rank">2</span>
-      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Best Setup card">—</span>
-      <span class="ap-result-delta">—</span>
-      <span class="ap-result-pct">—</span>
-      <!-- Actual thumbtack shape (Lucide's "pin" icon, MIT-licensed -
-           https://lucide.dev), same stroke-icon convention as the copy
-           icon elsewhere in this file (24x24 viewBox, stroke-width 2,
-           round caps/joins). Replaces an earlier hand-rolled circle+line
-           SVG that read as an ambiguous squiggle at this size instead of
-           a recognizable pin - see the CSS comment on .ap-result-pin svg. -->
-      <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the base for every comparison on this page, instead of the true best. Click again to unpin.">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 17v5"></path>
-          <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"></path>
-        </svg>
-      </button>
+      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Base / Best card"><span class="ap-result-split">—</span><span class="ap-result-pair">—</span></span>
     </div>
     <div class="ap-calc-result-row" data-rank="3">
-      <span class="ap-result-rank">3</span>
-      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Best Setup card">—</span>
-      <span class="ap-result-delta">—</span>
-      <span class="ap-result-pct">—</span>
-      <!-- Actual thumbtack shape (Lucide's "pin" icon, MIT-licensed -
-           https://lucide.dev), same stroke-icon convention as the copy
-           icon elsewhere in this file (24x24 viewBox, stroke-width 2,
-           round caps/joins). Replaces an earlier hand-rolled circle+line
-           SVG that read as an ambiguous squiggle at this size instead of
-           a recognizable pin - see the CSS comment on .ap-result-pin svg. -->
-      <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the base for every comparison on this page, instead of the true best. Click again to unpin.">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 17v5"></path>
-          <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"></path>
-        </svg>
-      </button>
+      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Base / Best card"><span class="ap-result-split">—</span><span class="ap-result-pair">—</span></span>
     </div>
     <div class="ap-calc-result-row" data-rank="4">
-      <span class="ap-result-rank">4</span>
-      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Best Setup card">—</span>
-      <span class="ap-result-delta">—</span>
-      <span class="ap-result-pct">—</span>
-      <!-- Actual thumbtack shape (Lucide's "pin" icon, MIT-licensed -
-           https://lucide.dev), same stroke-icon convention as the copy
-           icon elsewhere in this file (24x24 viewBox, stroke-width 2,
-           round caps/joins). Replaces an earlier hand-rolled circle+line
-           SVG that read as an ambiguous squiggle at this size instead of
-           a recognizable pin - see the CSS comment on .ap-result-pin svg. -->
-      <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the base for every comparison on this page, instead of the true best. Click again to unpin.">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 17v5"></path>
-          <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"></path>
-        </svg>
-      </button>
+      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Base / Best card"><span class="ap-result-split">—</span><span class="ap-result-pair">—</span></span>
     </div>
     <div class="ap-calc-result-row" data-rank="5">
-      <span class="ap-result-rank">5</span>
-      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Best Setup card">—</span>
-      <span class="ap-result-delta">—</span>
-      <span class="ap-result-pct">—</span>
-      <!-- Actual thumbtack shape (Lucide's "pin" icon, MIT-licensed -
-           https://lucide.dev), same stroke-icon convention as the copy
-           icon elsewhere in this file (24x24 viewBox, stroke-width 2,
-           round caps/joins). Replaces an earlier hand-rolled circle+line
-           SVG that read as an ambiguous squiggle at this size instead of
-           a recognizable pin - see the CSS comment on .ap-result-pin svg. -->
-      <button type="button" class="ap-result-pin" aria-pressed="false" aria-label="Pin this combo as the comparison base" title="Pin this combo as the base for every comparison on this page, instead of the true best. Click again to unpin.">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 17v5"></path>
-          <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"></path>
-        </svg>
-      </button>
+      <span class="ap-result-combo" role="button" tabindex="0" aria-label="Preview this combo&#39;s stats in the Base / Best card"><span class="ap-result-split">—</span><span class="ap-result-pair">—</span></span>
+    </div>
+    </div>
+    <div class="ap-result-readout">
+      <div class="ap-result-readout-name"><span class="ap-result-readout-split">—</span><span class="ap-result-readout-pair">—</span></div>
+      <div class="ap-result-readout-pct"><span class="ap-result-pct">—</span><span class="ap-result-delta">—</span></div>
     </div>
   </div>
 
 
-  <!-- Verification + Result -->
-  <!-- Base Setup vs the selected combo, one row per stat: Base, Best and
-       the difference between them. The Best column header doubles as the
-       card title the JS rewrites ("Best", "2nd Best", "Pinned") and the card carries the previewed/pinned state classes. -->
+  <!-- Base Setup vs the selected combo: one tile per stat with the Best
+       value large, the gap to Base beside it and the Base value under it.
+       The header's .ap-stat-card-title is the title the JS rewrites ("Best",
+       "2nd Best", "Pinned") and the card carries the previewed/pinned state
+       classes. The Crit Dmg tile includes Breaking Moon's Crit Dmg add on
+       Surge 111, flagged by .ap-tz-tag (hidden on every other build). -->
   <div class="ap-calc-summary">
     <div class="ap-stat-card ap-stat-card-best ap-stat-table">
       <div class="ap-stat-row ap-stat-row--head">
-        <span></span>
-        <span class="ap-stat-col-title">Base</span>
-        <span class="ap-stat-card-title">Best</span>
+        <span class="ap-stat-head-label">Base → <span class="ap-stat-card-title">Best</span></span>
         <span class="ap-stat-col-title">Diff</span>
       </div>
-      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--critrate" title="The capped, uptime-weighted Crit Rate the DPS math actually uses (accounts for buffs overlapping and hitting the 100% cap).">Eff. Crit Rate</span><span class="ap-summary-base-critrate ap-summary-value">—</span><span class="ap-summary-best-crit ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
-      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--critrate" title="Crit Rate if Adrenaline and Back Attack both hit at full value, uncapped, so it can read over 100%. Includes Flash Orb at its full value when Flash Orb Uptime is above 0.">Peak Crit Rate</span><span class="ap-summary-base-critrate-peak ap-summary-value">—</span><span class="ap-summary-best-crit-peak ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
-      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--critdmg">Crit Dmg</span><span class="ap-summary-base-critdmg ap-summary-value">—</span><span class="ap-summary-best-critdmg ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
-      <div class="ap-stat-row ap-stat-card-row--breakingmoon-base ap-stat-card-row--breakingmoon-best ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg" title="Breaking Moon's average per-cast Crit Dmg bonus (applies to 111 Surge only).">T→Z CDmg</span><span class="ap-summary-base-breakingmoon ap-summary-value">—</span><span class="ap-summary-best-breakingmoon ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
-      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--oncrit">Crit Hit Dmg</span><span class="ap-summary-base-oncrit ap-summary-value">—</span><span class="ap-summary-best-oncrit ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
-      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--evodmg">Evo Dmg</span><span class="ap-summary-base-evodmg ap-summary-value">—</span><span class="ap-summary-best-evodmg ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
-      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--adddmg">Add Dmg</span><span class="ap-summary-base-adddmg ap-summary-value">—</span><span class="ap-summary-best-adddmg ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
+      <div class="ap-stat-tiles">
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--critrate" title="The capped, uptime-weighted Crit Rate the DPS math actually uses (accounts for buffs overlapping and hitting the 100% cap).">Eff. Crit Rate</span><span class="ap-summary-best-crit ap-summary-value">—</span><span class="ap-stat-delta">—</span><span class="ap-summary-base-critrate ap-summary-value">—</span></div>
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--critrate" title="Crit Rate when all bonuses stack at full value, uncapped. It can read over 100%.">Peak Crit Rate</span><span class="ap-summary-best-crit-peak ap-summary-value">—</span><span class="ap-stat-delta">—</span><span class="ap-summary-base-critrate-peak ap-summary-value">—</span><span class="ap-orb-tag" hidden title="Includes Flash Orb at its full value when Flash Orb Uptime % is set above 0.">ORB</span></div>
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--critdmg">Crit Dmg</span><span class="ap-summary-best-critdmg ap-summary-value">—</span><span class="ap-stat-delta">—</span><span class="ap-summary-base-critdmg ap-summary-value">—</span><span class="ap-tz-tag" hidden>T→Z</span></div>
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--oncrit">Crit Hit Dmg</span><span class="ap-summary-best-oncrit ap-summary-value">—</span><span class="ap-stat-delta">—</span><span class="ap-summary-base-oncrit ap-summary-value">—</span></div>
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--evodmg">Evo Dmg</span><span class="ap-summary-best-evodmg ap-summary-value">—</span><span class="ap-stat-delta">—</span><span class="ap-summary-base-evodmg ap-summary-value">—</span></div>
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--adddmg">Add Dmg</span><span class="ap-summary-best-adddmg ap-summary-value">—</span><span class="ap-stat-delta">—</span><span class="ap-summary-base-adddmg ap-summary-value">—</span></div>
+      </div>
     </div>
   </div>
 
@@ -1422,22 +1375,37 @@
 
     <!-- Stone 1 and Stone 2 share a single row, titled just "Ability
          Stone" (a longer title would force Stone 1 onto a line by
-         itself). It is the title bar of the
-         .ap-engr-contrib-panel that also holds the contribution table
-         (one card, see extra.css). Since "Ability Stone" as a title already
-         says what both slots are, their labels are just "1"/"2" (the
-         tooltips still spell out "Ability Stone's first/second slot" in
-         full). .ap-engr-stone-groups wraps the 2 label+pair units (see
-         .ap-engr-stone-label-group below) so the row's own
-         space-between only ever sees 2 children - title on the left,
-         both stones together on the right - instead of spreading 3
-         children (title, Stone 1, Stone 2) evenly apart. See
-         extra.css's own comment chain on .ap-engr-stone-row--first /
-         .ap-engr-stone-groups for the responsive fallback once both
-         stones plus their selects do not fit next to the title on one
-         line. -->
+         itself). It is the footer bar of the .ap-engr-contrib-panel that
+         also holds the contribution table (one card, see extra.css), and
+         sits outside the table's sideways scroller so it never scrolls
+         with the table. Since "Ability Stone" as a title already says what
+         both slots are, their labels are just "1"/"2" (the tooltips still
+         spell out "Ability Stone's first/second slot" in full).
+         .ap-engr-stone-groups wraps the 2 label+pair units (see
+         .ap-engr-stone-label-group below) so the row's own space-between
+         only ever sees 2 children - title on the left, both stones together
+         on the right - instead of spreading 3 children (title, Stone 1,
+         Stone 2) evenly apart. See extra.css's own comment chain on
+         .ap-engr-stone-row--foot / .ap-engr-stone-groups for the responsive
+         fallback once both stones plus their selects do not fit next to
+         the title on one line. -->
     <div class="ap-engr-contrib-panel">
-    <div class="ap-calc-field-row ap-engr-stone-row ap-engr-stone-row--first">
+    <div class="ap-acc-table-scroll ap-engr-contrib-wrap">
+      <table class="ap-brace-compare-table ap-engr-contrib-table">
+        <thead>
+          <tr>
+            <th class="ap-brace-th-label">Engraving</th>
+            <th>DPS Contribution</th>
+            <th>Stone Lv.1</th>
+            <th>Stone Lv.2</th>
+            <th>Stone Lv.3</th>
+            <th>Stone Lv.4</th>
+          </tr>
+        </thead>
+        <tbody class="ap-engr-contrib-rows"></tbody>
+      </table>
+    </div>
+    <div class="ap-calc-field-row ap-engr-stone-row ap-engr-stone-row--foot">
       <p class="ap-acc-panel-title ap-engr-contrib-title">Ability Stone</p>
       <span class="ap-engr-stone-groups">
         <span class="ap-engr-stone-label-group">
@@ -1485,21 +1453,6 @@
           </span>
         </span>
       </span>
-    </div>
-    <div class="ap-acc-table-scroll ap-engr-contrib-wrap">
-      <table class="ap-brace-compare-table ap-engr-contrib-table">
-        <thead>
-          <tr>
-            <th class="ap-brace-th-label">Engraving</th>
-            <th>DPS Contribution</th>
-            <th>Stone Lv.1</th>
-            <th>Stone Lv.2</th>
-            <th>Stone Lv.3</th>
-            <th>Stone Lv.4</th>
-          </tr>
-        </thead>
-        <tbody class="ap-engr-contrib-rows"></tbody>
-      </table>
     </div>
     </div>
 
