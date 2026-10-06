@@ -1802,7 +1802,7 @@
 
     var calculatorUrl = location.origin + location.pathname;
     var bookmarklet = control.querySelector(".bible-import-bookmarklet");
-    var statusEl = control.querySelector(".bible-import-status");
+    var statusEl = root.querySelector(".bible-import-status");
     if (bookmarklet) {
       bookmarklet.href = buildBookmarklet(calculatorUrl);
       // Clicking (instead of dragging) this link would otherwise actually

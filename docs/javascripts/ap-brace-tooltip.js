@@ -55,44 +55,25 @@
 // call needed on the calculator's end.
 //
 // A label that wraps its own checkbox/input (ap-calc-pair-check,
-// ap-bvb-inline-check, ap-engr-checkbox-label) picks up a real focus stop
+// ap-bvb-inline-check) picks up a real focus stop
 // here (wire() always adds tabindex="0"), on top of the input's own
 // native one - two tab stops instead of one for that control. Deliberate
 // trade-off: the alternative (skip wiring anything that already contains
 // a focusable child) would silently leave every checkbox-with-caveat back
 // on native title, exactly the inconsistency this pass exists to remove.
 //
-// That same wrapping shape needs wireCustom's opts.tapToggle: false,
-// same reasoning as rune-tooltip.js's own use of it for a rune chip
-// inside a <summary> (see that file) - here for a different reason
-// though. Tapping the label TEXT (not the tiny checkbox square itself,
-// the realistic thumb target) makes the browser dispatch a SECOND,
-// separate click straight at the wrapped checkbox as part of the label's
-// normal activation behavior (ordinary label behavior, not a bug on its
-// own - see skill-tooltip.js's suppressNextDocumentClose comment for the
-// closely related bug that fixes). That second click bubbles back UP
-// through the very same label, re-entering wire()'s own click handler a
-// second time within the same synchronous tap: the first (real) click
-// sets state.open true and opens the tooltip, then this second
-// (synthetic, forwarded) click sees state.open already true and closes
-// it right back - an open-then-immediately-close every single time you
-// tap the label away from the checkbox itself, confirmed via instrumented
-// timing (both click events land within ~1ms of each other, well before
-// any paint). suppressNextDocumentClose doesn't help here - it only
-// stops the SEPARATE document-level "tap outside closes everything"
-// listener from ALSO closing things; it does nothing about this label's
-// own handler firing twice on itself. Passing tapToggle: false removes
-// click from the equation entirely for these triggers, so the tooltip
-// only ever opens via hover (mouse) or focus (keyboard tab, or the
-// wrapped checkbox actually receiving focus - focusin bubbles up from it
-// to this label same as any other descendant) - both single-fire per
-// interaction, neither exhibits the double-click self-cancel above.
-// A for="" label (ap-calc-field-label) pointing at a SIBLING input
-// doesn't have this problem - the forwarded click lands on a control
-// that isn't a DOM descendant of the label, so it bubbles up whatever
-// ancestors THAT input has instead of back through the label a second
-// time - so only the wrapping shape needs the opt-out, not every label
-// this file wires.
+// Inside .ap-calc a label never operates its control: ark-passive-
+// calculator.js cancels the default click action of a click on label text,
+// so no second, forwarded click reaches the control and the label's tap
+// handler fires once per tap like any other trigger. The .cpm-calc and
+// .bid-calc labels keep the browser's normal label behaviour, so a label
+// there that WRAPS its control needs wireCustom's tapToggle: false (the
+// forwarded click would re-enter the label's tap handler and close the
+// tooltip the first click just opened) plus wrapsControl: true (the click
+// still has to be kept from the document-level "tap outside closes
+// everything" listener; the control's focus is what shows the tooltip).
+// A for="" label pointing at a SIBLING input never re-enters its own
+// handler, so only the wrapping shape outside .ap-calc needs the opt-out.
 //
 // Several icons/labels authored in resources.md are also conditionally
 // [hidden] by enforceBvbLineControls elsewhere (e.g. the Bracelet vs.
@@ -148,11 +129,10 @@
     if (!text) return;
     var tip = buildTip(text);
     tipByTrigger.set(trigger, tip);
-    // See this file's own header comment on why a label WRAPPING its
-    // checkbox/input (as opposed to a for="" label pointing at a
-    // sibling) needs both tapToggle: false and wrapsControl: true (see
-    // wire()'s own comment on why those are two separate flags now).
-    var wrapsControl = trigger.tagName === "LABEL" && !!trigger.querySelector("input, select, textarea");
+    // See this file's own header comment on which labels need
+    // tapToggle: false and wrapsControl: true (see wire()'s own comment on
+    // why those are two separate flags).
+    var wrapsControl = trigger.tagName === "LABEL" && !trigger.closest(".ap-calc") && !!trigger.querySelector("input, select, textarea");
     window.SkillTooltip.wireCustom(trigger, tip, wrapsControl ? { tapToggle: false, wrapsControl: true } : undefined);
     trigger.removeAttribute("title");
   }

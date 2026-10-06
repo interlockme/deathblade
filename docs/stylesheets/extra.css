@@ -4525,27 +4525,51 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---------- Ark Passive node comparison calculator ---------- */
-/* Same card shell as .cpm-calc (lavender border, dark panel) so the two
-   calculators read as one family. Inputs are grouped by which final stat
-   they actually feed (Crit Rate / Crit Dmg / On-Crit Dmg / Additional Dmg /
-   Evolution Dmg) rather than by item slot, since that's what a reader is
-   usually trying to reason about ("what's pushing my Crit Dmg") rather than
-   "what's on my bracelet". Each group gets a small accent color, reused on
-   the Your Setup / Best Setup labels further down so a field and its
-   contribution to the final numbers read as the same color everywhere on
-   the card. Party & Positioning is deliberately pulled out of that stat
-   grouping and placed next to the result grid instead - unlike gear, it's
-   the section people re-toggle every pull, so it lives with the payoff
-   rather than sitting buried among fill-once fields. Deliberately no raw
-   multiplier numbers shown next to the inputs themselves - only the grid's
-   Final Multiplier column and the %-vs-best figure are surfaced, so the
-   takeaway stays "pick the highlighted cell" rather than inviting the
-   reader to hand-compute multiplier math. */
+/* Structure of the calculator:
+   - Top bar (.ap-calc-bar): Build chips on the left, preset slots and file
+     actions (Export, Import, Reset, Bible Import) on the right. Sticky under
+     the site header on desktop.
+   - Two columns below it. Left: the inputs, grouped by the final stat they
+     feed (Crit Rate, Crit Dmg, Crit Hit Dmg, Additional Dmg, Evolution
+     Dmg) rather than by item slot, since "what is pushing my Crit Dmg" is
+     the question a reader is usually asking. Right: the things that change
+     every pull (Party & Positioning), the ranked Top Combinations, and the
+     Base / Best / Diff table they feed. Party is pulled out of the stat
+     grouping and placed next to the results for that reason: unlike gear,
+     it is re-toggled constantly, so it lives with the payoff.
+   - Everything is a panel: a bordered surface with a header bar (small caps
+     title with a colour dot) and rows. Each input group carries an accent
+     (--ap-cat) that is reused on the stat labels in the results table, so a
+     field and its contribution read as the same colour everywhere.
+   - No raw multiplier numbers beside the inputs. Only the ranked list's
+     percentages and the stat table are surfaced, so the takeaway stays
+     "pick the top row" rather than inviting hand-computed multiplier math.
+   Type sizes, control height, radii and surfaces are the --ap-* tokens
+   below; use them instead of one-off values inside .ap-calc. */
 .md-typeset .ap-calc {
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
-  background-color: rgba(var(--dbc-purple-rgb), 0.045);
-  border-radius: 10px;
-  padding: 1em 1.2em 1.2em;
+  /* Type scale (rem; the site root is 20px). cap = uppercase panel titles,
+     sm = derived values and secondary text, base = labels and controls,
+     table = comparison table body text, md = emphasised values,
+     lg = the headline percentage. */
+  --ap-fs-cap: 0.56rem;
+  --ap-fs-sm: 0.6rem;
+  --ap-fs-base: 0.65rem;
+  --ap-fs-table: 0.7rem;
+  --ap-fs-md: 0.75rem;
+  --ap-fs-lg: 0.9rem;
+  --ap-ctl-h: 1.6rem;
+  --ap-radius: 8px;
+  --ap-radius-lg: 12px;
+  --ap-gap: 0.9rem;
+  --ap-pad-x: 0.85rem;
+  /* Opaque on purpose: these are the page background (#161718) with a thin
+     white wash already mixed in. A translucent wash would stack when a card
+     sits inside another card (the comparison sections), and the inner card
+     would come out lighter than the same card in the main grid. */
+  --ap-surface: #1c1d1f;
+  --ap-surface-2: #232426;
+  --ap-line: rgba(255, 255, 255, 0.09);
+  --ap-line-strong: rgba(var(--dbc-purple-rgb), 0.35);
   margin: 1em 0 1.5em;
 }
 
@@ -4557,8 +4581,8 @@ h3 { color: var(--dbc-teal); }
    `position`/`top` pair below and it just scrolls normally instead. ---- */
 .md-typeset .ap-calc-layout {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(300px, 1.15fr);
-  gap: 1.1em;
+  grid-template-columns: minmax(340px, 1fr) minmax(300px, 0.9fr);
+  gap: var(--ap-gap);
   align-items: start;
 }
 .md-typeset .ap-calc-gear {
@@ -4582,7 +4606,7 @@ h3 { color: var(--dbc-teal); }
      refusing to shrink, this one stops the grid track inside it from
      doing the same thing one level down. */
   grid-template-columns: minmax(0, 1fr);
-  gap: 0.9em;
+  gap: var(--ap-gap);
   align-content: start;
   /* align-items defaults to stretch, which was forcing every group in a row
      to match its tallest sibling's height - e.g. a short group padded out
@@ -4590,67 +4614,31 @@ h3 { color: var(--dbc-teal); }
      content height. */
   align-items: start;
 }
-/* Leap Rank is the lone field feeding Evolution Damage directly (see the
-   HTML comment above it) - full-width slim strip instead of its own boxed
-   group, so one dropdown doesn't cost a whole card's worth of border/title/
-   padding for little payoff. */
-.md-typeset .ap-calc-mini-field {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 0.6em;
-  padding: 0.3em 0.1em 0.6em;
-  border-bottom: 2px solid var(--ap-cat, rgba(255, 255, 255, 0.15));
-  margin-bottom: 0.1em;
-}
-.md-typeset .ap-calc-mini-field-tag {
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 700;
-  color: var(--ap-cat, var(--dbc-lavender));
-  flex-shrink: 0;
-}
-.md-typeset .ap-calc-mini-field .ap-calc-field-label {
-  flex: 1;
-  /* This label/select pair sits outside .ap-calc-field-row, so none of that
-     class's font-size/color/select styling reaches them by default - which
-     was leaving Leap Rank's label at the browser's base font size (visibly
-     larger than every other label) and its select completely unstyled
-     (no dark background/border, default browser chrome). Mirrored here to
-     match .ap-calc-field-row's label + select rules exactly. */
-  font-size: 0.82em;
-  color: var(--dbc-lilac);
-}
-.md-typeset .ap-calc-mini-field select {
-  background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
-  border-radius: 6px;
-  color: var(--md-default-fg-color);
-  padding: 0.3em 0.5em;
-  font-size: 0.85em;
-  font-family: inherit;
-}
-.md-typeset .ap-calc-mini-field select:focus {
-  outline: none;
-  border-color: var(--dbc-purple);
-}
-.md-typeset .ap-calc-mini-field--evo-dmg { --ap-cat: var(--dbc-purple); }
 .md-typeset .ap-calc-live {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: var(--ap-gap);
+  min-width: 0;
+  /* Stretches to the row's full height so the pinned results below have
+     room to stay in view; the layout grid otherwise sizes columns to their
+     own content (align-items: start). */
+  align-self: stretch;
+}
+/* The results (Top Combinations plus the Base / Best table) stay pinned
+   below the sticky top bar while the inputs are edited: the site header
+   (2.4rem), the bar's own height (--ap-bar-h, measured by JS because the bar
+   wraps to a second row at some widths) and one layout gap. The cards above them scroll away normally.
+   position: sticky always creates its own stacking context, and without an
+   explicit z-index that context paints in plain DOM order among its
+   siblings, so .ap-brace-compare (a later sibling, living outside this
+   column on purpose) would paint over everything in here. A small explicit
+   z-index lifts the pinned results above later unpositioned content. */
+.md-typeset .ap-calc-live-sticky {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-gap);
   position: sticky;
-  top: 4.4rem;
-  /* position: sticky always creates its own stacking context, and without
-     an explicit z-index that context paints in plain DOM order among its
-     siblings - so .ap-brace-compare (a later sibling, living outside this
-     column on purpose - see its own comment) was painting on top of
-     EVERYTHING in here, including the Export/Import popovers' own
-     z-index: 30, because that 30 only ranks things inside this context,
-     not against outside elements. A small explicit z-index here lifts the
-     whole sticky column (and everything nested in it) above later
-     unpositioned content like .ap-brace-compare instead. */
+  top: calc(2.4rem + var(--ap-bar-h, 3.5rem) + var(--ap-gap));
   z-index: 2;
 }
 @media screen and (max-width: 900px) {
@@ -4675,12 +4663,8 @@ h3 { color: var(--dbc-teal); }
        tracks) actually gets a chance to. */
     align-items: stretch;
   }
-  /* Party toggles + grid + summary read before the fill-once gear list on
-     small screens, since that's the part worth seeing without scrolling
-     past everything else first. */
-  .md-typeset .ap-calc-live {
+  .md-typeset .ap-calc-live-sticky {
     position: static;
-    order: -1;
   }
   /* Same bare-track story as the BvB grid fix below (minmax(0,1fr)), just
      showing up as a flex item instead of a grid track here: switching to
@@ -4702,75 +4686,151 @@ h3 { color: var(--dbc-teal); }
   }
 }
 
-.md-typeset .ap-calc-group {
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-left: 3px solid var(--ap-cat, rgba(255, 255, 255, 0.15));
-  border-radius: 8px;
-  padding: 0.7em 0.85em;
+/* Panel: the shared surface for input groups, Party & Positioning, the
+   Top Combinations list and the Character Data cards. overflow: hidden
+   clips the header bar to the rounded corners. The header bar bleeds to the
+   panel edges with negative margins, so a panel's body keeps the same
+   padding whatever it contains. */
+.md-typeset .ap-calc-group,
+.md-typeset .ap-calc-party-card,
+.md-typeset .ap-calc-results,
+.md-typeset .ap-gear-card,
+.md-typeset .ap-bvb-card,
+.md-typeset .ap-esvs-card {
+  --ap-cat: var(--dbc-lavender);
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius-lg);
+  background-color: var(--ap-surface);
+  padding: 0 var(--ap-pad-x) 0.3rem;
+  overflow: hidden;
 }
-.md-typeset .ap-calc-group-title {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ap-cat, var(--dbc-lavender));
+.md-typeset .ap-calc-group-title,
+.md-typeset .ap-calc-results-title,
+.md-typeset .ap-gear-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin: 0 calc(var(--ap-pad-x) * -1) 0.2rem;
+  padding: 0.5rem var(--ap-pad-x);
+  font-size: var(--ap-fs-cap);
   font-weight: 700;
-  margin-bottom: 0.55em;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ap-cat);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ap-cat) 14%, transparent), transparent 70%);
+  border-bottom: 1px solid var(--ap-line);
 }
 .md-typeset .ap-calc-group--crit-rate  { --ap-cat: var(--dbc-pink); }
 .md-typeset .ap-calc-group--crit-dmg   { --ap-cat: var(--dbc-teal); }
 .md-typeset .ap-calc-group--oncrit-dmg { --ap-cat: var(--dbc-orange); }
 .md-typeset .ap-calc-group--add-dmg    { --ap-cat: var(--dbc-sky); }
-/* Evolution Damage has no full group - its one field (Leap Rank)
-   lives in the .ap-calc-mini-field strip above instead, which carries its
-   own --ap-cat: var(--dbc-purple). */
+.md-typeset .ap-calc-group--evo-dmg    { --ap-cat: var(--dbc-purple); }
+.md-typeset .ap-calc-results           { --ap-cat: var(--dbc-teal); }
+/* The gear cards pick their accent through --ap-gear-card-accent (set by
+   the per-card modifiers further down). */
+.md-typeset .ap-gear-card {
+  --ap-cat: var(--ap-gear-card-accent, var(--dbc-lavender));
+}
 
 .md-typeset .ap-calc-field-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* The label's auto right margin takes the slack, so controls sit at the
+     far edge, including a control that wraps onto its own line. */
+  justify-content: flex-end;
   gap: 0.6em;
-  margin-bottom: 0.5em;
+  min-height: 2.3rem;
+  margin: 0;
+  padding: 0.2rem 0;
 }
-.md-typeset .ap-calc-field-row:last-child {
-  margin-bottom: 0;
+.md-typeset .ap-calc-field-row + .ap-calc-field-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.045);
 }
 .md-typeset .ap-calc-field-row label.ap-calc-field-label {
-  font-size: 0.82em;
+  font-size: var(--ap-fs-base);
   color: var(--dbc-lilac);
-  /* flex: 1 1 auto (not the flex:1 shorthand's 1 1 0%) + min-width: 0.
-     flex-basis:0% (what flex:1 sets) resolves as "content" against
-     indefinite space, which is exactly what this label's available
-     space becomes once its column runs out of room on a narrow phone -
-     so instead of wrapping, a long label like "Support: Passionate
-     Dance (Evo Dmg)" was rendering at its full single-line width and
-     forcing the whole row (and the sticky Party & Positioning card,
-     and the whole right-hand column) wider than the viewport. min-
-     width: 0 alone doesn't fix this - it only overrides the *other*
-     flex auto-min-size quirk, not this one. flex-basis: auto sizes
-     from the label's own natural content instead, which wraps
-     correctly once min-width: 0 is also in play. */
-  flex: 1 1 auto;
+  /* The label is only as wide as its text (flex-basis: auto, no grow), and
+     margin-right: auto pushes the controls to the row's far edge. The
+     empty space between label and control therefore belongs to neither: no
+     tooltip opens over it and a click on it does not toggle the control.
+     min-width: 0 lets a long label wrap on a narrow phone instead of
+     pushing the row, the card and the page wider than the viewport. */
+  flex: 0 1 auto;
   min-width: 0;
+  margin-right: auto;
 }
-.md-typeset .ap-calc-field-row select,
-.md-typeset .ap-calc-field-row input[type="number"] {
+/* Shared control look: every select and text/number input inside the
+   calculator, including the comparison panels' line pickers. */
+.md-typeset .ap-calc select,
+.md-typeset .ap-calc input[type="number"],
+.md-typeset .ap-calc input[type="text"] {
+  box-sizing: border-box;
+  height: var(--ap-ctl-h);
+  padding: 0 0.55rem;
   background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
-  border-radius: 6px;
+  border: 1px solid var(--ap-line-strong);
+  border-radius: var(--ap-radius);
   color: var(--md-default-fg-color);
-  padding: 0.3em 0.5em;
-  font-size: 0.85em;
   font-family: inherit;
+  font-size: var(--ap-fs-base);
+  font-variant-numeric: tabular-nums;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+.md-typeset .ap-calc select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 1.35rem;
+  /* The selected text is centered in the room left of the arrow; the Chromium
+     and Firefox select boxes need text-align-last for a single line. */
+  text-align: center;
+  text-align-last: center;
+  /* Text wider than the select ends in an ellipsis instead of being cut mid-glyph. */
+  text-overflow: ellipsis;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23948fa0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 0.5rem;
+  cursor: pointer;
+}
+.md-typeset .ap-calc-field-row select {
   min-width: 5.5em;
 }
 .md-typeset .ap-calc-field-row input[type="number"] {
   width: 5.5em;
   min-width: 0;
 }
-.md-typeset .ap-calc-field-row select:focus,
-.md-typeset .ap-calc-field-row input[type="number"]:focus {
+/* Number fields keep the compact width; tighter side padding plus a small
+   gap before the browser's up/down spinner (which appears on hover and sits
+   inside the field) stops the value from touching or sitting under it. */
+.md-typeset .ap-calc input[type="number"] {
+  padding: 0 0.35rem 0 0.45rem;
+  text-align: center;
+}
+.md-typeset .ap-calc input[type="number"]::-webkit-inner-spin-button {
+  margin-left: 0.3rem;
+}
+/* A 5-digit value (Accessory Main Stat, 15178-17857) does not fit the
+   5.5em field beside the spinner. */
+.md-typeset .ap-calc-field-row input[type="number"].ap-gear-input-mid {
+  width: 6.5em;
+}
+/* Firefox keeps the spinner in the field's layout at all times, directly
+   after the text area, and exposes no pseudo-element a page can use to add
+   space between the two. Centered values keep free space on both sides of
+   the text, so it never touches the spinner. The spinner is left alone
+   (hiding or revealing it on hover would shift the value). */
+.md-typeset .ap-calc select.ap-ctl-hover,
+.md-typeset .ap-calc input[type="number"].ap-ctl-hover,
+.md-typeset .ap-calc input[type="text"].ap-ctl-hover {
+  border-color: rgba(var(--dbc-purple-rgb), 0.6);
+}
+.md-typeset .ap-calc select:focus,
+.md-typeset .ap-calc input[type="number"]:focus,
+.md-typeset .ap-calc input[type="text"]:focus {
   outline: none;
-  border-color: var(--dbc-purple);
+  border-color: var(--dbc-pink);
+  box-shadow: 0 0 0 2px rgba(var(--dbc-pink-rgb), 0.2);
 }
 /* Crit Stat, Weapon Quality, Astrogem Level, Demon Damage %, and Bracelet
    Crit Stat Equipped all carry min/max attrs, but a free-typed number
@@ -4779,7 +4839,7 @@ h3 { color: var(--dbc-teal); }
    pattern as the CPM calculator's Raid CPM/Base Multiplier fields) - this
    is the live cue while typing. Reuses the site's standard danger red
    rather than inventing a new color for this one warning state. */
-.md-typeset .ap-calc-field-row input[type="number"]:out-of-range {
+.md-typeset .ap-calc input[type="number"]:out-of-range {
   border-color: var(--dbc-red);
 }
 /* Flash Orb Uptime is pure RNG (see .ap-flash-orb-warn's own tooltip on
@@ -4795,13 +4855,19 @@ h3 { color: var(--dbc-teal); }
    state. */
 .md-typeset .ap-calc-field-row-muted label.ap-calc-field-label {
   color: var(--dbc-slate);
+  /* The WARN pill that follows takes the free space instead (its own
+     margin-right: auto), so it sits right beside the label. */
+  margin-right: 0;
+}
+.md-typeset .ap-calc-field-row-muted .ap-brace-warn-icon {
+  margin-right: auto;
 }
 .md-typeset .ap-calc-field-row-muted input[type="number"] {
   background-color: transparent;
   border: 1px dashed rgba(255, 255, 255, 0.15);
   color: var(--dbc-muted-text-alt);
 }
-.md-typeset .ap-calc-field-row-muted input[type="number"]:hover {
+.md-typeset .ap-calc-field-row-muted input[type="number"].ap-ctl-hover {
   border-color: rgba(255, 255, 255, 0.3);
   color: var(--dbc-lilac);
 }
@@ -4833,11 +4899,30 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-engr-manafood-row {
   flex-wrap: wrap;
 }
-.md-typeset .ap-calc-field-row input[type="checkbox"] {
-  width: 1.1em;
-  height: 1.1em;
-  accent-color: var(--dbc-pink);
+.md-typeset .ap-calc input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: 5px;
+  background: transparent center / 0.75rem no-repeat;
   cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+.md-typeset .ap-calc input[type="checkbox"].ap-ctl-hover {
+  border-color: rgba(var(--dbc-pink-rgb), 0.7);
+}
+.md-typeset .ap-calc input[type="checkbox"]:checked {
+  background-color: var(--dbc-pink);
+  border-color: var(--dbc-pink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.4 2.4 4.6-5' fill='none' stroke='%231a1a1d' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.md-typeset .ap-calc input[type="checkbox"]:focus-visible {
+  outline: 2px solid rgba(var(--dbc-pink-rgb), 0.6);
+  outline-offset: 2px;
 }
 /* ---- Paired rows: two controls that are the same slot on two different
    items (Ring 1/2, Bracelet line 1/2, the Crit Hit Dmg checkboxes)
@@ -4871,16 +4956,12 @@ h3 { color: var(--dbc-teal); }
   row-gap: 0.3em;
 }
 .md-typeset .ap-calc-pair select {
-  width: auto;
-  /* 5em matched these options' raw text width (e.g. "0.95%", "10.00%")
-     almost exactly, which left no room for the native dropdown arrow -
-     at narrow widths, where the row has no slack to grow beyond this
-     floor, the arrow rendered on top of the last character instead of
-     beside it. 5.8em is sized off the widest real option in these pairs
-     ("10.00%") plus the arrow, confirmed by screenshot at 340-480px. */
-  min-width: 5.8em;
+  /* One shared width so the paired selects line up in a column across the
+     Rings, Bracelet and Earrings rows. 6.3em fits the widest option
+     ("10.00%") plus the native dropdown arrow. */
+  width: 6.3em;
+  min-width: 6.3em;
   flex: 0 1 auto;
-  padding: 0.3em 0.5em;
 }
 /* Same shrink-guard as the select rule above, for paired number inputs
    (Gem Base AP%) - the generic number-input rule further down sets
@@ -4893,7 +4974,9 @@ h3 { color: var(--dbc-teal); }
   flex: 0 1 auto;
 }
 /* Checkbox variant (Crit Hit Damage's Bracelet 1/2 toggles) - each is a
-   <label> so clicking the "1 (1.50%)" text also toggles its checkbox. */
+   <label> so clicking its text also toggles its checkbox. Reads
+   readout, checkbox, number: the live value sits to the left of the
+   control, as it does on every other row. */
 .md-typeset .ap-calc-pair-checks {
   flex: 0 0 auto;
   gap: 1.1em;
@@ -4901,32 +4984,28 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-calc-pair-check {
   display: flex;
   align-items: center;
-  gap: 0.35em;
+  gap: 0.4em;
+  line-height: 1;
   cursor: pointer;
 }
 .md-typeset .ap-calc-pair-check-label {
-  font-size: 0.82em;
+  font-size: var(--ap-fs-base);
   color: var(--dbc-lilac);
   white-space: nowrap;
 }
 .md-typeset .ap-calc-pair-check .ap-value-display {
   min-width: 0;
-  text-align: left;
-  font-size: 0.75em;
+  text-align: right;
+}
+.md-typeset .ap-calc-pair-check input[type="checkbox"] {
+  margin: 0;
 }
 
-/* ---- Party & Positioning: the "changes every pull" card - visually
-   distinct from the fill-once gear groups (teal accent matching the grid's
-   "best cell" highlight below) and sitting directly above the grid it
-   feeds. ---- */
+/* ---- Party & Positioning: the "changes every pull" card, kept in the
+   results column directly above the list it feeds. Lavender rather than a
+   stat colour, since it is not one of the stats. ---- */
 .md-typeset .ap-calc-party-card {
-  border: 1px solid rgba(var(--dbc-teal-rgb), 0.35);
-  background-color: rgba(var(--dbc-teal-rgb), 0.05);
-  border-radius: 8px;
-  padding: 0.7em 0.85em;
-}
-.md-typeset .ap-calc-party-card .ap-calc-group-title {
-  color: var(--dbc-teal);
+  --ap-cat: var(--dbc-lavender);
 }
 /* A field gets `disabled` (not silently reset) when something else makes
    it inapplicable - the Party & Positioning checkboxes past the 3-of-5
@@ -4953,30 +5032,16 @@ h3 { color: var(--dbc-teal); }
    Rows are fixed in the markup (data-rank 1/2/3) and JS re-sorts &
    re-labels them in place each update, since which combo ranks where
    changes with the inputs. */
+/* The ranked list runs closer to the panel edge than the field panels do:
+   the rows are themselves inset boxes (hover, best and pinned states draw a
+   border), so the panel only keeps a thin gutter around them. */
 .md-typeset .ap-calc-results {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 0.7em 0.85em;
+  padding: 0 0.4rem 0.4rem;
 }
 .md-typeset .ap-calc-results-title {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--dbc-lavender);
-  font-weight: 700;
-  margin-bottom: 0.6em;
-  /* Title text on the left, the OT1 badge (below) on the right. */
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.2em 0.6em;
+  margin: 0 -0.4rem 0.4rem;
+  padding: 0.5rem var(--ap-pad-x);
 }
-/* Shown while Optimized Training 1 is checked (see EVOLUTION_SPLITS_OT1
-   in ark-passive-calculator.js): plain red text on the right of the Top
-   Combinations header, with the DPS the trade costs appended by renderGrid
-   (.ap-ot1-cost). Was a filled pill at first; text keeps the header quiet
-   while still reading as a flag. Inherits the title's uppercase/size. */
 .md-typeset .ap-ot1-indicator {
   color: var(--dbc-red);
   text-align: right;
@@ -4989,34 +5054,35 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-ot1-indicator[hidden] {
   display: none;
 }
-/* Optimized Training 1's readout + checkbox, wrapped so the pair takes the
-   same width a number input does (5.5em at .85em font-size). Without this
-   the row's WARN pill sat left of Flash Orb's, since the pill's position
-   is set by whatever width the controls to its right happen to have. */
+/* Optimized Training 1's readout + checkbox, kept together at the right
+   end of the row. */
 .md-typeset .ap-ot1-controls {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 0.6em;
-  /* Shrinks like the number input it's standing in for (default
-     flex-shrink), so the two stay the same width on a squeezed phone row. */
-  flex: 0 1 auto;
-  min-width: 0;
-  width: 4.675em;
-  /* Flex shrink is weighted by inner (content-box) size, and the number
-     input has 0.5em*0.85 padding per side + 1px borders inside its own
-     width. Reserving the same total as left padding gives this wrapper the
-     same inner size, so both shrink by the same amount on a narrow row. */
-  box-sizing: border-box;
-  padding-left: calc(0.85em + 2px);
+  flex: 0 0 auto;
 }
 .md-typeset .ap-calc-result-row {
   position: relative;
+  /* Rank, combo name, the gap to the best combo, then the percentage. The
+     faint fill behind the row (--ap-fill, set by renderGrid in the JS) is
+     a background image rather than an extra element, so the row's own
+     state colours (hover, best, previewed) still layer on top of it. */
   display: flex;
   align-items: center;
-  gap: 0.7em;
-  padding: 0.5em 0.6em;
-  border-radius: 6px;
+  gap: 0.7rem;
+  padding: 0.45rem 0.6rem;
+  --ap-fill-rgb: var(--dbc-teal-rgb);
+  background-image: linear-gradient(
+    90deg,
+    rgba(var(--ap-fill-rgb), 0.11) var(--ap-fill, 0%),
+    transparent var(--ap-fill, 0%)
+  );
+  /* The gradient is sized to the padding box and would otherwise tile into
+     the transparent border, drawing a 1px sliver of the fill colour down
+     the right edge. */
+  background-repeat: no-repeat;
+  border-radius: var(--ap-radius);
   border: 1px solid transparent;
   /* Clickable (preview that rank's stats in the Best Setup card) - see
      renderGrid/initApCalcRoot's own comments. Cursor + a hover/focus tint
@@ -5064,11 +5130,12 @@ h3 { color: var(--dbc-teal); }
   }
 }
 .md-typeset .ap-calc-result-row + .ap-calc-result-row {
-  margin-top: 0.4em;
+  margin-top: 0.15rem;
 }
 .md-typeset .ap-calc-result-row-best {
   border-color: rgba(var(--dbc-teal-rgb), 0.5);
   background-color: rgba(var(--dbc-teal-rgb), 0.09);
+  background-image: none; /* already full-width tinted */
 }
 /* Previewed (clicked) - a 2nd/3rd-best row whose stats are currently
    populating the Best Setup card below. Deliberately a fainter lavender
@@ -5084,6 +5151,7 @@ h3 { color: var(--dbc-teal); }
    its own comment). This exclusion is what actually gives -pinned
    priority; the later source position alone was never enough. */
 .md-typeset .ap-calc-result-row-active:not(.ap-calc-result-row-best):not(.ap-calc-result-row-pinned) {
+  --ap-fill-rgb: var(--dbc-lavender-rgb);
   border-color: rgba(var(--dbc-lavender-rgb), 0.6);
   background-color: rgba(var(--dbc-lavender-rgb), 0.12);
 }
@@ -5095,7 +5163,7 @@ h3 { color: var(--dbc-teal); }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.72em;
+  font-size: var(--ap-fs-cap);
   font-weight: 700;
   color: var(--dbc-lilac);
   background-color: rgba(255, 255, 255, 0.07);
@@ -5105,8 +5173,8 @@ h3 { color: var(--dbc-teal); }
   background-color: var(--dbc-teal);
 }
 .md-typeset .ap-result-combo {
-  flex: 1;
-  font-size: 0.88em;
+  flex: 1 1 0;
+  font-size: var(--ap-fs-base);
   font-weight: 600;
   color: var(--md-default-fg-color);
   min-width: 0;
@@ -5124,8 +5192,11 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-teal);
 }
 .md-typeset .ap-result-pct {
-  font-size: 1em;
+  flex: none;
+  min-width: 3.2rem;
+  font-size: var(--ap-fs-base);
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   color: var(--md-default-fg-color);
   text-align: right;
 }
@@ -5133,10 +5204,10 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-teal);
 }
 .md-typeset .ap-result-delta {
-  flex-shrink: 0;
-  font-size: 0.72em;
-  color: var(--dbc-lavender);
-  min-width: 5.5em;
+  flex: none;
+  font-size: var(--ap-fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--dbc-muted-text);
   text-align: right;
 }
 .md-typeset .ap-calc-result-row-best .ap-result-delta {
@@ -5240,6 +5311,7 @@ h3 { color: var(--dbc-teal); }
    (source order, equal specificity), which is fine since a pinned row
    is never simultaneously -best (rank 1 has no pin control). */
 .md-typeset .ap-calc-result-row-pinned {
+  --ap-fill-rgb: var(--dbc-red-rgb);
   border-color: rgba(var(--dbc-red-rgb), 0.55);
   background-color: rgba(var(--dbc-red-rgb), 0.08);
 }
@@ -5261,8 +5333,9 @@ h3 { color: var(--dbc-teal); }
    effect (e.g. "+0.95% Crit Rate") so a reader can sanity-check their own
    inputs without knowing the underlying formula. */
 .md-typeset .ap-value-display {
-  color: var(--dbc-lavender);
-  font-size: 0.75em;
+  color: var(--dbc-muted-text);
+  font-size: var(--ap-fs-sm);
+  font-variant-numeric: tabular-nums;
   min-width: 4.5em;
   text-align: right;
   flex-shrink: 0;
@@ -5337,8 +5410,7 @@ h3 { color: var(--dbc-teal); }
    the Best card visually promoted (teal border, same treatment as the #1
    row in the results list above) so the eye lands on it first. */
 .md-typeset .ap-calc-summary {
-  border-top: 1px solid rgba(var(--dbc-purple-rgb), 0.2);
-  padding-top: 0.9em;
+  margin: 0;
 }
 .md-typeset .ap-calc-stat-cards {
   display: grid;
@@ -5357,9 +5429,9 @@ h3 { color: var(--dbc-teal); }
   }
 }
 .md-typeset .ap-stat-card {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 0.7em 0.85em;
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius-lg);
+  padding: 0.7rem var(--ap-pad-x);
 }
 .md-typeset .ap-stat-card-best {
   border-color: rgba(var(--dbc-teal-rgb), 0.5);
@@ -5408,8 +5480,8 @@ h3 { color: var(--dbc-teal); }
   align-items: center;
   justify-content: space-between;
   gap: 0.6em;
-  font-size: 0.85em;
-  padding: 0.28em 0;
+  font-size: var(--ap-fs-base);
+  padding: 0.3rem 0;
 }
 .md-typeset .ap-stat-card-row + .ap-stat-card-row {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -5428,6 +5500,29 @@ h3 { color: var(--dbc-teal); }
   font-weight: 700;
   color: var(--md-default-fg-color);
 }
+/* Peak Crit Rate row while Flash Orb Uptime is above 0: the figure counts the
+   orb at full value, so it is only reached while the orb is active. Gold
+   values and a circled "!" after the label (the same size as the "i" icons);
+   the red over-100% state below wins on the values. */
+.md-typeset .ap-stat-row--orb-warn .ap-summary-value {
+  color: var(--dbc-gold);
+}
+.md-typeset .ap-stat-row--orb-warn .ap-summary-label::after {
+  content: "!";
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(var(--dbc-gold-rgb), 0.7);
+  border-radius: 50%;
+  color: var(--dbc-gold);
+  font-size: var(--ap-fs-cap);
+  font-weight: 700;
+  line-height: 1;
+}
 /* Toggled by JS instead of an inline color when a raw (uncapped) Crit Rate
    total exceeds 100% - a clear warning that points are being wasted past
    the cap, matching the same red used for other danger states on the site. */
@@ -5439,6 +5534,161 @@ h3 { color: var(--dbc-teal); }
    rather than left visible showing "+0.00%" the rest of the time. */
 .md-typeset .ap-stat-card-row--hidden {
   display: none;
+}
+/* Base / Best / Diff table in the results column. It reuses the Best card's
+   state classes (.ap-stat-card-previewed, .ap-stat-card-pinned) that the JS
+   toggles, but shows them as a tint on the Best column and its title rather
+   than recolouring the whole card. */
+.md-typeset .ap-stat-table,
+.md-typeset .ap-stat-table.ap-stat-card-best,
+.md-typeset .ap-stat-table.ap-stat-card-best.ap-stat-card-previewed,
+.md-typeset .ap-stat-table.ap-stat-card-best.ap-stat-card-pinned {
+  padding: var(--ap-stat-inset) 0;
+  overflow: hidden;
+  background-color: var(--ap-surface);
+  border-color: var(--ap-line);
+  border-radius: var(--ap-radius-lg);
+}
+/* The Best column is drawn as an inset rounded card (tint plus border)
+   whose colour follows the state: teal for the true best, lavender while
+   previewing another row, coral while a combo is pinned. Set on the same
+   selector the shared rule above uses, so no later rule can reset it. */
+.md-typeset .ap-stat-table {
+  --ap-stat-inset: 0.4rem;
+  --ap-stat-base-w: 4.6rem;
+  --ap-stat-best-w: 5.4rem;
+  --ap-stat-diff-w: 4rem;
+}
+.md-typeset .ap-stat-table.ap-stat-card-best {
+  --ap-best-tint: rgba(var(--dbc-teal-rgb), 0.07);
+  --ap-best-edge: rgba(var(--dbc-teal-rgb), 0.5);
+}
+.md-typeset .ap-stat-table.ap-stat-card-best.ap-stat-card-previewed {
+  --ap-best-tint: rgba(var(--dbc-lavender-rgb), 0.09);
+  --ap-best-edge: rgba(var(--dbc-lavender-rgb), 0.5);
+}
+.md-typeset .ap-stat-table.ap-stat-card-best.ap-stat-card-pinned {
+  --ap-best-tint: rgba(var(--dbc-red-rgb), 0.1);
+  --ap-best-edge: rgba(var(--dbc-red-rgb), 0.5);
+}
+/* The table is the grid and each row is display: contents, so the three
+   number columns size to their widest cell and line up down the whole
+   table (per-row grids would size each row on its own). The three number
+   columns have fixed widths, so the Best card never shifts or resizes
+   whichever title or values it shows. */
+.md-typeset .ap-stat-table {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--ap-stat-base-w) var(--ap-stat-best-w) var(--ap-stat-diff-w);
+  font-size: var(--ap-fs-base);
+  font-variant-numeric: tabular-nums;
+}
+.md-typeset .ap-stat-row {
+  display: contents;
+}
+.md-typeset .ap-stat-row.ap-stat-card-row--hidden {
+  display: none;
+}
+.md-typeset .ap-stat-row > span {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  padding: 0.38rem 0.6rem;
+  white-space: nowrap;
+}
+.md-typeset .ap-stat-row > span:first-child {
+  justify-content: flex-start;
+}
+.md-typeset .ap-stat-row + .ap-stat-row > span {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.md-typeset .ap-stat-row > :nth-child(3) {
+  background-color: var(--ap-best-tint);
+  border-left: 1px solid var(--ap-best-edge);
+  border-right: 1px solid var(--ap-best-edge);
+}
+.md-typeset .ap-stat-row--head > :nth-child(3) {
+  border-top: 1px solid var(--ap-best-edge);
+  border-radius: var(--ap-radius) var(--ap-radius) 0 0;
+}
+.md-typeset .ap-stat-row:last-child > :nth-child(3) {
+  border-bottom: 1px solid var(--ap-best-edge);
+  border-radius: 0 0 var(--ap-radius) var(--ap-radius);
+}
+.md-typeset .ap-stat-row--head > span {
+  font-size: var(--ap-fs-cap);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  color: var(--dbc-muted-text);
+  border-bottom: 1px solid var(--ap-line);
+}
+/* The Best column title is rewritten by the JS ("2nd Best", "Pinned"); the
+   fixed column width fits the longest on one line. */
+.md-typeset .ap-stat-row--head .ap-stat-card-title {
+  margin: 0;
+  white-space: nowrap;
+  text-align: right;
+  color: var(--dbc-teal);
+}
+.md-typeset .ap-stat-row .ap-summary-label {
+  white-space: normal;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--dbc-lilac);
+}
+/* Category dot before each stat label, in the same five colours as the gear
+   groups. */
+.md-typeset .ap-stat-row .ap-summary-label::before {
+  content: "";
+  flex: none;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: var(--ap-dot, var(--dbc-lavender));
+}
+.md-typeset .ap-stat-row .ap-summary-label--critrate { --ap-dot: var(--dbc-pink); }
+.md-typeset .ap-stat-row .ap-summary-label--critdmg  { --ap-dot: var(--dbc-teal); }
+.md-typeset .ap-stat-row .ap-summary-label--oncrit   { --ap-dot: var(--dbc-orange); }
+.md-typeset .ap-stat-row .ap-summary-label--adddmg   { --ap-dot: var(--dbc-sky); }
+.md-typeset .ap-stat-row .ap-summary-label--evodmg   { --ap-dot: var(--dbc-purple); }
+/* On a phone the padding tightens so "+15.00" never wraps and the number
+   columns narrow so the label column keeps room. */
+@media screen and (max-width: 480px) {
+  .md-typeset .ap-stat-table {
+    --ap-stat-base-w: 4rem;
+    --ap-stat-best-w: 4.6rem;
+    --ap-stat-diff-w: 3.5rem;
+  }
+  .md-typeset .ap-stat-row > span {
+    padding: 0.38rem 0.45rem;
+  }
+}
+@media screen and (max-width: 380px) {
+  .md-typeset .ap-stat-table {
+    --ap-stat-base-w: 3.6rem;
+    --ap-stat-best-w: 4.4rem;
+    --ap-stat-diff-w: 3.2rem;
+  }
+  .md-typeset .ap-stat-row > span {
+    padding-inline: 0.3rem;
+  }
+}
+/* Diff column: written by updateStatDeltas in the JS. Zero reads as
+   quiet, a gain as teal, a loss as red. */
+.md-typeset .ap-stat-delta {
+  font-weight: 600;
+  color: var(--dbc-muted-text);
+}
+.md-typeset .ap-stat-delta--pos {
+  color: var(--dbc-teal);
+}
+.md-typeset .ap-stat-delta--neg {
+  color: var(--dbc-red);
+}
+.md-typeset .ap-stat-delta--zero {
+  font-weight: 400;
 }
 
 /* ---- Bracelet Line Comparison: collapsible <details> block, native
@@ -5475,10 +5725,10 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-esvs,
 .md-typeset .ap-avb,
 .md-typeset .ap-engr-compare {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius-lg);
   margin: 1em 0 0;
-  background: none;
+  background-color: var(--md-default-bg-color);
 }
 /* Material also gives every bare <details> a focus-within ring -
    `details:focus-within{box-shadow:0 0 0 .2rem #448aff1a}` - meant for
@@ -5562,12 +5812,16 @@ h3 { color: var(--dbc-teal); }
   display: flex;
   align-items: center;
   gap: 0.6em;
-  font-size: 0.92em;
-  font-weight: 700;
-  color: var(--dbc-lavender);
-  padding: 0.6em 0.85em;
+  font-size: var(--ap-fs-base);
+  font-weight: 600;
+  color: var(--md-default-fg-color);
+  padding: 0.65rem var(--ap-pad-x);
   cursor: pointer;
   list-style: none;
+  /* The title bar is the card surface; the body underneath stays the page
+     colour, so a card nested in the body looks the same as one in the main
+     grid. */
+  background-color: var(--ap-surface);
   /* Material's `.md-typeset .admonition-title,.md-typeset summary` rule
      sets `background-color: #448aff1a` (its default admonition blue) -
      this rule reset spacing/color/cursor but never touched background,
@@ -5575,7 +5829,6 @@ h3 { color: var(--dbc-teal); }
      neutral, unfilled panel (see .ap-brace-compare's own comment above:
      "no fill as .ap-calc-results"). Same root cause the .skill-card and
      .setup-note fixes already cover elsewhere - just missed here. */
-  background: none;
   /* Same fast-click-selects-the-row-text issue .skill-card summary and
      .gem-item-expandable summary already guard against - these six
      sandboxes' title bars are <details> toggles too. */
@@ -5604,7 +5857,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-esvs:not([open]) summary,
 .md-typeset .ap-avb:not([open]) summary,
 .md-typeset .ap-engr-compare:not([open]) summary {
-  padding: 0.6em 0.85em;
+  padding: 0.65rem var(--ap-pad-x);
 }
 .md-typeset .ap-brace-compare summary::before,
 .md-typeset .ap-acc-compare summary::before,
@@ -5659,8 +5912,43 @@ h3 { color: var(--dbc-teal); }
      height identical between collapsed and expanded. */
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }
+/* Sections open and close with a short height and fade transition.
+   ::details-content and interpolate-size are progressive: a browser without
+   them toggles instantly as before. */
+@supports selector(::details-content) {
+  .md-typeset .ap-gear-comp-group > details,
+  .md-typeset .ap-bvb,
+  .md-typeset .ap-esvs,
+  .md-typeset .ap-avb {
+    interpolate-size: allow-keywords;
+  }
+  .md-typeset .ap-gear-comp-group > details::details-content,
+  .md-typeset .ap-bvb::details-content,
+  .md-typeset .ap-esvs::details-content,
+  .md-typeset .ap-avb::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: clip;
+    transition: block-size 0.2s ease, opacity 0.2s ease, content-visibility 0.2s allow-discrete;
+  }
+  .md-typeset .ap-gear-comp-group > details[open]::details-content,
+  .md-typeset .ap-bvb[open]::details-content,
+  .md-typeset .ap-esvs[open]::details-content,
+  .md-typeset .ap-avb[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset .ap-gear-comp-group > details::details-content,
+  .md-typeset .ap-bvb::details-content,
+  .md-typeset .ap-esvs::details-content,
+  .md-typeset .ap-avb::details-content {
+    transition: none;
+  }
+}
 .md-typeset .ap-brace-compare-body {
-  padding: 0.7em 0.85em 0.85em;
+  padding: 0.9rem var(--ap-pad-x) 1rem;
   /* Scroll sideways instead of clipping. Every comparison <details> hides
      its own overflow (that is what rounds the corners), and its tables
      have a min-content width wider than a phone's panel: at 320px the
@@ -5681,41 +5969,57 @@ h3 { color: var(--dbc-teal); }
      alike) but harmless for the ones that don't query it. */
   container-type: inline-size;
 }
+/* On a phone the comparison sections nest two levels deep (Bracelet vs.
+   Bracelet inside Bracelet Comparison), and each level's side padding comes
+   off the width the selects inside have to share. A narrower side padding
+   gives the line-type selects room for their selected text. */
+@media screen and (max-width: 480px) {
+  .md-typeset .ap-brace-compare-body {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .md-typeset .ap-bvb-card,
+  .md-typeset .ap-esvs-card {
+    --ap-pad-x: 0.6rem;
+  }
+}
+/* A select in a panel row keeps the width of its longest option on a phone.
+   When the label, value readout and select do not fit one line, the select
+   drops under them, right-aligned, instead of squeezing the select until its
+   selected text is cut or the label wraps to one word per line. */
+@media screen and (max-width: 480px) {
+  .md-typeset .ap-calc-group .ap-calc-field-row:has(> select) {
+    flex-wrap: wrap;
+  }
+  .md-typeset .ap-calc-group .ap-calc-field-row > select {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+}
 .md-typeset .ap-brace-compare-intro {
-  font-size: 0.9em;
-  color: var(--dbc-lavender);
-  margin: 0 0 0.7em;
+  font-size: var(--ap-fs-sm);
+  color: var(--dbc-muted-text);
+  margin: 0 0 0.8rem;
 }
-/* .ap-engr-checkbox-label (Rage Rune/Vernese Wine/Mana Food/Include Mass
-   Increase) never actually had a CSS rule of its
-   own - every other label in this calculator either matches
-   label.ap-calc-field-label (the left-hand field name in a label+control
-   row) or one of the dedicated inline-checkbox classes elsewhere
-   (.ap-calc-pair-check-label, .ap-bvb-inline-check), but these rows use a
-   third, never-styled pattern: one <label> wrapping BOTH its own
-   checkbox AND the full description text, with no separate control to
-   hand the color/size to. Landing on neither shared rule, they fell
-   through to the browser's plain default text - full brightness, default
-   size, no controlled gap from the checkbox - reading as unstyled next
-   to every properly-lilac label around them. Same color/size treatment
-   as the other inline-check classes now, so every way of pairing a
-   checkbox with a label reads as the same design language instead of one
-   being the odd one out. */
-.md-typeset .ap-engr-checkbox-label {
-  display: inline-flex;
+/* Engraving option rows (Mass Increase, the Mana Food, Support and Rage Rune
+   rows) follow the shared label-left, control-right pattern. A row with a
+   checkbox plus a select keeps both in .ap-engr-controls on the right. */
+.md-typeset .ap-engr-controls {
+  display: flex;
   align-items: center;
-  gap: 0.5em;
-  color: var(--dbc-lilac);
-  font-size: 0.82em;
-  cursor: pointer;
+  gap: 0.6em;
+  flex: 0 0 auto;
+  margin-left: auto;
 }
-.md-typeset .ap-engr-checkbox-label input[type="checkbox"] {
-  width: 1em;
-  height: 1em;
-  margin: 0;
-  flex-shrink: 0;
-  accent-color: var(--dbc-pink);
-  cursor: pointer;
+/* On a phone the controls drop under the label instead of squeezing it into
+   a mid-word break. */
+.md-typeset .ap-engr-mi-row,
+.md-typeset .ap-engr-manafood-row {
+  flex-wrap: wrap;
+}
+.md-typeset .ap-engr-mi-row label.ap-calc-field-label,
+.md-typeset .ap-engr-manafood-row label.ap-calc-field-label {
+  min-width: max-content;
 }
 /* Accessory Line Comparison's 4 slot panels (Necklace/Earrings/Rings/Any
    Accessory Slot) - each just a small heading plus its own
@@ -5730,13 +6034,15 @@ h3 { color: var(--dbc-teal); }
   margin-bottom: 0;
 }
 .md-typeset .ap-acc-panel-title {
-  font-size: 0.78em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--ap-fs-cap);
   font-weight: 700;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--dbc-lilac);
-  margin: 0 0 0.35em;
-  opacity: 0.85;
+  color: var(--dbc-lavender);
+  margin: 0 0 0.45rem;
 }
 /* Necklace/Earrings/Rings grow to 10 columns (Label + Low/Mid/High + 6
    combo columns) - too many to fit at mobile widths without crushing the
@@ -5750,6 +6056,13 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-acc-combo-table {
   min-width: 640px;
+  width: 100%;
+  /* Fixed layout: the Necklace, Earring and Ring tables get identical
+     column positions instead of each sizing to its own widest figure. */
+  table-layout: fixed;
+}
+.md-typeset .ap-acc-combo-table th.ap-brace-th-label {
+  width: 30%;
 }
 /* Combo headers' two letters carry
    their own Low/Mid/High tier colors (reusing .ap-brace-label-low/mid/
@@ -5772,249 +6085,120 @@ h3 { color: var(--dbc-teal); }
    still lands on Low/Mid/High first. */
 .md-typeset .ap-acc-combo-val {
   color: var(--dbc-slate);
-  font-size: 0.92em;
+  font-size: var(--ap-fs-base);
 }
-/* Docked Build toggle (top of calculator) - real pill-chip <button>s so
-   every option is visible and comparable at once ("one vivid, rest
-   muted"), unlike a plain <select> which only ever shows the current
-   value collapsed, or radio dots which don't carry a strong enough
-   active/inactive contrast at a glance. Two tiers per group (Family:
-   RE/Surge, Variant: 2 or 3 chips depending which family's active - see
-   .ap-build-toggle-tier below and resources.md's Build dock comment for
-   why RE only has 2). See ark-passive-calculator.js's syncBuildToggleUI
-   for how the active class/tier visibility is applied, and initBuildDock
-   just below it for the sticky/collapse behavior this single instance
-   needs as the single shared instance. */
+/* Build toggle: real <button> chips in segmented groups, so every option is
+   visible and comparable at once. A plain <select> only shows the current
+   value and radio dots do not carry enough active/inactive contrast. Two
+   tiers: Family (RE/Surge) and Variant (2 chips for RE, 3 for Surge; only
+   the active family's tier is shown, see syncBuildToggleUI). The active
+   chip is tinted pink for RE builds and teal for Surge builds, the same
+   split used elsewhere on the site. */
 .md-typeset .ap-build-toggle-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.7em;
+  gap: 0.6rem;
 }
 .md-typeset .ap-build-toggle-row--master {
   margin: 0;
 }
 .md-typeset .ap-build-toggle-label {
-  color: var(--dbc-lavender);
-  font-size: 0.85em;
-  font-weight: 600;
+  color: var(--dbc-muted-text);
+  font-size: var(--ap-fs-cap);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
 }
 .md-typeset .ap-build-toggle {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5em;
+  gap: 0.4rem;
 }
-/* Two-tier Family/Variant split (see resources.md's master Build toggle
-   comment for why: RE 111/313 collapse into one Variant chip, so Family
-   and Variant are separate control groups rather than one flat row of
-   6). Each tier is its own flex group so its chips stay visually
-   clustered; the divider between Family and Variant reuses the same
-   dashed-line language as the toggle row's own bottom border, just
-   vertical, so the two-level structure reads as one control at a
-   glance rather than two unrelated ones bolted together. */
 .md-typeset .ap-build-toggle-tier {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em;
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background-color: var(--md-default-bg-color);
+  border: 1px solid var(--ap-line);
+  border-radius: 10px;
 }
-.md-typeset .ap-build-toggle-tier--variant {
-  padding-left: 0.6em;
-  border-left: 1px dashed rgba(255, 255, 255, 0.15);
-}
-/* Only one Variant tier (RE's 2 chips or Surge's 3) is ever shown at
-   once - see syncBuildToggleUI, same hidden-unless-active convention as
-   the Breaking Moon summary row elsewhere in this calculator. */
+/* Only one Variant tier is ever shown at once, same hidden-unless-active
+   convention as the Breaking Moon row in the stat table. */
 .md-typeset .ap-build-toggle-tier--hidden {
   display: none;
 }
 .md-typeset .ap-build-chip {
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
-  background-color: var(--dbc-chip-surface);
+  border: none;
+  background: none;
   color: var(--dbc-muted-text);
-  border-radius: 999px;
+  border-radius: 7px;
   font-family: inherit;
-  font-size: 0.85em;
+  font-size: var(--ap-fs-sm);
   font-weight: 600;
-  padding: 0.35em 0.9em;
+  padding: 0.2rem 0.65rem;
   line-height: 1.3;
   cursor: pointer;
-  opacity: 0.9;
-  transition: opacity 0.15s ease, border-color 0.15s ease,
-    background-color 0.15s ease, color 0.15s ease;
+  transition: color 0.12s ease, background-color 0.12s ease, box-shadow 0.12s ease;
 }
 .md-typeset .ap-build-chip:hover {
-  opacity: 1;
-  background-color: var(--dbc-chip-surface-hover);
+  color: var(--dbc-lavender);
 }
-/* Active chip: fully saturated/colored, RE builds in the site's primary
-   pink accent, Surge builds in teal - matching the RE/Surge color split
-   used everywhere else on the site (--dbc-teal's own comment: "Trixion
-   DPS bar... 'good'/on-track stat variant"), so the active chip's own
-   color hints which family is selected even before reading the label. */
+.md-typeset .ap-build-chip:focus-visible {
+  outline: 2px solid rgba(var(--dbc-pink-rgb), 0.6);
+  outline-offset: 1px;
+}
 .md-typeset .ap-build-chip.ap-build-chip-active {
-  opacity: 1;
-  color: #1a1a1d;
-  background-color: var(--dbc-pink);
-  border-color: var(--dbc-pink);
+  color: var(--dbc-pink);
+  background-color: rgba(var(--dbc-pink-rgb), 0.16);
+  box-shadow: inset 0 0 0 1px rgba(var(--dbc-pink-rgb), 0.45);
 }
 .md-typeset .ap-build-chip.ap-build-chip-active[data-build^="surge-"],
 .md-typeset .ap-build-chip.ap-build-chip-active[data-family="surge"] {
-  background-color: var(--dbc-teal);
-  border-color: var(--dbc-teal);
+  color: var(--dbc-teal);
+  background-color: rgba(var(--dbc-teal-rgb), 0.16);
+  box-shadow: inset 0 0 0 1px rgba(var(--dbc-teal-rgb), 0.45);
 }
-/* Compact sizing - smaller chips, tighter gaps - so the docked toggle
-   reads as a lightweight control that rides along with you, not a
-   full-size widget bar. */
-.md-typeset .ap-build-toggle--master {
-  gap: 0.35em;
-}
-.md-typeset .ap-build-toggle--master .ap-build-chip {
-  font-size: 0.72em;
-  padding: 0.2em 0.6em;
-}
-.md-typeset .ap-build-toggle--master .ap-build-toggle-tier {
-  gap: 0.35em;
-}
-.md-typeset .ap-build-toggle--master .ap-build-toggle-tier--variant {
-  padding-left: 0.5em;
-}
-/* .ap-build-dock is the positioning shell around the docked toggle: the
-   trigger pill (mobile only) plus .ap-build-dock-panel (the actual
-   .ap-build-toggle-row from above). Scoped to sit anywhere inside
-   .ap-calc - on desktop, position: sticky's release point is its own
-   DOM parent's box, so it naturally stops sticking once .ap-calc itself
-   (the whole calculator, Bracelet/Accessory/Engraving Comparison
-   included) scrolls past, right before CPM Calculator/Useful Links,
-   with no JS scroll math needed there. Mobile does NOT get this for
-   free - it uses position: fixed instead of sticky (see the mobile
-   media query's own comment further down for why sticky doesn't work
-   for this element at all on that axis) - so its equivalent release is
-   done in JS instead; see .ap-build-dock--offscreen and
-   updateDockStuckState in ark-passive-calculator.js. The rest of this
-   comment block, where it talks about sticky's release behavior,
-   describes the desktop case only. z-index: 3 keeps it above
-   .ap-calc-live's sticky column
-   (z-index: 2) if their sticky boxes ever overlap during scroll. */
-.md-typeset .ap-build-dock {
-  position: sticky;
+
+/* Top bar. One instance for the whole calculator, holding the Build chips
+   (.ap-build-dock) and the toolbar. Desktop: sticks directly under the site header
+   (2.4rem, the header's own height) with an opaque surface so scrolled content does not show through,
+   and picks up a shadow while pinned. The JS-driven .ap-calc-bar--stuck
+   class does that, because sticky has no ":stuck" selector (see
+   updateDockStuckState in ark-passive-calculator.js). sticky releases on
+   its own once .ap-calc scrolls past. z-index 3 keeps it above the sticky
+   results column (z-index 2). */
+.md-typeset .ap-calc-bar {
+  position: relative;
   z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin: 0 0 var(--ap-gap);
+  padding: 0.5rem 0.75rem;
+  background-color: var(--dbc-header-footer-bg);
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius-lg);
+  transition: box-shadow 0.2s ease, border-radius 0.2s ease;
 }
-/* Desktop (matches .ap-calc-layout's own 900px breakpoint): sticks to
-   the top of the viewport, with an opaque background+padding so
-   scrolled content doesn't show through the bar. Nothing to collapse
-   here, so the trigger pill is hidden entirely and the panel is forced
-   visible regardless of .ap-build-dock-panel--open. This override does
-   NOT need to fight [hidden]'s UA-stylesheet specificity the way
-   .ap-brace-info-icon[hidden] et al. do elsewhere in this file - the
-   open/close state below is a plain class, not the [hidden] attribute
-   .ap-calc-popover uses, specifically so this responsive swap has
-   nothing to out-specificity.
-
-   top is deliberately NOT the same 4.4rem .ap-calc-live uses. That
-   value matches Material's *expanded* header (title bar + tabs row).
-   .ap-calc-live gets away with it because it's transparent - once you
-   scroll down far enough for a sticky element to actually engage,
-   Material has already collapsed the tabs row down to just the title
-   bar (title bar alone renders at 48px regardless of the 125% root
-   font-size Material sets, so this is a plain px value, not rem), and
-   an invisible 40px gap above transparent content is unnoticeable. The
-   dock has a background, so that same gap rendered as a floating black
-   band with dead space above it. 48px matches the steady-state
-   (scrolled, tabs collapsed) header exactly, which is the case the dock
-   is actually visible in almost all the time. The only trade-off is a
-   brief moment right after a scroll-up gesture re-expands the tabs row,
-   where the dock can sit a sliver under the header until the collapse
-   re-triggers - far less visible than a permanent gap on every scroll.
-   Background is --dbc-header-footer-bg (the same "site chrome" surface
-   the header/footer already use) rather than the raw page background,
-   so the bar reads as an extension of that chrome instead of an
-   arbitrary dark slab.
-
-   Deliberately NO border-bottom here. Every card the dock scrolls over
-   (.ap-calc-group, Party & Positioning) already has its own top border
-   at the exact pixel line where the dock's bottom edge sits once stuck
-   - a border-bottom on the dock collides with the card's own top border
-   on that same line, two adjacent strokes reading as one doubled/
-   overlapping line cutting across the card's rounded top corner. A
-   flat, borderless slab has no hard line of its own to collide with
-   anything - when a card's top border passes the dock's bottom edge it
-   just cleanly appears from underneath, one single stroke, no seam.
-
-   The background+shadow live on ::before rather than directly on
-   .ap-build-dock, and only paint at all while the JS-driven
-   .ap-build-dock--stuck class is present (see the scroll listener in
-   ark-passive-calculator.js) - two separate problems this solves:
-
-   1) box-shadow alone, unconditionally, painted even while the dock is
-      still sitting in normal flow (before it's actually engaged, at
-      the very top of .ap-calc) and again during the brief release
-      window at the very bottom (once .ap-calc's own box ends and the
-      dock unpins - see this comment's own note on the release point
-      above). Sticky has no cross-browser ":stuck" selector, so the JS
-      does one rect.top-vs-offset check and toggles the class; the CSS
-      just reacts to it, keeping the shadow scoped to the moments the
-      dock is actually a floating bar over content instead of showing
-      up on a bar that's sitting flush in the normal document flow.
-
-   2) The bar needs to look like an extension of the calculator's own
-      chrome - reaching .ap-calc's own left/right border edges (the
-      padding-box the bar was sitting inset inside of, per .ap-calc's
-      own `padding: 1em 1.2em 1.2em`), not just the width of whatever
-      was visually narrower still inside it. This is scoped to .ap-calc
-      itself, NOT the full viewport - .ap-build-dock is a direct child
-      of .ap-calc, so ::before bleeding by exactly -1.2em on each side
-      (matching .ap-calc's own left/right padding, a fixed em value so
-      it tracks that padding regardless of viewport width) lands it
-      exactly flush with .ap-calc's border, no further and no less -
-      the sidebar/TOC gutters beyond that are not part of "the
-      calculator" and were never meant to be covered. top:0/bottom:0
-      sizes it to .ap-build-dock's own padding box height, same as
-      before. Sits behind the chip content at z-index:-1 within
-      .ap-build-dock's own stacking context (established by its
-      z-index:3 below). The shadow value itself (0 0 .2rem #0000001a,
-      0 .2rem .4rem #0003) is copied directly from Material's own
-      .md-header--shadow rule, so the dock's stuck shadow reads as the
-      same weight as the real header's rather than a heavier one-off -
-      matching that rule's weight is the only thing borrowed from the
-      header here, not its full-viewport span.
-
-   margin-bottom keeps a strip of plain page background between the
-   dock and .ap-calc-layout right at the moment the dock first engages
-   (before that, the dock is still in normal flow and this is just
-   ordinary spacing) - a few extra pixels of buffer before the flat
-   occlusion edge starts covering the grid, so the transition isn't
-   instant. It does not, and can't, prevent the dock from eventually
-   sliding over card content deeper in the grid as you keep scrolling -
-   that's inherent to any sticky occluding bar and is fine now that the
-   only edge treatment left (the soft shadow above) has nothing hard
-   enough to conflict with whatever border is under it. */
 @media screen and (min-width: 901px) {
-  .md-typeset .ap-build-dock {
-    top: 48px;
-    padding: 0.6em 0 0.7em;
-    margin-bottom: 0.8em;
+  .md-typeset .ap-calc-bar {
+    position: sticky;
+    top: 2.4rem;
   }
-  .md-typeset .ap-build-dock::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -1.2em;
-    right: -1.2em;
-    z-index: -1;
-    background-color: var(--dbc-header-footer-bg);
-    box-shadow: none;
-    transition: box-shadow 0.2s ease;
-  }
-  /* Background above stays on regardless of stuck state - it's just the
-     bar's normal chrome, on-screen the moment .ap-build-dock is in the
-     viewport at all. Only the shadow is conditional: it's meaningless
-     (and looked wrong) while the bar sits in normal flow rather than
-     actually floating over content underneath it. */
-  .md-typeset .ap-build-dock.ap-build-dock--stuck::before {
+  .md-typeset .ap-calc-bar.ap-calc-bar--stuck {
     box-shadow: 0 0 0.15rem #0000001a, 0 0.15rem 0.3rem #0003;
+    /* Pinned under the header, the top edge is flush with it, so only the
+       bottom corners stay rounded. */
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top-color: transparent;
   }
+  /* Nothing to collapse on desktop: no trigger pill, the chips are always
+     shown. This does not have to out-specify [hidden] because the mobile
+     open/close state is a plain class, not the attribute. */
   .md-typeset .ap-build-dock-trigger {
     display: none;
   }
@@ -6022,39 +6206,24 @@ h3 { color: var(--dbc-teal); }
     display: flex;
   }
 }
-/* Mobile: collapses to just the trigger pill, docked to the BOTTOM of
-   the viewport instead (the top is already Material's own mobile
-   header). pointer-events: none on the row and auto on just the pill/
-   panel keeps the empty transparent width from swallowing taps on
-   whatever page content sits underneath it.
+/* Mobile: the Build chips collapse to a trigger pill fixed to the BOTTOM of
+   the viewport (the top is Material's own mobile header). pointer-events:
+   none on the shell and auto on the pill/panel keeps the empty transparent
+   width from swallowing taps on the page underneath.
 
-   position: fixed here, NOT sticky (the base .ap-build-dock rule further up uses sticky), which looks like the obvious choice but doesn't actually work for this element: bottom-anchored sticky only pins a box while
-   scrolling UP INTO it (the classic case is an element sitting at the
-   END of a container, catching itself against the viewport's bottom
-   edge as you scroll back toward the top). .ap-build-dock sits at the
-   very TOP of .ap-calc's DOM instead, and a reader scrolls DOWN through
-   it - the exact opposite direction bottom-sticky catches - so it would never engage: the pill would be a perfectly ordinary in-flow block, scrolling away with the page 1:1 (confirmed with a Playwright getBoundingClientRect() sweep: its position tracks `staticY - scrollY` exactly, no pinning, at every scroll offset). Nothing would move it TO the bottom of the screen, so it would never read as "docked", and at the top of the page its in-flow position sits right before .ap-calc-layout's first card with only normal margin between them, which is easy to misread as an overlapping border once you're expecting a floating bar there.
+   position: fixed, not sticky. Bottom-anchored sticky only pins while
+   scrolling UP into a box at the end of its container; the dock sits at the
+   TOP of .ap-calc and a reader scrolls DOWN through it, so sticky would
+   never engage. Fixed needs the .md-content__inner transform fix (see that
+   rule's comment), since fixed elements anchor to the nearest transformed
+   ancestor instead of the viewport. left/right: 0 because fixed elements
+   have no in-flow width; Material has dropped the sidebars by this
+   breakpoint so the viewport and content widths are effectively equal.
 
-   Fixed position needed the .md-content__inner transform bug fixed
-   first (see that rule's own comment) - fixed-position elements anchor
-   to the nearest transformed ancestor's box instead of the true
-   viewport, which was silently retargeting this to the whole article
-   regardless of what position/inset values were used here.
-
-   left/right: 0 because fixed
-   positioning has no in-flow width to inherit, so it needs an explicit
-   span - full viewport width is fine here since Material's mobile
-   layout has already dropped the sidebar/TOC by this breakpoint, so
-   .ap-calc's content width and the viewport width are effectively the
-   same at <=900px.
-
-   Visibility (.ap-build-dock--offscreen) is JS-driven the same way
-   .ap-build-dock--stuck is on desktop (see updateDockStuckState in
-   ark-passive-calculator.js) - fixed positioning has no native "release
-   once my container scrolls past" behavior the way sticky does, so the
-   same scroll listener that already runs for the desktop shadow also hides this pill outside of .ap-calc's own vertical range,
-   keeping the ".ap-calc-scoped release" this dock was always meant to
-   have (see .ap-build-dock's own comment above) - done in JS instead of getting it for free from sticky, which can't do it here. */
+   Fixed has no "release once my container scrolls past" behaviour, so
+   .ap-build-dock--offscreen is toggled by the same scroll listener that
+   drives the desktop shadow (updateDockStuckState) to hide the pill when
+   .ap-calc is outside the viewport. */
 @media screen and (max-width: 900px) {
   .md-typeset .ap-build-dock {
     position: fixed;
@@ -6065,6 +6234,7 @@ h3 { color: var(--dbc-teal); }
     justify-content: flex-end;
     padding-right: 0.9em;
     pointer-events: none;
+    z-index: 3;
   }
   .md-typeset .ap-build-dock.ap-build-dock--offscreen {
     display: none;
@@ -6072,6 +6242,11 @@ h3 { color: var(--dbc-teal); }
   .md-typeset .ap-build-dock-trigger,
   .md-typeset .ap-build-dock-panel {
     pointer-events: auto;
+  }
+  /* The fixed pill floats over the bottom of the viewport; this reserve at the
+     end of the calculator lets the last row scroll clear of it. */
+  .md-typeset .ap-calc {
+    padding-bottom: 2.6rem;
   }
   .md-typeset .ap-build-dock-panel {
     display: none;
@@ -6092,14 +6267,10 @@ h3 { color: var(--dbc-teal); }
     gap: 0.5em;
   }
 }
-/* display isn't set here on purpose - it's fully governed by the two
-   media queries above (mobile: flex, desktop: none). Declaring `display: flex` unconditionally here would - being equal
-   specificity to and later in the source than the desktop media query's
-   `display: none` above - silently win on desktop and leave the trigger
-   pill visible there at all times, alongside the panel that's ALSO
-   force-visible on desktop (see that media query's own comment on why
-   the panel doesn't need to fight [hidden] there - the trigger had the
-   same cascade-order issue that comment was written to avoid). */
+/* display is not set here on purpose: the media queries above govern it
+   (mobile: flex, desktop: none). An unconditional `display: flex` here would
+   be equal in specificity to, and later than, the desktop `display: none`,
+   and would win, leaving the pill visible on desktop. */
 .md-typeset .ap-build-dock-trigger {
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
   background-color: var(--dbc-chip-surface);
@@ -6132,49 +6303,23 @@ h3 { color: var(--dbc-teal); }
   padding-bottom: 0.7em;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
 }
-/* Visual break between the Ark Passive setup above and the gear-
-   comparison tools below (see resources.md's own comment on the
-   .ap-section-divider markup for why this exists at all - a plain
-   horizontal rule didn't read as a SECTION break). Line-label-line
-   layout via two auto-growing flex pseudo-elements flanking the label,
-   rather than a background-image line-through-text trick, so the line
-   thickness/color stays a normal border property instead of baked into
-   an image. Purple accent matches h2 headings (--dbc-purple) - this is
-   a bigger structural break than any single .ap-calc-group's own
-   category accent color, so it intentionally doesn't reuse pink/teal/
-   orange/sky. */
+/* Section label between the Ark Passive setup above and the equipment
+   comparisons below (see resources.md's comment on the .ap-section-divider
+   markup for why the break exists). A small left-aligned caption in the
+   same type as the panel titles; the spacing does the separating, so no
+   rule is drawn. */
 .md-typeset .ap-section-divider {
   display: flex;
   align-items: center;
-  gap: 0.75em;
-  margin: 1.8em 0 1.3em;
-}
-/* Fades toward each outer edge instead of a flat solid line, matching
-   the same fade-to-transparent language the site already uses for
-   every other divider (.md-typeset hr and the H2 top-border just above
-   it both use this exact gradient) - a flat rgba line here read as a
-   harsher, differently-styled rule than those, not a deliberate
-   variation. ::before fades IN toward the label (transparent at the far
-   left, solid approaching center); ::after mirrors it fading OUT. */
-.md-typeset .ap-section-divider::before {
-  content: "";
-  flex: 1 1 auto;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(var(--dbc-purple-rgb), 0.2));
-}
-.md-typeset .ap-section-divider::after {
-  content: "";
-  flex: 1 1 auto;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(var(--dbc-purple-rgb), 0.2), transparent);
+  margin: 0.9rem 0;
 }
 .md-typeset .ap-section-divider-label {
-  flex: 0 0 auto;
-  font-size: 0.72rem;
+  font-size: var(--ap-fs-base);
+  line-height: 1;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   font-weight: 700;
-  color: var(--dbc-purple);
+  color: var(--dbc-muted-text);
   white-space: nowrap;
 }
 /* Gearing inputs (Weapon Power / Attack Power) - a top-level <details>,
@@ -6301,15 +6446,13 @@ h3 { color: var(--dbc-teal); }
   align-items: center;
   flex: 0 0 auto;
   margin-left: auto;
-  padding: 0.15em 0.55em;
-  border-radius: 3px;
-  background: rgba(var(--dbc-lavender-rgb), 0.1);
-  border: 1px solid rgba(var(--dbc-lavender-rgb), 0.4);
-  color: var(--dbc-lavender);
-  font-size: 0.68em;
-  font-weight: 600;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--ap-line);
+  color: var(--dbc-muted-text);
+  font-size: var(--ap-fs-sm);
+  font-weight: 400;
   line-height: 1.3;
-  letter-spacing: 0.01em;
   white-space: nowrap;
   cursor: help;
 }
@@ -6337,89 +6480,76 @@ h3 { color: var(--dbc-teal); }
   padding-bottom: 0;
   border-bottom: none;
 }
-/* Gear Comparisons group: the 5 boxes above (Character Data, Bracelet/
-   Engraving/Accessory/Chaos Core Comparison) would otherwise each be a fully
-   independent bordered+rounded box with its own margin-top, so the section would read as 5 unrelated gray bars stacked with visible gaps
-   between them rather than one family of related "value this gear
-   piece" tools grouped under the Gear Comparisons divider above.
-   Wrapping them in .ap-gear-comp-group (see resources.md) and
-   overriding their individual border/radius/margin down to 0 turns
-   that into a single bordered panel with thin divider lines between
-   rows instead - same accordion-list language as a settings screen,
-   one outer boundary instead of 5. The extra `> details` type selector
-   here gives this just enough specificity to win over both the shared
-   .ap-brace-compare/.ap-acc-compare/.ap-arkgrid-compare/.ap-engr-compare
-   block above AND .ap-gear-inputs's own rule further up, without having
-   to touch either - this only fires for the 5 boxes actually inside the
-   group wrapper, not the nested .ap-bvb/.ap-esvs sub-comparisons that
-   live deeper inside Bracelet/Engraving Comparison's own bodies (those
-   aren't direct children of .ap-gear-comp-group, so they're unaffected
-   and keep their own individual box look). */
+/* Equipment comparisons: the five top-level sections (Character Data,
+   Bracelet / Engraving / Accessory / Chaos Core Comparison) are a column of
+   separate cards, each a collapsible <details> with a title, a one-line
+   description and a chevron. The extra `> details` selector gives these
+   rules enough specificity to win over the shared comparison-card block
+   and .ap-gear-inputs's own rule without touching either; it only applies
+   to direct children of .ap-gear-comp-group, so the nested .ap-bvb / .ap-esvs
+   / .ap-avb comparisons keep their lighter look. */
 .md-typeset .ap-gear-comp-group {
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
-  border-radius: 8px;
-  overflow: hidden; /* clips each row's now-square corners to the group's rounded ones */
+  display: grid;
+  gap: 0.6rem;
   margin: 0.8em 0 0;
 }
 .md-typeset .ap-gear-comp-group > details {
   margin: 0;
-  border: none;
-  border-radius: 0;
+  overflow: hidden; /* clips the summary hover tint to the card's radius */
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius-lg);
+  background-color: var(--md-default-bg-color);
 }
-/* Divider between rows instead of each row's own full border - only
-   between adjacent rows, since the group's own outer border already
-   bounds the top of the first row and the bottom of the last. */
-.md-typeset .ap-gear-comp-group > details + details {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+.md-typeset .ap-gear-comp-group > details > summary,
+.md-typeset .ap-gear-comp-group > details:not([open]) > summary {
+  gap: 0.6rem;
+  font-size: var(--ap-fs-base);
+  font-weight: 600;
+  color: var(--md-default-fg-color);
+  background-color: var(--ap-surface);
+  padding: 0.65rem var(--ap-pad-x);
 }
-/* Character Data (.ap-gear-inputs) is the one row of the 5 with no
-   [open] border-bottom rule of its own - it never needed one as a
-   standalone box, since its content div's own dashed border-bottom is
-   explicitly turned off (see that rule's comment above). Added here
-   instead of on .ap-gear-inputs directly so the header/body divider
-   only appears while it's grouped with the other 4 rows, matching
-   their own open state instead of changing how it looks on its own. */
-.md-typeset .ap-gear-comp-group > .ap-gear-inputs[open] > summary {
-  /* Recolors the transparent border .ap-gear-inputs > summary already
-     reserves above instead of adding a new one - see that rule's comment. */
-  border-bottom-color: rgba(255, 255, 255, 0.08);
+.md-typeset .ap-gear-comp-group > details[open] > summary {
+  border-bottom-color: var(--ap-line);
 }
-/* Rows with no hover feedback beyond cursor:pointer would read as flat/dead next to the rest of the site's interactive controls
-   (e.g. .gem-item-expandable:hover further up brightens its border on
-   hover). These rows have no individual borders to brighten once
-   grouped, so a background tint on the summary instead. */
 .md-typeset .ap-gear-comp-group > details > summary:hover {
-  background: rgba(var(--dbc-purple-rgb), 0.05);
+  background: var(--ap-surface-2);
 }
-/* Group's overflow:hidden (needed to clip rows to the outer radius) would
-   otherwise clip a default browser focus ring drawn outside the row's
-   edge - pulled inside with a negative offset instead. The browser/Material default outline is `outline: auto` - an unstyled, slightly hazy ring in the theme's pink accent color (mkdocs.yml's `accent:
-   pink`) that doesn't match anything else on the site. Same explicit
-   treatment as .md-typeset a:focus-visible below (2px solid
-   var(--dbc-pink)) for a crisp, on-brand ring instead - just inset
-   rather than outset since that rule's +2px offset would be clipped
-   here. */
+/* The group's overflow: hidden would clip an outset focus ring, so the ring
+   is drawn inside the summary. */
 .md-typeset .ap-gear-comp-group > details > summary:focus-visible {
   outline: 2px solid var(--dbc-pink);
   outline-offset: -2px;
 }
-/* Character Data (.ap-gear-inputs) titles match the shared
-   .ap-brace-compare/.ap-acc-compare/.ap-arkgrid-compare/.ap-engr-compare
-   summary rule (color/size/weight/gap only - flex-wrap stays, still
-   needed to let the Optional badge drop to its own line on narrow
-   widths). It's a peer of the other 4 rows, so a smaller/lighter
-   treatment (narrower gap, smaller font-size, --dbc-lilac instead of
-   --dbc-lavender/700 weight) would read as a mismatched, more prominent
-   row rather than one of 5 equal options. That leaves the "Optional"
-   badge alone to carry the "this one's different" signal. */
-.md-typeset .ap-gear-comp-group > .ap-gear-inputs > summary {
-  gap: 0.6em;
-  color: var(--dbc-lavender);
-  font-size: 0.92em;
-  font-weight: 700;
+/* Title plus one-line description, stacked. The chevron (the summary's
+   ::before triangle) moves to the right edge, after the Optional badge. */
+.md-typeset .ap-gear-summary-text {
+  display: flex;
+  flex: 1 1 12em;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
 }
-.md-typeset .ap-gear-comp-group > .ap-gear-inputs > summary::before {
-  border-left-color: var(--dbc-lavender);
+.md-typeset .ap-gear-summary-text > .ap-gear-title {
+  flex: none;
+}
+.md-typeset .ap-gear-summary-desc {
+  font-size: var(--ap-fs-sm);
+  font-weight: 400;
+  color: var(--dbc-muted-text);
+}
+.md-typeset .ap-gear-comp-group > details > summary::before,
+.md-typeset .ap-bvb > summary::before,
+.md-typeset .ap-esvs > summary::before,
+.md-typeset .ap-avb > summary::before {
+  order: 3;
+  margin-left: auto;
+  border-left-color: var(--dbc-muted-text);
+}
+.md-typeset .ap-bvb > summary:hover,
+.md-typeset .ap-esvs > summary:hover,
+.md-typeset .ap-avb > summary:hover {
+  background: var(--ap-surface-2);
 }
 /* Gearing's two cards (Weapon Power/Main Stat, and Attack Power %
    sources) stacked full-width, one after another - same visual language
@@ -6458,7 +6588,7 @@ h3 { color: var(--dbc-teal); }
   flex: 1 1 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
-  gap: 0.9em;
+  gap: var(--ap-gap);
   align-content: start;
   align-items: start;
   /* Safety net only, same as the wrapper above: both usages (Character
@@ -6494,11 +6624,7 @@ h3 { color: var(--dbc-teal); }
   }
 }
 .md-typeset .ap-gear-card {
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-left: 3px solid var(--ap-gear-card-accent, rgba(255, 255, 255, 0.15));
-  border-radius: 8px;
-  padding: 0.6em 0.75em 0.7em;
-  background: none;
+  min-width: 0;
 }
 .md-typeset .ap-gear-card--basics { --ap-gear-card-accent: var(--dbc-purple); }
 /* Was --dbc-lavender - too close to the Weapon Power/Main Stat card's
@@ -6521,33 +6647,12 @@ h3 { color: var(--dbc-teal); }
    weight. */
 .md-typeset .ap-gear-card--engr-core { --ap-gear-card-accent: var(--dbc-teal); }
 .md-typeset .ap-gear-card--engr-variables { --ap-gear-card-accent: var(--dbc-purple); }
-/* Reader found the colored left-edge stripe (inherited from the shared
-   .ap-gear-card shell) too heavy on these two specifically - overridden
-   back to the same plain 1px/neutral treatment as the other 3 sides so
-   the accent color only shows up in the title text now, not as a border
-   too. Character Data's own .ap-gear-card pair above keeps the stripe;
-   this only touches Engraving Comparison's two cards. */
-.md-typeset .ap-gear-card--engr-core,
-.md-typeset .ap-gear-card--engr-variables {
-  border-left: 1px solid rgba(255, 255, 255, 0.07);
-}
-/* Accessory vs. Accessory's Comparing/Slot Currently Empty/Other Ring-
-   Earring Equipped controls - was three bare .ap-calc-field-rows sitting
-   directly in .ap-brace-compare-body with nothing to visually group them
-   (no card, no border), reading as loose fields floating above the A/B
-   cards rather than a related settings block. Reuses .ap-gear-card's
-   shell for the same bordered-box treatment every other input group on
-   this page gets, but - like Engraving Comparison's pair right above -
-   overridden back to a plain neutral left edge: these are page-level
-   comparison SETTINGS, not one of the accent-colored per-side/per-
-   category cards (.ap-gear-card--basics etc., .ap-avb-card-a/b), so a
-   colored stripe here would wrongly suggest it's another item in that
-   same family. Sits as a single full-width div (not inside .ap-gear-cards'
-   auto-fit grid), so it just takes the width of .ap-brace-compare-body
-   like the intro paragraph above it. */
+/* Accessory vs. Accessory's settings card (Comparing, Other Ring/Earring
+   Equipped). It holds page-level comparison settings rather than one side
+   of the comparison, so it takes the neutral accent instead of a stat
+   colour. Sits as a single full-width div outside .ap-gear-cards' grid. */
 .md-typeset .ap-gear-card--avb-options {
-  border-left: 1px solid rgba(255, 255, 255, 0.07);
-  margin-bottom: 0.9em;
+  margin-bottom: var(--ap-gap);
 }
 /* Half-width once .ap-brace-compare-body (container-type set on it
    above) has room to spare - at full width, this card's own row still
@@ -6563,7 +6668,10 @@ h3 { color: var(--dbc-teal); }
    the same narrow range. */
 @container (min-width: 480px) {
   .md-typeset .ap-gear-card--avb-options {
-    width: 50%;
+    /* One column of the two-column card grid below it: half the width
+       minus half the grid gap, so its right edge lines up with Accessory
+       A's. A plain 50% is wider than a column by half the gap. */
+    width: calc((100% - var(--ap-gap)) / 2);
   }
 }
 /* The readouts (Raid Captain Efficiency, the Wine-vs-Mana-Food note)
@@ -6579,17 +6687,15 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-gear-card--engr-variables .ap-brace-compare-footer-note:last-child {
   margin-bottom: 0;
 }
+/* The last option row already ends with the same bottom padding every row
+   has, so the readout's own top margin would double the gap above the
+   separator. */
+.md-typeset .ap-gear-card--engr-variables .ap-engr-ms-readout {
+  margin-top: 0;
+}
 /* Same title treatment as .ap-calc-group-title above, so these cards
    read as the same kind of thing as the Ark Passive grid's own category
    cards rather than a visually distinct sub-widget. */
-.md-typeset .ap-gear-card-title {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ap-gear-card-accent, var(--dbc-lavender));
-  font-weight: 700;
-  margin: 0 0 0.55em;
-}
 /* Attack Power base -> Adrenaline -> Support readout (gearApBeforeAfter,
    see the JS comment) - sits full-width below the two Character Data
    cards. No top border/rule here (this card's own field rows above
@@ -6601,22 +6707,12 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-gear-ap-readout {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: baseline;
   gap: 0.4em;
-  /* Was 1.1em, stacking on top of .ap-brace-compare-inputs's own
-     0.9em flex row-gap (this readout and .ap-gear-cards are both
-     direct flex children there, each forced onto their own line by
-     .ap-gear-cards' flex: 1 1 100%) for a real 2em gap above the
-     readout - visibly more open than the 0.7em gap below it to
-     .ap-gear-inputs's own bottom padding (.ap-gear-inputs >
-     .ap-brace-compare-inputs's padding-bottom), which reads as this
-     readout's real "next section" boundary (the border-top divider
-     .ap-gear-comp-group > details + details draws against the row
-     below). Set negative here so it cancels the flex row-gap down to
-     that same 0.7em net, instead of adding on top of it - matching
-     the breathing room above (to the cards) to the room already below
-     (to that divider). */
-  margin: -0.2em 0 0;
+  /* Lines up with the card's own content above it. */
+  margin: 0;
+  padding: 0 var(--ap-pad-x);
 }
 /* Same `[hidden]` specificity fix as .ap-brace-info-icon elsewhere in this
    file - the rule above's own `display: flex` beats the UA stylesheet's
@@ -6627,7 +6723,7 @@ h3 { color: var(--dbc-teal); }
   display: none;
 }
 .md-typeset .ap-gear-ap-readout-label {
-  font-size: 0.68rem;
+  font-size: var(--ap-fs-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--dbc-slate);
@@ -6665,17 +6761,17 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-slate);
   opacity: 0.6;
 }
-/* The final value gets the same pill treatment as .ap-bvb-diff above -
-   this is the one number in the card the eye should land on. */
+/* The final value is the one number in the readout the eye should land on,
+   so it gets a small outlined pill. */
 .md-typeset .ap-gear-ap-readout-final {
   display: inline-block;
-  padding: 0.15em 0.7em;
+  padding: 0.15rem 0.7rem;
   border-radius: 999px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background-color: rgba(255, 255, 255, 0.04);
-  color: var(--dbc-lilac);
+  border: 1px solid var(--ap-line-strong);
+  background-color: var(--ap-surface-2);
+  color: var(--md-default-fg-color);
 }
 /* Stone 1+2's merged row (see resources.md's own comment on
    .ap-engr-stone-row--first) directly follows this grid, which now holds
@@ -6685,20 +6781,26 @@ h3 { color: var(--dbc-teal); }
    padding-top) would. Just margin-top, matching .ap-gear-cards' own
    0.9em inter-card gap so the spacing above this card reads the same as
    the spacing between the two cards inside that grid. */
-.md-typeset .ap-gear-cards + .ap-engr-stone-row--first {
-  margin-top: 0.9em;
+/* A grid cell holding a card plus a line under it (the Attack Power %
+   card and the Attack Power readout), so the pair is one column of the
+   grid and the readout fills the space the shorter card leaves free. */
+.md-typeset .ap-gear-card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-gap);
+  min-width: 0;
 }
-/* Reuses the .ap-gear-card shell (border/radius/padding) other Engraving
-   Comparison cards use, sitting as a single full-width card outside
-   .ap-gear-cards' auto-fit grid - same "standalone full-width card"
-   pattern as .ap-gear-card--avb-options above. Overridden to the same
-   plain neutral 1px left edge as .ap-gear-card--engr-core/--engr-
-   variables (see that rule's own comment): "Ability Stone" is already
-   descriptive as a title on its own, so a colored accent stripe here
-   would just be one more color the reader has to learn without telling
-   them anything the title doesn't already say. */
+.md-typeset .ap-gear-cards + .ap-engr-stone-row--first {
+  margin-top: var(--ap-gap);
+}
+/* Ability Stone is one compact row (title plus both stone pickers) that is
+   also a field row, so it needs its own padding rather than the panel's
+   header-and-body padding. */
 .md-typeset .ap-gear-card--engr-stone {
-  border-left: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 0.35rem var(--ap-pad-x);
+  /* Same gap as between any two cards, so the table below does not butt
+     up against the card. */
+  margin-bottom: var(--ap-gap);
 }
 /* Title loses the old standalone-heading treatment (centered text, its
    own top margin/padding/border, a bumped size to carry a header on its
@@ -6718,8 +6820,8 @@ h3 { color: var(--dbc-teal); }
   padding: 0;
   border-top: none;
   text-align: left;
-  font-size: 0.84em;
-  letter-spacing: 0.06em;
+  font-size: var(--ap-fs-cap);
+  letter-spacing: 0.09em;
   flex: 1 1 auto;
   min-width: 0;
 }
@@ -6880,13 +6982,9 @@ h3 { color: var(--dbc-teal); }
    Comparison's rows (not inside a .ap-gear-card) untouched. */
 .md-typeset .ap-gear-inputs .ap-gear-card .ap-calc-field-row {
   flex: 1 1 100%;
-  margin-bottom: 0.5em;
-}
-.md-typeset .ap-gear-inputs .ap-gear-card .ap-calc-field-row:last-child {
-  margin-bottom: 0;
 }
 .md-typeset .ap-gear-inputs .ap-gear-card .ap-calc-field-row .ap-calc-field-label {
-  flex: 1;
+  flex: 0 1 auto;
 }
 /* Weapon Power / Main Stat are typed as large raw numbers (6-7 digits) -
    the shared 5.5em field width above clips them, so these two get more
@@ -6902,6 +7000,11 @@ h3 { color: var(--dbc-teal); }
    that width. */
 .md-typeset .ap-calc-field-row input[type="number"].ap-gear-input-narrow {
   width: 5em;
+}
+.md-typeset .ap-gear-inputs > .ap-brace-compare-inputs {
+  margin: 0;
+  padding: 0.9rem var(--ap-pad-x) 1rem;
+  border-bottom: none;
 }
 .md-typeset .ap-brace-compare-inputs .ap-calc-field-row {
   flex: 0 0 auto;
@@ -6946,12 +7049,10 @@ h3 { color: var(--dbc-teal); }
    margin) still applies via that class on the same element, this just
    adds the flex layout needed to push the total to the far edge. */
 .md-typeset .ap-gear-ap-sources-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.6em;
+  gap: 0.5rem;
 }
 .md-typeset .ap-gear-ap-total-display {
+  margin-left: auto;
   text-transform: none;
   letter-spacing: normal;
   font-weight: 700;
@@ -6967,19 +7068,36 @@ h3 { color: var(--dbc-teal); }
    line the same way the Crit Rate/Crit Damage/etc. cards' own pair rows
    do at full width. Below that width the @container rule next to
    .ap-gear-cards wraps the row instead. */
+/* Comparison tables are panels like everything else here: a bordered,
+   rounded surface with a filled header row. border-collapse: separate is
+   what lets the border radius apply to a table; the corner cells carry the
+   matching radius so their fills do not square the corners off. */
 .md-typeset .ap-brace-compare-table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.96em;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--ap-fs-table);
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius-lg);
+  background-color: var(--ap-surface);
 }
 .md-typeset .ap-brace-compare-table th {
   text-align: right;
-  font-size: 0.82em;
+  font-size: var(--ap-fs-cap);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--dbc-slate);
-  padding: 0.3em 0.6em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  letter-spacing: 0.08em;
+  color: var(--dbc-muted-text);
+  padding: 0.5rem 0.7rem;
+  background-color: var(--ap-surface-2);
+  border-bottom: 1px solid var(--ap-line);
+}
+.md-typeset .ap-brace-compare-table thead tr:first-child th:first-child {
+  border-top-left-radius: calc(var(--ap-radius-lg) - 1px);
+}
+.md-typeset .ap-brace-compare-table thead tr:first-child th:last-child {
+  border-top-right-radius: calc(var(--ap-radius-lg) - 1px);
 }
 .md-typeset .ap-brace-compare-table th.ap-brace-th-label {
   text-align: left;
@@ -7021,10 +7139,41 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-table th.ap-brace-th-low {
   color: var(--dbc-red);
 }
+/* Chaos Core Comparison: fixed layout gives the five figure columns one
+   shared width. Under auto layout each column sizes to its header text, so
+   the Ancient columns came out wider than the Relic ones and the gaps
+   between figures alternated. The scroll wrapper takes over when the
+   min-width does not fit. */
+.md-typeset .ap-arkgrid-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 40rem;
+}
+.md-typeset .ap-arkgrid-table th.ap-brace-th-label {
+  width: 38%;
+}
+/* Figures and their headers are centred in their columns. Right-aligned
+   figures put the Relic and Ancient labels off-centre under a centred
+   17/20 Points group header; centred columns keep each group header
+   exactly between the two columns it covers. Tabular numerals keep the
+   decimals aligned. */
+.md-typeset .ap-arkgrid-table th:not(.ap-brace-th-label),
+.md-typeset .ap-arkgrid-table td.ap-arkgrid-tier-val {
+  text-align: center;
+}
 .md-typeset .ap-brace-compare-table td {
-  padding: 0.45em 0.6em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   vertical-align: top;
+}
+.md-typeset .ap-brace-compare-table tbody tr:hover td {
+  background-color: var(--ap-surface-2);
+}
+.md-typeset .ap-brace-compare-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: calc(var(--ap-radius-lg) - 1px);
+}
+.md-typeset .ap-brace-compare-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: calc(var(--ap-radius-lg) - 1px);
 }
 .md-typeset .ap-brace-compare-table tr:last-child td {
   border-bottom: none;
@@ -7069,22 +7218,53 @@ h3 { color: var(--dbc-teal); }
    space for every reader, while still being obvious enough to notice:
    a small circled "i" right after the label, native `title` attribute
    for the actual hover tooltip (no JS-driven tooltip needed). */
+/* The "i" is a 16px ring (border) with the glyph drawn by an SVG mask on
+   ::before, so it is crisp at integer pixel sizes on every display instead
+   of depending on a font glyph's metrics. The text node stays for assistive
+   tech and is pushed out of the clipped box with text-indent. overflow:
+   hidden makes the box's baseline its bottom edge in every browser (an
+   inline-block holding text takes the text's baseline, which differs
+   between engines), so vertical-align places the circle's centre a fixed
+   fraction of the surrounding font size above the text baseline, level
+   with the middle of the lowercase letters. Fixed size and margin so every
+   icon is the same wherever it sits. */
 .md-typeset .ap-brace-info-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.2em;
-  height: 1.2em;
-  margin-left: 0.4em;
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  margin-left: 0.4rem;
   border-radius: 50%;
   border: 1px solid rgba(var(--dbc-lavender-rgb), 0.6);
   color: var(--dbc-lavender);
-  font-size: 0.8em;
-  font-style: italic;
-  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  text-indent: 200%;
   line-height: 1;
+  font-style: normal;
   cursor: help;
-  vertical-align: middle;
+  vertical-align: calc(0.29em - 8px);
+}
+.md-typeset .ap-brace-info-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Ccircle cx='7' cy='4' r='1.15'/%3E%3Crect x='6.1' y='6.2' width='1.8' height='4.6' rx='0.9'/%3E%3C/svg%3E") center / 14px 14px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Ccircle cx='7' cy='4' r='1.15'/%3E%3Crect x='6.1' y='6.2' width='1.8' height='4.6' rx='0.9'/%3E%3C/svg%3E") center / 14px 14px no-repeat;
+}
+/* Beside a control in a field row the row's own gap already spaces the icon,
+   so the extra margin would push the control onto a second line on a 320px
+   phone. */
+.md-typeset .ap-calc-field-row > .ap-brace-info-icon {
+  margin-left: 0;
+}
+/* Uppercase card titles centre on the capital height, a little higher than
+   the lowercase middle used above. */
+.md-typeset .ap-bvb-card-title .ap-brace-info-icon {
+  vertical-align: calc(0.37em - 8px);
 }
 .md-typeset .ap-brace-info-icon:hover {
   border-color: var(--dbc-lavender);
@@ -7127,18 +7307,18 @@ h3 { color: var(--dbc-teal); }
   display: inline-flex;
   align-items: center;
   margin-left: 0.5em;
-  padding: 0.02em 0.35em;
-  border-radius: 3px;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
   /* Uses the shared --dbc-gold/--dbc-gold-rgb tokens, the same warn accent
      every other warn-styled element on the site uses. */
   background: rgba(var(--dbc-gold-rgb), 0.15);
   border: 1px solid rgba(var(--dbc-gold-rgb), 0.55);
   color: var(--dbc-gold);
-  font-size: 0.62em;
+  font-size: var(--ap-fs-cap);
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.2;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   vertical-align: middle;
   white-space: nowrap;
   cursor: help;
@@ -7178,17 +7358,16 @@ h3 { color: var(--dbc-teal); }
    rule (no border-top, tighter margin) since it's a single aside line,
    not a block-separated footer like .ap-brace-compare-footer-note below. */
 .md-typeset .ap-brace-compare-aside-note {
-  font-size: 0.78em;
-  color: var(--dbc-slate);
-  font-style: italic;
-  margin: 0.6em 0 0;
+  font-size: var(--ap-fs-sm);
+  color: var(--dbc-muted-text);
+  margin: 0.6rem 0 0;
 }
 .md-typeset .ap-brace-compare-footer-note {
-  font-size: 0.8em;
-  color: var(--dbc-slate);
-  margin: 1.1em 0 0;
-  padding-top: 0.7em;
-  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  font-size: var(--ap-fs-sm);
+  color: var(--dbc-muted-text);
+  margin: 1.1rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--ap-line);
 }
 /* .ap-engr-overall-best-note sits directly under the Best Combo/Runner-Up
    cards, answering a follow-on question about THAT same pair ("best combo
@@ -7205,6 +7384,7 @@ h3 { color: var(--dbc-teal); }
   border-top: none;
   padding-top: 0;
   margin-top: 0.6em;
+  text-align: center;
 }
 /* .ap-engr-manafood-note (the "RC: Mana Food + Bleed beats Vernese Wine
    by X%" line, Surge-only) sits directly under .ap-engr-ms-readout
@@ -7299,15 +7479,13 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-bvb-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 0.9em;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--ap-gap);
   align-items: start;
 }
 .md-typeset .ap-bvb-card {
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-left: 3px solid var(--ap-bvb-accent, rgba(255, 255, 255, 0.15));
-  border-radius: 8px;
-  padding: 0.6em 0.75em 0.7em;
+  --ap-cat: var(--ap-bvb-accent, var(--dbc-lavender));
+  min-width: 0;
 }
 .md-typeset .ap-bvb-card-a { --ap-bvb-accent: var(--dbc-pink); }
 .md-typeset .ap-bvb-card-b { --ap-bvb-accent: var(--dbc-teal); }
@@ -7323,10 +7501,7 @@ h3 { color: var(--dbc-teal); }
   background-color: rgba(var(--dbc-teal-rgb), 0.06);
 }
 .md-typeset .ap-bvb-card-title {
-  color: var(--ap-bvb-accent);
-}
-.md-typeset .ap-bvb-card .ap-calc-field-row {
-  margin-bottom: 0.5em;
+  color: var(--ap-cat);
 }
 /* Each free line is its own row: a type <select> that gets whatever room
    it needs plus a fixed-width Low/Mid/High tier <select> beside it -
@@ -7336,41 +7511,45 @@ h3 { color: var(--dbc-teal); }
    two same-width selects, not one wide + one narrow). */
 .md-typeset .ap-bvb-line-row {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 0.4em;
-  margin-bottom: 0.5em;
+  min-height: 2.3rem;
+  padding: 0.2rem 0;
+}
+/* flex-basis 0 so the select never asks for its longest option's width and
+   wraps the row on its own; it takes whatever the tier control leaves. */
+.md-typeset .ap-bvb-line-row + .ap-bvb-line-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.045);
 }
 .md-typeset .ap-bvb-line-row .ap-bvb-line-type {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-width: 0;
 }
 .md-typeset .ap-bvb-line-row .ap-bvb-line-tier {
   flex: 0 0 auto;
-  width: 4.6em;
+  width: 6.2em;
 }
-/* Accessory vs. Accessory's Line 3 tier select reuses .ap-bvb-line-tier's
-   shell (see resources.md's own class list on it) but, unlike Bracelet's
-   own Line 3 tier (always just "Low"/"Mid"/"High", 4 chars max),
-   enforceAvbLineControls re-labels its options with the real value +
-   unit - up to "960 WP" (ACC_FLAT_WP_TABLE.High) - which the inherited
-   4.6em was never sized for, clipping the trailing unit letter. Widened
-   just for these two selects rather than touching the shared class,
-   so Bracelet's own Low/Mid/High selects keep their original width. */
-.md-typeset .ap-bvb-line-row .ap-avb-a-line3-tier,
-.md-typeset .ap-bvb-line-row .ap-avb-b-line3-tier {
-  width: 5.6em;
+/* fitBvbLineRows adds --stack when the selected type's text cannot fit
+   beside the tier/value control. The type select then takes the whole line
+   and the control drops under it, right-aligned like every other control. */
+.md-typeset .ap-bvb-line-row--stack .ap-bvb-line-type {
+  flex: 1 1 100%;
 }
-/* STR/DEX/INT's free-typed 10000-16000 amount takes the Low/Mid/High tier
-   dropdown's exact place in the row (see enforceBvbLineControls - only one
-   of the two is ever visible at a time), so it reuses that same fixed
-   width - matched exactly to .ap-bvb-line-tier's 4.6em (rather than the
-   slightly wider 5.4em this used before) so a line's tier/mainstat slot
-   lines up at the same x position across every row regardless of which
-   line type occupies it. The number spinner still fits a 5-digit value
-   fine at this width; the amber-tinted border marks it as a free-typed
-   value standing in for a dropdown rather than another plain field. */
+.md-typeset .ap-bvb-line-row--stack .ap-bvb-line-tier,
+.md-typeset .ap-bvb-line-row--stack .ap-bvb-line-mainstat {
+  margin-left: auto;
+}
+/* STR/DEX/INT's free-typed 10000-16000 amount takes the tier dropdown's
+   exact place in the row (see enforceBvbLineControls - only one of the two
+   is ever visible at a time), so it has the same width and sits at the same
+   x position in every row regardless of which line type occupies the slot.
+   The width also fits a 5-digit value beside the number spinner; the
+   amber-tinted border marks it as a free-typed value standing in for a
+   dropdown rather than another plain field. */
 .md-typeset .ap-bvb-line-row .ap-bvb-line-mainstat {
   flex: 0 0 auto;
-  width: 4.6em;
+  width: 6.2em;
   /* Uses the shared --dbc-gold token (the site's "warn/conditional" role,
      same as the .ap-brace-label-caveat badge and .ap-brace-warn-icon
      below) rather than a hand-picked amber hex. */
@@ -7389,7 +7568,7 @@ h3 { color: var(--dbc-teal); }
    dimmed and slightly smaller so the card reads as one clear answer with
    its math available on closer look, not five equally-weighted rows. */
 .md-typeset .ap-bvb-breakdown-row {
-  font-size: 0.9em;
+  font-size: var(--ap-fs-sm);
   opacity: 0.85;
 }
 /* "Other Lines" groups its two per-side checkboxes (vs Demons, CD
@@ -7402,14 +7581,23 @@ h3 { color: var(--dbc-teal); }
    flex when a hidden label contributes nothing. */
 .md-typeset .ap-bvb-other-wrap {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.6em;
+  justify-content: flex-end;
+  gap: 0.2em 0.6em;
+  min-width: 0;
+  margin-left: auto;
+}
+/* With both checkboxes shown the row is wider than a phone's card, so the
+   group drops under the label instead of being clipped by the card. */
+.md-typeset .ap-bvb-breakdown-row:has(.ap-bvb-other-wrap) {
+  flex-wrap: wrap;
 }
 .md-typeset .ap-bvb-inline-check {
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
-  font-size: 0.82em;
+  font-size: var(--ap-fs-sm);
   color: var(--dbc-lilac);
   cursor: pointer;
   white-space: nowrap;
@@ -7423,13 +7611,6 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-bvb-inline-check[hidden] {
   display: none;
 }
-.md-typeset .ap-bvb-inline-check input[type="checkbox"] {
-  width: 1em;
-  height: 1em;
-  margin: 0;
-  accent-color: var(--dbc-lavender);
-  cursor: pointer;
-}
 .md-typeset .ap-bvb-summary {
   margin-top: 0.9em;
   text-align: center;
@@ -7438,43 +7619,69 @@ h3 { color: var(--dbc-teal); }
   margin: 0.3em 0;
 }
 /* "Running neither" is context for the two cards above (what the fallback
-   keystone would be with no bracelet at all) - useful, but not the
-   takeaway of this whole subsection, so it's pulled down in size/weight
-   to read as a footnote rather than competing with the wins-by verdict
-   right below it. */
-.md-typeset .ap-bvb-neither {
-  font-size: 0.82em;
-  color: var(--dbc-lavender);
-  opacity: 0.8;
+   keystone would be with no bracelet or setup at all). Useful, but not the
+   takeaway, so it is a quiet caption above the verdict. */
+.md-typeset .ap-bvb-neither,
+.md-typeset .ap-esvs-neither {
+  margin: 0.2rem 0;
+  font-size: var(--ap-fs-sm);
+  color: var(--dbc-muted-text);
 }
-/* The actual verdict - which bracelet wins, and by how much - gets the
-   same "selected answer" treatment as the Ark Passive section's own
-   best-combo row/card (.ap-calc-result-row-best / .ap-stat-card-best):
-   a colored pill instead of plain centered text, so it's the one thing
-   in the whole subsection the eye can't miss. Colored dynamically by JS
-   (.ap-bvb-diff-a / -b) in whichever side's own accent actually won,
-   matching that bracelet's card border (pink for A, teal for B) so the
-   pill's color alone echoes back to the winning card above it. */
-.md-typeset .ap-bvb-diff {
-  display: inline-block;
-  margin-top: 0.15em;
-  padding: 0.35em 1.1em;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 1.05em;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background-color: rgba(255, 255, 255, 0.04);
-  color: var(--dbc-lilac);
+/* The verdict: which side wins and by how much. A full-width result bar
+   under the two cards, in the winning side's accent (set by the JS through
+   the -a / -b modifier, matching that card's header colour), so the colour
+   alone points back at the card that won. Bracelet, Setup and Accessory
+   comparisons all share it; the Accessory one carries both
+   .ap-esvs-diff and .ap-avb-diff. */
+.md-typeset .ap-bvb-diff-wrap,
+.md-typeset .ap-esvs-diff-wrap {
+  margin: 0.35rem 0 0;
 }
-.md-typeset .ap-bvb-diff-a {
-  border-color: rgba(var(--dbc-pink-rgb), 0.5);
-  background-color: rgba(var(--dbc-pink-rgb), 0.1);
-  color: var(--dbc-pink);
+/* The Setup comparison's food note icon sits inside the verdict bar, at its
+   right edge, so the bar spans the full width. The bar's side padding is
+   symmetric (room for the icon on both sides) so the text stays centred. */
+.md-typeset .ap-esvs-diff-wrap {
+  position: relative;
 }
-.md-typeset .ap-bvb-diff-b {
-  border-color: rgba(var(--dbc-teal-rgb), 0.5);
-  background-color: rgba(var(--dbc-teal-rgb), 0.1);
-  color: var(--dbc-teal);
+.md-typeset .ap-esvs-diff-wrap > .ap-esvs-diff {
+  padding-inline: calc(var(--ap-pad-x) + 1rem);
+}
+/* On a phone only the icon's side is padded, so the text keeps one line. */
+@media screen and (max-width: 480px) {
+  .md-typeset .ap-esvs-diff-wrap > .ap-esvs-diff {
+    padding-left: var(--ap-pad-x);
+  }
+}
+.md-typeset .ap-esvs-diff-wrap > .ap-brace-info-icon {
+  position: absolute;
+  top: 50%;
+  right: var(--ap-pad-x);
+  margin: 0;
+  transform: translateY(-50%);
+}
+.md-typeset .ap-bvb-diff,
+.md-typeset .ap-esvs-diff {
+  --ap-verdict: var(--dbc-lilac);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem var(--ap-pad-x);
+  border: 1px solid color-mix(in srgb, var(--ap-verdict) 40%, transparent);
+  border-radius: var(--ap-radius-lg);
+  background-color: color-mix(in srgb, var(--ap-verdict) 10%, var(--md-default-bg-color));
+  color: var(--ap-verdict);
+  font-size: var(--ap-fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.md-typeset .ap-bvb-diff-a,
+.md-typeset .ap-esvs-diff-a {
+  --ap-verdict: var(--dbc-pink);
+}
+.md-typeset .ap-bvb-diff-b,
+.md-typeset .ap-esvs-diff-b {
+  --ap-verdict: var(--dbc-teal);
 }
 /* Stronger sibling of .ap-brace-info-icon's mild "i" - was a solid amber
    circled "!", one step up from the plain informational note beside it
@@ -7493,27 +7700,25 @@ h3 { color: var(--dbc-teal); }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.15em 0.55em;
+  padding: 0.1rem 0.5rem;
   margin-left: 0.3em;
   border-radius: 999px;
-  background: rgba(var(--dbc-red-rgb), 0.85);
-  /* Dark-on-fill pairing, same convention .cycle-num-3 uses (background: var(--dbc-gold); color:
-     var(--dbc-gold-dark)) - no separate --dbc-red-dark token exists, so a
-     near-black falls back to the same near-black .ap-brace-warn-icon's
-     gold version paired with (#1a1410 by way of --dbc-gold-dark) rather
-     than inventing a new one-off just for this. */
-  color: #1a1410;
-  font-size: 0.62em;
+  /* Tinted fill, matching border and coloured text: the same pill language
+     as .ap-brace-label-caveat and the verdict bars. */
+  background: rgba(var(--dbc-red-rgb), 0.15);
+  border: 1px solid rgba(var(--dbc-red-rgb), 0.55);
+  color: var(--dbc-red);
+  font-size: var(--ap-fs-cap);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  line-height: 1.6;
+  line-height: 1.2;
   white-space: nowrap;
   cursor: help;
   vertical-align: middle;
 }
 .md-typeset .ap-brace-warn-icon:hover {
-  background: var(--dbc-red);
+  background: rgba(var(--dbc-red-rgb), 0.25);
 }
 /* Same `[hidden]` specificity fix as .ap-brace-info-icon above - without
    it this warning shows unconditionally regardless of the </83 check. */
@@ -7538,16 +7743,11 @@ h3 { color: var(--dbc-teal); }
      the label zero width (one letter per line), squeezed the Basic Effect number input to 18px and the
      line selects to a single letter. Rows wrap instead: the label keeps its text on one line and the
      controls drop under it at a usable width. */
-  .md-typeset .ap-bvb-card .ap-calc-field-row,
-  .md-typeset .ap-bvb-line-row {
+  .md-typeset .ap-bvb-card .ap-calc-field-row {
     flex-wrap: wrap;
   }
   .md-typeset .ap-bvb-card .ap-calc-field-label {
     white-space: nowrap;
-  }
-  .md-typeset .ap-bvb-line-row .ap-bvb-line-type {
-    flex: 1 1 7em;
-    min-width: 7em;
   }
   .md-typeset .ap-bvb-card input[type="number"] {
     min-width: 5em;
@@ -7575,20 +7775,22 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-esvs-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 0.9em;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--ap-gap);
   align-items: start;
 }
 .md-typeset .ap-esvs-card {
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-left: 3px solid var(--ap-esvs-accent, rgba(255, 255, 255, 0.15));
-  border-radius: 8px;
-  padding: 0.6em 0.75em 0.7em;
+  --ap-cat: var(--ap-esvs-accent, var(--dbc-lavender));
+  min-width: 0;
 }
 .md-typeset .ap-esvs-card-a { --ap-esvs-accent: var(--dbc-pink); }
 .md-typeset .ap-esvs-card-b { --ap-esvs-accent: var(--dbc-teal); }
 .md-typeset .ap-esvs-card-title {
-  color: var(--ap-esvs-accent);
+  color: var(--ap-cat);
+  /* The suffix is one unbreakable word, so on a narrow card the title row
+     wraps it onto its own line instead of cutting it at the card edge. */
+  flex-wrap: wrap;
+  row-gap: 0;
 }
 /* Accessory vs. Accessory's "(Currently Equipped)"/"(Candidate)" suffix -
    was inheriting .ap-gear-card-title's bold/uppercase/accent-colored
@@ -7600,9 +7802,6 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-muted-text);
   font-weight: 400;
   text-transform: none;
-}
-.md-typeset .ap-esvs-card .ap-calc-field-row {
-  margin-bottom: 0.5em;
 }
 /* Option 1/2 and Stone 1/2 each pair a label with TWO raw selects (type/
    target + level), left as 3 bare children of the shared .ap-calc-field-
@@ -7662,39 +7861,7 @@ h3 { color: var(--dbc-teal); }
   border-top: none;
   padding-top: 0;
   margin-top: 0.5em;
-}
-/* "Running neither" is context for the two cards above, not the
-   takeaway of this whole subsection - same dimmed-footnote treatment
-   .ap-bvb-neither gives its own equivalent row. */
-.md-typeset .ap-esvs-neither {
-  font-size: 0.82em;
-  color: var(--dbc-lavender);
-  opacity: 0.8;
-}
-/* The actual verdict - which setup wins, and by how much - gets the same
-   "selected answer" pill treatment as .ap-bvb-diff. Colored dynamically
-   by JS (.ap-esvs-diff-a / -b) in whichever side's own accent actually
-   won, matching that setup's card border. */
-.md-typeset .ap-esvs-diff {
-  display: inline-block;
-  margin-top: 0.15em;
-  padding: 0.35em 1.1em;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 1.05em;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background-color: rgba(255, 255, 255, 0.04);
-  color: var(--dbc-lilac);
-}
-.md-typeset .ap-esvs-diff-a {
-  border-color: rgba(var(--dbc-pink-rgb), 0.5);
-  background-color: rgba(var(--dbc-pink-rgb), 0.1);
-  color: var(--dbc-pink);
-}
-.md-typeset .ap-esvs-diff-b {
-  border-color: rgba(var(--dbc-teal-rgb), 0.5);
-  background-color: rgba(var(--dbc-teal-rgb), 0.1);
-  color: var(--dbc-teal);
+  text-align: center;
 }
 /* Same minmax(0,1fr) grid-blowout fix .ap-bvb-cards needs below 480px -
    see that rule's own comment for the full explanation (a bare 1fr
@@ -7707,165 +7874,166 @@ h3 { color: var(--dbc-teal); }
   }
 }
 
-/* Small persistence notice + reset link under the summary panel - inputs
-   are saved to this browser's localStorage on every change (see the JS
-   header comment), so a reader coming back later sees their own last
-   setup instead of a blank form. The reset link is the escape hatch back
-   to the authored HTML defaults.
-
-   Preset switcher (3 slots) + Export/Import share this same footnote row
-   rather than getting their own section - they're all "manage my saved
-   data" actions, same tier of importance as Reset, so keeping them
-   together as plain text-link controls (not boxed buttons) means the
-   actual widget above stays the visual focus and nothing here competes
-   with it for attention. */
-.md-typeset .ap-calc-footnote {
+/* Toolbar: preset slots plus Export, Import, Reset and the Bible Import
+   bookmarklet. Lives in the top bar (.ap-calc-bar), right-aligned. Inputs
+   are saved to this browser's localStorage on every change, so a reader
+   coming back later sees their own last setup; Reset is the way back to the
+   authored defaults and only clears the active preset. */
+.md-typeset .ap-calc-toolbar {
   position: relative; /* anchors the Export/Import popovers below */
-  margin: 0.7em 0 0;
-  font-size: 0.72em;
-  color: var(--dbc-slate);
-  text-align: right;
-  /* Extra line-height so wrapped rows (e.g. Preset 1 2 3 on one line,
-     Export/Import/Reset/Bible Import on the next) get real vertical
-     separation - text-align: right means both rows end at the same right
-     edge, so without this the row-2 content sits uncomfortably close
-     under row-1's right-aligned content. */
-  line-height: 2.2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
 }
-.md-typeset .ap-calc-footnote .ap-calc-reset,
-.md-typeset .ap-calc-footnote .ap-calc-export,
-.md-typeset .ap-calc-footnote .ap-calc-import {
-  color: var(--dbc-lavender);
-  text-decoration: underline;
-  text-decoration-color: rgba(var(--dbc-purple-rgb), 0.4);
-  /* Reset the <button> defaults so this reads as the same inline text
-     link as everywhere else on the card, not a boxed control. */
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0 0 0 0.9em;
+.md-typeset .ap-calc-toolbar .ap-calc-export,
+.md-typeset .ap-calc-toolbar .ap-calc-import,
+.md-typeset .ap-calc-toolbar .ap-calc-reset {
+  box-sizing: border-box;
+  height: 1.55rem;
+  padding: 0 0.7rem;
+  background-color: var(--ap-surface-2);
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius);
+  color: var(--dbc-lilac);
   font: inherit;
-  font-size: 1em;
+  font-size: var(--ap-fs-sm);
+  font-weight: 500;
   cursor: pointer;
+  transition: border-color 0.12s ease, color 0.12s ease;
 }
-.md-typeset .ap-calc-footnote .ap-calc-reset:hover,
-.md-typeset .ap-calc-footnote .ap-calc-export:hover,
-.md-typeset .ap-calc-footnote .ap-calc-import:hover {
+.md-typeset .ap-calc-toolbar .ap-calc-export:hover,
+.md-typeset .ap-calc-toolbar .ap-calc-import:hover,
+.md-typeset .ap-calc-toolbar .ap-calc-reset:hover {
   color: var(--dbc-pink);
-  text-decoration-color: currentColor;
+  border-color: rgba(var(--dbc-pink-rgb), 0.5);
 }
-
-/* Bible Import bookmarklet: deliberately NOT styled like the Export/Import/
-   Reset text links next to it (see that rule above) - those are click
-   targets, this one only works when DRAGGED to a bookmarks bar. Matching
-   underline styling trained people to click it instead, which just ran the
-   bookmarklet against this calculator page itself (no character data here)
-   and produced a confusing "couldn't find character data" message rather
-   than telling them what to do differently. A dashed-border pill with a
-   grab cursor reads as "drag this object," not "click this link" - the
-   click handler in bible-import.js is the other half of this fix. */
-.md-typeset .ap-calc-footnote .bible-import-control {
-  /* No margin of its own - the bookmarklet pill below carries the same
-     0.9em left margin as Export/Import/Reset use on each other, so the
-     gap from "Reset to defaults" to this pill matches every other gap in
-     the row instead of stacking two margins on top of each other. */
-  margin-left: 0;
+.md-typeset .ap-calc-toolbar .ap-calc-export:focus-visible,
+.md-typeset .ap-calc-toolbar .ap-calc-import:focus-visible,
+.md-typeset .ap-calc-toolbar .ap-calc-reset:focus-visible,
+.md-typeset .ap-calc-toolbar .ap-calc-preset:focus-visible {
+  outline: 2px solid rgba(var(--dbc-pink-rgb), 0.6);
+  outline-offset: 2px;
 }
-.md-typeset .ap-calc-footnote .bible-import-bookmarklet {
+/* Preset group: a segmented control. The active slot is picked out by tint
+   and weight, not an underline, since the point is which slot is active
+   rather than that all three are clickable. */
+.md-typeset .ap-calc-toolbar .ap-calc-preset-group {
   display: inline-flex;
   align-items: center;
-  color: var(--dbc-lavender);
-  text-decoration: none;
-  background: rgba(var(--dbc-purple-rgb), 0.12);
-  border: 1px dashed rgba(var(--dbc-purple-rgb), 0.55);
-  border-radius: 999px;
-  padding: 0.1em 0.7em;
-  margin: 0 0 0 0.9em;
-  font: inherit;
-  font-size: 0.92em;
-  cursor: grab;
-  line-height: 1.4; /* independent of the footnote's own 2.2 - keeps the pill's own text/icon snug, only the gap BETWEEN rows needed the extra height */
+  gap: 2px;
+  padding: 3px;
+  background-color: var(--md-default-bg-color);
+  border: 1px solid var(--ap-line);
+  border-radius: 10px;
 }
-/* Grip icon as a pseudo-element, not text inside the <a> - dragging this
-   link to a bookmarks bar uses the anchor's actual text content as the
-   saved bookmark title, and CSS-generated content isn't part of that, so
-   this is the only way to show the icon without it ending up saved as
-   "⠿ Bible Import". Sized and centered as its own flex item (rather than
-   inline with the label text) so its glyph's own font metrics don't throw
-   off vertical alignment against "Bible Import" the way sharing one text
-   node did. */
-.md-typeset .ap-calc-footnote .bible-import-bookmarklet::before {
+.md-typeset .ap-calc-preset-label {
+  padding: 0 0.35rem 0 0.5rem;
+  font-size: var(--ap-fs-sm);
+  color: var(--dbc-muted-text);
+}
+.md-typeset .ap-calc-toolbar .ap-calc-preset {
+  min-width: 1.5rem;
+  padding: 0.2rem 0.4rem;
+  background: none;
+  border: none;
+  border-radius: 7px;
+  font: inherit;
+  font-size: var(--ap-fs-sm);
+  font-weight: 600;
+  color: var(--dbc-muted-text);
+  cursor: pointer;
+}
+.md-typeset .ap-calc-toolbar .ap-calc-preset:hover {
+  color: var(--dbc-lavender);
+}
+.md-typeset .ap-calc-toolbar .ap-calc-preset.ap-calc-preset-active {
+  color: var(--dbc-pink);
+  background-color: rgba(var(--dbc-pink-rgb), 0.16);
+  box-shadow: inset 0 0 0 1px rgba(var(--dbc-pink-rgb), 0.45);
+}
+
+/* Bible Import bookmarklet: deliberately not styled like the buttons next
+   to it. Those are click targets; this one only works when DRAGGED to a
+   bookmarks bar. Matching styling trained people to click it, which ran the
+   bookmarklet against this calculator page (no character data here) and
+   produced a confusing "couldn't find character data" message. A dashed
+   pill with a grab cursor reads as "drag this object"; the click handler in
+   bible-import.js is the other half of that fix. */
+.md-typeset .ap-calc-toolbar .bible-import-control {
+  display: inline-flex;
+}
+.md-typeset .ap-calc-toolbar .bible-import-bookmarklet {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 1.55rem;
+  padding: 0 0.7rem;
+  color: var(--dbc-pink);
+  text-decoration: none;
+  background: rgba(var(--dbc-pink-rgb), 0.08);
+  border: 1px dashed rgba(var(--dbc-pink-rgb), 0.5);
+  border-radius: var(--ap-radius);
+  font-size: var(--ap-fs-sm);
+  font-weight: 500;
+  cursor: grab;
+}
+/* The grip icon is a pseudo-element, not text inside the <a>: dragging the
+   link to a bookmarks bar uses the anchor's text content as the saved
+   title, and generated content is not part of that, so this is the only way
+   to show the icon without it being saved as "⠿ Bible Import". */
+.md-typeset .ap-calc-toolbar .bible-import-bookmarklet::before {
   content: "⠿";
   display: inline-flex;
   align-items: center;
   margin-right: 0.35em;
   opacity: 0.7;
   line-height: 1;
-  /* The glyph's own visual weight sits slightly above its em-box center
-     in most fonts, so centering it via align-items alone still reads as
-     a hair too high next to the "B" baseline - nudge down a touch. */
-  position: relative;
-  top: 1px;
 }
-.md-typeset .ap-calc-footnote .bible-import-bookmarklet:hover {
+.md-typeset .ap-calc-toolbar .bible-import-bookmarklet:hover {
+  background: rgba(var(--dbc-pink-rgb), 0.16);
   border-color: var(--dbc-pink);
-  color: var(--dbc-pink);
-  background: rgba(var(--dbc-purple-rgb), 0.2);
 }
-.md-typeset .ap-calc-footnote .bible-import-bookmarklet:active {
+.md-typeset .ap-calc-toolbar .bible-import-bookmarklet:active {
   cursor: grabbing;
 }
-.md-typeset .ap-calc-footnote .bible-import-status {
+
+/* Import result and skipped-field warnings from the bookmarklet. Takes no
+   space until bible-import.js writes a status or un-hides the list. */
+.md-typeset .ap-calc-notice {
+  margin: 0 0 var(--ap-gap);
+  padding: 0.55rem var(--ap-pad-x);
+  font-size: var(--ap-fs-sm);
+  background-color: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius);
+}
+.md-typeset .ap-calc-notice:not(:has(.bible-import-status:not(:empty), .bible-import-warnings:not([hidden]))) {
+  display: none;
+}
+.md-typeset .ap-calc-notice .bible-import-status {
   display: block;
-  margin-top: 0.3em;
   color: #7fd8b8;
 }
-.md-typeset .ap-calc-footnote .bible-import-status-error {
+.md-typeset .ap-calc-notice .bible-import-status-error {
   color: #f0a8a8;
 }
-/* Warning list is left-aligned prose, not right-aligned footnote text -
-   right-aligning wrapped sentences makes them hard to read, and these can
-   run to a full sentence or two per field. */
-.md-typeset .ap-calc-footnote .bible-import-warnings {
+/* Left-aligned prose: wrapped sentences are hard to read ragged-left, and
+   these can run to a sentence or two per field. */
+.md-typeset .ap-calc-notice .bible-import-warnings {
   margin: 0.4em 0 0;
   padding-left: 1.2em;
   text-align: left;
   color: var(--dbc-muted-text-soft);
 }
-.md-typeset .ap-calc-footnote .bible-import-warnings[hidden] {
+.md-typeset .ap-calc-notice .bible-import-warnings[hidden] {
   display: none;
 }
 
-/* Preset group: "Preset 1 2 3" with the active slot picked out by solid
-   color+weight instead of an underline, since underline here would read
-   as "clickable" for all three equally - the distinction that matters is
-   WHICH one is active, not that they're all links. */
-.md-typeset .ap-calc-footnote .ap-calc-preset-group {
-  margin-left: 0.9em;
-}
-.md-typeset .ap-calc-footnote .ap-calc-preset {
-  background: none;
-  border: none;
-  padding: 0 0.2em;
-  margin: 0;
-  font: inherit;
-  font-size: 1em;
-  color: var(--dbc-slate);
-  cursor: pointer;
-}
-.md-typeset .ap-calc-footnote .ap-calc-preset:hover {
-  color: var(--dbc-lavender);
-}
-.md-typeset .ap-calc-footnote .ap-calc-preset-active {
-  color: var(--dbc-pink);
-  font-weight: 700;
-}
-
-/* Export/Import popovers - position: absolute so opening either one
-   floats above the page instead of pushing the footnote/reset link (or
-   anything above them) down; closed by default via the [hidden]
-   attribute the JS toggles. Anchored to .ap-calc-footnote's
-   position: relative above. */
+/* Export/Import popovers: absolutely positioned under the toolbar so
+   opening one floats above the page instead of pushing anything down;
+   closed by default via the [hidden] attribute the JS toggles. */
 .md-typeset .ap-calc-popover {
   position: absolute;
   top: 100%;
@@ -7882,7 +8050,7 @@ h3 { color: var(--dbc-teal); }
   background-color: #1c1a22;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
   text-align: left;
-  font-size: 1.05em;
+  font-size: 0.6rem;
   color: var(--dbc-lilac);
   white-space: normal;
 }
@@ -7944,16 +8112,14 @@ h3 { color: var(--dbc-teal); }
   color: #f0a8a8;
 }
 
-@media screen and (max-width: 480px) {
-  /* On narrow widths the footnote's own text already wraps to several
-     lines - keeping this row right-aligned would leave "Preset 1 2 3
-     Export Import Reset to defaults" ragged against the right edge with
-     the persistence notice ragged against the left, reading as two
-     unrelated fragments. Left-aligning the whole block below the notice
-     keeps it one coherent stack instead. */
-  .md-typeset .ap-calc-footnote {
-    text-align: left;
+@media screen and (max-width: 900px) {
+  /* The bar scrolls with the page on small screens (only the Build pill is
+     fixed, see .ap-build-dock), so the toolbar takes the whole row. */
+  .md-typeset .ap-calc-toolbar {
+    margin-left: 0;
   }
+}
+@media screen and (max-width: 480px) {
   .md-typeset .ap-calc-popover {
     right: auto;
     left: 0;
@@ -10774,12 +10940,13 @@ html.image-lightbox-open {
     min-height: 26px;
   }
   .md-typeset .ap-calc-field-row:has(> input[type="checkbox"]) > .ap-calc-field-label,
+  .md-typeset .ap-calc-field-row:has(> .ap-engr-controls input[type="checkbox"]) > .ap-calc-field-label,
   .md-typeset .ap-calc-field-row:has(.ap-ot1) > .ap-calc-field-label {
     display: flex;
     align-items: center;
     min-height: 26px;
   }
-  .md-typeset .ap-calc-footnote .ap-calc-preset {
+  .md-typeset .ap-calc-toolbar .ap-calc-preset {
     min-width: 32px;
   }
   .md-typeset .ap-bvb-line-row select {

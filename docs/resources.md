@@ -38,44 +38,22 @@
 
 <div class="ap-calc">
 
-<!-- Build dock - ONE instance of the Family/Variant toggle, docked and
-     scoped to .ap-calc's own box (see initBuildDock in
-     ark-passive-calculator.js and the ap-build-dock rules in extra.css)
-     instead of being repeated inside Bracelet Comparison's and
-     Engraving Comparison's own headers as separate "echo" copies (the
-     former approach - see git history/old comment on this block if it
-     still exists). Real pill-chip buttons, not a plain <select> or
-     radio dots, since "one vivid, rest muted" needs every option visible
-     at once - a collapsed <select> can't show that.
-     Two tiers, not one flat row of 6: Family (RE/Surge) plus Variant
-     (whichever family is active - 2 chips for RE since 111/313 merged
-     into one "111/313" chip, 3 for Surge). Every formula that reads
-     BRACE_SPEC_BUILDS was traced before doing this split - RE 111/313
-     are 100% computationally identical, everything else genuinely needs
-     its exact variant (see ark-passive-calculator.js's BRACE_SPEC_BUILDS
-     comment and normalizeBraceSpecBuild). Only one Variant tier is ever
-     shown; the other is hidden by syncBuildToggleUI, same
-     hidden-unless-active convention as the Breaking Moon summary row.
-     Writes to the real ap-brace-spec-build <select> further down (see
-     that select's own comment).
-     Desktop (>900px, matching .ap-calc-layout's own breakpoint):
-     .ap-build-dock is position:sticky to the top of the viewport (same
-     offset as .ap-calc-live) for as long as you're anywhere inside
-     .ap-calc - releases naturally once you scroll into CPM Calculator/
-     Useful Links, since .ap-calc's own box ends right there. The trigger
-     button is display:none and .ap-build-dock-panel is forced visible
-     (see the ap-build-dock-panel media-query override in extra.css -
-     it deliberately does NOT use the [hidden] attribute the way
-     .ap-calc-popover does, to avoid the same display-vs-[hidden]
-     specificity fight documented on .ap-brace-info-icon[hidden] et al.;
-     see the JS/CSS comments for why a plain --open class is used
-     instead).
-     Mobile (<=900px): collapses to just the ap-build-dock-trigger pill
-     (label kept in sync with the resolved build by syncBuildToggleUI),
-     sticky to the BOTTOM of the viewport instead, same .ap-calc-scoped
-     release. Tapping it opens .ap-build-dock-panel as a small popover
-     above the pill; tapping a chip, tapping the pill again, clicking
-     outside, or Escape closes it (see initBuildDock). -->
+<!-- Top bar: Build chips on the left, preset slots and file actions on
+     the right. One instance for the whole calculator. Desktop (>900px):
+     the whole bar is sticky under the site header (see .ap-calc-bar in
+     extra.css). Mobile (<=900px): the toolbar scrolls with the page and
+     only the Build pill (.ap-build-dock) is fixed to the bottom of the
+     viewport, with a JS-driven release once the calculator scrolls out of
+     view (updateDockStuckState in ark-passive-calculator.js).
+     The Build chips are two tiers, Family (RE/Surge) plus the active
+     family's Variant chips (2 for RE because 111 and 313 are
+     computationally identical and share one "111/313" chip, 3 for Surge;
+     see BRACE_SPEC_BUILDS and normalizeBraceSpecBuild in the JS). Only one
+     Variant tier is shown at a time, the other is hidden by
+     syncBuildToggleUI. They write to the real ap-brace-spec-build <select>
+     further down. Real chip buttons rather than a <select> because every
+     option has to stay visible at once. -->
+<div class="ap-calc-bar">
 <div class="ap-build-dock">
   <button type="button" class="ap-build-dock-trigger" aria-haspopup="true" aria-expanded="false">
     <span class="ap-build-dock-trigger-label">Build</span>
@@ -99,6 +77,55 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Preset slots plus Export/Import/Reset and the Bible Import bookmarklet.
+     Export and Import open the popovers at the end of this block, anchored
+     to the toolbar. The bookmarklet is wired up by bible-import.js: drag the
+     link to a bookmarks bar, then click it on a loaded lostark.bible
+     character page; it redirects back here and the data flows through the
+     same Import path (same validation, unknown options are skipped). The
+     grip icon is a CSS ::before, not text inside the <a>, because a
+     browser saves the link text as the bookmark title when it is dragged. -->
+<div class="ap-calc-toolbar">
+  <span class="ap-calc-preset-group" role="group" aria-label="Preset slot"><span class="ap-calc-preset-label">Preset</span><button type="button" class="ap-calc-preset" data-preset="1">1</button><button type="button" class="ap-calc-preset" data-preset="2">2</button><button type="button" class="ap-calc-preset" data-preset="3">3</button></span>
+  <button type="button" class="ap-calc-export">Export</button>
+  <button type="button" class="ap-calc-import">Import</button>
+  <button type="button" class="ap-calc-reset" title="Reset every field to its default">Reset</button>
+  <span class="bible-import-control">
+    <a href="#" class="bible-import-bookmarklet" title="Drag to your bookmarks bar, then click it on a loaded lostark.bible character page. Doesn't capture Main Stat % (Stronghold Pet + Skins), so set them manually. Only as accurate as your Raid Loadout is.">Bible Import</a>
+  </span>
+  <span class="ap-calc-popover" data-popover="export" hidden>
+    <span class="ap-calc-popover-title" id="ap-calc-popover-title-export">Export Preset <span class="ap-calc-popover-preset-num"></span></span>
+    <textarea class="ap-calc-popover-textarea" aria-labelledby="ap-calc-popover-title-export" readonly rows="4" spellcheck="false"></textarea>
+    <span class="ap-calc-popover-actions">
+      <button type="button" class="ap-calc-popover-copy">Copy to Clipboard</button>
+      <button type="button" class="ap-calc-popover-download">Download .json</button>
+      <button type="button" class="ap-calc-popover-close">Close</button>
+    </span>
+    <span class="ap-calc-popover-msg" aria-live="polite"></span>
+  </span>
+  <span class="ap-calc-popover" data-popover="import" hidden>
+    <span class="ap-calc-popover-title" id="ap-calc-popover-title-import">Import into Preset <span class="ap-calc-popover-preset-num"></span></span>
+    <textarea class="ap-calc-popover-textarea" aria-labelledby="ap-calc-popover-title-import" rows="4" spellcheck="false" placeholder="Paste exported JSON here, or choose a file below."></textarea>
+    <input type="file" class="ap-calc-popover-file" aria-label="Choose a JSON file to import" accept="application/json,.json">
+    <span class="ap-calc-popover-actions">
+      <button type="button" class="ap-calc-popover-load">Load</button>
+      <button type="button" class="ap-calc-popover-close">Cancel</button>
+    </span>
+    <span class="ap-calc-popover-msg" aria-live="polite"></span>
+  </span>
+</div>
+</div>
+
+<!-- Import result and any skipped-field warnings from the Bible Import
+     bookmarklet. A <div> rather than a <p>: the <ul> is block-level, and an
+     HTML5 parser closes an open <p> right before it, which would move the
+     list out of this container. Hidden by CSS while both children are
+     empty. -->
+<div class="ap-calc-notice">
+  <span class="bible-import-status" aria-live="polite"></span>
+  <ul class="bible-import-warnings" hidden></ul>
 </div>
 
 <div class="ap-calc-layout">
@@ -183,6 +210,16 @@
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-adrenaline-uptime" title="% of the fight spent at full Adrenaline stacks. Scales both the Crit Rate bonus above and an Ability Stone's Adrenaline AP bonus.">Adrenaline Uptime %</label>
       <input type="number" id="ap-adrenaline-uptime" class="ap-adrenaline-uptime" min="0" max="100" step="1" value="97">
+    </div>
+    <!-- Flash Orb Uptime sits with the other Crit Rate inputs even though it
+         comes from the Support's engraving rather than the player's own gear.
+         Muted row plus a WARN pill: the orbs are random, so this is off by
+         default and best left at 0 unless a reader has real uptime data. -->
+    <div class="ap-calc-field-row ap-calc-field-row-muted">
+      <label class="ap-calc-field-label" for="ap-flash-orb-uptime" title="+15% Crit Rate, scaled by the Support's Drops of Ether engraving.">Flash Orb Uptime %</label>
+      <span class="ap-brace-warn-icon ap-flash-orb-warn" title="Getting these orbs at all is pure RNG - they'll shift your best setup, but they're not worth planning around unless you like seeing white numbers most of the time.">WARN</span>
+      <span class="ap-value-display" data-for="ap-flash-orb-uptime"></span>
+      <input type="number" id="ap-flash-orb-uptime" class="ap-flash-orb-uptime" min="0" max="100" step="1" value="0">
     </div>
   </div>
 
@@ -271,14 +308,14 @@
       <label class="ap-calc-field-label">Bracelet</label>
       <div class="ap-calc-pair ap-calc-pair-checks">
         <label class="ap-calc-pair-check" title="Checked if your bracelet rolled a + Crit Hit Dmg dual line - each dual line adds +1.5% Crit Hit Dmg multiplicatively.">
+          <span class="ap-value-display">(1.50%)</span>
           <input type="checkbox" id="ap-crit-rate-dual" class="ap-crit-rate-dual" checked>
           <span class="ap-calc-pair-check-label">1</span>
-          <span class="ap-value-display">(1.50%)</span>
         </label>
         <label class="ap-calc-pair-check" title="Checked if your bracelet rolled a + Crit Hit Dmg dual line - each dual line adds +1.5% Crit Hit Dmg multiplicatively.">
+          <span class="ap-value-display">(1.50%)</span>
           <input type="checkbox" id="ap-crit-dmg-dual" class="ap-crit-dmg-dual" checked>
           <span class="ap-calc-pair-check-label">2</span>
-          <span class="ap-value-display">(1.50%)</span>
         </label>
       </div>
     </div>
@@ -361,30 +398,47 @@
     </div>
   </div>
 
-    <!-- Leap Rank is the only field feeding Evolution Damage directly (Yearning,
-       the other Evo Dmg source, lives in Party & Positioning instead) - a full
-       bordered group for one dropdown was mostly empty box, so it's a slim
-       tagged strip spanning the gear column instead of its own card. -->
-  <div class="ap-calc-mini-field ap-calc-mini-field--evo-dmg">
-    <span class="ap-calc-mini-field-tag">Evo Dmg</span>
-    <label class="ap-calc-field-label" for="ap-evo-karma">Karmic Leap Rank</label>
-    <span class="ap-value-display" data-for="ap-evo-karma"></span>
-    <select id="ap-evo-karma" class="ap-evo-karma">
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6" selected>6</option>
-    </select>
-  </div>
-
 </div> <!-- end ap-calc-gear -->
 
 <!-- Live: the stuff you actually re-toggle per pull/party, plus the result
      grid and verification numbers it feeds - kept together so nothing you
      change often is more than a glance away from its effect. -->
 <div class="ap-calc-live">
+
+  <!-- Evolution Damage's inputs: Karmic Leap Rank, and Optimized Training 1,
+       which adds a flat +5% Evo Dmg. Yearning, the other Evo Dmg source,
+       lives in Party & Positioning below. This card sits above Party
+       because both are read together when working out what to run. -->
+  <div class="ap-calc-group ap-calc-group--evo-dmg">
+    <div class="ap-calc-group-title">Evolution Damage</div>
+    <div class="ap-calc-field-row">
+      <label class="ap-calc-field-label" for="ap-evo-karma">Karmic Leap Rank</label>
+      <span class="ap-value-display" data-for="ap-evo-karma"></span>
+      <select id="ap-evo-karma" class="ap-evo-karma">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6" selected>6</option>
+      </select>
+    </div>
+    <!-- Optimized Training Lv 1 shares the Keen Sense/Limit Break pool of 3
+         keystone levels, so checking this leaves only 2 for them (see
+         EVOLUTION_SPLITS_OT1 in ark-passive-calculator.js) and adds a fixed
+         +5% Evo Dmg. Its cooldown reduction is deliberately not modeled.
+         Same muted row + WARN pill as Flash Orb Uptime in Party & Positioning. The Top
+         Combinations header below shows .ap-ot1-indicator while this is on. -->
+    <div class="ap-calc-field-row ap-calc-field-row-muted">
+      <label class="ap-calc-field-label" for="ap-ot1" title="Takes 1 of the 3 combined Keen Sense/Limit Break levels, and adds a fixed +5% Evo Dmg. Its Cooldown Reduction isn't modeled.">Optimized Training 1</label>
+      <span class="ap-brace-warn-icon ap-ot1-warn" title="Only check this if you'd run Optimized Training 1 for its cooldown reduction. That reduction isn't calculated here, so this just locks in the split and the +5% Evo Dmg.">WARN</span>
+      <!-- Readout + checkbox share one wrapper so they stay together on the right. -->
+      <span class="ap-ot1-controls">
+        <span class="ap-value-display" data-for="ap-ot1"></span>
+        <input type="checkbox" id="ap-ot1" class="ap-ot1">
+      </span>
+    </div>
+  </div>
 
   <div class="ap-calc-party-card">
     <div class="ap-calc-group-title">Party &amp; Positioning</div>
@@ -445,33 +499,17 @@
         <option value="High">4.80%</option>
       </select>
     </div>
-    <div class="ap-calc-field-row ap-calc-field-row-muted">
-      <label class="ap-calc-field-label" for="ap-flash-orb-uptime" title="+15% Crit Rate, scaled by the Support's Drops of Ether engraving.">Flash Orb Uptime %</label>
-      <span class="ap-brace-warn-icon ap-flash-orb-warn" title="Getting these orbs at all is pure RNG - they'll shift your best setup, but they're not worth planning around unless you like seeing white numbers most of the time.">WARN</span>
-      <span class="ap-value-display" data-for="ap-flash-orb-uptime"></span>
-      <input type="number" id="ap-flash-orb-uptime" class="ap-flash-orb-uptime" min="0" max="100" step="1" value="0">
-    </div>
-    <!-- Optimized Training Lv 1 shares the Keen Sense/Limit Break pool of 3
-         keystone levels, so checking this leaves only 2 for them (see
-         EVOLUTION_SPLITS_OT1 in ark-passive-calculator.js) and adds a fixed
-         +5% Evo Dmg. Its cooldown reduction is deliberately not modeled.
-         Same muted row + WARN pill as Flash Orb Uptime above. The Top
-         Combinations header below shows .ap-ot1-indicator while this is on. -->
-    <div class="ap-calc-field-row ap-calc-field-row-muted">
-      <label class="ap-calc-field-label" for="ap-ot1" title="Takes 1 of the 3 combined Keen Sense/Limit Break levels, and adds a fixed +5% Evo Dmg. Its Cooldown Reduction isn't modeled.">Optimized Training 1</label>
-      <span class="ap-brace-warn-icon ap-ot1-warn" title="Only check this if you'd run Optimized Training 1 for its cooldown reduction. That reduction isn't calculated here, so this just locks in the split and the +5% Evo Dmg.">WARN</span>
-      <!-- Readout + checkbox share a wrapper sized to a number input's
-           width so this row's WARN pill lines up with Flash Orb's. -->
-      <span class="ap-ot1-controls">
-        <span class="ap-value-display" data-for="ap-ot1"></span>
-        <input type="checkbox" id="ap-ot1" class="ap-ot1">
-      </span>
-    </div>
     <div class="ap-calc-field-row">
       <label class="ap-calc-field-label" for="ap-back-attack-rate" title="Enter the 'Back Attack Rate' % from Combat Analyzer's Overview tab. Only applies to the share of your DPS that's a Back Attack.">Back Attack Rate %</label>
       <input type="number" id="ap-back-attack-rate" class="ap-back-attack-rate" min="0" max="100" step="1" value="85">
     </div>
   </div>
+
+  <!-- The results stay in view while the inputs are edited: only this
+       wrapper is sticky, because Evolution Damage and Party & Positioning
+       above it are tall enough that a sticky column holding all of it would
+       not fit a laptop-height viewport. -->
+  <div class="ap-calc-live-sticky">
 
   <!-- Top 3 combinations, ranked by % of the best. Replaces the old 3x3
        grid + progress bars: with 9 cells the only things that mattered
@@ -580,91 +618,28 @@
 
 
   <!-- Verification + Result -->
+  <!-- Base Setup vs the selected combo, one row per stat: Base, Best and
+       the difference between them. The Best column header doubles as the
+       card title the JS rewrites ("Best", "2nd Best", "Pinned") and the card carries the previewed/pinned state classes. -->
   <div class="ap-calc-summary">
-    <div class="ap-calc-stat-cards">
-
-      <div class="ap-stat-card">
-        <div class="ap-stat-card-title">Base Setup</div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critrate" title="The capped, uptime-weighted Crit Rate the DPS math actually uses (accounts for buffs overlapping and hitting the 100% cap).">Eff. Crit Rate</span><span class="ap-summary-base-critrate ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critrate" title="Crit Rate if Adrenaline and Back Attack both hit at full value, uncapped - can read over 100%. Flash Orb stays uptime-scaled.">Peak Crit Rate</span><span class="ap-summary-base-critrate-peak ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critdmg">Crit Dmg</span><span class="ap-summary-base-critdmg ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row ap-stat-card-row--breakingmoon-base ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg" title="Breaking Moon's average per-cast Crit Dmg bonus (applies to 111 Surge only).">T→Z CDmg</span><span class="ap-summary-base-breakingmoon ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--oncrit">Crit Hit Dmg</span><span class="ap-summary-base-oncrit ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--evodmg">Evo Dmg</span><span class="ap-summary-base-evodmg ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--adddmg">Add Dmg</span><span class="ap-summary-base-adddmg ap-summary-value">—</span></div>
+    <div class="ap-stat-card ap-stat-card-best ap-stat-table">
+      <div class="ap-stat-row ap-stat-row--head">
+        <span></span>
+        <span class="ap-stat-col-title">Base</span>
+        <span class="ap-stat-card-title">Best</span>
+        <span class="ap-stat-col-title">Diff</span>
       </div>
-
-      <div class="ap-stat-card ap-stat-card-best">
-        <div class="ap-stat-card-title">Best Setup</div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critrate" title="The capped, uptime-weighted Crit Rate the DPS math actually uses (accounts for buffs overlapping and hitting the 100% cap).">Eff. Crit Rate</span><span class="ap-summary-best-crit ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critrate" title="Crit Rate if Adrenaline and Back Attack both hit at full value, uncapped - can read over 100%. Flash Orb stays uptime-scaled.">Peak Crit Rate</span><span class="ap-summary-best-crit-peak ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--critdmg">Crit Dmg</span><span class="ap-summary-best-critdmg ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row ap-stat-card-row--breakingmoon-best ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg" title="Breaking Moon's average per-cast Crit Dmg bonus (applies to 111 Surge only).">T→Z CDmg</span><span class="ap-summary-best-breakingmoon ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--oncrit">Crit Hit Dmg</span><span class="ap-summary-best-oncrit ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--evodmg">Evo Dmg</span><span class="ap-summary-best-evodmg ap-summary-value">—</span></div>
-        <div class="ap-stat-card-row"><span class="ap-summary-label ap-summary-label--adddmg">Add Dmg</span><span class="ap-summary-best-adddmg ap-summary-value">—</span></div>
-      </div>
-
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--critrate" title="The capped, uptime-weighted Crit Rate the DPS math actually uses (accounts for buffs overlapping and hitting the 100% cap).">Eff. Crit Rate</span><span class="ap-summary-base-critrate ap-summary-value">—</span><span class="ap-summary-best-crit ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--critrate" title="Crit Rate if Adrenaline and Back Attack both hit at full value, uncapped, so it can read over 100%. Includes Flash Orb at its full value when Flash Orb Uptime is above 0.">Peak Crit Rate</span><span class="ap-summary-base-critrate-peak ap-summary-value">—</span><span class="ap-summary-best-crit-peak ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--critdmg">Crit Dmg</span><span class="ap-summary-base-critdmg ap-summary-value">—</span><span class="ap-summary-best-critdmg ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
+      <div class="ap-stat-row ap-stat-card-row--breakingmoon-base ap-stat-card-row--breakingmoon-best ap-stat-card-row--hidden"><span class="ap-summary-label ap-summary-label--critdmg" title="Breaking Moon's average per-cast Crit Dmg bonus (applies to 111 Surge only).">T→Z CDmg</span><span class="ap-summary-base-breakingmoon ap-summary-value">—</span><span class="ap-summary-best-breakingmoon ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--oncrit">Crit Hit Dmg</span><span class="ap-summary-base-oncrit ap-summary-value">—</span><span class="ap-summary-best-oncrit ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--evodmg">Evo Dmg</span><span class="ap-summary-base-evodmg ap-summary-value">—</span><span class="ap-summary-best-evodmg ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
+      <div class="ap-stat-row"><span class="ap-summary-label ap-summary-label--adddmg">Add Dmg</span><span class="ap-summary-base-adddmg ap-summary-value">—</span><span class="ap-summary-best-adddmg ap-summary-value">—</span><span class="ap-stat-delta">—</span></div>
     </div>
   </div>
 
-  <!-- This has to be a <div>, not a <p> - it was a <p> originally, but a
-       <p> can't legally contain block-level content, and the
-       bible-import-warnings <ul> below is block-level. A browser's HTML5
-       parser silently closes </p> right before that <ul>, which reparents
-       the <ul> all the way out to a sibling of .ap-calc-layout - outside
-       .ap-calc-footnote entirely, so every ".ap-calc-footnote
-       .bible-import-warnings" CSS rule below stops matching and the
-       warning list renders unstyled in an unrelated part of the page.
-       Confirmed via a real DOM inspection, not just reading the markup -
-       the ul's parentElement was .ap-calc-live, and ul.closest
-       ('.ap-calc-footnote') was null. A <div> has no such restriction and
-       needs no CSS changes, since every rule below already targets
-       ".ap-calc-footnote" as a class, not a "p.ap-calc-footnote" tag
-       selector. -->
-  <div class="ap-calc-footnote">
-  <span class="ap-calc-preset-group" role="group" aria-label="Preset slot">Preset <button type="button" class="ap-calc-preset" data-preset="1">1</button><button type="button" class="ap-calc-preset" data-preset="2">2</button><button type="button" class="ap-calc-preset" data-preset="3">3</button></span>
-  <button type="button" class="ap-calc-export">Export</button>
-  <button type="button" class="ap-calc-import">Import</button>
-  <button type="button" class="ap-calc-reset">Reset to defaults</button>
-  <!-- Wired up by bible-import.js. Drag the link to a bookmarks bar, then
-       click it while on a fully-loaded/refreshed lostark.bible character
-       page - it redirects back here with the character's data, which then
-       flows through the existing Import mechanism above (same validation,
-       same "unknown option = skipped" safety). Nothing here talks to Bible
-       or to this site's own server - see bible-import.js's header comment
-       for the full data flow and its known gaps. The "⠿" grip icon is a
-       CSS ::before, not text inside the <a> - text content is what a
-       browser uses as the bookmark's saved title when this link is
-       dragged to a bookmarks bar, so the icon has to live outside it or
-       every saved bookmark would be titled "⠿ Bible Import". -->
-  <span class="bible-import-control">
-    <a href="#" class="bible-import-bookmarklet" title="Drag to your bookmarks bar, then click it on a loaded lostark.bible character page. Doesn't capture Main Stat % (Stronghold Pet + Skins), so set them manually. Only as accurate as your Raid Loadout is.">Bible Import</a>
-    <span class="bible-import-status" aria-live="polite"></span>
-    <ul class="bible-import-warnings" hidden></ul>
-  </span>
-  <span class="ap-calc-popover" data-popover="export" hidden>
-    <span class="ap-calc-popover-title" id="ap-calc-popover-title-export">Export Preset <span class="ap-calc-popover-preset-num"></span></span>
-    <textarea class="ap-calc-popover-textarea" aria-labelledby="ap-calc-popover-title-export" readonly rows="4" spellcheck="false"></textarea>
-    <span class="ap-calc-popover-actions">
-      <button type="button" class="ap-calc-popover-copy">Copy to Clipboard</button>
-      <button type="button" class="ap-calc-popover-download">Download .json</button>
-      <button type="button" class="ap-calc-popover-close">Close</button>
-    </span>
-    <span class="ap-calc-popover-msg" aria-live="polite"></span>
-  </span>
-  <span class="ap-calc-popover" data-popover="import" hidden>
-    <span class="ap-calc-popover-title" id="ap-calc-popover-title-import">Import into Preset <span class="ap-calc-popover-preset-num"></span></span>
-    <textarea class="ap-calc-popover-textarea" aria-labelledby="ap-calc-popover-title-import" rows="4" spellcheck="false" placeholder="Paste exported JSON here, or choose a file below."></textarea>
-    <input type="file" class="ap-calc-popover-file" aria-label="Choose a JSON file to import" accept="application/json,.json">
-    <span class="ap-calc-popover-actions">
-      <button type="button" class="ap-calc-popover-load">Load</button>
-      <button type="button" class="ap-calc-popover-close">Cancel</button>
-    </span>
-    <span class="ap-calc-popover-msg" aria-live="polite"></span>
-  </span>
-  </div>
-
+  </div> <!-- end ap-calc-live-sticky -->
 
 </div> <!-- end ap-calc-live -->
 
@@ -707,7 +682,7 @@
      running total is derived rather than hand-typed. -->
 <details class="ap-gear-inputs">
   <summary>
-    <span class="ap-gear-title">Character Data</span>
+    <span class="ap-gear-summary-text"><span class="ap-gear-title">Character Data</span><span class="ap-gear-summary-desc">Weapon Power, Main Stat and Attack Power inputs</span></span>
     <span class="ap-gear-optional-badge" title="Only feeds data to the sections below - skip this if you're not using them.">Optional</span>
   </summary>
   <div class="ap-brace-compare-inputs">
@@ -804,119 +779,123 @@
         </div>
       </div>
 
-      <!-- Attack Power % sources: every field that folds into the running
-           Attack Power % total lives in this one card - Ability Stone:
-           Adrenaline and Atropine included, since they differ from
-           Kazeros/Guardian/etc only in how each is implemented (its own
-           toggle/table), not conceptually (see
-           gearAttackPowerPercentTotal's own comment in the JS for how they
-           fold in). Support is deliberately NOT in this card: it buffs
-           Attack Power through a completely different mechanism (a flat
-           AP-equivalent amount derived from your own Weapon Power/Main
-           Stat, added before the Attack Power % multiply rather than being
-           a term inside it - see supportApBuff's own comment in the JS),
-           so it has no "% value" to contribute here and would just be dead
-           weight inside a card titled "sources". It sits in the card on
-           the left instead, alongside Weapon Power/Main Stat/etc. -->
-      <div class="ap-gear-card ap-gear-card--ap-sources ap-gear-ap-section">
-        <p class="ap-gear-card-title ap-gear-ap-sources-heading">Attack Power %<span class="ap-value-display ap-gear-ap-total-display" data-for="ap-gear-ap-total"></span></p>
-        <div class="ap-calc-field-row ap-calc-field-row-pair">
-          <label class="ap-calc-field-label" >Earrings</label>
-          <div class="ap-calc-pair">
-            <select id="ap-gear-ap-earring1" class="ap-gear-ap-earring1" aria-label="Earring 1 Attack Power %">
-              <option value="None">None</option>
-              <option value="Low">0.4%</option>
-              <option value="Mid">0.95%</option>
-              <option value="High" selected>1.55%</option>
-            </select>
-            <select id="ap-gear-ap-earring2" class="ap-gear-ap-earring2" aria-label="Earring 2 Attack Power %">
-              <option value="None">None</option>
-              <option value="Low">0.4%</option>
-              <option value="Mid">0.95%</option>
-              <option value="High" selected>1.55%</option>
+      <!-- The Attack Power readout sits under the Attack Power % card, in the
+           column the shorter card leaves free. -->
+      <div class="ap-gear-card-stack">
+        <!-- Attack Power % sources: every field that folds into the running
+             Attack Power % total lives in this one card - Ability Stone:
+             Adrenaline and Atropine included, since they differ from
+             Kazeros/Guardian/etc only in how each is implemented (its own
+             toggle/table), not conceptually (see
+             gearAttackPowerPercentTotal's own comment in the JS for how they
+             fold in). Support is deliberately NOT in this card: it buffs
+             Attack Power through a completely different mechanism (a flat
+             AP-equivalent amount derived from your own Weapon Power/Main
+             Stat, added before the Attack Power % multiply rather than being
+             a term inside it - see supportApBuff's own comment in the JS),
+             so it has no "% value" to contribute here and would just be dead
+             weight inside a card titled "sources". It sits in the card on
+             the left instead, alongside Weapon Power/Main Stat/etc. -->
+        <div class="ap-gear-card ap-gear-card--ap-sources ap-gear-ap-section">
+          <p class="ap-gear-card-title ap-gear-ap-sources-heading">Attack Power %<span class="ap-value-display ap-gear-ap-total-display" data-for="ap-gear-ap-total"></span></p>
+          <div class="ap-calc-field-row ap-calc-field-row-pair">
+            <label class="ap-calc-field-label" >Earrings</label>
+            <div class="ap-calc-pair">
+              <select id="ap-gear-ap-earring1" class="ap-gear-ap-earring1" aria-label="Earring 1 Attack Power %">
+                <option value="None">None</option>
+                <option value="Low">0.4%</option>
+                <option value="Mid">0.95%</option>
+                <option value="High" selected>1.55%</option>
+              </select>
+              <select id="ap-gear-ap-earring2" class="ap-gear-ap-earring2" aria-label="Earring 2 Attack Power %">
+                <option value="None">None</option>
+                <option value="Low">0.4%</option>
+                <option value="Mid">0.95%</option>
+                <option value="High" selected>1.55%</option>
+              </select>
+            </div>
+          </div>
+          <div class="ap-calc-field-row">
+            <label class="ap-calc-field-label" for="ap-gear-ap-kazeros" title="Only applicable for Kazeros Raids, up to +2% Attack Power at max contribution.">Kazeros Raid Contribution</label>
+            <span class="ap-value-display" data-for="ap-gear-ap-kazeros"></span>
+            <input type="checkbox" id="ap-gear-ap-kazeros" class="ap-gear-ap-kazeros">
+          </div>
+          <div class="ap-calc-field-row">
+            <label class="ap-calc-field-label" for="ap-gear-ap-guardian" title="Only applicable for Guardian Raids, +3% Attack Power at max contribution.">Guardian Raid Contribution</label>
+            <span class="ap-value-display" data-for="ap-gear-ap-guardian"></span>
+            <input type="checkbox" id="ap-gear-ap-guardian" class="ap-gear-ap-guardian">
+          </div>
+          <div class="ap-calc-field-row ap-gear-ap-select-row">
+            <label class="ap-calc-field-label" for="ap-gear-ap-chaos-star" title="Chaos Core: Attack's Atk. Power % AND Flat AP, both at once.">Chaos Core: Attack</label>
+            <span class="ap-value-display" data-for="ap-gear-ap-chaos-star"></span>
+            <select id="ap-gear-ap-chaos-star" class="ap-gear-ap-chaos-star">
+              <option value="None|0P">None</option>
+              <option value="Any|10P">10 Points</option>
+              <option value="Any|14P">14 Points</option>
+              <option value="Relic|17P">Relic 17P</option>
+              <option value="Relic|18P">Relic 18P</option>
+              <option value="Relic|19P">Relic 19P</option>
+              <option value="Relic|20P" selected>Relic 20P</option>
+              <option value="Ancient|17P">Ancient 17P</option>
+              <option value="Ancient|18P">Ancient 18P</option>
+              <option value="Ancient|19P">Ancient 19P</option>
+              <option value="Ancient|20P">Ancient 20P</option>
             </select>
           </div>
+          <div class="ap-calc-field-row">
+            <label class="ap-calc-field-label" for="ap-gear-ap-astrogem-lv" >Astrogem Atk. Power Level</label>
+            <span class="ap-value-display" data-for="ap-gear-ap-astrogem-lv"></span>
+            <input type="number" id="ap-gear-ap-astrogem-lv" class="ap-gear-ap-astrogem-lv" min="0" max="120" step="1" value="35">
+          </div>
+          <div class="ap-calc-field-row ap-gear-ap-select-row">
+            <label class="ap-calc-field-label" for="ap-adrenaline-stone" title="A fixed 0.9% per stack, scaled by Adrenaline Uptime %, plus this stone's own bonus, same scaling (Lv.1 +0.48% / Lv.2 +0.60% / Lv.3 +0.83% / Lv.4 +0.95% per stack).">Ability Stone: Adrenaline</label>
+            <span class="ap-value-display" data-for="ap-adrenaline-stone"></span>
+            <select id="ap-adrenaline-stone" class="ap-adrenaline-stone">
+              <option value="0 Lv." selected>Lv. 0</option>
+              <option value="1 Lv.">Lv. 1</option>
+              <option value="2 Lv.">Lv. 2</option>
+              <option value="3 Lv.">Lv. 3</option>
+              <option value="4 Lv.">Lv. 4</option>
+            </select>
+          </div>
+          <div class="ap-calc-field-row">
+            <label class="ap-calc-field-label" for="ap-gear-strength-orb-uptime" title="+10% Attack Power, scaled by the Support's Drops of Ether engraving.">Strength Orb Uptime %</label>
+            <span class="ap-value-display" data-for="ap-gear-strength-orb-uptime"></span>
+            <input type="number" id="ap-gear-strength-orb-uptime" class="ap-gear-strength-orb-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="0">
+          </div>
+          <div class="ap-calc-field-row">
+            <label class="ap-calc-field-label" for="ap-gear-atropine-uptime" title="+30% Attack Power for 10s. Usually 0-15% uptime in latest content.">Atropine Uptime %</label>
+            <span class="ap-value-display" data-for="ap-gear-atropine-uptime"></span>
+            <input type="number" id="ap-gear-atropine-uptime" class="ap-gear-atropine-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="0">
+          </div>
+          <div class="ap-calc-field-row">
+            <label class="ap-calc-field-label" for="ap-gear-ap-other" title="Anything not covered above - e.g. a temporary in-raid buff. Don't include AP % from Enlightenment nodes.">Other AP % Bonuses</label>
+            <input type="number" id="ap-gear-ap-other" class="ap-gear-ap-other ap-gear-input-narrow" min="0" max="50" step="0.01" value="0">
+          </div>
         </div>
-        <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-ap-kazeros" title="Only applicable for Kazeros Raids, up to +2% Attack Power at max contribution.">Kazeros Raid Contribution</label>
-          <span class="ap-value-display" data-for="ap-gear-ap-kazeros"></span>
-          <input type="checkbox" id="ap-gear-ap-kazeros" class="ap-gear-ap-kazeros">
-        </div>
-        <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-ap-guardian" title="Only applicable for Guardian Raids, +3% Attack Power at max contribution.">Guardian Raid Contribution</label>
-          <span class="ap-value-display" data-for="ap-gear-ap-guardian"></span>
-          <input type="checkbox" id="ap-gear-ap-guardian" class="ap-gear-ap-guardian">
-        </div>
-        <div class="ap-calc-field-row ap-gear-ap-select-row">
-          <label class="ap-calc-field-label" for="ap-gear-ap-chaos-star" title="Chaos Core: Attack's Atk. Power % AND Flat AP, both at once.">Chaos Core: Attack</label>
-          <span class="ap-value-display" data-for="ap-gear-ap-chaos-star"></span>
-          <select id="ap-gear-ap-chaos-star" class="ap-gear-ap-chaos-star">
-            <option value="None|0P">None</option>
-            <option value="Any|10P">10 Points</option>
-            <option value="Any|14P">14 Points</option>
-            <option value="Relic|17P">Relic 17P</option>
-            <option value="Relic|18P">Relic 18P</option>
-            <option value="Relic|19P">Relic 19P</option>
-            <option value="Relic|20P" selected>Relic 20P</option>
-            <option value="Ancient|17P">Ancient 17P</option>
-            <option value="Ancient|18P">Ancient 18P</option>
-            <option value="Ancient|19P">Ancient 19P</option>
-            <option value="Ancient|20P">Ancient 20P</option>
-          </select>
-        </div>
-        <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-ap-astrogem-lv" >Astrogem Atk. Power Level</label>
-          <span class="ap-value-display" data-for="ap-gear-ap-astrogem-lv"></span>
-          <input type="number" id="ap-gear-ap-astrogem-lv" class="ap-gear-ap-astrogem-lv" min="0" max="120" step="1" value="35">
-        </div>
-        <div class="ap-calc-field-row ap-gear-ap-select-row">
-          <label class="ap-calc-field-label" for="ap-adrenaline-stone" title="A fixed 0.9% per stack, scaled by Adrenaline Uptime %, plus this stone's own bonus, same scaling (Lv.1 +0.48% / Lv.2 +0.60% / Lv.3 +0.83% / Lv.4 +0.95% per stack).">Ability Stone: Adrenaline</label>
-          <span class="ap-value-display" data-for="ap-adrenaline-stone"></span>
-          <select id="ap-adrenaline-stone" class="ap-adrenaline-stone">
-            <option value="0 Lv." selected>Lv. 0</option>
-            <option value="1 Lv.">Lv. 1</option>
-            <option value="2 Lv.">Lv. 2</option>
-            <option value="3 Lv.">Lv. 3</option>
-            <option value="4 Lv.">Lv. 4</option>
-          </select>
-        </div>
-        <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-strength-orb-uptime" title="+10% Attack Power, scaled by the Support's Drops of Ether engraving.">Strength Orb Uptime %</label>
-          <span class="ap-value-display" data-for="ap-gear-strength-orb-uptime"></span>
-          <input type="number" id="ap-gear-strength-orb-uptime" class="ap-gear-strength-orb-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="0">
-        </div>
-        <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-atropine-uptime" title="+30% Attack Power for 10s. Usually 0-15% uptime in latest content.">Atropine Uptime %</label>
-          <span class="ap-value-display" data-for="ap-gear-atropine-uptime"></span>
-          <input type="number" id="ap-gear-atropine-uptime" class="ap-gear-atropine-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="0">
-        </div>
-        <div class="ap-calc-field-row">
-          <label class="ap-calc-field-label" for="ap-gear-ap-other" title="Anything not covered above - e.g. a temporary in-raid buff. Don't include AP % from Enlightenment nodes.">Other AP % Bonuses</label>
-          <input type="number" id="ap-gear-ap-other" class="ap-gear-ap-other ap-gear-input-narrow" min="0" max="50" step="0.01" value="0">
-        </div>
-      </div>
-    </div>
-    <!-- Actual Attack Power readout, computed from the same gearApTotal()
-         formula the Bracelet Comparison's WP/AP rows below already use -
-         see gearApBeforeAfter's own comment in the JS. Hidden until
-         Weapon Power and Main Stat are both filled in (same guard as
-         those rows). Three cumulative stages, not a single before/after
-         pair: Base (every Attack Power % source except Adrenaline, no
-         Support buff) -> Adrenaline (Adrenaline's bonus added in, still
-         no Support) -> Attack Power (your real total, both included).
-         The Adrenaline stage - its arrow AND value together - is hidden
-         by the JS whenever Adrenaline is "Not Used" above, so the chain
-         reads as a plain Base -> Attack Power step instead of implying a
-         buff that isn't active. -->
-    <div class="ap-gear-ap-readout" hidden>
-      <span class="ap-gear-ap-readout-label">Attack Power</span>
-      <span class="ap-gear-ap-readout-base" title="Your Attack Power, as calculated and displayed on your Character Profile.">&mdash;</span>
-      <span class="ap-gear-ap-readout-adrenaline-stage">
+      <!-- Actual Attack Power readout, computed from the same gearApTotal()
+           formula the Bracelet Comparison's WP/AP rows below already use -
+           see gearApBeforeAfter's own comment in the JS. Hidden until
+           Weapon Power and Main Stat are both filled in (same guard as
+           those rows). Three cumulative stages, not a single before/after
+           pair: Base (every Attack Power % source except Adrenaline, no
+           Support buff) -> Adrenaline (Adrenaline's bonus added in, still
+           no Support) -> Attack Power (your real total, both included).
+           The Adrenaline stage - its arrow AND value together - is hidden
+           by the JS whenever Adrenaline is "Not Used" above, so the chain
+           reads as a plain Base -> Attack Power step instead of implying a
+           buff that isn't active. -->
+      <div class="ap-gear-ap-readout" hidden>
+        <span class="ap-gear-ap-readout-label">Attack Power</span>
+        <span class="ap-gear-ap-readout-base" title="Your Attack Power, as calculated and displayed on your Character Profile.">&mdash;</span>
+        <span class="ap-gear-ap-readout-adrenaline-stage">
+          <span class="ap-gear-ap-readout-arrow">&rarr;</span>
+          <span class="ap-gear-ap-readout-adrenaline" title="Your Attack Power with Adrenaline's AP bonus added.">&mdash;</span>
+        </span>
         <span class="ap-gear-ap-readout-arrow">&rarr;</span>
-        <span class="ap-gear-ap-readout-adrenaline" title="Your Attack Power with Adrenaline's AP bonus added.">&mdash;</span>
-      </span>
-      <span class="ap-gear-ap-readout-arrow">&rarr;</span>
-      <span class="ap-gear-ap-readout-final" title="Your Attack Power in a raid setting, factoring in an estimated AP buff from a similarly geared Support.">&mdash;</span>
+        <span class="ap-gear-ap-readout-final" title="Your Attack Power in a raid setting, factoring in an estimated AP buff from a similarly geared Support.">&mdash;</span>
+      </div>
+      </div>
     </div>
   </div>
 </details>
@@ -938,7 +917,9 @@
      room to breathe horizontally instead of pushing that column's height
      around. -->
 <details class="ap-brace-compare">
-  <summary>Bracelet Comparison</summary>
+  <summary>
+    <span class="ap-gear-summary-text"><span class="ap-gear-title">Bracelet Comparison</span><span class="ap-gear-summary-desc">Each candidate line valued on its own, ranked against your Best Setup</span></span>
+  </summary>
   <div class="ap-brace-compare-body">
     <div class="ap-brace-compare-inputs">
       <!-- Build toggle now lives once, docked at the top of .ap-calc (see
@@ -975,7 +956,6 @@
         <option value="surge-333">Surge 333</option>
       </select>
     </div>
-    <p class="ap-brace-compare-intro">Candidate bracelet lines, valued as if each were the only line on your bracelet, against your Best Setup above.</p>
     <table class="ap-brace-compare-table">
       <thead>
         <tr>
@@ -1004,10 +984,10 @@
          above are filled out, which is why it reads as a continuation of
          them rather than something you'd reach for on its own. -->
     <details class="ap-bvb">
-      <summary>Bracelet vs. Bracelet</summary>
+      <summary>
+        <span class="ap-gear-summary-text"><span class="ap-gear-title">Bracelet vs. Bracelet</span><span class="ap-gear-summary-desc">Two full 5-line bracelets compared against each other and against no bracelet</span></span>
+      </summary>
       <div class="ap-brace-compare-body">
-        <p class="ap-brace-compare-intro">Compares two full 5-line bracelets against each other and against running none at all.</p>
-
         <!-- Basic Effect 2: a bracelet's 2nd fixed line isn't guaranteed
              to be Crit Stat - it can also land as Main Stat (STR/DEX/INT),
              or as a real effect this calculator doesn't track at all
@@ -1062,16 +1042,16 @@
             <div class="ap-bvb-line-row">
               <select class="ap-bvb-a-line1-type ap-bvb-line-type" aria-label="Bracelet A Line 3 Type">
                 <option value="none">— Line 3: None —</option>
-                <option value="crit_rate_dual" selected>Crit Rate % &amp; Crit Hit Dmg %</option>
-                <option value="crit_rate">Crit Rate %</option>
-                <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
-                <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Damage % &amp; Cooldown +2%</option>
-                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
-                <option value="outgoing">Outgoing Damage %</option>
-                <option value="add_a">Additional Damage %</option>
-                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
-                <option value="back_attack">Back Attack Damage %</option>
+                <option value="crit_rate_dual" selected>Crit Rate &amp; Crit Hit Dmg</option>
+                <option value="crit_rate">Crit Rate</option>
+                <option value="crit_dmg_dual">Crit Damage &amp; Crit Hit Dmg</option>
+                <option value="crit_dmg">Crit Damage</option>
+                <option value="damage_cd">Outgoing Damage &amp; CD +2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg &amp; Dmg to Staggered</option>
+                <option value="outgoing">Outgoing Damage</option>
+                <option value="add_a">Additional Damage</option>
+                <option value="add_b">Additional Damage &amp; vs Demons</option>
+                <option value="back_attack">Back Attack Damage</option>
                 <option value="stat_main">STR/DEX/INT</option>
                 <option value="wp_flat">Weapon Power</option>
                 <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
@@ -1088,16 +1068,16 @@
             <div class="ap-bvb-line-row">
               <select class="ap-bvb-a-line2-type ap-bvb-line-type" aria-label="Bracelet A Line 4 Type">
                 <option value="none">— Line 4: None —</option>
-                <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
-                <option value="crit_rate">Crit Rate %</option>
-                <option value="crit_dmg_dual" selected>Crit Damage % &amp; Crit Hit Dmg %</option>
-                <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Damage % &amp; Cooldown +2%</option>
-                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
-                <option value="outgoing">Outgoing Damage %</option>
-                <option value="add_a">Additional Damage %</option>
-                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
-                <option value="back_attack">Back Attack Damage %</option>
+                <option value="crit_rate_dual">Crit Rate &amp; Crit Hit Dmg</option>
+                <option value="crit_rate">Crit Rate</option>
+                <option value="crit_dmg_dual" selected>Crit Damage &amp; Crit Hit Dmg</option>
+                <option value="crit_dmg">Crit Damage</option>
+                <option value="damage_cd">Outgoing Damage &amp; CD +2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg &amp; Dmg to Staggered</option>
+                <option value="outgoing">Outgoing Damage</option>
+                <option value="add_a">Additional Damage</option>
+                <option value="add_b">Additional Damage &amp; vs Demons</option>
+                <option value="back_attack">Back Attack Damage</option>
                 <option value="stat_main">STR/DEX/INT</option>
                 <option value="wp_flat">Weapon Power</option>
                 <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
@@ -1114,16 +1094,16 @@
             <div class="ap-bvb-line-row">
               <select class="ap-bvb-a-line3-type ap-bvb-line-type" aria-label="Bracelet A Line 5 Type">
                 <option value="none">— Line 5: None —</option>
-                <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
-                <option value="crit_rate">Crit Rate %</option>
-                <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
-                <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Damage % &amp; Cooldown +2%</option>
-                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
-                <option value="outgoing">Outgoing Damage %</option>
-                <option value="add_a" selected>Additional Damage %</option>
-                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
-                <option value="back_attack">Back Attack Damage %</option>
+                <option value="crit_rate_dual">Crit Rate &amp; Crit Hit Dmg</option>
+                <option value="crit_rate">Crit Rate</option>
+                <option value="crit_dmg_dual">Crit Damage &amp; Crit Hit Dmg</option>
+                <option value="crit_dmg">Crit Damage</option>
+                <option value="damage_cd">Outgoing Damage &amp; CD +2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg &amp; Dmg to Staggered</option>
+                <option value="outgoing">Outgoing Damage</option>
+                <option value="add_a" selected>Additional Damage</option>
+                <option value="add_b">Additional Damage &amp; vs Demons</option>
+                <option value="back_attack">Back Attack Damage</option>
                 <option value="stat_main">STR/DEX/INT</option>
                 <option value="wp_flat">Weapon Power</option>
                 <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
@@ -1168,16 +1148,16 @@
             <div class="ap-bvb-line-row">
               <select class="ap-bvb-b-line1-type ap-bvb-line-type" aria-label="Bracelet B Line 3 Type">
                 <option value="none">— Line 3: None —</option>
-                <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
-                <option value="crit_rate" selected>Crit Rate %</option>
-                <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
-                <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd">Outgoing Damage % &amp; Cooldown +2%</option>
-                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
-                <option value="outgoing">Outgoing Damage %</option>
-                <option value="add_a">Additional Damage %</option>
-                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
-                <option value="back_attack">Back Attack Damage %</option>
+                <option value="crit_rate_dual">Crit Rate &amp; Crit Hit Dmg</option>
+                <option value="crit_rate" selected>Crit Rate</option>
+                <option value="crit_dmg_dual">Crit Damage &amp; Crit Hit Dmg</option>
+                <option value="crit_dmg">Crit Damage</option>
+                <option value="damage_cd">Outgoing Damage &amp; CD +2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg &amp; Dmg to Staggered</option>
+                <option value="outgoing">Outgoing Damage</option>
+                <option value="add_a">Additional Damage</option>
+                <option value="add_b">Additional Damage &amp; vs Demons</option>
+                <option value="back_attack">Back Attack Damage</option>
                 <option value="stat_main">STR/DEX/INT</option>
                 <option value="wp_flat">Weapon Power</option>
                 <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
@@ -1194,16 +1174,16 @@
             <div class="ap-bvb-line-row">
               <select class="ap-bvb-b-line2-type ap-bvb-line-type" aria-label="Bracelet B Line 4 Type">
                 <option value="none">— Line 4: None —</option>
-                <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
-                <option value="crit_rate">Crit Rate %</option>
-                <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
-                <option value="crit_dmg" selected>Crit Damage %</option>
-                <option value="damage_cd">Outgoing Damage % &amp; Cooldown +2%</option>
-                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
-                <option value="outgoing">Outgoing Damage %</option>
-                <option value="add_a">Additional Damage %</option>
-                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
-                <option value="back_attack">Back Attack Damage %</option>
+                <option value="crit_rate_dual">Crit Rate &amp; Crit Hit Dmg</option>
+                <option value="crit_rate">Crit Rate</option>
+                <option value="crit_dmg_dual">Crit Damage &amp; Crit Hit Dmg</option>
+                <option value="crit_dmg" selected>Crit Damage</option>
+                <option value="damage_cd">Outgoing Damage &amp; CD +2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg &amp; Dmg to Staggered</option>
+                <option value="outgoing">Outgoing Damage</option>
+                <option value="add_a">Additional Damage</option>
+                <option value="add_b">Additional Damage &amp; vs Demons</option>
+                <option value="back_attack">Back Attack Damage</option>
                 <option value="stat_main">STR/DEX/INT</option>
                 <option value="wp_flat">Weapon Power</option>
                 <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
@@ -1220,16 +1200,16 @@
             <div class="ap-bvb-line-row">
               <select class="ap-bvb-b-line3-type ap-bvb-line-type" aria-label="Bracelet B Line 5 Type">
                 <option value="none">— Line 5: None —</option>
-                <option value="crit_rate_dual">Crit Rate % &amp; Crit Hit Dmg %</option>
-                <option value="crit_rate">Crit Rate %</option>
-                <option value="crit_dmg_dual">Crit Damage % &amp; Crit Hit Dmg %</option>
-                <option value="crit_dmg">Crit Damage %</option>
-                <option value="damage_cd" selected>Outgoing Damage % &amp; Cooldown +2%</option>
-                <option value="outgoing_stagger">Outgoing Dmg % &amp; Dmg to Staggered %</option>
-                <option value="outgoing">Outgoing Damage %</option>
-                <option value="add_a">Additional Damage %</option>
-                <option value="add_b">Additional Damage % &amp; vs Demon/Archdemon</option>
-                <option value="back_attack">Back Attack Damage %</option>
+                <option value="crit_rate_dual">Crit Rate &amp; Crit Hit Dmg</option>
+                <option value="crit_rate">Crit Rate</option>
+                <option value="crit_dmg_dual">Crit Damage &amp; Crit Hit Dmg</option>
+                <option value="crit_dmg">Crit Damage</option>
+                <option value="damage_cd" selected>Outgoing Damage &amp; CD +2%</option>
+                <option value="outgoing_stagger">Outgoing Dmg &amp; Dmg to Staggered</option>
+                <option value="outgoing">Outgoing Damage</option>
+                <option value="add_a">Additional Damage</option>
+                <option value="add_b">Additional Damage &amp; vs Demons</option>
+                <option value="back_attack">Back Attack Damage</option>
                 <option value="stat_main">STR/DEX/INT</option>
                 <option value="wp_flat">Weapon Power</option>
                 <option value="wp_onhit">On-Hit Weapon Power (stacking)</option>
@@ -1295,7 +1275,9 @@
      Stone 1/2 rows below remain id-less on purpose - those really are
      hypotheticals. -->
 <details class="ap-engr-compare">
-  <summary>Engraving Comparison</summary>
+  <summary>
+    <span class="ap-gear-summary-text"><span class="ap-gear-title">Engraving Comparison</span><span class="ap-gear-summary-desc">Best 2-slot engraving combo valued against your Best Setup</span></span>
+  </summary>
   <div class="ap-brace-compare-body">
     <!-- Build toggle now lives once, docked at the top of .ap-calc, and
          stays reachable (sticky) while this section is open, so no echo
@@ -1303,7 +1285,6 @@
          indicator (the active chip's label and color already say RE vs
          Surge, so a separate "Playstyle: RE" line next to it would be
          redundant). -->
-    <p class="ap-brace-compare-intro">Competing engravings, searched for the best 2-slot combination, against your Best Setup above.<span class="ap-brace-info-icon" title="This section's inputs are isolated from the rest of the calculator - nothing here affects your tracked setup above.">i</span></p>
 
     <!-- Engravings (Core + Competing Pool merged into one card) and
          Raid Captain Variables as the two side-by-side cards, same visual
@@ -1384,7 +1365,9 @@
           </select>
         </div>
         <div class="ap-calc-field-row ap-engr-mi-row">
-          <label class="ap-calc-field-label"><span class="skill-mention" data-skill-id="massincrease">Mass Increase</span> <input type="checkbox" class="ap-engr-mi-optin" checked title="Its -10% Attack Speed drawback isn't modeled here - uncheck this if you'd rather leave it out of the best-combo search."></label>
+          <label class="ap-calc-field-label" for="ap-engr-mi-level"><span class="skill-mention" data-skill-id="massincrease">Mass Increase</span></label>
+          <span class="ap-engr-controls">
+          <input type="checkbox" class="ap-engr-mi-optin" checked aria-label="Include Mass Increase in the best-combo search" title="Its -10% Attack Speed drawback isn't modeled here - uncheck this if you'd rather leave it out of the best-combo search.">
           <select id="ap-engr-mi-level" class="ap-engr-mi-level" aria-label="Mass Increase Node Level">
             <option value="0 Nodes">0 Nodes</option>
             <option value="1 Nodes">1 Node</option>
@@ -1392,6 +1375,7 @@
             <option value="3 Nodes">3 Nodes</option>
             <option value="4 Nodes" selected>4 Nodes</option>
           </select>
+          </span>
         </div>
       </div>
 
@@ -1401,27 +1385,35 @@
           <label class="ap-calc-field-label" for="ap-engr-maelstrom-uptime" title="% of the fight Maelstrom's buffs are active as you attack the boss - a flat +12.8% Move Speed/Atk. Speed bonus.">Maelstrom Uptime %</label>
           <input type="number" id="ap-engr-maelstrom-uptime" class="ap-engr-maelstrom-uptime" min="0" max="100" step="1" value="85">
         </div>
-        <div class="ap-calc-field-row ap-engr-manafood-main-row">
-          <label class="ap-engr-checkbox-label" title="Mana Food for its Main Stat only, without equipping Bleed on Maelstrom. Uses the Mana Food amount selected below. Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus."><input type="checkbox" id="ap-engr-manafood-main" class="ap-engr-manafood-main"> Mana Food (Main Stat only)</label>
-        </div>
         <div class="ap-calc-field-row ap-engr-manafood-row">
-          <label class="ap-engr-checkbox-label" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus."><input type="checkbox" id="ap-engr-manafood" class="ap-engr-manafood" checked> <span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed)</span></label>
+          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus."><span class="ap-engr-manafood-label">Mana Food (+Maelstrom Bleed)</span></label>
+          <span class="ap-engr-controls">
+          <input type="checkbox" id="ap-engr-manafood" class="ap-engr-manafood" checked>
           <select id="ap-engr-manafood-amount" class="ap-engr-manafood-amount" aria-label="Mana Food Amount">
             <option value="6000" selected>6000 DEX</option>
             <option value="12000">12000 DEX</option>
           </select>
+          </span>
         </div>
-        <div class="ap-calc-field-row ap-engr-support-av-row">
-          <label class="ap-engr-checkbox-label" title="A high-uptime, party-wide Move Speed buff from an Artist or Valkyrie's Identity."><input type="checkbox" id="ap-engr-support-av" class="ap-engr-support-av"> Support: Artist/Valkyrie (+Move Speed)</label>
-        </div>
-        <div class="ap-calc-field-row ap-engr-support-paladin-row">
-          <label class="ap-engr-checkbox-label" title="A low-uptime, party-wide Move Speed buff from a Paladin's skills."><input type="checkbox" id="ap-engr-support-paladin" class="ap-engr-support-paladin"> Support: Paladin (+Move Speed)</label>
+        <div class="ap-calc-field-row ap-engr-manafood-main-row">
+          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood-main" title="Mana Food for its Main Stat only, without equipping Bleed on Maelstrom. Uses the Mana Food amount selected below. Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus.">Mana Food (Main Stat only)</label>
+          <input type="checkbox" id="ap-engr-manafood-main" class="ap-engr-manafood-main">
         </div>
         <div class="ap-calc-field-row ap-engr-rage-rune-row">
-          <label class="ap-engr-checkbox-label" title="16% chance per skill cast for +16% Move Speed and +16% Atk. Speed for 6s."><input type="checkbox" id="ap-engr-rage-rune" class="ap-engr-rage-rune" checked> Rage Rune on Surprise Attack (Avg.)</label>
+          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-rage-rune" title="16% chance per skill cast for +16% Move Speed and +16% Atk. Speed for 6s.">Rage Rune on Surprise Attack</label>
+          <input type="checkbox" id="ap-engr-rage-rune" class="ap-engr-rage-rune" checked>
         </div>
         <div class="ap-calc-field-row ap-engr-wine-row">
-          <label class="ap-engr-checkbox-label"><input type="checkbox" id="ap-engr-wine" class="ap-engr-wine" checked> Vernese Wine (+3% Move Speed)</label>
+          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-wine" title="A consumable that adds +3% Move Speed.">Vernese Wine</label>
+          <input type="checkbox" id="ap-engr-wine" class="ap-engr-wine" checked>
+        </div>
+        <div class="ap-calc-field-row ap-engr-support-av-row">
+          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-support-av" title="A high-uptime, party-wide Move Speed buff from an Artist or Valkyrie's Identity.">Support: Artist/Valkyrie</label>
+          <input type="checkbox" id="ap-engr-support-av" class="ap-engr-support-av">
+        </div>
+        <div class="ap-calc-field-row ap-engr-support-paladin-row">
+          <label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-support-paladin" title="A low-uptime, party-wide Move Speed buff from a Paladin's skills.">Support: Paladin</label>
+          <input type="checkbox" id="ap-engr-support-paladin" class="ap-engr-support-paladin">
         </div>
         <p class="ap-brace-compare-footer-note ap-engr-ms-readout">Raid Captain Efficiency: —</p>
         <p class="ap-brace-compare-footer-note ap-engr-manafood-note">—</p>
@@ -1557,9 +1549,10 @@
          computeEngravingSetupComparison's own JS comment for the full
          methodology. -->
     <details class="ap-esvs">
-      <summary>Setup A vs. Setup B</summary>
+      <summary>
+        <span class="ap-gear-summary-text"><span class="ap-gear-title">Setup A vs. Setup B</span><span class="ap-gear-summary-desc">Two loadouts compared, using the Core Engravings and Raid Captain Variables above</span></span>
+      </summary>
       <div class="ap-brace-compare-body">
-        <p class="ap-brace-compare-intro">Two loadouts, compared against each other. Core Engravings and Raid Captain Variables above apply.<span class="ap-brace-info-icon ap-esvs-food-icon" role="img" aria-label="Uses whichever food is currently selected. If either setup includes Raid Captain, switching food can change the winner here too - see the Overall Best Setup below." title="Uses whichever food is currently selected. If either setup includes Raid Captain, switching food can change the winner here too - see the Overall Best Setup below.">i</span></p>
         <div class="ap-esvs-cards">
           <div class="ap-esvs-card ap-esvs-card-a">
             <p class="ap-gear-card-title ap-esvs-card-title">Setup A</p>
@@ -1733,7 +1726,7 @@
         </div>
         <div class="ap-esvs-summary">
           <p class="ap-esvs-neither">Running neither: <span class="ap-esvs-no-setup-keystone">—</span></p>
-          <p class="ap-esvs-diff-wrap"><span class="ap-esvs-diff">—</span></p>
+          <p class="ap-esvs-diff-wrap"><span class="ap-esvs-diff">—</span><span class="ap-brace-info-icon ap-esvs-food-icon" role="img" aria-label="Uses whichever food is currently selected. If either setup includes Raid Captain, switching food can change the winner here too - see the Overall Best Setup below." title="Uses whichever food is currently selected. If either setup includes Raid Captain, switching food can change the winner here too - see the Overall Best Setup below.">i</span></p>
           <p class="ap-brace-compare-aside-note ap-esvs-keystone-note" hidden>Setup A and B land on different best keystones - the comparison above already accounts for that.</p>
           <!-- See computeOverallBestEngravingSetupAB's own JS comment -
                aVsB above locks both sides to whichever food is currently
@@ -1770,12 +1763,13 @@
      universal line can land on any of 5 pieces, so a full combo set
      would be enormous without being any more useful to look at). -->
 <details class="ap-acc-compare">
-  <summary>Accessory Comparison</summary>
+  <summary>
+    <span class="ap-gear-summary-text"><span class="ap-gear-title">Accessory Comparison</span><span class="ap-gear-summary-desc">Each necklace, earring and ring line valued on its own against your Best Setup</span></span>
+  </summary>
   <div class="ap-brace-compare-body">
     <!-- Build toggle now lives once, docked at the top of .ap-calc and
          sticky while this section is open - see Bracelet Comparison's
          own comment for why there is no echo copy here. -->
-    <p class="ap-brace-compare-intro">Candidate accessory lines, valued as if each were the only line on that slot, against your Best Setup above.</p>
 
     <div class="ap-acc-panel ap-acc-necklace-panel">
       <p class="ap-acc-panel-title">Necklace</p>
@@ -1904,10 +1898,10 @@
          row at all, unlike Ring/Necklace whose Line 1/2 already gets its
          own Grid/Flat row and would just show +0.00% here). -->
     <details class="ap-avb">
-      <summary>Accessory vs. Accessory</summary>
+      <summary>
+        <span class="ap-gear-summary-text"><span class="ap-gear-title">Accessory vs. Accessory</span><span class="ap-gear-summary-desc">Your equipped accessory against a candidate replacement, and both against neither</span></span>
+      </summary>
       <div class="ap-brace-compare-body">
-        <p class="ap-brace-compare-intro">Compares your currently equipped accessory against a candidate replacement, and both against neither.</p>
-
         <div class="ap-gear-card ap-gear-card--avb-options">
           <div class="ap-calc-field-row">
             <label class="ap-calc-field-label" for="ap-avb-slot">Comparing</label>
@@ -1948,7 +1942,7 @@
             <p class="ap-gear-card-title ap-esvs-card-title">Accessory A<span class="ap-avb-equipped-badge"> (Currently Equipped)</span></p>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label" for="ap-avb-a-mainstat">Main Stat</label>
-              <input type="number" id="ap-avb-a-mainstat" class="ap-avb-a-mainstat" min="15178" max="17857" step="1" value="15178">
+              <input type="number" id="ap-avb-a-mainstat" class="ap-avb-a-mainstat ap-gear-input-mid" min="15178" max="17857" step="1" value="15178">
             </div>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label ap-avb-a-line1-label" for="ap-avb-a-line1-tier">Additional Damage</label>
@@ -1992,7 +1986,7 @@
             <p class="ap-gear-card-title ap-esvs-card-title">Accessory B<span class="ap-avb-equipped-badge"> (Candidate)</span></p>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label" for="ap-avb-b-mainstat">Main Stat</label>
-              <input type="number" id="ap-avb-b-mainstat" class="ap-avb-b-mainstat" min="15178" max="17857" step="1" value="17857">
+              <input type="number" id="ap-avb-b-mainstat" class="ap-avb-b-mainstat ap-gear-input-mid" min="15178" max="17857" step="1" value="17857">
             </div>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label ap-avb-b-line1-label" for="ap-avb-b-line1-tier">Additional Damage</label>
@@ -2085,27 +2079,25 @@
      columns (one holding the text, the other a blank filler just to
      hold that column's width/height) give every header cell in this
      table the same real, collapsed border-bottom - one paint path
-     table-wide, so there's nothing left to mismatch. 14 Points' own
-     text sits in row 1 (blank filler below it in row 2) so it lines up
-     with 17/20 Points instead of sitting a row lower than them; Core's
-     text stays in row 2 (blank filler above it in row 1) since it's a
-     row label, not a points tier, and has nothing to line up with in
-     row 1. -->
+     table-wide, so there's nothing left to mismatch. Core's and 14 Points'
+     text both sit in row 1 (blank filler below each in row 2), on the
+     same line as the 17/20 Points group headers. -->
 <details class="ap-arkgrid-compare">
-  <summary>Chaos Core Comparison</summary>
+  <summary>
+    <span class="ap-gear-summary-text"><span class="ap-gear-title">Chaos Core Comparison</span><span class="ap-gear-summary-desc">Each core valued on its own at 14, 17 and 20 points, against your Best Setup</span></span>
+  </summary>
   <div class="ap-brace-compare-body">
-    <p class="ap-brace-compare-intro">Candidate Chaos Cores, valued as if each were the only equipped one, against your Best Setup above.</p>
     <div class="ap-acc-table-scroll">
       <table class="ap-brace-compare-table ap-acc-combo-table ap-arkgrid-table">
         <thead>
           <tr>
-            <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
+            <th class="ap-brace-th-label">Core</th>
             <th>14 Points</th>
             <th class="ap-arkgrid-th-group" colspan="2">17 Points</th>
             <th class="ap-arkgrid-th-group" colspan="2">20 Points</th>
           </tr>
           <tr>
-            <th class="ap-brace-th-label">Core</th>
+            <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
             <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
             <th class="ap-brace-th-low">Relic</th>
             <th class="ap-brace-th-high">Ancient</th>

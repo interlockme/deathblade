@@ -1686,25 +1686,22 @@
   // isn't a temporal window at all, it's a per-hit DPS-share split (see
   // effectiveBackAttackShare) - "peak" there just means "my crit rate on
   // the hits that land as back attacks", a real and common subset, not
-  // an edge case. Flash Orb is deliberately left uptime-scaled, NOT
-  // promoted to full value: its uptime input is really an on/off gate
-  // for whether the reader even has a Drops of Ether support in their
-  // party at all (defaults to 0%), and even when present it's genuinely
-  // situational and usually low-uptime - showing its full value
-  // regardless would put an unachievable number on the card for anyone
-  // who hasn't set a nonzero Flash Orb uptime, and an overstated one for
-  // most who have.
+  // an edge case. Flash Orb is also taken at full value, but only when
+  // its uptime input is above 0: that input doubles as the gate for
+  // whether the party has a Drops of Ether support at all (default 0%),
+  // so a reader without one never sees an unachievable +15%. With a
+  // nonzero uptime the orb is only up for part of the fight, so the
+  // Peak Crit Rate row carries a warning (see peakIncludesFlashOrb).
   function peakCritRate(inputs, keenSenseLv, extra) {
     const adrenalineBonus = ADRENALINE_TABLE[inputs.adrenaline] || 0;
     const backAttackBonus = 0.1;
-    const flashOrbBonus = FLASH_ORB_FULL_CRIT_RATE;
-    const flashOrbUptime = inputs.flashOrbUptime / 100;
+    const flashOrbBonus = inputs.flashOrbUptime > 0 ? FLASH_ORB_FULL_CRIT_RATE : 0;
     return (
       nonSwingyCritRate(inputs, keenSenseLv) +
       extra +
       adrenalineBonus +
       backAttackBonus +
-      flashOrbBonus * flashOrbUptime
+      flashOrbBonus
     );
   }
 
@@ -1935,6 +1932,9 @@
       // windows.
       critRate: baseEffCrit * 100,
       critRatePeak: peakCritRate(inputs, 0, 0) * 100,
+      // True when the peak figure includes Flash Orb at full value (uptime
+      // above 0); the Peak Crit Rate row shows a warning for it.
+      peakIncludesFlashOrb: inputs.flashOrbUptime > 0,
       critDmg: shared.critDmgTotal,
       onCritDmg: shared.onCritDmgBase * 100,
       evoDmg: (shared.yearningEvo + shared.evoKarmaEvo + shared.optimizedTrainingEvo + STANDING_STRIKER_EVO_DMG) * 100,
@@ -5211,21 +5211,6 @@
     setDisplay("#ap-crit-hit-syn-2", inputs.critHitSyn2 ? 0.08 : 0);
   }
 
-  // "1st"/"2nd"/"3rd"/"4th"... - only used for a pinned combo that has
-  // drifted below the visible top 5 (see renderGrid's own comment on
-  // pinnedDisplayCell) and needs an honest true-rank label instead of a
-  // fake "5th Best".
-  function ordinal(n) {
-    const rem100 = n % 100;
-    if (rem100 >= 11 && rem100 <= 13) return n + "th";
-    switch (n % 10) {
-      case 1: return n + "st";
-      case 2: return n + "nd";
-      case 3: return n + "rd";
-      default: return n + "th";
-    }
-  }
-
   function renderGrid(root, result) {
     // Top 5 combinations, ranked by % of the grid's best cell. Pure
     // rendering: pctOfBest was already computed in computeGridAndSummary,
@@ -5258,9 +5243,8 @@
     // real, live numbers (pct/delta both still read straight off its own
     // cell, same as any other row - nothing about those is faked). The
     // row's rank badge shows its true overall rank (e.g. "7") instead of
-    // "5" in that case, and the Best Setup card title says "Pinned Setup
-    // (7th Best)" rather than falsely claiming 5th. Unpinning reverts the
-    // row to whichever combo is truly 5th again.
+    // "5" in that case, rather than falsely claiming 5th. Unpinning reverts
+    // the row to whichever combo is truly 5th again.
     const list = root.querySelector(".ap-calc-results");
     if (!list) return;
 
@@ -5307,6 +5291,15 @@
     const pinnedForcedIn = !!pinnedCell && !ranked.some((c) => sameCombo(c, pinnedCell));
     if (pinnedForcedIn) displayRows[displayRows.length - 1] = pinnedCell;
 
+    // Each row carries a faint fill behind it (--ap-fill) so the spread
+    // between combos reads at a glance. A plain "pct of 100" would put every
+    // row at 99-100% and look identical, so the scale is stretched to the
+    // visible spread: the best row is full and the lowest shown row sits at
+    // about a third, whatever the actual gap is. Purely visual; the numbers
+    // in the row are the real values.
+    const shownPcts = displayRows.filter(Boolean).map((c) => c.pctOfBest);
+    const fillSpan = Math.max(0.5, (100 - Math.min.apply(null, shownPcts)) * 1.5);
+
     displayRows.forEach((cell, i) => {
       if (!cell) return;
       const rank = i + 1;
@@ -5326,8 +5319,10 @@
       }
       if (pctEl) pctEl.textContent = cell.pctOfBest.toFixed(2) + "%";
       if (deltaEl) {
-        deltaEl.textContent = rank === 1 ? "Best" : (cell.pctOfBest - ranked[0].pctOfBest).toFixed(2) + "% vs best";
+        deltaEl.textContent = rank === 1 ? "Best" : (cell.pctOfBest - ranked[0].pctOfBest).toFixed(2) + "%";
       }
+      const fillPct = Math.max(0, Math.min(100, 100 - ((100 - cell.pctOfBest) / fillSpan) * 100));
+      rowEl.style.setProperty("--ap-fill", fillPct.toFixed(1) + "%");
       rowEl.classList.toggle("ap-calc-result-row-best", rank === 1);
       rowEl.classList.toggle("ap-calc-result-row-active", state.previewRank === rank);
       rowEl.classList.toggle("ap-calc-result-row-forced", forcedHere);
@@ -5382,12 +5377,12 @@
     const titleEl = cardEl && cardEl.querySelector(".ap-stat-card-title");
     if (titleEl) {
       if (pinnedCell) {
-        const rankLabels = { 1: "Best", 2: "2nd Best", 3: "3rd Best", 4: "4th Best", 5: "5th Best" };
-        const rankLabel = rankLabels[pinnedTrueRank] || (pinnedTrueRank ? ordinal(pinnedTrueRank) + " Best" : null);
-        titleEl.textContent = rankLabel ? "Pinned Setup (" + rankLabel + ")" : "Pinned Setup";
+        // Just "Pinned": the combo's rank is already on its row in Top
+        // Combinations, and a longer title wraps the table's header cell.
+        titleEl.textContent = "Pinned";
       } else {
-        const rankTitles = { 1: "Best Setup", 2: "2nd Best Setup", 3: "3rd Best Setup", 4: "4th Best Setup", 5: "5th Best Setup" };
-        titleEl.textContent = rankTitles[cardRank] || "Best Setup";
+        const rankTitles = { 1: "Best", 2: "2nd Best", 3: "3rd Best", 4: "4th Best", 5: "5th Best" };
+        titleEl.textContent = rankTitles[cardRank] || "Best";
       }
     }
     if (cardEl) {
@@ -5431,6 +5426,8 @@
         const peak = base.critRatePeak;
         ratePeakEl.textContent = peak.toFixed(2) + "%";
         ratePeakEl.classList.toggle("ap-summary-value-warn", peak > 100);
+        const peakRow = ratePeakEl.closest(".ap-stat-row");
+        if (peakRow) peakRow.classList.toggle("ap-stat-row--orb-warn", !!base.peakIncludesFlashOrb);
       }
       // Displayed Crit Dmg excludes Breaking Moon's own add when active -
       // base.critDmg itself stays the real shared.critDmgTotal (the DPS
@@ -5495,6 +5492,36 @@
       if (bmRow) bmRow.classList.toggle("ap-stat-card-row--hidden", !best.breakingMoonActive);
       if (bmEl) bmEl.textContent = (best.breakingMoonAdd * 100).toFixed(2) + "%";
     }
+
+    updateStatDeltas(root);
+  }
+
+  // Fills the Diff column of the Base / Best table: Best minus Base for each
+  // stat row, read back from the values just written above so the column can
+  // never disagree with what is on screen. A row that has not been
+  // populated yet (still the em dash placeholder) shows an em dash too.
+  function updateStatDeltas(root) {
+    root.querySelectorAll(".ap-stat-table .ap-stat-row:not(.ap-stat-row--head)").forEach((row) => {
+      const baseEl = row.querySelector('[class*="ap-summary-base-"]');
+      const bestEl = row.querySelector('[class*="ap-summary-best-"]');
+      const deltaEl = row.querySelector(".ap-stat-delta");
+      if (!baseEl || !bestEl || !deltaEl) return;
+      const base = parseFloat(baseEl.textContent);
+      const best = parseFloat(bestEl.textContent);
+      deltaEl.classList.remove("ap-stat-delta--pos", "ap-stat-delta--neg", "ap-stat-delta--zero");
+      if (!isFinite(base) || !isFinite(best)) {
+        deltaEl.textContent = "—";
+        return;
+      }
+      const diff = Math.round((best - base) * 100) / 100;
+      if (diff === 0) {
+        deltaEl.textContent = "0.00";
+        deltaEl.classList.add("ap-stat-delta--zero");
+      } else {
+        deltaEl.textContent = (diff > 0 ? "+" : "-") + Math.abs(diff).toFixed(2);
+        deltaEl.classList.add(diff > 0 ? "ap-stat-delta--pos" : "ap-stat-delta--neg");
+      }
+    });
   }
 
   // ----- Comparison table rendering (shared by Bracelet + Accessories) -----
@@ -5569,7 +5596,7 @@
       if (row.combos) {
         ["LL", "ML", "MM", "HL", "HM", "HH"].forEach((key) => {
           const val = row.combos[key];
-          const td = window.SiteUtils.el("td", "ap-brace-tier-val ap-acc-combo-val", val === undefined ? "\u2013" : formatPctBare(val));
+          const td = window.SiteUtils.el("td", "ap-brace-tier-val ap-acc-combo-val", val === undefined ? "—" : formatPctBare(val));
           tr.appendChild(td);
         });
       }
@@ -6464,6 +6491,7 @@
     enforceBvbLineControls(root);
     enforceAvbSlotUI(root);
     enforceAvbLineControls(root);
+    fitBvbLineRows(root);
     enforceEngravingStoneExclusivity(root);
     // Slots first: the stone targets of a Setup side depend on which
     // engravings its two Option slots hold after this pass.
@@ -6950,6 +6978,45 @@
       const cdestEl = root.querySelector(".ap-bvb-" + prefix + "-cdest");
       if (cdestWrap) cdestWrap.hidden = !hasDamageCd;
       if (cdestEl) cdestEl.disabled = !hasDamageCd;
+    });
+  }
+
+  // A native <select> clips its selected text instead of wrapping it. A line
+  // row puts the type select beside a fixed-width tier or value control, so
+  // when the selected type's text is wider than the room left, the row gets
+  // --stack: the select takes the whole line and the control drops under it.
+  // Re-run from update() (type changes) and by a ResizeObserver on each row
+  // (card width changes, a closed details opening, fonts loading).
+  const bvbLineRowObserved = new WeakSet();
+  let bvbLineFitCtx = null;
+  function fitBvbLineRow(row) {
+    const typeEl = row.querySelector(".ap-bvb-line-type");
+    if (!typeEl) return;
+    const controlEl = [".ap-bvb-line-tier", ".ap-bvb-line-mainstat"]
+      .map((sel) => row.querySelector(sel))
+      .find((el) => el && !el.hidden);
+    row.classList.remove("ap-bvb-line-row--stack");
+    const rowWidth = row.clientWidth;
+    // Nothing to stack when the row is not laid out, or when the type
+    // select already has the whole line to itself.
+    if (!rowWidth || !controlEl) return;
+    if (!bvbLineFitCtx) bvbLineFitCtx = document.createElement("canvas").getContext("2d");
+    const cs = getComputedStyle(typeEl);
+    bvbLineFitCtx.font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily;
+    const option = typeEl.options[typeEl.selectedIndex];
+    const textWidth = bvbLineFitCtx.measureText(option ? option.text : "").width;
+    const chrome = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+    const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+    const room = rowWidth - controlEl.offsetWidth - gap;
+    if (textWidth + chrome > room) row.classList.add("ap-bvb-line-row--stack");
+  }
+
+  function fitBvbLineRows(root) {
+    root.querySelectorAll(".ap-bvb-line-row").forEach((row) => {
+      fitBvbLineRow(row);
+      if (typeof ResizeObserver === "undefined" || bvbLineRowObserved.has(row)) return;
+      bvbLineRowObserved.add(row);
+      new ResizeObserver(() => fitBvbLineRow(row)).observe(row);
     });
   }
 
@@ -7721,6 +7788,41 @@
       closePopover(popoverEl);
     });
   });
+  // Labels name their control and carry its tooltip; they never operate it.
+  // A label's default click action focuses or toggles its control, so a
+  // click on label text (not on a control inside the label) is cancelled
+  // here. Capture phase on document: it covers rows the calculator builds
+  // later, and runs before the tooltip engine's own bubble-phase handlers,
+  // which are unaffected because only the default action is cancelled.
+  document.addEventListener("click", (ev) => {
+    const target = ev.target;
+    if (!target || !target.closest || !target.closest(".ap-calc label")) return;
+    if (target.closest("input, select, textarea, button")) return;
+    ev.preventDefault();
+  }, true);
+
+  // Hover highlight for controls. The browser also gives a label's control
+  // the :hover state while the label is hovered, so :hover cannot tell
+  // "pointer on the field" from "pointer on its label". The highlight is
+  // the .ap-ctl-hover class instead, set only while the pointer is over the
+  // control itself (extra.css styles it).
+  let hoveredControl = null;
+  const setHoveredControl = (control) => {
+    if (control === hoveredControl) return;
+    if (hoveredControl) hoveredControl.classList.remove("ap-ctl-hover");
+    hoveredControl = control;
+    if (hoveredControl) hoveredControl.classList.add("ap-ctl-hover");
+  };
+  document.addEventListener("pointerover", (ev) => {
+    if (ev.pointerType === "touch") return;
+    const target = ev.target;
+    const control = target && target.closest ? target.closest(".ap-calc input, .ap-calc select, .ap-calc textarea") : null;
+    setHoveredControl(control);
+  });
+  document.addEventListener("pointerout", (ev) => {
+    if (!ev.relatedTarget) setHoveredControl(null);
+  });
+
   document.addEventListener("keydown", (ev) => {
     if (ev.key !== "Escape") return;
     document.querySelectorAll(".ap-calc-popover").forEach((popoverEl) => {
@@ -7759,55 +7861,61 @@
     });
   });
 
-  // Docked Build toggle's shadow (see .ap-build-dock--stuck in extra.css)
-  // should only paint while the dock is genuinely pinned under the
-  // header - sticky positioning alone can't express that, since the
-  // dock is *always* position:sticky whether or not it's currently
-  // engaged. Plain CSS also has no cross-browser ":stuck" selector, so
-  // this does the one geometry check that actually distinguishes the
-  // three states: normal flow at the very top of .ap-calc (rect.top is
-  // way more than the offset - hasn't engaged yet), genuinely pinned
-  // (rect.top sits exactly at the offset), and the release window at
-  // the very bottom of .ap-calc (rect.top drifts back above the offset
-  // as the dock unpins and scrolls away with the rest of the box - see
-  // the "release point" part of .ap-build-dock's own comment in
-  // extra.css). One check covers engage AND release symmetrically, so
-  // there's no separate "was it released" branch to maintain.
-  // Bound ONCE at module scope, same reasoning as the click-outside/
-  // Escape listeners just above (a per-root binding inside
-  // initApCalcRoot() would leave another permanent scroll listener
-  // behind on every instant-nav revisit) - queries `document` fresh
-  // inside the handler rather than caching the element, so it keeps
-  // working after instant nav swaps the DOM out from under a cached
-  // reference. There's normally just one .ap-build-dock per page, so
-  // querying from `document` costs nothing in practice.
+  // Top bar shadow (see .ap-calc-bar--stuck in extra.css) should only paint
+  // while the bar is genuinely pinned under the site header. The bar is
+  // always position:sticky on desktop whether or not it is engaged, and CSS
+  // has no cross-browser ":stuck" selector, so this does the one geometry
+  // check that tells the states apart: normal flow at the top of .ap-calc
+  // (rect.top well above the offset, not engaged yet), pinned (rect.top at
+  // the offset), and the release window at the bottom of .ap-calc (rect.top
+  // drifts back above the offset as the bar scrolls away with its box). One
+  // check covers engage and release symmetrically.
+  // Bound ONCE at module scope, like the click-outside/Escape listeners just
+  // above: a per-root binding inside initApCalcRoot() would leave another
+  // permanent scroll listener behind on every instant-nav revisit. It
+  // queries `document` inside the handler rather than caching elements, so
+  // it keeps working after instant nav swaps the DOM out.
   //
-  // Mobile shares this same listener for a second, unrelated job: the
-  // dock is position:fixed there instead of sticky (see the mobile
-  // media query's own comment in extra.css for why bottom-anchored
-  // sticky can't work for an element that sits at the TOP of .ap-calc),
-  // and fixed positioning has no native "stop once my container
-  // scrolls past" behavior the way sticky does - so .ap-calc's own
-  // rect is checked directly here and .ap-build-dock--offscreen is
-  // toggled to hide the pill whenever .ap-calc isn't intersecting the
-  // viewport at all (above it - hasn't scrolled down that far yet - or
-  // below it - already scrolled past into CPM Calculator/Useful Links).
-  // This is what the "same .ap-calc-scoped release" part of the mobile
-  // media query's own comment refers to.
-  const DOCK_STUCK_OFFSET_PX = 48; // must match extra.css's desktop `top`
+  // Mobile shares this listener for an unrelated job. The Build pill
+  // (.ap-build-dock) is position:fixed there, because bottom-anchored sticky
+  // cannot work for an element at the TOP of .ap-calc (see the mobile media
+  // query in extra.css), and fixed positioning has no native "stop once my
+  // container scrolls past". So .ap-calc's own rect is checked here and
+  // .ap-build-dock--offscreen is toggled to hide the pill whenever .ap-calc
+  // is outside the viewport (above it, or already scrolled past it).
+  // The sticky results column pins below the bar, and the bar wraps to a
+  // second row at some widths, so its height is published as --ap-bar-h on
+  // .ap-calc (extra.css reads it in .ap-calc-live-sticky's `top`).
+  const publishBarHeight = (barEl) => {
+    const calcEl = barEl.closest(".ap-calc");
+    if (!calcEl) return;
+    const h = Math.round(barEl.getBoundingClientRect().height);
+    if (calcEl.dataset.barH !== String(h)) {
+      calcEl.dataset.barH = String(h);
+      calcEl.style.setProperty("--ap-bar-h", h + "px");
+    }
+  };
+  const barResizeObserver = typeof ResizeObserver === "function"
+    ? new ResizeObserver((entries) => entries.forEach((entry) => publishBarHeight(entry.target)))
+    : null;
   let dockStuckTicking = false;
   const updateDockStuckState = () => {
     dockStuckTicking = false;
+    const barEl = document.querySelector(".ap-calc-bar");
     const dockEl = document.querySelector(".ap-build-dock");
-    if (!dockEl) return;
-    const isDesktopDock = window.matchMedia("(min-width: 901px)").matches;
-    if (isDesktopDock) {
-      const isStuck = dockEl.getBoundingClientRect().top <= DOCK_STUCK_OFFSET_PX + 1;
-      dockEl.classList.toggle("ap-build-dock--stuck", isStuck);
+    if (!barEl || !dockEl) return;
+    const isDesktopBar = window.matchMedia("(min-width: 901px)").matches;
+    if (isDesktopBar) {
+      publishBarHeight(barEl);
+      // The bar pins directly under the site header (extra.css: top 2.4rem).
+      const headerEl = document.querySelector(".md-header");
+      const stuckOffset = headerEl ? headerEl.getBoundingClientRect().height : 48;
+      const isStuck = barEl.getBoundingClientRect().top <= stuckOffset + 1;
+      barEl.classList.toggle("ap-calc-bar--stuck", isStuck);
       dockEl.classList.remove("ap-build-dock--offscreen");
       return;
     }
-    dockEl.classList.remove("ap-build-dock--stuck");
+    barEl.classList.remove("ap-calc-bar--stuck");
     const calcEl = document.querySelector(".ap-calc");
     if (!calcEl) return;
     const calcRect = calcEl.getBoundingClientRect();
@@ -7826,6 +7934,9 @@
   // resize event, so the dock never briefly shows the wrong shadow
   // state right after a re-render.
   window.SiteUtils.registerRenderer(".ap-calc", queueDockStuckUpdate);
+  window.SiteUtils.registerRenderer(".ap-calc-bar", (barEl) => {
+    if (barResizeObserver) barResizeObserver.observe(barEl);
+  });
 
   // Was a hand-rolled document$-only subscription (see site-utils.js's
   // registerRenderer doc comment for why that's not safe to assume covers
