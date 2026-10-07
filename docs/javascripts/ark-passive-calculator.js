@@ -5362,6 +5362,14 @@
         }
       } else {
         stateEl.textContent = ordinals[cardRank] || "Best";
+        if (cardRank > 1 && ordinals[cardRank]) {
+          // A previewed rank reads like the Base / Best card's title ("2nd Best").
+          // " Best" is its own span so a narrow card can drop it (CSS).
+          const bestEl = document.createElement("span");
+          bestEl.className = "ap-result-state-best";
+          bestEl.textContent = " Best";
+          stateEl.appendChild(bestEl);
+        }
       }
     }
     const headPinEl = list.querySelector(".ap-result-pin");

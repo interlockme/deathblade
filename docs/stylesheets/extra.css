@@ -5109,9 +5109,11 @@ h3 { color: var(--dbc-teal); }
   }
   .md-typeset .ap-calc-results .ap-result-state {
     letter-spacing: 0;
+    /* Room for "2nd Best" (the widest state once the rank suffix is hidden). */
     min-width: 3.6rem;
   }
-  .md-typeset .ap-result-state-rank {
+  .md-typeset .ap-result-state-rank,
+  .md-typeset .ap-result-state-best {
     display: none;
   }
   .md-typeset .ap-result-split {
@@ -5138,6 +5140,12 @@ h3 { color: var(--dbc-teal); }
   letter-spacing: 0.05em;
   text-transform: none;
   white-space: nowrap;
+}
+/* The chip is inline-flex, so the leading space in these two spans is
+   dropped (a flex item's edge whitespace collapses); the margin is the gap. */
+.md-typeset .ap-result-state-best,
+.md-typeset .ap-result-state-rank {
+  margin-left: 0.3em;
 }
 .md-typeset .ap-result-pin {
   display: inline-flex;
@@ -6762,6 +6770,24 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-gear-card--engr-variables .ap-engr-ms-readout {
   margin-top: 0;
 }
+/* The two readouts are the card's result, so they are centered under the
+   rows like the other summary lines on this page, with Raid Captain
+   Efficiency as the headline (base size, lilac) and the Wine-vs-Mana-Food
+   note as its quieter caption. At the card's 400px track floor both fit on
+   one line each (the longest, "Mana Food + Bleed beats Vernese Wine by
+   0.33%.", is about 300px); a phone-narrow card wraps them, balanced. */
+.md-typeset .ap-gear-card--engr-variables .ap-brace-compare-footer-note {
+  text-align: center;
+  text-wrap: balance;
+}
+.md-typeset .ap-gear-card--engr-variables .ap-engr-ms-readout {
+  padding-top: 0.8rem;
+  font-size: var(--ap-fs-base);
+  color: var(--dbc-lilac);
+}
+.md-typeset .ap-gear-card--engr-variables .ap-engr-manafood-note {
+  margin-top: 0.15em;
+}
 /* Same title treatment as .ap-calc-group-title above, so these cards
    read as the same kind of thing as the Ark Passive grid's own category
    cards rather than a visually distinct sub-widget. */
@@ -7672,6 +7698,14 @@ h3 { color: var(--dbc-teal); }
   flex: 0 0 auto;
   width: 6.2em;
 }
+/* The Accessory Line 3 tier labels carry the value ("390 AP", "480 WP"), which
+   is wider than the 6.2em Low/Mid/High control: at that width the text would
+   end in an ellipsis ("390 ..."). 7.4em leaves the widest label ("480 WP") room
+   beside the arrow with a little to spare. */
+.md-typeset .ap-bvb-line-row .ap-avb-a-line3-tier,
+.md-typeset .ap-bvb-line-row .ap-avb-b-line3-tier {
+  width: 7.4em;
+}
 /* fitBvbLineRows adds --stack when the selected type's text cannot fit
    beside the tier/value control. The type select then takes the whole line
    and the control drops under it, right-aligned like every other control. */
@@ -7734,6 +7768,10 @@ h3 { color: var(--dbc-teal); }
    group drops under the label instead of being clipped by the card. */
 .md-typeset .ap-bvb-breakdown-row:has(.ap-bvb-other-wrap) {
   flex-wrap: wrap;
+  /* The row is as tall as a checkbox line (1.7rem) even while both checkboxes
+     are hidden, so picking vs Demons or CD% never makes the card taller and
+     the two side-by-side cards stay the same height. */
+  min-height: 1.7rem;
 }
 .md-typeset .ap-bvb-inline-check {
   display: inline-flex;
