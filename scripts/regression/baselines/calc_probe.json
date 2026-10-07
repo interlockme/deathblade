@@ -13,7 +13,6 @@
    "custom_1": {
     "copyDisabled": false,
     "customDisabled": false,
-    "customHidden": false,
     "customInvalid": false,
     "customVal": "2",
     "intent": [
@@ -39,7 +38,6 @@
    "custom_2": {
     "copyDisabled": false,
     "customDisabled": false,
-    "customHidden": false,
     "customInvalid": false,
     "customVal": "2",
     "intent": [
@@ -65,7 +63,6 @@
    "custom_30": {
     "copyDisabled": false,
     "customDisabled": false,
-    "customHidden": false,
     "customInvalid": false,
     "customVal": "30",
     "intent": [
@@ -91,7 +88,6 @@
    "custom_6": {
     "copyDisabled": false,
     "customDisabled": false,
-    "customHidden": false,
     "customInvalid": false,
     "customVal": "6",
     "intent": [
@@ -117,7 +113,6 @@
    "custom_back_to_8": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "30",
     "intent": [
@@ -143,7 +138,6 @@
    "custom_empty": {
     "copyDisabled": true,
     "customDisabled": false,
-    "customHidden": false,
     "customInvalid": false,
     "customVal": "",
     "intent": [
@@ -169,7 +163,6 @@
    "price_0": {
     "copyDisabled": true,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "30",
     "intent": [
@@ -195,7 +188,6 @@
    "price_1000000000000": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "30",
     "intent": [
@@ -221,7 +213,6 @@
    "price_5000000000000": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "30",
     "intent": [
@@ -247,7 +238,6 @@
    "price_abc": {
     "copyDisabled": true,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "30",
     "intent": [
@@ -273,7 +263,6 @@
    "size16_equal": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "",
     "intent": [
@@ -299,7 +288,6 @@
    "size16_max": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "",
     "intent": [
@@ -325,7 +313,6 @@
    "size16_punish": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "",
     "intent": [
@@ -351,7 +338,6 @@
    "size4_equal": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "",
     "intent": [
@@ -377,7 +363,6 @@
    "size4_max": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "",
     "intent": [
@@ -403,7 +388,6 @@
    "size4_punish": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "",
     "intent": [
@@ -429,7 +413,6 @@
    "size8_equal": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "",
     "intent": [
@@ -455,7 +438,6 @@
    "size8_max": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "",
     "intent": [
@@ -481,7 +463,6 @@
    "size8_punish": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "",
     "intent": [
@@ -507,7 +488,6 @@
    "typed_price_grouped": {
     "copyDisabled": false,
     "customDisabled": true,
-    "customHidden": true,
     "customInvalid": false,
     "customVal": "",
     "intent": [
@@ -534,7 +514,6 @@
   "initial": {
    "copyDisabled": true,
    "customDisabled": true,
-   "customHidden": true,
    "customInvalid": false,
    "customVal": "",
    "intent": [

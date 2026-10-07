@@ -186,16 +186,15 @@
     return isFinite(n) && n >= RAID_SIZE_MIN ? n : null;
   }
 
+  // The custom field is the last item in the Raid Size chip row. It is always on screen and
+  // disabled (dimmed, dashed border) until the Custom chip is active. Returns the field so a
+  // caller can focus it.
   function updateCustomRaidSizeVisibility(root) {
     var active = root.querySelector(".bid-calc-toggle .ap-build-chip.ap-build-chip-active");
-    var row = root.querySelector(".bid-calc-custom-raid-size-row");
-    if (!row) return;
-    var inactive = !active || active.dataset.value !== "custom";
-    row.hidden = inactive;
-    // The row stays on screen (dimmed) so choosing Custom never resizes the card; a
-    // disabled field cannot be focused or typed into while another size is selected.
-    var field = row.querySelector("input");
-    if (field) field.disabled = inactive;
+    var field = root.querySelector(".bid-custom-raid-size");
+    if (!field) return null;
+    field.disabled = !active || active.dataset.value !== "custom";
+    return field;
   }
 
   // Wires one pill-chip group (Raid Size or Intent): clicking a chip
@@ -381,9 +380,10 @@
     // Raid Size and Intent are pill-chip <button>s now, not radios - they
     // don't fire "input" events, so they're wired separately here rather
     // than through the generic input-listener loop above.
-    initToggleGroup(root, ".bid-calc-toggle", function () {
-      updateCustomRaidSizeVisibility(root);
+    initToggleGroup(root, ".bid-calc-toggle", function (btn) {
+      var field = updateCustomRaidSizeVisibility(root);
       update(root);
+      if (field && btn.dataset.value === "custom") field.focus();
     });
     initToggleGroup(root, ".bid-calc-intent", function () {
       update(root);

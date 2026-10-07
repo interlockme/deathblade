@@ -4052,7 +4052,7 @@ h3 { color: var(--dbc-teal); }
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-/* Base Multiplier is a per-build constant that patches occasionally shift: editable, but muted
+/* Trixion Multiplier is a per-build constant that patches occasionally shift: editable, but muted
    (dashed border, quiet label) so it reads as "leave this unless you know why". */
 .md-typeset .cpm-calc-field-muted .cpm-calc-field-label {
   color: var(--dbc-slate);
@@ -4261,15 +4261,15 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .bid-calc input.bid-market-price {
   width: 7.5em;
 }
-/* The Custom Raid Size row is always on screen so choosing Custom never resizes the card. While
-   another size is active the script marks it hidden and disables its field, and this rule keeps
-   it displayed, dimmed (0.6 keeps the label above 4.5:1), instead of removing it. */
-.md-typeset .bid-calc-custom-raid-size-row[hidden] {
-  display: flex;
-  opacity: 0.6;
+/* The custom raid size field ends the Raid Size chip row and is always on screen, disabled (the
+   shared disabled-input look) until Custom is chosen, so choosing it never moves or resizes the
+   chips. Firefox keeps the number spinner inside the field's width, hence 4.6em. */
+.md-typeset .bid-calc input.bid-custom-raid-size {
+  width: 4.6em;
 }
 .md-typeset .bid-calc-chips {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.35rem;

@@ -180,12 +180,10 @@ def bid_state(pg):
           const cls = (s, c) => { const e = r.querySelector(s); return e ? e.classList.contains(c) : null };
           const active = g => [...r.querySelectorAll(g + ' .ap-build-chip-active')].map(b => b.dataset.value);
           const copy = r.querySelector('.bid-calc-copy-btn');
-          const custom = r.querySelector('.bid-calc-custom-raid-size-row');
           return {
             price: r.querySelector('.bid-market-price').value,
             priceInvalid: cls('.bid-market-price', 'bid-calc-input-invalid'),
             size: active('.bid-calc-toggle'),
-            customHidden: custom ? custom.hidden : null,
             customDisabled: r.querySelector('.bid-custom-raid-size').disabled,
             customVal: r.querySelector('.bid-custom-raid-size').value,
             customInvalid: cls('.bid-custom-raid-size', 'bid-calc-input-invalid'),

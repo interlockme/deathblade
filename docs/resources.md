@@ -2111,14 +2111,14 @@
 <div class="cpm-calc-inputs">
 <label class="cpm-calc-field">
 <span class="cpm-calc-field-label">Raid CPM</span>
-<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" max="20" placeholder="e.g. 9.5">
+<input type="number" class="cpm-calc-raidcpm" step="0.1" min="0" max="20" placeholder="9.5">
 </label>
 <div class="cpm-calc-field">
 <span class="cpm-calc-field-lead"><label class="cpm-calc-field-label" for="cpm-ba-333">Back Attack %</label><span class="ap-brace-info-icon cpm-calc-ba-info" role="img" aria-label="Enter the Back Attack Percentage shown in your in-game Combat Analyzer." title="Enter the Back Attack Percentage shown in your in-game Combat Analyzer.">i</span><span class="cpm-calc-ba-rate"></span></span>
-<input id="cpm-ba-333" type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 80">
+<input id="cpm-ba-333" type="number" class="cpm-calc-ba-input" step="0.1" min="0" max="100" placeholder="80">
 </div>
 <label class="cpm-calc-field cpm-calc-field-muted">
-<span class="cpm-calc-field-label">Base Multiplier</span>
+<span class="cpm-calc-field-label">Trixion Multiplier</span>
 <input type="number" class="cpm-calc-basemult-input" step="0.01" min="0.5" max="2">
 </label>
 </div>
@@ -2151,14 +2151,14 @@
 <div class="cpm-calc-inputs">
 <label class="cpm-calc-field">
 <span class="cpm-calc-field-label">Raid CPM</span>
-<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" max="20" placeholder="e.g. 6.5">
+<input type="number" class="cpm-calc-raidcpm" step="0.1" min="0" max="20" placeholder="6.5">
 </label>
 <div class="cpm-calc-field">
 <span class="cpm-calc-field-lead"><label class="cpm-calc-field-label" for="cpm-ba-111">Back Attack %</label><span class="ap-brace-info-icon cpm-calc-ba-info" role="img" aria-label="Enter the Back Attack Percentage shown in your in-game Combat Analyzer." title="Enter the Back Attack Percentage shown in your in-game Combat Analyzer.">i</span><span class="cpm-calc-ba-rate"></span></span>
-<input id="cpm-ba-111" type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 92">
+<input id="cpm-ba-111" type="number" class="cpm-calc-ba-input" step="0.1" min="0" max="100" placeholder="92">
 </div>
 <label class="cpm-calc-field cpm-calc-field-muted">
-<span class="cpm-calc-field-label">Base Multiplier</span>
+<span class="cpm-calc-field-label">Trixion Multiplier</span>
 <input type="number" class="cpm-calc-basemult-input" step="0.01" min="0.5" max="2">
 </label>
 </div>
@@ -2191,14 +2191,14 @@
 <div class="cpm-calc-inputs">
 <label class="cpm-calc-field">
 <span class="cpm-calc-field-label">Raid CPM</span>
-<input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" max="20" placeholder="e.g. 6">
+<input type="number" class="cpm-calc-raidcpm" step="0.1" min="0" max="20" placeholder="6">
 </label>
 <div class="cpm-calc-field">
 <span class="cpm-calc-field-lead"><label class="cpm-calc-field-label" for="cpm-ba-222">Back Attack %</label><span class="ap-brace-info-icon cpm-calc-ba-info" role="img" aria-label="Enter the Back Attack Percentage shown in your in-game Combat Analyzer." title="Enter the Back Attack Percentage shown in your in-game Combat Analyzer.">i</span><span class="cpm-calc-ba-rate"></span></span>
-<input id="cpm-ba-222" type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 84">
+<input id="cpm-ba-222" type="number" class="cpm-calc-ba-input" step="0.1" min="0" max="100" placeholder="84">
 </div>
 <label class="cpm-calc-field cpm-calc-field-muted">
-<span class="cpm-calc-field-label">Base Multiplier</span>
+<span class="cpm-calc-field-label">Trixion Multiplier</span>
 <input type="number" class="cpm-calc-basemult-input" step="0.01" min="0.5" max="2">
 </label>
 </div>
@@ -2240,11 +2240,8 @@
 <button type="button" class="ap-build-chip bid-calc-chip ap-build-chip-active" data-value="8" aria-pressed="true">8</button>
 <button type="button" class="ap-build-chip bid-calc-chip" data-value="16" aria-pressed="false">16</button>
 <button type="button" class="ap-build-chip bid-calc-chip" data-value="custom" aria-pressed="false">Custom</button>
+<input type="number" inputmode="numeric" id="bid-custom-raid-size" class="bid-custom-raid-size" min="2" step="1" placeholder="6" aria-label="Custom raid size" disabled>
 </span>
-</div>
-<div class="bid-calc-field-row bid-calc-custom-raid-size-row" hidden>
-<label class="bid-calc-field-label" for="bid-custom-raid-size">Custom Raid Size</label>
-<input type="number" inputmode="numeric" id="bid-custom-raid-size" class="bid-custom-raid-size" min="2" step="1" placeholder="6" disabled>
 </div>
 <div class="bid-calc-field-row bid-calc-intent" role="group" aria-label="Bidding intent">
 <span class="bid-calc-field-label">Intent</span>
