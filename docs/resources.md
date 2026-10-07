@@ -2088,27 +2088,24 @@
 <p class="page-banner page-banner-warning">This tool's data is imported from KR and is meant to provide an estimate, not a truly accurate result.</p>
 
 <div class="cpm-calc">
-
-<div class="cpm-calc-header">
-
-<p class="cpm-calc-hint">Enter your in-game Combat Analyzer's <strong>Back Attack Percentage</strong> below.</p>
-
-<div class="cpm-rate-calc">
-<div class="cpm-rate-calc-inputs">
-<span class="ap-brace-info-icon cpm-rate-calc-info-icon" role="img" aria-label="Time elapsed: &quot;2m 3s&quot;, &quot;123s&quot; (bare number = seconds), or mm:ss / hh:mm:ss. Max 120m" title="Time elapsed: &quot;2m 3s&quot;, &quot;123s&quot; (bare number = seconds), or mm:ss / hh:mm:ss. Max 120m">i</span>
+<div class="cpm-rate-calc cpm-card">
+<div class="cpm-card-head"><span class="cpm-card-title">Cast rate</span><span class="cpm-card-sub">Converts casts over time into CPM</span></div>
+<div class="cpm-rate-calc-row">
+<span class="cpm-rate-calc-label">Time elapsed<span class="ap-brace-info-icon cpm-rate-calc-info-icon" role="img" aria-label="Time elapsed: &quot;2m 3s&quot;, &quot;123s&quot; (bare number = seconds), or mm:ss / hh:mm:ss. Max 120m" title="Time elapsed: &quot;2m 3s&quot;, &quot;123s&quot; (bare number = seconds), or mm:ss / hh:mm:ss. Max 120m">i</span></span>
+<span class="cpm-rate-calc-inputs">
 <input type="text" class="cpm-rate-calc-time" placeholder="2m 3s" inputmode="text" autocomplete="off" maxlength="10" aria-label="Time elapsed, e.g. 2m 3s or 123 seconds, max 120m 60s">
 <span class="cpm-rate-calc-x">&times;</span>
 <input type="number" class="cpm-rate-calc-count" placeholder="31" min="0" max="999" step="1" aria-label="Number of casts, max 999">
-</div>
+</span>
 <span class="cpm-rate-calc-result"><span class="cpm-rate-calc-result-value cpm-rate-calc-output-empty">—</span><span class="cpm-rate-calc-result-unit">CPM</span></span>
 </div>
-
 </div>
-
 <div class="cpm-calc-row" data-build="333-ceiling">
 <div class="cpm-calc-row-header">
 <span class="cpm-calc-row-title">333 (Ceiling)</span>
+<span class="cpm-calc-row-tag"></span>
 <span class="cpm-calc-row-meta"></span>
+<span class="cpm-calc-best-chip">Best</span>
 </div>
 <div class="cpm-calc-body">
 <div class="cpm-calc-inputs">
@@ -2116,13 +2113,10 @@
 <span class="cpm-calc-field-label">Raid CPM</span>
 <input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" max="20" placeholder="e.g. 9.5">
 </label>
-<label class="cpm-calc-field">
-<span class="cpm-calc-field-label cpm-calc-ba-label">Back Attack %</span>
-<span class="cpm-calc-ba-wrap">
-<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 80">
-<span class="cpm-calc-ba-rate"></span>
-</span>
-</label>
+<div class="cpm-calc-field">
+<span class="cpm-calc-field-lead"><label class="cpm-calc-field-label" for="cpm-ba-333">Back Attack %</label><span class="ap-brace-info-icon cpm-calc-ba-info" role="img" aria-label="Enter the Back Attack Percentage shown in your in-game Combat Analyzer." title="Enter the Back Attack Percentage shown in your in-game Combat Analyzer.">i</span><span class="cpm-calc-ba-rate"></span></span>
+<input id="cpm-ba-333" type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 80">
+</div>
 <label class="cpm-calc-field cpm-calc-field-muted">
 <span class="cpm-calc-field-label">Base Multiplier</span>
 <input type="number" class="cpm-calc-basemult-input" step="0.01" min="0.5" max="2">
@@ -2134,7 +2128,7 @@
 <span class="cpm-calc-output-label">Adjusted Multiplier</span>
 <span class="cpm-calc-adj-value">—</span>
 </div>
-<div class="cpm-calc-output-item">
+<div class="cpm-calc-output-item cpm-calc-output-item-final">
 <span class="cpm-calc-output-label">Final Multiplier</span>
 <span class="cpm-calc-result-value">—</span>
 </div>
@@ -2149,7 +2143,9 @@
 <div class="cpm-calc-row" data-build="111-classic">
 <div class="cpm-calc-row-header">
 <span class="cpm-calc-row-title">111 (Classic)</span>
+<span class="cpm-calc-row-tag"></span>
 <span class="cpm-calc-row-meta"></span>
+<span class="cpm-calc-best-chip">Best</span>
 </div>
 <div class="cpm-calc-body">
 <div class="cpm-calc-inputs">
@@ -2157,13 +2153,10 @@
 <span class="cpm-calc-field-label">Raid CPM</span>
 <input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" max="20" placeholder="e.g. 6.5">
 </label>
-<label class="cpm-calc-field">
-<span class="cpm-calc-field-label cpm-calc-ba-label">Back Attack %</span>
-<span class="cpm-calc-ba-wrap">
-<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 92">
-<span class="cpm-calc-ba-rate"></span>
-</span>
-</label>
+<div class="cpm-calc-field">
+<span class="cpm-calc-field-lead"><label class="cpm-calc-field-label" for="cpm-ba-111">Back Attack %</label><span class="ap-brace-info-icon cpm-calc-ba-info" role="img" aria-label="Enter the Back Attack Percentage shown in your in-game Combat Analyzer." title="Enter the Back Attack Percentage shown in your in-game Combat Analyzer.">i</span><span class="cpm-calc-ba-rate"></span></span>
+<input id="cpm-ba-111" type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 92">
+</div>
 <label class="cpm-calc-field cpm-calc-field-muted">
 <span class="cpm-calc-field-label">Base Multiplier</span>
 <input type="number" class="cpm-calc-basemult-input" step="0.01" min="0.5" max="2">
@@ -2175,7 +2168,7 @@
 <span class="cpm-calc-output-label">Adjusted Multiplier</span>
 <span class="cpm-calc-adj-value">—</span>
 </div>
-<div class="cpm-calc-output-item">
+<div class="cpm-calc-output-item cpm-calc-output-item-final">
 <span class="cpm-calc-output-label">Final Multiplier</span>
 <span class="cpm-calc-result-value">—</span>
 </div>
@@ -2190,7 +2183,9 @@
 <div class="cpm-calc-row" data-build="222-speedy">
 <div class="cpm-calc-row-header">
 <span class="cpm-calc-row-title">222 (Speedy)</span>
+<span class="cpm-calc-row-tag"></span>
 <span class="cpm-calc-row-meta"></span>
+<span class="cpm-calc-best-chip">Best</span>
 </div>
 <div class="cpm-calc-body">
 <div class="cpm-calc-inputs">
@@ -2198,13 +2193,10 @@
 <span class="cpm-calc-field-label">Raid CPM</span>
 <input type="number" class="cpm-calc-raidcpm" step="0.01" min="0" max="20" placeholder="e.g. 6">
 </label>
-<label class="cpm-calc-field">
-<span class="cpm-calc-field-label cpm-calc-ba-label">Back Attack %</span>
-<span class="cpm-calc-ba-wrap">
-<input type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 84">
-<span class="cpm-calc-ba-rate"></span>
-</span>
-</label>
+<div class="cpm-calc-field">
+<span class="cpm-calc-field-lead"><label class="cpm-calc-field-label" for="cpm-ba-222">Back Attack %</label><span class="ap-brace-info-icon cpm-calc-ba-info" role="img" aria-label="Enter the Back Attack Percentage shown in your in-game Combat Analyzer." title="Enter the Back Attack Percentage shown in your in-game Combat Analyzer.">i</span><span class="cpm-calc-ba-rate"></span></span>
+<input id="cpm-ba-222" type="number" class="cpm-calc-ba-input" step="0.01" min="0" max="100" placeholder="e.g. 84">
+</div>
 <label class="cpm-calc-field cpm-calc-field-muted">
 <span class="cpm-calc-field-label">Base Multiplier</span>
 <input type="number" class="cpm-calc-basemult-input" step="0.01" min="0.5" max="2">
@@ -2216,7 +2208,7 @@
 <span class="cpm-calc-output-label">Adjusted Multiplier</span>
 <span class="cpm-calc-adj-value">—</span>
 </div>
-<div class="cpm-calc-output-item">
+<div class="cpm-calc-output-item cpm-calc-output-item-final">
 <span class="cpm-calc-output-label">Final Multiplier</span>
 <span class="cpm-calc-result-value">—</span>
 </div>
@@ -2235,44 +2227,50 @@
 *Finds the optimal auction bid amount based on personal intent.*
 
 <div class="bid-calc">
-
-<div class="bid-calc-controls">
+<div class="bid-card bid-calc-controls">
+<div class="bid-card-head"><span class="bid-card-title">Bid inputs</span></div>
 <div class="bid-calc-field-row">
 <label class="bid-calc-field-label" for="bid-market-price">Market Price</label>
 <input type="text" inputmode="numeric" autocomplete="off" id="bid-market-price" class="bid-market-price" placeholder="e.g. 9,000">
 </div>
-<div class="bid-calc-toggle" role="group" aria-label="Raid size">
+<div class="bid-calc-field-row bid-calc-toggle" role="group" aria-label="Raid size">
 <span class="bid-calc-field-label">Raid Size</span>
+<span class="bid-calc-chips">
 <button type="button" class="ap-build-chip bid-calc-chip" data-value="4" aria-pressed="false">4</button>
 <button type="button" class="ap-build-chip bid-calc-chip ap-build-chip-active" data-value="8" aria-pressed="true">8</button>
 <button type="button" class="ap-build-chip bid-calc-chip" data-value="16" aria-pressed="false">16</button>
 <button type="button" class="ap-build-chip bid-calc-chip" data-value="custom" aria-pressed="false">Custom</button>
+</span>
 </div>
 <div class="bid-calc-field-row bid-calc-custom-raid-size-row" hidden>
 <label class="bid-calc-field-label" for="bid-custom-raid-size">Custom Raid Size</label>
-<input type="number" inputmode="numeric" id="bid-custom-raid-size" class="bid-custom-raid-size" min="2" step="1" placeholder="e.g. 6">
+<input type="number" inputmode="numeric" id="bid-custom-raid-size" class="bid-custom-raid-size" min="2" step="1" placeholder="6" disabled>
 </div>
-</div>
-
-<div class="bid-calc-intent" role="group" aria-label="Bidding intent">
+<div class="bid-calc-field-row bid-calc-intent" role="group" aria-label="Bidding intent">
 <span class="bid-calc-field-label">Intent</span>
+<span class="bid-calc-chips">
 <button type="button" class="ap-build-chip bid-calc-chip ap-build-chip-active" data-value="equal" aria-pressed="true" title="Splits the gold evenly - you and everyone else net the same amount.">Equal Profit</button>
 <button type="button" class="ap-build-chip bid-calc-chip" data-value="punish" aria-pressed="false" title="Solid profit if you win - and outbidding you costs the rival more.">Profit &amp; Punish Next Bidder</button>
 <button type="button" class="ap-build-chip bid-calc-chip" data-value="max" aria-pressed="false" title="Highest possible profit - if you get outbid, it just falls back to an even split.">Max Profit</button>
+</span>
 </div>
-
+</div>
+<div class="bid-card bid-calc-output">
+<div class="bid-card-head"><span class="bid-card-title">Result</span></div>
 <div class="bid-calc-result">
+<span class="bid-calc-result-text">
 <span class="bid-calc-result-label">Amount to Bid</span>
 <span class="bid-calc-result-value">—</span>
-<button type="button" class="bid-calc-copy-btn" aria-label="Copy amount to bid" data-tooltip="Copy amount" disabled>
-<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</span>
+<button type="button" class="bid-calc-copy-btn" aria-label="Copy amount to bid" disabled>
+<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+<span class="bid-calc-copy-label">Copy</span>
 </button>
 </div>
-
 <table class="bid-calc-table">
 <thead>
 <tr>
-<th class="bid-calc-th-label"><span class="dbc-sr-only">Bidder</span></th>
+<th><span class="dbc-sr-only">Bidder</span></th>
 <th>Bid</th>
 <th>Profit</th>
 <th>Party Profit</th>
@@ -2293,9 +2291,8 @@
 </tr>
 </tbody>
 </table>
-
 <p class="bid-calc-footnote">Party Profit is each other member's cut if that row wins. Next Bidder needs a +10% raise to outbid you.</p>
-
+</div>
 </div>
 
 ## Useful Links

@@ -189,7 +189,13 @@
   function updateCustomRaidSizeVisibility(root) {
     var active = root.querySelector(".bid-calc-toggle .ap-build-chip.ap-build-chip-active");
     var row = root.querySelector(".bid-calc-custom-raid-size-row");
-    if (row) row.hidden = !active || active.dataset.value !== "custom";
+    if (!row) return;
+    var inactive = !active || active.dataset.value !== "custom";
+    row.hidden = inactive;
+    // The row stays on screen (dimmed) so choosing Custom never resizes the card; a
+    // disabled field cannot be focused or typed into while another size is selected.
+    var field = row.querySelector("input");
+    if (field) field.disabled = inactive;
   }
 
   // Wires one pill-chip group (Raid Size or Intent): clicking a chip
@@ -298,21 +304,30 @@
   // useful to restore, it's just stale data to clear out before the next
   // one. Starts empty every load.
 
-  // ----- Copy button (same pattern as build-compare.js's share button) -----
+  // ----- Copy button -----
   function initCopyButton(root) {
     var copyBtn = root.querySelector(".bid-calc-copy-btn");
     var resultValue = root.querySelector(".bid-calc-result-value");
     if (!copyBtn || !resultValue) return;
 
-    var COPY_ICON = copyBtn.innerHTML;
-    var CHECK_ICON =
-      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+    // The button carries a visible text label next to its icon, so the outcome of a
+    // click shows on the button itself (Copied / Failed) with no hover bubble, which
+    // a touch screen never shows. Every state's label fits the button's min-width,
+    // so the result row does not shift when the label changes.
+    var svgOpen = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+    var COPY_ICON = copyBtn.querySelector("svg").outerHTML;
+    var CHECK_ICON = svgOpen + '<polyline points="20 6 9 17 4 12"></polyline></svg>';
     var resetTimer = null;
 
+    function show(icon, label, ariaLabel, stateClass) {
+      copyBtn.innerHTML = icon + '<span class="bid-calc-copy-label">' + label + "</span>";
+      copyBtn.setAttribute("aria-label", ariaLabel);
+      copyBtn.classList.toggle("bid-calc-copy-btn-copied", stateClass === "copied");
+      copyBtn.classList.toggle("bid-calc-copy-btn-failed", stateClass === "failed");
+    }
+
     function reset() {
-      copyBtn.innerHTML = COPY_ICON;
-      copyBtn.classList.remove("bid-calc-copy-btn-copied");
-      copyBtn.setAttribute("data-tooltip", "Copy amount");
+      show(COPY_ICON, "Copy", "Copy amount to bid", "");
     }
 
     copyBtn.addEventListener("click", function () {
@@ -321,22 +336,17 @@
       window.SiteUtils.copyToClipboard(raw)
         .then(function () {
           clearTimeout(resetTimer);
-          copyBtn.innerHTML = CHECK_ICON;
-          copyBtn.classList.add("bid-calc-copy-btn-copied");
-          copyBtn.setAttribute("data-tooltip", "Copied!");
+          show(CHECK_ICON, "Copied", "Copied to clipboard", "copied");
           resetTimer = setTimeout(reset, 1500);
         })
         .catch(function () {
           clearTimeout(resetTimer);
-          copyBtn.setAttribute("data-tooltip", "Couldn't copy");
+          show(COPY_ICON, "Failed", "Could not copy", "failed");
           resetTimer = setTimeout(reset, 2000);
         });
     });
   }
 
-  // formatted: pass true for the comma-grouped price field so the clamped
-  // result gets re-grouped too, instead of landing back in the box as a
-  // plain digit string.
   function clampOnBlur(input, min, max, root, formatted) {
     window.SiteUtils.clampOnBlur(input, min, max, function () { update(root); }, {
       parse: formatted ? parseNumber : parseFloat,

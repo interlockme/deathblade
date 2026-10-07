@@ -75,6 +75,16 @@ The baselines record values and text, not layout, so a CSS change can break a ph
 
 It opens /resources/ in touch emulation at 320 to 1400px, opens every `<details>` in the calculator, and fails (exit 1) if the page scrolls sideways, an element spills outside the viewport with no scroll container, or an overflow-hidden element is holding content wider than itself (columns cut off with no way to reach them). Small text (under 16px, which makes iOS Safari zoom on focus) and small tap targets are counted as warnings and listed with `--verbose`. Takes about a minute. Use `--page` / `--root` for another widget, and the `ALLOW` list at the top of the script for clipping you have decided is fine.
 
+For the CPM and Bid calculators pass `--root .cpm-calc` or `--root .bid-calc` with `--builds default` (the build switch is Ark-specific).
+
+## calc_probe.py: CPM and Bid calculators
+
+Neither smoke.py nor regress.py drives these two widgets, and the regress dump only reads `.ap-calc`. `calc_probe.py` drives every input, chip, the copy button, the recent-input chips and the rate converter, and records each output text:
+
+    python3 scripts/regression/calc_probe.py --site site_out --check scripts/regression/baselines/calc_probe.json
+
+It prints `IDENTICAL to baseline` or the differing paths (exit 1). It reads only the classes the two scripts query, so a pure restyle that keeps them must not change it. When an output is meant to change, name every difference, then rewrite the baseline with `--out scripts/regression/baselines/calc_probe.json`.
+
 ## smoke.py: everything that is not the calculator
 
 `regress.py` pins the calculator and the importer. `smoke.py` drives the sitewide behaviour they cannot see: tabs, `<details>`, permalinks and jump links, tooltips (hover, click, keyboard, phone taps), Ark Cores, the lightbox, practice mode, and instant navigation between pages.

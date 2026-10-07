@@ -454,7 +454,7 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---------- Tables ---------- */
-/* Every other boxed component on the site (.build-card, .cpm-calc,
+/* Every other boxed component on the site (.build-card,
    .skills-table, .food-alt-table) uses the same lavender-tinted card
    language - a lavender border, a faint lavender-tinted body, and an
    uppercase tinted header row. This generic rule is what any bare
@@ -3773,449 +3773,465 @@ h3 { color: var(--dbc-teal); }
   content: "▲";
 }
 
-/* ---------- Personal CPM/back-attack multiplier calculator ---------- */
-/* Reuses .stat-bar-track-teal/.stat-bar-fill-teal's visual style (same
-   teal color, same track/fill shape) so it reads as the same family of
-   component as the Trixion multiplier bars elsewhere - but the JS drives
-   it on its own 0.4-1.0 scale, since this bar tracks Final Multiplier
-   (RaidCPM/TrixionCPM * AdjustedMultiplier) which lands in a different,
-   lower range than the 1.0-1.3-scaled Adjusted Multiplier bars use. */
-.md-typeset .cpm-calc {
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
-  background-color: rgba(var(--dbc-purple-rgb), 0.045);
-  border-radius: 10px;
-  padding: 1em 1.2em 1.2em;
+/* ---------- CPM and Bid calculators ---------- */
+/* Both widgets use the Ark Passive calculator's card language: a flat #1c1d1f card with a
+   hairline border and a title bar, field rows with the label on the left and the control on the
+   right, 32px centred inputs, result tiles with coloured labels. The --ap-* names below match the
+   ones .ap-calc defines (a shared rule such as .ap-build-chip reads --ap-fs-sm), declared here
+   because these widgets sit outside .ap-calc. Each widget queries its own width (container-type),
+   not the viewport, because the sidebar and TOC coming and going change the width a card gets. */
+.md-typeset .cpm-calc,
+.md-typeset .bid-calc {
+  --ap-fs-cap: 0.56rem;
+  --ap-fs-sm: 0.6rem;
+  --ap-fs-base: 0.65rem;
+  --ap-ctl-h: 1.6rem;
+  --ap-radius: 8px;
+  --ap-radius-lg: 12px;
+  --ap-pad-x: 0.85rem;
+  --ap-surface: #1c1d1f;
+  --ap-line: rgba(255, 255, 255, 0.09);
+  --ap-row-line: rgba(255, 255, 255, 0.045);
+  --ap-line-strong: rgba(var(--dbc-purple-rgb), 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
   margin: 1em 0 1.5em;
-  /* Lets .cpm-calc-header below query the CARD's own rendered width (not
-     the viewport's) to decide side-by-side vs stacked - same reasoning
-     as .cpm-calc-row's container-type further down, and independent of
-     it (each row still queries against itself for .cpm-calc-body). */
   container-type: inline-size;
 }
-/* Intro line above the rows - was falling back to plain body text with
-   no rule of its own. Muted lavender matches the same palette as
-   .cpm-calc's border/.cpm-calc-row-meta rather than reading as an
-   unstyled leftover paragraph. */
-.md-typeset .cpm-calc-hint {
-  margin: 0 0 1em;
-  font-size: 0.85em;
+.md-typeset .cpm-card,
+.md-typeset .cpm-calc-row,
+.md-typeset .bid-card {
+  border: 1px solid var(--ap-line);
+  border-radius: var(--ap-radius-lg);
+  background-color: var(--ap-surface);
+  overflow: hidden;
+}
+/* Flat title bar: title, optional tag pill, then secondary text pushed right. */
+.md-typeset .cpm-card-head,
+.md-typeset .cpm-calc-row-header,
+.md-typeset .bid-card-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  min-height: 1.95rem;
+  padding: 0.35rem var(--ap-pad-x);
+  border-bottom: 1px solid var(--ap-line);
+}
+.md-typeset .cpm-card-title,
+.md-typeset .cpm-calc-row-title,
+.md-typeset .bid-card-title {
+  font-size: var(--ap-fs-cap);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--dbc-purple);
+}
+.md-typeset .cpm-card-sub,
+.md-typeset .cpm-calc-row-meta {
+  margin-left: auto;
+  font-size: var(--ap-fs-sm);
+  color: var(--dbc-muted-text);
+}
+/* Family tag (Remaining Energy / Surge): the same box as the Ark calculator's tag pills. */
+.md-typeset .cpm-calc-row-tag {
+  padding: 0 0.2rem;
+  border: 1px solid rgba(var(--dbc-lavender-rgb), 0.45);
+  border-radius: 5px;
+  background-color: rgba(var(--dbc-lavender-rgb), 0.16);
   color: var(--dbc-lavender);
-  line-height: 1.5;
-}
-.md-typeset .cpm-calc-hint strong {
-  color: var(--md-default-fg-color);
-}
-/* Row pairing the hint text with the Surges/Min scratch-pad widget so
-   the widget sits at the top-right of the card instead of full-width
-   above/below the hint. align-items: center so the hint's single line
-   sits level with the middle of the (taller, padded) widget box instead
-   of pinned to its top edge, which left a lopsided gap under the hint. */
-.md-typeset .cpm-calc-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1em;
-}
-.md-typeset .cpm-calc-header .cpm-calc-hint {
-  margin: 0;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-@container (max-width: 420px) {
-  .md-typeset .cpm-calc-header {
-    flex-direction: column;
-  }
-  .md-typeset .cpm-rate-calc {
-    align-self: stretch;
-    justify-content: center;
-    flex-wrap: wrap;
-    white-space: normal;
-  }
-}
-
-/* ---------- Surges/Min scratch-pad (top of the CPM Calculator card) ---------- */
-/* Deliberately its own small self-contained box rather than folded into
-   .cpm-calc-hint's row of text - it's a quick unit conversion (count over
-   a clip -> a per-minute rate) the reader does once and copies into Raid
-   CPM below, not a persistent input the calculator itself depends on, so
-   it gets a visually distinct "tool," not another calculator row.
-   One horizontal row (info icon, inputs, result all inline) rather than
-   a stacked column - a single compact line keeps the whole card's header
-   short instead of ballooning it taller than the hint text beside it. */
-.md-typeset .cpm-rate-calc {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5em;
-  flex: 0 0 auto;
-  padding: 0.4em 0.7em;
-  background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  border-radius: 8px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
   white-space: nowrap;
 }
-/* Circled "i" - now literally .ap-brace-info-icon (same shape, color,
-   hover treatment as every other info icon on the page, including the
-   real tooltip panel ap-brace-tooltip.js wires onto its title). This
-   class only overrides the two things that actually differ here: no
-   left margin (it sits first in a flex row, no preceding label text to
-   hang .ap-brace-info-icon's default margin-left off of) and
-   flex-shrink: 0 so the tight row doesn't squeeze it. */
+.md-typeset .cpm-calc-row-tag:empty {
+  display: none;
+}
+
+/* Shared controls: every number and text field in both widgets. */
+.md-typeset .cpm-calc input[type="number"],
+.md-typeset .cpm-calc input[type="text"],
+.md-typeset .bid-calc input[type="number"],
+.md-typeset .bid-calc input[type="text"] {
+  box-sizing: border-box;
+  width: 5.5em;
+  min-width: 0;
+  height: var(--ap-ctl-h);
+  padding: 0 0.35rem 0 0.45rem;
+  background-color: var(--md-default-bg-color);
+  border: 1px solid var(--ap-line-strong);
+  border-radius: var(--ap-radius);
+  color: var(--md-default-fg-color);
+  font-family: inherit;
+  font-size: var(--ap-fs-base);
+  font-variant-numeric: tabular-nums;
+  /* Centred so the value stays off the browser's number spinner (Firefox keeps it in the layout). */
+  text-align: center;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+.md-typeset .cpm-calc input[type="number"]::-webkit-inner-spin-button,
+.md-typeset .bid-calc input[type="number"]::-webkit-inner-spin-button {
+  margin-left: 0.3rem;
+}
+.md-typeset .cpm-calc input::placeholder,
+.md-typeset .bid-calc input::placeholder {
+  color: var(--dbc-muted-text-alt);
+}
+.md-typeset .cpm-calc input[type="number"]:focus,
+.md-typeset .cpm-calc input[type="text"]:focus,
+.md-typeset .bid-calc input[type="number"]:focus,
+.md-typeset .bid-calc input[type="text"]:focus {
+  outline: none;
+  border-color: var(--dbc-pink);
+  box-shadow: 0 0 0 2px rgba(var(--dbc-pink-rgb), 0.2);
+}
+/* Live out-of-range cue while typing; the scripts clamp the value on blur. The free-text fields
+   (time elapsed, market price) have no :out-of-range, so the scripts toggle an invalid class. */
+.md-typeset .cpm-calc input[type="number"]:out-of-range,
+.md-typeset .bid-calc input[type="number"]:out-of-range,
+.md-typeset .cpm-calc input.cpm-rate-calc-input-invalid,
+.md-typeset .bid-calc input.bid-calc-input-invalid {
+  border-color: var(--dbc-red);
+}
+.md-typeset .cpm-calc input[type="number"]:out-of-range:focus,
+.md-typeset .bid-calc input[type="number"]:out-of-range:focus,
+.md-typeset .cpm-calc input.cpm-rate-calc-input-invalid:focus,
+.md-typeset .bid-calc input.bid-calc-input-invalid:focus {
+  box-shadow: 0 0 0 2px rgba(var(--dbc-red-rgb), 0.2);
+}
+.md-typeset .bid-calc input:disabled {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.18);
+  background-color: transparent;
+  color: var(--dbc-muted-text-alt);
+  cursor: default;
+}
+
+/* ---- CPM: intro line and the Cast rate card ---- */
+/* A standalone converter (casts over a clip into casts per minute); it feeds no field below. */
+.md-typeset .cpm-rate-calc-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  min-height: 2.3rem;
+  padding: 0.2rem var(--ap-pad-x);
+}
+.md-typeset .cpm-rate-calc-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-right: auto;
+  font-size: var(--ap-fs-base);
+  color: var(--dbc-lilac);
+}
 .md-typeset .cpm-rate-calc-info-icon {
   margin-left: 0;
-  flex-shrink: 0;
 }
 .md-typeset .cpm-rate-calc-inputs {
   display: flex;
   align-items: center;
-  gap: 0.4em;
+  gap: 0.4rem;
 }
-.md-typeset .cpm-rate-calc-time,
-.md-typeset .cpm-rate-calc-count {
-  background-color: #1c1d1f;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
-  border-radius: 6px;
-  color: var(--md-default-fg-color);
-  padding: 0.3em 0.4em;
-  font-size: 0.85em;
-  font-family: inherit;
-  text-align: center;
-}
-/* Wide enough for the longest accepted string ("120m 60s", the parser's
-   own max-clamp ceiling) without the text getting cut off or scrolling
-   inside the box. */
-.md-typeset .cpm-rate-calc-time {
+/* Wide enough for the longest accepted string ("120m 60s") beside its own padding. */
+.md-typeset .cpm-calc input.cpm-rate-calc-time {
   width: 6.5em;
-}
-/* Wide enough for a 4th fat-fingered digit (the max="999" attribute
-   doesn't stop someone from typing "9999" - it's only enforced on blur
-   by clampOnBlur in cpm-calculator.js) plus the number spinner UI some
-   browsers draw inside the box, so a reader mid-typing past the ceiling
-   sees their own digits, not a clipped value. */
-.md-typeset .cpm-rate-calc-count {
-  width: 4.6em;
-}
-.md-typeset .cpm-rate-calc-time:focus,
-.md-typeset .cpm-rate-calc-count:focus {
-  outline: none;
-  border-color: var(--dbc-purple);
-}
-/* Live invalid cue for the time field - unlike cpm-calc's numeric fields
-   there's no min/max/:out-of-range to lean on here since this is a
-   free-text field (it has to accept "2m 3s", not just a number), so the
-   JS toggles this class itself once the text fails to parse. */
-.md-typeset .cpm-rate-calc-time.cpm-rate-calc-input-invalid {
-  border-color: var(--dbc-red);
-}
-/* Count field IS a native number input with min/max, so unlike the time
-   field above it gets the live :out-of-range cue for free - it just
-   needs the same red border color wired up (this was missing, which is
-   why typing past 999 showed no warning until blur silently clamped
-   it). Declared after the :focus rule above so it wins while the field
-   is still focused and being typed into, matching the cpm-calc-field
-   pattern elsewhere on this page. */
-.md-typeset .cpm-rate-calc-count:out-of-range {
-  border-color: var(--dbc-red);
 }
 .md-typeset .cpm-rate-calc-x {
   color: var(--dbc-slate);
-  font-size: 0.8em;
+  font-size: var(--ap-fs-sm);
 }
 .md-typeset .cpm-rate-calc-result {
-  font-size: 0.85em;
-  color: var(--dbc-slate);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25rem;
   white-space: nowrap;
+  font-size: var(--ap-fs-sm);
+  color: var(--dbc-slate);
 }
-/* min-width (not width) reserves room for a typical result (up to a
-   3-digit whole number, e.g. "999.99") so the box's own overall width -
-   and with it, .cpm-calc-header's space-between layout - doesn't shift
-   left/right on every keystroke for the common case. Deliberately NOT
-   sized to the mathematical worst case (a tiny time value can push the
-   result to 5+ digits) - min-width still lets the box grow past 6ch if
-   a reader actually hits that, it just stops reserving dead space for
-   it up front, since that made ordinary results (e.g. "64.00") sit with
-   a visibly empty gap before them. Right-aligned so results sit flush
-   against the "CPM" unit instead of floating in the reserved space. */
+/* min-width keeps the row from shifting on every keystroke for an ordinary result. */
 .md-typeset .cpm-rate-calc-result-value {
   display: inline-block;
   min-width: 6ch;
   text-align: right;
+  font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
   color: var(--dbc-teal);
 }
-/* Same empty-state treatment as .cpm-calc-result-value.cpm-calc-output-
-   empty - plain "—" placeholder shouldn't read as bold teal like a real
-   result. */
 .md-typeset .cpm-rate-calc-result-value.cpm-rate-calc-output-empty {
   color: var(--dbc-slate);
   font-weight: 400;
 }
-.md-typeset .cpm-rate-calc-result-unit {
-  margin-left: 0.2em;
+@container (max-width: 440px) {
+  .md-typeset .cpm-rate-calc-row {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  .md-typeset .cpm-rate-calc-label {
+    flex: 1 0 100%;
+  }
+  .md-typeset .cpm-rate-calc-result {
+    margin-left: auto;
+  }
 }
-/* Teal left-edge accent (matching the multiplier bar and the "best" row
-   highlight below) rather than .ap-calc-group's per-category colors - the
-   three rows are peer options (which build should I play), not different
-   stat categories, so one consistent accent reads better than inventing
-   three arbitrary hues. container-type lets .cpm-calc-body below query
-   the ROW's own rendered width (not the viewport's) to decide side-by-side
-   vs stacked - same technique .ark-passive-col/.skill-card use, since the
-   sidebar/TOC coming and going changes a row's actual width at a given
-   viewport size. */
+
+/* ---- CPM: one card per build ---- */
 .md-typeset .cpm-calc-row {
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-left: 3px solid rgba(var(--dbc-teal-rgb), 0.35);
-  border-radius: 8px;
-  padding: 0.8em 1em;
-  margin-top: 0.8em;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
   container-type: inline-size;
+  transition: border-color 0.15s ease;
 }
-.md-typeset .cpm-calc-row:first-of-type {
-  margin-top: 0;
-}
-/* Marked by JS on whichever row currently has the highest Final
-   Multiplier, once at least two rows have valid input - "which build
-   should I actually play" is the whole point of comparing side by side. */
+/* Marked by the script on the row with the highest Final Multiplier once two rows have a result. */
 .md-typeset .cpm-calc-row-best {
-  border-color: rgba(var(--dbc-teal-rgb), 0.5);
-  border-left-color: var(--dbc-teal);
-  background-color: rgba(var(--dbc-teal-rgb), 0.06);
+  border-color: rgba(var(--dbc-teal-rgb), 0.55);
 }
-.md-typeset .cpm-calc-row-header {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.5em;
-  margin-bottom: 0.6em;
-}
-.md-typeset .cpm-calc-row-title {
+/* The chip's slot is always reserved (visibility, not display) so the title bar never changes
+   height or moves when the best row changes. */
+.md-typeset .cpm-calc-best-chip {
+  min-width: 3.2rem;
+  padding: 0.05rem 0.5rem;
+  border: 1px solid rgba(var(--dbc-teal-rgb), 0.45);
+  border-radius: 7px;
+  background-color: rgba(var(--dbc-teal-rgb), 0.16);
+  color: var(--dbc-teal);
+  font-size: var(--ap-fs-sm);
   font-weight: 700;
-  color: var(--md-default-fg-color);
+  line-height: 1.4;
+  text-align: center;
+  visibility: hidden;
 }
-.md-typeset .cpm-calc-row-meta {
-  font-size: 0.78em;
-  color: var(--dbc-lavender);
+.md-typeset .cpm-calc-row-best .cpm-calc-best-chip {
+  visibility: visible;
 }
-/* Inputs on the left, Adjusted/Final Multiplier + bar on the right - puts
-   the payoff beside the fields that drive it instead of stacked
-   underneath, the same "inputs feed a result panel beside them" shape as
-   .ap-calc-layout's gear/live-results split, and reads more compact than
-   the old fully-stacked rows. Drops to stacked (see @container below)
-   once the row itself gets too narrow for both columns. */
 .md-typeset .cpm-calc-body {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1.2em;
-}
-@container (max-width: 480px) {
-  .md-typeset .cpm-calc-body {
-    flex-direction: column;
-  }
-  .md-typeset .cpm-calc-results {
-    width: 100%;
-  }
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
 }
 .md-typeset .cpm-calc-inputs {
   display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  gap: 0.9em;
+  flex-direction: column;
+  min-width: 0;
 }
 .md-typeset .cpm-calc-field {
   display: flex;
-  flex-direction: column;
-  gap: 0.25em;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6em;
+  min-height: 2.3rem;
+  margin: 0;
+  padding: 0.2rem var(--ap-pad-x);
+  font-size: var(--ap-fs-base);
+  color: var(--dbc-lilac);
+}
+.md-typeset .cpm-calc-field + .cpm-calc-field {
+  border-top: 1px solid var(--ap-row-line);
 }
 .md-typeset .cpm-calc-field-label {
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--dbc-lavender);
-  font-weight: 700;
+  font-size: var(--ap-fs-base);
+  color: var(--dbc-lilac);
 }
-.md-typeset .cpm-calc-field input[type="number"] {
-  width: 6.5em;
-  background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
-  border-radius: 6px;
-  color: var(--md-default-fg-color);
-  padding: 0.35em 0.5em;
-  font-size: 0.95em;
-  font-family: inherit;
-}
-.md-typeset .cpm-calc-field input[type="number"]:focus {
-  outline: none;
-  border-color: var(--dbc-purple);
-}
-/* Raid CPM and Base Multiplier now carry min/max attrs (see
-   cpm-calculator.js for the actual clamp-on-blur enforcement - :out-of-
-   range here is just the live visual cue while typing, before blur
-   snaps the value back in range). Reuses the site's standard danger red
-   rather than inventing a new color for this one warning state. */
-.md-typeset .cpm-calc-field input[type="number"]:out-of-range {
-  border-color: var(--dbc-red);
-}
-/* Back-Attack % is the raw Combat Analyzer reading (a ratio, not the
-   actual back-attack rate) - this small readout beside the input shows
-   the converted rate live so the reader never has to do the ratio->rate
-   math themselves, without a second input field to maintain. */
-.md-typeset .cpm-calc-ba-wrap {
+.md-typeset .cpm-calc-field-lead {
   display: flex;
   align-items: center;
-  gap: 0.5em;
+  flex-wrap: wrap;
+  gap: 0 0.4rem;
+  min-width: 0;
 }
+.md-typeset .cpm-calc-ba-info {
+  margin-left: 0;
+}
+/* Back Attack % is the raw Combat Analyzer ratio; this readout shows the converted rate live. */
 .md-typeset .cpm-calc-ba-rate {
-  display: inline-block;
-  min-width: 6.3em;
-  min-height: 1.3em;
-  line-height: 1.3em;
-  font-size: 0.72em;
-  color: var(--dbc-slate);
+  margin-left: 0.1rem;
+  font-size: var(--ap-fs-sm);
+  color: var(--dbc-teal);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-/* Base Multiplier is a per-build constant from the Trixion parse - almost
-   never something the reader should change, but patches do shift it, so
-   it's editable rather than hardcoded. Muted so it visually reads as
-   "leave this alone unless you know why you're touching it," distinct
-   from Raid CPM/Back-Attack which the reader is expected to fill in. */
+/* Base Multiplier is a per-build constant that patches occasionally shift: editable, but muted
+   (dashed border, quiet label) so it reads as "leave this unless you know why". */
 .md-typeset .cpm-calc-field-muted .cpm-calc-field-label {
   color: var(--dbc-slate);
 }
-.md-typeset .cpm-calc-field-muted input[type="number"] {
-  width: 5em;
+.md-typeset .cpm-calc .cpm-calc-field-muted input[type="number"] {
   background-color: transparent;
-  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
   color: var(--dbc-muted-text-alt);
 }
-.md-typeset .cpm-calc-field-muted input[type="number"]:hover {
+.md-typeset .cpm-calc .cpm-calc-field-muted input[type="number"]:hover {
   border-color: rgba(255, 255, 255, 0.3);
   color: var(--dbc-lilac);
 }
-.md-typeset .cpm-calc-field-muted input[type="number"]:focus {
-  border-color: var(--dbc-purple);
+.md-typeset .cpm-calc .cpm-calc-field-muted input[type="number"]:focus {
+  border-color: var(--dbc-pink);
   border-style: solid;
   color: var(--md-default-fg-color);
 }
-.md-typeset .cpm-calc-field-muted input[type="number"]:out-of-range {
+.md-typeset .cpm-calc .cpm-calc-field-muted input[type="number"]:out-of-range {
   border-color: var(--dbc-red);
   border-style: solid;
 }
-/* Right-hand column of .cpm-calc-body - fixed-ish width so the bar below
-   doesn't stretch full-card-width and dwarf the numbers above it. */
+/* Result tiles: coloured label, large number, muted dash until both inputs are valid. */
 .md-typeset .cpm-calc-results {
   display: flex;
   flex-direction: column;
-  gap: 0.4em;
-  flex: 0 0 auto;
-  min-width: 13em;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.7rem var(--ap-pad-x);
+  border-left: 1px solid var(--ap-row-line);
 }
 .md-typeset .cpm-calc-output {
   display: flex;
-  gap: 1.5em;
+  flex-direction: column;
+  gap: 0.7rem;
 }
 .md-typeset .cpm-calc-output-item {
   display: flex;
   flex-direction: column;
 }
 .md-typeset .cpm-calc-output-label {
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--dbc-lavender);
+  font-size: var(--ap-fs-cap);
   font-weight: 700;
-  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--dbc-lilac);
 }
-/* Adjusted/Final Multiplier sit side by side in .cpm-calc-output as two
-   flex columns (label, then value). Their value spans use different
-   font-sizes (0.95em vs 1.1em) - with only the default prose line-height
-   inherited, that difference in font-size produced a different line-box
-   height per column, so "1.1195" and "0.703" landed at visibly different
-   baselines even though both columns start from an identical label. A
-   shared line-height fixed in rem (not em, so it doesn't scale with each
-   span's own font-size) forces both line boxes to the same height
-   regardless of font-size, which is what actually keeps the two values
-   aligned. margin-top nudges both down by the same fixed amount so the
-   value line starts right under the label instead of via default spacing. */
+.md-typeset .cpm-calc-output-item-final .cpm-calc-output-label {
+  color: var(--dbc-teal);
+}
 .md-typeset .cpm-calc-adj-value,
 .md-typeset .cpm-calc-result-value {
   display: block;
-  line-height: 1.35rem;
-  margin-top: 0.05em;
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.5rem;
   font-variant-numeric: tabular-nums;
 }
 .md-typeset .cpm-calc-adj-value {
-  font-size: 0.95em;
   color: var(--dbc-lilac);
 }
 .md-typeset .cpm-calc-result-value {
-  font-size: 1.1em;
-  font-weight: 700;
-  color: var(--dbc-teal);
+  color: var(--md-default-fg-color);
 }
-/* Before either field has valid input, both values show a plain "—"
-   placeholder (see cpm-calculator.js). Left unstyled, that placeholder
-   would inherit the same bold teal treatment as a real Final Multiplier
-   result, which reads as "there's already an answer here" - toggled off
-   via .cpm-calc-output-empty (added/removed by the JS alongside the
-   textContent swap) so an empty row visually reads as empty. */
 .md-typeset .cpm-calc-adj-value.cpm-calc-output-empty,
 .md-typeset .cpm-calc-result-value.cpm-calc-output-empty {
   color: var(--dbc-slate);
-  font-weight: 400;
+}
+.md-typeset .cpm-calc-results .stat-bar-track {
+  margin: 0;
+}
+@container (max-width: 480px) {
+  .md-typeset .cpm-calc-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .md-typeset .cpm-calc-results {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem 0.8rem;
+    border-left: 0;
+    border-top: 1px solid var(--ap-row-line);
+  }
+  .md-typeset .cpm-calc-output {
+    display: contents;
+  }
+  /* Labels may wrap to two lines in a half-width tile; bottom-aligning keeps the two numbers level. */
+  .md-typeset .cpm-calc-output-item {
+    justify-content: flex-end;
+  }
+  /* Two-line title bar: title and tag, then the Trixion CPM with the Best chip at its right.
+     The chip's slot stays reserved on rows that are not best, so every bar is the same height. */
+  .md-typeset .cpm-calc-row-header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+  }
+  .md-typeset .cpm-calc-row-title {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .md-typeset .cpm-calc-row-tag {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+  }
+  .md-typeset .cpm-calc-row-meta {
+    grid-column: 1 / 3;
+    grid-row: 2;
+    margin-left: 0;
+  }
+  .md-typeset .cpm-calc-best-chip {
+    grid-column: 3;
+    grid-row: 2;
+  }
+  .md-typeset .cpm-calc-results .stat-bar-track {
+    grid-column: 1 / -1;
+  }
 }
 
-/* ---------- CPM calculator: recent-inputs chips ---------- */
-/* Injected by cpm-calculator.js (localStorage-backed), right after
-   .cpm-calc-body in each row (full width, below both columns).
-   Deliberately quieter than the gem-priority chips (smaller, single
-   muted tone) since these are a shortcut, not a primary piece of content
-   on the page. */
+/* ---- CPM: recent-inputs footer (filled by cpm-calculator.js from localStorage) ---- */
+/* The footer keeps its one-line height while empty (the script marks it hidden then), so the
+   first entry never grows the card; the placeholder text fills the strip. */
 .md-typeset .cpm-calc-recent {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5em;
-  margin: 0.6em 0 0;
+  gap: 0.35rem 0.5rem;
+  min-height: 2.2rem;
+  margin: 0;
+  padding: 0.25rem var(--ap-pad-x);
+  border-top: 1px solid var(--ap-line);
+}
+.md-typeset .cpm-calc-recent[hidden] {
+  display: flex;
+}
+.md-typeset .cpm-calc-recent[hidden]::before {
+  content: "Recent inputs appear here";
+  font-size: var(--ap-fs-sm);
+  color: var(--dbc-muted-text);
 }
 .md-typeset .cpm-calc-recent-label {
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--dbc-slate);
+  font-size: var(--ap-fs-cap);
   font-weight: 700;
-  margin-right: 0.1em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dbc-muted-text);
 }
 .md-typeset .cpm-calc-recent-chip {
-  font-family: inherit;
-  font-size: 0.76em;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 7px;
+  background: none;
   color: var(--dbc-lilac);
-  background-color: rgba(var(--dbc-purple-rgb), 0.08);
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  border-radius: 999px;
-  padding: 0.28em 0.75em;
+  font-family: inherit;
+  font-size: var(--ap-fs-sm);
+  font-variant-numeric: tabular-nums;
   cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.12s ease, color 0.12s ease, background-color 0.12s ease;
 }
 .md-typeset .cpm-calc-recent-chip:hover,
 .md-typeset .cpm-calc-recent-chip:focus-visible {
-  border-color: var(--dbc-pink);
+  border-color: rgba(var(--dbc-pink-rgb), 0.5);
   color: var(--dbc-pink-bright);
   background-color: rgba(var(--dbc-pink-rgb), 0.08);
   outline: none;
 }
 .md-typeset .cpm-calc-recent-clear {
-  font-family: inherit;
-  font-size: 0.72em;
-  color: var(--dbc-slate);
-  background: none;
+  padding: 0.15rem 0.3rem;
   border: none;
-  cursor: pointer;
-  padding: 0.28em 0.3em;
+  background: none;
+  color: var(--dbc-muted-text);
+  font-family: inherit;
+  font-size: var(--ap-fs-sm);
   text-decoration: underline;
   text-underline-offset: 2px;
+  cursor: pointer;
 }
 .md-typeset .cpm-calc-recent-clear:hover,
 .md-typeset .cpm-calc-recent-clear:focus-visible {
@@ -4223,184 +4239,115 @@ h3 { color: var(--dbc-teal); }
   outline: none;
 }
 
-/* ---------- Raid auction bid calculator ---------- */
-/* Same card shell as .cpm-calc - lavender border, dark panel, lavender
-   field/radio accents throughout. Tinting the whole card amber to flag
-   "this one's gold, not a damage stat" would look like a stray warning
-   banner instead of a calculator, so gold is used
-   the way it's used in-game: just on the headline number itself
-   (.bid-calc-result-value) and the copy confirmation, not the card shell. */
-.md-typeset .bid-calc {
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
-  background-color: rgba(var(--dbc-purple-rgb), 0.045);
-  border-radius: 10px;
-  padding: 1em 1.2em 1.2em;
-  margin: 1em 0 1.5em;
-  /* Lets .bid-calc-table below query the CARD's own rendered width (not
-     the viewport's) to decide when it needs to scroll instead of
-     overflow - same reasoning as .cpm-calc-header/.skill-card's
-     container-type further up this file: the sidebar/TOC coming and
-     going changes this card's actual available width at a given
-     viewport size, so a viewport media query is the wrong signal to key
-     off of. */
-  container-type: inline-size;
-}
-.md-typeset .bid-calc-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  gap: 1em 1.4em;
-  padding-bottom: 0.9em;
-  margin-bottom: 0.9em;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-}
+/* ---- Bid calculator ---- */
 .md-typeset .bid-calc-field-row {
   display: flex;
-  flex-direction: column;
-  gap: 0.25em;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.6rem;
+  min-height: 2.3rem;
+  margin: 0;
+  padding: 0.2rem var(--ap-pad-x);
 }
-/* Same `[hidden]` specificity fix as .ap-brace-info-icon elsewhere in this
-   file: the class rule's own `display: flex` above beats the UA
-   stylesheet's bare `[hidden] { display: none }`, so without this
-   .bid-calc-custom-raid-size-row's `hidden` attribute (toggled by
-   bid-calculator.js's updateCustomRaidSizeVisibility) was silently
-   ignored and the Custom Raid Size field showed unconditionally
-   regardless of which Raid Size chip was active. Pre-existing bug, not
-   introduced by the Raid Size radio -> pill-chip conversion - surfaced
-   while screenshot-testing that conversion. */
-.md-typeset .bid-calc-field-row[hidden] {
-  display: none;
+.md-typeset .bid-calc-field-row + .bid-calc-field-row {
+  border-top: 1px solid var(--ap-row-line);
 }
 .md-typeset .bid-calc-field-label {
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--dbc-lavender);
-  font-weight: 700;
+  margin-right: auto;
+  font-size: var(--ap-fs-base);
+  color: var(--dbc-lilac);
 }
-.md-typeset .bid-calc-field-row input[type="number"],
-.md-typeset .bid-calc-field-row input.bid-market-price {
-  width: 8em;
-  background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
-  border-radius: 6px;
-  color: var(--md-default-fg-color);
-  padding: 0.35em 0.5em;
-  font-size: 0.95em;
-  font-family: inherit;
+.md-typeset .bid-calc input.bid-market-price {
+  width: 7.5em;
 }
-.md-typeset .bid-calc-field-row input[type="number"]:focus,
-.md-typeset .bid-calc-field-row input.bid-market-price:focus {
-  outline: none;
-  border-color: var(--dbc-purple);
+/* The Custom Raid Size row is always on screen so choosing Custom never resizes the card. While
+   another size is active the script marks it hidden and disables its field, and this rule keeps
+   it displayed, dimmed (0.6 keeps the label above 4.5:1), instead of removing it. */
+.md-typeset .bid-calc-custom-raid-size-row[hidden] {
+  display: flex;
+  opacity: 0.6;
 }
-.md-typeset .bid-calc-field-row input[type="number"]:out-of-range {
-  border-color: var(--dbc-red);
-}
-/* .bid-market-price is type="text" (not type="number") so commas can be
-   typed/displayed - a real number input rejects any "," keystroke, and a
-   6-7 digit gold price with no thousands separators is hard to read at a
-   glance. :out-of-range doesn't exist for text inputs, so out-of-range
-   styling for price is applied via this class from JS instead (see
-   bid-calculator.js's clampOnBlur/validity check). */
-.md-typeset .bid-calc-field-row input.bid-market-price.bid-calc-input-invalid {
-  border-color: var(--dbc-red);
-}
-/* Raid Size / Intent pickers - real .ap-build-chip pill <button>s, the
-   same "one vivid, rest muted" component the Ark Passive Calculator's
-   Build toggle uses (see that toggle's own comment in extra.css),
-   reused as-is instead of radio dots - see bid-calculator.js's
-   initToggleGroup for the click wiring that stands in for native radio
-   mutual-exclusivity. */
-.md-typeset .bid-calc-toggle,
-.md-typeset .bid-calc-intent {
+.md-typeset .bid-calc-chips {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5em;
-  margin: 0;
+  justify-content: flex-end;
+  gap: 0.35rem;
 }
-.md-typeset .bid-calc-intent {
-  padding-bottom: 0.9em;
-  margin-bottom: 0.9em;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+/* .ap-build-chip supplies the active (pink) state and the hover; the outline here makes a
+   resting chip read as a button, which the borderless Build toggle does not need. */
+.md-typeset .bid-calc-chip {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
-/* .ap-build-chip's own active state defaults to the RE/Surge pink/teal
-   split - the right color on the Build toggle, meaningless here (this
-   card has nothing to do with builds), so the active state is
-   overridden back to the card's own lavender accent. Everything else
-   (resting/hover look, sizing, transition) comes straight from
-   .ap-build-chip - not duplicated here. */
-.md-typeset .bid-calc-toggle .bid-calc-chip.ap-build-chip-active,
-.md-typeset .bid-calc-intent .bid-calc-chip.ap-build-chip-active {
-  background-color: var(--dbc-lavender);
-  border-color: var(--dbc-lavender);
-  color: #1a1a1d;
+@container (max-width: 500px) {
+  .md-typeset .bid-calc-intent {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 0.5rem;
+    padding-bottom: 0.6rem;
+  }
+  .md-typeset .bid-calc-intent .bid-calc-chips {
+    justify-content: flex-start;
+  }
 }
-/* Now that Intent's tooltip runs through the site's real tooltip panel
-   (ap-brace-tooltip.js wires .bid-calc [title] the same as .ap-calc's
-   own triggers) rather than a bare native title, the old dotted-
-   underline "there's a hover hint here" hack isn't needed - the pill
-   itself already reads as interactive the same way every other
-   .ap-build-chip on the site does. */
-/* The headline number - same treatment as .cpm-calc-result-value (bold,
-   tabular-nums, muted "—" placeholder before valid input) but sized up
-   since this is the single payoff of the whole card, not one of two
-   side-by-side figures. */
 .md-typeset .bid-calc-result {
-  position: relative;
   display: flex;
-  align-items: baseline;
-  gap: 0.6em;
-  margin-bottom: 0.9em;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.7rem var(--ap-pad-x);
+}
+.md-typeset .bid-calc-result-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 .md-typeset .bid-calc-result-label {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--dbc-lavender);
+  font-size: var(--ap-fs-cap);
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--dbc-gold);
 }
 .md-typeset .bid-calc-result-value {
-  font-size: 1.6em;
-  font-weight: 700;
-  color: var(--dbc-gold);
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
+  color: var(--dbc-gold);
 }
 .md-typeset .bid-calc-result-value.bid-calc-result-empty {
   color: var(--dbc-slate);
-  font-weight: 400;
 }
-/* Icon-only copy button, same shape/hover/custom-tooltip language as
-   .build-compare-share-btn (native title is invisible to some touch/
-   screen-reader flows and reads late, so this reuses that hand-rolled
-   data-tooltip instead). align-self overrides the row's own baseline
-   alignment so the button centers on the tall result number instead of
-   sitting low against its text baseline. Disabled state (no valid bid
-   yet) just dims and drops pointer events rather than hiding it, so the
-   layout doesn't jump the moment a valid Market Price is typed. */
+/* Labelled copy button. Every label (Copy, Copied, Failed) fits the min-width, so the row does
+   not shift when bid-calculator.js swaps it. Disabled until there is a valid bid. */
 .md-typeset .bid-calc-copy-btn {
-  position: relative;
-  align-self: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 1.9em;
-  height: 1.9em;
+  gap: 0.35rem;
+  min-width: 5.2rem;
+  height: var(--ap-ctl-h);
+  padding: 0 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 7px;
   background: none;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  border-radius: 6px;
-  color: var(--dbc-lavender);
+  color: var(--dbc-lilac);
+  font-family: inherit;
+  font-size: var(--ap-fs-sm);
+  font-weight: 600;
   cursor: pointer;
-  padding: 0;
-  transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: opacity 0.15s ease, color 0.12s ease, border-color 0.12s ease;
 }
-.md-typeset .bid-calc-copy-btn:hover,
+.md-typeset .bid-calc-copy-btn:hover {
+  color: var(--dbc-pink-bright);
+  border-color: rgba(var(--dbc-pink-rgb), 0.5);
+}
 .md-typeset .bid-calc-copy-btn:focus-visible {
-  color: var(--dbc-purple);
-  border-color: rgba(var(--dbc-purple-rgb), 0.55);
-  outline: none;
+  outline: 2px solid rgba(var(--dbc-pink-rgb), 0.6);
+  outline-offset: 1px;
 }
 .md-typeset .bid-calc-copy-btn svg {
   display: block;
@@ -4409,108 +4356,57 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-teal);
   border-color: rgba(var(--dbc-teal-rgb), 0.5);
 }
+.md-typeset .bid-calc-copy-btn.bid-calc-copy-btn-failed {
+  color: var(--dbc-red);
+  border-color: rgba(var(--dbc-red-rgb), 0.5);
+}
 .md-typeset .bid-calc-copy-btn:disabled {
-  opacity: 0.35;
+  opacity: 0.5;
   cursor: default;
   pointer-events: none;
 }
-.md-typeset .bid-calc-copy-btn::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: calc(100% + 7px);
-  left: 0;
-  background-color: var(--md-default-bg-color);
-  color: var(--md-default-fg-color);
-  font-size: 0.68rem;
-  font-weight: 600;
-  font-family: inherit;
-  white-space: nowrap;
-  padding: 0.35em 0.6em;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  border-radius: 5px;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(2px);
-  transition: opacity 0.15s ease, transform 0.15s ease;
-  z-index: 5;
-}
-.md-typeset .bid-calc-copy-btn:hover::after,
-.md-typeset .bid-calc-copy-btn:focus-visible::after {
-  opacity: 1;
-  transform: translateY(0);
-}
-/* The bubble is opacity: 0 while idle, which still counts toward the page's scrollable width.
-   The button sits at about 200px from the left edge, so a left-anchored nowrap bubble ends past
-   a 320px viewport once Poppins is loaded (wider than a fallback font) and the whole page scrolls
-   sideways. Anchoring it to the button's right edge keeps it over the card, where there is room. */
-@media screen and (max-width: 480px) {
-  .md-typeset .bid-calc-copy-btn::after {
-    left: auto;
-    right: 0;
-  }
-}
-/* You / Next Bidder comparison - same card polish as .ap-brace-compare-table
-   (tinted uppercase header, no vertical rules) rather than Material's
-   default table style, so it reads as part of this component instead of
-   plain page content. */
+/* You / Next Bidder comparison. */
 .md-typeset .bid-calc-table {
   width: 100%;
+  margin: 0;
   border-collapse: collapse;
-  font-size: 0.92em;
-}
-/* Sub-300px widths (narrower than any real phone viewport, but the
-   sidebar/TOC coming and going can still squeeze a reader's actual
-   content column this tight) run out of room for three comma-formatted
-   gold columns - scrolls instead of forcing an overflow like the other
-   reference tables on this site (see .skills-table-wrap). Queries the
-   .bid-calc card's own width (container-type: inline-size above), not
-   the viewport - a viewport query would miss exactly the sidebar/TOC
-   squeeze case this comment describes, since the viewport can stay wide
-   while the card itself narrows. */
-@container (max-width: 340px) {
-  .md-typeset .bid-calc-table {
-    display: block;
-    overflow-x: auto;
-  }
+  border-top: 1px solid var(--ap-line);
+  table-layout: fixed;
+  font-size: var(--ap-fs-base);
 }
 .md-typeset .bid-calc-table th {
-  text-align: right;
-  font-size: 0.78em;
+  padding: 0.5rem 0.25rem;
+  text-align: center;
+  font-size: var(--ap-fs-cap);
+  font-weight: 400;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--dbc-slate);
-  padding: 0.3em 0.5em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-.md-typeset .bid-calc-table .bid-calc-th-label {
-  text-align: left;
+  color: var(--dbc-muted-text);
 }
 .md-typeset .bid-calc-table td {
-  padding: 0.5em;
-  text-align: right;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.55rem 0.25rem;
+  text-align: center;
+  vertical-align: middle;
+  border-top: 1px solid var(--ap-row-line);
   font-variant-numeric: tabular-nums;
-  vertical-align: top;
+  color: var(--dbc-lilac);
 }
-.md-typeset .bid-calc-table tr:last-child td {
-  border-bottom: none;
-}
-.md-typeset .bid-calc-table .bid-calc-row-label {
+.md-typeset .bid-calc-table th:first-child,
+.md-typeset .bid-calc-table td:first-child {
+  width: 28%;
+  padding-left: var(--ap-pad-x);
   text-align: left;
-  font-weight: 700;
+}
+.md-typeset .bid-calc-row-you td {
+  background-color: rgba(var(--dbc-teal-rgb), 0.07);
   color: var(--md-default-fg-color);
 }
 .md-typeset .bid-calc-table .bid-calc-you-profit {
   color: var(--dbc-teal);
   font-weight: 700;
 }
-.md-typeset .bid-calc-table .bid-calc-next-profit {
-  color: var(--dbc-lilac);
-}
-/* Toggled by the JS once a rival's profit from outbidding you actually
-   exceeds their share of your bid - i.e. bidding low (Max Profit) really
-   does invite someone to take the item from you, and this row should say
-   so instead of sitting there looking as neutral as the deterred case. */
+/* Set by the script when the rival's profit from outbidding you exceeds their share of your bid:
+   a low bid (Max Profit) really does invite someone to take the item. */
 .md-typeset .bid-calc-row-next-risk .bid-calc-next-profit {
   color: var(--dbc-red);
   font-weight: 700;
@@ -4519,10 +4415,25 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-slate);
 }
 .md-typeset .bid-calc-footnote {
-  margin: 0.9em 0 0;
-  font-size: 0.78em;
-  color: var(--dbc-slate);
+  margin: 0;
+  padding: 0.6rem var(--ap-pad-x) 0.75rem;
+  border-top: 1px solid var(--ap-row-line);
+  text-align: center;
+  font-size: var(--ap-fs-sm);
   line-height: 1.5;
+  color: var(--dbc-muted-text);
+  text-wrap: balance;
+}
+@container (max-width: 340px) {
+  .md-typeset .bid-calc-table th,
+  .md-typeset .bid-calc-table td {
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+  }
+  .md-typeset .bid-calc-table th:first-child,
+  .md-typeset .bid-calc-table td:first-child {
+    padding-left: 0.5rem;
+  }
 }
 
 /* ---------- Ark Passive node comparison calculator ---------- */
@@ -8388,8 +8299,7 @@ h3 { color: var(--dbc-teal); }
    The chart is drawn live, so there's no screenshot to retake after a
    balance pass.
 
-   Shell matches the site's standard flat card family (.cpm-calc,
-   .build-compare) - a hairline lavender border + a faint lavender tint,
+   Shell matches the site's standard flat card family (.build-compare) - a hairline lavender border + a faint lavender tint,
    nothing else - rather than a bespoke glow/hover-lift/gradient
    treatment, which would read as much more decorated than every other
    panel on the page for what is a plain data readout. */
@@ -8476,7 +8386,7 @@ h3 { color: var(--dbc-teal); }
 /* The bar: a full-width track with the value's fill and the row's
    label all layered inside it, rather than a separate label column next
    to a thin standalone track. Neutral card-shell background (same
-   rgba(255,255,255,0.04)/hairline-border language as .cpm-calc and the
+   rgba(255,255,255,0.04)/hairline-border language as the CPM and
    Ark Passive cards) rather than a tinted track, since the accent
    now lives entirely in the fill - keeps a chart with a non-default
    data-accent from having a mismatched tinted track under a
@@ -11093,7 +11003,7 @@ html.image-lightbox-open {
 }
 
 /* ---- Touch screens: comfortable text size and tap targets in the Ark Passive
-   Calculator, plus the build-card update-note badge at the end of the block.
+   Calculator and the CPM and Bid calculators, plus the build-card update-note badge at the end of the block.
    Gated on (pointer: coarse) so mouse layouts are untouched.
    - Every input/select was 13.6px. iOS Safari zooms the whole page when a
      field under 16px is focused and does not zoom back, which makes typing
@@ -11105,8 +11015,22 @@ html.image-lightbox-open {
      new look. */
 @media (pointer: coarse) {
   .md-typeset .ap-calc input:not([type="checkbox"]):not([type="radio"]),
-  .md-typeset .ap-calc select {
+  .md-typeset .ap-calc select,
+  .md-typeset .cpm-calc input[type="number"],
+  .md-typeset .cpm-calc input[type="text"],
+  .md-typeset .bid-calc input[type="number"],
+  .md-typeset .bid-calc input[type="text"] {
     font-size: 16px;
+  }
+  /* CPM and Bid: chips, the recent-input chips and the copy button get a 32px tap height. */
+  .md-typeset .bid-calc-chip,
+  .md-typeset .bid-calc-copy-btn,
+  .md-typeset .cpm-calc-recent-chip,
+  .md-typeset .cpm-calc-recent-clear {
+    min-height: 32px;
+  }
+  .md-typeset .cpm-calc-recent-clear {
+    min-width: 32px;
   }
   .md-typeset .ap-calc input[type="checkbox"] {
     width: 20px;

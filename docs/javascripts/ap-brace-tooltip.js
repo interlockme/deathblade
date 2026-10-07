@@ -26,7 +26,7 @@
 // Also covers .cpm-calc and .bid-calc: this is the site's one tooltip
 // system, not one local to the Ark Passive Calculator. Bid Calculator's
 // Intent chips (.bid-calc-intent's .ap-build-chip buttons - see
-// bid-calculator.js) and the Casts/Min scratch-pad's
+// bid-calculator.js) and the CPM Cast rate card's
 // .cpm-rate-calc-info-icon (an .ap-brace-info-icon - see
 // resources.md/extra.css) use it too. Nothing about attach() below is
 // Ark-Passive-specific - it's a generic "wire whatever title exists"

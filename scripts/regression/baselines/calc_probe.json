@@ -1,0 +1,1084 @@
+{
+ "bid": {
+  "copy": {
+   "aria_after": "Copied to clipboard",
+   "aria_before": "Copy amount to bid",
+   "clipboard": "7035",
+   "copied_class": true,
+   "label_after": "Copied",
+   "label_before": "Copy",
+   "label_reset": "Copy"
+  },
+  "grid": {
+   "custom_1": {
+    "copyDisabled": false,
+    "customDisabled": false,
+    "customHidden": false,
+    "customInvalid": false,
+    "customVal": "2",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "4,385g",
+    "nextParty": "4,166g",
+    "nextProfit": "4,165g",
+    "nextRisk": true,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "3986",
+    "result": "3,986g",
+    "resultEmpty": false,
+    "size": [
+     "custom"
+    ],
+    "tableEmpty": false,
+    "youBid": "3,986g",
+    "youParty": "3,787g",
+    "youProfit": "4,564g"
+   },
+   "custom_2": {
+    "copyDisabled": false,
+    "customDisabled": false,
+    "customHidden": false,
+    "customInvalid": false,
+    "customVal": "2",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "4,385g",
+    "nextParty": "4,166g",
+    "nextProfit": "4,165g",
+    "nextRisk": true,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "3986",
+    "result": "3,986g",
+    "resultEmpty": false,
+    "size": [
+     "custom"
+    ],
+    "tableEmpty": false,
+    "youBid": "3,986g",
+    "youParty": "3,787g",
+    "youProfit": "4,564g"
+   },
+   "custom_30": {
+    "copyDisabled": false,
+    "customDisabled": false,
+    "customHidden": false,
+    "customInvalid": false,
+    "customVal": "30",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "8,279g",
+    "nextParty": "271g",
+    "nextProfit": "271g",
+    "nextRisk": true,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "7526",
+    "result": "7,526g",
+    "resultEmpty": false,
+    "size": [
+     "custom"
+    ],
+    "tableEmpty": false,
+    "youBid": "7,526g",
+    "youParty": "247g",
+    "youProfit": "1,024g"
+   },
+   "custom_6": {
+    "copyDisabled": false,
+    "customDisabled": false,
+    "customHidden": false,
+    "customInvalid": false,
+    "customVal": "6",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "7,185g",
+    "nextParty": "1,365g",
+    "nextProfit": "1,365g",
+    "nextRisk": true,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "6532",
+    "result": "6,532g",
+    "resultEmpty": false,
+    "size": [
+     "custom"
+    ],
+    "tableEmpty": false,
+    "youBid": "6,532g",
+    "youParty": "1,241g",
+    "youProfit": "2,018g"
+   },
+   "custom_back_to_8": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "30",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "7,528g",
+    "nextParty": "1,022g",
+    "nextProfit": "1,022g",
+    "nextRisk": true,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "6844",
+    "result": "6,844g",
+    "resultEmpty": false,
+    "size": [
+     "8"
+    ],
+    "tableEmpty": false,
+    "youBid": "6,844g",
+    "youParty": "929g",
+    "youProfit": "1,706g"
+   },
+   "custom_empty": {
+    "copyDisabled": true,
+    "customDisabled": false,
+    "customHidden": false,
+    "customInvalid": false,
+    "customVal": "",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "\u2014",
+    "nextParty": "\u2014",
+    "nextProfit": "\u2014",
+    "nextRisk": true,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": null,
+    "result": "\u2014",
+    "resultEmpty": true,
+    "size": [
+     "custom"
+    ],
+    "tableEmpty": true,
+    "youBid": "\u2014",
+    "youParty": "\u2014",
+    "youProfit": "\u2014"
+   },
+   "price_0": {
+    "copyDisabled": true,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "30",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "\u2014",
+    "nextParty": "\u2014",
+    "nextProfit": "\u2014",
+    "nextRisk": true,
+    "price": "0",
+    "priceInvalid": true,
+    "rawBid": null,
+    "result": "\u2014",
+    "resultEmpty": true,
+    "size": [
+     "8"
+    ],
+    "tableEmpty": true,
+    "youBid": "\u2014",
+    "youParty": "\u2014",
+    "youProfit": "\u2014"
+   },
+   "price_1000000000000": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "30",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "836,477,987,421g",
+    "nextParty": "113,522,012,579g",
+    "nextProfit": "113,522,012,579g",
+    "nextRisk": true,
+    "price": "1,000,000,000,000",
+    "priceInvalid": false,
+    "rawBid": "760434534019",
+    "result": "760,434,534,019g",
+    "resultEmpty": false,
+    "size": [
+     "8"
+    ],
+    "tableEmpty": false,
+    "youBid": "760,434,534,019g",
+    "youParty": "103,201,829,617g",
+    "youProfit": "189,565,465,981g"
+   },
+   "price_5000000000000": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "30",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "836,477,987,421g",
+    "nextParty": "113,522,012,579g",
+    "nextProfit": "113,522,012,579g",
+    "nextRisk": true,
+    "price": "1,000,000,000,000",
+    "priceInvalid": false,
+    "rawBid": "760434534019",
+    "result": "760,434,534,019g",
+    "resultEmpty": false,
+    "size": [
+     "8"
+    ],
+    "tableEmpty": false,
+    "youBid": "760,434,534,019g",
+    "youParty": "103,201,829,617g",
+    "youProfit": "189,565,465,981g"
+   },
+   "price_abc": {
+    "copyDisabled": true,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "30",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "\u2014",
+    "nextParty": "\u2014",
+    "nextProfit": "\u2014",
+    "nextRisk": true,
+    "price": "",
+    "priceInvalid": false,
+    "rawBid": null,
+    "result": "\u2014",
+    "resultEmpty": true,
+    "size": [
+     "8"
+    ],
+    "tableEmpty": true,
+    "youBid": "\u2014",
+    "youParty": "\u2014",
+    "youProfit": "\u2014"
+   },
+   "size16_equal": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "",
+    "intent": [
+     "equal"
+    ],
+    "nextBid": "8,845g",
+    "nextParty": "560g",
+    "nextProfit": "-295g",
+    "nextRisk": false,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "8041",
+    "result": "8,041g",
+    "resultEmpty": false,
+    "size": [
+     "16"
+    ],
+    "tableEmpty": false,
+    "youBid": "8,041g",
+    "youParty": "509g",
+    "youProfit": "509g"
+   },
+   "size16_max": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "8,041g",
+    "nextParty": "509g",
+    "nextProfit": "509g",
+    "nextRisk": true,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "7310",
+    "result": "7,310g",
+    "resultEmpty": false,
+    "size": [
+     "16"
+    ],
+    "tableEmpty": false,
+    "youBid": "7,310g",
+    "youParty": "463g",
+    "youProfit": "1,240g"
+   },
+   "size16_punish": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "",
+    "intent": [
+     "punish"
+    ],
+    "nextBid": "8,152g",
+    "nextParty": "516g",
+    "nextProfit": "398g",
+    "nextRisk": false,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "7411",
+    "result": "7,411g",
+    "resultEmpty": false,
+    "size": [
+     "16"
+    ],
+    "tableEmpty": false,
+    "youBid": "7,411g",
+    "youParty": "469g",
+    "youProfit": "1,139g"
+   },
+   "size4_equal": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "",
+    "intent": [
+     "equal"
+    ],
+    "nextBid": "7,143g",
+    "nextParty": "2,262g",
+    "nextProfit": "1,407g",
+    "nextRisk": false,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "6494",
+    "result": "6,494g",
+    "resultEmpty": false,
+    "size": [
+     "4"
+    ],
+    "tableEmpty": false,
+    "youBid": "6,494g",
+    "youParty": "2,056g",
+    "youProfit": "2,056g"
+   },
+   "size4_max": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "6,493g",
+    "nextParty": "2,056g",
+    "nextProfit": "2,057g",
+    "nextRisk": true,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "5903",
+    "result": "5,903g",
+    "resultEmpty": false,
+    "size": [
+     "4"
+    ],
+    "tableEmpty": false,
+    "youBid": "5,903g",
+    "youParty": "1,869g",
+    "youProfit": "2,647g"
+   },
+   "size4_punish": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "",
+    "intent": [
+     "punish"
+    ],
+    "nextBid": "6,870g",
+    "nextParty": "2,176g",
+    "nextProfit": "1,680g",
+    "nextRisk": false,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "6245",
+    "result": "6,245g",
+    "resultEmpty": false,
+    "size": [
+     "4"
+    ],
+    "tableEmpty": false,
+    "youBid": "6,245g",
+    "youParty": "1,978g",
+    "youProfit": "2,305g"
+   },
+   "size8_equal": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "",
+    "intent": [
+     "equal"
+    ],
+    "nextBid": "8,281g",
+    "nextParty": "1,124g",
+    "nextProfit": "269g",
+    "nextRisk": false,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "7528",
+    "result": "7,528g",
+    "resultEmpty": false,
+    "size": [
+     "8"
+    ],
+    "tableEmpty": false,
+    "youBid": "7,528g",
+    "youParty": "1,022g",
+    "youProfit": "1,022g"
+   },
+   "size8_max": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "",
+    "intent": [
+     "max"
+    ],
+    "nextBid": "7,528g",
+    "nextParty": "1,022g",
+    "nextProfit": "1,022g",
+    "nextRisk": true,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "6844",
+    "result": "6,844g",
+    "resultEmpty": false,
+    "size": [
+     "8"
+    ],
+    "tableEmpty": false,
+    "youBid": "6,844g",
+    "youParty": "929g",
+    "youProfit": "1,706g"
+   },
+   "size8_punish": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "",
+    "intent": [
+     "punish"
+    ],
+    "nextBid": "7,739g",
+    "nextParty": "1,050g",
+    "nextProfit": "811g",
+    "nextRisk": false,
+    "price": "9,000",
+    "priceInvalid": false,
+    "rawBid": "7035",
+    "result": "7,035g",
+    "resultEmpty": false,
+    "size": [
+     "8"
+    ],
+    "tableEmpty": false,
+    "youBid": "7,035g",
+    "youParty": "955g",
+    "youProfit": "1,515g"
+   },
+   "typed_price_grouped": {
+    "copyDisabled": false,
+    "customDisabled": true,
+    "customHidden": true,
+    "customInvalid": false,
+    "customVal": "",
+    "intent": [
+     "equal"
+    ],
+    "nextBid": "896,765g",
+    "nextParty": "121,704g",
+    "nextProfit": "29,116g",
+    "nextRisk": false,
+    "price": "974,612",
+    "priceInvalid": false,
+    "rawBid": "815241",
+    "result": "815,241g",
+    "resultEmpty": false,
+    "size": [
+     "8"
+    ],
+    "tableEmpty": false,
+    "youBid": "815,241g",
+    "youParty": "110,640g",
+    "youProfit": "110,640g"
+   }
+  },
+  "initial": {
+   "copyDisabled": true,
+   "customDisabled": true,
+   "customHidden": true,
+   "customInvalid": false,
+   "customVal": "",
+   "intent": [
+    "equal"
+   ],
+   "nextBid": "\u2014",
+   "nextParty": "\u2014",
+   "nextProfit": "\u2014",
+   "nextRisk": false,
+   "price": "",
+   "priceInvalid": false,
+   "rawBid": null,
+   "result": "\u2014",
+   "resultEmpty": true,
+   "size": [
+    "8"
+   ],
+   "tableEmpty": true,
+   "youBid": "\u2014",
+   "youParty": "\u2014",
+   "youProfit": "\u2014"
+  }
+ },
+ "cpm": {
+  "history": {
+   "after_chip_click": {
+    "adj": "1.0938",
+    "ba": "73",
+    "bar": "42.7093%",
+    "base": "1.20",
+    "best": false,
+    "build": "333-ceiling",
+    "final": "0.656",
+    "meta": "Trixion CPM 15",
+    "raid": "9",
+    "rate": "\u2248 66.5% rate",
+    "recent": [
+     "9.00 cpm \u00b7 74.0%",
+     "9.00 cpm \u00b7 73.0%",
+     "8.00 cpm \u00b7 73.0%",
+     "8.00 cpm \u00b7 72.0%"
+    ],
+    "recentHidden": false,
+    "tag": "Remaining Energy"
+   },
+   "after_clear": {
+    "adj": "1.0938",
+    "ba": "73",
+    "bar": "42.7093%",
+    "base": "1.20",
+    "best": false,
+    "build": "333-ceiling",
+    "final": "0.656",
+    "meta": "Trixion CPM 15",
+    "raid": "9",
+    "rate": "\u2248 66.5% rate",
+    "recent": [],
+    "recentHidden": true,
+    "tag": "Remaining Energy"
+   },
+   "after_six_entries": [
+    "9.00 cpm \u00b7 74.0%",
+    "9.00 cpm \u00b7 73.0%",
+    "8.00 cpm \u00b7 73.0%",
+    "8.00 cpm \u00b7 72.0%"
+   ]
+  },
+  "initial": [
+   {
+    "adj": "\u2014",
+    "ba": "",
+    "bar": "0%",
+    "base": "1.20",
+    "best": false,
+    "build": "333-ceiling",
+    "final": "\u2014",
+    "meta": "Trixion CPM 15",
+    "raid": "",
+    "rate": "",
+    "recent": [],
+    "recentHidden": true,
+    "tag": "Remaining Energy"
+   },
+   {
+    "adj": "\u2014",
+    "ba": "",
+    "bar": "0%",
+    "base": "1.23",
+    "best": false,
+    "build": "111-classic",
+    "final": "\u2014",
+    "meta": "Trixion CPM 10.952",
+    "raid": "",
+    "rate": "",
+    "recent": [],
+    "recentHidden": true,
+    "tag": "Surge"
+   },
+   {
+    "adj": "\u2014",
+    "ba": "",
+    "bar": "0%",
+    "base": "1.25",
+    "best": false,
+    "build": "222-speedy",
+    "final": "\u2014",
+    "meta": "Trixion CPM 10.084",
+    "raid": "",
+    "rate": "",
+    "recent": [],
+    "recentHidden": true,
+    "tag": "Surge"
+   }
+  ],
+  "rate": {
+   "bare_seconds": {
+    "count": "31",
+    "empty": false,
+    "invalid": false,
+    "out": "15.12",
+    "time": "123"
+   },
+   "colon": {
+    "count": "31",
+    "empty": false,
+    "invalid": false,
+    "out": "15.12",
+    "time": "2:03"
+   },
+   "count_over_max": {
+    "count": "999",
+    "empty": false,
+    "invalid": false,
+    "out": "499.50",
+    "time": "2m"
+   },
+   "count_zero": {
+    "count": "0",
+    "empty": false,
+    "invalid": false,
+    "out": "0.00",
+    "time": "2m"
+   },
+   "garbage": {
+    "count": "31",
+    "empty": true,
+    "invalid": true,
+    "out": "\u2014",
+    "time": "abc"
+   },
+   "hms": {
+    "count": "100",
+    "empty": false,
+    "invalid": false,
+    "out": "1.61",
+    "time": "1:02:03"
+   },
+   "hours": {
+    "count": "50",
+    "empty": false,
+    "invalid": false,
+    "out": "0.82",
+    "time": "1h 1m"
+   },
+   "min_sec": {
+    "count": "31",
+    "empty": false,
+    "invalid": false,
+    "out": "15.12",
+    "time": "2m 3s"
+   },
+   "no_count": {
+    "count": "",
+    "empty": true,
+    "invalid": false,
+    "out": "\u2014",
+    "time": "2m"
+   },
+   "over_max_time": {
+    "count": "10",
+    "empty": false,
+    "invalid": false,
+    "out": "0.08",
+    "time": "121m"
+   },
+   "zero_time": {
+    "count": "31",
+    "empty": true,
+    "invalid": true,
+    "out": "\u2014",
+    "time": "0"
+   }
+  },
+  "rate_initial": {
+   "count": "",
+   "empty": true,
+   "invalid": false,
+   "out": "\u2014",
+   "time": ""
+  },
+  "sequence": {
+   "ba_over_max": {
+    "adj": "1.2500",
+    "ba": "100.00",
+    "bar": "77.9519%",
+    "base": "1.25",
+    "best": true,
+    "build": "222-speedy",
+    "final": "0.868",
+    "meta": "Trixion CPM 10.084",
+    "raid": "7",
+    "rate": "\u2248 100.0% rate",
+    "recent": [
+     "7.00 cpm \u00b7 100.0%",
+     "7.00 cpm \u00b7 84.0%",
+     "20.00 cpm \u00b7 84.0%"
+    ],
+    "recentHidden": false,
+    "tag": "Surge"
+   },
+   "ba_zero": {
+    "adj": "0.9193",
+    "ba": "0",
+    "bar": "39.6899%",
+    "base": "1.25",
+    "best": false,
+    "build": "222-speedy",
+    "final": "0.638",
+    "meta": "Trixion CPM 10.084",
+    "raid": "7",
+    "rate": "\u2248 0.0% rate",
+    "recent": [
+     "7.00 cpm \u00b7 0.0%",
+     "7.00 cpm \u00b7 100.0%",
+     "7.00 cpm \u00b7 84.0%",
+     "20.00 cpm \u00b7 84.0%"
+    ],
+    "recentHidden": false,
+    "tag": "Surge"
+   },
+   "base_blank_falls_back": {
+    "adj": "1.1820",
+    "ba": "84",
+    "bar": "70.0807%",
+    "base": "",
+    "best": true,
+    "build": "222-speedy",
+    "final": "0.820",
+    "meta": "Trixion CPM 10.084",
+    "raid": "7",
+    "rate": "\u2248 79.4% rate",
+    "recent": [
+     "7.00 cpm \u00b7 84.0%",
+     "7.00 cpm \u00b7 0.0%",
+     "7.00 cpm \u00b7 100.0%",
+     "20.00 cpm \u00b7 84.0%"
+    ],
+    "recentHidden": false,
+    "tag": "Surge"
+   },
+   "base_custom": {
+    "adj": "1.3238",
+    "ba": "84",
+    "bar": "86.4904%",
+    "base": "1.4",
+    "best": true,
+    "build": "222-speedy",
+    "final": "0.919",
+    "meta": "Trixion CPM 10.084",
+    "raid": "7",
+    "rate": "\u2248 79.4% rate",
+    "recent": [
+     "7.00 cpm \u00b7 84.0%",
+     "7.00 cpm \u00b7 0.0%",
+     "7.00 cpm \u00b7 100.0%",
+     "20.00 cpm \u00b7 84.0%"
+    ],
+    "recentHidden": false,
+    "tag": "Surge"
+   },
+   "base_over_max": {
+    "adj": "1.8911",
+    "ba": "84",
+    "bar": "100%",
+    "base": "2.00",
+    "best": true,
+    "build": "222-speedy",
+    "final": "1.313",
+    "meta": "Trixion CPM 10.084",
+    "raid": "7",
+    "rate": "\u2248 79.4% rate",
+    "recent": [
+     "7.00 cpm \u00b7 84.0%",
+     "7.00 cpm \u00b7 0.0%",
+     "7.00 cpm \u00b7 100.0%",
+     "20.00 cpm \u00b7 84.0%"
+    ],
+    "recentHidden": false,
+    "tag": "Surge"
+   },
+   "one_row_filled": [
+    {
+     "adj": "1.1195",
+     "ba": "80",
+     "bar": "51.498%",
+     "base": "1.20",
+     "best": false,
+     "build": "333-ceiling",
+     "final": "0.709",
+     "meta": "Trixion CPM 15",
+     "raid": "9.5",
+     "rate": "\u2248 74.6% rate",
+     "recent": [
+      "9.50 cpm \u00b7 80.0%"
+     ],
+     "recentHidden": false,
+     "tag": "Remaining Energy"
+    },
+    {
+     "adj": "\u2014",
+     "ba": "",
+     "bar": "0%",
+     "base": "1.23",
+     "best": false,
+     "build": "111-classic",
+     "final": "\u2014",
+     "meta": "Trixion CPM 10.952",
+     "raid": "",
+     "rate": "",
+     "recent": [],
+     "recentHidden": true,
+     "tag": "Surge"
+    },
+    {
+     "adj": "\u2014",
+     "ba": "",
+     "bar": "0%",
+     "base": "1.25",
+     "best": false,
+     "build": "222-speedy",
+     "final": "\u2014",
+     "meta": "Trixion CPM 10.084",
+     "raid": "",
+     "rate": "",
+     "recent": [],
+     "recentHidden": true,
+     "tag": "Surge"
+    }
+   ],
+   "raid_over_max": {
+    "adj": "1.1820",
+    "ba": "84",
+    "bar": "100%",
+    "base": "1.25",
+    "best": true,
+    "build": "222-speedy",
+    "final": "2.344",
+    "meta": "Trixion CPM 10.084",
+    "raid": "20.00",
+    "rate": "\u2248 79.4% rate",
+    "recent": [
+     "20.00 cpm \u00b7 84.0%",
+     "7.00 cpm \u00b7 84.0%"
+    ],
+    "recentHidden": false,
+    "tag": "Surge"
+   },
+   "raid_zero": {
+    "adj": "\u2014",
+    "ba": "84",
+    "bar": "0%",
+    "base": "1.25",
+    "best": false,
+    "build": "222-speedy",
+    "final": "\u2014",
+    "meta": "Trixion CPM 10.084",
+    "raid": "0",
+    "rate": "\u2248 79.4% rate",
+    "recent": [
+     "7.00 cpm \u00b7 84.0%"
+    ],
+    "recentHidden": false,
+    "tag": "Surge"
+   },
+   "row0_cleared": [
+    {
+     "adj": "\u2014",
+     "ba": "",
+     "bar": "0%",
+     "base": "1.20",
+     "best": false,
+     "build": "333-ceiling",
+     "final": "\u2014",
+     "meta": "Trixion CPM 15",
+     "raid": "",
+     "rate": "",
+     "recent": [
+      "9.50 cpm \u00b7 80.0%"
+     ],
+     "recentHidden": false,
+     "tag": "Remaining Energy"
+    },
+    {
+     "adj": "1.1956",
+     "ba": "92",
+     "bar": "51.597%",
+     "base": "1.23",
+     "best": false,
+     "build": "111-classic",
+     "final": "0.710",
+     "meta": "Trixion CPM 10.952",
+     "raid": "6.5",
+     "rate": "\u2248 89.4% rate",
+     "recent": [
+      "6.50 cpm \u00b7 92.0%"
+     ],
+     "recentHidden": false,
+     "tag": "Surge"
+    },
+    {
+     "adj": "1.1820",
+     "ba": "84",
+     "bar": "70.0807%",
+     "base": "",
+     "best": true,
+     "build": "222-speedy",
+     "final": "0.820",
+     "meta": "Trixion CPM 10.084",
+     "raid": "7",
+     "rate": "\u2248 79.4% rate",
+     "recent": [
+      "7.00 cpm \u00b7 84.0%",
+      "7.00 cpm \u00b7 0.0%",
+      "7.00 cpm \u00b7 100.0%",
+      "20.00 cpm \u00b7 84.0%"
+     ],
+     "recentHidden": false,
+     "tag": "Surge"
+    }
+   ],
+   "three_rows_best": [
+    {
+     "adj": "1.1195",
+     "ba": "80",
+     "bar": "51.498%",
+     "base": "1.20",
+     "best": false,
+     "build": "333-ceiling",
+     "final": "0.709",
+     "meta": "Trixion CPM 15",
+     "raid": "9.5",
+     "rate": "\u2248 74.6% rate",
+     "recent": [
+      "9.50 cpm \u00b7 80.0%"
+     ],
+     "recentHidden": false,
+     "tag": "Remaining Energy"
+    },
+    {
+     "adj": "1.1956",
+     "ba": "92",
+     "bar": "51.597%",
+     "base": "1.23",
+     "best": false,
+     "build": "111-classic",
+     "final": "0.710",
+     "meta": "Trixion CPM 10.952",
+     "raid": "6.5",
+     "rate": "\u2248 89.4% rate",
+     "recent": [
+      "6.50 cpm \u00b7 92.0%"
+     ],
+     "recentHidden": false,
+     "tag": "Surge"
+    },
+    {
+     "adj": "1.1820",
+     "ba": "84",
+     "bar": "70.0807%",
+     "base": "1.25",
+     "best": true,
+     "build": "222-speedy",
+     "final": "0.820",
+     "meta": "Trixion CPM 10.084",
+     "raid": "7",
+     "rate": "\u2248 79.4% rate",
+     "recent": [
+      "7.00 cpm \u00b7 84.0%"
+     ],
+     "recentHidden": false,
+     "tag": "Surge"
+    }
+   ],
+   "two_rows_best": [
+    {
+     "adj": "1.1195",
+     "ba": "80",
+     "bar": "51.498%",
+     "base": "1.20",
+     "best": false,
+     "build": "333-ceiling",
+     "final": "0.709",
+     "meta": "Trixion CPM 15",
+     "raid": "9.5",
+     "rate": "\u2248 74.6% rate",
+     "recent": [
+      "9.50 cpm \u00b7 80.0%"
+     ],
+     "recentHidden": false,
+     "tag": "Remaining Energy"
+    },
+    {
+     "adj": "1.1956",
+     "ba": "92",
+     "bar": "51.597%",
+     "base": "1.23",
+     "best": true,
+     "build": "111-classic",
+     "final": "0.710",
+     "meta": "Trixion CPM 10.952",
+     "raid": "6.5",
+     "rate": "\u2248 89.4% rate",
+     "recent": [
+      "6.50 cpm \u00b7 92.0%"
+     ],
+     "recentHidden": false,
+     "tag": "Surge"
+    },
+    {
+     "adj": "\u2014",
+     "ba": "",
+     "bar": "0%",
+     "base": "1.25",
+     "best": false,
+     "build": "222-speedy",
+     "final": "\u2014",
+     "meta": "Trixion CPM 10.084",
+     "raid": "",
+     "rate": "",
+     "recent": [],
+     "recentHidden": true,
+     "tag": "Surge"
+    }
+   ]
+  }
+ }
+}

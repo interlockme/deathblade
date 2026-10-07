@@ -40,7 +40,9 @@ import socketserver
 import sys
 import threading
 
-ALLOW = []  # substrings of an element signature that are allowed to clip, e.g. "ap-summary-value"
+# Substrings of an element signature that are allowed to clip. dbc-sr-only is visually hidden text
+# (1px clip box) that screen readers still read, so it always "clips" by design.
+ALLOW = ["dbc-sr-only"]
 # Substrings of an ANCESTOR's signature that are deliberate sideways scrollers: wide tables whose
 # columns are meant to be reached by scrolling. Text running past these is not a finding.
 SCROLL_OK = ["ap-acc-table-scroll", "ap-brace-compare-body"]

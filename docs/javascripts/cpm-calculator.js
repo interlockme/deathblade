@@ -546,7 +546,11 @@
     // above; the markup ships with an empty span.
     const metaEl = row.querySelector(".cpm-calc-row-meta");
     if (build && metaEl) {
-      metaEl.textContent = "Trixion CPM " + build.trixionCPM + " \u00b7 " + build.familyLabel;
+      metaEl.textContent = "Trixion CPM " + build.trixionCPM;
+    }
+    const tagEl = row.querySelector(".cpm-calc-row-tag");
+    if (build && tagEl) {
+      tagEl.textContent = build.familyLabel;
     }
 
     row.querySelectorAll("input").forEach((input) => {
