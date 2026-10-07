@@ -1254,7 +1254,7 @@
          (Grudge/Ambush Master/Adrenaline always-on, then Raid
          Captain/Keen Blunt Weapon/Cursed Doll/Mass Increase competing)
          list straight down. -->
-    <div class="ap-gear-cards">
+    <div class="ap-gear-cards ap-gear-cards--equal">
       <div class="ap-gear-card ap-gear-card--engr-core">
         <p class="ap-gear-card-title">Engravings</p>
         <div class="ap-calc-field-row">
@@ -1340,23 +1340,29 @@
           <input type="number" id="ap-engr-maelstrom-uptime" class="ap-engr-maelstrom-uptime" min="0" max="100" step="1" value="85">
         </div>
         <div class="ap-calc-field-row ap-engr-manafood-row">
-          <span class="ap-engr-food-label-group"><label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus."><span class="ap-engr-manafood-label">Mana Food</span></label><span class="ap-engr-food-tag" title="Also counts the DPS gain from equipping the Bleed rune on Maelstrom.">Mael Bleed</span></span>
+          <span class="ap-engr-food-label-group"><label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus."><span class="ap-engr-manafood-label">Mana Food</span></label><span class="ap-engr-food-tag" title="Only counts the Main Stat from Mana Food.">Main Stat</span></span>
           <span class="ap-engr-controls">
           <input type="checkbox" id="ap-engr-manafood" class="ap-engr-manafood" checked>
           <select id="ap-engr-manafood-amount" class="ap-engr-manafood-amount" aria-label="Mana Food Amount">
             <option value="6000" selected>6000 DEX</option>
             <option value="12000">12000 DEX</option>
           </select>
-          </span>
-        </div>
-        <div class="ap-calc-field-row ap-engr-manafood-main-row">
-          <span class="ap-engr-food-label-group"><label class="ap-calc-field-label ap-engr-checkbox-label" for="ap-engr-manafood-main" title="Only accurate if the Main Stat input in Character Data doesn't already include Mana Food's Main Stat bonus."><span class="ap-engr-manafood-main-label">Mana Food</span></label><span class="ap-engr-food-tag" title="Only counts the Main Stat from Mana Food.">Main Stat</span></span>
-          <span class="ap-engr-controls">
+          <select class="ap-engr-food-mode" aria-label="Mana Food" title="No Mana Food is counted." hidden>
+            <option value="none" selected>None</option>
+            <option value="bleed">Mael Bleed</option>
+            <option value="main">Main Stat</option>
+          </select>
+          <select class="ap-engr-food-mode-amount" aria-label="Mana Food Amount" hidden>
+            <option value="6000" selected>6000 DEX</option>
+            <option value="12000">12000 DEX</option>
+          </select>
+          <span class="ap-engr-food-store" hidden>
           <input type="checkbox" id="ap-engr-manafood-main" class="ap-engr-manafood-main">
           <select id="ap-engr-manafood-main-amount" class="ap-engr-manafood-main-amount" aria-label="Mana Food (Main Stat only) Amount">
             <option value="6000" selected>6000 DEX</option>
             <option value="12000">12000 DEX</option>
           </select>
+          </span>
           </span>
         </div>
         <div class="ap-calc-field-row ap-engr-rage-rune-row">

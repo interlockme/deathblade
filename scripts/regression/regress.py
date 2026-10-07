@@ -265,6 +265,8 @@ STALE_FIELD_SETS = {
     "main + regular food ticked on surge-333": {"ap-brace-spec-build": "surge-333", "ap-engr-wine": False, "ap-engr-manafood-main": True, "ap-engr-manafood": True},
     "main food ticked on surge-222": {"ap-brace-spec-build": "surge-222", "ap-engr-wine": False, "ap-engr-manafood-main": True, "ap-engr-manafood": False},
     "main food + wine ticked on surge-222": {"ap-brace-spec-build": "surge-222", "ap-engr-wine": True, "ap-engr-manafood-main": True, "ap-engr-manafood": False},
+    "main food 12000 stored on surge-333": {"ap-brace-spec-build": "surge-333", "ap-engr-wine": False, "ap-engr-manafood-main": True, "ap-engr-manafood-main-amount": "12000", "ap-engr-manafood": False},
+    "bleed food 12000 stored on surge-111": {"ap-brace-spec-build": "surge-111", "ap-engr-wine": False, "ap-engr-manafood-main": False, "ap-engr-manafood": True, "ap-engr-manafood-amount": "12000"},
     "main food ticked on re-333": {"ap-brace-spec-build": "re-333", "ap-engr-wine": False, "ap-engr-manafood-main": True, "ap-engr-manafood": False},
     "wine + regular food ticked on re-333": {"ap-brace-spec-build": "re-333", "ap-engr-wine": True, "ap-engr-manafood-main": False, "ap-engr-manafood": True},
     "flashy + stable + swift chosen": {"ap-flashy-atk": CHAOS_FLASHY, "ap-stable-atk": CHAOS_STABLE, "ap-swift-core": CHAOS_STABLE},
@@ -309,6 +311,24 @@ MAIN_AMOUNT_SEQUENCES = [
      [(MAIN_AMOUNT, "12000"), ("toggle", MAIN_BOX), "@surge-222", "@surge-111"]),
     ("main amount: surge-222, regular 12000, regular box is the main food", "surge-222",
      [(REG_AMOUNT, "12000"), ("toggle", "input#ap-engr-manafood:0")]),
+]
+
+# Mana Food mode select and its amount select (the single visible Mana Food row on Surge 111/333). They mirror
+# the stored boxes and amount selects above; each sequence must leave the stored fields, the readouts and the
+# mirror itself where the equivalent box clicks would.
+FOOD_MODE = "select.ap-engr-food-mode:0"
+FOOD_MODE_AMOUNT = "select.ap-engr-food-mode-amount:0"
+FACADE_SEQUENCES = [
+    ("food select: surge-111, Main Stat, 12000", "surge-111", [(FOOD_MODE, "main"), (FOOD_MODE_AMOUNT, "12000")]),
+    ("food select: surge-111, Mael Bleed, 12000", "surge-111", [(FOOD_MODE, "bleed"), (FOOD_MODE_AMOUNT, "12000")]),
+    ("food select: surge-111, Main Stat then None", "surge-111", [(FOOD_MODE, "main"), (FOOD_MODE, "none")]),
+    ("food select: surge-111, Main Stat then Mael Bleed", "surge-111", [(FOOD_MODE, "main"), (FOOD_MODE, "bleed")]),
+    ("food select: surge-333, Main Stat, 12000", "surge-333", [(FOOD_MODE, "main"), (FOOD_MODE_AMOUNT, "12000")]),
+    ("food select: surge-333, Mael Bleed, 12000", "surge-333", [(FOOD_MODE, "bleed"), (FOOD_MODE_AMOUNT, "12000")]),
+    ("food select: surge-111, Main Stat 12000, away through 222 and back", "surge-111",
+     [(FOOD_MODE, "main"), (FOOD_MODE_AMOUNT, "12000"), "@surge-222", "@surge-111"]),
+    ("food select: surge-111, Mael Bleed 12000, away through RE and back", "surge-111",
+     [(FOOD_MODE, "bleed"), (FOOD_MODE_AMOUNT, "12000"), "@re-333", "@surge-111"]),
 ]
 
 
@@ -556,7 +576,7 @@ def run_calculator(base_url, payloads, fast=False):
                     return False
             return True
 
-        for name, build, steps in SVS_STONE_SEQUENCES + MAIN_AMOUNT_SEQUENCES:
+        for name, build, steps in SVS_STONE_SEQUENCES + MAIN_AMOUNT_SEQUENCES + FACADE_SEQUENCES:
             if not probe(name, lambda b=build, q=steps: run_kv(b, q)):
                 skipped.append(name)
                 restart()

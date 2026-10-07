@@ -4897,8 +4897,18 @@ h3 { color: var(--dbc-teal); }
    drops the select under the label when the card is too narrow for both
    side by side, instead of letting it poke out past the card's border. */
 .md-typeset .ap-engr-manafood-amount,
-.md-typeset .ap-engr-manafood-main-amount {
+.md-typeset .ap-engr-food-mode-amount {
   flex-shrink: 0;
+}
+/* Surge 111/333's food select is the one control in the row that may shrink (its text ends in an ellipsis, the picker list shows
+   the full text), so the select pair never outgrows the row at 320px; the controls wrapper may shrink for the same reason. */
+.md-typeset .ap-engr-manafood-row .ap-engr-controls {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+.md-typeset .ap-engr-food-mode {
+  min-width: 0;
 }
 .md-typeset .ap-engr-manafood-row {
   flex-wrap: wrap;
@@ -6049,14 +6059,18 @@ h3 { color: var(--dbc-teal); }
 /* On a phone the controls drop under the label instead of squeezing it into
    a mid-word break. */
 .md-typeset .ap-engr-mi-row,
-.md-typeset .ap-engr-manafood-row,
-.md-typeset .ap-engr-manafood-main-row {
+.md-typeset .ap-engr-manafood-row {
   flex-wrap: wrap;
 }
 .md-typeset .ap-engr-mi-row label.ap-calc-field-label,
-.md-typeset .ap-engr-manafood-row label.ap-calc-field-label,
-.md-typeset .ap-engr-manafood-main-row label.ap-calc-field-label {
+.md-typeset .ap-engr-manafood-row label.ap-calc-field-label {
   min-width: max-content;
+}
+/* The Surge 111/333 food select, its amount select and the stored fields
+   they stand for are swapped with the hidden attribute (a display set by the
+   select rules would otherwise win over it). */
+.md-typeset .ap-engr-controls [hidden] {
+  display: none;
 }
 /* Accessory Line Comparison's 4 slot panels (Necklace/Earrings/Rings/Any
    Accessory Slot) - each just a small heading plus its own
@@ -6694,6 +6708,14 @@ h3 { color: var(--dbc-teal); }
    weight. */
 .md-typeset .ap-gear-card--engr-core { --ap-gear-card-accent: var(--dbc-teal); }
 .md-typeset .ap-gear-card--engr-variables { --ap-gear-card-accent: var(--dbc-purple); }
+/* Engraving Comparison's two card pairs (Engravings next to Raid Captain Variables, Best Combo next to Runner-Up) stretch to the
+   taller card of the pair, so the borders line up; the rows inside a card stay top-aligned, and a card that is shorter keeps blank
+   space at its bottom. Where the pair wraps to one column each card is its own grid row, so it keeps its own height. Character
+   Data's cards (also .ap-gear-cards) and the other card pairs keep their own heights. */
+.md-typeset .ap-gear-cards--equal,
+.md-typeset .ap-bvb-cards.ap-engr-best-panel {
+  align-items: stretch;
+}
 /* Accessory vs. Accessory's settings card (Comparing, Other Ring/Earring
    Equipped). It holds page-level comparison settings rather than one side
    of the comparison, so it takes the neutral accent instead of a stat

@@ -5812,10 +5812,85 @@
   }
 
   // ----- Engraving Comparison rendering -----
-  // The Mana Food label's own tooltip is static in resources.md; these are
-  // the two pill tooltips, swapped with the pill's text.
-  const MANAFOOD_TAG_BLEED_TIP = "Also counts the DPS gain from equipping the Bleed rune on Maelstrom.";
-  const MANAFOOD_TAG_MAIN_TIP = "Only counts the Main Stat from Mana Food.";
+  // The Mana Food label's own tooltip and the Main Stat pill's are static in
+  // resources.md; these are the three tooltips of the Surge 111/333 food
+  // select, swapped with its selected value.
+  const MANAFOOD_MODE_TIPS = {
+    none: "No Mana Food is counted.",
+    bleed: "Also counts the DPS gain from equipping the Bleed rune on Maelstrom.",
+    main: "Only counts the Main Stat from Mana Food.",
+  };
+
+  // Which food the stored fields describe: "main" (Main Stat only box),
+  // "bleed" (regular box, which means Mana Food + Maelstrom Bleed on Surge
+  // 111/333) or "none". The exclusive group keeps the boxes from both being
+  // ticked; if a bulk write left both, the Main Stat box wins, the same
+  // order the group resolves them in.
+  function manaFoodModeOf(root) {
+    const mainEl = root.querySelector(".ap-engr-manafood-main");
+    const foodEl = root.querySelector(".ap-engr-manafood");
+    if (mainEl && mainEl.checked) return "main";
+    return foodEl && foodEl.checked ? "bleed" : "none";
+  }
+
+  // Surge 111 and 333 offer two foods, shown as ONE row: a three-way select
+  // (None / Mael Bleed / Main Stat) and one amount select. Both are views
+  // of the stored fields (the two checkboxes and the two amount selects,
+  // which stay the saved, exported and computed values), so this runs on
+  // every update, after any path that wrote them (preset, Import, Reset,
+  // build switch, stored data, the exclusive group). The amount select
+  // shows the active food's own amount, or the regular food's when none is
+  // on. Elsewhere (RE, Surge 222) the single checkbox and amount select are
+  // shown as they are, with the Main Stat pill.
+  function syncManaFoodControls(root) {
+    const modeEl = root.querySelector(".ap-engr-food-mode");
+    const modeAmountEl = root.querySelector(".ap-engr-food-mode-amount");
+    const foodEl = root.querySelector(".ap-engr-manafood");
+    const foodAmountEl = root.querySelector(".ap-engr-manafood-amount");
+    const mainAmountEl = root.querySelector(".ap-engr-manafood-main-amount");
+    const tagEl = root.querySelector(".ap-engr-manafood-row .ap-engr-food-tag");
+    const combined = isSurgeBleedFoodBuild(root);
+    [modeEl, modeAmountEl].forEach((el) => {
+      if (el) el.hidden = !combined;
+    });
+    [foodEl, foodAmountEl, tagEl].forEach((el) => {
+      if (el) el.hidden = combined;
+    });
+    if (!combined || !modeEl || !modeAmountEl) return;
+    const mode = manaFoodModeOf(root);
+    if (modeEl.value !== mode) modeEl.value = mode;
+    const amountSource = mode === "main" ? mainAmountEl : foodAmountEl;
+    if (amountSource && modeAmountEl.value !== amountSource.value) modeAmountEl.value = amountSource.value;
+    if (modeEl.dataset.tipMode !== mode) {
+      modeEl.dataset.tipMode = mode;
+      modeEl.title = MANAFOOD_MODE_TIPS[mode];
+    }
+  }
+
+  // The food select and amount select write the stored fields, then fire a
+  // real "change" on the field they set so the exclusive group (Wine and
+  // the other food clear), the recompute and the save run exactly as for a
+  // click on the stored checkbox or amount select itself.
+  function wireManaFoodControls(root) {
+    const modeEl = root.querySelector(".ap-engr-food-mode");
+    const modeAmountEl = root.querySelector(".ap-engr-food-mode-amount");
+    const foodEl = root.querySelector(".ap-engr-manafood");
+    const foodAmountEl = root.querySelector(".ap-engr-manafood-amount");
+    const mainEl = root.querySelector(".ap-engr-manafood-main");
+    const mainAmountEl = root.querySelector(".ap-engr-manafood-main-amount");
+    if (!modeEl || !modeAmountEl || !foodEl || !foodAmountEl || !mainEl || !mainAmountEl) return;
+    modeEl.addEventListener("change", () => {
+      const mode = modeEl.value;
+      foodEl.checked = mode === "bleed";
+      mainEl.checked = mode === "main";
+      (mode === "main" ? mainEl : foodEl).dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    modeAmountEl.addEventListener("change", () => {
+      const target = manaFoodModeOf(root) === "main" ? mainAmountEl : foodAmountEl;
+      target.value = modeAmountEl.value;
+      target.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  }
   // Contribution rows are a single value per engraving (not a Low/Mid/
   // High trio), so this doesn't reuse renderComparisonRows - closer to
   // renderArkGridComparison's own bespoke-shape renderer just above.
@@ -5831,24 +5906,12 @@
     if (rageRuneRow) rageRuneRow.style.display = isSurge ? "" : "none";
     const wineRow = root.querySelector(".ap-engr-wine-row");
     if (wineRow) wineRow.style.display = isSurge ? "" : "none";
-    const manaFoodRow = root.querySelector(".ap-engr-manafood-row");
-    const manaFoodMainRow = root.querySelector(".ap-engr-manafood-main-row");
-    if (manaFoodMainRow) manaFoodMainRow.style.display = isSurgeBleedFoodBuild(root) ? "" : "none";
-    // Mana Food is not Surge-exclusive UI - RE gets the same
-    // checkbox/amount select (see manaFoodContributionGain's own
-    // comment for what it actually does on RE: Main-Stat-only, excluded
-    // from calculations, purely informational). Row itself always shows;
-    // only the label text below changes per spec/build.
-    if (manaFoodRow) manaFoodRow.style.display = "";
-    const manaFoodTagEl = root.querySelector(".ap-engr-manafood-row .ap-engr-food-tag");
-    if (manaFoodTagEl) {
-      const kind = isSurge && !is222Build(root) ? "bleed" : "main";
-      if (manaFoodTagEl.dataset.tagKind !== kind) {
-        manaFoodTagEl.dataset.tagKind = kind;
-        manaFoodTagEl.textContent = kind === "bleed" ? "Mael Bleed" : "Main Stat";
-        manaFoodTagEl.title = kind === "bleed" ? MANAFOOD_TAG_BLEED_TIP : MANAFOOD_TAG_MAIN_TIP;
-      }
-    }
+    // Mana Food is not Surge-exclusive UI - RE gets the same checkbox and
+    // amount select (see manaFoodContributionGain's own comment for what it
+    // actually does on RE: Main-Stat-only, excluded from calculations,
+    // purely informational). The row always shows; Surge 111/333 swap its
+    // controls for the food select (see syncManaFoodControls).
+    syncManaFoodControls(root);
     const miRow = root.querySelector(".ap-engr-mi-row");
     if (miRow) miRow.style.display = isSurge ? "" : "none";
 
@@ -7292,6 +7355,7 @@
       // Live enforcement of every mutually exclusive group (see
       // EXCLUSIVE_GROUPS for the groups and what each one means).
       wireExclusiveGroups(root);
+      wireManaFoodControls(root);
       const manaFoodEl = root.querySelector(".ap-engr-manafood");
 
       // Master Build toggle (top of calculator) and its compact echo
