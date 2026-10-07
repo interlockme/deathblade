@@ -46,6 +46,10 @@ CHECKS
      ("previously", "used to be", "no longer", "formerly", "no more"). Style policy: a comment states
      how the code works now and why a rule exists; what it looked like before belongs in git. Visible
      page text is not scanned, only comments.
+  10. The damage shares in docs/javascripts/order-core-data.js match the dps-chart blocks of the build
+     pages they are copied from (the Order Core table reads them), and each Order core's relic/ancient
+     figures there appear as that pair in its 17P line in core-options-data.js. Fix stale shares by
+     running python3 scripts/sync_order_core_shares.py.
 """
 import datetime
 import json
@@ -412,6 +416,11 @@ def check():
         check_history_comments(path.read_text(), str(path.relative_to(ROOT)), "js", problems)
     for path in sorted((DOCS / "stylesheets").glob("*.css")):
         check_history_comments(path.read_text(), str(path.relative_to(ROOT)), "css", problems)
+
+    # 10. Order Core Comparison shares match the build pages
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import sync_order_core_shares
+    problems.extend(sync_order_core_shares.check())
 
     return problems
 

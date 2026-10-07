@@ -210,6 +210,30 @@
       return e;
     },
 
+    // Appends `text` to `parent` with every relic/ancient pair of figures
+    // ("+16.0%/20.0%", how core-options-data.js and order-core-data.js write
+    // a number that differs between the two grades) split into a
+    // .grade-relic-val span, a "/" and a .grade-ancient-val span, so the two
+    // grades read in their header colours (extra.css). The text around the
+    // pairs goes through `appendPlain(parent, segment)` when given (the core
+    // tooltip uses it to highlight keywords), else as a plain text node.
+    appendGradePairs: function (parent, text, appendPlain) {
+      var plain = appendPlain || function (node, segment) {
+        node.appendChild(document.createTextNode(segment));
+      };
+      var re = /([+-]?\d+(?:\.\d+)?[%s]?)\/(\d+(?:\.\d+)?[%s]?)/g;
+      var last = 0;
+      var match;
+      while ((match = re.exec(text))) {
+        if (match.index > last) plain(parent, text.slice(last, match.index));
+        parent.appendChild(window.SiteUtils.el("span", "grade-relic-val", match[1]));
+        parent.appendChild(document.createTextNode("/"));
+        parent.appendChild(window.SiteUtils.el("span", "grade-ancient-val", match[2]));
+        last = match.index + match[0].length;
+      }
+      if (last < text.length) plain(parent, text.slice(last));
+    },
+
     // Create an SVG element in the correct namespace and set its
     // attributes. Shared by pentagon-badge.js and build-compare.js.
     svgEl: function (tag, attrs) {

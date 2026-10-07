@@ -103,7 +103,6 @@
   const STABLE_ATK_TABLE = {
     "None|0P": 0,
     "Any|14P": 0.007,
-    "Relic|14P": 0.007, // alias of Any|14P - computeArkGridComparison's points6() always looks up "Relic"+"14P" for its merged column, never the "Any|"-prefixed key
     "Relic|17P": 0.021,
     "Relic|18P": 0.0233,
     "Relic|19P": 0.0256,
@@ -352,17 +351,14 @@
   // reader to hand-add it into that field themselves.
   // "Any|10P" covers the flat-only stage (10 Points, both grades give
   // the same +900 with no % yet), and "Any|14P" merges the 14P tier the
-  // same way - grade doesn't actually diverge until 17P (Relic|14P and
-  // Ancient|14P are bit-identical, 0.55%/900; see the
-  // Ark Grid Core Comparison table's own header note in resources.md,
-  // which already merged the same tier for the same reason). 17P+ values
+  // same way - grade doesn't actually diverge until 17P (Relic and
+  // Ancient are bit-identical at 14P, 0.55%/900). 17P+ values
   // are cumulative totals at each tier, matching how the core's own
   // tooltip lists each breakpoint as additive.
   const GEAR_AP_CHAOS_STAR_TABLE = {
     "None|0P": { pct: 0, flat: 0 },
     "Any|10P": { pct: 0, flat: 900 },
     "Any|14P": { pct: 0.55, flat: 900 },
-    "Relic|14P": { pct: 0.55, flat: 900 }, // alias of Any|14P - computeArkGridComparison's points6() always looks up "Relic"+"14P" for its merged column, never the "Any|"-prefixed key
     "Relic|17P": { pct: 1.65, flat: 2700 },
     "Relic|18P": { pct: 1.81, flat: 2700 },
     "Relic|19P": { pct: 1.97, flat: 2700 },
@@ -401,7 +397,6 @@
   const ARK_SWIFT_CDMG_TABLE = {
     "None|0P": 0,
     "Any|14P": 0.014,
-    "Relic|14P": 0.014, // alias of Any|14P - see GEAR_AP_CHAOS_STAR_TABLE's own comment on why points6() needs this key too
     "Relic|17P": 0.042,
     "Relic|18P": 0.0465,
     "Relic|19P": 0.051,
@@ -414,7 +409,6 @@
   const ARK_CRUSHING_CRATE_TABLE = {
     "None|0P": 0,
     "Any|14P": 0.0065,
-    "Relic|14P": 0.0065, // alias of Any|14P - see GEAR_AP_CHAOS_STAR_TABLE's own comment on why points6() needs this key too
     "Relic|17P": 0.0195,
     "Relic|18P": 0.0216,
     "Relic|19P": 0.0237,
@@ -426,13 +420,7 @@
   };
   // Flashy's Dmg% half - separate from FLASHY_ATK_TABLE above, which
   // only covers its Crit Hit Damage half (see that table's own comment).
-  // No "Ancient|14P" key: computeArkGridComparison's points6() always
-  // reads the merged 14P column as gainFn("Relic", "14P") - it never
-  // constructs an "Ancient"+"14P" lookup for any table - and this table
-  // has no live select of its own to serve, unlike the merged Any|14P
-  // tables above, so there's nothing else that would ever read that key.
   const ARK_FLASHY_DMG_TABLE = {
-    "Relic|14P": 0.005,
     "Relic|17P": 0.015,
     "Relic|18P": 0.0166,
     "Relic|19P": 0.0182,
@@ -442,9 +430,7 @@
     "Ancient|19P": 0.0232,
     "Ancient|20P": 0.0248,
   };
-  // No "Ancient|14P" key - see ARK_FLASHY_DMG_TABLE's own comment above.
   const ARK_SMOLDERING_BOSSDMG_TABLE = {
-    "Relic|14P": 0.005,
     "Relic|17P": 0.015,
     "Relic|18P": 0.0166,
     "Relic|19P": 0.0182,
@@ -461,9 +447,7 @@
   // translate cleanly into this calculator's own methodology. Modeled
   // instead as a flat, grade-only %DPS estimate.
   const ARK_SMOLDERING_BURN_TABLE = { Relic: 0.005, Ancient: 0.0075 };
-  // No "Ancient|14P" key - see ARK_FLASHY_DMG_TABLE's own comment above.
   const ARK_ABSORBING_DMG_TABLE = {
-    "Relic|14P": 0.005,
     "Relic|17P": 0.015,
     "Relic|18P": 0.0166,
     "Relic|19P": 0.0182,
@@ -494,7 +478,6 @@
     "None|0P": { pct: 0, flat: 0 },
     "Any|10P": { pct: 0, flat: 1300 },
     "Any|14P": { pct: 0.75, flat: 1300 },
-    "Relic|14P": { pct: 0.75, flat: 1300 }, // alias of Any|14P - see GEAR_AP_CHAOS_STAR_TABLE's own comment on why points6() needs this key too
     "Relic|17P": { pct: 2.25, flat: 3900 },
     "Relic|18P": { pct: 2.48, flat: 3900 },
     "Relic|19P": { pct: 2.71, flat: 3900 },
@@ -3523,7 +3506,7 @@
   //
   // One row per Core TYPE (not one per type+grade) - Relic and Ancient
   // are columns within that row, not separate rows, so the table stays
-  // at 8 rows instead of 16 and Points (14/17/20, this panel's actual
+  // at 8 rows instead of 16 and Points (17/20, this panel's actual
   // comparison axis) reads as the table's real structure instead of
   // being relabeled Low/Mid/High the way Bracelet/Accessory's tier
   // lookups are. See renderArkGridComparison for the two-level header
@@ -3619,21 +3602,21 @@
       return withBest.mult / baselineMult - 1;
     }
 
-    // Builds one row's 5 cells from a single per-grade gain function:
-    // one merged 14 Points cell (Relic/Ancient are the same core
-    // investment before 17p unlocks any grade difference in every table
-    // above except Smoldering's flat-by-grade Burn estimate - see that
-    // table's own comment - so a single Relic-grade value stands in for
-    // both there too, rather than the table carrying two columns that
-    // read as duplicates for 7 of its 8 rows), then the real Relic/
-    // Ancient pair at 17p and 20p where the grades actually diverge.
-    function points6(gainFn) {
+    // Builds one row's cells from a single per-grade gain function: the
+    // Relic/Ancient pair at 17p and at 20p, plus `upgrade`, the DPS gain of
+    // moving the same core from Relic to Ancient at 20p. Every gain here is
+    // DPS with the core / DPS without it - 1, so Ancient over Relic is
+    // (1 + ancient) / (1 + relic) - 1. 20p is the reference point because
+    // the gap between grades keeps widening through 18-20p on most cores.
+    function gradeCells(gainFn) {
+      const relic20 = gainFn("Relic", "20P");
+      const ancient20 = gainFn("Ancient", "20P");
       return {
-        p14: gainFn("Relic", "14P"),
         relic17: gainFn("Relic", "17P"),
         ancient17: gainFn("Ancient", "17P"),
-        relic20: gainFn("Relic", "20P"),
-        ancient20: gainFn("Ancient", "20P"),
+        relic20,
+        ancient20,
+        upgrade: (1 + ancient20) / (1 + relic20) - 1,
       };
     }
 
@@ -3642,12 +3625,11 @@
     // Chaos Core: Flashy - Crit Hit Dmg (own tracked field, zeroed
     // above) combined with Dmg% (untracked elsewhere, a flat addition -
     // see ARK_FLASHY_DMG_TABLE's own comment). Crit Hit Dmg only moves
-    // at 10p and 17p (nothing changes at 14p or 18-20p), so the 14p
-    // columns reuse the 10p figure and 20p reuses 17p's.
+    // at 10p and 17p (nothing changes at 18-20p), so 20p reuses 17p's.
     rows.push({
-      label: "Chaos Core: Flashy - Crit Hit Dmg & Dmg%",
-      ...points6((grade, pts) => {
-        const chitKey = pts === "14P" ? "Epic-Leg 10P" : grade + " 17P";
+      label: "Flashy Attack - Crit Hit Dmg & Dmg%",
+      ...gradeCells((grade, pts) => {
+        const chitKey = grade + " 17P";
         const chit = critLikeGain((c) => { c.flashyAtk = chitKey; });
         const dmg = ARK_FLASHY_DMG_TABLE[grade + "|" + pts];
         return (1 + chit) * (1 + dmg) - 1;
@@ -3660,22 +3642,22 @@
     // tracks), run through stableAddGain's re-optimized with/without
     // search - see that function's own comment above.
     rows.push({
-      label: "Chaos Core: Stable - Additional Dmg",
-      ...points6((grade, pts) => stableAddGain(STABLE_ATK_TABLE[grade + "|" + pts])),
+      label: "Stable Attack - Additional Dmg",
+      ...gradeCells((grade, pts) => stableAddGain(STABLE_ATK_TABLE[grade + "|" + pts])),
     });
 
     // Chaos Core: Swift - Crit Dmg only (Attack Speed excluded). Own
     // tracked field (zeroed in arkNB above), same treatment as Flashy.
     rows.push({
-      label: "Chaos Core: Swift - Crit Dmg",
-      ...points6((grade, pts) => critLikeGain((c) => { c.swiftCore = grade + "|" + pts; })),
+      label: "Swift Attack - Crit Dmg",
+      ...gradeCells((grade, pts) => critLikeGain((c) => { c.swiftCore = grade + "|" + pts; })),
     });
 
     // Chaos Core: Crushing - Crit Rate only (Weapon Power Cooldown
     // reduction excluded). Own tracked field (zeroed in arkNB above).
     rows.push({
-      label: "Chaos Core: Crushing - Crit Rate",
-      ...points6((grade, pts) => critLikeGain((c) => { c.crushingCore = grade + "|" + pts; })),
+      label: "Crushing Strike - Crit Rate",
+      ...gradeCells((grade, pts) => critLikeGain((c) => { c.crushingCore = grade + "|" + pts; })),
     });
 
     // Chaos Core: Smoldering - Boss Dmg (untracked elsewhere, a flat
@@ -3683,8 +3665,8 @@
     // comment for why that half is a fixed grade-only estimate rather
     // than Points-scaled).
     rows.push({
-      label: "Chaos Core: Smoldering - Boss Dmg & Burn",
-      ...points6((grade, pts) => {
+      label: "Smoldering Strike - Boss Dmg & Burn",
+      ...gradeCells((grade, pts) => {
         const bossDmg = ARK_SMOLDERING_BOSSDMG_TABLE[grade + "|" + pts];
         const burn = ARK_SMOLDERING_BURN_TABLE[grade];
         return (1 + bossDmg) * (1 + burn) - 1;
@@ -3694,8 +3676,8 @@
     // Chaos Core: Absorbing - Dmg only (Healing excluded). Untracked
     // elsewhere, so a flat addition same as Smoldering's Boss Dmg half.
     rows.push({
-      label: "Chaos Core: Absorbing - Dmg",
-      ...points6((grade, pts) => ARK_ABSORBING_DMG_TABLE[grade + "|" + pts]),
+      label: "Absorbing Strike - Dmg",
+      ...gradeCells((grade, pts) => ARK_ABSORBING_DMG_TABLE[grade + "|" + pts]),
     });
 
     // ----- Chaos Core: Attack / Weapon - reuse the same gearApTotal
@@ -3720,8 +3702,8 @@
         // gearApTotal takes both directly as parameters, no folding
         // trick needed (unlike Weapon below).
         rows.push({
-          label: "Chaos Core: Attack - Flat AP & AP%",
-          ...points6((grade, pts) => {
+          label: "Attack - Flat AP & AP%",
+          ...gradeCells((grade, pts) => {
             const t = GEAR_AP_CHAOS_STAR_TABLE[grade + "|" + pts] || { pct: 0, flat: 0 };
             return (
               gearApTotal(wp, mainStat, baseApMult, flatAp + t.flat, percentApMult + t.pct / 100, supApBuff) /
@@ -3741,8 +3723,8 @@
         // get the same treatment a real equipped Weapon Core's payout
         // would).
         rows.push({
-          label: "Chaos Core: Weapon - Flat WP & WP%",
-          ...points6((grade, pts) => {
+          label: "Weapon - Flat WP & WP%",
+          ...gradeCells((grade, pts) => {
             const t = ARK_WEAPON_CORE_TABLE[grade + "|" + pts] || { pct: 0, flat: 0 };
             const newWp = wp * (1 + t.pct / 100 / wpPercentMult) + t.flat * wpPercentMult;
             return gearApTotal(newWp, mainStat, baseApMult, flatAp, percentApMult, supApBuff) / baselineAp - 1;
@@ -3757,6 +3739,72 @@
     // point that played Mid's role - moved to match once those panels
     // switched from Mid to High).
     rows.sort((a, b) => b.ancient20 - a.ancient20);
+    return rows;
+  }
+
+  // ----- Order Core Comparison -----
+  // The real DPS gain of upgrading each Order core from Relic to Ancient.
+  // Grade only changes a core's 17P line, so that line is the whole
+  // comparison: order-core-data.js says what it affects (all damage, named
+  // skills, or Normal Skill Damage), the bonus before and after, and the
+  // build whose Trixion shares apply, plus the short `summary` line shown
+  // beside the gain (core-options-data.js has the full 17P line the hover
+  // tooltip shows). It needs no input from the page, so it renders once.
+  //
+  // The shares are measured with the core already Ancient, so the Relic
+  // total is the Ancient one with the extra bonus divided back out, not a
+  // Relic base multiplied up. With s the share the line touches, r the
+  // Relic bonus and a the Ancient bonus:
+  //   relicTotal = 1 - s + s * (1 + r) / (1 + a)
+  //   gain = 1 / relicTotal - 1
+  // "Damage to foes" touches everything (s = 1), so it reduces to
+  // (1 + a) / (1 + r) - 1. Normal Skill Damage touches everything except
+  // Surge and Awakening: the build's Awakening share is the one the Spec
+  // model already uses (BRACE_SPEC_BUILDS), and bleed and other non-skill
+  // damage are small enough to leave in. A `stacks` multiplier scales the
+  // bonus, and a `coverage` below 1 means only that fraction of the skill's
+  // damage gets it (the average multiplier is then 1 + coverage * bonus).
+  function formatBonusPct(frac) {
+    return "+" + (frac * 100).toFixed(1) + "%";
+  }
+
+  function computeOrderCoreComparison() {
+    const data = window.DB_ORDER_CORE_DATA;
+    const names = window.DB_SKILL_NAMES || {};
+    if (!data || !data.cores || !data.shares) return [];
+    const rows = [];
+    Object.keys(data.cores).forEach((label) => {
+      const core = data.cores[label];
+      const shares = data.shares[core.build];
+      const cfg = BRACE_SPEC_BUILDS[core.build];
+      if (!core.summary || !shares || !cfg) return;
+
+      let share;
+      let scope;
+      if (core.kind === "foes") {
+        share = 1;
+        scope = "Applies to all damage";
+      } else if (core.kind === "normal") {
+        share = Math.max(0, 1 - (shares.surge || 0) / 100 - cfg.awakeningShare);
+        scope = "Normal skills are " + (share * 100).toFixed(1) + "% of damage (all but Surge and Awakening)";
+      } else {
+        share = (core.skills || []).reduce((sum, id) => sum + (shares[id] || 0), 0) / 100;
+        const skillNames = (core.skills || []).map((id) => names[id] || id);
+        scope = skillNames.join(" and ") + " " + (share * 100).toFixed(1) + "% of damage";
+      }
+      const stacks = core.stacks || 1;
+      const coverage = core.coverage == null ? 1 : core.coverage;
+      const relicBonus = core.relic * stacks * coverage;
+      const ancientBonus = core.ancient * stacks * coverage;
+      const relicTotal = 1 - share + (share * (1 + relicBonus)) / (1 + ancientBonus);
+      const gain = 1 / relicTotal - 1;
+
+      let detail = scope + ". " + formatBonusPct(core.relic * stacks) + " to " + formatBonusPct(core.ancient * stacks);
+      if (stacks > 1) detail += " at " + stacks + " stacks";
+      if (coverage < 1) detail += ", counted on " + Math.round(coverage * 100) + "% of the skill's damage";
+      rows.push({ label, line: core.summary, gain, detail: detail + "." });
+    });
+    rows.sort((a, b) => b.gain - a.gain);
     return rows;
   }
 
@@ -5795,9 +5843,9 @@
 
   // ----- ArkGrid (Chaos Core) Comparison rendering -----
   // Custom renderer, not renderComparisonRows above - each row shows 5
-  // numeric cells (one merged 14 Points cell, then Relic/Ancient x 17/20
-  // Points) instead of a single Low/Mid/High trio, so the shared per-
-  // row-single-trio renderer doesn't fit here.
+  // numeric cells (Relic/Ancient x 17/20 Points, then the Relic to Ancient
+  // upgrade at 20 Points) instead of a single Low/Mid/High trio, so the
+  // shared per-row-single-trio renderer doesn't fit here.
   function renderArkGridComparison(root, rows) {
     const container = root.querySelector(".ap-arkgrid-compare-rows");
     if (!container) return;
@@ -5810,11 +5858,34 @@
       // (see extra.css's .ap-brace-compare-footer-note comment for why).
       const labelTd = window.SiteUtils.el("td", "ap-brace-row-label", row.label);
       tr.appendChild(labelTd);
-      ["p14", "relic17", "ancient17", "relic20", "ancient20"].forEach((key) => {
-        const gradeClass = key === "p14" ? "ap-arkgrid-merged" : key.indexOf("relic") === 0 ? "ap-arkgrid-relic" : "ap-arkgrid-ancient";
-        const td = window.SiteUtils.el("td", "ap-brace-tier-val ap-arkgrid-tier-val " + gradeClass, formatPctBare(row[key]));
+      ["relic17", "ancient17", "relic20", "ancient20", "upgrade"].forEach((key) => {
+        const gradeClass = key === "upgrade" ? "ap-arkgrid-upgrade" : key.indexOf("relic") === 0 ? "ap-arkgrid-relic" : "ap-arkgrid-ancient";
+        const text = (key === "upgrade" ? "+" : "") + formatPctBare(row[key]);
+        const td = window.SiteUtils.el("td", "ap-brace-tier-val ap-arkgrid-tier-val " + gradeClass, text);
         tr.appendChild(td);
       });
+      container.appendChild(tr);
+    });
+  }
+
+  // ----- Order Core Comparison rendering -----
+  // The Order Core table's line is a core's `summary` (order-core-data.js),
+  // which writes each figure that differs between grades as relic/ancient;
+  // SiteUtils.appendGradePairs colours the two grades.
+  function renderOrderCoreComparison(root, rows) {
+    const container = root.querySelector(".ap-ordercore-compare-rows");
+    if (!container) return;
+    container.innerHTML = "";
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+      tr.appendChild(window.SiteUtils.el("td", "ap-brace-row-label", row.label));
+      const lineTd = window.SiteUtils.el("td", "ap-ordercore-line");
+      window.SiteUtils.appendGradePairs(lineTd, row.line);
+      tr.appendChild(lineTd);
+      const gainTd = window.SiteUtils.el("td", "ap-brace-tier-val ap-ordercore-gain");
+      gainTd.title = row.detail;
+      gainTd.appendChild(window.SiteUtils.el("span", "ap-ordercore-gain-val", "+" + formatPctBare(row.gain)));
+      tr.appendChild(gainTd);
       container.appendChild(tr);
     });
   }
@@ -7288,6 +7359,7 @@
       syncMaelstromUptimeGroupTracking(root);
       resetAvbMemory(root);
       updatePresetButtonStates(root);
+      renderOrderCoreComparison(root, computeOrderCoreComparison());
 
       // Top Combinations: click a row to preview its stats in the Best
       // Setup card (state.previewRank) - see getApCalcSelection and

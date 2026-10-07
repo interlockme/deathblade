@@ -4,7 +4,7 @@
 //
 // WHY THIS FILE EXISTS
 // mkdocs.yml's extra_javascript loads on EVERY page - there is no per-page
-// script hook in MkDocs Material. Five of those files are only ever used by
+// script hook in MkDocs Material. Six of those files are only ever used by
 // resources.md (the Ark Passive / CPM / Bid calculators, the Bible importer,
 // and the title="" tooltip upgrader that only wires triggers inside those
 // three), and between them they were 543 KB of the site's 851 KB total. That
@@ -13,8 +13,8 @@
 // genuinely wasteful on a phone.
 //
 // This file (a couple of KB) stays global in its place and injects those
-// five only when a calculator container is actually on the page, dropping
-// guide pages to ~307 KB with no change to any of the five files themselves.
+// six only when a calculator container is actually on the page, dropping
+// guide pages to ~307 KB with no change to any of the six files themselves.
 //
 // HOW IT STAYS CORRECT
 //  - Order is preserved. `script.async = false` on a dynamically created
@@ -23,7 +23,7 @@
 //    i.e. whoever lands first runs first, which would break bible-import.js
 //    (it drives ark-passive-calculator.js's own Import popover, so it has to
 //    run after it). Do NOT drop that line when editing.
-//  - Self-initialization is free. Every one of the five ends in a
+//  - Self-initialization is free. Every one of the six that renders something ends in a
 //    SiteUtils.registerRenderer(...) call, and registerRenderer runs its
 //    renderAll() immediately when the document is already past "loading"
 //    (see its definition in site-utils.js). Loading them late therefore
@@ -37,7 +37,7 @@
 // CACHE-BUSTING
 // Nothing to bump by hand. scripts/hash_assets.py runs after the build and
 // rewrites every entry in LAZY_BUNDLE below to "name.js?v=<content hash>",
-// then hashes THIS file (so a change to any of the five also changes this
+// then hashes THIS file (so a change to any of the six also changes this
 // file's own URL on every page, and returning visitors refetch the list).
 // Keep entries as bare file names.
 
@@ -53,6 +53,7 @@
   var LAZY_BUNDLE = [
     "cpm-calculator.js",
     "bid-calculator.js",
+    "order-core-data.js",  // data for ark-passive-calculator.js, must precede it
     "ark-passive-calculator.js",
     "bible-import.js",   // must follow ark-passive-calculator.js
     "ap-brace-tooltip.js", // needs skill-tooltip.js, which is still global

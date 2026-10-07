@@ -21,14 +21,13 @@
 //
 // A card whose label has an entry in core-options-data.js (window.
 // DB_CORE_OPTIONS, keyed by exact label text) also gets a hover/focus/
-// tap tooltip reproducing that core's full in-game "Core Options" list
+// tap tooltip reproducing that core's in-game option list
 // (10P/14P/17P/18P/19P/20P), so a reader can check what a core actually
 // does without leaving the page. The tooltip's header repeats the same
-// sun/moon/star icon the card itself already shows (see buildTooltip),
-// colored (along with the "Core Options" label itself) by that entry's
-// rarity tier - defaulting to Relic, since that's the only grade this
-// site's core-options-data.js currently transcribes, but overridable
-// per-entry via an optional `tier` field for a future non-Relic core.
+// sun/moon/star icon the card itself shows (see buildTooltip), on the
+// Ancient grade's colour by default (an Order core's 17P line shows both
+// grades, and the Ancient one is the end state), overridable per entry
+// via an optional `tier` field.
 // A label with no match (typo, or a core core-options-data.js hasn't
 // been given yet) just renders without a tooltip - same "fail quietly"
 // rule every other widget here follows. The panel is wired through
@@ -96,25 +95,18 @@
   // Builds the hover/focus/tap tooltip panel for one core, or null if
   // core-options-data.js has no entry for this label (fails quietly).
   // `core` ("sun"/"moon"/"star") picks the same CORE_ART icon buildItem
-  // already shows on the card itself - the card had the icon from the
-  // start, but the tooltip never did until now. Reuses skill-tooltip.js/
-  // ark-passive-tooltip.js's own .skill-tip-header/.skill-tip-icon CSS
-  // rather than inventing ark-core-specific classes, same "reuse the
-  // shared header row" convention as rune-tooltip.js's own buildHeader -
-  // .ark-core-tip-title keeps its own class/styling on the text itself,
-  // just wrapped in that shared flex row now instead of sitting bare.
+  // shows on the card itself. Reuses skill-tooltip.js/ark-passive-tooltip.js's
+  // .skill-tip-header/.skill-tip-icon CSS rather than inventing
+  // ark-core-specific classes, same "reuse the shared header row"
+  // convention as rune-tooltip.js's own buildHeader.
   function buildTooltip(label, core) {
     var data = window.DB_CORE_OPTIONS && window.DB_CORE_OPTIONS[label];
     if (!data || !data.options || !data.options.length) return null;
 
-    // Defaults to "relic" - every Order Core on this site is Relic grade
-    // (see core-options-data.js's own header comment) - but reads
-    // data.tier first so a future non-Relic entry (an explicit escape
-    // hatch, same "override wins over the fixed default" rule as every
-    // other DATA file on this site) colors both the icon and the
-    // "Core Options" label correctly instead of always painting Relic
-    // red.
-    var tier = data.tier || "relic";
+    // The icon's fill is the Ancient colour unless the entry names another
+    // grade in `tier` (the explicit escape hatch every DATA file on this
+    // site allows over its fixed default).
+    var tier = data.tier || "ancient";
 
     var tip = el("div", "ark-core-options-tip");
     tip.setAttribute("role", "tooltip");
@@ -134,7 +126,6 @@
     header.appendChild(icon);
     header.appendChild(el("div", "ark-core-tip-title", label));
     tip.appendChild(header);
-    tip.appendChild(el("div", "ark-core-tip-subtitle ark-core-tip-subtitle-" + tier, "Core Options"));
 
     var list = el("div", "ark-core-tip-list");
     data.options.forEach(function (opt) {
@@ -142,7 +133,7 @@
       var bpLabel = el("span", "ark-core-tip-bp", "[" + opt.bp + "]");
       line.appendChild(bpLabel);
       var textEl = el("span", "ark-core-tip-text");
-      appendHighlighted(textEl, opt.text);
+      window.SiteUtils.appendGradePairs(textEl, opt.text, appendHighlighted);
       line.appendChild(document.createTextNode(" "));
       line.appendChild(textEl);
       list.appendChild(line);

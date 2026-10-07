@@ -7187,15 +7187,8 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-table th.ap-brace-th-low {
   color: var(--dbc-red);
 }
-/* The merged 14 Points column doesn't need the group-header center
-   treatment above - it's just one column (not a 2-column Relic/Ancient
-   spread to center over), so it inherits the base th's right-align and
-   lines up with the right-aligned % figures underneath it. */
-.md-typeset .ap-arkgrid-table th.ap-brace-th-low {
-  color: var(--dbc-red);
-}
-/* Chaos Core Comparison: fixed layout gives the five figure columns one
-   shared width. Under auto layout each column sizes to its header text, so
+/* Chaos Core Comparison: fixed layout gives the five figure columns (the
+   Relic/Ancient pairs and the upgrade) one shared width. Under auto layout each column sizes to its header text, so
    the Ancient columns came out wider than the Relic ones and the gaps
    between figures alternated. The scroll wrapper takes over when the
    min-width does not fit. */
@@ -7215,6 +7208,47 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-arkgrid-table th:not(.ap-brace-th-label),
 .md-typeset .ap-arkgrid-table td.ap-arkgrid-tier-val {
   text-align: center;
+}
+/* Ark Grid Core Comparison's Order Core table: one text column (the 17P
+   line, both grades written as relic/ancient) and one figure column. It
+   sits under the Chaos Core table in the same body, so the second scroll
+   wrapper gets a gap. The text is left-aligned like the core name; only
+   the gain is centred. The scroll wrapper takes over below min-width. */
+.md-typeset .ap-arkgrid-compare .ap-acc-table-scroll + .ap-acc-table-scroll {
+  margin-top: 1rem;
+}
+.md-typeset .ap-ordercore-table {
+  min-width: 36rem;
+}
+.md-typeset .ap-ordercore-table th.ap-brace-th-label {
+  width: 22%;
+}
+.md-typeset .ap-ordercore-table th.ap-ordercore-th-line {
+  text-align: left;
+}
+.md-typeset .ap-ordercore-table th:last-child {
+  width: 15%;
+  text-align: center;
+}
+.md-typeset .ap-ordercore-table td.ap-ordercore-line {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+/* The two grades' figures in a relic/ancient pair (SiteUtils.
+   appendGradePairs), in the same red and orange as the Chaos Core table's
+   Relic and Ancient headers. Global, not under .md-typeset, because the
+   core hover tooltip uses them too. */
+.grade-relic-val {
+  color: var(--dbc-red);
+  font-weight: 700;
+}
+.grade-ancient-val {
+  color: var(--dbc-orange);
+  font-weight: 700;
+}
+.md-typeset .ap-ordercore-table td.ap-ordercore-gain {
+  text-align: center;
+  white-space: nowrap;
 }
 .md-typeset .ap-brace-compare-table td {
   padding: 0.5rem 0.7rem;
@@ -9553,44 +9587,6 @@ body.page-333-blitz input[type="text"] {
   font-weight: 700;
   color: var(--md-default-fg-color);
 }
-/* Same "muted label line under the title" element as .rune-tip-tier
-   (see that rule's own comment), tinted per rarity tier instead of a
-   flat uppercase caption - a core's own grade (Relic, currently the
-   only one core-options-data.js ever transcribes - see that file's
-   header comment) now reads the same way a rune's tier does, via the
-   matching .ark-core-tip-subtitle-<tier> modifier ark-core-badge.js
-   applies (defaulting to "relic" when an entry has no explicit `tier`,
-   same optional-override-over-fixed-default rule as everywhere else on
-   this site - see project-context.md's DATA SIMPLIFICATION CONVENTION).
-   margin-top only (no margin-bottom) is a deliberate copy of
-   .rune-tip-tier's own spacing: that rule has no bottom margin at all,
-   and neither does .skill-tip-note sitting right under it, so the only
-   gap between a rune's tier line and its effect text is line-height
-   itself. The previous version here set a margin-BELOW the label
-   instead of matching that - visibly looser than the rune tooltip it
-   was meant to match despite the comment claiming otherwise. This
-   removes that stray margin so the two tooltip types finally share the
-   same "label, then content right under it, no extra air" rhythm. */
-.md-typeset .ark-core-tip-subtitle {
-  margin-top: 0.1em;
-  font-size: 0.68em;
-  font-weight: 700;
-}
-.md-typeset .ark-core-tip-subtitle-uncommon {
-  color: #81c995;
-}
-.md-typeset .ark-core-tip-subtitle-rare {
-  color: var(--dbc-blue);
-}
-.md-typeset .ark-core-tip-subtitle-epic {
-  color: var(--dbc-violet);
-}
-.md-typeset .ark-core-tip-subtitle-legendary {
-  color: var(--dbc-orange);
-}
-.md-typeset .ark-core-tip-subtitle-relic {
-  color: var(--dbc-red);
-}
 .md-typeset .ark-core-tip-list {
   display: flex;
   flex-direction: column;
@@ -9745,6 +9741,13 @@ body.page-333-blitz input[type="text"] {
 }
 .skill-tip-icon-rarity-relic {
   background-color: rgba(var(--dbc-red-rgb), 0.55);
+}
+/* Ancient is the site's --dbc-orange (the tone of .grade-ancient-val and the
+   Ancient column headers of the Ark Grid Core Comparison tables) at 0.4
+   alpha, where the other rarities use 0.55: the full-strength colour
+   overpowers the icon art. */
+.skill-tip-icon-rarity-ancient {
+  background-color: rgba(var(--dbc-orange-rgb), 0.4);
 }
 .skill-tip-icon-rarity-neutral {
   background-color: rgba(var(--dbc-slate-rgb), 0.55);

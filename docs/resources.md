@@ -617,7 +617,7 @@
 </div>
 
 <!-- Wraps the 5 top-level <details> below (Character Data, Bracelet/
-     Engraving/Accessory/Chaos Core Comparison) into one cohesive panel
+     Engraving/Accessory/Ark Grid Core Comparison) into one cohesive panel
      instead of 5 independently bordered/rounded boxes stacked with gaps
      between them - see .ap-gear-comp-group in extra.css for the actual
      styling and why it's done as an override rather than editing each
@@ -2020,58 +2020,73 @@
 
      One row per Core TYPE (8 rows, not 16) - Relic/Ancient are columns
      within a row via a two-level header (a Points group, then a Relic/
-     Ancient sub-header colored the same sky/orange as Low/High
-     elsewhere) rather than doubling every row into a separate Relic
-     line and Ancient line. 14 Points gets a single merged column
-     instead of its own Relic/Ancient pair - that grade split doesn't
-     unlock until 17p investment (every lookup table above agrees
-     Relic|14P === Ancient|14P), so showing two identical-reading
-     columns there was pure duplication; see computeArkGridComparison's
-     own points6() comment for the one row (Smoldering's Burn estimate)
-     where they aren't quite bit-identical and why a single Relic-grade
-     value still stands in for both. Reuses the Accessory panel's own
+     Ancient sub-header colored the same red/orange as the Order Core
+     table's relic/ancient figures) rather than doubling every row into a
+     separate Relic line and Ancient line. The last column, under the 20
+     Points group, is the DPS gain of upgrading that core from Relic to
+     Ancient at 20 Points, worked out from the two 20 Points figures
+     beside it (see computeArkGridComparison's own gradeCells comment). Reuses the Accessory panel's own
      .ap-acc-table-scroll/.ap-acc-combo-table pattern for the wider-
      than-narrow-viewport table, same reasoning as that panel's combo
      columns.
 
-     Core/14 Points deliberately do NOT use rowspan="2" (tried first,
-     reverted) - a rowspan cell's border-bottom doesn't get a real
+     Core deliberately does NOT use rowspan="2" (tried first, reverted) - a rowspan cell's border-bottom doesn't get a real
      border-collapse partner on its own far edge, so its bottom line had
      to be faked with box-shadow instead of a real border. That shadow
      and its neighbors' real collapsed borders are two different paint
      paths meeting at the same boundary pixel, which rendered as a
-     visibly brighter seam right where the 14 Points/17 Points columns
-     meet. Real cells in BOTH rows for both the Core and 14 Points
-     columns (one holding the text, the other a blank filler just to
-     hold that column's width/height) give every header cell in this
-     table the same real, collapsed border-bottom - one paint path
-     table-wide, so there's nothing left to mismatch. Core's and 14 Points'
-     text both sit in row 1 (blank filler below each in row 2), on the
-     same line as the 17/20 Points group headers. -->
+     visibly brighter seam where that column meets the Points groups.
+     Real cells in BOTH rows for the Core column (one holding the text,
+     the other a blank filler) give
+     every header cell in this table the same real, collapsed
+     border-bottom - one paint path table-wide, so there's nothing left to
+     mismatch. Core's text sits in row 1 (blank filler below), on the same
+     line as the 17/20 Points group headers. -->
 <details class="ap-arkgrid-compare">
   <summary>
-    <span class="ap-gear-summary-text"><span class="ap-gear-title">Chaos Core Comparison</span><span class="ap-gear-summary-desc">Each core valued on its own at 14, 17 and 20 points, against your Best Setup</span></span>
+    <span class="ap-gear-summary-text"><span class="ap-gear-title">Ark Grid Core Comparison</span><span class="ap-gear-summary-desc">Each Core against your Best Setup, and what upgrading each one from Relic to Ancient is worth</span></span>
   </summary>
   <div class="ap-brace-compare-body">
     <div class="ap-acc-table-scroll">
       <table class="ap-brace-compare-table ap-acc-combo-table ap-arkgrid-table">
         <thead>
           <tr>
-            <th class="ap-brace-th-label">Core</th>
-            <th>14 Points</th>
+            <th class="ap-brace-th-label">Chaos Core</th>
             <th class="ap-arkgrid-th-group" colspan="2">17 Points</th>
-            <th class="ap-arkgrid-th-group" colspan="2">20 Points</th>
+            <th class="ap-arkgrid-th-group" colspan="3">20 Points</th>
           </tr>
           <tr>
             <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
-            <th class="ap-arkgrid-th-blank" aria-hidden="true"></th>
             <th class="ap-brace-th-low">Relic</th>
             <th class="ap-brace-th-high">Ancient</th>
             <th class="ap-brace-th-low">Relic</th>
             <th class="ap-brace-th-high">Ancient</th>
+            <th title="DPS gain of upgrading this core from Relic to Ancient at 20 Points"><span class="grade-relic-val">R</span> &rarr; <span class="grade-ancient-val">A</span></th>
           </tr>
         </thead>
         <tbody class="ap-arkgrid-compare-rows"></tbody>
+      </table>
+    </div>
+    <!-- Order Core table: the real DPS gain of upgrading each Order core from
+         Relic to Ancient. Grade only changes a core's 17P line, so each row
+         shows that line once with both grades' figures as relic/ancient (the
+         line comes from core-options-data.js) and the gain. Needs no inputs:
+         computeOrderCoreComparison reads order-core-data.js (which skill each
+         line affects, and the Trixion shares of the build it is judged on)
+         and renderOrderCoreComparison fills the body once at load. Hover a
+         gain for how it was worked out. .ap-ordercore-table only re-sizes the
+         columns of the shared Chaos Core table styling for one text column
+         and one figure column. -->
+    <div class="ap-acc-table-scroll">
+      <table class="ap-brace-compare-table ap-acc-combo-table ap-arkgrid-table ap-ordercore-table">
+        <thead>
+          <tr>
+            <th class="ap-brace-th-label">Order Core</th>
+            <th class="ap-ordercore-th-line">17 Points (<span class="grade-relic-val">Relic</span>/<span class="grade-ancient-val">Ancient</span>)</th>
+            <th>DPS Gain</th>
+          </tr>
+        </thead>
+        <tbody class="ap-ordercore-compare-rows"></tbody>
       </table>
     </div>
   </div>
