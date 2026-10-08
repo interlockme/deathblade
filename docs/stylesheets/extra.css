@@ -2988,57 +2988,418 @@ h3 { color: var(--dbc-teal); }
   background-color: var(--dbc-teal-card-bg);
   border-color: rgba(var(--dbc-teal-rgb), 0.45);
 }
-/* A third card takes the gold accent, the same trio as .prearc-cards. On the
-   home page it is the Additional Resources card, which is not a playstyle
-   path, so .home-cards stretches it across the whole row under the two
-   path cards instead of leaving it alone in a half-empty second row. */
+/* A third card takes the gold accent, the same trio as .prearc-cards. */
 .md-typeset .grid.cards > ul > li:nth-child(3) {
   background-color: var(--dbc-gold-dark);
   border-color: rgba(var(--dbc-gold-rgb), 0.45);
 }
-.md-typeset .grid.cards.home-cards > ul > li:nth-child(3) {
-  grid-column: 1 / -1;
-}
-/* Two path cards side by side (one column on phones); the third spans the row. */
-.md-typeset .grid.cards.home-cards {
+.md-typeset .grid.cards > ul > li:nth-child(1):hover { border-color: var(--dbc-rose); }
+.md-typeset .grid.cards > ul > li:nth-child(2):hover { border-color: var(--dbc-teal); }
+.md-typeset .grid.cards > ul > li:nth-child(3):hover { border-color: var(--dbc-gold); }
+
+/* ==========================================================================
+   Home page (index.md)
+   ========================================================================== */
+/* Two lanes side by side (Remaining Energy, Surge), each a header, a start
+   card and a flat list of build rows, then the Additional Resources strip and
+   two notes. A lane's rows are a list of choices, not a ladder: every row links
+   straight to its build page. The Difficulty and Trixion meters inside a row are
+   rendered by build-stats-badge.js from build-data.js (.home-meters), so the
+   numbers cannot drift from the build pages. Colours come from --home-rgb /
+   --home-accent, set once per lane.
+   Layout is by container width, not viewport: .home-lane is the query container
+   (rows stack and the divider hint hides under 460px of the lane's own content
+   width), so the sidebar coming and going cannot put the breakpoint at the
+   wrong place. */
+.md-typeset .home p { margin: 0; }
+.md-typeset .home-lanes {
+  display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  max-width: min(100%, 46rem);
-  margin: 1em auto;
+  gap: 1rem;
+  margin: 0;
 }
-@media screen and (max-width: 44.9375em) {
-  .md-typeset .grid.cards.home-cards {
-    grid-template-columns: minmax(0, 1fr);
-  }
+@media screen and (max-width: 59.9375em) {
+  .md-typeset .home-lanes { grid-template-columns: minmax(0, 1fr); }
 }
-/* The flowchart sits under the cards as a map, so it does not need the full wide column. */
-.md-typeset img[src$="flowchart-deathblade-paths.svg"] {
-  display: block;
-  max-width: min(100%, 46rem);
-  margin: 1.2rem auto 0;
+.md-typeset .home-lane {
+  --home-rgb: var(--dbc-rose-rgb);
+  --home-accent: var(--dbc-rose);
+  container: home-lane / inline-size;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0.9rem;
+  border: 1px solid rgba(var(--home-rgb), 0.4);
+  border-radius: var(--dbc-r-lg);
+  background: linear-gradient(180deg, var(--dbc-rose-dark), var(--dbc-surface-muted) 45%);
 }
-/* Whole-card click target: the card's one link stretches over the card. */
-.md-typeset .grid.cards.home-cards > ul > li {
+.md-typeset .home-lane--surge {
+  --home-rgb: var(--dbc-teal-rgb);
+  --home-accent: var(--dbc-teal);
+  background: linear-gradient(180deg, var(--dbc-teal-card-bg), var(--dbc-surface-muted) 45%);
+}
+.md-typeset .home-lane-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid rgba(var(--home-rgb), 0.25);
+}
+.md-typeset .home-lane-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+.md-typeset .home-lane-title {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.md-typeset a.home-cta {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid rgba(var(--home-rgb), 0.55);
+  border-radius: 999px;
+  background: rgba(var(--home-rgb), 0.08);
+  color: var(--home-accent);
+  font-size: var(--dbc-fs-base);
+  font-weight: 600;
+  transition: background-color 0.15s ease;
+}
+.md-typeset a.home-cta:hover {
+  text-decoration: none;
+  background: rgba(var(--home-rgb), 0.18);
+  color: var(--home-accent);
+}
+.md-typeset .home-lane-line {
+  color: var(--home-accent);
+  font-size: var(--dbc-fs-table);
+  font-weight: 500;
+}
+.md-typeset .home-lane-sub {
+  color: var(--dbc-lilac);
+  font-size: var(--dbc-fs-base);
+}
+.md-typeset ul.home-trade {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.md-typeset ul.home-trade > li {
+  margin: 0;
+  padding: 0.05rem 0.5rem;
+  border: 1px solid rgba(var(--home-rgb), 0.3);
+  border-radius: 999px;
+  background: rgba(var(--home-rgb), 0.06);
+  color: var(--dbc-lilac);
+  font-size: var(--dbc-fs-cap);
+}
+/* "Then pick a build" divider: label, a rule, then a right-aligned hint. */
+.md-typeset .home-sec {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.7rem 0 0.4rem;
+}
+.md-typeset .home-sec-label {
+  color: var(--home-accent);
+  font-size: var(--dbc-fs-cap);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.md-typeset .home-sec::after {
+  content: "";
+  order: 1;
+  flex: 1;
+  height: 1px;
+  background: rgba(var(--home-rgb), 0.22);
+}
+.md-typeset .home-sec-hint {
+  order: 2;
+  color: var(--dbc-muted-text);
+  font-size: var(--dbc-fs-cap);
+  white-space: nowrap;
+}
+.md-typeset .home-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.md-typeset .home-row {
   position: relative;
-  cursor: pointer;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 8.6rem;
+  gap: 0.2rem 0.9rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid rgba(var(--home-rgb), 0.4);
+  border-radius: var(--dbc-r-lg);
+  background: rgba(23, 22, 28, 0.55);
+  transition: transform 0.15s ease, border-color 0.15s ease;
 }
-.md-typeset .grid.cards.home-cards > ul > li a::after {
-  /* !important: the same-site link rule above sets content: none !important. */
+.md-typeset .home-row:hover {
+  transform: translateY(-2px);
+  border-color: rgb(var(--home-rgb));
+}
+.md-typeset .home-row--start {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  background: rgba(var(--home-rgb), 0.07);
+}
+/* A variant build (not a recommended path) is dashed and unfilled. */
+.md-typeset .home-row--variant {
+  border-style: dashed;
+  background: transparent;
+}
+.md-typeset .home-row-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+.md-typeset .home-row-emoji {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+/* The name link stretches over the whole row (same click target as the old
+   home cards). !important: the same-site link rule sets content: none. */
+.md-typeset a.home-row-name {
+  text-decoration: none;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.md-typeset a.home-row-name::after {
   content: "" !important;
   position: absolute;
   inset: 0;
   border-radius: var(--dbc-r-lg);
 }
-.md-typeset .grid.cards > ul > li:nth-child(1):hover { border-color: var(--dbc-rose); }
-.md-typeset .grid.cards > ul > li:nth-child(2):hover { border-color: var(--dbc-teal); }
-.md-typeset .grid.cards > ul > li:nth-child(3):hover { border-color: var(--dbc-gold); }
-/* Additional Resources is not a playstyle path, so it takes the lavender-purple accent instead of gold. */
-.md-typeset .grid.cards.home-cards > ul > li:nth-child(3) {
-  background-color: var(--dbc-purple-card-bg);
-  border-color: rgba(var(--dbc-purple-rgb), 0.45);
+.md-typeset a.home-row-name:hover { color: #fff; text-decoration: none; }
+.md-typeset a.home-row-name small {
+  margin-left: 0.25rem;
+  color: var(--dbc-lilac);
+  font-size: var(--dbc-fs-base);
+  font-weight: 400;
 }
-.md-typeset .grid.cards.home-cards > ul > li:nth-child(3):hover {
+.md-typeset .home-row-words {
+  margin: 0.05rem 0 0.2rem;
+  color: var(--dbc-muted-text);
+  font-size: var(--dbc-fs-cap);
+}
+.md-typeset .home-row-desc {
+  color: var(--dbc-lilac);
+  font-size: var(--dbc-fs-base);
+  line-height: 1.5;
+}
+.md-typeset .home-row-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+}
+.md-typeset .home-row--start .home-row-side { align-items: center; }
+.md-typeset .home-row-side > .home-pill { align-self: flex-end; }
+.md-typeset .home-row--start .home-row-side > .home-pill { align-self: center; }
+/* Pills: Ark Grid need (none / little / full), Recommended, Not viable. */
+.md-typeset .home-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--home-pill-line);
+  border-radius: 999px;
+  background: var(--home-pill-fill, transparent);
+  color: var(--home-pill-ink);
+  font-size: var(--dbc-fs-2xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.md-typeset .home-pill--none {
+  --home-pill-ink: var(--dbc-green);
+  --home-pill-line: rgba(var(--dbc-green-rgb), 0.5);
+  --home-pill-fill: rgba(var(--dbc-green-rgb), 0.08);
+}
+.md-typeset .home-pill--little,
+.md-typeset .home-pill--star {
+  --home-pill-ink: var(--dbc-gold);
+  --home-pill-line: rgba(var(--dbc-gold-rgb), 0.5);
+}
+.md-typeset .home-pill--little { --home-pill-fill: rgba(var(--dbc-gold-rgb), 0.08); }
+.md-typeset .home-pill--full {
+  --home-pill-ink: var(--dbc-pink);
+  --home-pill-line: rgba(var(--dbc-pink-rgb), 0.5);
+  --home-pill-fill: rgba(var(--dbc-pink-rgb), 0.08);
+}
+.md-typeset .home-pill--warn {
+  --home-pill-ink: var(--dbc-red);
+  --home-pill-line: rgba(var(--dbc-red-rgb), 0.5);
+  --home-pill-fill: rgba(var(--dbc-red-rgb), 0.08);
+}
+/* Meters (filled by build-stats-badge.js). The container reserves its height
+   so the row does not grow when the script runs. */
+.md-typeset .home-meters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.35rem;
+  min-height: 2.5rem;
+}
+.md-typeset .home-meter-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.3rem;
+}
+.md-typeset .home-meter-label {
+  color: var(--dbc-lavender);
+  font-size: var(--dbc-fs-2xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.md-typeset .home-meter-value {
+  color: #fff;
+  font-size: var(--dbc-fs-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.md-typeset .home-meter-track {
+  height: 4px;
+  margin-top: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(var(--dbc-slate-rgb), 0.35);
+}
+.md-typeset .home-meter-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--dbc-pink);
+}
+.md-typeset .home-meter--trixion .home-meter-fill { background: var(--dbc-teal); }
+.md-typeset .home-meter--unconfirmed .home-meter-fill {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--dbc-teal) 0 4px,
+    rgba(var(--dbc-teal-rgb), 0.35) 4px 8px
+  );
+}
+@container home-lane (max-width: 460px) {
+  .md-typeset .home-row,
+  .md-typeset .home-row--start {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .md-typeset .home-row-side,
+  .md-typeset .home-row--start .home-row-side { align-items: stretch; }
+  .md-typeset .home-row-side > .home-pill,
+  .md-typeset .home-row--start .home-row-side > .home-pill { align-self: flex-start; }
+  .md-typeset .home-meters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+  .md-typeset .home-sec-hint { display: none; }
+}
+/* Additional Resources strip: the title link stretches over it, the chips sit
+   above that link (z-index) so each goes to its own section. */
+.md-typeset .home-res {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.45);
+  border-radius: var(--dbc-r-lg);
+  background: var(--dbc-purple-card-bg);
+  transition: border-color 0.15s ease;
+}
+.md-typeset .home-res:hover { border-color: var(--dbc-purple); }
+.md-typeset .home-res-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.md-typeset a.home-res-link {
+  text-decoration: none;
+  color: #fff;
+}
+.md-typeset a.home-res-link:hover { color: #fff; text-decoration: none; }
+.md-typeset a.home-res-link::after {
+  content: "" !important;
+  position: absolute;
+  inset: 0;
+  border-radius: var(--dbc-r-lg);
+}
+.md-typeset .home-res-desc {
+  margin-top: 0.1rem;
+  color: var(--dbc-lilac);
+  font-size: var(--dbc-fs-base);
+}
+.md-typeset .home-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.md-typeset a.home-chip {
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
+  border-radius: 999px;
+  background: rgba(var(--dbc-purple-rgb), 0.06);
+  color: var(--dbc-lilac);
+  font-size: var(--dbc-fs-sm);
+}
+.md-typeset a.home-chip:hover {
+  text-decoration: none;
   border-color: var(--dbc-purple);
+  color: #fff;
 }
+.md-typeset .home-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .home-notes { grid-template-columns: minmax(0, 1fr); }
+}
+.md-typeset .home-note {
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.2);
+  border-radius: var(--dbc-r-lg);
+  background: rgba(var(--dbc-purple-rgb), 0.045);
+  color: var(--dbc-lilac);
+  font-size: var(--dbc-fs-base);
+}
+.md-typeset .home-note b { color: #fff; font-weight: 600; }
+.md-typeset .home-note-label {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--dbc-purple);
+  font-size: var(--dbc-fs-cap);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.md-typeset .home-note a:not(.md-button) { color: var(--dbc-pink-bright); }
 
 /* ==========================================================================
    Useful Links (resources page)
@@ -10908,7 +11269,7 @@ html.image-lightbox-open {
 }
 
 /* ---- Touch screens: comfortable text size and tap targets in the Ark Passive
-   Calculator and the CPM and Bid calculators, plus the build-card update-note badge at the end of the block.
+   Calculator and the CPM and Bid calculators, plus the home page chips and the build-card update-note badge at the end of the block.
    Gated on (pointer: coarse) so mouse layouts are untouched.
    - Every input/select was 13.6px. iOS Safari zooms the whole page when a
      field under 16px is focused and does not zoom back, which makes typing
@@ -10978,6 +11339,13 @@ html.image-lightbox-open {
   }
   .md-typeset .ap-result-pin {
     min-width: 32px;
+    min-height: 32px;
+  }
+  /* Home page Additional Resources chips: 27px tall at rest, 32px like the other chips. The
+     row and strip links are stretched over their whole card, so only the chips need this. */
+  .md-typeset a.home-chip {
+    display: inline-flex;
+    align-items: center;
     min-height: 32px;
   }
   /* Update-note badge: 0.62rem text is far below a usable tap target. Grow the

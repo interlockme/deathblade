@@ -141,7 +141,7 @@
           trixionConfirmed: true,
           playstyle: "Max Mobility",
           bestFor: "\uD83D\uDC06 Simple uptime focus",
-          recommended: false,
+          recommended: true,
           compareEnabled: true,
         },
         {

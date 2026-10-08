@@ -330,22 +330,6 @@ Recovery
 
 </div>
 
-TL;DR
-{ .rotation-stage }
-
-<div class="setup-panel" data-accent="lavender" markdown>
-<div class="setup-notes" markdown>
-
-<details class="setup-note" data-kind="tip" markdown>
-<summary><span class="setup-note-tag">Tip</span>313 for Dummies<span class="setup-note-arrow"></span></summary>
-
-![313 TL;DR flowchart](../assets/tldr-313.png){ .zoomable-image loading=lazy }
-
-</details>
-
-</div>
-</div>
-
 ## DPS Spread
 
 <!-- data-labels / data-values / data-ids are three parallel comma-separated

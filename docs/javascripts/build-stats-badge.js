@@ -3,6 +3,8 @@
 // changes needed here, just point your build/essentials pages' JSON blocks
 // at your own data.
 //
+// Also renders the compact home page meters (see renderHomeMeters below).
+//
 // Renders the Difficulty/Trixion/Playstyle stat cards at the top of each
 // build page from window.DB_BUILD_DATA - the SAME single source of truth
 // pentagon-badge.js and build-compare.js already read. Before this file,
@@ -98,5 +100,47 @@
     el.appendChild(buildStatEl("Playstyle", data.playstyle, null));
   }
 
+  // Home page meters: the compact Difficulty and Trixion bars inside each build
+  // row of index.md, <div class="home-meters" data-family="re"
+  // data-build="333-ceiling">. Same data and the same bar scales as renderStats;
+  // an unconfirmed Trixion value keeps its "?" and striped fill. A build with no
+  // Trixion figure (Standard) gets no Trixion meter.
+  function homeMeter(kind, label, valueText, pct, unconfirmed) {
+    var meter = window.SiteUtils.el(
+      "div",
+      "home-meter home-meter--" + kind + (unconfirmed ? " home-meter--unconfirmed" : "")
+    );
+    var top = window.SiteUtils.el("div", "home-meter-top");
+    top.appendChild(window.SiteUtils.el("span", "home-meter-label", label));
+    top.appendChild(window.SiteUtils.el("span", "home-meter-value", valueText));
+    meter.appendChild(top);
+    var track = window.SiteUtils.el("div", "home-meter-track");
+    var fill = window.SiteUtils.el("div", "home-meter-fill");
+    fill.style.width = pct + "%";
+    track.appendChild(fill);
+    meter.appendChild(track);
+    return meter;
+  }
+
+  function renderHomeMeters(el) {
+    var data = resolveStatsData(el);
+    if (!data) return;
+
+    el.innerHTML = "";
+    var diffPct = Math.max(0, Math.min(100, (data.difficulty / 10) * 100));
+    el.appendChild(homeMeter("difficulty", "Difficulty", fmtDifficulty(data.difficulty) + " / 10", diffPct, false));
+
+    if (data.trixion == null) return;
+    var trixPct = Math.max(0, Math.min(100, ((data.trixion - 1.0) / 0.3) * 100));
+    el.appendChild(homeMeter(
+      "trixion",
+      "Trixion DPS",
+      data.trixion.toFixed(2) + "x" + (data.trixionConfirmed ? "" : " ?"),
+      trixPct,
+      !data.trixionConfirmed
+    ));
+  }
+
   window.SiteUtils.registerRenderer(".build-stats[data-build]", renderStats);
+  window.SiteUtils.registerRenderer(".home-meters[data-build]", renderHomeMeters);
 })();
