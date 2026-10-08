@@ -418,44 +418,59 @@
     "Ancient|19P": 0.0367,
     "Ancient|20P": 0.0388,
   };
+  // The three Damage-to-foes tables below (Flashy's Dmg%, Smoldering's Boss
+  // Dmg, Absorbing's Dmg) are exact products, not sums: every line of a
+  // core is its own multiplier (confirmed in game on the Order cores,
+  // across cores and within one), so a core's 14P, 17P and 18/19/20P foes
+  // lines combine as (1 + a)(1 + b)(1 + 0.0016)^n - 1. Relic is 0.50% (14P)
+  // and 1.00% (17P); Ancient is 0.50% and 2.00% (Flashy: 1.50%); 18-20P
+  // add 0.16% each at both grades. That sits about 0.01-0.02 points above
+  // the plain sum the tooltip's figures add up to.
   // Flashy's Dmg% half - separate from FLASHY_ATK_TABLE above, which
   // only covers its Crit Hit Damage half (see that table's own comment).
   const ARK_FLASHY_DMG_TABLE = {
-    "Relic|17P": 0.015,
-    "Relic|18P": 0.0166,
-    "Relic|19P": 0.0182,
-    "Relic|20P": 0.0198,
-    "Ancient|17P": 0.02,
-    "Ancient|18P": 0.0216,
-    "Ancient|19P": 0.0232,
-    "Ancient|20P": 0.0248,
+    "Relic|17P": 0.015050,
+    "Relic|18P": 0.016674,
+    "Relic|19P": 0.018301,
+    "Relic|20P": 0.019930,
+    "Ancient|17P": 0.020075,
+    "Ancient|18P": 0.021707,
+    "Ancient|19P": 0.023342,
+    "Ancient|20P": 0.024979,
   };
   const ARK_SMOLDERING_BOSSDMG_TABLE = {
-    "Relic|17P": 0.015,
-    "Relic|18P": 0.0166,
-    "Relic|19P": 0.0182,
-    "Relic|20P": 0.0198,
-    "Ancient|17P": 0.025,
-    "Ancient|18P": 0.0266,
-    "Ancient|19P": 0.0282,
-    "Ancient|20P": 0.0298,
+    "Relic|17P": 0.015050,
+    "Relic|18P": 0.016674,
+    "Relic|19P": 0.018301,
+    "Relic|20P": 0.019930,
+    "Ancient|17P": 0.025100,
+    "Ancient|18P": 0.026740,
+    "Ancient|19P": 0.028383,
+    "Ancient|20P": 0.030028,
   };
   // Smoldering's Burn tick damage, unlike its Boss Damage half above,
-  // isn't Points-gated on the reference sheet (it scales off weapon
-  // damage, not Core investment) - and its own formula there is relative
-  // to Bleed uptime rather than a direct %DPS figure, which doesn't
-  // translate cleanly into this calculator's own methodology. Modeled
-  // instead as a flat, grade-only %DPS estimate.
-  const ARK_SMOLDERING_BURN_TABLE = { Relic: 0.005, Ancient: 0.0075 };
+  // isn't Points-gated (it scales off weapon damage, not Core investment),
+  // and its share of your damage depends on Bleed uptime, so it is a flat,
+  // grade-only %DPS estimate. Relic is 0.55%, the middle of the 0.5-0.6%
+  // of total damage that combat logs show at 20p. Ancient is 1.25x that:
+  // 17p's Burn Damage bonus is +100% at Relic and +150% at Ancient, so a
+  // tick goes from x2.0 to x2.5 of its base. Checked on a dummy with the
+  // biggest tick over a minute: 10p (no bonus) 1,367,177, Relic 20p
+  // 2,788,746, Ancient 20p 3,518,436 - ticks of 2.040x and 2.574x the 10p
+  // one, i.e. the bonus times the core's own Boss Dmg lines (Burn is
+  // multiplied by them too, which is why the Boss Dmg and Burn halves are
+  // multiplied together in the Smoldering row). The Boss Dmg multipliers
+  // cancel out of the share, leaving the 1.25x.
+  const ARK_SMOLDERING_BURN_TABLE = { Relic: 0.0055, Ancient: 0.006875 };
   const ARK_ABSORBING_DMG_TABLE = {
-    "Relic|17P": 0.015,
-    "Relic|18P": 0.0166,
-    "Relic|19P": 0.0182,
-    "Relic|20P": 0.0198,
-    "Ancient|17P": 0.025,
-    "Ancient|18P": 0.0266,
-    "Ancient|19P": 0.0282,
-    "Ancient|20P": 0.0298,
+    "Relic|17P": 0.015050,
+    "Relic|18P": 0.016674,
+    "Relic|19P": 0.018301,
+    "Relic|20P": 0.019930,
+    "Ancient|17P": 0.025100,
+    "Ancient|18P": 0.026740,
+    "Ancient|19P": 0.028383,
+    "Ancient|20P": 0.030028,
   };
   // Chaos Core: Weapon - Weapon Power's own counterpart to
   // GEAR_AP_CHAOS_STAR_TABLE (Chaos Core: Attack) above, same shape and
