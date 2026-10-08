@@ -9,10 +9,6 @@
      link doesn't navigate you away from the guide)
    - mobile-only quick-jump pills on build pages, generated from that
      page's own H2s
-   - a slim fixed scrollspy nav on wide desktop viewports, same idea
-     as the quick-jump pills but for screens with room to spare - now
-     the primary "where am I" indicator on any long page, since it
-     replaced the old top-of-header reading progress bar
    - every emoji site-wide gets a small hover wiggle (walks text nodes
      and wraps each emoji in a .emoji-wiggle span; the animation itself
      lives in extra.css)
@@ -26,17 +22,10 @@
    Material's instant-loading page swaps (navigation.instant), not just
    on the very first load. */
 (function () {
-  var scrollListenerBound = false;
+  var visibilityListenerBound = false;
   var delegatedClickListenersBound = false;
   var jumpClickBound = false;
-  var sectionTrackerItems = [];
   var blurTitleOriginal = null;
-  // Minimum own-page H2 count for a page to count as "lengthy" enough to
-  // earn the desktop section tracker. 3 covers the build guides (5 each)
-  // and pages like Essentials/Resources, while excluding short ones like
-  // Home or Pre-Ark Grid.
-  var SECTION_TRACKER_MIN_HEADINGS = 3;
-
   function externalLinksNewTab() {
     document.querySelectorAll(".md-content a[href]").forEach(function (a) {
       if (!/^https?:\/\//i.test(a.getAttribute("href") || "")) return;
@@ -117,84 +106,6 @@
       nav.appendChild(a);
     });
     anchor.insertAdjacentElement("afterend", nav);
-  }
-
-  // Desktop counterpart to the mobile quick-jump pills. toc.integrate
-  // folds the page's own TOC into the collapsible left nav, which is fine
-  // but not glanceable on longer pages - this is a slim always-visible
-  // mark-nav, fixed to the right edge, that also tracks scroll position
-  // so you can see which section you're in without hunting through the
-  // sidebar. Only appears on wide viewports (see the min-width gate in
-  // extra.css) so it never competes with actual content for space.
-  //
-  // Not build-page-specific: any page with enough of its own H2s counts
-  // as "lengthy" and gets the tracker (build guides, but also pages like
-  // Essentials or Additional Resources). SECTION_TRACKER_MIN_HEADINGS is
-  // the threshold - short pages (Home, Pre-Ark Grid) fall under it and
-  // don't get a tracker for two or fewer sections.
-  function buildSectionTracker() {
-    var old = document.getElementById("section-tracker");
-    if (old) old.remove();
-    sectionTrackerItems = [];
-
-    var headings = document.querySelectorAll(".md-content__inner > h2");
-    if (headings.length < SECTION_TRACKER_MIN_HEADINGS) return;
-
-    var nav = document.createElement("nav");
-    nav.id = "section-tracker";
-    nav.className = "section-tracker";
-    nav.setAttribute("aria-label", "Section tracker");
-
-    headings.forEach(function (h) {
-      if (!h.id) return;
-      var a = document.createElement("a");
-      a.className = "section-tracker-item";
-      a.href = "#" + h.id;
-      var headingText = h.textContent.replace(/\s*¶\s*$/, "");
-      a.title = headingText;
-      var mark = document.createElement("span");
-      mark.className = "section-tracker-mark";
-      var label = document.createElement("span");
-      label.className = "section-tracker-label";
-      label.textContent = headingText;
-      a.appendChild(label);
-      a.appendChild(mark);
-      nav.appendChild(a);
-      sectionTrackerItems.push({ heading: h, link: a });
-    });
-    if (!sectionTrackerItems.length) return;
-
-    document.body.appendChild(nav);
-    updateSectionTrackerActive();
-  }
-
-  // Which section is "current" is whichever H2 you've most recently
-  // scrolled past - not just whichever one happens to be crossing a narrow
-  // band right now, which left the tracker showing nothing while reading
-  // through the middle of a section. Walking down the heading list and
-  // keeping the last one whose top has scrolled above the offset line
-  // guarantees exactly one mark is active at all times once you've reached
-  // the first section, in-between headings included.
-  function updateSectionTrackerActive() {
-    if (!sectionTrackerItems.length) return;
-    var header = document.querySelector(".md-header");
-    var offset = (header ? header.offsetHeight : 0) + 24;
-    var activeIndex = -1;
-    for (var i = 0; i < sectionTrackerItems.length; i++) {
-      if (sectionTrackerItems[i].heading.getBoundingClientRect().top <= offset) {
-        activeIndex = i;
-      } else {
-        break;
-      }
-    }
-    sectionTrackerItems.forEach(function (it, i) {
-      it.link.classList.toggle("is-active", i === activeIndex);
-      if (i === activeIndex) {
-        it.link.setAttribute("aria-current", "location");
-      } else {
-        it.link.removeAttribute("aria-current");
-      }
-    });
   }
 
   // \p{Extended_Pictographic} covers essentially all emoji (Unicode
@@ -322,7 +233,7 @@
     }
   }
 
-  // Every same-page #anchor link (pills, tracker marks, heading permalinks,
+  // Every same-page #anchor link (pills, heading permalinks,
   // TOC entries, in-content links) scrolls in place instead of going through
   // Material's instant navigation. Material treats the FIRST
   // same-page anchor click after a full load as a navigation: it refetches the
@@ -381,7 +292,6 @@
       externalLinksNewTab();
       buildSectionSkipLinks();
       buildQuickJumpPills();
-      buildSectionTracker();
       wrapEmojisForWiggle();
       var isBlitzPage = togglePageBodyClasses();
       handleVisibilityChange();
@@ -393,10 +303,8 @@
       // ever - the header and <body> persist across instant-loading swaps,
       // so a delegated listener bound to either keeps working on every
       // subsequent page without rebinding.
-      if (!scrollListenerBound) {
-        scrollListenerBound = true;
-        window.addEventListener("scroll", updateSectionTrackerActive, { passive: true });
-        window.addEventListener("resize", updateSectionTrackerActive);
+      if (!visibilityListenerBound) {
+        visibilityListenerBound = true;
         document.addEventListener("visibilitychange", handleVisibilityChange);
       }
       if (!delegatedClickListenersBound) {

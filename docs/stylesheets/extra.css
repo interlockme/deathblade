@@ -42,7 +42,7 @@
   --dbc-blue-bright: #7aa9f0;  /* Material's default admonition/info blue */
   --dbc-sky: #88c7e9;          /* additional damage category accent */
   --dbc-sky-rgb: 136, 199, 233;
-  --dbc-pink-bright: #fdbcd3;  /* hover/active state pink - links, tabs, chips, section tracker */
+  --dbc-pink-bright: #fdbcd3;  /* hover/active state pink - links, tabs, chips */
   --dbc-arrow: #cf99c7;        /* rotation-line chevron color (.arrow/.arrow-swap) */
   --dbc-green: #8bc997;        /* rune-chip "uncommon" tier, tripod-chip tier 2 */
   --dbc-green-rgb: 139, 201, 151;
@@ -8394,7 +8394,7 @@ h3 { color: var(--dbc-teal); }
 /* ---------- Trixion DPS distribution chart ---------- */
 /* Trixion DPS is its own H2 chapter ("## Trixion DPS"): it picks up the
    standard H2 chapter-break treatment above and shows up in the mobile
-   quick-jump pills / desktop section tracker like every other section.
+   quick-jump pills like every other section.
    The chart is drawn live, so there's no screenshot to retake after a
    balance pass.
 
@@ -8723,169 +8723,6 @@ h3 { color: var(--dbc-teal); }
   border-color: var(--dbc-pink);
   color: var(--dbc-pink) !important;
 }
-/* ---------- Desktop section tracker (scrollspy nav) ---------- */
-/* Built by javascripts/extra.js from a page's own H2s (any page with
-   enough of them - see SECTION_TRACKER_MIN_HEADINGS in extra.js - not
-   just build guides), same source as the mobile quick-jump pills but
-   shown only on wide viewports where there's real room beside the
-   (centered, fixed-max-width) content column.
-   Kept deliberately minimal - no panel, no blur, no shadow - just small
-   rounded-square marks threaded by a faint line directly on the page, so
-   it reads as a quiet margin note rather than a UI chrome element.
-   The current section's MARK stays visible at all times (bigger, filled,
-   a soft glow) so you always know roughly where you are on the page at a
-   glance. The LABEL is hover/focus-only for every mark, active section
-   included: a label parked on screen for the active section would sit over actual page content (on pages with real diagrams/images near the tracker, not just prose) the whole time you were reading that section, not just when you glanced over at the tracker. Hover-only means it only ever appears
-   while your cursor is already over there on purpose. */
-.section-tracker {
-  display: none;
-}
-@media screen and (min-width: 1400px) {
-  .section-tracker {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: fixed;
-    right: 2rem;
-    /* Vertically centered via top:0/bottom:0 + margin:auto rather than
-       the more common top:50%/transform:translateY(-50%): that -50% is
-       relative to THIS element's own height, which varies by page (more
-       sections = more marks = a taller stack) and only sometimes lands
-       on a whole pixel - see the extra_javascript-injected .section-
-       tracker-label comment below for the actual bug this caused
-       (fractional-pixel transforms blur their own text on Firefox,
-       Chrome doesn't show it, hence "just this one spot" reports). The
-       top/bottom+margin:auto centering technique reaches the same
-       centered position through ordinary box layout instead of a
-       compositor transform, so there's no separate paint layer for
-       Firefox to place off the pixel grid in the first place. */
-    top: 0;
-    bottom: 0;
-    margin: auto 0;
-    /* Without an explicit height, the browser resolves this fixed box's
-       'auto' height by stretching it to fill the full top:0/bottom:0
-       span (viewport height) rather than shrink-wrapping its 6-or-so
-       marks and centering that smaller box - margin:auto only splits
-       the LEFTOVER space evenly once a height is known, it doesn't by
-       itself imply shrink-to-fit. max-content forces the shrink-wrap
-       so there's leftover space for margin:auto to split in the first
-       place. */
-    height: max-content;
-    z-index: 4;
-  }
-}
-/* The connecting line - faint, faded at both ends, just enough to read
-   the marks as one sequence rather than disconnected shapes. */
-.section-tracker::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    180deg,
-    transparent,
-    rgba(var(--dbc-purple-rgb), 0.28) 12%,
-    rgba(var(--dbc-purple-rgb), 0.28) 88%,
-    transparent
-  );
-}
-.section-tracker-item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5em 0.4em;
-  text-decoration: none !important;
-}
-.section-tracker-mark {
-  position: relative;
-  z-index: 1;
-  flex: 0 0 auto;
-  width: 9px;
-  height: 13px;
-  border-radius: 3px;
-  background-color: var(--md-default-bg-color);
-  border: 1.5px solid rgba(var(--dbc-purple-rgb), 0.6);
-  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-}
-/* Label sits to the left. Originally just text with a soft shadow for
-   legibility over whatever content was behind it - fine for the short
-   build-guide headings this started with (Gems, Rotation), but once the
-   tracker started appearing on longer-titled pages too (Essentials'
-   "Remaining Energy Skills", Resources' "Ark Passive Calculator"), a
-   shadow alone wasn't enough: the *active* label stays visible
-   permanently, not just on hover, so a long one sitting over a table or
-   a colored admonition box just read as noise. Solid pill backdrop
-   (blurred, so it holds up over anything) fixes that outright rather
-   than trying to out-shadow busier backgrounds - matches the pill shape
-   already used for gem-chip/video-chip/quick-jump-pills elsewhere.
-   max-width + ellipsis is a hard backstop for anything longer than
-   that could still crowd the content column on the narrow end of the
-   1400px+ range this shows at; the JS also sets a title attribute so
-   the full text is still one hover away if it ever truncates. */
-.section-tracker-label {
-  position: absolute;
-  right: calc(100% + 0.6em);
-  /* Vertically centered via top:0/bottom:0 + margin:auto, not
-     top:50%/transform:translateY(-50%) - same fractional-pixel-transform
-     Firefox text-blur issue as .section-tracker above (this label is
-     real text, so it's the more visible half of that bug: hover any
-     mark on a wide/1400px+ screen in Firefox and the tooltip text came
-     out soft). The 4px horizontal slide-in on hover stays a transform
-     (translateX only now) since a plain whole-pixel translateX never
-     lands on a fractional offset the way a height-relative -50% can. */
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
-  /* Same height: max-content note as .section-tracker above - without it
-     this stretches to the item's full height instead of shrink-wrapping
-     its own single line of text and centering that. */
-  height: max-content;
-  max-width: 13em;
-  padding: 0.32em 0.75em;
-  border-radius: 999px;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
-  background-color: rgba(20, 20, 24, 0.82);
-  backdrop-filter: blur(4px);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
-  transform: translateX(4px);
-  font-size: 0.7em;
-  font-weight: 600;
-  color: var(--md-default-fg-color--light);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-}
-.section-tracker-item:hover .section-tracker-label,
-.section-tracker-item:focus-visible .section-tracker-label {
-  opacity: 1;
-  transform: translateX(0);
-}
-.section-tracker-item:hover .section-tracker-mark,
-.section-tracker-item:focus-visible .section-tracker-mark {
-  border-color: var(--dbc-pink);
-}
-.section-tracker-item.is-active .section-tracker-mark {
-  background-color: var(--dbc-pink);
-  border-color: var(--dbc-pink);
-  transform: scaleY(1.3);
-  box-shadow: 0 0 7px 1px rgba(var(--dbc-pink-rgb), 0.65);
-}
-.section-tracker-item:hover .section-tracker-label,
-.section-tracker-item:focus-visible .section-tracker-label {
-  border-color: rgba(var(--dbc-pink-rgb), 0.4);
-}
-.section-tracker-item.is-active .section-tracker-label {
-  color: var(--dbc-pink-bright);
-  border-color: rgba(var(--dbc-pink-rgb), 0.55);
-}
-
 /* ---------- 333 Blitz title tiger: click-to-rain easter egg ---------- */
 /* Triggered by javascripts/extra.js on click of the tiger emoji in the
    page's H1 (the existing .tiger-emoji span, title="rawr") - a nod to the
@@ -11004,7 +10841,7 @@ html.image-lightbox-open {
   .md-header, .md-tabs, .md-sidebar, .md-footer, .md-search,
   .md-top, .md-nav, .md-dialog, .md-skip,
   .rotation-practice-toggle, .image-lightbox-overlay,
-  .ap-build-dock, .quick-jump, .section-tracker {
+  .ap-build-dock, .quick-jump {
     display: none !important;
   }
 

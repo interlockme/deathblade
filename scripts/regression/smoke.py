@@ -17,7 +17,7 @@ Per page, at desktop width:
   tabs       click every tab label of every tab group, nested groups included: its radio becomes
              checked and its panel shows
   details    click every <details> summary open and shut
-  anchors    click heading permalinks, quick-jump pills, section tracker marks, TOC links: the hash
+  anchors    click heading permalinks, quick-jump pills, TOC links: the hash
              lands, the page is not refetched, the heading sits under the sticky header
   skip-links Tab to a section's skip link (shown on focus), Enter: focus lands on the next heading and the
              next Tab continues inside that section
@@ -29,8 +29,7 @@ Per page, at desktop width:
              alone when the line is scrolled off-screen
 At 390px with touch emulation: no sideways scroll, anchors, and tap open / tap close / swap /
 tap-outside on tooltips and Ark Cores.
-Then a run of instant-navigation hops: no refetch, widgets re-render, exactly one tracker and
-pill row, no orphaned tooltip panels.
+Then a run of instant-navigation hops: no refetch, widgets re-render, exactly one pill row, no orphaned tooltip panels.
 
 Only FAIL lines set a non-zero exit code. Serves the built site itself.
 Needs: pip install playwright && playwright install chromium
@@ -332,14 +331,14 @@ def anchor_click(pg, run, path, el, label, tag):
 
 
 def check_anchors(pg, run, path, tag):
-    # Heading permalinks (the page title's included), then pills, tracker marks and TOC links.
+    # Heading permalinks (the page title's included), then pills and TOC links.
     links = pg.locator("h1 > .headerlink, h2 > .headerlink, h3 > .headerlink")
     for i in range(min(links.count(), 6)):
         el = links.nth(i)
         heading = el.evaluate("e => e.parentElement.tagName + ' ' + e.parentElement.id")
         el.evaluate("e => e.parentElement.scrollIntoView({block: 'center'})")
         anchor_click(pg, run, path, el, f"permalink {heading}", tag)
-    groups = [(".quick-jump-pills a", "quick-jump pill"), (".section-tracker-item", "tracker mark")]
+    groups = [(".quick-jump-pills a", "quick-jump pill")]
     if tag == "1300":  # at phone width the TOC lives in an off-canvas drawer
         groups.append((".md-sidebar a.md-nav__link[href*='#']", "TOC link"))
     for sel, name in groups:
@@ -726,16 +725,15 @@ def check_instant_nav(pg, run, base, hops):
           const described = new Set();
           document.querySelectorAll('[aria-describedby]').forEach(e => e.getAttribute('aria-describedby').split(/\\s+/).forEach(i => described.add(i)));
           const panels = [...document.querySelectorAll('body > [role=tooltip]')];
-          return { marker: window.__smoke, trackers: document.querySelectorAll('#section-tracker').length,
-                   pills: document.querySelectorAll('.quick-jump-pills').length,
+          return { marker: window.__smoke, pills: document.querySelectorAll('.quick-jump-pills').length,
                    skips: document.querySelectorAll('.section-skip').length, h2s: document.querySelectorAll('.md-content__inner > h2[id]').length,
                    orphans: panels.filter(p => !described.has(p.id)).length,
                    blank: [...document.querySelectorAll('.skill-setup[data-family], .ark-passives, .gem-priority')].filter(e => !(e.textContent || '').trim()).length };
         }""")
         if st["marker"] != "same-document":
             run.fail("(instant nav)", f"hop to {h} did a full page load (Material instant navigation is off or broken)")
-        if st["trackers"] > 1 or st["pills"] > 1:
-            run.fail("(instant nav)", f"after hop to {h}: {st['trackers']} section trackers, {st['pills']} pill rows (expected at most 1 each)")
+        if st["pills"] > 1:
+            run.fail("(instant nav)", f"after hop to {h}: {st['pills']} pill rows (expected at most 1)")
         if st["skips"] > max(st["h2s"], 0):
             run.fail("(instant nav)", f"after hop to {h}: {st['skips']} skip links for {st['h2s']} sections (duplicated?)")
         if st["orphans"]:
