@@ -30,6 +30,9 @@ theme:
     - search.highlight
 
 extra_css:
+  # Material only loads Poppins 300/400/700. The site CSS also asks for 500 and
+  # 600, so load those two as well (the privacy plugin self-hosts them in CI).
+  - https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap
   - stylesheets/extra.css
 # Load order matters: several widgets read a shared data file
 # (build-data.js/skill-data.js/skill-names.js/ap-node-names.js) or the

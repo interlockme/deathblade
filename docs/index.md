@@ -1,6 +1,9 @@
-# Deathblade Class Guide
+---
+hide:
+  - navigation
+---
 
-![Deathblade path flowchart](assets/shared/flowchart-deathblade-paths.svg)
+# Deathblade Class Guide
 
 <div class="grid cards home-cards" markdown>
 
@@ -30,10 +33,14 @@
 
 </div>
 
----
-
-**What do the build names mean?** Names like 333, 313, 111, and 222 are shorthand for each build's Ark Grid Core assignment, not a difficulty rating. Choose a build for more information.
+![Deathblade path flowchart](assets/shared/flowchart-deathblade-paths.svg)
 
 ---
 
-**About:** This site adapts KR Deathblade research for NA. The class has enough quirks that the context behind it is worth knowing. It's easy to fork [this repo](https://github.com/interlockme/deathblade) and get a working site if you want your own spin.
+**What do the build names mean?** Names like 333, 313, 111, and 222 are shorthand for each build's Ark Grid Core assignment, not a difficulty rating.
+
+---
+
+**About:** This site adapts KR Deathblade research for NA. The class has enough quirks that the context behind it is worth knowing.
+
+It's easy to fork [this repo](https://github.com/interlockme/deathblade) and get a working site if you want your own spin for another class, or wish to make a build page for this one.

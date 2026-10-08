@@ -57,7 +57,7 @@
         {
           id: "333-ceiling",
           name: "333 (Ceiling)",
-          accent: "#ee83ab",
+          accent: "#ec91b2",
           pentagon: [8, 9, 5, 8.5, 8.5],
           difficulty: 8,
           trixion: 1.2,
@@ -70,7 +70,7 @@
         {
           id: "313-high-floor",
           name: "313 (High Floor)",
-          accent: "#b39ddb",
+          accent: "#baa4e2",
           pentagon: [7.5, 8, 5, 9, 10],
           difficulty: 7.5,
           trixion: 1.17,
@@ -83,7 +83,7 @@
         {
           id: "111-head-hunt",
           name: "111 (Head Hunt)",
-          accent: "#4db6ac",
+          accent: "#6ac7be",
           pentagon: [9, 8, 5, 7, 10],
           difficulty: 9,
           trixion: 1.18,
@@ -96,7 +96,7 @@
         {
           id: "standard",
           name: "Standard",
-          accent: "#e6b422",
+          accent: "#e2c575",
           pentagon: [6, 6, 8.5, 4, 6],
           difficulty: 6,
           trixion: null,
@@ -121,7 +121,7 @@
         {
           id: "111-classic",
           name: "111 (Classic)",
-          accent: "#ee83ab",
+          accent: "#ec91b2",
           pentagon: [7.5, 9, 7, 6.5, 7],
           difficulty: 7.5,
           trixion: 1.23,
@@ -134,7 +134,7 @@
         {
           id: "222-speedy",
           name: "222 (Speedy)",
-          accent: "#4db6ac",
+          accent: "#6ac7be",
           pentagon: [7, 9.5, 9, 8, 8],
           difficulty: 7,
           trixion: 1.25,
@@ -147,7 +147,7 @@
         {
           id: "333-blitz",
           name: "333 (Blitz)",
-          accent: "#b39ddb",
+          accent: "#baa4e2",
           pentagon: [8, 8, 8, 9, 6],
           difficulty: 8,
           trixion: 1.2,

@@ -14,42 +14,41 @@
    hex vars above. Only added for colors actually reused this way inside
    rgba(); a color with just one or two translucent uses stays a literal
    triplet, same one-off reasoning as the hex vars.
-   The one remaining #ee83ab1a compound hex+alpha literal (--md-accent-
-   fg-color--transparent below) is left as-is for a different reason - a
-   var() reference can't be concatenated with a trailing alpha suffix
-   like that, so there's no way to express it via variable at all. */
+   --md-accent-fg-color--transparent below is written as rgba() with the
+   pink triplet, because a var() reference can't take a trailing hex alpha
+   suffix. */
 :root {
-  --dbc-pink: #ee83ab;         /* primary accent - Difficulty bar, danger admonition border, headers */
-  --dbc-pink-rgb: 238, 131, 171;
-  --dbc-teal: #4db6ac;         /* Trixion DPS bar, h3 headings, "good"/on-track stat variant */
-  --dbc-teal-rgb: 77, 182, 172;
-  --dbc-lavender: #a79bc4;     /* stat-label text, muted secondary accent - most-used color on the site */
-  --dbc-lavender-rgb: 167, 155, 196;
-  --dbc-purple: #b39ddb;       /* h2 headings, Evolution-category accent */
-  --dbc-purple-rgb: 179, 157, 219;
+  --dbc-pink: #ec91b2;         /* primary accent - Difficulty bar, danger admonition border, headers */
+  --dbc-pink-rgb: 236, 145, 178;
+  --dbc-teal: #6ac7be;         /* Trixion DPS bar, h3 headings, "good"/on-track stat variant */
+  --dbc-teal-rgb: 106, 199, 190;
+  --dbc-lavender: #a99dc6;     /* stat-label text, muted secondary accent - most-used color on the site */
+  --dbc-lavender-rgb: 169, 157, 198;
+  --dbc-purple: #baa4e2;       /* h2 headings, Evolution-category accent */
+  --dbc-purple-rgb: 186, 164, 226;
   --dbc-lilac: #cfc9dd;        /* light lavender body/label text */
   --dbc-slate: #9d99ab;        /* muted purple-gray secondary text. 4.5:1+ on the dark surfaces, including the lighter .skill-card surface (was #6f6a80, 2.6-3.1:1). --dbc-slate-rgb below is deliberately unchanged so tinted backgrounds/borders built from it look the same. */
   --dbc-slate-rgb: 111, 106, 128;
-  --dbc-red: #e57373;          /* danger/error accent, replaces Material's default #ff1744 */
-  --dbc-red-rgb: 229, 115, 115;
-  --dbc-rose: #f48fb1;         /* secondary pink accent */
-  --dbc-rose-rgb: 244, 143, 177;
-  --dbc-gold: #e6b422;         /* warn/conditional accent */
-  --dbc-gold-rgb: 230, 180, 34;
-  --dbc-orange: #f0a868;       /* on-crit damage category accent */
-  --dbc-orange-rgb: 240, 168, 104;
-  --dbc-blue: #64b5f6;         /* info accent */
-  --dbc-blue-rgb: 100, 181, 246;
-  --dbc-blue-bright: #448aff;  /* Material's default admonition/info blue */
-  --dbc-sky: #7ec4e8;          /* additional damage category accent */
-  --dbc-sky-rgb: 126, 196, 232;
-  --dbc-pink-bright: #ffb3cf;  /* hover/active state pink - links, tabs, chips, section tracker */
+  --dbc-red: #e6908d;          /* danger/error accent, replaces Material's default #ff1744 */
+  --dbc-red-rgb: 230, 144, 141;
+  --dbc-rose: #f29eb9;         /* secondary pink accent */
+  --dbc-rose-rgb: 242, 158, 185;
+  --dbc-gold: #e2c575;         /* warn/conditional accent */
+  --dbc-gold-rgb: 226, 197, 117;
+  --dbc-orange: #ecaf79;       /* on-crit damage category accent */
+  --dbc-orange-rgb: 236, 175, 121;
+  --dbc-blue: #7fbbed;         /* info accent */
+  --dbc-blue-rgb: 127, 187, 237;
+  --dbc-blue-bright: #7aa9f0;  /* Material's default admonition/info blue */
+  --dbc-sky: #88c7e9;          /* additional damage category accent */
+  --dbc-sky-rgb: 136, 199, 233;
+  --dbc-pink-bright: #fdbcd3;  /* hover/active state pink - links, tabs, chips, section tracker */
   --dbc-arrow: #cf99c7;        /* rotation-line chevron color (.arrow/.arrow-swap) */
-  --dbc-green: #66bb6a;        /* rune-chip "uncommon" tier, tripod-chip tier 2 */
-  --dbc-green-rgb: 102, 187, 106;
-  --dbc-violet: #cc89ff;       /* rune-chip "epic" tier, .skill-card border/hover glow. Nudged up from #c77dff so the epic chip text clears 4.5:1 on its hovered skill-card background; --dbc-violet-rgb is deliberately unchanged so tints/borders look the same. */
-  --dbc-violet-rgb: 199, 125, 255;
-  --dbc-header-footer-bg: #1d1d20; /* matches the rendered color of a lavender
+  --dbc-green: #8bc997;        /* rune-chip "uncommon" tier, tripod-chip tier 2 */
+  --dbc-green-rgb: 139, 201, 151;
+  --dbc-violet: #c79ce8;       /* rune-chip "epic" tier, .skill-card border/hover glow. Nudged up from #c77dff so the epic chip text clears 4.5:1 on its hovered skill-card background; --dbc-violet-rgb is deliberately unchanged so tints/borders look the same. */
+  --dbc-violet-rgb: 199, 156, 232;
+  --dbc-header-footer-bg: #1f1d24; /* matches the rendered color of a lavender
     .setup-panel note (rgba(--dbc-purple-rgb, 0.045) over the page bg) - picked
     to make the header/tabs bar and footer read as the same "surface" as those
     notes instead of their own separate near-black shade */
@@ -57,23 +56,23 @@
   /* Colors below are named here like every other reused color on the site,
      rather than repeated as raw hex literals at 2-6 call sites each: one
      source of truth instead of N copies that could drift apart. */
-  --dbc-gold-dark: #26210f;        /* dark gold tint - the
+  --dbc-gold-dark: #292624;        /* dark gold tint - the
     2nd Pre-Ark Grid option card, and .page-banner-warning, pairs with --dbc-gold */
-  --dbc-rose-dark: #241a20;        /* dark rose tint - the 1st
+  --dbc-rose-dark: #2d242c;        /* dark rose tint - the 1st
     .grid.cards/.prearc-cards option card, a rank-1 gem badge's on-fill text, and
     cycle-num-1's on-fill text, pairs with --dbc-rose */
-  --dbc-teal-dark: #0a1f1c;        /* darkest teal tint - on-fill text for a rank-1
+  --dbc-teal-dark: #1d2227;        /* darkest teal tint - on-fill text for a rank-1
     Cooldown gem badge and cycle-num-2, pairs with --dbc-teal (see also
     --dbc-teal-card-bg below, a different/lighter teal-family tint) */
-  --dbc-teal-card-bg: #16221f;     /* the 2nd .grid.cards option card and 3rd
+  --dbc-teal-card-bg: #1e262b;     /* the 2nd .grid.cards option card and 3rd
     .prearc-cards option card background, pairs with --dbc-teal */
-  --dbc-surface-muted: #1d1d21;    /* plain-table row background + the 1st/2nd
+  --dbc-surface-muted: #1f1d24;    /* plain-table row background + the 1st/2nd
     gearing-value cards - a muted dark surface with no accent color tie-in */
   --dbc-gem-name-muted: #d8d2de;   /* rank-2 gem item name text + an alt-gem's bolded name */
-  --dbc-chip-surface: #1c1c1f;     /* background shared by the build-compare share-link
+  --dbc-chip-surface: #1f1d24;     /* background shared by the build-compare share-link
     tooltip and the image-lightbox close button, both bordered in --dbc-purple */
   --dbc-chip-text: #cbb9e8;        /* text color paired with --dbc-chip-surface above */
-  --dbc-chip-surface-hover: #232327; /* hover background for those same two --dbc-purple-bordered controls */
+  --dbc-chip-surface-hover: #26252b; /* hover background for those same two --dbc-purple-bordered controls */
   --dbc-muted-text: #948fa0;       /* faint gray label text (kept at 4.5:1+ on the dark surfaces) - a "no diff" build-compare
     note, an engraving loadout hint, and an Ark Passive tier's point count */
   --dbc-muted-text-alt: #948ea4;   /* placeholder-style input text, shared by the CPM and bid calculators' "muted" fields */
@@ -83,18 +82,32 @@
     distribution chart's white overlay label to read clearly on top of it,
     unlike the much lighter pastel --dbc-rose */
   --dbc-rose-deep-rgb: 168, 68, 107;
-  --dbc-violet-dark: #241a33;      /* dark violet tint, same darkness as
+  --dbc-purple-card-bg: #26232e;
+  --dbc-violet-dark: #2a2532;      /* dark violet tint, same darkness as
     --dbc-rose-dark/--dbc-gold-dark/--dbc-teal-dark - on-fill text for
     cycle-num-4, pairs with --dbc-violet (already used for epic-tier
     rune chips/.skill-card glow elsewhere on the site) */
+
+  /* Radius scale: small (chips, inputs), base (cards, panels), large (hero cards), pill and circle stay literal 999px / 50%. */
+  --dbc-r-sm: 4px;
+  --dbc-r: 8px;
+  --dbc-r-lg: 12px;
+
+  /* Text-size scale for the small UI text (rem). Larger body sizes stay em-relative to their parent. */
+  --dbc-fs-2xs: 0.5rem;
+  --dbc-fs-cap: 0.56rem;
+  --dbc-fs-sm: 0.6rem;
+  --dbc-fs-base: 0.65rem;
+  --dbc-fs-table: 0.7rem;
+  --dbc-fs-md: 0.75rem;
 }
 
 [data-md-color-scheme="slate"] {
-  --md-default-bg-color: #161718;
+  --md-default-bg-color: #17161c;
   --md-default-fg-color: #e8e6ee;
   --md-default-fg-color--light: #c9c6d4;
   --md-accent-fg-color: var(--dbc-pink); /* softer than Material's default vibrant #f50056 hover pink */
-  --md-accent-fg-color--transparent: #ee83ab1a;
+  --md-accent-fg-color--transparent: rgba(236, 145, 178, 0.1);
 }
 
 /* Material's "black" primary preset hardcodes header/tabs background via
@@ -381,7 +394,7 @@ h3 { color: var(--dbc-teal); }
 /* ---------- Admonitions ---------- */
 .md-typeset .admonition,
 .md-typeset details {
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   font-size: 1em;             /* match surrounding body text instead of Material's smaller default or a larger override */
   overflow: hidden;           /* fixes title-bar corners poking out past the rounded box */
   margin: 0.6em 0;            /* tighter than default so a stacked sequence reads as one flow */
@@ -430,7 +443,7 @@ h3 { color: var(--dbc-teal); }
    language instead of a stock Material leftover. */
 .md-typeset .highlight {
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.32);
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   overflow: hidden;
   margin: 0.6em 0;
 }
@@ -469,7 +482,7 @@ h3 { color: var(--dbc-teal); }
    get it for free. */
 .md-typeset table:not([class]) {
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   overflow: hidden;
   /* Opaque instead of a translucent lavender overlay - a translucent bg
      lets whatever's behind it show through, which looked fine against the
@@ -479,14 +492,14 @@ h3 { color: var(--dbc-teal); }
      inconsistent half-tinted look. These are the same colors
      rgba(var(--dbc-purple-rgb), 0.045) [body] and rgba(var(--dbc-purple-rgb), 0.12)
      [header] - the same tint .skills-table/.food-alt-table use - produce
-     against the page's #161718 background, just hardcoded so they no
+     against the page's #17161c background, just hardcoded so they no
      longer depend on what's underneath. */
   background-color: var(--dbc-surface-muted);
 }
 .md-typeset table:not([class]) th {
   background-color: #29272f;
   color: var(--dbc-lavender);
-  font-size: 0.68rem;
+  font-size: var(--dbc-fs-base);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -500,7 +513,7 @@ h3 { color: var(--dbc-teal); }
   width: 1.4em;
   object-fit: contain;
   vertical-align: middle;
-  border-radius: 6px;
+  border-radius: var(--dbc-r-sm);
 }
 
 /* ---------- Difficulty bar inside Build Comparison tables ---------- */
@@ -533,7 +546,7 @@ h3 { color: var(--dbc-teal); }
   display: flex;
   flex-wrap: wrap;
   gap: 0.9em;
-  font-size: 0.72rem;
+  font-size: var(--dbc-fs-table);
   color: var(--dbc-lavender);
   margin: 0.3em 0 0.8em;
 }
@@ -600,14 +613,14 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .skills-table table {
   min-width: 560px;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   overflow: hidden;
   background-color: rgba(var(--dbc-purple-rgb), 0.045);
 }
 .md-typeset .skills-table table th {
   background-color: rgba(var(--dbc-purple-rgb), 0.12);
   color: var(--dbc-lavender);
-  font-size: 0.68rem;
+  font-size: var(--dbc-fs-base);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -617,7 +630,7 @@ h3 { color: var(--dbc-teal); }
   width: 48px;
   object-fit: contain;
   vertical-align: middle;
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
 }
 
 /* ---------- Small reference tables inside admonitions/setup-notes ---------- */
@@ -630,14 +643,14 @@ h3 { color: var(--dbc-teal); }
    <div class="food-alt-table" markdown>...</div>. */
 .md-typeset .food-alt-table table {
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   overflow: hidden;
   background-color: rgba(var(--dbc-purple-rgb), 0.045);
 }
 .md-typeset .food-alt-table table th {
   background-color: rgba(var(--dbc-purple-rgb), 0.12);
   color: var(--dbc-lavender);
-  font-size: 0.68rem;
+  font-size: var(--dbc-fs-base);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -651,7 +664,7 @@ h3 { color: var(--dbc-teal); }
   width: 1.1em;
   object-fit: contain;
   vertical-align: text-bottom;
-  border-radius: 4px;
+  border-radius: var(--dbc-r-sm);
   margin: 0 2px 0 4px;
 }
 /* Only icons skill-tooltip.js's attachBareIcon actually found
@@ -788,7 +801,7 @@ h3 { color: var(--dbc-teal); }
    tag-immune (push/status immune), tag-warn (not paralysis immune). */
 .md-typeset .tag {
   display: inline-block;
-  font-size: 0.62rem;
+  font-size: var(--dbc-fs-sm);
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -987,7 +1000,7 @@ h3 { color: var(--dbc-teal); }
    styling every <details> row inherits before its own rules narrow
    the grid down to the summary. */
 .md-typeset .gem-item {
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   padding: 0.55em 0.85em;
   border: 1px solid transparent;
   transition: border-color 0.15s ease;
@@ -1029,7 +1042,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .gem-item-icon {
   width: 1.7em;
   height: 1.7em;
-  border-radius: 5px;
+  border-radius: var(--dbc-r-sm);
   margin: 0;
   object-fit: contain;
   /* Thin ring, matching .skill-card-icon/.rotation-line img's at-rest
@@ -1200,7 +1213,7 @@ h3 { color: var(--dbc-teal); }
      which run edge-to-edge. */
   margin: 0 0.6em 0.6em 0.6em;
   padding: 0.6em 0.8em;
-  border-radius: 6px;
+  border-radius: var(--dbc-r-sm);
 }
 .md-typeset details[open] > .gem-item-alts {
   display: flex;
@@ -1233,7 +1246,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .gem-alt-icon {
   width: 1.1em;
   height: 1.1em;
-  border-radius: 4px;
+  border-radius: var(--dbc-r-sm);
   object-fit: contain;
   vertical-align: -0.2em;
   margin-right: 0.35em;
@@ -1260,7 +1273,7 @@ h3 { color: var(--dbc-teal); }
      Skill Setup cards elsewhere on the page. */
   background-color: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   padding: 0.7em 0.9em 0.1em;   /* bottom trimmed - the skill/arrow margin-bottom below supplies it, see note */
   margin: 0.35em 0;
   font-size: 0.87em;   /* was 0.95em - felt heavier/larger than surrounding prose despite the same nominal size, mostly from the chips' bold (700) weight; trimmed down a notch (see .cycle-title below, kept in step with it) */
@@ -1315,7 +1328,7 @@ h3 { color: var(--dbc-teal); }
   display: inline-flex;
   align-items: center;
   color: var(--dbc-rose);
-  font-size: 0.78em;
+  font-size: 0.85em;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -1334,7 +1347,7 @@ h3 { color: var(--dbc-teal); }
      behind it without needing a shadow to do that work. */
   border: 1px solid rgba(255, 255, 255, 0.08);
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
+  border-radius: var(--dbc-r-sm);
   padding: 0.2em 0.6em 0.2em 0.35em;
   transition: border-color 0.15s ease, transform 0.15s ease;
 }
@@ -1346,7 +1359,7 @@ h3 { color: var(--dbc-teal); }
   height: 1.35em;
   width: 1.35em;
   vertical-align: text-bottom;
-  border-radius: 5px;
+  border-radius: var(--dbc-r-sm);
   margin: 0;
   /* A thin ring only (no blur glow) - matches .skill-card-icon's at-rest
      state rather than the previous soft-glow version, which was part of
@@ -1598,7 +1611,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .cycle-card {
   background-color: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.32);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   overflow: hidden;
   margin: 0.8em 0 0.6em;
 }
@@ -1648,7 +1661,7 @@ h3 { color: var(--dbc-teal); }
   margin: 0.6em 0 1.2em;
   padding: 0.55em 1em;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.32);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   background-color: rgba(255, 255, 255, 0.035);
   font-size: 0.94em;
   line-height: 1.55;
@@ -1729,7 +1742,7 @@ h3 { color: var(--dbc-teal); }
   background-color: var(--dbc-purple);
   color: var(--md-default-bg-color);
   font-weight: 700;
-  font-size: 0.72rem;
+  font-size: var(--dbc-fs-table);
   flex-shrink: 0;
 }
 .md-typeset .cycle-num-1 {
@@ -2137,7 +2150,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .build-card {
   border: 1px solid rgba(var(--dbc-rose-rgb), 0.3);
   background-color: rgba(var(--dbc-rose-rgb), 0.045);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   padding: 1em 1.2em 1.1em;
   margin: 1em 0 1.5em;
   position: relative; /* anchors .last-updated-badge to this card's own corner */
@@ -2154,7 +2167,7 @@ h3 { color: var(--dbc-teal); }
   position: absolute;
   right: 1.1em;
   bottom: 0.3em;
-  font-size: 0.62rem;
+  font-size: var(--dbc-fs-sm);
   letter-spacing: 0.01em;
   color: var(--md-default-fg-color--light);
   opacity: 0.65;
@@ -2206,7 +2219,7 @@ h3 { color: var(--dbc-teal); }
   flex: 1 1 130px;
   background-color: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(var(--dbc-rose-rgb), 0.22);
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   padding: 0.45em 0.9em;
   min-width: 108px;
   transition: border-color 0.15s ease, background-color 0.15s ease;
@@ -2216,7 +2229,7 @@ h3 { color: var(--dbc-teal); }
   background-color: rgba(255, 255, 255, 0.05);
 }
 .md-typeset .stat-label {
-  font-size: 0.6rem;
+  font-size: var(--dbc-fs-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--dbc-lavender);
@@ -2415,11 +2428,11 @@ h3 { color: var(--dbc-teal); }
   align-items: center;
   border: 1px solid rgba(var(--dbc-rose-rgb), 0.3);
   background-color: rgba(var(--dbc-rose-rgb), 0.045);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   padding: 0.8em 0.35em 0.6em;
 }
 .md-typeset .pentagon-badge-title {
-  font-size: 0.6rem;
+  font-size: var(--dbc-fs-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--dbc-lavender);
@@ -2493,7 +2506,7 @@ h3 { color: var(--dbc-teal); }
    since Exposure is the one axis where higher reads as worse rather
    than better like the other four. */
 .pentagon-badge-caption {
-  font-size: 0.62rem;
+  font-size: var(--dbc-fs-sm);
   color: var(--dbc-lavender);
   text-align: center;
   margin-top: 0.5em;
@@ -2615,7 +2628,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .build-compare {
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   background-color: rgba(var(--dbc-purple-rgb), 0.045);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   padding: 1.1em 1.2em 1.1em;
   margin: 1em 0 1.5em;
 }
@@ -2637,20 +2650,20 @@ h3 { color: var(--dbc-teal); }
      purpose instead of leaving it to the browser's guess. */
   table-layout: fixed;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.025);
   margin: 0 0 0.6em;
 }
 .md-typeset .build-compare table th {
   background-color: rgba(var(--dbc-purple-rgb), 0.1);
-  font-size: 0.68rem;
+  font-size: var(--dbc-fs-base);
 }
 /* Cells match the header size (13.6px). The sitewide table size is 0.64rem
    (12.8px), which read small next to the 16px build-card text this table
    sits under. */
 .md-typeset .build-compare table td {
-  font-size: 0.68rem;
+  font-size: var(--dbc-fs-base);
 }
 .md-typeset .build-compare table th:nth-child(1),
 .md-typeset .build-compare table td:nth-child(1) {
@@ -2739,7 +2752,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .build-compare-select {
   background-color: var(--md-default-bg-color);
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
-  border-radius: 6px;
+  border-radius: var(--dbc-r-sm);
   color: var(--md-default-fg-color);
   padding: 0.35em 0.6em;
   font-size: 0.85em;
@@ -2780,7 +2793,7 @@ h3 { color: var(--dbc-teal); }
   height: 1.8em;
   background: none;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.25);
-  border-radius: 6px;
+  border-radius: var(--dbc-r-sm);
   color: var(--dbc-lavender);
   opacity: 0.7;
   cursor: pointer;
@@ -2806,7 +2819,7 @@ h3 { color: var(--dbc-teal); }
   transform: translateY(2px);
   background-color: var(--md-default-bg-color);
   color: var(--md-default-fg-color);
-  font-size: 0.68rem;
+  font-size: var(--dbc-fs-base);
   font-weight: 600;
   font-family: inherit;
   text-transform: none;
@@ -2814,7 +2827,7 @@ h3 { color: var(--dbc-teal); }
   white-space: nowrap;
   padding: 0.35em 0.6em;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  border-radius: 5px;
+  border-radius: var(--dbc-r-sm);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease, transform 0.15s ease;
@@ -2841,7 +2854,7 @@ h3 { color: var(--dbc-teal); }
   justify-content: center;
   margin-top: 0.3em;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   background-color: rgba(255, 255, 255, 0.02);
   overflow: hidden;
 }
@@ -2894,7 +2907,7 @@ h3 { color: var(--dbc-teal); }
   justify-content: flex-start;
 }
 .md-typeset .build-compare-diffcard-title {
-  font-size: 0.65rem;
+  font-size: var(--dbc-fs-base);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--dbc-lavender);
@@ -2961,7 +2974,7 @@ h3 { color: var(--dbc-teal); }
 }
 
 .md-typeset .grid.cards > ul > li {
-  border-radius: 12px;
+  border-radius: var(--dbc-r-lg);
   transition: transform 0.15s ease, border-color 0.15s ease;
 }
 .md-typeset .grid.cards > ul > li:hover {
@@ -2969,11 +2982,11 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .grid.cards > ul > li:nth-child(1) {
   background-color: var(--dbc-rose-dark);
-  border-color: var(--dbc-rose);
+  border-color: rgba(var(--dbc-rose-rgb), 0.45);
 }
 .md-typeset .grid.cards > ul > li:nth-child(2) {
   background-color: var(--dbc-teal-card-bg);
-  border-color: var(--dbc-teal);
+  border-color: rgba(var(--dbc-teal-rgb), 0.45);
 }
 /* A third card takes the gold accent, the same trio as .prearc-cards. On the
    home page it is the Additional Resources card, which is not a playstyle
@@ -2981,10 +2994,50 @@ h3 { color: var(--dbc-teal); }
    path cards instead of leaving it alone in a half-empty second row. */
 .md-typeset .grid.cards > ul > li:nth-child(3) {
   background-color: var(--dbc-gold-dark);
-  border-color: var(--dbc-gold);
+  border-color: rgba(var(--dbc-gold-rgb), 0.45);
 }
 .md-typeset .grid.cards.home-cards > ul > li:nth-child(3) {
   grid-column: 1 / -1;
+}
+/* Two path cards side by side (one column on phones); the third spans the row. */
+.md-typeset .grid.cards.home-cards {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: min(100%, 46rem);
+  margin: 1em auto;
+}
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .grid.cards.home-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* The flowchart sits under the cards as a map, so it does not need the full wide column. */
+.md-typeset img[src$="flowchart-deathblade-paths.svg"] {
+  display: block;
+  max-width: min(100%, 46rem);
+  margin: 1.2rem auto 0;
+}
+/* Whole-card click target: the card's one link stretches over the card. */
+.md-typeset .grid.cards.home-cards > ul > li {
+  position: relative;
+  cursor: pointer;
+}
+.md-typeset .grid.cards.home-cards > ul > li a::after {
+  /* !important: the same-site link rule above sets content: none !important. */
+  content: "" !important;
+  position: absolute;
+  inset: 0;
+  border-radius: var(--dbc-r-lg);
+}
+.md-typeset .grid.cards > ul > li:nth-child(1):hover { border-color: var(--dbc-rose); }
+.md-typeset .grid.cards > ul > li:nth-child(2):hover { border-color: var(--dbc-teal); }
+.md-typeset .grid.cards > ul > li:nth-child(3):hover { border-color: var(--dbc-gold); }
+/* Additional Resources is not a playstyle path, so it takes the lavender-purple accent instead of gold. */
+.md-typeset .grid.cards.home-cards > ul > li:nth-child(3) {
+  background-color: var(--dbc-purple-card-bg);
+  border-color: rgba(var(--dbc-purple-rgb), 0.45);
+}
+.md-typeset .grid.cards.home-cards > ul > li:nth-child(3):hover {
+  border-color: var(--dbc-purple);
 }
 
 /* ==========================================================================
@@ -3006,7 +3059,7 @@ h3 { color: var(--dbc-teal); }
   min-width: 0;
   padding: 0.9em 1.1em 0.7em;
   border: 1px solid rgba(var(--link-accent-rgb), 0.35);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   background-color: rgba(var(--link-accent-rgb), 0.05);
 }
 .md-typeset .link-group[data-accent="pink"] { --link-accent-rgb: var(--dbc-rose-rgb); }
@@ -3085,7 +3138,7 @@ h3 { color: var(--dbc-teal); }
   margin: 0;
   padding: 0.7em 0.95em;
   border: 1px solid rgba(var(--gp-rgb), 0.32);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   background-color: rgba(var(--gp-rgb), 0.05);
   font-size: 0.9em;
   line-height: 1.5;
@@ -3135,7 +3188,7 @@ h3 { color: var(--dbc-teal); }
   margin: 0;
   padding: 0.35em 0.9em;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.45);
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   background-color: rgba(var(--dbc-purple-rgb), 0.1);
   font-size: 0.9em;
   font-weight: 700;
@@ -3284,7 +3337,7 @@ h3 { color: var(--dbc-teal); }
   gap: 0.65em 0.5em;
 }
 .md-typeset .engraving-loadout-label {
-  font-size: 0.62rem;
+  font-size: var(--dbc-fs-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--dbc-lavender);
@@ -3455,7 +3508,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset details.engraving-card {
   margin: 0;
   padding: 0;
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   border: 1px solid rgba(255, 255, 255, 0.14);
   background-color: rgba(255, 255, 255, 0.03);
   box-shadow: none;
@@ -3576,7 +3629,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .engraving-card-badge {
   display: inline-block;
-  font-size: 0.6rem;
+  font-size: var(--dbc-fs-sm);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -3735,15 +3788,15 @@ h3 { color: var(--dbc-teal); }
 /* ---------- Pre-Ark Grid page option cards ---------- */
 .md-typeset .grid.cards.prearc-cards > ul > li:nth-child(1) {
   background-color: var(--dbc-rose-dark);
-  border-color: var(--dbc-rose);
+  border-color: rgba(var(--dbc-rose-rgb), 0.45);
 }
 .md-typeset .grid.cards.prearc-cards > ul > li:nth-child(2) {
   background-color: var(--dbc-gold-dark);
-  border-color: var(--dbc-gold);
+  border-color: rgba(var(--dbc-gold-rgb), 0.45);
 }
 .md-typeset .grid.cards.prearc-cards > ul > li:nth-child(3) {
   background-color: var(--dbc-teal-card-bg);
-  border-color: var(--dbc-teal);
+  border-color: rgba(var(--dbc-teal-rgb), 0.45);
 }
 
 /* ---------- Page-level availability banner ---------- */
@@ -3757,7 +3810,7 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.85em;
   font-weight: 600;
   padding: 0.5em 0.9em;
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   margin: -0.4em 0 1.1em;
 }
 .md-typeset .page-banner::before {
@@ -3774,7 +3827,7 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---------- CPM and Bid calculators ---------- */
-/* Both widgets use the Ark Passive calculator's card language: a flat #1c1d1f card with a
+/* Both widgets use the Ark Passive calculator's card language: a flat #1f1d24 card with a
    hairline border and a title bar, field rows with the label on the left and the control on the
    right, 32px centred inputs, result tiles with coloured labels. The --ap-* names below match the
    ones .ap-calc defines (a shared rule such as .ap-build-chip reads --ap-fs-sm), declared here
@@ -3782,14 +3835,14 @@ h3 { color: var(--dbc-teal); }
    not the viewport, because the sidebar and TOC coming and going change the width a card gets. */
 .md-typeset .cpm-calc,
 .md-typeset .bid-calc {
-  --ap-fs-cap: 0.56rem;
-  --ap-fs-sm: 0.6rem;
-  --ap-fs-base: 0.65rem;
+  --ap-fs-cap: var(--dbc-fs-cap);
+  --ap-fs-sm: var(--dbc-fs-sm);
+  --ap-fs-base: var(--dbc-fs-base);
   --ap-ctl-h: 1.6rem;
-  --ap-radius: 8px;
-  --ap-radius-lg: 12px;
+  --ap-radius: var(--dbc-r);
+  --ap-radius-lg: var(--dbc-r-lg);
   --ap-pad-x: 0.85rem;
-  --ap-surface: #1c1d1f;
+  --ap-surface: #1f1d24;
   --ap-line: rgba(255, 255, 255, 0.09);
   --ap-row-line: rgba(255, 255, 255, 0.045);
   --ap-line-strong: rgba(var(--dbc-purple-rgb), 0.35);
@@ -3838,10 +3891,10 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .cpm-calc-row-tag {
   padding: 0 0.2rem;
   border: 1px solid rgba(var(--dbc-lavender-rgb), 0.45);
-  border-radius: 5px;
+  border-radius: var(--dbc-r-sm);
   background-color: rgba(var(--dbc-lavender-rgb), 0.16);
   color: var(--dbc-lavender);
-  font-size: 0.5rem;
+  font-size: var(--dbc-fs-2xs);
   font-weight: 700;
   letter-spacing: 0.02em;
   line-height: 1.3;
@@ -3957,7 +4010,7 @@ h3 { color: var(--dbc-teal); }
   display: inline-block;
   min-width: 6ch;
   text-align: right;
-  font-size: 0.75rem;
+  font-size: var(--dbc-fs-md);
   font-variant-numeric: tabular-nums;
   font-weight: 700;
   color: var(--dbc-teal);
@@ -3994,7 +4047,7 @@ h3 { color: var(--dbc-teal); }
   min-width: 3.2rem;
   padding: 0.05rem 0.5rem;
   border: 1px solid rgba(var(--dbc-teal-rgb), 0.45);
-  border-radius: 7px;
+  border-radius: var(--dbc-r);
   background-color: rgba(var(--dbc-teal-rgb), 0.16);
   color: var(--dbc-teal);
   font-size: var(--ap-fs-sm);
@@ -4206,7 +4259,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .cpm-calc-recent-chip {
   padding: 0.15rem 0.55rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 7px;
+  border-radius: var(--dbc-r);
   background: none;
   color: var(--dbc-lilac);
   font-family: inherit;
@@ -4332,7 +4385,7 @@ h3 { color: var(--dbc-teal); }
   height: var(--ap-ctl-h);
   padding: 0 0.65rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 7px;
+  border-radius: var(--dbc-r);
   background: none;
   color: var(--dbc-lilac);
   font-family: inherit;
@@ -4463,23 +4516,23 @@ h3 { color: var(--dbc-teal); }
      sm = derived values and secondary text, base = labels and controls,
      table = comparison table body text, md = emphasised values,
      lg = the headline percentage. */
-  --ap-fs-cap: 0.56rem;
-  --ap-fs-sm: 0.6rem;
-  --ap-fs-base: 0.65rem;
-  --ap-fs-table: 0.7rem;
-  --ap-fs-md: 0.75rem;
+  --ap-fs-cap: var(--dbc-fs-cap);
+  --ap-fs-sm: var(--dbc-fs-sm);
+  --ap-fs-base: var(--dbc-fs-base);
+  --ap-fs-table: var(--dbc-fs-table);
+  --ap-fs-md: var(--dbc-fs-md);
   --ap-fs-lg: 0.9rem;
   --ap-ctl-h: 1.6rem;
-  --ap-radius: 8px;
-  --ap-radius-lg: 12px;
+  --ap-radius: var(--dbc-r);
+  --ap-radius-lg: var(--dbc-r-lg);
   --ap-gap: 0.9rem;
   --ap-pad-x: 0.85rem;
-  /* Opaque on purpose: these are the page background (#161718) with a thin
+  /* Opaque on purpose: these are the page background (#17161c) with a thin
      white wash already mixed in. A translucent wash would stack when a card
      sits inside another card (the comparison sections), and the inner card
      would come out lighter than the same card in the main grid. */
-  --ap-surface: #1c1d1f;
-  --ap-surface-2: #232426;
+  --ap-surface: #1f1d24;
+  --ap-surface-2: #26252b;
   /* Table header bars are flat like the card titles: the card body colour,
      separated from the rows by the header's bottom rule. */
   --ap-surface-head: var(--ap-surface);
@@ -4832,7 +4885,7 @@ h3 { color: var(--dbc-teal); }
   height: 1.05rem;
   margin: 0;
   border: 1.5px solid rgba(255, 255, 255, 0.28);
-  border-radius: 5px;
+  border-radius: var(--dbc-r-sm);
   background: transparent center / 0.75rem no-repeat;
   cursor: pointer;
   transition: background-color 0.12s ease, border-color 0.12s ease;
@@ -5169,7 +5222,7 @@ h3 { color: var(--dbc-teal); }
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: var(--ap-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e57373' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 17v5'/%3E%3Cpath d='M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z'/%3E%3C/svg%3E") center / 10px no-repeat;
+  background: var(--ap-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e6908d' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 17v5'/%3E%3Cpath d='M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z'/%3E%3C/svg%3E") center / 10px no-repeat;
   pointer-events: none;
 }
 .md-typeset .ap-result-combo {
@@ -5230,7 +5283,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-result-readout-split,
 .md-typeset .ap-result-readout-ot1 {
-  font-size: 0.7rem;
+  font-size: var(--dbc-fs-table);
 }
 .md-typeset .ap-result-readout-ot1 {
   margin-right: -0.35rem;
@@ -5246,7 +5299,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-ot1-tag {
   padding: 0 0.25rem;
   border: 1px solid rgba(var(--dbc-red-rgb), 0.45);
-  border-radius: 5px;
+  border-radius: var(--dbc-r-sm);
   background-color: rgba(var(--dbc-red-rgb), 0.16);
   color: var(--dbc-red);
   font-size: var(--ap-fs-cap);
@@ -5282,7 +5335,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-engr-food-tag {
   padding: 0 0.25rem;
   border: 1px solid rgba(var(--dbc-lavender-rgb), 0.45);
-  border-radius: 5px;
+  border-radius: var(--dbc-r-sm);
   background-color: rgba(var(--dbc-lavender-rgb), 0.16);
   color: var(--dbc-lavender);
   font-size: var(--ap-fs-cap);
@@ -5351,7 +5404,7 @@ h3 { color: var(--dbc-teal); }
   flex: 1 1 15em;
   min-width: 0;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   padding: 0.7em 0.85em;
 }
 .md-typeset .skill-compare-col > :first-child,
@@ -5405,7 +5458,7 @@ h3 { color: var(--dbc-teal); }
   background-color: rgba(var(--dbc-teal-rgb), 0.06);
 }
 .md-typeset .ap-stat-card-title {
-  font-size: 0.68rem;
+  font-size: var(--dbc-fs-base);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--dbc-lavender);
@@ -5582,7 +5635,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-stat-tiles .ap-stat-row .ap-summary-label--evodmg   { color: var(--dbc-purple); }
 .md-typeset .ap-stat-tiles .ap-stat-row > :nth-child(2) {
   grid-area: best;
-  font-size: 0.75rem;
+  font-size: var(--dbc-fs-md);
   font-weight: 700;
   color: var(--md-default-fg-color);
 }
@@ -5628,10 +5681,10 @@ h3 { color: var(--dbc-teal); }
   padding: 0 0.2rem;
   letter-spacing: 0.02em;
   border: 1px solid rgba(var(--ap-tag-rgb), 0.45);
-  border-radius: 5px;
+  border-radius: var(--dbc-r-sm);
   background-color: rgba(var(--ap-tag-rgb), 0.16);
   color: rgb(var(--ap-tag-rgb));
-  font-size: 0.5rem;
+  font-size: var(--dbc-fs-2xs);
   font-weight: 700;
   line-height: 1.3;
   cursor: help;
@@ -6092,7 +6145,7 @@ h3 { color: var(--dbc-teal); }
   padding: 3px;
   background-color: var(--md-default-bg-color);
   border: 1px solid var(--ap-line);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
 }
 /* Only one Variant tier is ever shown at once; the other family's tier is
    hidden rather than dropped. */
@@ -6103,7 +6156,7 @@ h3 { color: var(--dbc-teal); }
   border: none;
   background: none;
   color: var(--dbc-muted-text);
-  border-radius: 7px;
+  border-radius: var(--dbc-r);
   font-family: inherit;
   font-size: var(--ap-fs-sm);
   font-weight: 600;
@@ -6225,7 +6278,7 @@ h3 { color: var(--dbc-teal); }
     right: 0.9em;
     background-color: var(--dbc-chip-surface);
     border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
-    border-radius: 10px;
+    border-radius: var(--dbc-r-lg);
     padding: 0.6em 0.7em;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
     z-index: 30;
@@ -6303,7 +6356,7 @@ h3 { color: var(--dbc-teal); }
   margin: 0.8em 0;
   padding: 0;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.25);
-  border-radius: 6px;
+  border-radius: var(--dbc-r-sm);
   background: none;
   overflow: visible;
 }
@@ -8051,7 +8104,7 @@ h3 { color: var(--dbc-teal); }
   padding: 3px;
   background-color: var(--md-default-bg-color);
   border: 1px solid var(--ap-line);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
 }
 .md-typeset .ap-calc-preset-label {
   padding: 0 0.35rem 0 0.5rem;
@@ -8063,7 +8116,7 @@ h3 { color: var(--dbc-teal); }
   padding: 0.2rem 0.4rem;
   background: none;
   border: none;
-  border-radius: 7px;
+  border-radius: var(--dbc-r);
   font: inherit;
   font-size: var(--ap-fs-sm);
   font-weight: 600;
@@ -8170,12 +8223,12 @@ h3 { color: var(--dbc-teal); }
   gap: 0.55em;
   width: min(380px, 90vw);
   padding: 0.9em 1em 1em;
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   background-color: #1c1a22;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
   text-align: left;
-  font-size: 0.6rem;
+  font-size: var(--dbc-fs-sm);
   color: var(--dbc-lilac);
   white-space: normal;
 }
@@ -8197,7 +8250,7 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-lilac);
   background-color: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
+  border-radius: var(--dbc-r-sm);
   padding: 0.5em 0.6em;
 }
 .md-typeset .ap-calc-popover-file {
@@ -8326,6 +8379,18 @@ h3 { color: var(--dbc-teal); }
   opacity: 1;
 }
 
+/* A tab group with only one tab is a heading, not a switcher: drop the
+   dimming and hover so it reads as a plain caption. */
+.md-typeset .tabbed-set > .tabbed-labels:has(> label:only-child) > label {
+  opacity: 1;
+  color: var(--dbc-purple);
+  cursor: default;
+}
+
+.md-typeset .tabbed-set > .tabbed-labels:has(> label:only-child)::before {
+  display: none;
+}
+
 /* ---------- Trixion DPS distribution chart ---------- */
 /* Trixion DPS is its own H2 chapter ("## Trixion DPS"): it picks up the
    standard H2 chapter-break treatment above and shows up in the mobile
@@ -8348,7 +8413,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .dps-showcase-frame {
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
   background-color: rgba(var(--dbc-purple-rgb), 0.045);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   padding: 1.4em 1.6em 1.5em;
 }
 .md-typeset .dps-showcase-frame p {
@@ -8400,7 +8465,7 @@ h3 { color: var(--dbc-teal); }
   align-items: center;
   gap: 0.7em;
   padding: 0.2em 0.4em;
-  border-radius: 6px;
+  border-radius: var(--dbc-r-sm);
 }
 /* Charts rendered without data-show-icons drop the icon column entirely
    rather than reserving empty space for it. */
@@ -8411,7 +8476,7 @@ h3 { color: var(--dbc-teal); }
   width: var(--dps-bar-height);
   height: var(--dps-bar-height);
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: var(--dbc-r-sm);
   /* Same thin ring the gem/skill icons wear elsewhere on the page
      (.gem-item-icon, .skill-card-icon) - without it this was the one
      icon spot left bare next to every other icon treatment on the site. */
@@ -8433,7 +8498,7 @@ h3 { color: var(--dbc-teal); }
      rather than a pill/chip shape, since a full-width row reading as a
      stretched pill (instead of a small rounded rectangle) was reading as
      more "rounded" than anything else on the page. */
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   background-color: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.09);
   overflow: hidden;
@@ -8739,11 +8804,11 @@ h3 { color: var(--dbc-teal); }
   position: relative;
   z-index: 1;
   flex: 0 0 auto;
-  width: 7px;
-  height: 10px;
-  border-radius: 2.5px;
+  width: 9px;
+  height: 13px;
+  border-radius: 3px;
   background-color: var(--md-default-bg-color);
-  border: 1.5px solid rgba(var(--dbc-purple-rgb), 0.4);
+  border: 1.5px solid rgba(var(--dbc-purple-rgb), 0.6);
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 /* Label sits to the left. Originally just text with a soft shadow for
@@ -8853,7 +8918,7 @@ h3 { color: var(--dbc-teal); }
    exceptions below, so it doesn't get in the way of actually using
    the page, just flavors idle hovering over regular content. */
 body.page-333-blitz {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"><g fill="%23f0a868" stroke="%23161718" stroke-width="1"><ellipse cx="12" cy="16.5" rx="6" ry="5"/><ellipse cx="5" cy="8" rx="2.2" ry="2.8"/><ellipse cx="9.3" cy="4" rx="2" ry="2.6"/><ellipse cx="14.7" cy="4" rx="2" ry="2.6"/><ellipse cx="19" cy="8" rx="2.2" ry="2.8"/></g></svg>') 12 14, auto;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"><g fill="%23ecaf79" stroke="%2317161c" stroke-width="1"><ellipse cx="12" cy="16.5" rx="6" ry="5"/><ellipse cx="5" cy="8" rx="2.2" ry="2.8"/><ellipse cx="9.3" cy="4" rx="2" ry="2.6"/><ellipse cx="14.7" cy="4" rx="2" ry="2.6"/><ellipse cx="19" cy="8" rx="2.2" ry="2.8"/></g></svg>') 12 14, auto;
 }
 body.page-333-blitz a:not(.md-nav__link),
 body.page-333-blitz button,
@@ -8911,7 +8976,7 @@ body.page-333-blitz input[type="text"] {
      transition here is what makes that reflow glide instead of pop. */
   transition: transform 0.22s ease, width 0.22s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   /* Lavender-matched tint (not a neutral white one) so it reads purple by
      default even outside a .setup-panel, and layers WITH the panel's own
      lavender wash when nested in one instead of a white overlay diluting
@@ -9060,7 +9125,7 @@ body.page-333-blitz input[type="text"] {
   height: 40px;
   width: 40px;
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: var(--dbc-r);
   flex-shrink: 0;
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.28);
 }
@@ -9097,7 +9162,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .skill-card-level,
 .md-typeset .skill-card-subtitle {
   display: block;
-  font-size: 0.56rem;
+  font-size: var(--dbc-fs-cap);
   font-weight: 700;
   letter-spacing: 0.03em;
   color: var(--dbc-lavender);
@@ -9154,8 +9219,8 @@ body.page-333-blitz input[type="text"] {
   justify-content: center;
   width: 22px;
   height: 22px;
-  border-radius: 50px;
-  font-size: 0.72rem;
+  border-radius: 999px;
+  font-size: var(--dbc-fs-table);
   font-weight: 700;
   color: var(--md-default-bg-color);
   flex-shrink: 0;
@@ -9200,7 +9265,7 @@ body.page-333-blitz input[type="text"] {
   width: 10ch;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 0.64rem;
+  font-size: var(--dbc-fs-sm);
   font-weight: 700;
   letter-spacing: 0.01em;
   padding: 0.22em 0.5em;
@@ -9354,7 +9419,7 @@ body.page-333-blitz input[type="text"] {
   border-radius: 999px;
   background-color: rgba(var(--dbc-slate-rgb), 0.14);
   border: 1px solid rgba(var(--dbc-slate-rgb), 0.3);
-  font-size: 0.62rem;
+  font-size: var(--dbc-fs-sm);
   line-height: 1.7;
   color: var(--dbc-slate);
 }
@@ -9444,7 +9509,7 @@ body.page-333-blitz input[type="text"] {
   /* Same subtle-tint-over-hairline-border surface as .stat/.skill-card
      rather than a bespoke dark gradient (and a much stronger 0.3 border), which would make this the one component on the site that looks like a separate skin instead of a variant of the same card. */
   border: 1px solid rgba(var(--dbc-rose-rgb), 0.22);
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   background-color: rgba(255, 255, 255, 0.02);
   transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
@@ -9470,7 +9535,7 @@ body.page-333-blitz input[type="text"] {
   min-width: 0;
 }
 .md-typeset .ark-core-name {
-  font-size: 0.72rem;
+  font-size: var(--dbc-fs-table);
   font-weight: 500;
   color: var(--md-default-fg-color);
   line-height: 1.25;
@@ -9509,7 +9574,7 @@ body.page-333-blitz input[type="text"] {
   box-shadow: 0 0 4px rgba(var(--dbc-orange-rgb), 0.75);
 }
 .md-typeset .ark-core-point-label {
-  font-size: 0.56rem;
+  font-size: var(--dbc-fs-cap);
   font-weight: 700;
   color: var(--dbc-slate);
   line-height: 1;
@@ -9544,7 +9609,7 @@ body.page-333-blitz input[type="text"] {
   width: max-content;
   max-width: min(320px, 88vw);
   padding: 0.75em 0.9em 0.8em;
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   background-color: #1c1a22;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
@@ -9655,7 +9720,7 @@ body.page-333-blitz input[type="text"] {
   width: max-content;
   max-width: min(280px, 88vw);
   padding: 0.65em 0.8em 0.7em;
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   background-color: #1c1a22;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
@@ -9698,7 +9763,7 @@ body.page-333-blitz input[type="text"] {
   width: 1.6em;
   height: 1.6em;
   object-fit: contain;
-  border-radius: 5px;
+  border-radius: var(--dbc-r-sm);
   /* Same thin ring convention as every other icon on the site
      (.gem-item-icon, .dps-chart-icon, .skill-card-icon). */
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.28);
@@ -9815,7 +9880,7 @@ body.page-333-blitz input[type="text"] {
   border-radius: 999px;
   background-color: rgba(var(--dbc-slate-rgb), 0.14);
   border: 1px solid rgba(var(--dbc-slate-rgb), 0.3);
-  font-size: 0.62rem;
+  font-size: var(--dbc-fs-sm);
   line-height: 1.7;
   color: var(--dbc-slate);
 }
@@ -9982,7 +10047,7 @@ body.page-333-blitz input[type="text"] {
    stretch (see .ark-passives above) makes every card in a row match the
    tallest one's height. */
 .md-typeset .ark-passive-col {
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   border: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.02);
   padding: 0.9em 1em 1.1em;
@@ -10027,7 +10092,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-passive-col-points {
   font-size: 0.68rem;
   color: var(--dbc-muted-text);
-  font-weight: 600;
+  font-weight: 700;
 }
 .md-typeset .ark-passive-col[data-column="evolution"] .ark-passive-col-title { color: var(--dbc-orange); }
 .md-typeset .ark-passive-col[data-column="enlightenment"] .ark-passive-col-title { color: var(--dbc-purple); }
@@ -10057,7 +10122,7 @@ body.page-333-blitz input[type="text"] {
   border-top: 1px solid rgba(255, 255, 255, 0.09);
 }
 .md-typeset .ark-passive-tier-label {
-  font-size: 0.58rem;
+  font-size: var(--dbc-fs-cap);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--dbc-slate);
@@ -10150,7 +10215,7 @@ body.page-333-blitz input[type="text"] {
    kept compact so it doesn't compete with the node name for space on a
    narrow card. */
 .md-typeset .ark-passive-node-level {
-  font-size: 0.64rem;
+  font-size: var(--dbc-fs-sm);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   padding: 0.05em 0.4em;
@@ -10218,7 +10283,7 @@ body.page-333-blitz input[type="text"] {
   font-size: 0.68rem;
 }
 .md-typeset .ark-passives-compact .ark-passive-col-points {
-  font-size: 0.6rem;
+  font-size: var(--dbc-fs-sm);
 }
 .md-typeset .ark-passives-compact .ark-passive-tier {
   gap: 0.22em;
@@ -10227,7 +10292,7 @@ body.page-333-blitz input[type="text"] {
   padding-top: 0.3em;
 }
 .md-typeset .ark-passives-compact .ark-passive-tier-label {
-  font-size: 0.52rem;
+  font-size: var(--dbc-fs-2xs);
 }
 .md-typeset .ark-passives-compact .ark-passive-node-icon {
   height: 14px;
@@ -10238,7 +10303,7 @@ body.page-333-blitz input[type="text"] {
   font-size: 0.72em;
 }
 .md-typeset .ark-passives-compact .ark-passive-node-level {
-  font-size: 0.58rem;
+  font-size: var(--dbc-fs-cap);
   padding: 0.03em 0.32em;
 }
 
@@ -10273,7 +10338,7 @@ body.page-333-blitz input[type="text"] {
    .build-compare elsewhere on the site), separated only by a hairline
    divider, makes the notes read as that widget's own footnotes instead. */
 .md-typeset .setup-panel {
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   padding: 1em 1.2em 0.9em;
   margin: 0.9em 0 1.2em;
 }
@@ -10484,7 +10549,7 @@ body.page-333-blitz input[type="text"] {
   flex-shrink: 0;
   width: 52px;
   text-align: center;
-  font-size: 0.6rem;
+  font-size: var(--dbc-fs-sm);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -10615,7 +10680,7 @@ body.page-333-blitz input[type="text"] {
      needs its own margin since nothing else provides that gap - the
      summary has margin: 0. */
   margin: 0.5em auto 0;
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
@@ -10715,7 +10780,7 @@ body.page-333-blitz input[type="text"] {
   height: 22px;
   width: 22px;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: var(--dbc-r-sm);
   box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.4), 0 0 6px rgba(var(--dbc-rose-rgb), 0.25);
   transition: box-shadow 0.15s ease;
 }
@@ -10867,7 +10932,7 @@ html.image-lightbox-open {
   max-height: 100%;
   width: auto;
   height: auto;
-  border-radius: 10px;
+  border-radius: var(--dbc-r-lg);
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
   cursor: zoom-out;
@@ -10906,7 +10971,7 @@ html.image-lightbox-open {
    @media print, so it cannot affect the rendered site at any width.
 
    Why this exists: the site is dark-themed (--md-default-fg-color is
-   #e8e6ee on a #161718 background). Browsers don't print background
+   #e8e6ee on a #17161c background). Browsers don't print background
    colors unless the reader ticks "Background graphics", so printing or
    saving-to-PDF without this block produced near-white text on white
    paper - effectively a blank page. Rotation cycles, gem priority and

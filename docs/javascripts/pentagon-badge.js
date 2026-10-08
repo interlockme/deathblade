@@ -124,7 +124,7 @@
       return {
         values: build.pentagon,
         labels: family.axisLabels,
-        accent: build.accent || "#ee83ab",
+        accent: build.accent || "#ec91b2",
         caption: caption,
       };
     }
@@ -143,7 +143,7 @@
     return {
       values: rawValues,
       labels: rawLabels,
-      accent: badge.getAttribute("data-accent") || "#ee83ab",
+      accent: badge.getAttribute("data-accent") || "#ec91b2",
       caption: badge.getAttribute("data-caption") || null,
     };
   }
