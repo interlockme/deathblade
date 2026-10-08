@@ -16,7 +16,7 @@
 **Tradeoff:**{: .tradeoff } Legacy build with some downtime and little to no recovery.
 
 - Last bastion of the classic Remaining Energy gameplay, now powercrept.
-- <span class="skill-mention" data-glossary-id="counter">Counter</span> is used often in the rotation, you must hold it when necessary.
+- <span class="skill-mention" data-glossary-id="counter">Counter</span> is used often in the rotation; you must hold it when necessary.
 - Simple to learn and execute, with better mobility than modern builds.
 
 </div>

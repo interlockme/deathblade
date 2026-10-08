@@ -27,6 +27,7 @@
   --dbc-purple: #baa4e2;       /* h2 headings, Evolution-category accent */
   --dbc-purple-rgb: 186, 164, 226;
   --dbc-lilac: #cfc9dd;        /* light lavender body/label text */
+  --dbc-white: #fff;           /* brightest text: titles and link text on the home page */
   --dbc-slate: #9d99ab;        /* muted purple-gray secondary text. 4.5:1+ on the dark surfaces, including the lighter .skill-card surface (was #6f6a80, 2.6-3.1:1). --dbc-slate-rgb below is deliberately unchanged so tinted backgrounds/borders built from it look the same. */
   --dbc-slate-rgb: 111, 106, 128;
   --dbc-red: #e6908d;          /* danger/error accent, replaces Material's default #ff1744 */
@@ -3005,25 +3006,39 @@ h3 { color: var(--dbc-teal); }
    two notes. A lane's rows are a list of choices, not a ladder: every row links
    straight to its build page. The Difficulty and Trixion meters inside a row are
    rendered by build-stats-badge.js from build-data.js (.home-meters), so the
-   numbers cannot drift from the build pages. Colours come from --home-rgb /
-   --home-accent, set once per lane.
-   Layout is by container width, not viewport: .home-lane is the query container
-   (rows stack and the divider hint hides under 460px of the lane's own content
-   width), so the sidebar coming and going cannot put the breakpoint at the
-   wrong place. */
-.md-typeset .home p { margin: 0; }
+   numbers cannot drift from the build pages.
+   Variants are attributes, as on the other pages: data-accent on a lane
+   (pink | teal) sets --home-rgb / --home-accent / --home-lane-bg, data-kind on
+   a pill (none | little | full | star | warn) or a row (start | variant).
+   Layout is by container width, not viewport: .home is the query container for
+   the lane and notes grids, and each .home-lane is the container for its own
+   rows (they stack and the divider hint hides under 460px of the lane's own
+   content width), so the sidebar coming and going cannot put a breakpoint at
+   the wrong place. Pixel thresholds, because em in a container query follows
+   the container's font size.
+   Paragraphs are plain markdown paragraphs with an attr_list class. The reset
+   below is written with :where() so it adds no specificity: a class rule on a
+   paragraph (.home-sec, .home-note-label) can set its own margin. */
+.md-typeset .home {
+  /* Display sizes above the small-text scale (--dbc-fs-*, whose top step is
+     --dbc-fs-md). */
+  --home-fs-title: 1.1rem;
+  --home-fs-name: 0.8rem;
+  --home-fs-emoji: 0.95rem;
+  container: home / inline-size;
+}
+.md-typeset .home :where(p) { margin: 0; }
 .md-typeset .home-lanes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
   margin: 0;
 }
-@media screen and (max-width: 59.9375em) {
+/* Two lanes need 928px: two 454px lanes plus the gap. */
+@container home (max-width: 927px) {
   .md-typeset .home-lanes { grid-template-columns: minmax(0, 1fr); }
 }
 .md-typeset .home-lane {
-  --home-rgb: var(--dbc-rose-rgb);
-  --home-accent: var(--dbc-rose);
   container: home-lane / inline-size;
   display: flex;
   flex-direction: column;
@@ -3031,12 +3046,17 @@ h3 { color: var(--dbc-teal); }
   padding: 0.9rem;
   border: 1px solid rgba(var(--home-rgb), 0.4);
   border-radius: var(--dbc-r-lg);
-  background: linear-gradient(180deg, var(--dbc-rose-dark), var(--dbc-surface-muted) 45%);
+  background: linear-gradient(180deg, var(--home-lane-bg), var(--dbc-surface-muted) 45%);
 }
-.md-typeset .home-lane--surge {
+.md-typeset .home-lane[data-accent="pink"] {
+  --home-rgb: var(--dbc-rose-rgb);
+  --home-accent: var(--dbc-rose);
+  --home-lane-bg: var(--dbc-rose-dark);
+}
+.md-typeset .home-lane[data-accent="teal"] {
   --home-rgb: var(--dbc-teal-rgb);
   --home-accent: var(--dbc-teal);
-  background: linear-gradient(180deg, var(--dbc-teal-card-bg), var(--dbc-surface-muted) 45%);
+  --home-lane-bg: var(--dbc-teal-card-bg);
 }
 .md-typeset .home-lane-head {
   display: flex;
@@ -3054,8 +3074,8 @@ h3 { color: var(--dbc-teal); }
   gap: 0.6rem;
 }
 .md-typeset .home-lane-title {
-  color: #fff;
-  font-size: 1.1rem;
+  color: var(--dbc-white);
+  font-size: var(--home-fs-title);
   font-weight: 600;
   line-height: 1.25;
 }
@@ -3086,7 +3106,8 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-lilac);
   font-size: var(--dbc-fs-base);
 }
-.md-typeset ul.home-trade {
+/* The trade-off chips are a plain markdown list in the lane header. */
+.md-typeset .home-lane-head > ul {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
@@ -3094,7 +3115,7 @@ h3 { color: var(--dbc-teal); }
   padding: 0;
   list-style: none;
 }
-.md-typeset ul.home-trade > li {
+.md-typeset .home-lane-head > ul > li {
   margin: 0;
   padding: 0.05rem 0.5rem;
   border: 1px solid rgba(var(--home-rgb), 0.3);
@@ -3103,14 +3124,12 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-lilac);
   font-size: var(--dbc-fs-cap);
 }
-/* "Then pick a build" divider: label, a rule, then a right-aligned hint. */
+/* "Then pick a build" divider: the paragraph is the label, followed by a rule. */
 .md-typeset .home-sec {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin: 0.7rem 0 0.4rem;
-}
-.md-typeset .home-sec-label {
   color: var(--home-accent);
   font-size: var(--dbc-fs-cap);
   font-weight: 600;
@@ -3120,16 +3139,9 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .home-sec::after {
   content: "";
-  order: 1;
   flex: 1;
   height: 1px;
   background: rgba(var(--home-rgb), 0.22);
-}
-.md-typeset .home-sec-hint {
-  order: 2;
-  color: var(--dbc-muted-text);
-  font-size: var(--dbc-fs-cap);
-  white-space: nowrap;
 }
 .md-typeset .home-rows {
   display: flex;
@@ -3144,20 +3156,20 @@ h3 { color: var(--dbc-teal); }
   padding: 0.6rem 0.7rem;
   border: 1px solid rgba(var(--home-rgb), 0.4);
   border-radius: var(--dbc-r-lg);
-  background: rgba(23, 22, 28, 0.55);
+  background: color-mix(in srgb, var(--md-default-bg-color) 55%, transparent);
   transition: transform 0.15s ease, border-color 0.15s ease;
 }
 .md-typeset .home-row:hover {
   transform: translateY(-2px);
   border-color: rgb(var(--home-rgb));
 }
-.md-typeset .home-row--start {
+.md-typeset .home-row[data-kind="start"] {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   background: rgba(var(--home-rgb), 0.07);
 }
 /* A variant build (not a recommended path) is dashed and unfilled. */
-.md-typeset .home-row--variant {
+.md-typeset .home-row[data-kind="variant"] {
   border-style: dashed;
   background: transparent;
 }
@@ -3168,15 +3180,16 @@ h3 { color: var(--dbc-teal); }
   gap: 0.4rem;
 }
 .md-typeset .home-row-emoji {
-  font-size: 0.95rem;
+  font-size: var(--home-fs-emoji);
   line-height: 1;
 }
-/* The name link stretches over the whole row (same click target as the old
-   home cards). !important: the same-site link rule sets content: none. */
+/* The name link stretches over the whole row, so the row is the click target.
+   !important: the same-site link rule sets content: none. A space separates the
+   number from its <small> label, so the link text reads "333 Ceiling". */
 .md-typeset a.home-row-name {
   text-decoration: none;
-  color: #fff;
-  font-size: 0.8rem;
+  color: var(--dbc-white);
+  font-size: var(--home-fs-name);
   font-weight: 600;
   line-height: 1.2;
 }
@@ -3186,15 +3199,13 @@ h3 { color: var(--dbc-teal); }
   inset: 0;
   border-radius: var(--dbc-r-lg);
 }
-.md-typeset a.home-row-name:hover { color: #fff; text-decoration: none; }
+.md-typeset a.home-row-name:hover { color: var(--dbc-white); text-decoration: none; }
 .md-typeset a.home-row-name small {
-  margin-left: 0.25rem;
   color: var(--dbc-lilac);
   font-size: var(--dbc-fs-base);
   font-weight: 400;
 }
 .md-typeset .home-row-words {
-  margin: 0.05rem 0 0.2rem;
   color: var(--dbc-muted-text);
   font-size: var(--dbc-fs-cap);
 }
@@ -3209,10 +3220,10 @@ h3 { color: var(--dbc-teal); }
   justify-content: center;
   gap: 0.4rem;
 }
-.md-typeset .home-row--start .home-row-side { align-items: center; }
+.md-typeset .home-row[data-kind="start"] .home-row-side { align-items: center; }
 .md-typeset .home-row-side > .home-pill { align-self: flex-end; }
-.md-typeset .home-row--start .home-row-side > .home-pill { align-self: center; }
-/* Pills: Ark Grid need (none / little / full), Recommended, Not viable. */
+.md-typeset .home-row[data-kind="start"] .home-row-side > .home-pill { align-self: center; }
+/* Pills: Ark Grid need (none / little / full), Recommended (star), Not viable (warn). */
 .md-typeset .home-pill {
   display: inline-flex;
   align-items: center;
@@ -3229,23 +3240,23 @@ h3 { color: var(--dbc-teal); }
   text-transform: uppercase;
   white-space: nowrap;
 }
-.md-typeset .home-pill--none {
+.md-typeset .home-pill[data-kind="none"] {
   --home-pill-ink: var(--dbc-green);
   --home-pill-line: rgba(var(--dbc-green-rgb), 0.5);
   --home-pill-fill: rgba(var(--dbc-green-rgb), 0.08);
 }
-.md-typeset .home-pill--little,
-.md-typeset .home-pill--star {
+.md-typeset .home-pill[data-kind="little"],
+.md-typeset .home-pill[data-kind="star"] {
   --home-pill-ink: var(--dbc-gold);
   --home-pill-line: rgba(var(--dbc-gold-rgb), 0.5);
 }
-.md-typeset .home-pill--little { --home-pill-fill: rgba(var(--dbc-gold-rgb), 0.08); }
-.md-typeset .home-pill--full {
+.md-typeset .home-pill[data-kind="little"] { --home-pill-fill: rgba(var(--dbc-gold-rgb), 0.08); }
+.md-typeset .home-pill[data-kind="full"] {
   --home-pill-ink: var(--dbc-pink);
   --home-pill-line: rgba(var(--dbc-pink-rgb), 0.5);
   --home-pill-fill: rgba(var(--dbc-pink-rgb), 0.08);
 }
-.md-typeset .home-pill--warn {
+.md-typeset .home-pill[data-kind="warn"] {
   --home-pill-ink: var(--dbc-red);
   --home-pill-line: rgba(var(--dbc-red-rgb), 0.5);
   --home-pill-fill: rgba(var(--dbc-red-rgb), 0.08);
@@ -3273,7 +3284,7 @@ h3 { color: var(--dbc-teal); }
   white-space: nowrap;
 }
 .md-typeset .home-meter-value {
-  color: #fff;
+  color: var(--dbc-white);
   font-size: var(--dbc-fs-sm);
   font-weight: 600;
   white-space: nowrap;
@@ -3300,19 +3311,18 @@ h3 { color: var(--dbc-teal); }
 }
 @container home-lane (max-width: 460px) {
   .md-typeset .home-row,
-  .md-typeset .home-row--start {
+  .md-typeset .home-row[data-kind="start"] {
     grid-template-columns: minmax(0, 1fr);
     align-items: start;
   }
   .md-typeset .home-row-side,
-  .md-typeset .home-row--start .home-row-side { align-items: stretch; }
+  .md-typeset .home-row[data-kind="start"] .home-row-side { align-items: stretch; }
   .md-typeset .home-row-side > .home-pill,
-  .md-typeset .home-row--start .home-row-side > .home-pill { align-self: flex-start; }
+  .md-typeset .home-row[data-kind="start"] .home-row-side > .home-pill { align-self: flex-start; }
   .md-typeset .home-meters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.6rem;
   }
-  .md-typeset .home-sec-hint { display: none; }
 }
 /* Additional Resources strip: the title link stretches over it, the chips sit
    above that link (z-index) so each goes to its own section. */
@@ -3332,14 +3342,14 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .home-res:hover { border-color: var(--dbc-purple); }
 .md-typeset .home-res-title {
-  font-size: 0.8rem;
+  font-size: var(--home-fs-name);
   font-weight: 600;
 }
 .md-typeset a.home-res-link {
   text-decoration: none;
-  color: #fff;
+  color: var(--dbc-white);
 }
-.md-typeset a.home-res-link:hover { color: #fff; text-decoration: none; }
+.md-typeset a.home-res-link:hover { color: var(--dbc-white); text-decoration: none; }
 .md-typeset a.home-res-link::after {
   content: "" !important;
   position: absolute;
@@ -3347,7 +3357,6 @@ h3 { color: var(--dbc-teal); }
   border-radius: var(--dbc-r-lg);
 }
 .md-typeset .home-res-desc {
-  margin-top: 0.1rem;
   color: var(--dbc-lilac);
   font-size: var(--dbc-fs-base);
 }
@@ -3370,7 +3379,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset a.home-chip:hover {
   text-decoration: none;
   border-color: var(--dbc-purple);
-  color: #fff;
+  color: var(--dbc-white);
 }
 .md-typeset .home-notes {
   display: grid;
@@ -3378,7 +3387,7 @@ h3 { color: var(--dbc-teal); }
   gap: 0.8rem;
   margin-top: 1rem;
 }
-@media screen and (max-width: 44.9375em) {
+@container home (max-width: 687px) {
   .md-typeset .home-notes { grid-template-columns: minmax(0, 1fr); }
 }
 .md-typeset .home-note {
@@ -3389,9 +3398,8 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-lilac);
   font-size: var(--dbc-fs-base);
 }
-.md-typeset .home-note b { color: #fff; font-weight: 600; }
+.md-typeset .home-note strong { color: var(--dbc-white); font-weight: 600; }
 .md-typeset .home-note-label {
-  display: block;
   margin-bottom: 0.2rem;
   color: var(--dbc-purple);
   font-size: var(--dbc-fs-cap);
