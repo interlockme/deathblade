@@ -7,14 +7,16 @@ hide:
 
 <!-- Home page. Hand-edited, except the Difficulty and Trixion meters: build-stats-badge.js
 fills each .home-meters from build-data.js (data-family and data-build name the build).
-Typed by hand, not read from build-data.js: the Recommended and Not viable pills, the Ark Grid
-need pills, the lane trade-off chips and every description. 333 Ceiling and 222 Speedy are also
+Typed by hand, not read from build-data.js: the recommended and not viable words, the Ark
+Grid need pills, the lane trade-off chips and every description. 333 Ceiling and 222 Speedy are also
 recommended: true in build-data.js (compare-table star); the nav label and the skill-code tab
 label carry the star by hand too.
 Markup: wrappers are markdown="1" and link holders markdown="span", written flat with no
 indentation (4 spaces is a code block) so mkdocs rewrites and checks the .md links. A paragraph
 takes its class from an attr_list line directly under it (a blank line in between drops it).
-Variants are attributes: data-accent on a lane, data-kind on a pill or row. Styles: the "Home
+Variants are attributes: data-accent on a lane, data-kind on a pill, a row or a words flag. The
+lane's recommended build has a gold "recommended" in its words line (data-kind="star"); a build
+that is not viable has a red "not viable" there (data-kind="warn") and data-kind="variant" on its row. Styles: the "Home
 page" block in extra.css. -->
 
 <div class="home" markdown="1">
@@ -26,15 +28,12 @@ page" block in extra.css. -->
 🌸 Remaining Energy
 { .home-lane-title role="heading" aria-level="2" }
 
-[Get started →](remaining-energy/essentials.md){ .home-cta }
+[Start with essentials →](remaining-energy/essentials.md){ .home-cta }
 
 </div>
 
 Build orbs, spend orbs, teleport.
 { .home-lane-line }
-
-Punishing but rewarding gameplay.
-{ .home-lane-sub }
 
 - low <span class="skill-mention" data-glossary-id="backattack">back-attack</span> stress
 - high uptime stress
@@ -68,9 +67,9 @@ Then pick a build
 <div class="home-rows" markdown="1">
 <div class="home-row" markdown="1">
 <div class="home-row-main" markdown="1">
-<div class="home-row-head" markdown="span"><span class="home-row-emoji">✨</span>[333 <small>Ceiling</small>](remaining-energy/333-ceiling.md){ .home-row-name }<span class="home-pill" data-kind="star">★ Recommended</span></div>
+<div class="home-row-head" markdown="span"><span class="home-row-emoji">✨</span>[333 <small>Ceiling</small>](remaining-energy/333-ceiling.md){ .home-row-name }</div>
 
-meta • skill reset
+skill reset <span class="home-words-flag" data-kind="star">★ recommended</span>
 { .home-row-words }
 
 Well-rounded build that offers the highest RE damage. Sensitive to high ping or low FPS.
@@ -132,15 +131,12 @@ Some Ark Grid
 ⚡ Surge
 { .home-lane-title role="heading" aria-level="2" }
 
-[Get started →](surge/essentials.md){ .home-cta }
+[Start with essentials →](surge/essentials.md){ .home-cta }
 
 </div>
 
 Build stacks, chase back, execute.
 { .home-lane-line }
-
-Nimble repositioning for one massive hit.
-{ .home-lane-sub }
 
 - highest mobility
 - high CD gem investment
@@ -174,28 +170,9 @@ Then pick a spirit animal
 <div class="home-rows" markdown="1">
 <div class="home-row" markdown="1">
 <div class="home-row-main" markdown="1">
-<div class="home-row-head" markdown="span"><span class="home-row-emoji">🐆</span>[222 <small>Speedy</small>](surge/222-speedy.md){ .home-row-name }<span class="home-pill" data-kind="star">★ Recommended</span></div>
-
-fast • acrobatic
-{ .home-row-words }
-
-Uptime-focused and mobile: easy to pick up, hard to master. It's exactly as good as you are.
-{ .home-row-desc }
-
-</div>
-<div class="home-row-side" markdown="1">
-
-Some Ark Grid
-{ .home-pill data-kind="little" }
-
-<div class="home-meters" data-family="surge" data-build="222-speedy"></div>
-</div>
-</div>
-<div class="home-row" markdown="1">
-<div class="home-row-main" markdown="1">
 <div class="home-row-head" markdown="span"><span class="home-row-emoji">🦁</span>[111 <small>Classic</small>](surge/111-classic.md){ .home-row-name }</div>
 
-bursty • big hit
+bursty • familiar
 { .home-row-words }
 
 Builds up to one massive hit. Strongest burst combo, but it needs careful execution.
@@ -210,11 +187,30 @@ Some Ark Grid
 <div class="home-meters" data-family="surge" data-build="111-classic"></div>
 </div>
 </div>
+<div class="home-row" markdown="1">
+<div class="home-row-main" markdown="1">
+<div class="home-row-head" markdown="span"><span class="home-row-emoji">🐆</span>[222 <small>Speedy</small>](surge/222-speedy.md){ .home-row-name }</div>
+
+combo chains <span class="home-words-flag" data-kind="star">★ recommended</span>
+{ .home-row-words }
+
+Uptime-focused and mobile: easy to pick up, hard to master. It's exactly as good as you are.
+{ .home-row-desc }
+
+</div>
+<div class="home-row-side" markdown="1">
+
+Some Ark Grid
+{ .home-pill data-kind="little" }
+
+<div class="home-meters" data-family="surge" data-build="222-speedy"></div>
+</div>
+</div>
 <div class="home-row" data-kind="variant" markdown="1">
 <div class="home-row-main" markdown="1">
-<div class="home-row-head" markdown="span"><span class="home-row-emoji">🐯</span>[333 <small>Blitz</small>](surge/333-blitz.md){ .home-row-name }<span class="home-pill" data-kind="warn">Not viable</span></div>
+<div class="home-row-head" markdown="span"><span class="home-row-emoji">🐯</span>[333 <small>Blitz</small>](surge/333-blitz.md){ .home-row-name }</div>
 
-tiger • skill reset
+skill reset <span class="home-words-flag" data-kind="warn">⚠︎ not viable</span>
 { .home-row-words }
 
 Fun, but too impractical for the damage it offers.

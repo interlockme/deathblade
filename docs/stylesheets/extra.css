@@ -3009,11 +3009,10 @@ h3 { color: var(--dbc-teal); }
    numbers cannot drift from the build pages.
    Variants are attributes, as on the other pages: data-accent on a lane
    (pink | teal) sets --home-rgb / --home-accent / --home-lane-bg, data-kind on
-   a pill (none | little | full | star | warn) or a row (start | variant).
+   a pill (none | little | full), a row (start | variant) or a words flag (star | warn).
    Layout is by container width, not viewport: .home is the query container for
    the lane and notes grids, and each .home-lane is the container for its own
-   rows (they stack and the divider hint hides under 460px of the lane's own
-   content width), so the sidebar coming and going cannot put a breakpoint at
+   rows (they stack under 460px of the lane's own content width), so the sidebar coming and going cannot put a breakpoint at
    the wrong place. Pixel thresholds, because em in a container query follows
    the container's font size.
    Paragraphs are plain markdown paragraphs with an attr_list class. The reset
@@ -3034,8 +3033,10 @@ h3 { color: var(--dbc-teal); }
   gap: 1rem;
   margin: 0;
 }
-/* Two lanes need 928px: two 454px lanes plus the gap. */
-@container home (max-width: 927px) {
+/* Two lanes need 1002px: two 491px lanes plus the gap. 491px is the width at
+   which the longer chip row (Surge, 453px) stays on one line, so the two lane
+   headers are the same height. Re-measure if the chip text changes. */
+@container home (max-width: 1001px) {
   .md-typeset .home-lanes { grid-template-columns: minmax(0, 1fr); }
 }
 .md-typeset .home-lane {
@@ -3063,8 +3064,6 @@ h3 { color: var(--dbc-teal); }
   flex-direction: column;
   gap: 0.2rem;
   margin-bottom: 0.6rem;
-  padding-bottom: 0.7rem;
-  border-bottom: 1px solid rgba(var(--home-rgb), 0.25);
 }
 .md-typeset .home-lane-top {
   display: flex;
@@ -3079,32 +3078,30 @@ h3 { color: var(--dbc-teal); }
   font-weight: 600;
   line-height: 1.25;
 }
+/* The essentials button is the one filled control on the page, so the lane's
+   first step reads as the way in. */
 .md-typeset a.home-cta {
-  text-decoration: none;
   display: inline-flex;
   align-items: center;
-  padding: 0.25rem 0.7rem;
-  border: 1px solid rgba(var(--home-rgb), 0.55);
+  padding: 0.3rem 0.85rem;
   border-radius: 999px;
-  background: rgba(var(--home-rgb), 0.08);
-  color: var(--home-accent);
-  font-size: var(--dbc-fs-base);
+  background: var(--home-accent);
+  color: var(--md-default-bg-color);
+  font-size: var(--dbc-fs-table);
   font-weight: 600;
-  transition: background-color 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: filter 0.15s ease;
 }
 .md-typeset a.home-cta:hover {
   text-decoration: none;
-  background: rgba(var(--home-rgb), 0.18);
-  color: var(--home-accent);
+  color: var(--md-default-bg-color);
+  filter: brightness(1.1);
 }
 .md-typeset .home-lane-line {
   color: var(--home-accent);
   font-size: var(--dbc-fs-table);
   font-weight: 500;
-}
-.md-typeset .home-lane-sub {
-  color: var(--dbc-lilac);
-  font-size: var(--dbc-fs-base);
 }
 /* The trade-off chips are a plain markdown list in the lane header. */
 .md-typeset .home-lane-head > ul {
@@ -3168,11 +3165,19 @@ h3 { color: var(--dbc-teal); }
   align-items: center;
   background: rgba(var(--home-rgb), 0.07);
 }
-/* A variant build (not a recommended path) is dashed and unfilled. */
+/* A build that is not viable is dashed and unfilled. */
 .md-typeset .home-row[data-kind="variant"] {
   border-style: dashed;
   background: transparent;
 }
+/* The name link is the click target for the whole row, so the keyboard focus
+   ring goes around the row, not just the link text. */
+.md-typeset a.home-row-name:focus-visible { outline: none; }
+.md-typeset .home-row:has(a.home-row-name:focus-visible) {
+  outline: 2px solid var(--dbc-pink);
+  outline-offset: 2px;
+}
+
 .md-typeset .home-row-head {
   display: flex;
   flex-wrap: wrap;
@@ -3209,6 +3214,9 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-muted-text);
   font-size: var(--dbc-fs-cap);
 }
+/* Recommended (gold) and not viable (red) are coloured words in the descriptor line. */
+.md-typeset .home-words-flag[data-kind="star"] { color: var(--dbc-gold); }
+.md-typeset .home-words-flag[data-kind="warn"] { color: var(--dbc-red); }
 .md-typeset .home-row-desc {
   color: var(--dbc-lilac);
   font-size: var(--dbc-fs-base);
@@ -3223,7 +3231,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .home-row[data-kind="start"] .home-row-side { align-items: center; }
 .md-typeset .home-row-side > .home-pill { align-self: flex-end; }
 .md-typeset .home-row[data-kind="start"] .home-row-side > .home-pill { align-self: center; }
-/* Pills: Ark Grid need (none / little / full), Recommended (star), Not viable (warn). */
+/* Pills: Ark Grid need (none / little / full). */
 .md-typeset .home-pill {
   display: inline-flex;
   align-items: center;
@@ -3245,29 +3253,24 @@ h3 { color: var(--dbc-teal); }
   --home-pill-line: rgba(var(--dbc-green-rgb), 0.5);
   --home-pill-fill: rgba(var(--dbc-green-rgb), 0.08);
 }
-.md-typeset .home-pill[data-kind="little"],
-.md-typeset .home-pill[data-kind="star"] {
+.md-typeset .home-pill[data-kind="little"] {
   --home-pill-ink: var(--dbc-gold);
   --home-pill-line: rgba(var(--dbc-gold-rgb), 0.5);
+  --home-pill-fill: rgba(var(--dbc-gold-rgb), 0.08);
 }
-.md-typeset .home-pill[data-kind="little"] { --home-pill-fill: rgba(var(--dbc-gold-rgb), 0.08); }
 .md-typeset .home-pill[data-kind="full"] {
   --home-pill-ink: var(--dbc-pink);
   --home-pill-line: rgba(var(--dbc-pink-rgb), 0.5);
   --home-pill-fill: rgba(var(--dbc-pink-rgb), 0.08);
 }
-.md-typeset .home-pill[data-kind="warn"] {
-  --home-pill-ink: var(--dbc-red);
-  --home-pill-line: rgba(var(--dbc-red-rgb), 0.5);
-  --home-pill-fill: rgba(var(--dbc-red-rgb), 0.08);
-}
-/* Meters (filled by build-stats-badge.js). The container reserves its height
-   so the row does not grow when the script runs. */
+/* Meters (filled by build-stats-badge.js). The container reserves the height of
+   its filled state (two stacked meters here, one row when the row stacks) so the
+   row does not grow when the script runs. */
 .md-typeset .home-meters {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 0.35rem;
-  min-height: 2.5rem;
+  min-height: 3.1rem;
 }
 .md-typeset .home-meter-top {
   display: flex;
@@ -3322,6 +3325,7 @@ h3 { color: var(--dbc-teal); }
   .md-typeset .home-meters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.6rem;
+    min-height: 1.4rem;
   }
 }
 /* Additional Resources strip: the title link stretches over it, the chips sit
@@ -3341,6 +3345,11 @@ h3 { color: var(--dbc-teal); }
   transition: border-color 0.15s ease;
 }
 .md-typeset .home-res:hover { border-color: var(--dbc-purple); }
+.md-typeset a.home-res-link:focus-visible { outline: none; }
+.md-typeset .home-res:has(a.home-res-link:focus-visible) {
+  outline: 2px solid var(--dbc-pink);
+  outline-offset: 2px;
+}
 .md-typeset .home-res-title {
   font-size: var(--home-fs-name);
   font-weight: 600;
