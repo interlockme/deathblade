@@ -96,7 +96,7 @@ Atk/Move Speed Feast
 <div class="ess-zone" markdown>
 <div class="setup-notes" markdown>
 <details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span>Quick Tips<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Tip</span>General Advice<span class="setup-note-arrow"></span></summary>
 
 - All Deathblade builds run a pet with the <span class="skill-mention" data-glossary-id="specializationstat">Specialization</span> stat bonus.
 - Optimize <span class="skill-mention" data-glossary-id="arkpassive">Ark Passive</span> nodes or compare <span class="skill-mention" data-glossary-id="bracelet">bracelets</span>/equipment [here!](../resources.md#ark-passive-calculator)
