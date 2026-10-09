@@ -10445,15 +10445,15 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess {
   container: ess / inline-size;
   margin: 0.9em 0 1.2em;
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.3);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: var(--dbc-r-lg);
-  background: rgba(var(--dbc-rose-rgb), 0.045);
+  background: rgba(var(--dbc-purple-rgb), 0.045);
 }
 .md-typeset .ess :where(p) { margin: 0; }
 /* Zones share the card's side inset (1.2em), so the food chips, the Alt table, the boxes and
    the Tip text all start and end on the same two vertical lines. A boxed zone (.ess-box, and
    the .ess-pair that holds two side by side) sits at that inset and is drawn in the card's own
-   rose tint, the recipe the food chips and the Alt table already use, so every surface in the
+   purple tint, the recipe the food chips and the Alt table already use, so every surface in the
    card reads as one family. The gap between neighbouring boxes (--ess-gap) is also what is left
    between the Alt row and the first box and between the last box and the Tip row: the zones
    around the boxes give up their padding on that side (a .setup-note keeps its own 0.45em, so
@@ -10469,8 +10469,8 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess-box + .ess-zone { padding-top: 0.1em; }
 .md-typeset .ess-box {
   min-width: 0; padding: 0.7em 0.5em;
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.12); border-radius: var(--dbc-r-lg);
-  background: rgba(var(--dbc-rose-rgb), 0.035);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.12); border-radius: var(--dbc-r-lg);
+  background: rgba(var(--dbc-purple-rgb), 0.035);
 }
 .md-typeset .ess [data-c="teal"] { --ess-c: var(--dbc-teal); }
 .md-typeset .ess [data-c="gold"] { --ess-c: var(--dbc-gold); }
@@ -10484,7 +10484,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess .food-option { padding: 0.33em 0.8em 0.33em 0.4em; gap: 0.45em; border-radius: var(--dbc-r); }
 .md-typeset .ess .food-option p { font-size: 0.8em; }
 .md-typeset .ess .food-option .food-option-icon { display: block; height: 20px; width: 20px; }
-.md-typeset .ess .food-option { background-color: rgba(var(--dbc-rose-rgb), 0.035); border-color: rgba(var(--dbc-rose-rgb), 0.12); }
+.md-typeset .ess .food-option { background-color: rgba(var(--dbc-purple-rgb), 0.035); border-color: rgba(var(--dbc-purple-rgb), 0.12); }
 .md-typeset .ess .food-required-lead { margin-bottom: 0.5em; font-size: var(--dbc-fs-md); line-height: 1.4; color: var(--dbc-lilac); }
 .md-typeset .ess .food-required-lead strong { font-weight: 600; }
 .md-typeset .ess .setup-notes { border-top: 0; margin: 0.6em 0 0; padding: 0; }
@@ -10497,7 +10497,7 @@ body.page-333-blitz input[type="text"] {
 /* alt swap list */
 .md-typeset .ess-swaps {
   display: grid; grid-template-columns: max-content minmax(0, 1fr) auto;
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.12); border-radius: var(--dbc-r); background: rgba(var(--dbc-rose-rgb), 0.035);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.12); border-radius: var(--dbc-r); background: rgba(var(--dbc-purple-rgb), 0.035);
 }
 .md-typeset .ess-swap {
   display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center;
@@ -10546,7 +10546,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess-goal {
   display: flex; align-items: center; justify-content: space-between; gap: 0.3em;
   padding: 0.35em 0.5em; min-width: 0;
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.4); border-radius: var(--dbc-r);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.4); border-radius: var(--dbc-r);
   background: color-mix(in srgb, var(--md-default-bg-color) 55%, transparent);
 }
 /* A build that is not viable is dashed and unfilled, as on the home page. */
