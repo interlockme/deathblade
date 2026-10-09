@@ -16,7 +16,7 @@
 **Tradeoff:**{: .tradeoff } Unforgiving rotation with very little room for error.
 
 - This is the final form of the old-school Remaining Energy gameplay.
-- Head Hunt is used in the rotation, so it may not be available for recovery or <span class="skill-mention" data-glossary-id="counter">counter</span>.
+- Head Hunt is used in the rotation, so it may not be available for <span class="skill-mention" data-glossary-id="counter">counter</span>.
 - Lower orb generation and fewer recovery options than Fatal Wave builds.
 
 </div>
