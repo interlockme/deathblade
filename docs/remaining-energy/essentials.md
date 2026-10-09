@@ -183,48 +183,35 @@ Atk/Move Speed Feast
 
 ### Identity
 
-<div class="gameplay-cards" data-accent="pink" markdown>
-
-- **Orb Generation** Normal skills generate Death Orbs when they hit a target.
-- **Surge** Press (Z) with 1+ orbs to consume them and activate Surge.
-
+<div class="gp-panel" markdown>
+<div class="gp-row" markdown="span"><span class="gp-term">Orb Generation</span><span class="gp-desc">Normal skills generate Death Orbs when they hit a target.</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term">Surge</span><span class="gp-desc">Press (Z) with 1+ orbs to consume them and activate Surge.</span></div>
 </div>
 
 ### Identity Buffs
 
-<div class="gameplay-chips" markdown>
-
-- **+12%** Attack Speed
-- **+12%** Move Speed
-- **14/28/42%** Attack Power
-- **15/25/45%** Mana
-- **10/30/50%** Cooldown Reduction
-
+<div class="gp-panel" markdown>
+<div class="gp-buffs" markdown>
+<div class="gp-buff" markdown="span"><span class="gp-buff-val"><b>+12%</b></span><span class="gp-buff-name">Attack Speed</span></div>
+<div class="gp-buff" markdown="span"><span class="gp-buff-val"><b>+12%</b></span><span class="gp-buff-name">Move Speed</span></div>
+<div class="gp-buff" markdown="span"><span class="gp-buff-val">14 / 28 / <b>42%</b></span><span class="gp-buff-name">Attack Power</span></div>
+<div class="gp-buff" markdown="span"><span class="gp-buff-val">15 / 25 / <b>45%</b></span><span class="gp-buff-name">Mana Restoration</span></div>
+<div class="gp-buff" markdown="span"><span class="gp-buff-val">10 / 30 / <b>50%</b></span><span class="gp-buff-name">Cooldown Reduction</span></div>
+</div>
 </div>
 
-Aim to always cast Surge with 3 orbs for the strongest buffs and cooldown reduction.
+Aim to always cast Surge with 3 orbs to receive the highest level buffs and cooldown reduction.
 
 ### Party Synergies
 
-<div class="gameplay-cards" data-accent="teal" markdown>
-
-- **Turning Slash** +4% outgoing and +5% directional damage for 12s.
-- **<span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>** +12.8% Attack/Move Speed for 6s.
-
+<div class="gp-panel gp-syn" markdown>
+<div class="gp-row" markdown="span"><span class="gp-term">Turning Slash</span><span class="gp-desc">+4% outgoing and +5% directional damage</span><span class="gp-dur">12s</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term"><span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span></span><span class="gp-desc">+12.8% Attack Speed and Move Speed</span><span class="gp-dur">6s</span></div>
 </div>
 
 ### Playstyle
 
-Remaining Energy is a continuous cycle:
-
-<div class="gameplay-flow" markdown>
-
-1. Generate Orbs
-2. 3 Orbs
-3. Surge
-4. Repeat
-
-</div>
+<div class="gp-cycle" markdown="span"><span>Generate Orbs</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>3 Orbs</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>Surge</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span class="gp-repeat"><span aria-hidden="true">&#8635;</span> repeat</span></div>
 
 Cooldown reduction is the core of this class; it resets your rotation so you can generate your next set of Orbs.
 Prioritize consistent uptime and good Maelstrom buff coverage over <span class="skill-mention" data-glossary-id="backattack">back attacks</span>, using Surge to reposition to the back.

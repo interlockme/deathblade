@@ -216,54 +216,39 @@ Not the end of the world if you're forced to use it
 
 ### Identity
 
-<div class="gameplay-cards" data-accent="pink" markdown>
-
-- **Orb Generation** Normal skills generate Death Orbs when they hit a target.
-- **Death Trance** Press (Z) with 1+ orbs to enter the Death Trance identity state.
-- **Stack Generation** Skills generate Surge stacks while in Death Trance.
-- **Stack Cap** You can hold up to 80 stacks. Stacks not consumed are retained.
-- **Surge** Press (Z) to consume 60 stacks, deal damage and end Death Trance.
-- **Stack Requirement** Surge must be cast with at least 40 stacks to refund all 3 Death Orbs.
-
+<div class="gp-panel" markdown>
+<div class="gp-row" markdown="span"><span class="gp-term">Orb Generation</span><span class="gp-desc">Normal skills generate Death Orbs when they hit a target.</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term">Death Trance</span><span class="gp-desc">Press (Z) with 1+ orbs to enter the Death Trance identity state.</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term">Stack Generation</span><span class="gp-desc">Skills generate Surge stacks while in Death Trance. Stacks not consumed are retained.</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term">Surge</span><span class="gp-desc">Press (Z) to consume up to 60 stacks, deal damage and end Death Trance.</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term">Surge stacks</span><span class="gp-desc"><span class="gp-meter" role="img" aria-label="Surge stacks: 40 is the minimum for a full orb refund, 60 are consumed by Surge, 80 is the cap"><span class="gp-m-label" data-at="40" aria-hidden="true"><b>40</b><span class="gp-m-full">full orb refund</span><span class="gp-m-short">full refund</span></span><span class="gp-m-label" data-at="60" aria-hidden="true"><b>60</b>Surge</span><span class="gp-m-label" data-at="80" aria-hidden="true"><b>80</b>cap</span><span class="gp-m-bar" aria-hidden="true"><span class="gp-m-fill"></span><span class="gp-m-over"></span><span class="gp-m-tick" data-at="40"></span><span class="gp-m-tick" data-at="60"></span><span class="gp-m-tick" data-at="80"></span></span></span></span></div>
 </div>
 
 ### Identity Buffs
 
-<div class="gameplay-chips" markdown>
-
-- **10/15/20%** Attack Speed
-- **10%** Move Speed
-- **8/16/24%** Attack Power
-- **15/25/45%** Mana
-- **10/30/50%** Cooldown Reduction
-
+<div class="gp-panel" markdown>
+<div class="gp-buffs" markdown>
+<div class="gp-buff" markdown="span"><span class="gp-buff-val">10 / 15 / <b>20%</b></span><span class="gp-buff-name">Attack Speed</span></div>
+<div class="gp-buff" markdown="span"><span class="gp-buff-val"><b>10%</b></span><span class="gp-buff-name">Move Speed</span></div>
+<div class="gp-buff" markdown="span"><span class="gp-buff-val">8 / 16 / <b>24%</b></span><span class="gp-buff-name">Attack Power</span></div>
+<div class="gp-buff" markdown="span"><span class="gp-buff-val">15 / 25 / <b>45%</b></span><span class="gp-buff-name">Mana Restoration</span></div>
+<div class="gp-buff" markdown="span"><span class="gp-buff-val">10 / 30 / <b>50%</b></span><span class="gp-buff-name">Cooldown Reduction</span></div>
+</div>
 </div>
 
-Aim to enter Death Trance with 3 orbs whenever possible to receive the highest level buffs.
+Aim to always enter Death Trance with 3 orbs to receive the highest level buffs and cooldown reduction.
 
 ### Party Synergies
 
-<div class="gameplay-cards" data-accent="teal" markdown>
-
-- **Turning Slash** +4% outgoing and +5% directional damage for 12s.
-- **Surprise Attack** +4% outgoing and +5% directional damage for 6s.
-- **<span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>** +12.8% Attack/Move Speed for 6s.
-
+<div class="gp-panel gp-syn" markdown>
+<div class="gp-row" markdown="span"><span class="gp-term">Turning Slash</span><span class="gp-desc">+4% outgoing and +5% directional damage</span><span class="gp-dur">12s</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term">Surprise Attack</span><span class="gp-desc">+4% outgoing and +5% directional damage</span><span class="gp-dur">6s</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term"><span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span></span><span class="gp-desc">+12.8% Attack/Move Speed</span><span class="gp-dur">6s</span></div>
 </div>
 
 ### Playstyle
 
-Surge is a repeating cycle:
-
-<div class="gameplay-flow" markdown>
-
-1. 3 Orbs
-2. Death Trance
-3. Build Stacks
-4. Surge
-5. Repeat
-
-</div>
+<div class="gp-cycle" markdown="span"><span>3 Orbs</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>Death Trance</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>Build Stacks</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>Surge</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span class="gp-repeat"><span aria-hidden="true">&#8635;</span> repeat</span></div>
 
 Build toward 60 stacks using your multi-hit skills, then land Surge as a <span class="skill-mention" data-glossary-id="backattack">back attack</span>.
 

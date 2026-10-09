@@ -57,15 +57,15 @@
      rather than repeated as raw hex literals at 2-6 call sites each: one
      source of truth instead of N copies that could drift apart. */
   --dbc-gold-dark: #292624;        /* dark gold tint - the
-    .page-banner-warning, pairs with --dbc-gold */
-  --dbc-rose-dark: #2d242c;        /* dark rose tint - a rank-1
-    gem badge's on-fill text, cycle-num-1's on-fill text and the pink home lane
-    background, pairs with --dbc-rose */
+    2nd Pre-Ark Grid option card, and .page-banner-warning, pairs with --dbc-gold */
+  --dbc-rose-dark: #2d242c;        /* dark rose tint - the 1st
+    .grid.cards/.prearc-cards option card, a rank-1 gem badge's on-fill text, and
+    cycle-num-1's on-fill text, pairs with --dbc-rose */
   --dbc-teal-dark: #1d2227;        /* darkest teal tint - on-fill text for a rank-1
     Cooldown gem badge and cycle-num-2, pairs with --dbc-teal (see also
     --dbc-teal-card-bg below, a different/lighter teal-family tint) */
-  --dbc-teal-card-bg: #1e262b;     /* the teal home lane
-    background, pairs with --dbc-teal */
+  --dbc-teal-card-bg: #1e262b;     /* the 2nd .grid.cards option card and 3rd
+    .prearc-cards option card background, pairs with --dbc-teal */
   --dbc-gem-name-muted: #d8d2de;   /* rank-2 gem item name text + an alt-gem's bolded name */
   --dbc-chip-text: #cbb9e8;        /* text color paired with --dbc-surface on the purple-bordered chip buttons */
   --dbc-muted-text: #948fa0;       /* faint gray label text (kept at 4.5:1+ on the dark surfaces) - a "no diff" build-compare
@@ -2777,6 +2777,30 @@ h3 { color: var(--dbc-teal); }
   font-style: italic;
 }
 
+.md-typeset .grid.cards > ul > li {
+  border-radius: var(--dbc-r-lg);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.md-typeset .grid.cards > ul > li:hover {
+  transform: translateY(-2px);
+}
+.md-typeset .grid.cards > ul > li:nth-child(1) {
+  background-color: var(--dbc-rose-dark);
+  border-color: rgba(var(--dbc-rose-rgb), 0.45);
+}
+.md-typeset .grid.cards > ul > li:nth-child(2) {
+  background-color: var(--dbc-teal-card-bg);
+  border-color: rgba(var(--dbc-teal-rgb), 0.45);
+}
+/* A third card takes the gold accent, the same trio as .prearc-cards. */
+.md-typeset .grid.cards > ul > li:nth-child(3) {
+  background-color: var(--dbc-gold-dark);
+  border-color: rgba(var(--dbc-gold-rgb), 0.45);
+}
+.md-typeset .grid.cards > ul > li:nth-child(1):hover { border-color: var(--dbc-rose); }
+.md-typeset .grid.cards > ul > li:nth-child(2):hover { border-color: var(--dbc-teal); }
+.md-typeset .grid.cards > ul > li:nth-child(3):hover { border-color: var(--dbc-gold); }
+
 /* ==========================================================================
    Home page (index.md)
    ========================================================================== */
@@ -3275,110 +3299,156 @@ h3 { color: var(--dbc-teal); }
 /* ==========================================================================
    Gameplay section (Essentials pages)
    ========================================================================== */
-/* Three small components that replace the plain bullet lists and the one-line
-   cycle under each Gameplay subsection:
+/* One quiet panel per subsection, rows separated by hairlines, no cards or chips inside:
 
-   .gameplay-cards[data-accent] - a list of "**Label** text" items shown as a
-     grid of small cards. data-accent is pink or teal. The bold label leads
-     the card; a skill-mention span may sit inside it.
-   .gameplay-chips - a list of short stat items shown as wrapping chips. A
-     leading bold value (**10/15/20%**) is picked out in the accent color.
-   .gameplay-flow - an ordered list shown as a row of steps joined by arrows.
-     The last step (Repeat) is dashed to read as the loop back to the start.
+   .gp-panel   - the frame (lavender, same strength as .setup-panel) and a query container
+                 (rows stack at 520px, the buff grid drops columns at 700px and 440px).
+   .gp-row     - a grid row: .gp-term (pink, teal inside .gp-syn) + .gp-desc [+ .gp-dur].
+   .gp-buffs   - a grid of .gp-buff cells (value over label). Tiered values read
+                 "10 / 15 / <b>20%</b>": the lower tiers and separators are muted and only
+                 the highest tier is teal, so a single value is fully teal.
+   .gp-meter   - the Surge stacks row: three labels at their ticks over a 0 to 80 bar.
+                 The labels carry every number, so the text above does not repeat them.
+                 The fill up to 60 and the dim zone above it are styling, not data.
+   .gp-cycle   - the content-width Playstyle line: steps, pink chevrons, a muted repeat.
 
-   The chips are a notch smaller than the cards (0.82em vs 0.9em) on purpose:
-   five chips have to fit one row of the 938px content column, and at 0.9em
-   they need about 994px.
-
-   All three keep the real <ul>/<ol> underneath, so the order and the text
-   read the same to a screen reader. minmax(min(100%, 15rem), 1fr) keeps a
-   card from overflowing a 320px phone. */
-.md-typeset .gameplay-cards {
-  --gp-rgb: var(--dbc-rose-rgb);
-}
-.md-typeset .gameplay-cards[data-accent="teal"] {
-  --gp-rgb: var(--dbc-teal-rgb);
-}
-.md-typeset .gameplay-cards > ul {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-  gap: 0.6em;
-  margin: 0.8em 0 1em;
-  padding: 0;
-  list-style: none;
-}
-.md-typeset .gameplay-cards > ul > li {
-  min-width: 0;
-  margin: 0;
-  padding: 0.7em 0.95em;
-  border: 1px solid rgba(var(--gp-rgb), 0.32);
+   Cell borders in .gp-buffs are drawn on the top and left of every cell and shifted
+   -1px, so the panel's overflow clip hides the outer ones at any column count. */
+.md-typeset .gp-panel {
+  container: gp / inline-size;
+  margin: 0.9em 0 1em;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: var(--dbc-r-lg);
-  background-color: rgba(var(--gp-rgb), 0.05);
-  font-size: 0.9em;
-  line-height: 1.5;
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
+  overflow: hidden;
 }
-.md-typeset .gameplay-cards > ul > li > strong:first-child {
-  display: block;
-  margin-bottom: 0.2em;
-  font-weight: 700;
-  color: rgb(var(--gp-rgb));
+.md-typeset .gp-panel :where(p) { margin: 0; }
+.md-typeset .gp-row {
+  display: grid;
+  grid-template-columns: 7.4rem minmax(0, 1fr);
+  align-items: baseline;
+  margin: 0 0.9rem;
+  padding: 0.45rem 0;
+  font-size: var(--dbc-fs-table);
+  line-height: 1.45;
+  color: var(--dbc-lilac);
 }
+.md-typeset .gp-row + .gp-row { border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.md-typeset .gp-term { padding-right: 0.7rem; font-weight: 600; color: var(--dbc-pink); }
+.md-typeset .gp-desc { min-width: 0; }
 
-.md-typeset .gameplay-chips > ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45em;
-  margin: 0.8em 0 1em;
-  padding: 0;
-  list-style: none;
-}
-.md-typeset .gameplay-chips > ul > li {
+.md-typeset .gp-syn .gp-row { grid-template-columns: 8rem minmax(0, 1fr) 3rem; }
+.md-typeset .gp-syn .gp-term { color: var(--dbc-teal); }
+.md-typeset .gp-dur { justify-self: end; padding-left: 0.5rem; color: var(--dbc-muted-text); }
+
+.md-typeset .gp-buffs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.md-typeset .gp-buff {
   min-width: 0;
-  margin: 0;
-  padding: 0.3em 0.85em;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
-  border-radius: 999px;
-  background-color: rgba(var(--dbc-purple-rgb), 0.08);
-  font-size: 0.82em;
+  margin: -1px 0 0 -1px;
+  padding: 0.6rem 0.7rem;
+  border: 0 solid rgba(255, 255, 255, 0.07);
+  border-width: 1px 0 0 1px;
 }
-.md-typeset .gameplay-chips > ul > li > strong:first-child {
-  color: var(--dbc-pink-bright);
+.md-typeset .gp-buff-val {
+  display: block;
+  font-size: var(--dbc-fs-md);
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  color: var(--dbc-muted-text);
 }
+.md-typeset .gp-buff-val b { font-weight: inherit; color: var(--dbc-teal); }
+.md-typeset .gp-buff-name { display: block; font-size: var(--dbc-fs-cap); line-height: 1.35; color: var(--dbc-muted-text); }
 
-.md-typeset .gameplay-flow > ol {
-  display: flex;
+.md-typeset .gp-meter { position: relative; display: block; padding-top: 1.5em; }
+.md-typeset .gp-m-label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: var(--dbc-fs-cap);
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--dbc-muted-text);
+}
+.md-typeset .gp-m-label b { margin-right: 0.3em; font-weight: 700; color: #fff; }
+.md-typeset .gp-m-label[data-at="40"] { left: 50%; }
+.md-typeset .gp-m-label[data-at="60"] { left: 75%; }
+.md-typeset .gp-m-label[data-at="80"] { left: 100%; transform: translateX(-100%); }
+.md-typeset .gp-m-short { display: none; }
+.md-typeset .gp-m-bar {
+  position: relative;
+  display: block;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+}
+.md-typeset .gp-m-fill,
+.md-typeset .gp-m-over { position: absolute; top: 0; bottom: 0; }
+.md-typeset .gp-m-fill {
+  left: 0;
+  width: 75%;
+  border-radius: 3px 0 0 3px;
+  background: linear-gradient(90deg, rgba(var(--dbc-pink-rgb), 0.3), var(--dbc-pink));
+}
+.md-typeset .gp-m-over {
+  left: 75%;
+  right: 0;
+  border-radius: 0 3px 3px 0;
+  background: rgba(var(--dbc-lavender-rgb), 0.3);
+}
+.md-typeset .gp-m-tick {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.85);
+  transform: translateX(-1px);
+}
+.md-typeset .gp-m-tick[data-at="40"] { left: 50%; }
+.md-typeset .gp-m-tick[data-at="60"] { left: 75%; }
+.md-typeset .gp-m-tick[data-at="80"] { left: 100%; }
+
+.md-typeset .gp-cycle {
+  display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5em 1.7em;
-  margin: 0.9em 0 1.1em;
-  /* The arrow after a step sits in the gap to its right, which for the last
-     step on a wrapped line is past the row's edge; this padding keeps it
-     inside the row so it never adds page width. */
-  padding: 0 1.4em 0 0;
-  list-style: none;
-}
-.md-typeset .gameplay-flow > ol > li {
-  position: relative;
-  margin: 0;
-  padding: 0.35em 0.9em;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.45);
+  gap: 0.25rem 0.5rem;
+  max-width: 100%;
+  margin: 0.4em 0 0.9em;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   border-radius: var(--dbc-r);
-  background-color: rgba(var(--dbc-purple-rgb), 0.1);
-  font-size: 0.9em;
-  font-weight: 700;
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
+  font-size: var(--dbc-fs-base);
+  font-weight: 600;
+  color: #fff;
 }
-.md-typeset .gameplay-flow > ol > li:not(:last-child)::after {
-  content: "\2192";
-  position: absolute;
-  top: 50%;
-  right: -1.35em;
-  transform: translateY(-50%);
-  font-size: 1.15em;
-  font-weight: 400;
-  color: var(--dbc-arrow);
+.md-typeset .gp-cycle > span { white-space: nowrap; }
+.md-typeset .gp-cycle .gp-sep { font-weight: 400; color: var(--dbc-pink); }
+.md-typeset .gp-cycle .gp-repeat { font-weight: 500; color: var(--dbc-muted-text); }
+
+@container gp (max-width: 700px) {
+  .md-typeset .gp-buffs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-.md-typeset .gameplay-flow > ol > li:last-child {
-  border-style: dashed;
+/* the long 40 label needs about 450px of meter to clear the 60 label; the short one needs about 300px */
+@container gp (max-width: 620px) {
+  .md-typeset .gp-m-full { display: none; }
+  .md-typeset .gp-m-short { display: inline; }
+}
+@container gp (max-width: 520px) {
+  .md-typeset .gp-row { grid-template-columns: minmax(0, 1fr); row-gap: 0.1rem; }
+  .md-typeset .gp-term { padding-right: 0; }
+  .md-typeset .gp-syn .gp-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .md-typeset .gp-syn .gp-desc { grid-column: 1 / -1; grid-row: 2; }
+  .md-typeset .gp-dur { padding-left: 0; }
+}
+/* below this the 40 and 60 labels touch even when short: the 60 label moves under the bar */
+@container gp (max-width: 340px) {
+  .md-typeset .gp-meter { padding-bottom: 1.5em; }
+  .md-typeset .gp-m-label[data-at="60"] { top: auto; bottom: 0; }
+}
+@container gp (max-width: 440px) {
+  .md-typeset .gp-buffs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ==========================================================================
@@ -3957,6 +4027,20 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .food-req-item.skill-tip-anchor:hover img.skill-icon,
 .md-typeset .food-req-item.skill-tip-anchor:focus-visible img.skill-icon {
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.65), 0 0 8px rgba(var(--dbc-purple-rgb), 0.4);
+}
+
+/* ---------- Pre-Ark Grid page option cards ---------- */
+.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(1) {
+  background-color: var(--dbc-rose-dark);
+  border-color: rgba(var(--dbc-rose-rgb), 0.45);
+}
+.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(2) {
+  background-color: var(--dbc-gold-dark);
+  border-color: rgba(var(--dbc-gold-rgb), 0.45);
+}
+.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(3) {
+  background-color: var(--dbc-teal-card-bg);
+  border-color: rgba(var(--dbc-teal-rgb), 0.45);
 }
 
 /* ---------- Page-level availability banner ---------- */
@@ -8757,7 +8841,7 @@ h3 { color: var(--dbc-teal); }
    with a .build-card near the top - 333-ceiling, 313-high-floor, 111-head-hunt,
    111-classic, 222-speedy, 333-blitz) end on a dense DPS-distribution image or
    tab set and read better with more breathing room than shorter pages like
-   index/resources/essentials, so they get more. Selects on
+   index/resources/essentials/pre-ark-grid, so they get more. Selects on
    .build-card's presence rather than duplicating a page list here, so a future
    build page picks up 5rem automatically just by using the component. */
 .md-content__inner > :last-child {
@@ -10393,7 +10477,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess .food-option { padding: 0.33em 0.8em 0.33em 0.4em; gap: 0.45em; border-radius: var(--dbc-r); }
 .md-typeset .ess .food-option p { font-size: 0.8em; }
 .md-typeset .ess .food-option .food-option-icon { display: block; height: 20px; width: 20px; }
-.md-typeset .ess .food-option { background-color: rgba(var(--dbc-rose-rgb), 0.03); border-color: rgba(var(--dbc-rose-rgb), 0.08); }
+.md-typeset .ess .food-option { background-color: rgba(var(--dbc-rose-rgb), 0.035); border-color: rgba(var(--dbc-rose-rgb), 0.12); }
 .md-typeset .ess .food-required-lead { margin-bottom: 0.5em; font-size: var(--dbc-fs-md); line-height: 1.4; color: var(--dbc-lilac); }
 .md-typeset .ess .food-required-lead strong { font-weight: 600; }
 .md-typeset .ess .setup-notes { border-top: 0; margin: 0.6em 0 0; padding: 0; }
@@ -10406,7 +10490,7 @@ body.page-333-blitz input[type="text"] {
 /* alt swap list */
 .md-typeset .ess-swaps {
   display: grid; grid-template-columns: max-content minmax(0, 1fr) auto;
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.08); border-radius: var(--dbc-r); background: rgba(var(--dbc-rose-rgb), 0.03);
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.12); border-radius: var(--dbc-r); background: rgba(var(--dbc-rose-rgb), 0.035);
 }
 .md-typeset .ess-swap {
   display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center;
