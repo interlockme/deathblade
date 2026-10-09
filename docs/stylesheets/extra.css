@@ -57,15 +57,15 @@
      rather than repeated as raw hex literals at 2-6 call sites each: one
      source of truth instead of N copies that could drift apart. */
   --dbc-gold-dark: #292624;        /* dark gold tint - the
-    2nd Pre-Ark Grid option card, and .page-banner-warning, pairs with --dbc-gold */
-  --dbc-rose-dark: #2d242c;        /* dark rose tint - the 1st
-    .grid.cards/.prearc-cards option card, a rank-1 gem badge's on-fill text, and
-    cycle-num-1's on-fill text, pairs with --dbc-rose */
+    .page-banner-warning, pairs with --dbc-gold */
+  --dbc-rose-dark: #2d242c;        /* dark rose tint - a rank-1
+    gem badge's on-fill text, cycle-num-1's on-fill text and the pink home lane
+    background, pairs with --dbc-rose */
   --dbc-teal-dark: #1d2227;        /* darkest teal tint - on-fill text for a rank-1
     Cooldown gem badge and cycle-num-2, pairs with --dbc-teal (see also
     --dbc-teal-card-bg below, a different/lighter teal-family tint) */
-  --dbc-teal-card-bg: #1e262b;     /* the 2nd .grid.cards option card and 3rd
-    .prearc-cards option card background, pairs with --dbc-teal */
+  --dbc-teal-card-bg: #1e262b;     /* the teal home lane
+    background, pairs with --dbc-teal */
   --dbc-gem-name-muted: #d8d2de;   /* rank-2 gem item name text + an alt-gem's bolded name */
   --dbc-chip-text: #cbb9e8;        /* text color paired with --dbc-surface on the purple-bordered chip buttons */
   --dbc-muted-text: #948fa0;       /* faint gray label text (kept at 4.5:1+ on the dark surfaces) - a "no diff" build-compare
@@ -2777,30 +2777,6 @@ h3 { color: var(--dbc-teal); }
   font-style: italic;
 }
 
-.md-typeset .grid.cards > ul > li {
-  border-radius: var(--dbc-r-lg);
-  transition: transform 0.15s ease, border-color 0.15s ease;
-}
-.md-typeset .grid.cards > ul > li:hover {
-  transform: translateY(-2px);
-}
-.md-typeset .grid.cards > ul > li:nth-child(1) {
-  background-color: var(--dbc-rose-dark);
-  border-color: rgba(var(--dbc-rose-rgb), 0.45);
-}
-.md-typeset .grid.cards > ul > li:nth-child(2) {
-  background-color: var(--dbc-teal-card-bg);
-  border-color: rgba(var(--dbc-teal-rgb), 0.45);
-}
-/* A third card takes the gold accent, the same trio as .prearc-cards. */
-.md-typeset .grid.cards > ul > li:nth-child(3) {
-  background-color: var(--dbc-gold-dark);
-  border-color: rgba(var(--dbc-gold-rgb), 0.45);
-}
-.md-typeset .grid.cards > ul > li:nth-child(1):hover { border-color: var(--dbc-rose); }
-.md-typeset .grid.cards > ul > li:nth-child(2):hover { border-color: var(--dbc-teal); }
-.md-typeset .grid.cards > ul > li:nth-child(3):hover { border-color: var(--dbc-gold); }
-
 /* ==========================================================================
    Home page (index.md)
    ========================================================================== */
@@ -3981,20 +3957,6 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .food-req-item.skill-tip-anchor:hover img.skill-icon,
 .md-typeset .food-req-item.skill-tip-anchor:focus-visible img.skill-icon {
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.65), 0 0 8px rgba(var(--dbc-purple-rgb), 0.4);
-}
-
-/* ---------- Pre-Ark Grid page option cards ---------- */
-.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(1) {
-  background-color: var(--dbc-rose-dark);
-  border-color: rgba(var(--dbc-rose-rgb), 0.45);
-}
-.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(2) {
-  background-color: var(--dbc-gold-dark);
-  border-color: rgba(var(--dbc-gold-rgb), 0.45);
-}
-.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(3) {
-  background-color: var(--dbc-teal-card-bg);
-  border-color: rgba(var(--dbc-teal-rgb), 0.45);
 }
 
 /* ---------- Page-level availability banner ---------- */
@@ -8795,7 +8757,7 @@ h3 { color: var(--dbc-teal); }
    with a .build-card near the top - 333-ceiling, 313-high-floor, 111-head-hunt,
    111-classic, 222-speedy, 333-blitz) end on a dense DPS-distribution image or
    tab set and read better with more breathing room than shorter pages like
-   index/resources/essentials/pre-ark-grid, so they get more. Selects on
+   index/resources/essentials, so they get more. Selects on
    .build-card's presence rather than duplicating a page list here, so a future
    build page picks up 5rem automatically just by using the component. */
 .md-content__inner > :last-child {
