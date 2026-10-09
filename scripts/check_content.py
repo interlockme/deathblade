@@ -315,6 +315,30 @@ def check_history_comments(text, rel, kind, problems):
                                 "state the current behaviour and why, history belongs in git")
 
 
+def check_home_rows(problems):
+    """11. Each home row names a build in build-data.js, and its link text matches that
+    build's name (the row's emoji, words, description and pill are filled from the data)."""
+    data = (JS / "build-data.js").read_text()
+    names = {}
+    for fam, body in re.findall(r'^\s{4}(re|surge): \{(.*?)^\s{4}\},?$', data, re.M | re.S):
+        for bid, name in re.findall(r'id: "([^"]+)",\s*name: "([^"]+)"', body):
+            names[(fam, bid)] = name
+    text = (DOCS / "index.md").read_text()
+    for m in re.finditer(r'<div class="home-row"[^>]*data-family="([^"]+)" data-build="([^"]+)"[^>]*>.*?\[([^\]]*)\]\(', text, re.S):
+        fam, bid, shown = m.groups()
+        line = text.count("\n", 0, m.start()) + 1
+        if (fam, bid) not in names:
+            problems.append(f"docs/index.md:{line}: home row data-family={fam!r} data-build={bid!r} "
+                            f"has no matching build in build-data.js")
+            continue
+        plain = re.sub(r"<[^>]+>", "", shown).strip()
+        plain = re.sub(r"\s+", " ", plain)
+        expect = re.sub(r"\s*\((.*)\)$", r" \1", names[(fam, bid)])
+        if plain != expect:
+            problems.append(f"docs/index.md:{line}: home row link text {plain!r} but build-data.js "
+                            f"names it {names[(fam, bid)]!r}")
+
+
 def check():
     problems = []
     today = datetime.date.today()
@@ -421,6 +445,9 @@ def check():
     sys.path.insert(0, str(ROOT / "scripts"))
     import sync_order_core_shares
     problems.extend(sync_order_core_shares.check())
+
+    # 11. home rows match build-data.js
+    check_home_rows(problems)
 
     return problems
 

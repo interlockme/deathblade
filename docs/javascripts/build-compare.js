@@ -3,31 +3,30 @@
 // changes needed here, just point your build/essentials pages' JSON blocks
 // at your own data.
 //
-// Unified build comparison card, sits under each family's "## Build
-// Comparison" heading on essentials.md. One card: a real <table> up top
-// and the two-build picker underneath (pentagon overlay + a "Key
-// Differences" panel), so there's one visual unit rather than a table and
-// a separate widget repeating the same numbers and links.
+// Build comparison card, sits under each family's "## Build Comparison"
+// heading on essentials.md. One card: a row per build (the picker) and, under
+// the rows, a radar overlay of the two picked builds with a "Key Differences"
+// column for each.
+//
+// Picking: click (or Enter/Space on) a row to put it in a slot. Slots are A
+// and B; a new pick replaces the older of the two and the other build keeps
+// its letter, so its colour never swaps. Clicking a row that is already
+// picked does nothing, because two builds are always compared.
 //
 // EASY EDIT GUIDE:
 //   All build data lives in build-data.js (window.DB_BUILD_DATA), NOT in
 //   this file - that's the single source of truth shared with
-//   pentagon-badge.js, so editing a build's numbers there updates both
-//   the build's own pentagon badge and this comparison card. See
-//   build-data.js's own top comment for the field-by-field writeup
-//   (recommended/trixion/trixionConfirmed/compareEnabled, etc).
+//   pentagon-badge.js, build-stats-badge.js and the home page rows. The
+//   row's emoji, descriptor line, description and meters come from the same
+//   fields the home page shows (build-stats-badge.js's window.BuildView), so
+//   editing a build there updates both places. See build-data.js's own top
+//   comment for the field-by-field writeup.
 //
 //   To add the widget to a page: <div class="build-compare"
 //   data-family="re"></div> (or data-family="surge"). Nothing else
-//   needed - the table rows, dropdowns, and defaults are all generated
-//   from whichever family's build list is picked.
-//
-//   Shareable links: once a reader picks a pair, the URL updates to
-//   ?a=<build-id>&b=<build-id> (no address-bar change on a plain page
-//   load, only after an actual selection) and a "Copy link" button sits
-//   under the dropdowns for grabbing it without touching the address
-//   bar. Opening a link with those params pre-selects that exact pair on
-//   load, overriding data-build-a/data-build-b if both are present.
+//   needed - the rows, defaults and radar are generated from whichever
+//   family's build list is picked. data-build-a / data-build-b override the
+//   default pair.
 //
 //   RE and Surge builds are never compared against each other here, same
 //   reasoning as pentagon-badge.js: RE's fifth axis is Recovery (higher
@@ -65,114 +64,13 @@
   var svgEl = window.SiteUtils.svgEl;
   var fmt1 = window.SiteUtils.formatStat;
   var radar = window.SiteUtils.radar;
+  var el = window.SiteUtils.el;
+  var View = window.BuildView;
 
-  // ---------- Overview table (this IS the old markdown table, just
-  // generated from the same data array the picker below reads instead
-  // of being hand-typed a second time). Deliberately a real <table>
-  // with NO class attribute so it inherits the sitewide
-  // `table:not([class])` styling every other table on the site gets -
-  // see the CSS comment above .build-compare table for why. ----------
-  function buildOverviewTable(family, data) {
-    var table = document.createElement("table");
-
-    var thead = document.createElement("thead");
-    var headRow = document.createElement("tr");
-    ["Build", "Difficulty", "Trixion DPS", "Playstyle", "Best For"].forEach(function (label) {
-      var th = document.createElement("th");
-      th.textContent = label;
-      headRow.appendChild(th);
-    });
-    thead.appendChild(headRow);
-    table.appendChild(thead);
-
-    var tbody = document.createElement("tbody");
-    data.builds.forEach(function (build) {
-      var row = document.createElement("tr");
-
-      var nameCell = document.createElement("td");
-      var nameLink = document.createElement("a");
-      nameLink.href = buildUrl(family, build);
-      nameLink.className = "build-compare-name";
-      var dot = document.createElement("span");
-      dot.className = "build-compare-dot";
-      dot.style.backgroundColor = build.accent;
-      nameLink.appendChild(dot);
-      // Star goes INSIDE the link, appended to the same text node run as
-      // the name - not as a sibling after the closing </a>. This link is
-      // display:inline-flex, which makes it a single atomic box in the
-      // outer (cell) flow; on a narrow mobile column the name text wraps
-      // to 2 lines INSIDE that box, but the box's own footprint still
-      // claims the full line width doing so, leaving zero room after it
-      // for anything else on that line - a star appended outside the
-      // link was forced onto a stranded 3rd line no matter what
-      // (non-breaking space between it and the name doesn't help: nbsp
-      // only blocks a break where there's still room not to break, it
-      // can't invent room that isn't there). Keeping the star as part of
-      // the SAME text flow the name itself wraps inside of means it just
-      // rides along on whichever line the name's last word lands on
-      // instead of competing separately for outer line space.
-      var nameText = build.name;
-      if (build.recommended) {
-        // Non-breaking space so the star can't get split off onto its
-        // own line even within this shared text run.
-        nameText += "\u00a0\u2605";
-      }
-      nameLink.appendChild(document.createTextNode(nameText));
-      nameCell.appendChild(nameLink);
-      row.appendChild(nameCell);
-
-      // Small local builder so each bar cell (diff/trix below) is DOM
-      // nodes, same no-innerHTML convention as every other widget - see
-      // ark-core-badge.js's comment on why. trackClass/fillClass default
-      // to the plain (non-teal) variant, which is all difficulty's own
-      // cell ever needs.
-      function buildBarCell(labelText, pct, trackClass, fillClass) {
-        var cell = document.createElement("div");
-        cell.className = "table-bar-cell";
-        cell.appendChild(document.createTextNode(labelText));
-        var track = document.createElement("div");
-        track.className = trackClass || "stat-bar-track";
-        var fill = document.createElement("div");
-        fill.className = fillClass || "stat-bar-fill";
-        fill.style.width = pct + "%";
-        track.appendChild(fill);
-        cell.appendChild(track);
-        return cell;
-      }
-
-      var diffCell = document.createElement("td");
-      diffCell.appendChild(buildBarCell(fmt1(build.difficulty) + " / 10", (build.difficulty / 10) * 100));
-      row.appendChild(diffCell);
-
-      var trixCell = document.createElement("td");
-      if (build.trixion == null) {
-        trixCell.textContent = "\u2014";
-      } else {
-        // Same fixed 1.0-1.3 scale as the per-build stat card - see
-        // extra.css's comment on .stat-bar-track-teal for why this isn't
-        // scaled to the data's own min/max.
-        var trixPct = Math.max(0, Math.min(1, (build.trixion - 1.0) / 0.3)) * 100;
-        var fillClass = "stat-bar-fill stat-bar-fill-teal" + (build.trixionConfirmed === false ? " stat-bar-fill-unconfirmed" : "");
-        trixCell.appendChild(buildBarCell(
-          build.trixion.toFixed(2) + "x", trixPct,
-          "stat-bar-track stat-bar-track-teal", fillClass
-        ));
-      }
-      row.appendChild(trixCell);
-
-      var styleCell = document.createElement("td");
-      styleCell.textContent = build.playstyle;
-      row.appendChild(styleCell);
-
-      var bestForCell = document.createElement("td");
-      bestForCell.textContent = build.bestFor;
-      row.appendChild(bestForCell);
-
-      tbody.appendChild(row);
-    });
-    table.appendChild(tbody);
-
-    return table;
+  // "#ec91b2" -> "236, 145, 178", for the rgba() tints a row builds from its accent.
+  function hexToRgb(hex) {
+    var n = parseInt(hex.slice(1), 16);
+    return (n >> 16) + ", " + ((n >> 8) & 255) + ", " + (n & 255);
   }
 
   // Overlay pentagon: same grid/spoke/label shape as pentagon-badge.js,
@@ -199,8 +97,8 @@
     radar.drawGrid(svg, angles);
 
     [buildB, buildA].forEach(function (build) {
-      // Draw B first, then A on top, so A (the left/first dropdown) reads
-      // as the "primary" shape when the two overlap heavily.
+      // Draw B first, then A on top, so A reads as the "primary" shape
+      // when the two overlap heavily.
       var dataPts = radar.dataPoints(angles, build.pentagon);
       svg.appendChild(
         svgEl("polygon", {
@@ -214,7 +112,7 @@
         })
       );
       dataPts.forEach(function (p) {
-        svg.appendChild(svgEl("circle", { cx: p[0].toFixed(1), cy: p[1].toFixed(1), r: "2.4", fill: build.accent, class: "build-compare-dot" }));
+        svg.appendChild(svgEl("circle", { cx: p[0].toFixed(1), cy: p[1].toFixed(1), r: "2.4", fill: build.accent }));
       });
     });
 
@@ -228,21 +126,7 @@
     return svg;
   }
 
-  function buildSelect(builds, selectedId, ariaLabel) {
-    var select = document.createElement("select");
-    select.className = "build-compare-select";
-    select.setAttribute("aria-label", ariaLabel);
-    builds.forEach(function (b) {
-      var opt = document.createElement("option");
-      opt.value = b.id;
-      opt.textContent = b.name;
-      if (b.id === selectedId) opt.selected = true;
-      select.appendChild(opt);
-    });
-    return select;
-  }
-
-  // "Key Differences" panel - for each axis where the two builds aren't
+  // "Key Differences" - for each axis where the two builds aren't
   // essentially tied, a small pill goes under whichever build comes out
   // ahead on it, labeled with the axis and the size of the gap. Chosen
   // over any kind of bar: bars scaled to a 0-10 (or even a per-pair
@@ -254,265 +138,158 @@
   // power stat, so a build reduces it rather than gains it - it gets a
   // "-" prefix instead of "+" so it doesn't read as "more" of something
   // bad being an advantage.
-  function buildKeyDifferences(axisLabels, invert, buildA, buildB) {
-    var card = document.createElement("div");
-    card.className = "build-compare-diffcard";
-
-    var title = document.createElement("div");
-    title.className = "build-compare-diffcard-title";
-    title.textContent = "Key Differences";
-    card.appendChild(title);
-
-    var chipsA = [];
-    var chipsB = [];
+  function edgeLists(axisLabels, invert, buildA, buildB) {
+    var listA = [];
+    var listB = [];
     axisLabels.forEach(function (label, i) {
       var delta = buildA.pentagon[i] - buildB.pentagon[i];
       if (Math.abs(delta) < 0.05) return; // tied on this axis - no chip
       var favorsA = invert[i] ? delta < 0 : delta > 0;
       var sign = invert[i] ? "\u2212" : "+";
-      var text = sign + fmt1(Math.abs(delta)) + " " + label;
-      (favorsA ? chipsA : chipsB).push(text);
+      (favorsA ? listA : listB).push(sign + fmt1(Math.abs(delta)) + " " + label);
     });
+    return [listA, listB];
+  }
 
-    var body = document.createElement("div");
-    body.className = "build-compare-diffcard-body";
+  // One column of the Key Differences panel: the slot letter, the build's name
+  // (a link to its page), and its chips.
+  function buildEdgeColumn(family, slot, build, chips) {
+    var col = el("div", "build-compare-edge-col");
+    col.style.setProperty("--bc-rgb", hexToRgb(build.accent));
 
-    if (chipsA.length === 0 && chipsB.length === 0) {
-      var same = document.createElement("div");
-      same.className = "build-compare-diffcard-empty";
-      same.textContent = "These builds are nearly identical across every axis.";
-      body.appendChild(same);
+    var head = el("div", "build-compare-edge-head");
+    head.appendChild(el("span", "build-compare-slot build-compare-slot--filled", slot));
+    var link = el("a", "build-compare-edge-name", build.name);
+    link.href = buildUrl(family, build);
+    link.style.color = build.accent;
+    head.appendChild(link);
+    col.appendChild(head);
+
+    col.appendChild(el("div", "build-compare-edge-label", "Edge"));
+
+    var chipRow = el("div", "build-compare-diffcard-chips");
+    if (chips.length === 0) {
+      chipRow.appendChild(el("span", "build-compare-diffcard-none", "No clear edge"));
     } else {
-      [
-        [buildA, chipsA],
-        [buildB, chipsB],
-      ].forEach(function (pair) {
-        var build = pair[0];
-        var chips = pair[1];
-        var col = document.createElement("div");
-        col.className = "build-compare-diffcard-col";
-
-        var name = document.createElement("div");
-        name.className = "build-compare-diffcard-name";
-        name.style.color = build.accent;
-        name.textContent = build.name;
-        col.appendChild(name);
-
-        var chipRow = document.createElement("div");
-        chipRow.className = "build-compare-diffcard-chips";
-        if (chips.length === 0) {
-          var none = document.createElement("span");
-          none.className = "build-compare-diffcard-none";
-          none.textContent = "No clear edge";
-          chipRow.appendChild(none);
-        } else {
-          chips.forEach(function (text) {
-            var chip = document.createElement("span");
-            chip.className = "build-compare-diffchip";
-            chip.style.borderColor = build.accent + "4d"; // ~30% alpha hex suffix - softer than the old 50%
-            chip.style.color = build.accent;
-            chip.textContent = text;
-            chipRow.appendChild(chip);
-          });
-        }
-        col.appendChild(chipRow);
-        body.appendChild(col);
+      chips.forEach(function (text) {
+        var chip = el("span", "build-compare-diffchip", text);
+        chip.style.borderColor = build.accent + "4d"; // ~30% alpha hex suffix
+        chip.style.color = build.accent;
+        chipRow.appendChild(chip);
       });
     }
-
-    card.appendChild(body);
-    return card;
+    col.appendChild(chipRow);
+    return col;
   }
-
-  // ----- Shareable compare links -----
-  // Reads/writes ?a=<build-id>&b=<build-id> so a specific matchup (e.g.
-  // essentials.md?a=333-ceiling&b=313-high-floor) can be linked directly
-  // instead of "go to essentials, then pick these two from the
-  // dropdowns." Scoped to exactly one compare widget per page (true for
-  // every essentials.md today), so plain "a"/"b" params are unambiguous
-  // and stay short/shareable rather than namespaced per-family.
-  function getUrlPair(compareBuilds) {
-    var params = new URLSearchParams(window.location.search);
-    var a = params.get("a");
-    var b = params.get("b");
-    if (!a || !b || a === b) return null;
-    var buildA = compareBuilds.filter(function (build) { return build.id === a; })[0];
-    var buildB = compareBuilds.filter(function (build) { return build.id === b; })[0];
-    if (!buildA || !buildB) return null; // unknown/stale id - ignore, fall through to normal default
-    return [buildA.id, buildB.id];
-  }
-
-  function shareUrlFor(idA, idB) {
-    var params = new URLSearchParams(window.location.search);
-    params.set("a", idA);
-    params.set("b", idB);
-    return window.location.pathname + "?" + params.toString() + window.location.hash;
-  }
-
-  // Only touches the address bar once the reader actually picks a pair -
-  // an untouched page load stays on its plain URL rather than getting
-  // ?a=...&b=... appended for every visitor by default.
-  function updateUrl(idA, idB) {
-    if (!window.history || !window.history.replaceState) return;
-    window.history.replaceState(null, "", shareUrlFor(idA, idB));
-  }
-
-  var copyToClipboard = window.SiteUtils.copyToClipboard; // was a local duplicate of the site-utils.js helper, textarea fallback and all
 
   function renderWidget(container, family) {
     var data = window.DB_BUILD_DATA && window.DB_BUILD_DATA[family];
-    if (!data) return;
+    if (!data || !View) return;
 
-    var compareBuilds = data.builds.filter(function (b) { return b.compareEnabled !== false; });
+    var builds = data.builds.filter(function (b) { return b.compareEnabled !== false; });
+    function byId(id) { return builds.filter(function (b) { return b.id === id; })[0]; }
 
-    var urlPair = getUrlPair(compareBuilds);
-    var idA = (urlPair && urlPair[0]) || container.getAttribute("data-build-a") || compareBuilds[data.defaultPair[0]].id;
-    var idB = (urlPair && urlPair[1]) || container.getAttribute("data-build-b") || compareBuilds[data.defaultPair[1]].id;
-    if (idA === idB) {
-      // Guard against both dropdowns landing on the same build (e.g. via
-      // a manually-edited default) - fall back to the family default pair.
-      idA = compareBuilds[data.defaultPair[0]].id;
-      idB = compareBuilds[data.defaultPair[1]].id;
+    var idA = container.getAttribute("data-build-a") || builds[data.defaultPair[0]].id;
+    var idB = container.getAttribute("data-build-b") || builds[data.defaultPair[1]].id;
+    if (!byId(idA) || !byId(idB) || idA === idB) {
+      // Guard against an unknown id or both slots landing on the same build
+      // (e.g. a manually-edited default) - fall back to the family default pair.
+      idA = builds[data.defaultPair[0]].id;
+      idB = builds[data.defaultPair[1]].id;
     }
-    var buildA = compareBuilds.filter(function (b) { return b.id === idA; })[0] || compareBuilds[0];
-    var buildB = compareBuilds.filter(function (b) { return b.id === idB; })[0] || compareBuilds[1];
+    var picks = [idA, idB]; // slot A, slot B
+    var nextSlot = 0; // the slot the next new pick replaces (the older pick)
 
     container.innerHTML = "";
-    // Wrapper exists purely so mobile can get horizontal scroll on just
-    // this table without touching its own layout - see the CSS comment
-    // on .build-compare-table-scroll for why the table itself couldn't
-    // just handle this alone. No-op on desktop (plain block wrapper).
-    var tableScroll = document.createElement("div");
-    tableScroll.className = "build-compare-table-scroll";
-    tableScroll.appendChild(buildOverviewTable(family, data));
-    container.appendChild(tableScroll);
 
-    // Dropdowns and the share action share one row - no text label above
-    // them, the picker + "vs" already reads as compare controls on its own.
-    var headerRow = document.createElement("div");
-    headerRow.className = "build-compare-header-row";
+    var rowsBox = el("div", "build-compare-rows");
+    rowsBox.setAttribute("role", "group");
+    rowsBox.setAttribute("aria-label", "Pick two builds to compare");
+    container.appendChild(rowsBox);
 
-    // Each select gets its own small color dot (kept in sync on change)
-    // instead of a separate link-legend row - the table above already
-    // links out to every build, repeating that here was redundant.
-    var controls = document.createElement("div");
-    controls.className = "build-compare-controls";
+    var panel = el("div", "build-compare-panel");
+    container.appendChild(panel);
 
-    var wrapA = document.createElement("span");
-    wrapA.className = "build-compare-select-wrap";
-    var dotA = document.createElement("span");
-    dotA.className = "build-compare-select-dot";
-    var selectA = buildSelect(compareBuilds, buildA.id, "First build to compare");
-    wrapA.appendChild(dotA);
-    wrapA.appendChild(selectA);
+    var rowEls = {};
+    builds.forEach(function (build) {
+      var row = el("div", "build-compare-row");
+      row.setAttribute("role", "button");
+      row.tabIndex = 0;
+      row.style.setProperty("--bc-rgb", hexToRgb(build.accent));
+      if (build.viable === false) row.setAttribute("data-kind", "variant");
 
-    var vs = document.createElement("span");
-    vs.className = "build-compare-vs";
-    vs.textContent = "vs";
+      row.appendChild(el("span", "build-compare-slot"));
 
-    var wrapB = document.createElement("span");
-    wrapB.className = "build-compare-select-wrap";
-    var dotB = document.createElement("span");
-    dotB.className = "build-compare-select-dot";
-    var selectB = buildSelect(compareBuilds, buildB.id, "Second build to compare");
-    wrapB.appendChild(dotB);
-    wrapB.appendChild(selectB);
+      var main = el("div", "build-compare-name");
+      var top = el("div", "build-compare-name-top");
+      top.appendChild(el("span", "home-row-emoji", build.emoji));
+      var parts = View.nameParts(build);
+      var nm = el("span", "build-compare-nm", parts[0]);
+      if (parts[1]) {
+        nm.appendChild(document.createTextNode(" "));
+        nm.appendChild(el("small", null, parts[1]));
+      }
+      top.appendChild(nm);
+      main.appendChild(top);
+      main.appendChild(View.wordsEl(build));
+      row.appendChild(main);
 
-    controls.appendChild(wrapA);
-    controls.appendChild(vs);
-    controls.appendChild(wrapB);
-    headerRow.appendChild(controls);
+      row.appendChild(el("div", "home-row-desc", build.desc));
+      row.appendChild(View.fillMeters(el("div", "build-compare-meters"), build));
 
-    // Icon-only copy button - shares the row with the picker instead of
-    // getting its own line, since sharing a comparison is a nice-to-have,
-    // not an action that needs a spelled-out label.
-    var COPY_ICON =
-      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
-    var CHECK_ICON =
-      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-    var shareBtn = document.createElement("button");
-    shareBtn.type = "button";
-    shareBtn.className = "build-compare-share-btn";
-    shareBtn.innerHTML = COPY_ICON;
-    shareBtn.setAttribute("aria-label", "Copy link to this comparison");
-    shareBtn.setAttribute("data-tooltip", "Copy link to this comparison");
-    headerRow.appendChild(shareBtn);
+      function pick() {
+        if (picks.indexOf(build.id) >= 0) return;
+        picks[nextSlot] = build.id;
+        nextSlot = 1 - nextSlot;
+        draw();
+      }
+      row.addEventListener("click", pick);
+      row.addEventListener("keydown", function (evt) {
+        if (evt.key === "Enter" || evt.key === " ") {
+          evt.preventDefault();
+          pick();
+        }
+      });
 
-    container.appendChild(headerRow);
+      rowEls[build.id] = row;
+      rowsBox.appendChild(row);
+    });
 
-    var body = document.createElement("div");
-    body.className = "build-compare-body";
-    container.appendChild(body);
+    function draw() {
+      var buildA = byId(picks[0]);
+      var buildB = byId(picks[1]);
 
-    function renderBody() {
-      body.innerHTML = "";
-      dotA.style.backgroundColor = buildA.accent;
-      dotB.style.backgroundColor = buildB.accent;
+      builds.forEach(function (build) {
+        var row = rowEls[build.id];
+        var slot = build.id === buildA.id ? "A" : build.id === buildB.id ? "B" : "";
+        row.setAttribute("aria-pressed", slot ? "true" : "false");
+        row.querySelector(".build-compare-slot").textContent = slot;
+      });
 
-      var svgMount = document.createElement("div");
-      svgMount.className = "build-compare-svg-mount";
+      panel.innerHTML = "";
+      var svgMount = el("div", "build-compare-svg-mount");
       var overlay = buildOverlaySvg(data.axisLabels, buildA, buildB);
       svgMount.appendChild(overlay);
       radar.wireLabelTips(overlay);
-      body.appendChild(svgMount);
+      panel.appendChild(svgMount);
 
-      body.appendChild(buildKeyDifferences(data.axisLabels, data.invert, buildA, buildB));
+      var lists = edgeLists(data.axisLabels, data.invert, buildA, buildB);
+      var edgesBox = el("div", "build-compare-edges");
+      edgesBox.appendChild(buildEdgeColumn(family, "A", buildA, lists[0]));
+      edgesBox.appendChild(buildEdgeColumn(family, "B", buildB, lists[1]));
+      panel.appendChild(edgesBox);
     }
 
-    renderBody();
-
-    var shareResetTimer = null;
-    function resetShareBtn() {
-      shareBtn.innerHTML = COPY_ICON;
-      shareBtn.setAttribute("data-tooltip", "Copy link to this comparison");
-      shareBtn.setAttribute("aria-label", "Copy link to this comparison");
-    }
-    shareBtn.addEventListener("click", function () {
-      copyToClipboard(window.location.origin + shareUrlFor(buildA.id, buildB.id))
-        .then(function () {
-          clearTimeout(shareResetTimer);
-          shareBtn.innerHTML = CHECK_ICON;
-          shareBtn.setAttribute("data-tooltip", "Link copied");
-          shareBtn.setAttribute("aria-label", "Link copied");
-          shareResetTimer = setTimeout(resetShareBtn, 1800);
-        })
-        .catch(function () {
-          clearTimeout(shareResetTimer);
-          shareBtn.setAttribute("data-tooltip", "Couldn't copy - copy from address bar");
-          shareBtn.setAttribute("aria-label", "Couldn't copy - copy from address bar");
-          shareResetTimer = setTimeout(resetShareBtn, 2400);
-        });
-    });
-
-    selectA.addEventListener("change", function () {
-      if (selectA.value === selectB.value) {
-        // Keep the two picks distinct - snap B to whatever A just gave up.
-        selectB.value = buildA.id;
-      }
-      buildA = compareBuilds.filter(function (b) { return b.id === selectA.value; })[0];
-      buildB = compareBuilds.filter(function (b) { return b.id === selectB.value; })[0];
-      updateUrl(buildA.id, buildB.id);
-      renderBody();
-    });
-    selectB.addEventListener("change", function () {
-      if (selectB.value === selectA.value) {
-        selectA.value = buildB.id;
-      }
-      buildA = compareBuilds.filter(function (b) { return b.id === selectA.value; })[0];
-      buildB = compareBuilds.filter(function (b) { return b.id === selectB.value; })[0];
-      updateUrl(buildA.id, buildB.id);
-      renderBody();
-    });
+    draw();
   }
 
   function renderContainer(container) {
     renderWidget(container, container.getAttribute("data-family"));
   }
 
-  // Was a lone document$ subscription - renderWidget() was already
-  // idempotent (container.innerHTML reset every call, fresh selects/
-  // buttons each time so no listener ever double-attaches to a surviving
-  // node), so this is a drop-in swap to the shared hard-load/instant-nav/
-  // mutation trigger set. See site-utils.js's registerRenderer doc comment.
+  // renderWidget() is idempotent (container.innerHTML reset every call, fresh
+  // rows each time so no listener ever double-attaches to a surviving node),
+  // so the shared hard-load/instant-nav/mutation trigger set is safe. See
+  // site-utils.js's registerRenderer doc comment.
   window.SiteUtils.registerRenderer(".build-compare[data-family]", renderContainer);
 })();

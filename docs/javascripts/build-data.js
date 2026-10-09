@@ -1,5 +1,5 @@
 // FORK GUIDE: DATA - every build entry (pentagon stats, accent colors,
-// bestFor blurbs) is one of Deathblade's own builds. Replace the re/surge
+// descriptions) is one of Deathblade's own builds. Replace the re/surge
 // families and their builds arrays with your class's own lineup; the
 // axisLabels/invert/axisNote fields let you define your own 5th axis
 // (this site uses Recovery for RE, Exposure for Surge).
@@ -26,14 +26,28 @@
 //     trixionConfirmed - false shows the diagonal-stripe "unconfirmed" fill
 //     playstyle     - short playstyle tag
 //     accent        - hex color used for this build's line/fill everywhere
-//     bestFor       - SHORT blurb for the compare table only. The build's
-//                     own page keeps its own longer "Best For:" prose
-//                     written directly in the .md - that's intentionally
-//                     not templated from here, it's real prose.
-//     recommended   - true adds the small star next to the name
-//     compareEnabled - false keeps a build in the compare table's overview
-//                      rows but out of the two-build picker (no pentagon
-//                      data to overlay)
+//     emoji, words, desc, ark, viable - the build's one-line pitch, shown
+//                     by BOTH the home page rows (index.md) and the compare
+//                     rows on the essentials pages, so editing it here
+//                     updates both (ark is home page only):
+//                       emoji   - leading emoji
+//                       words   - short descriptor line ("comfort \u2022 transitional")
+//                       desc    - one or two sentence description
+//                       ark     - Ark Grid need: "none" | "little" | "full"
+//                                 (the home row pill)
+//                       viable  - false marks a build as not viable (red
+//                                 flag, dashed home row); omit otherwise.
+//                                 Do not repeat it in desc.
+//                     The build's own page keeps its own longer "Best For:"
+//                     prose written directly in the .md - that's real prose,
+//                     not templated from here.
+//     recommended   - true adds the gold "recommended" flag (home row and
+//                     compare row) and the star next to the name elsewhere
+//     compareEnabled - false keeps a build out of the compare rows (no
+//                      pentagon data to overlay). A build with no pentagon,
+//                      difficulty or trixion at all (surge's
+//                      "pre-ark-grid") exists only for the home page start
+//                      row.
 //
 //   RE and Surge are never compared against each other - RE's fifth axis
 //   is Recovery (higher is better), Surge's is Exposure (lower is
@@ -63,7 +77,10 @@
           trixion: 1.2,
           trixionConfirmed: true,
           playstyle: "Skill Reset",
-          bestFor: "\u2728 Well-rounded damage ceiling",
+          emoji: "\u2728",
+          words: "skill reset",
+          desc: "Well-rounded build that offers the highest RE damage. Sensitive to high ping or low FPS.",
+          ark: "full",
           recommended: true,
           compareEnabled: true,
         },
@@ -76,7 +93,10 @@
           trixion: 1.17,
           trixionConfirmed: true,
           playstyle: "Fast & Comfy",
-          bestFor: "\uD83D\uDC9C Comfort and recovery",
+          emoji: "\uD83D\uDC9C",
+          words: "comfort \u2022 transitional",
+          desc: "A faster, simpler, more forgiving build with a lower damage ceiling.",
+          ark: "little",
           recommended: false,
           compareEnabled: true,
         },
@@ -89,7 +109,10 @@
           trixion: 1.18,
           trixionConfirmed: true,
           playstyle: "Fast & Punishing",
-          bestFor: "\uD83D\uDD2A Skill expression and stagger",
+          emoji: "\uD83D\uDD2A",
+          words: "challenging \u2022 old meta",
+          desc: "Fast, punishing build with little recovery, but high skill expression.",
+          ark: "little",
           recommended: false,
           compareEnabled: true,
         },
@@ -102,7 +125,10 @@
           trixion: null,
           trixionConfirmed: true,
           playstyle: "AFK Simulator",
-          bestFor: "\uD83C\uDF31 Pre-Ark Grid beginner build",
+          emoji: "\uD83C\uDF31",
+          words: "beginner \u2022 legacy",
+          desc: "Simple to learn, with some downtime.",
+          ark: "none",
           recommended: false,
           compareEnabled: true,
         },
@@ -127,7 +153,10 @@
           trixion: 1.23,
           trixionConfirmed: true,
           playstyle: "Burst Combo",
-          bestFor: "\uD83E\uDD81 Classic Surge gameplay",
+          emoji: "\uD83E\uDD81",
+          words: "bursty \u2022 familiar",
+          desc: "Builds up to one massive hit. Strongest burst combo, but it needs careful execution.",
+          ark: "little",
           recommended: false,
           compareEnabled: true,
         },
@@ -140,7 +169,10 @@
           trixion: 1.25,
           trixionConfirmed: true,
           playstyle: "Max Mobility",
-          bestFor: "\uD83D\uDC06 Simple uptime focus",
+          emoji: "\uD83D\uDC06",
+          words: "combo chains",
+          desc: "Uptime-focused and mobile: easy to pick up, hard to master. It's exactly as good as you are.",
+          ark: "little",
           recommended: true,
           compareEnabled: true,
         },
@@ -153,9 +185,24 @@
           trixion: 1.2,
           trixionConfirmed: false,
           playstyle: "Skill Reset",
-          bestFor: "\uD83D\uDC2F Not a viable build",
+          emoji: "\uD83D\uDC2F",
+          words: "skill reset",
+          desc: "Fun, but too impractical for the damage it offers.",
+          ark: "full",
+          viable: false,
           recommended: false,
           compareEnabled: true,
+        },
+        {
+          id: "pre-ark-grid",
+          name: "Surge",
+          accent: "#6ac7be",
+          emoji: "\uD83C\uDF31",
+          words: "beginner \u2022 modern",
+          desc: "Essentially 111 (Classic) with minor adjustments.",
+          ark: "none",
+          recommended: false,
+          compareEnabled: false,
         },
       ],
     },

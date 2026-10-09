@@ -6,8 +6,8 @@
 <!-- Difficulty/Trixion/Playstyle stats above, AND the pentagon badge below,
      both read from javascripts/build-data.js (window.DB_BUILD_DATA) - there is
      nothing to hand-edit in either div itself. Find this build by its
-     data-build id there and edit pentagon/difficulty/trixion/bestFor/etc.;
-     the stat row, the pentagon badge, and the essentials.md comparison table
+     data-build id there and edit pentagon/difficulty/trixion/etc.;
+     the stat row, the pentagon badge, and the essentials.md comparison rows
      all update together from that one place. -->
 <div class="build-stats" data-build="313-high-floor" data-family="re"></div>
 

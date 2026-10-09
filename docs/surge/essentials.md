@@ -70,10 +70,10 @@ Atk/Move Speed Feast
 
 ## Build Comparison
 
-<!-- This table and its two-build overlay picker are entirely driven by
+<!-- These rows and the overlay under them are entirely driven by
      javascripts/build-data.js (window.DB_BUILD_DATA) - nothing to edit here.
-     Go there to change a build's numbers, its short compare-table blurb, or
-     whether it's eligible for the overlay picker. -->
+     Go there to change a build's numbers, its description (shared with the home
+     page), or whether it's eligible for the picker. -->
 
 <div class="build-compare" data-family="surge"></div>
 

@@ -70,10 +70,10 @@
   --dbc-surface-muted: #1f1d24;    /* plain-table row background + the 1st/2nd
     gearing-value cards - a muted dark surface with no accent color tie-in */
   --dbc-gem-name-muted: #d8d2de;   /* rank-2 gem item name text + an alt-gem's bolded name */
-  --dbc-chip-surface: #1f1d24;     /* background shared by the build-compare share-link
-    tooltip and the image-lightbox close button, both bordered in --dbc-purple */
+  --dbc-chip-surface: #1f1d24;     /* background of the image-lightbox close button, the
+    rotation practice toggle and the calculator build dock trigger, all bordered in --dbc-purple */
   --dbc-chip-text: #cbb9e8;        /* text color paired with --dbc-chip-surface above */
-  --dbc-chip-surface-hover: #26252b; /* hover background for those same two --dbc-purple-bordered controls */
+  --dbc-chip-surface-hover: #26252b; /* hover background for the --dbc-purple-bordered image-lightbox close button */
   --dbc-muted-text: #948fa0;       /* faint gray label text (kept at 4.5:1+ on the dark surfaces) - a "no diff" build-compare
     note, an engraving loadout hint, and an Ark Passive tier's point count */
   --dbc-muted-text-alt: #948ea4;   /* placeholder-style input text, shared by the CPM and bid calculators' "muted" fields */
@@ -476,7 +476,7 @@ h3 { color: var(--dbc-teal); }
    needed) - it's deliberately the DEFAULT, not a fallback, so a new
    table just typed as plain markdown (like Useful Links below) already
    matches the site instead of reading as the one unstyled leftover.
-   .skills-table/.food-alt-table/.build-compare still carry their own
+   .skills-table/.food-alt-table still carry their own
    more specific rules on top of this for the things that actually vary
    per-table (zebra striping, min-width, icon sizing) - those stay.
    This rule just sets the shared card language, so wrapper-less tables
@@ -515,24 +515,6 @@ h3 { color: var(--dbc-teal); }
   object-fit: contain;
   vertical-align: middle;
   border-radius: var(--dbc-r-sm);
-}
-
-/* ---------- Difficulty bar inside Build Comparison tables ---------- */
-/* Reuses the same stat-bar-track/fill pieces from the build-card, laid out
-   horizontally to fit a table cell instead of stacked under a stat-value.
-   Usage in a pipe-table cell:
-   <div class="table-bar-cell">8.5 / 10<div class="stat-bar-track"><div
-   class="stat-bar-fill" style="width: 85%"></div></div></div> */
-.md-typeset .table-bar-cell {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-.md-typeset .table-bar-cell .stat-bar-track {
-  width: 46px;
-  margin-top: 0;
-  flex-shrink: 0;
 }
 
 /* ---------- Tag color-key legend (above skill tables) ---------- */
@@ -597,8 +579,8 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .skills-table {
   overflow-x: auto;
 }
-/* Card treatment matching .build-compare table's own polish (lavender
-   border/tint + tinted header row + uppercase header text) rather than
+/* Card treatment: a lavender border and tint like the .build-compare card,
+   plus a tinted uppercase header row, rather than
    the flat generic table:not([class]) styling every other bare table on
    the site gets. Same specificity as that generic rule (.md-typeset +
    one class + table element, in both cases), so as the later rule in the
@@ -2527,36 +2509,6 @@ h3 { color: var(--dbc-teal); }
     align-self: center;
     margin-bottom: 1.5em;
   }
-  /* Stack the pentagon over the diff card on narrow screens - the
-     vertical divider becomes a horizontal one so the "two halves of one
-     panel" feel carries over instead of the divider just vanishing. */
-  .md-typeset .build-compare-body {
-    flex-direction: column;
-  }
-  .md-typeset .build-compare-svg-mount {
-    border-right: none;
-    border-bottom: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
-  }
-  /* The overview table's fixed-width columns (see .build-compare table's
-     table-layout:fixed comment) plus the nowrap Playstyle column squeeze
-     down to unreadable widths once the table is forced to fit a phone-
-     width container - and since the table itself clips overflow (its
-     border-radius rounding depends on overflow:hidden), any text that
-     didn't fit was just silently cut off with no way to reach it, rather
-     than causing a page-level horizontal scrollbar. Giving the table a
-     floor width and letting only this wrapper scroll horizontally means
-     every column keeps its desktop proportions and nothing gets clipped
-     - you just pan across it - while the table's own layout/overflow
-     rules (and desktop, where this wrapper is a no-op) stay untouched.
-     No -webkit-overflow-scrolling - see .quick-jump-pills' removal note
-     further down for why. */
-  .md-typeset .build-compare-table-scroll {
-    overflow-x: auto;
-  }
-  .md-typeset .build-compare-table-scroll table {
-    width: auto;
-    min-width: 600px;
-  }
 }
 /* Phone width and up: the build profile badge is a row (radar left, video chips and
    note right). Below 360px the right column is too narrow for the chip labels, so
@@ -2604,352 +2556,234 @@ h3 { color: var(--dbc-teal); }
 }
 
 
-/* ---------- Build compare widget (essentials.md, replaces the old
-   "## Build Comparison" markdown table) ---------- */
+/* ---------- Build compare widget (essentials.md) ---------- */
 /* Structure: <div class="build-compare" data-family="re"></div> - the JS
-   (javascripts/build-compare.js) fills in everything else: a real
-   <table> up top (this IS the old markdown table, just generated from
-   the same data array the picker below reads from instead of hand-typed
-   twice), a "Compare Two Directly" picker with two <select> dropdowns,
-   and an overlaid pentagon reusing the .pentagon-svg/.pentagon-ring/
-   .pentagon-spoke/.pentagon-label pieces from the single-build badge
-   above. See that file's top comment for the build data and why RE/Surge
-   are never compared against each other.
-
-   The table is intentionally left with NO class attribute, so it falls
-   through to the sitewide `table:not([class])` rule and renders exactly
-   like every other table on the site (same header/hover/img sizing)
-   rather than a hand-rolled approximation - that's what the plain
-   markdown table had for free and a bespoke flex layout here didn't. It
-   keeps its own rounded panel (border-radius + overflow:hidden) sitting
-   inside the outer card's padding, rather than being stripped flush the
-   way .cycle-card's nested .rotation-line is - flush read as "text just
-   floating in the card" with no visual boundary telling you where the
-   table starts, this reads as a distinct sub-panel instead. */
+   (javascripts/build-compare.js) fills in everything else: one row per
+   build (the picker; click two to compare them) and, under the rows, a panel
+   with the overlaid radar and each build's Key Differences. See that file's
+   top comment for the data and why RE/Surge are never compared against each
+   other.
+   A row shows the same pitch as a home page row (emoji, name, descriptor line,
+   description, Difficulty and Trixion meters), built from the same build-data.js
+   fields by build-stats-badge.js's BuildView, and reuses the home row's text
+   and meter classes (.home-row-emoji, .home-row-words, .home-words-flag,
+   .home-row-desc, .home-meter-*). Each row is tinted by its build's accent,
+   passed as --bc-rgb, so a row's colour is the colour of its radar polygon.
+   The widget is a query container (its own width, not the viewport, because
+   the sidebar and TOC coming and going would fire viewport breakpoints at the
+   wrong place). Pixel thresholds, because em in a container query follows the
+   container's font size. */
 .md-typeset .build-compare {
+  container: build-compare / inline-size;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   background-color: rgba(var(--dbc-purple-rgb), 0.045);
   border-radius: var(--dbc-r-lg);
-  padding: 1.1em 1.2em 1.1em;
+  padding: 0.8rem 0.9rem 0.9rem;
   margin: 1em 0 1.5em;
 }
-.md-typeset .build-compare-table-scroll {
-  /* Plain block wrapper on desktop - no width/overflow rules here at all,
-     so nothing about the table's own layout or sizing changes. Mobile
-     gets its own override below (see the @media screen and
-     (max-width: 720px) block) that turns this into the horizontal-scroll
-     container; this bare rule only exists so the class always resolves
-     to something (keeps the two rules easy to find/diff together). */
+.md-typeset .build-compare-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
-.md-typeset .build-compare table {
-  width: 100%;
-  /* table-layout:auto (the default) puts 100% of the leftover width onto
-     whichever column has the least content pinned to it - in practice
-     that dumped almost the entire remaining width onto "Best For" alone,
-     leaving its text stranded on the left of a mostly-empty column.
-     Fixed + explicit per-column percentages spreads that width out on
-     purpose instead of leaving it to the browser's guess. */
-  table-layout: fixed;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
-  border-radius: var(--dbc-r);
-  overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.025);
-  margin: 0 0 0.6em;
+.md-typeset .build-compare-row {
+  display: grid;
+  grid-template-columns: 1.2rem 10rem minmax(0, 1fr) 10rem;
+  grid-template-areas: "slot name desc meters";
+  align-items: center;
+  gap: 0.3rem 0.8rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(var(--bc-rgb), 0.35);
+  border-radius: var(--dbc-r-lg);
+  background: color-mix(in srgb, var(--md-default-bg-color) 55%, transparent);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
-.md-typeset .build-compare table th {
-  background-color: rgba(var(--dbc-purple-rgb), 0.1);
-  font-size: var(--dbc-fs-base);
+.md-typeset .build-compare-row:hover {
+  border-color: rgba(var(--bc-rgb), 0.8);
 }
-/* Cells match the header size (13.6px). The sitewide table size is 0.64rem
-   (12.8px), which read small next to the 16px build-card text this table
-   sits under. */
-.md-typeset .build-compare table td {
-  font-size: var(--dbc-fs-base);
+.md-typeset .build-compare-row[aria-pressed="true"] {
+  border-color: rgb(var(--bc-rgb));
+  background: rgba(var(--bc-rgb), 0.09);
 }
-.md-typeset .build-compare table th:nth-child(1),
-.md-typeset .build-compare table td:nth-child(1) {
-  width: 20%;
+/* A build that is not viable is dashed, as on the home page. */
+.md-typeset .build-compare-row[data-kind="variant"] {
+  border-style: dashed;
 }
-.md-typeset .build-compare table th:nth-child(2),
-.md-typeset .build-compare table td:nth-child(2) {
-  width: 12%;
+.md-typeset .build-compare-row:focus-visible {
+  outline: 2px solid var(--dbc-pink);
+  outline-offset: 2px;
 }
-.md-typeset .build-compare table th:nth-child(3),
-.md-typeset .build-compare table td:nth-child(3) {
-  /* 16% so the "Trixion DPS" header (about 129px with its padding) stays on
-     one line from roughly 810px of viewport up; narrower than that it wraps
-     as before. Taken from the Difficulty and Best For columns. */
-  width: 16%;
+/* A/B slot badge: an empty ring on an unpicked row, filled with the build's
+   colour and lettered on a picked one (and on the Key Differences columns). */
+.md-typeset .build-compare-slot {
+  grid-area: slot;
+  display: grid;
+  place-items: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1.5px solid rgba(var(--bc-rgb), 0.55);
+  border-radius: 50%;
+  color: var(--md-default-bg-color);
+  font-size: var(--dbc-fs-2xs);
+  font-weight: 700;
+  line-height: 1;
 }
-/* Widened from 15% - "Fast & Punishing" (the longest playstyle value)
-   was wrapping to two lines at the old width. */
-.md-typeset .build-compare table th:nth-child(4),
-.md-typeset .build-compare table td:nth-child(4) {
-  width: 20%;
-  white-space: nowrap;
-}
-.md-typeset .build-compare table th:nth-child(5),
-.md-typeset .build-compare table td:nth-child(5) {
-  width: 32%;
+.md-typeset .build-compare-row[aria-pressed="true"] .build-compare-slot,
+.md-typeset .build-compare-slot--filled {
+  background-color: rgb(var(--bc-rgb));
+  border-color: rgb(var(--bc-rgb));
 }
 .md-typeset .build-compare-name {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
+  grid-area: name;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
 }
-.md-typeset .build-compare-dot {
-  width: 0.6em;
-  height: 0.6em;
-  border-radius: 999px;
-  flex-shrink: 0;
+.md-typeset .build-compare-name-top {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.md-typeset .build-compare-nm {
+  color: var(--dbc-white);
+  font-size: var(--home-fs-name);
+  font-weight: 600;
+  line-height: 1.2;
+}
+.md-typeset .build-compare-nm small {
+  color: var(--dbc-lilac);
+  font-size: var(--dbc-fs-base);
+  font-weight: 400;
+}
+.md-typeset .build-compare-row .home-row-desc {
+  grid-area: desc;
+}
+.md-typeset .build-compare-meters {
+  grid-area: meters;
+  display: grid;
+  gap: 0.3rem;
+}
+/* Narrow widget: the row stacks (name, description, then the two meters side by
+   side), so nothing scrolls sideways. 680px is the width at which the
+   10rem name column, the 10rem meters and a readable description stop
+   fitting in one line. */
+@container build-compare (max-width: 680px) {
+  .md-typeset .build-compare-row {
+    grid-template-columns: 1.2rem minmax(0, 1fr);
+    grid-template-areas: "slot name" ". desc" ". meters";
+    gap: 0.35rem 0.6rem;
+  }
+  .md-typeset .build-compare-meters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
 }
 
-/* Dropdown picker and copy-link icon share a single row - no text label
-   above them. The icon is pulled out of normal flow (absolute,
-   pinned to the row's right edge) instead of living in its own grid
-   track, so the dropdowns get the row's full width to center in rather
-   than losing a chunk of it to an empty column reserved just to balance
-   the icon - such a column would squeeze the selects enough to
-   clip long build names. */
-.md-typeset .build-compare-header-row {
-  position: relative;
-  display: flex;
+/* Panel under the rows: the radar overlay and the Key Differences. */
+.md-typeset .build-compare-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
   align-items: center;
-  justify-content: center;
-  /* Top and bottom padding match on purpose so the icon centers itself
-     on the dropdowns' true vertical middle (top:50% against a symmetric
-     box). No margin-bottom here - padding doesn't collapse with a
-     neighbor's margin the way two margins collapse into each other, so
-     stacking padding-bottom on top of the old margin-bottom was adding
-     real extra space below the row that the original design never had.
-     .build-compare-body below supplies the actual gap via its own
-     margin-top, sized to already account for this padding. */
-  padding: 0.6em 2.1em 0.6em;
-  border-top: 1px solid rgba(var(--dbc-purple-rgb), 0.18);
-}
-.md-typeset .build-compare-controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6em;
-  min-width: 0;
-  max-width: 100%;
-}
-/* Small colored dot on each dropdown, kept in sync with its current
-   selection (JS) - a quiet visual link to the matching polygon color
-   below without repeating the table's own links a second time. */
-.md-typeset .build-compare-select-wrap {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;
-  min-width: 0;
-}
-.md-typeset .build-compare-select-dot {
-  width: 0.65em;
-  height: 0.65em;
-  border-radius: 999px;
-  flex-shrink: 0;
-}
-.md-typeset .build-compare-select {
-  background-color: var(--md-default-bg-color);
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
-  border-radius: var(--dbc-r-sm);
-  color: var(--md-default-fg-color);
-  padding: 0.35em 0.6em;
-  font-size: 0.85em;
-  font-family: inherit;
-  min-width: 0;
-  flex: 1 1 auto;
-  /* If the row ever gets too tight to fit the full name (very narrow
-     screens), fade it to an ellipsis rather than hard-clipping mid
-     character the way native <select> rendering does by default. */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.md-typeset .build-compare-select:focus {
-  outline: none;
-  border-color: var(--dbc-purple);
-}
-.md-typeset .build-compare-vs {
-  font-size: 0.75em;
-  color: var(--dbc-lavender);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 700;
-}
-/* Icon-only copy button, sharing the header row with the picker instead
-   of a spelled-out label on its own line - sharing a comparison is a
-   nice-to-have, not the main action, so it stays quiet until hovered. */
-.md-typeset .build-compare-share-btn {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 1.8em;
-  height: 1.8em;
-  background: none;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.25);
-  border-radius: var(--dbc-r-sm);
-  color: var(--dbc-lavender);
-  opacity: 0.7;
-  cursor: pointer;
-  padding: 0;
-  transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-}
-.md-typeset .build-compare-share-btn:hover {
-  opacity: 1;
-  color: var(--dbc-purple);
-  border-color: rgba(var(--dbc-purple-rgb), 0.5);
-}
-.md-typeset .build-compare-share-btn svg {
-  display: block;
-}
-/* Custom tooltip (rather than relying on the native title attribute,
-   which is slow to appear and invisible to some touch/screen-reader
-   flows) so the icon's function is clear on hover or keyboard focus. */
-.md-typeset .build-compare-share-btn::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: calc(100% + 7px);
-  right: 0;
-  transform: translateY(2px);
-  background-color: var(--md-default-bg-color);
-  color: var(--md-default-fg-color);
-  font-size: var(--dbc-fs-base);
-  font-weight: 600;
-  font-family: inherit;
-  text-transform: none;
-  letter-spacing: normal;
-  white-space: nowrap;
-  padding: 0.35em 0.6em;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  border-radius: var(--dbc-r-sm);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-  z-index: 5;
-}
-.md-typeset .build-compare-share-btn:hover::after,
-.md-typeset .build-compare-share-btn:focus-visible::after {
-  opacity: 1;
-  transform: translateY(0);
-}
-/* Body is now a single two-panel "sub-card" (matches the table's own
-   rounded sub-panel above it) instead of two free-floating pieces with a
-   gap between them - a shared border + a vertical divider down the
-   middle gives the pentagon and the diff card each an explicit, equal
-   half rather than leaving their relative size to flex-basis alone.
-   margin-top trimmed from 0.9em to 0.3em: the header row above now
-   contributes its own 0.6em of padding-bottom (added for icon
-   centering, see .build-compare-header-row) which sits in addition to
-   this margin rather than collapsing into it, so the two together
-   still land on the original ~0.9em gap instead of stacking to 1.5em. */
-.md-typeset .build-compare-body {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  margin-top: 0.3em;
+  gap: 1rem;
+  margin-top: 0.7rem;
+  padding: 0.6rem 1rem 0.8rem;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
   border-radius: var(--dbc-r);
   background-color: rgba(255, 255, 255, 0.02);
-  overflow: hidden;
 }
 .md-typeset .build-compare-svg-mount {
-  flex: 1 1 50%;
   display: flex;
-  /* Top-aligned (not centered) so the "Difficulty" axis label at the top
-     of the pentagon lines up with "Key Differences" on the other side,
-     rather than the whole SVG - empty space below the shape included -
-     being centered as one block. */
-  align-items: flex-start;
   justify-content: center;
-  padding: 1.3em 1em;
-  border-right: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
 }
 .md-typeset .build-compare-svg-mount svg {
   /* About 1.2 screen px per viewBox unit here, so the 10-unit axis labels
-     draw at about 12px, close to the Key Differences title and pills
-     beside it. */
+     draw at about 12px, close to the Key Differences text beside it. */
   width: min(264px, 100%);
 }
 /* Two overlapping translucent polygons - fill-opacity is set inline per
    build (JS) rather than here since it's paired with each build's own
-   accent color, but the stroke needs to stay crisp on top of the fill,
-   which .pentagon-data's site-wide rule already handles for the single-
-   build badge; this reuses the same visual weight. */
+   accent color. */
 .md-typeset .build-compare-poly {
   transition: opacity 0.15s ease;
 }
+@container build-compare (max-width: 600px) {
+  .md-typeset .build-compare-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Two columns side by side, each a letter badge over the name. The head keeps
+     the height of a two-line name so the columns' chips start level. */
+  .md-typeset .build-compare-edge-head {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.2rem;
+    min-height: 3.2rem;
+  }
+}
 
-/* ---------- Key Differences panel (sits beside the pentagon overlay) --------- */
+/* ---------- Key Differences (beside or under the radar) --------- */
 /* For each axis that isn't essentially tied, a small pill goes under
-   whichever build wins it - see the comment above buildKeyDifferences()
-   in build-compare.js for why this is a pill rather than a bar chart. Reuses the same
-   pill shape as .tag (padding/radius/border) but colored per-build via
-   inline style instead of a fixed palette of classes. */
-.md-typeset .build-compare-diffcard {
-  flex: 1 1 50%;
-  min-width: 0;
-  background-color: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 1.3em 1.2em;
-  display: flex;
-  flex-direction: column;
-  /* Top-aligned to match .build-compare-svg-mount above, plus the title's
-     own margin-top below to land roughly level with the pentagon's
-     "Difficulty" label (which sits a bit below the SVG's own top edge,
-     not flush with it). */
-  justify-content: flex-start;
-}
-.md-typeset .build-compare-diffcard-title {
-  font-size: var(--dbc-fs-base);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--dbc-lavender);
-  font-weight: 700;
-  /* Lands level with the radar's "Difficulty" label, which sits about 2
-     viewBox units below the SVG's top edge (see SiteUtils.radar.VIEWBOX). */
-  margin-top: 0.2em;
-  margin-bottom: 0.9em;
+   whichever build wins it - see the comment above edgeLists() in
+   build-compare.js for why this is a pill rather than a bar chart. Reuses the
+   same pill shape as .tag (padding/radius/border) but colored per-build via
+   inline style instead of a fixed palette of classes. The build's name in each
+   column links to its page. */
+.md-typeset .build-compare-edges {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
   text-align: center;
 }
-/* Side-by-side columns (one per build) instead of a top-to-bottom stack -
-   centered as a pair within the card, matching the "A vs B" framing the
-   dropdowns above already set up, and using the half-width horizontally
-   instead of stretching the card tall. */
-.md-typeset .build-compare-diffcard-body {
-  display: flex;
-  justify-content: center;
-  gap: 1.6em;
-  text-align: center;
-}
-.md-typeset .build-compare-diffcard-col {
+.md-typeset .build-compare-edge-col {
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 1 1 0;
+  gap: 0.45rem;
   min-width: 0;
 }
-.md-typeset .build-compare-diffcard-name {
-  font-weight: 700;
+.md-typeset .build-compare-edge-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+/* Name link: no underline, a padded rounded highlight on hover/focus (the
+   padding and the equal negative margin cancel, so text does not shift at
+   rest). */
+.md-typeset .build-compare a.build-compare-edge-name {
+  padding: 0.1em 0.35em;
+  margin: -0.1em -0.35em;
+  border-radius: var(--dbc-r-sm);
   font-size: 0.88em;
-  margin-bottom: 0.55em;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+.md-typeset .build-compare a.build-compare-edge-name:hover,
+.md-typeset .build-compare a.build-compare-edge-name:focus-visible {
+  background-color: rgba(var(--bc-rgb), 0.16);
+  text-decoration: none;
+}
+.md-typeset .build-compare a.build-compare-edge-name:focus-visible {
+  outline: 2px solid var(--dbc-pink);
+  outline-offset: 2px;
+}
+.md-typeset .build-compare-edge-label {
+  color: var(--dbc-lavender);
+  font-size: var(--dbc-fs-cap);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 .md-typeset .build-compare-diffcard-chips {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4em;
+  gap: 0.4rem;
 }
 /* Softer than a typical .tag pill on purpose - these sit two-per-column
    in a fairly quiet card and don't need to compete visually with the
-   pentagon; the accent color alone (text + a faint border) is enough to
+   radar; the accent color alone (text + a faint border) is enough to
    read as "this build's advantage" without a heavy filled chip. */
 .md-typeset .build-compare-diffchip {
   display: inline-block;
@@ -2966,12 +2800,6 @@ h3 { color: var(--dbc-teal); }
   font-size: 0.78em;
   color: var(--dbc-muted-text);
   font-style: italic;
-}
-.md-typeset .build-compare-diffcard-empty {
-  font-size: 0.85em;
-  color: var(--dbc-lavender);
-  font-style: italic;
-  text-align: center;
 }
 
 .md-typeset .grid.cards > ul > li {
@@ -3018,12 +2846,15 @@ h3 { color: var(--dbc-teal); }
    Paragraphs are plain markdown paragraphs with an attr_list class. The reset
    below is written with :where() so it adds no specificity: a class rule on a
    paragraph (.home-sec, .home-note-label) can set its own margin. */
-.md-typeset .home {
+.md-typeset .home,
+.md-typeset .build-compare {
   /* Display sizes above the small-text scale (--dbc-fs-*, whose top step is
-     --dbc-fs-md). */
+     --dbc-fs-md). The compare rows on the essentials pages use them too. */
   --home-fs-title: 1.1rem;
   --home-fs-name: 0.8rem;
   --home-fs-emoji: 0.95rem;
+}
+.md-typeset .home {
   container: home / inline-size;
 }
 .md-typeset .home :where(p) { margin: 0; }
@@ -3155,6 +2986,14 @@ h3 { color: var(--dbc-teal); }
   border-radius: var(--dbc-r-lg);
   background: color-mix(in srgb, var(--md-default-bg-color) 55%, transparent);
   transition: transform 0.15s ease, border-color 0.15s ease;
+}
+/* build-stats-badge.js fills a row's text and meters after load; these floors
+   keep an unfilled row near its filled height so the page does not jump. */
+.md-typeset .home-row[data-build] {
+  min-height: 5.8rem;
+}
+.md-typeset .home-row[data-build][data-kind="start"] {
+  min-height: 4.1rem;
 }
 .md-typeset .home-row:hover {
   transform: translateY(-2px);
@@ -3313,6 +3152,12 @@ h3 { color: var(--dbc-teal); }
   );
 }
 @container home-lane (max-width: 460px) {
+  .md-typeset .home-row[data-build] {
+    min-height: 8.1rem;
+  }
+  .md-typeset .home-row[data-build][data-kind="start"] {
+    min-height: 5.3rem;
+  }
   .md-typeset .home-row,
   .md-typeset .home-row[data-kind="start"] {
     grid-template-columns: minmax(0, 1fr);
@@ -9052,7 +8897,7 @@ h3 { color: var(--dbc-teal); }
 .quick-jump-pills {
   display: none;
 }
-/* -webkit-overflow-scrolling: touch is deliberately absent from every horizontal scroller in this file (.skills-table, .build-compare-table-scroll, .ap-gear-cards' phone-width wrapper, .ap-brace-compare-inputs, and this one). Root cause of the
+/* -webkit-overflow-scrolling: touch is deliberately absent from every horizontal scroller in this file (.skills-table, .ap-gear-cards' phone-width wrapper, .ap-brace-compare-inputs, and this one). Root cause of the
    "pinch-zoom on iPhone 12 leaves the header with a gap on the right,
    or on Essentials pages leaves the whole page zoomed way out and
    unable to snap back" bug report: -webkit-overflow-scrolling: touch is
@@ -9067,11 +8912,10 @@ h3 { color: var(--dbc-teal); }
    flatly redundant now: every iOS version this site supports already
    gives plain `overflow-x: auto` native momentum scrolling without it.
    Essentials pages got hit harder than build pages in the report because
-   .skills-table AND .build-compare-table-scroll both sit on that page
-   family (an essentials page embeds a .build-compare block too), so two
-   of these layers stacked instead of one - consistent with a compositing
-   bug that compounds with each extra touch-scroll layer on the page.
-   The quick-jump pills are called out here since they're on every build page (hence "most pages" in the report vs. Essentials' harsher variant), but the fix applies to all five scrollers, not just this one. */
+   several of these scroll layers share that page family (.skills-table
+   among them) - consistent with a compositing bug that compounds with
+   each extra touch-scroll layer on the page.
+   The quick-jump pills are called out here since they're on every build page (hence "most pages" in the report vs. Essentials' harsher variant), but the fix applies to every scroller, not just this one. */
 @media screen and (max-width: 768px) {
   .quick-jump-pills {
     display: flex;

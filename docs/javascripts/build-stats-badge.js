@@ -3,7 +3,8 @@
 // changes needed here, just point your build/essentials pages' JSON blocks
 // at your own data.
 //
-// Also renders the compact home page meters (see renderHomeMeters below).
+// Also renders the home page rows and exports the shared build pitch pieces
+// (window.BuildView) that build-compare.js reuses; see "Shared build pitch" below.
 //
 // Renders the Difficulty/Trixion/Playstyle stat cards at the top of each
 // build page from window.DB_BUILD_DATA - the SAME single source of truth
@@ -100,47 +101,118 @@
     el.appendChild(buildStatEl("Playstyle", data.playstyle, null));
   }
 
-  // Home page meters: the compact Difficulty and Trixion bars inside each build
-  // row of index.md, <div class="home-meters" data-family="re"
-  // data-build="333-ceiling">. Same data and the same bar scales as renderStats;
-  // an unconfirmed Trixion value keeps its "?" and striped fill. A build with no
-  // Trixion figure (Standard) gets no Trixion meter.
-  function homeMeter(kind, label, valueText, pct, unconfirmed) {
-    var meter = window.SiteUtils.el(
-      "div",
-      "home-meter home-meter--" + kind + (unconfirmed ? " home-meter--unconfirmed" : "")
-    );
-    var top = window.SiteUtils.el("div", "home-meter-top");
-    top.appendChild(window.SiteUtils.el("span", "home-meter-label", label));
-    top.appendChild(window.SiteUtils.el("span", "home-meter-value", valueText));
-    meter.appendChild(top);
-    var track = window.SiteUtils.el("div", "home-meter-track");
-    var fill = window.SiteUtils.el("div", "home-meter-fill");
-    fill.style.width = pct + "%";
-    track.appendChild(fill);
-    meter.appendChild(track);
-    return meter;
+  // ---- Shared build pitch: home rows and compare rows -------------------
+  // Both show the same one-line pitch for a build (emoji, name, descriptor line,
+  // description, Difficulty and Trixion meters), all read from build-data.js, so
+  // editing a build there updates the home page and the essentials comparison
+  // together. The pieces are exported as window.BuildView for build-compare.js
+  // (which loads after this file). The meter bars use the same scales as
+  // renderStats above; an unconfirmed Trixion value keeps its "?" and striped
+  // fill, and a build with no Trixion figure (Standard) shows an empty meter
+  // with a dash so the rows line up.
+  var el = window.SiteUtils.el;
+  var ARK_LABEL = { none: "No Ark Grid", little: "Some Ark Grid", full: "Full Ark Grid" };
+
+  function findBuild(familyId, buildId) {
+    var family = window.DB_BUILD_DATA && window.DB_BUILD_DATA[familyId];
+    return (family && family.builds.filter(function (b) { return b.id === buildId; })[0]) || null;
   }
 
-  function renderHomeMeters(el) {
-    var data = resolveStatsData(el);
-    if (!data) return;
+  // "333 (Ceiling)" -> ["333", "Ceiling"]; a name with no brackets has no label.
+  function nameParts(build) {
+    var m = /^(\S+)\s*\((.*)\)$/.exec(build.name);
+    return m ? [m[1], m[2]] : [build.name, ""];
+  }
 
-    el.innerHTML = "";
-    var diffPct = Math.max(0, Math.min(100, (data.difficulty / 10) * 100));
-    el.appendChild(homeMeter("difficulty", "Difficulty", fmtDifficulty(data.difficulty) + " / 10", diffPct, false));
+  function meter(kind, label, valueText, pct, unconfirmed) {
+    var m = el("div", "home-meter home-meter--" + kind + (unconfirmed ? " home-meter--unconfirmed" : ""));
+    var top = el("div", "home-meter-top");
+    top.appendChild(el("span", "home-meter-label", label));
+    top.appendChild(el("span", "home-meter-value", valueText));
+    m.appendChild(top);
+    var track = el("div", "home-meter-track");
+    var fill = el("div", "home-meter-fill");
+    fill.style.width = pct + "%";
+    track.appendChild(fill);
+    m.appendChild(track);
+    return m;
+  }
 
-    if (data.trixion == null) return;
-    var trixPct = Math.max(0, Math.min(100, ((data.trixion - 1.0) / 0.3) * 100));
-    el.appendChild(homeMeter(
-      "trixion",
-      "Trixion DPS",
-      data.trixion.toFixed(2) + "x" + (data.trixionConfirmed ? "" : " ?"),
-      trixPct,
-      !data.trixionConfirmed
-    ));
+  // Fills `box` with the Difficulty and Trixion meters of `build`.
+  function fillMeters(box, build) {
+    box.innerHTML = "";
+    var diffPct = Math.max(0, Math.min(100, (build.difficulty / 10) * 100));
+    box.appendChild(meter("difficulty", "Difficulty", fmtDifficulty(build.difficulty) + " / 10", diffPct, false));
+    if (build.trixion == null) {
+      box.appendChild(meter("trixion", "Trixion DPS", "\u2014", 0, false));
+      return box;
+    }
+    var confirmed = build.trixionConfirmed !== false;
+    var trixPct = Math.max(0, Math.min(100, ((build.trixion - 1.0) / 0.3) * 100));
+    box.appendChild(meter("trixion", "Trixion DPS", build.trixion.toFixed(2) + "x" + (confirmed ? "" : " ?"), trixPct, !confirmed));
+    return box;
+  }
+
+  // The descriptor line: the build's words, then the coloured flag
+  // (recommended or not viable).
+  function wordsEl(build) {
+    var line = el("div", "home-row-words", build.words);
+    var flag = null;
+    if (build.viable === false) flag = el("span", "home-words-flag", "\u26A0\uFE0E not viable");
+    else if (build.recommended) flag = el("span", "home-words-flag", "\u2605 recommended");
+    if (flag) {
+      flag.setAttribute("data-kind", build.viable === false ? "warn" : "star");
+      line.appendChild(document.createTextNode(" "));
+      line.appendChild(flag);
+    }
+    return line;
+  }
+
+  window.BuildView = {
+    ARK_LABEL: ARK_LABEL,
+    findBuild: findBuild,
+    nameParts: nameParts,
+    fillMeters: fillMeters,
+    wordsEl: wordsEl,
+  };
+
+  // Home page rows: <div class="home-row" data-family="re" data-build="333-ceiling">
+  // holds only the link (the name, a real markdown link) and, on a build row, an
+  // empty .home-meters that reserves its height. This fills in the emoji, the
+  // descriptor line, the description, the Ark Grid pill and the meters, and marks
+  // a build that is not viable. Generated nodes carry data-gen so a re-render
+  // replaces them instead of adding a second set.
+  function renderHomeRow(row) {
+    var build = findBuild(row.getAttribute("data-family"), row.getAttribute("data-build"));
+    if (!build) return;
+    row.querySelectorAll("[data-gen]").forEach(function (n) { n.remove(); });
+    var head = row.querySelector(".home-row-head");
+    var main = row.querySelector(".home-row-main");
+    var side = row.querySelector(".home-row-side");
+    if (!head || !main || !side) return;
+
+    if (build.viable === false) row.setAttribute("data-kind", "variant");
+
+    var emoji = el("span", "home-row-emoji", build.emoji);
+    emoji.setAttribute("data-gen", "");
+    head.insertBefore(emoji, head.firstChild);
+
+    var words = wordsEl(build);
+    words.setAttribute("data-gen", "");
+    main.appendChild(words);
+    var desc = el("div", "home-row-desc", build.desc);
+    desc.setAttribute("data-gen", "");
+    main.appendChild(desc);
+
+    var pill = el("span", "home-pill", ARK_LABEL[build.ark]);
+    pill.setAttribute("data-kind", build.ark);
+    pill.setAttribute("data-gen", "");
+    side.insertBefore(pill, side.firstChild);
+
+    var meters = row.querySelector(".home-meters");
+    if (meters) fillMeters(meters, build);
   }
 
   window.SiteUtils.registerRenderer(".build-stats[data-build]", renderStats);
-  window.SiteUtils.registerRenderer(".home-meters[data-build]", renderHomeMeters);
+  window.SiteUtils.registerRenderer(".home-row[data-build]", renderHomeRow);
 })();
