@@ -55,42 +55,27 @@ Atk/Move Speed Feast
 </div>
 </div>
 <div class="ess-pair" markdown>
-<div class="ess-zone" markdown>
-<div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="specializationstat">Specialization</span></div>
+<div class="ess-box" markdown>
 <div class="ess-ladder" markdown>
-<div class="ess-step" data-c="orange" markdown="span"><i></i><b>Below 1818</b><span>Some downtime</span></div>
-<div class="ess-step" data-c="teal" markdown="span"><i></i><b>1818+</b><span>No downtime on 333</span></div>
-<div class="ess-step" data-c="green" markdown="span"><i></i><b>1830+</b><span>Future-proof</span></div>
+<div class="ess-step" data-c="orange" markdown="span"><i></i><b>&lt;1818 <span class="skill-mention" data-glossary-id="specializationstat">Spec</span></b><span>Some downtime</span></div>
+<div class="ess-step" data-c="teal" markdown="span"><i></i><b>1818+ <span class="skill-mention" data-glossary-id="specializationstat">Spec</span></b><span>No downtime on 333</span></div>
+<div class="ess-step" data-c="green" markdown="span"><i></i><b>1830+ <span class="skill-mention" data-glossary-id="specializationstat">Spec</span></b><span>Future-proof</span></div>
 </div>
 <div class="ess-flag" markdown="span"><span class="ess-flag-key">+CD% bracelet</span><span>Forces Fatal Wave builds to use <span class="skill-mention" data-ap-id="releasepotential" data-level="4">Release Potential 4</span>.</span></div>
 </div>
-<div class="ess-zone" markdown>
-<div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="trixion">Trixion</span> <span class="skill-mention" data-glossary-id="cpm">CPM</span> goal</div>
+<div class="ess-box" markdown>
 <div class="ess-goals" markdown>
-<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>✨ 333</span><small>Ceiling</small></span><span class="ess-goal-num">15</span></div>
-<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>💜 313</span><small>High Floor</small></span><span class="ess-goal-num">16</span></div>
-<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>🔪 111</span><small>Head Hunt</small></span><span class="ess-goal-num">16</span></div>
+<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>✨ 333</span><small>Ceiling</small></span><span class="ess-goal-val"><span class="ess-goal-num">15</span><small>CPM</small></span></div>
+<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>💜 313</span><small>High Floor</small></span><span class="ess-goal-val"><span class="ess-goal-num">16</span><small>CPM</small></span></div>
+<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>🔪 111</span><small>Head Hunt</small></span><span class="ess-goal-val"><span class="ess-goal-num">16</span><small>CPM</small></span></div>
 </div>
-<div class="ess-note" markdown="span">Check your Surge CPM against these in Trixion with the [DPS Meter](https://github.com/snoww/loa-logs) and maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> / <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.</div>
+<div class="ess-note" markdown="span">Check your Surge <span class="skill-mention" data-glossary-id="cpm">CPM</span> against these in <span class="skill-mention" data-glossary-id="trixion">Trixion</span> with the [DPS Meter](https://github.com/snoww/loa-logs) and maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> / <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.</div>
 </div>
 </div>
-<div class="ess-zone" markdown>
-<div class="ess-title" data-c="lav">FPS / Latency</div>
+<div class="ess-box" markdown>
 <div class="ess-cols" markdown>
-<div class="ess-col" data-c="pink" markdown>
-<div class="ess-col-head">Why it matters</div>
-
-- Higher FPS raises CPM and helps fit skills under Maelstrom buff.
-- High latency or low FPS hinders skill queuing and can cause 2.9 orbs.
-
-</div>
-<div class="ess-col" data-c="teal" markdown>
-<div class="ess-col-head">What helps</div>
-
-- Low/OFF graphics and forced 21:9 can raise FPS.
-- Join nearer lobbies or avoid builds with tight orb generation.
-
-</div>
+<div class="ess-fx" data-c="teal" data-dir="up" markdown="span"><i></i><b>FPS</b><span class="ess-fx-eff">Raises CPM and helps fit skills under Maelstrom buff.</span><span class="ess-fx-fix"><span class="ess-fx-key">Try</span><span>Low/OFF graphics and forced 21:9.</span></span></div>
+<div class="ess-fx" data-c="pink" data-dir="down" markdown="span"><i></i><b>Latency</b><span class="ess-fx-eff">Hinders skill queuing and can cause 2.9 orbs, as low FPS does.</span><span class="ess-fx-fix"><span class="ess-fx-key">Try</span><span>Join nearer lobbies or avoid builds with tight orb generation.</span></span></div>
 </div>
 </div>
 <div class="ess-zone" markdown>

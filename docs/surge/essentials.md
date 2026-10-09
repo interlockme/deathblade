@@ -44,19 +44,17 @@ Atk/Move Speed Feast
 </div>
 </div>
 <div class="ess-pair" markdown>
-<div class="ess-zone" markdown>
-<div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="specializationstat">Specialization</span></div>
-<div class="ess-ramp" markdown="span"><i></i><b>More is always better</b><span>Both cooldown reduction and damage scale highly with it.</span></div>
+<div class="ess-box" markdown>
+<div class="ess-ramp" markdown="span"><i></i><b>More <span class="skill-mention" data-glossary-id="specializationstat">Specialization</span> is always better</b><span>Both cooldown reduction and damage scale highly with it.</span></div>
 <div class="ess-flag" markdown="span"><span class="ess-flag-key">+CD% bracelet</span><span>Raises already-high CD gem needs. Use <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">OT 1</span> or Lv 10 gems.</span></div>
 </div>
-<div class="ess-zone" markdown>
-<div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="trixion">Trixion</span> <span class="skill-mention" data-glossary-id="cpm">CPM</span> goal</div>
+<div class="ess-box" markdown>
 <div class="ess-goals" markdown>
-<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>🦁 111</span><small>Classic</small></span><span class="ess-goal-num">11</span></div>
-<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>🐆 222</span><small>Speedy</small></span><span class="ess-goal-num">10</span></div>
-<div class="ess-goal" data-kind="variant" markdown="span"><span class="ess-goal-name"><span>🐯 333</span><small>Blitz</small></span><span class="ess-goal-num">9?</span></div>
+<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>🦁 111</span><small>Classic</small></span><span class="ess-goal-val"><span class="ess-goal-num">11</span><small>CPM</small></span></div>
+<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>🐆 222</span><small>Speedy</small></span><span class="ess-goal-val"><span class="ess-goal-num">10</span><small>CPM</small></span></div>
+<div class="ess-goal" data-kind="variant" markdown="span"><span class="ess-goal-name"><span>🐯 333</span><small>Blitz</small></span><span class="ess-goal-val"><span class="ess-goal-num">9?</span><small>CPM</small></span></div>
 </div>
-<div class="ess-note" markdown="span">Check your Surge CPM against these in Trixion with the [DPS Meter](https://github.com/snoww/loa-logs) and maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> / <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.</div>
+<div class="ess-note" markdown="span">Check your Surge <span class="skill-mention" data-glossary-id="cpm">CPM</span> against these in <span class="skill-mention" data-glossary-id="trixion">Trixion</span> with the [DPS Meter](https://github.com/snoww/loa-logs) and maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> / <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.</div>
 </div>
 </div>
 <div class="ess-zone" markdown>

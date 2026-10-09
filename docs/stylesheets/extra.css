@@ -10450,27 +10450,34 @@ body.page-333-blitz input[type="text"] {
   background: rgba(var(--dbc-rose-rgb), 0.045);
 }
 .md-typeset .ess :where(p) { margin: 0; }
-.md-typeset .ess-zone { position: relative; padding: 0.85em 1.2em; min-width: 0; }
-.md-typeset .ess-zone:has(> .ess-title) { padding-top: 1.05em; }
-.md-typeset .ess > * + * { border-top: 1px solid rgba(255, 255, 255, 0.08); }
+/* Zones share the card's side inset (1.2em), so the food chips, the Alt table, the boxes and
+   the Tip text all start and end on the same two vertical lines. A boxed zone (.ess-box, and
+   the .ess-pair that holds two side by side) sits at that inset and is drawn in the card's own
+   rose tint, the recipe the food chips and the Alt table already use, so every surface in the
+   card reads as one family. The gap between neighbouring boxes (--ess-gap) is also what is left
+   between the Alt row and the first box and between the last box and the Tip row: the zones
+   around the boxes give up their padding on that side (a .setup-note keeps its own 0.45em, so
+   the visible gap is about the same either way). */
+.md-typeset .ess { --ess-gap: 0.5em; }
+.md-typeset .ess-zone { padding: 0.85em 1.2em; min-width: 0; }
+.md-typeset .ess-zone:has(+ .ess-pair),
+.md-typeset .ess-zone:has(+ .ess-box) { padding-bottom: 0; }
+.md-typeset .ess-pair, .md-typeset .ess-box { margin-inline: 1.2em; }
+.md-typeset .ess-pair > .ess-box { margin-inline: 0; }
+.md-typeset .ess-pair + .ess-box { margin-top: var(--ess-gap); }
+.md-typeset .ess-pair + .ess-zone,
+.md-typeset .ess-box + .ess-zone { padding-top: 0.1em; }
+.md-typeset .ess-box {
+  min-width: 0; padding: 0.7em 0.5em;
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.12); border-radius: var(--dbc-r-lg);
+  background: rgba(var(--dbc-rose-rgb), 0.035);
+}
 .md-typeset .ess [data-c="teal"] { --ess-c: var(--dbc-teal); }
 .md-typeset .ess [data-c="gold"] { --ess-c: var(--dbc-gold); }
 .md-typeset .ess [data-c="orange"] { --ess-c: var(--dbc-orange); }
 .md-typeset .ess [data-c="lav"]  { --ess-c: var(--dbc-lavender); }
 .md-typeset .ess [data-c="green"]{ --ess-c: var(--dbc-green); }
 .md-typeset .ess [data-c="pink"] { --ess-c: var(--dbc-pink); }
-
-/* zone label: plain semibold text in the zone's accent, sitting on the divider
-   line above its zone so it costs no row of its own. The fill is the frame's
-   tint over the page colour, so the line breaks cleanly behind the text. */
-.md-typeset .ess-title {
-  position: absolute; top: 0; left: 0.95em; transform: translateY(-50%);
-  margin: 0; padding: 0 0.4em; max-width: calc(100% - 1.9em);
-  font-size: var(--dbc-fs-table); font-weight: 600; line-height: 1.2; white-space: nowrap;
-  color: var(--ess-c);
-  background: color-mix(in srgb, var(--dbc-rose) 4.5%, var(--md-default-bg-color));
-}
-.md-typeset .ess-title .skill-mention { color: inherit; }
 
 /* food: the site's own .food-option chips, a little shorter, with more room left of the icon so the round end clears it */
 .md-typeset .ess .food-options { gap: 0.4em; flex-wrap: wrap; }
@@ -10512,8 +10519,10 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess-step i { display: block; height: 6px; border-radius: 3px; background: var(--ess-c); opacity: 0.85; }
 .md-typeset .ess-step:first-child i { opacity: 0.5; }
 .md-typeset .ess-step b { display: block; margin-top: 0.45em; font-size: var(--dbc-fs-md); font-weight: 600; color: var(--ess-c); line-height: 1.2; }
-.md-typeset .ess-step span { display: block; margin-top: 0.15em; font-size: var(--dbc-fs-base); line-height: 1.35; color: var(--dbc-muted-text); }
-.md-typeset .ess-step span a { color: var(--dbc-pink); }
+.md-typeset .ess-step > span { display: block; margin-top: 0.15em; font-size: var(--dbc-fs-base); line-height: 1.35; color: var(--dbc-muted-text); }
+.md-typeset .ess-step > span a { color: var(--dbc-pink); }
+.md-typeset .ess-step b .skill-mention,
+.md-typeset .ess-ramp b .skill-mention { color: inherit; }
 .md-typeset .ess-ramp i {
   position: relative; display: block; height: 6px; border-radius: 3px; margin-right: 8px;
   background: linear-gradient(90deg, rgba(var(--dbc-orange-rgb), 0.5), var(--dbc-teal) 55%, var(--dbc-green));
@@ -10523,44 +10532,79 @@ body.page-333-blitz input[type="text"] {
   border-left: 8px solid var(--dbc-green); border-top: 6px solid transparent; border-bottom: 6px solid transparent;
 }
 .md-typeset .ess-ramp b { display: block; margin-top: 0.45em; font-size: var(--dbc-fs-md); font-weight: 600; color: var(--dbc-green); line-height: 1.2; }
-.md-typeset .ess-ramp span { display: block; margin-top: 0.15em; font-size: var(--dbc-fs-base); line-height: 1.35; color: var(--dbc-muted-text); }
+.md-typeset .ess-ramp > span { display: block; margin-top: 0.15em; font-size: var(--dbc-fs-base); line-height: 1.35; color: var(--dbc-muted-text); }
 .md-typeset .ess-flag { display: flex; align-items: baseline; gap: 0.55em; margin-top: 0.8em; font-size: var(--dbc-fs-sm); line-height: 1.4; color: var(--dbc-lilac); }
 .md-typeset .ess-flag-key { flex-shrink: 0; font-weight: 600; color: var(--dbc-orange); }
 .md-typeset .ess-note { margin-top: 0.6em; font-size: var(--dbc-fs-base); line-height: 1.4; color: var(--dbc-muted-text); }
 .md-typeset .ess-note a { color: var(--dbc-pink); }
 
 /* CPM goals */
-.md-typeset .ess-goals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4em; }
+/* The grid is its own query container: a tile needs about 107px to hold the name and the
+   number side by side, and the grid's width (not the card's) is what decides that, because the
+   Specialization box beside it takes a different share of the card at every width. */
+.md-typeset .ess-goals { container: essg / inline-size; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4em; }
 .md-typeset .ess-goal {
-  display: flex; align-items: center; justify-content: space-between; gap: 0.4em;
-  padding: 0.35em 0.65em; min-width: 0;
-  border: 1px solid rgba(var(--dbc-teal-rgb), 0.3); border-radius: var(--dbc-r);
-  background: rgba(var(--dbc-teal-rgb), 0.06);
+  display: flex; align-items: center; justify-content: space-between; gap: 0.3em;
+  padding: 0.35em 0.5em; min-width: 0;
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.2); border-radius: var(--dbc-r);
+  background: rgba(var(--dbc-rose-rgb), 0.06);
 }
 /* A build that is not viable is dashed and unfilled, as on the home page. */
 .md-typeset .ess-goal[data-kind="variant"] { border-style: dashed; background: transparent; }
 .md-typeset .ess-goal[data-kind="variant"] .ess-goal-num { color: var(--dbc-muted-text); }
 .md-typeset .ess-goal-name { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; font-size: var(--dbc-fs-table); font-weight: 600; color: var(--md-default-fg-color); }
 .md-typeset .ess-goal-name small { font-size: var(--dbc-fs-sm); font-weight: 400; color: var(--dbc-muted-text); white-space: nowrap; }
-.md-typeset .ess-goal-num { font-size: 1.2em; font-weight: 600; line-height: 1; color: var(--dbc-teal); }
+.md-typeset .ess-goal-val { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; line-height: 1.2; }
+.md-typeset .ess-goal-val small { font-size: var(--dbc-fs-sm); font-weight: 400; color: var(--dbc-muted-text); }
+.md-typeset .ess-goal-num { font-size: 1.2em; font-weight: 600; line-height: 1.1; color: var(--dbc-teal); }
 
-/* FPS / latency: site bullets, two columns */
-.md-typeset .ess-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.2em 1.6em; }
-.md-typeset .ess-col-head { font-size: var(--dbc-fs-base); font-weight: 600; color: var(--ess-c); margin-bottom: 0.15em; }
-.md-typeset .ess-col ul { margin: 0; }
-.md-typeset .ess-col li { margin: 0.15em 0; font-size: var(--dbc-fs-sm); line-height: 1.45; color: var(--dbc-lilac); }
+/* FPS / latency: one tile per factor, built like a Specialization step (accent bar, bold name,
+   muted effect line) with the fix as a flag-style line under it. */
+.md-typeset .ess-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8em 1.6em; }
+.md-typeset .ess-fx { min-width: 0; }
+/* The bar carries an arrowhead like the Surge Specialization ramp, pointing at the better end:
+   more FPS is better (points right), less latency is better (points left). */
+.md-typeset .ess-fx i {
+  position: relative; display: block; height: 6px; border-radius: 3px;
+  background: linear-gradient(var(--ess-dir, 90deg), color-mix(in srgb, var(--ess-c) 45%, transparent), var(--ess-c));
+}
+.md-typeset .ess-fx i::after {
+  content: ""; position: absolute; top: 50%; transform: translateY(-50%);
+  border-top: 6px solid transparent; border-bottom: 6px solid transparent;
+}
+.md-typeset .ess-fx[data-dir="up"] i { margin-right: 8px; }
+.md-typeset .ess-fx[data-dir="up"] i::after { right: -8px; border-left: 8px solid var(--ess-c); }
+.md-typeset .ess-fx[data-dir="down"] { --ess-dir: 270deg; }
+.md-typeset .ess-fx[data-dir="down"] i { margin-left: 8px; }
+.md-typeset .ess-fx[data-dir="down"] i::after { left: -8px; border-right: 8px solid var(--ess-c); }
+.md-typeset .ess-fx b { display: block; margin-top: 0.45em; font-size: var(--dbc-fs-md); font-weight: 600; line-height: 1.2; color: var(--ess-c); }
+.md-typeset .ess-fx-eff { display: block; margin-top: 0.15em; font-size: var(--dbc-fs-base); line-height: 1.35; color: var(--dbc-muted-text); }
+.md-typeset .ess-fx-fix { display: flex; align-items: baseline; gap: 0.55em; margin-top: 0.5em; font-size: var(--dbc-fs-sm); line-height: 1.4; color: var(--dbc-lilac); }
+.md-typeset .ess-fx-key { flex-shrink: 0; font-weight: 600; color: var(--ess-c); }
 
 /* layout: spec | goals side by side */
-.md-typeset .ess-pair > .ess-zone { padding-bottom: 1.1em; }
-.md-typeset .ess-pair { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); }
-.md-typeset .ess-pair > .ess-zone + .ess-zone { border-left: 1px solid rgba(255, 255, 255, 0.08); }
+.md-typeset .ess-pair { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--ess-gap); }
+/* Wide enough, the CPM box gets exactly what its note needs for two lines (about 380px of text
+   in Poppins) and the Specialization box gets the rest, which is what the longest +CD% flag
+   line (Surge, about 467px of text) needs to stay on one line. A ratio cannot do both at the
+   widest layout, where the two together have only about 900px. */
+@container ess (min-width: 800px) {
+  .md-typeset .ess-pair { grid-template-columns: minmax(0, 1fr) 20.15rem; }
+}
+/* From a 1600px viewport Material raises the root font size to 22px; the note's text grows with
+   it but the box padding does not, so the box needs a little more than the rem ratio above. */
+@container ess (min-width: 1000px) {
+  .md-typeset .ess-pair { grid-template-columns: minmax(0, 1fr) 20.4rem; }
+}
 @container ess (max-width: 640px) {
   .md-typeset .ess-pair { grid-template-columns: minmax(0, 1fr); }
-  .md-typeset .ess-pair > .ess-zone + .ess-zone { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+}
+@container essg (max-width: 330px) {
+  .md-typeset .ess-goal { flex-direction: column; align-items: flex-start; justify-content: center; gap: 0.15em; }
+  .md-typeset .ess-goal-val { flex-direction: row; align-items: baseline; gap: 0.3em; }
+  .md-typeset .ess-goal-num { font-size: 1.1em; }
 }
 @container ess (max-width: 480px) {
-  .md-typeset .ess-goal { flex-direction: column; align-items: flex-start; justify-content: center; gap: 0.15em; }
-  .md-typeset .ess-goal-num { font-size: 1.1em; }
   .md-typeset .ess-flag { flex-direction: column; gap: 0.1em; }
 }
 @container ess (max-width: 560px) {
