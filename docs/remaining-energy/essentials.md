@@ -45,7 +45,7 @@ Atk/Move Speed Feast
 <summary><span class="setup-note-tag">Alt</span>How to avoid mana food, at a DPS loss<span class="setup-note-arrow"></span></summary>
 
 <div class="ess-swaps" markdown>
-<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="gold">Evolution</span><span class="ess-swap-what">Raise <span class="skill-mention" data-ap-id="illicitspell">Illicit Spell</span> instead of <span class="skill-mention" data-ap-id="limitbreakevo">Limit Break</span></span><span class="ess-swap-cond">for unimportant content</span></div>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="orange">Evolution</span><span class="ess-swap-what">Raise <span class="skill-mention" data-ap-id="illicitspell">Illicit Spell</span> instead of <span class="skill-mention" data-ap-id="limitbreakevo">Limit Break</span></span><span class="ess-swap-cond">for unimportant content</span></div>
 <div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="teal">Leap</span><span class="ess-swap-what"><span class="skill-mention" data-ap-id="releasepotential" data-level="3">Release Potential 3</span> / <span class="skill-mention" data-ap-id="instantspell" data-level="3">Instant Spell 3</span> / <span class="skill-mention" data-ap-id="awakeningamplifier" data-level="1">Awakening Amplifier 1</span></span><span class="ess-swap-cond">dps loss on fatal wave builds</span></div>
 <div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="lav">Head Hunt</span><span class="ess-swap-what">Magick Control tripod, <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Legendary Focus</span> <span class="skill-mention" data-glossary-id="rune">rune</span>, Lv 1</span><span class="ess-swap-cond">only for fatal wave builds</span></div>
 <div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="lav">Maelstrom</span><span class="ess-swap-what"><span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Legendary Focus</span> rune</span><span class="ess-swap-cond">lowers orb generation</span></div>
@@ -58,7 +58,7 @@ Atk/Move Speed Feast
 <div class="ess-zone" markdown>
 <div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="specializationstat">Specialization</span></div>
 <div class="ess-ladder" markdown>
-<div class="ess-step" data-c="gold" markdown="span"><i></i><b>Below 1818</b><span>Some downtime</span></div>
+<div class="ess-step" data-c="orange" markdown="span"><i></i><b>Below 1818</b><span>Some downtime</span></div>
 <div class="ess-step" data-c="teal" markdown="span"><i></i><b>1818+</b><span>No downtime on 333</span></div>
 <div class="ess-step" data-c="green" markdown="span"><i></i><b>1830+</b><span>Future-proof</span></div>
 </div>

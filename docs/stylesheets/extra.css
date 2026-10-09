@@ -49,10 +49,9 @@
   --dbc-green-rgb: 139, 201, 151;
   --dbc-violet: #c79ce8;       /* rune-chip "epic" tier, .skill-card border/hover glow. Nudged up from #c77dff so the epic chip text clears 4.5:1 on its hovered skill-card background; --dbc-violet-rgb is deliberately unchanged so tints/borders look the same. */
   --dbc-violet-rgb: 199, 156, 232;
-  --dbc-header-footer-bg: #1f1d24; /* matches the rendered color of a lavender
-    .setup-panel note (rgba(--dbc-purple-rgb, 0.045) over the page bg) - picked
-    to make the header/tabs bar and footer read as the same "surface" as those
-    notes instead of their own separate near-black shade */
+  --dbc-surface: #1f1d24;          /* the card/panel surface: a lavender-tinted wash (rgba(--dbc-purple-rgb, 0.045)) over the page bg, mixed opaque so a card inside
+    a card does not stack washes. Header/tabs bar, footer, plain-table rows, the chip buttons and the calculators' --ap-surface all use it */
+  --dbc-surface-raised: #26252b;   /* one step above --dbc-surface: chip button hover, the calculators' --ap-surface-2 */
 
   /* Colors below are named here like every other reused color on the site,
      rather than repeated as raw hex literals at 2-6 call sites each: one
@@ -67,13 +66,8 @@
     --dbc-teal-card-bg below, a different/lighter teal-family tint) */
   --dbc-teal-card-bg: #1e262b;     /* the 2nd .grid.cards option card and 3rd
     .prearc-cards option card background, pairs with --dbc-teal */
-  --dbc-surface-muted: #1f1d24;    /* plain-table row background + the 1st/2nd
-    gearing-value cards - a muted dark surface with no accent color tie-in */
   --dbc-gem-name-muted: #d8d2de;   /* rank-2 gem item name text + an alt-gem's bolded name */
-  --dbc-chip-surface: #1f1d24;     /* background of the image-lightbox close button, the
-    rotation practice toggle and the calculator build dock trigger, all bordered in --dbc-purple */
-  --dbc-chip-text: #cbb9e8;        /* text color paired with --dbc-chip-surface above */
-  --dbc-chip-surface-hover: #26252b; /* hover background for the --dbc-purple-bordered image-lightbox close button */
+  --dbc-chip-text: #cbb9e8;        /* text color paired with --dbc-surface on the purple-bordered chip buttons */
   --dbc-muted-text: #948fa0;       /* faint gray label text (kept at 4.5:1+ on the dark surfaces) - a "no diff" build-compare
     note, an engraving loadout hint, and an Ark Passive tier's point count */
   --dbc-muted-text-alt: #948ea4;   /* placeholder-style input text, shared by the CPM and bid calculators' "muted" fields */
@@ -119,7 +113,7 @@
    code blocks, footer, tables, etc. that use --md-hue for other purposes. */
 [data-md-color-primary="black"] .md-header,
 [data-md-color-primary="black"] .md-tabs {
-  background-color: var(--dbc-header-footer-bg) !important; /* matches the lavender setup-note surface, see --dbc-header-footer-bg */
+  background-color: var(--dbc-surface) !important; /* matches the lavender setup-note surface, see --dbc-surface */
 }
 
 /* ---------- Selection & scrollbar theming ---------- */
@@ -155,7 +149,7 @@ html {
    is styled to match the site rather than hidden (Material's default
    blue-indigo hue would otherwise show). */
 .md-footer {
-  background-color: var(--dbc-header-footer-bg); /* matches the lavender setup-note surface, see --dbc-header-footer-bg */
+  background-color: var(--dbc-surface); /* matches the lavender setup-note surface, see --dbc-surface */
 }
 .md-footer-meta {
   background-color: var(--md-default-bg-color); /* page bg, so the generator-credit row (empty, generator: false) doesn't add a visible second stripe */
@@ -202,7 +196,7 @@ html {
    matches this selector's specificity exactly, and empirically still wins
    without it despite extra.css loading last. */
 .md-nav__title[for] {
-  background-color: var(--dbc-header-footer-bg) !important;
+  background-color: var(--dbc-surface) !important;
 }
 
 /* ---------- Search modal: same two Material defaults, same fix ---------- */
@@ -210,7 +204,7 @@ html {
    uses the same generic light "lifted surface" overlay as the nav titles
    above - matched to the same chrome surface for the same reason. */
 .md-search-result__meta {
-  background-color: var(--dbc-header-footer-bg);
+  background-color: var(--dbc-surface);
 }
 /* The "N more on this page" expand link inside a result uses the same
    --md-typeset-a-color blue fallback as the nav links above (its hover/
@@ -495,7 +489,7 @@ h3 { color: var(--dbc-teal); }
      [header] - the same tint .skills-table uses - produce
      against the page's #17161c background, just hardcoded so they no
      longer depend on what's underneath. */
-  background-color: var(--dbc-surface-muted);
+  background-color: var(--dbc-surface);
 }
 .md-typeset table:not([class]) th {
   background-color: #29272f;
@@ -2026,7 +2020,7 @@ h3 { color: var(--dbc-teal); }
   /* Opaque (tint over the card surface) because the floating variant
      overlaps the rotation box's own border; the header variant below
      swaps this for a plain translucent tint. */
-  background-color: var(--dbc-chip-surface);
+  background-color: var(--dbc-surface);
   background-image: linear-gradient(rgba(var(--dbc-purple-rgb), 0.16), rgba(var(--dbc-purple-rgb), 0.16));
   color: var(--dbc-chip-text);
   border-radius: 999px;
@@ -2565,7 +2559,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .build-compare-row {
   display: grid;
-  grid-template-columns: 1.2rem 10rem minmax(0, 1fr) 10rem;
+  grid-template-columns: 1.2rem 9.6rem minmax(0, 1fr) 10rem;
   grid-template-areas: "slot name desc meters";
   align-items: center;
   gap: 0.3rem 0.8rem;
@@ -2634,8 +2628,12 @@ h3 { color: var(--dbc-teal); }
   font-size: var(--dbc-fs-base);
   font-weight: 400;
 }
+/* The description sits as far from the meters as from the name block: its
+   right padding equals the slack between the longest name line and the end of
+   the name column (plus the column gap). */
 .md-typeset .build-compare-row .home-row-desc {
   grid-area: desc;
+  padding-right: 0.55rem;
 }
 .md-typeset .build-compare-meters {
   grid-area: meters;
@@ -2644,7 +2642,7 @@ h3 { color: var(--dbc-teal); }
 }
 /* Narrow widget: the row stacks (name, description, then the two meters side by
    side), so nothing scrolls sideways. 680px is the width at which the
-   10rem name column, the 10rem meters and a readable description stop
+   9.6rem name column, the 10rem meters and a readable description stop
    fitting in one line. */
 @container build-compare (max-width: 680px) {
   .md-typeset .build-compare-row {
@@ -2855,7 +2853,7 @@ h3 { color: var(--dbc-teal); }
   padding: 0.9rem;
   border: 1px solid rgba(var(--home-rgb), 0.4);
   border-radius: var(--dbc-r-lg);
-  background: linear-gradient(180deg, var(--home-lane-bg), var(--dbc-surface-muted) 45%);
+  background: linear-gradient(180deg, var(--home-lane-bg), var(--dbc-surface) 45%);
 }
 .md-typeset .home-lane[data-accent="pink"] {
   --home-rgb: var(--dbc-rose-rgb);
@@ -4027,7 +4025,7 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---------- CPM and Bid calculators ---------- */
-/* Both widgets use the Ark Passive calculator's card language: a flat #1f1d24 card with a
+/* Both widgets use the Ark Passive calculator's card language: a flat --dbc-surface card with a
    hairline border and a title bar, field rows with the label on the left and the control on the
    right, 32px centred inputs, result tiles with coloured labels. The --ap-* names below match the
    ones .ap-calc defines (a shared rule such as .ap-build-chip reads --ap-fs-sm), declared here
@@ -4042,7 +4040,7 @@ h3 { color: var(--dbc-teal); }
   --ap-radius: var(--dbc-r);
   --ap-radius-lg: var(--dbc-r-lg);
   --ap-pad-x: 0.85rem;
-  --ap-surface: #1f1d24;
+  --ap-surface: var(--dbc-surface);
   --ap-line: rgba(255, 255, 255, 0.09);
   --ap-row-line: rgba(255, 255, 255, 0.045);
   --ap-line-strong: rgba(var(--dbc-purple-rgb), 0.35);
@@ -4731,8 +4729,8 @@ h3 { color: var(--dbc-teal); }
      white wash already mixed in. A translucent wash would stack when a card
      sits inside another card (the comparison sections), and the inner card
      would come out lighter than the same card in the main grid. */
-  --ap-surface: #1f1d24;
-  --ap-surface-2: #26252b;
+  --ap-surface: var(--dbc-surface);
+  --ap-surface-2: var(--dbc-surface-raised);
   /* Table header bars are flat like the card titles: the card body colour,
      separated from the rows by the header's bottom rule. */
   --ap-surface-head: var(--ap-surface);
@@ -6401,7 +6399,7 @@ h3 { color: var(--dbc-teal); }
   gap: 0.5rem 1rem;
   margin: 0 0 var(--ap-gap);
   padding: 0.5rem 0.75rem;
-  background-color: var(--dbc-header-footer-bg);
+  background-color: var(--dbc-surface);
   border: 1px solid var(--ap-line);
   border-radius: var(--ap-radius-lg);
   transition: box-shadow 0.2s ease, border-radius 0.2s ease;
@@ -6476,7 +6474,7 @@ h3 { color: var(--dbc-teal); }
     position: absolute;
     bottom: 2.7em;
     right: 0.9em;
-    background-color: var(--dbc-chip-surface);
+    background-color: var(--dbc-surface);
     border: 1px solid rgba(var(--dbc-purple-rgb), 0.35);
     border-radius: var(--dbc-r-lg);
     padding: 0.6em 0.7em;
@@ -6496,7 +6494,7 @@ h3 { color: var(--dbc-teal); }
    and would win, leaving the pill visible on desktop. */
 .md-typeset .ap-build-dock-trigger {
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
-  background-color: var(--dbc-chip-surface);
+  background-color: var(--dbc-surface);
   color: var(--dbc-lavender);
   border-radius: 999px;
   font-family: inherit;
@@ -10411,6 +10409,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess > * + * { border-top: 1px solid rgba(255, 255, 255, 0.08); }
 .md-typeset .ess [data-c="teal"] { --ess-c: var(--dbc-teal); }
 .md-typeset .ess [data-c="gold"] { --ess-c: var(--dbc-gold); }
+.md-typeset .ess [data-c="orange"] { --ess-c: var(--dbc-orange); }
 .md-typeset .ess [data-c="lav"]  { --ess-c: var(--dbc-lavender); }
 .md-typeset .ess [data-c="green"]{ --ess-c: var(--dbc-green); }
 .md-typeset .ess [data-c="pink"] { --ess-c: var(--dbc-pink); }
@@ -10421,7 +10420,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess-title {
   position: absolute; top: 0; left: 0.95em; transform: translateY(-50%);
   margin: 0; padding: 0 0.4em; max-width: calc(100% - 1.9em);
-  font-size: 0.86em; font-weight: 600; line-height: 1.2; white-space: nowrap;
+  font-size: var(--dbc-fs-table); font-weight: 600; line-height: 1.2; white-space: nowrap;
   color: var(--ess-c);
   background: color-mix(in srgb, var(--dbc-rose) 4.5%, var(--md-default-bg-color));
 }
@@ -10433,13 +10432,14 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess .food-option p { font-size: 0.8em; }
 .md-typeset .ess .food-option .food-option-icon { display: block; height: 20px; width: 20px; }
 .md-typeset .ess .food-option { background-color: rgba(var(--dbc-rose-rgb), 0.06); border-color: rgba(var(--dbc-rose-rgb), 0.2); }
-.md-typeset .ess .food-required-lead { margin-bottom: 0.5em; font-size: 0.94em; line-height: 1.4; color: var(--dbc-lilac); }
+.md-typeset .ess .food-required-lead { margin-bottom: 0.5em; font-size: var(--dbc-fs-md); line-height: 1.4; color: var(--dbc-lilac); }
 .md-typeset .ess .food-required-lead strong { font-weight: 600; }
 .md-typeset .ess .setup-notes { border-top: 0; margin: 0.6em 0 0; padding: 0; }
 .md-typeset .ess .setup-note { padding: 0.45em 0; }
 .md-typeset .ess .setup-note > summary + * { margin-top: 0.55em; }
 .md-typeset .ess .setup-note[data-kind="tip"] > summary + * { margin-top: 0.4em; }
 .md-typeset .ess-zone:last-child > .setup-notes { margin: 0; }
+.md-typeset .ess .setup-note[data-kind="tip"] li { font-size: var(--dbc-fs-md); }
 
 /* alt swap list */
 .md-typeset .ess-swaps {
@@ -10449,7 +10449,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess-swap {
   display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center;
   gap: 0 0.8em; padding: 0.42em 0.8em;
-  font-size: 0.86em; line-height: 1.4; color: var(--dbc-lilac);
+  font-size: var(--dbc-fs-base); line-height: 1.4; color: var(--dbc-lilac);
 }
 .md-typeset .ess-swap + .ess-swap { border-top: 1px solid rgba(255, 255, 255, 0.06); }
 .md-typeset .ess-swap-where {
@@ -10465,21 +10465,21 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess-ladder { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4em; }
 .md-typeset .ess-step i { display: block; height: 6px; border-radius: 3px; background: var(--ess-c); opacity: 0.85; }
 .md-typeset .ess-step:first-child i { opacity: 0.5; }
-.md-typeset .ess-step b { display: block; margin-top: 0.45em; font-size: 0.92em; font-weight: 600; color: var(--ess-c); line-height: 1.2; }
+.md-typeset .ess-step b { display: block; margin-top: 0.45em; font-size: var(--dbc-fs-md); font-weight: 600; color: var(--ess-c); line-height: 1.2; }
 .md-typeset .ess-step span { display: block; margin-top: 0.15em; font-size: var(--dbc-fs-base); line-height: 1.35; color: var(--dbc-muted-text); }
 .md-typeset .ess-step span a { color: var(--dbc-pink); }
 .md-typeset .ess-ramp i {
   position: relative; display: block; height: 6px; border-radius: 3px; margin-right: 8px;
-  background: linear-gradient(90deg, rgba(var(--dbc-gold-rgb), 0.5), var(--dbc-teal) 55%, var(--dbc-green));
+  background: linear-gradient(90deg, rgba(var(--dbc-orange-rgb), 0.5), var(--dbc-teal) 55%, var(--dbc-green));
 }
 .md-typeset .ess-ramp i::after {
   content: ""; position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
   border-left: 8px solid var(--dbc-green); border-top: 6px solid transparent; border-bottom: 6px solid transparent;
 }
-.md-typeset .ess-ramp b { display: block; margin-top: 0.45em; font-size: 0.92em; font-weight: 600; color: var(--dbc-green); line-height: 1.2; }
+.md-typeset .ess-ramp b { display: block; margin-top: 0.45em; font-size: var(--dbc-fs-md); font-weight: 600; color: var(--dbc-green); line-height: 1.2; }
 .md-typeset .ess-ramp span { display: block; margin-top: 0.15em; font-size: var(--dbc-fs-base); line-height: 1.35; color: var(--dbc-muted-text); }
-.md-typeset .ess-flag { display: flex; align-items: baseline; gap: 0.55em; margin-top: 0.8em; font-size: 0.76em; line-height: 1.4; color: var(--dbc-lilac); }
-.md-typeset .ess-flag-key { flex-shrink: 0; font-weight: 600; color: var(--dbc-gold); }
+.md-typeset .ess-flag { display: flex; align-items: baseline; gap: 0.55em; margin-top: 0.8em; font-size: var(--dbc-fs-sm); line-height: 1.4; color: var(--dbc-lilac); }
+.md-typeset .ess-flag-key { flex-shrink: 0; font-weight: 600; color: var(--dbc-orange); }
 .md-typeset .ess-note { margin-top: 0.6em; font-size: var(--dbc-fs-base); line-height: 1.4; color: var(--dbc-muted-text); }
 .md-typeset .ess-note a { color: var(--dbc-pink); }
 
@@ -10494,15 +10494,15 @@ body.page-333-blitz input[type="text"] {
 /* A build that is not viable is dashed and unfilled, as on the home page. */
 .md-typeset .ess-goal[data-kind="variant"] { border-style: dashed; background: transparent; }
 .md-typeset .ess-goal[data-kind="variant"] .ess-goal-num { color: var(--dbc-muted-text); }
-.md-typeset .ess-goal-name { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; font-size: 0.86em; font-weight: 600; color: var(--md-default-fg-color); }
+.md-typeset .ess-goal-name { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; font-size: var(--dbc-fs-table); font-weight: 600; color: var(--md-default-fg-color); }
 .md-typeset .ess-goal-name small { font-size: var(--dbc-fs-sm); font-weight: 400; color: var(--dbc-muted-text); white-space: nowrap; }
 .md-typeset .ess-goal-num { font-size: 1.2em; font-weight: 600; line-height: 1; color: var(--dbc-teal); }
 
 /* FPS / latency: site bullets, two columns */
 .md-typeset .ess-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.2em 1.6em; }
-.md-typeset .ess-col-head { font-size: 0.82em; font-weight: 600; color: var(--ess-c); margin-bottom: 0.15em; }
+.md-typeset .ess-col-head { font-size: var(--dbc-fs-base); font-weight: 600; color: var(--ess-c); margin-bottom: 0.15em; }
 .md-typeset .ess-col ul { margin: 0; }
-.md-typeset .ess-col li { margin: 0.15em 0; font-size: 0.76em; line-height: 1.45; color: var(--dbc-lilac); }
+.md-typeset .ess-col li { margin: 0.15em 0; font-size: var(--dbc-fs-sm); line-height: 1.45; color: var(--dbc-lilac); }
 
 /* layout: spec | goals side by side */
 .md-typeset .ess-pair > .ess-zone { padding-bottom: 1.1em; }
@@ -11113,7 +11113,7 @@ html.image-lightbox-open {
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
-  background-color: var(--dbc-chip-surface);
+  background-color: var(--dbc-surface);
   color: var(--dbc-chip-text);
   border-radius: 999px;
   font-size: 1rem;
@@ -11124,7 +11124,7 @@ html.image-lightbox-open {
 }
 .image-lightbox-close:hover {
   border-color: rgba(var(--dbc-purple-rgb), 0.75);
-  background-color: var(--dbc-chip-surface-hover);
+  background-color: var(--dbc-surface-raised);
 }
 
 /* ============================================================
