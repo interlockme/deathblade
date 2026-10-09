@@ -10390,10 +10390,10 @@ body.page-333-blitz input[type="text"] {
 
 /* food: the site's own .food-option chips, a little shorter, with more room left of the icon so the round end clears it */
 .md-typeset .ess .food-options { gap: 0.4em; flex-wrap: wrap; }
-.md-typeset .ess .food-option { padding: 0.22em 0.8em 0.22em 0.4em; gap: 0.45em; border-radius: var(--dbc-r); }
+.md-typeset .ess .food-option { padding: 0.33em 0.8em 0.33em 0.4em; gap: 0.45em; border-radius: var(--dbc-r); }
 .md-typeset .ess .food-option p { font-size: 0.8em; }
 .md-typeset .ess .food-option .food-option-icon { display: block; height: 20px; width: 20px; }
-.md-typeset .ess .food-option { background-color: rgba(var(--dbc-rose-rgb), 0.06); border-color: rgba(var(--dbc-rose-rgb), 0.2); }
+.md-typeset .ess .food-option { background-color: rgba(var(--dbc-rose-rgb), 0.03); border-color: rgba(var(--dbc-rose-rgb), 0.08); }
 .md-typeset .ess .food-required-lead { margin-bottom: 0.5em; font-size: var(--dbc-fs-md); line-height: 1.4; color: var(--dbc-lilac); }
 .md-typeset .ess .food-required-lead strong { font-weight: 600; }
 .md-typeset .ess .setup-notes { border-top: 0; margin: 0.6em 0 0; padding: 0; }
@@ -10406,7 +10406,7 @@ body.page-333-blitz input[type="text"] {
 /* alt swap list */
 .md-typeset .ess-swaps {
   display: grid; grid-template-columns: max-content minmax(0, 1fr) auto;
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.12); border-radius: var(--dbc-r); background: rgba(var(--dbc-rose-rgb), 0.035);
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.08); border-radius: var(--dbc-r); background: rgba(var(--dbc-rose-rgb), 0.03);
 }
 .md-typeset .ess-swap {
   display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center;
