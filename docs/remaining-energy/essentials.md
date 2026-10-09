@@ -3,7 +3,7 @@
 <div class="ess" markdown>
 <div class="ess-zone" markdown>
 
-<p class="food-required-lead">Mana food and Atk/Move Speed feast are <strong>required</strong> for <span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span> Remaining Energy.</p>
+<p class="food-required-lead">Mana food and Atk/Move Speed feast are <strong>required</strong> to play <span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span> Remaining Energy as intended.</p>
 
 <div class="food-options" markdown>
 
@@ -42,13 +42,13 @@ Atk/Move Speed Feast
 
 <div class="setup-notes" markdown>
 <details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alt</span>Skip mana food by lowering mana use, at a DPS loss<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Alt</span>How to avoid mana food, at a DPS loss<span class="setup-note-arrow"></span></summary>
 
 <div class="ess-swaps" markdown>
-<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="gold">Evolution</span><span class="ess-swap-what">Raise <span class="skill-mention" data-ap-id="illicitspell">Illicit Spell</span> instead of <span class="skill-mention" data-ap-id="limitbreakevo">Limit Break</span></span><span class="ess-swap-cond">Unimportant content only</span></div>
-<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="teal">Leap</span><span class="ess-swap-what"><span class="skill-mention" data-ap-id="releasepotential" data-level="3">Release Potential 3</span> / <span class="skill-mention" data-ap-id="instantspell" data-level="3">Instant Spell 3</span> / <span class="skill-mention" data-ap-id="awakeningamplifier" data-level="1">Awakening Amplifier 1</span> ★</span></div>
-<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="lav">Head Hunt</span><span class="ess-swap-what">Magick Control tripod, <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> <span class="skill-mention" data-glossary-id="rune">rune</span>, or set to Lv 1</span><span class="ess-swap-cond">Fatal Wave only</span></div>
-<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="lav">Maelstrom</span><span class="ess-swap-what"><span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Legendary Focus</span> rune</span><span class="ess-swap-cond">Excess orbs only</span></div>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="gold">Evolution</span><span class="ess-swap-what">Raise <span class="skill-mention" data-ap-id="illicitspell">Illicit Spell</span> instead of <span class="skill-mention" data-ap-id="limitbreakevo">Limit Break</span></span><span class="ess-swap-cond">for unimportant content</span></div>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="teal">Leap</span><span class="ess-swap-what"><span class="skill-mention" data-ap-id="releasepotential" data-level="3">Release Potential 3</span> / <span class="skill-mention" data-ap-id="instantspell" data-level="3">Instant Spell 3</span> / <span class="skill-mention" data-ap-id="awakeningamplifier" data-level="1">Awakening Amplifier 1</span></span><span class="ess-swap-cond">dps loss on fatal wave builds</span></div>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="lav">Head Hunt</span><span class="ess-swap-what">Magick Control tripod, <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Legendary Focus</span> <span class="skill-mention" data-glossary-id="rune">rune</span>, Lv 1</span><span class="ess-swap-cond">only for fatal wave builds</span></div>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="lav">Maelstrom</span><span class="ess-swap-what"><span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Legendary Focus</span> rune</span><span class="ess-swap-cond">lowers orb generation</span></div>
 </div>
 
 </details>
@@ -59,10 +59,10 @@ Atk/Move Speed Feast
 <div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="specializationstat">Specialization</span></div>
 <div class="ess-ladder" markdown>
 <div class="ess-step" data-c="gold" markdown="span"><i></i><b>Below 1818</b><span>Some downtime</span></div>
-<div class="ess-step" data-c="teal" markdown="span"><i></i><b>1818+</b><span>No downtime on [333 (Ceiling)](333-ceiling.md)</span></div>
-<div class="ess-step" data-c="green" markdown="span"><i></i><b>1830+</b><span>Future-proof, optional</span></div>
+<div class="ess-step" data-c="teal" markdown="span"><i></i><b>1818+</b><span>No downtime on 333</span></div>
+<div class="ess-step" data-c="green" markdown="span"><i></i><b>1830+</b><span>Future-proof</span></div>
 </div>
-<div class="ess-flag" markdown="span"><span class="ess-flag-key">+CD% bracelet</span><span>Raises CD leap/gem needs. Fatal Wave builds need <span class="skill-mention" data-ap-id="releasepotential" data-level="4">RP 4</span>.</span></div>
+<div class="ess-flag" markdown="span"><span class="ess-flag-key">+CD% bracelet</span><span>Forces Fatal Wave builds to use <span class="skill-mention" data-ap-id="releasepotential" data-level="4">Release Potential 4</span>.</span></div>
 </div>
 <div class="ess-zone" markdown>
 <div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="trixion">Trixion</span> <span class="skill-mention" data-glossary-id="cpm">CPM</span> goal</div>

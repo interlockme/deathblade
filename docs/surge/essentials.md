@@ -3,7 +3,7 @@
 <div class="ess" markdown>
 <div class="ess-zone" markdown>
 
-<p class="food-required-lead">Atk/Move Speed food and feast are <strong>recommended</strong> for Surge. Food is sold at Peyto Island.</p>
+<p class="food-required-lead">Atk/Move Speed food and feast are <strong>recommended</strong>. Food is sold at Peyto.</p>
 
 <div class="food-options" markdown>
 
@@ -36,8 +36,8 @@ Atk/Move Speed Feast
 <summary><span class="setup-note-tag">Alt</span>Mana Food + Maelstrom Bleed (111/333 ONLY)<span class="setup-note-arrow"></span></summary>
 
 <div class="ess-swaps" markdown>
-<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="pink">Bleed</span><span class="ess-swap-what">Use ![](../assets/shared/icon-striploin.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-steak.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-azena.png){: .food-option-icon } <span class="food-option-connector food-option-connector-plus">+</span> ![](../assets/shared/icon-feast.png){: .food-option-icon } and equip <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> rune on <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span></span><span class="ess-swap-cond">Higher ceiling, lower floor</span></div>
-<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="lav">Focus</span><span class="ess-swap-what">Keep <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> if you or your support (spec bards) have shaky uptime, or for Trixion-like content</span></div>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="pink">Bleed</span><span class="ess-swap-what">Use ![](../assets/shared/icon-striploin.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-steak.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-azena.png){: .food-option-icon } <span class="food-option-connector food-option-connector-plus">+</span> ![](../assets/shared/icon-feast.png){: .food-option-icon } and equip <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> rune on <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span></span><span class="ess-swap-cond">higher ceiling, lower floor</span></div>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="lav">Focus</span><span class="ess-swap-what">Keep <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> if you or your support have shaky uptime, or for Trixion-like content</span><span class="ess-swap-cond">spec bards...</span></div>
 </div>
 
 </details>
@@ -47,7 +47,7 @@ Atk/Move Speed Feast
 <div class="ess-zone" markdown>
 <div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="specializationstat">Specialization</span></div>
 <div class="ess-ramp" markdown="span"><i></i><b>More is always better</b><span>Both cooldown reduction and damage scale highly with it.</span></div>
-<div class="ess-flag" markdown="span"><span class="ess-flag-key">+CD% bracelet</span><span>Raises already-high CD gem needs. Use <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">OT1</span> or Lv 10 gems to fit the CD bracelet line.</span></div>
+<div class="ess-flag" markdown="span"><span class="ess-flag-key">+CD% bracelet</span><span>Raises already-high CD gem needs. Use <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">OT 1</span> or Lv 10 gems.</span></div>
 </div>
 <div class="ess-zone" markdown>
 <div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="trixion">Trixion</span> <span class="skill-mention" data-glossary-id="cpm">CPM</span> goal</div>
