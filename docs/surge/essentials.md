@@ -1,9 +1,9 @@
 # Essentials
 
-<div class="setup-panel" data-accent="pink" markdown>
-<div class="setup-notes" markdown>
+<div class="ess" markdown>
+<div class="ess-zone" markdown>
 
-<p class="food-required-lead">Atk/Move Speed food and feast are <strong>recommended</strong> to play Surge optimally. Food is sold at Peyto Island.</p>
+<p class="food-required-lead">Atk/Move Speed food and feast are <strong>recommended</strong> for Surge. Food is sold at Peyto Island.</p>
 
 <div class="food-options" markdown>
 
@@ -31,40 +31,47 @@ Atk/Move Speed Feast
 
 </div>
 
+<div class="setup-notes" markdown>
 <details class="setup-note" data-kind="example" open markdown>
 <summary><span class="setup-note-tag">Alt</span>Mana Food + Maelstrom Bleed (111/333 ONLY)<span class="setup-note-arrow"></span></summary>
 
-- Otherwise, use ![](../assets/shared/icon-striploin.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-steak.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-azena.png){: .food-option-icon } <span class="food-option-connector food-option-connector-plus">+</span> ![](../assets/shared/icon-feast.png){: .food-option-icon } and equip <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> rune on <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span>. Higher ceiling, lower floor.
-- Keep the <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> rune if you don't trust your or your support's uptime (spec bards), or for Trixion-like content.
+<div class="ess-swaps" markdown>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="pink">Bleed</span><span class="ess-swap-what">Use ![](../assets/shared/icon-striploin.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-steak.png){: .food-option-icon } <span class="food-option-connector">or</span> ![](../assets/shared/icon-azena.png){: .food-option-icon } <span class="food-option-connector food-option-connector-plus">+</span> ![](../assets/shared/icon-feast.png){: .food-option-icon } and equip <span class="skill-mention" data-rune-name="Bleed" data-rune-tier="legendary">Legendary Bleed</span> rune on <span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span></span><span class="ess-swap-cond">Higher ceiling, lower floor</span></div>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="lav">Focus</span><span class="ess-swap-what">Keep <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> if you or your support (spec bards) have shaky uptime, or for Trixion-like content</span></div>
+</div>
 
 </details>
-
+</div>
+</div>
+<div class="ess-pair" markdown>
+<div class="ess-zone" markdown>
+<div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="specializationstat">Specialization</span></div>
+<div class="ess-ramp" markdown="span"><i></i><b>More is always better</b><span>Both cooldown reduction and damage scale highly with it.</span></div>
+<div class="ess-flag" markdown="span"><span class="ess-flag-key">+CD% bracelet</span><span>Raises already-high CD gem needs. Use <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">OT1</span> or Lv 10 gems to fit the CD bracelet line.</span></div>
+</div>
+<div class="ess-zone" markdown>
+<div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="trixion">Trixion</span> <span class="skill-mention" data-glossary-id="cpm">CPM</span> goal</div>
+<div class="ess-goals" markdown>
+<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>🦁 111</span><small>Classic</small></span><span class="ess-goal-num">11</span></div>
+<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>🐆 222</span><small>Speedy</small></span><span class="ess-goal-num">10</span></div>
+<div class="ess-goal" data-kind="variant" markdown="span"><span class="ess-goal-name"><span>🐯 333</span><small>Blitz</small></span><span class="ess-goal-num">9?</span></div>
+</div>
+<div class="ess-note" markdown="span">Check your Surge CPM against these in Trixion with the [DPS Meter](https://github.com/snoww/loa-logs) and maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> / <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.</div>
+</div>
+</div>
+<div class="ess-zone" markdown>
+<div class="setup-notes" markdown>
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Quick Tips<span class="setup-note-arrow"></span></summary>
 
 - All Deathblade builds run a pet with the <span class="skill-mention" data-glossary-id="specializationstat">Specialization</span> stat bonus.
 - Optimize <span class="skill-mention" data-glossary-id="arkpassive">Ark Passive</span> nodes or compare <span class="skill-mention" data-glossary-id="bracelet">bracelets</span>/equipment [here!](../resources.md#ark-passive-calculator)
-- Always press the next skill during your current skill's animation (skill queuing).
-- If unsure, select <span class="skill-mention" data-skill-id="grudge">Grudge</span> and <span class="skill-mention" data-skill-id="ambushmaster">Ambush Master</span> as your <span class="skill-mention" data-glossary-id="abilitystone">Ability Stone</span> engravings.
-- <span class="skill-mention" data-glossary-id="trixion">Trixion</span> practice requires equipping maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> and <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.
+- Press the next skill during the current animation (skill queuing).
+- If unsure, pick <span class="skill-mention" data-skill-id="grudge">Grudge</span> and <span class="skill-mention" data-skill-id="ambushmaster">Ambush Master</span> for your <span class="skill-mention" data-glossary-id="abilitystone">Ability Stone</span>.
 - <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training 1</span> may help smooth things out at lower gem levels.
 
 </details>
-
-<details class="setup-note" data-kind="danger" markdown>
-<summary><span class="setup-note-tag">Warn</span>09/16/26 Balance Patch<span class="setup-note-arrow"></span></summary>
-
-- Death Trance no longer auto-deactivates mid-stack via a side node.
-- Stack cap went from 60 to 80, and extra stacks now roll over.
-- Breaking Moon became a Normal skill and gives 60 stacks on hit.
-- Complete rework of 222 cores and playstyle. It's incredible now.
-- Blitz Rush gained a 27% cast speed <span class="skill-mention" data-glossary-id="tripod">tripod</span> and 20% more attack range.
-- Turning Slash and Surprise Attack's after-effects now also apply <span class="skill-mention" data-glossary-id="synergy">Synergy</span>.
-- Overall damage went up, and Surge is genuinely competitive with RE.
-- Surge's post-cast delay was removed, so animation cancelling is not needed.
-
-</details>
-
+</div>
 </div>
 </div>
 

@@ -65,6 +65,7 @@ MD = sorted(DOCS.glob("**/*.md"))
 # Display text that intentionally differs from the DATA file's full name.
 # Key is (id, rendered text); add to this rather than widening the check.
 ALLOWED_SHORT_FORMS = {
+    ("optimizedtraining", "OT1"),
     ("maxmp", "Max MP"),
     ("raidcaptain", "RC"),
     ("massincrease", "MI"),

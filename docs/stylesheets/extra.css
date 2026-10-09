@@ -469,14 +469,14 @@ h3 { color: var(--dbc-teal); }
 
 /* ---------- Tables ---------- */
 /* Every other boxed component on the site (.build-card,
-   .skills-table, .food-alt-table) uses the same lavender-tinted card
+   .skills-table) uses the same lavender-tinted card
    language - a lavender border, a faint lavender-tinted body, and an
    uppercase tinted header row. This generic rule is what any bare
    markdown table gets with zero markup (no wrapper class, no `{: .foo }`
    needed) - it's deliberately the DEFAULT, not a fallback, so a new
    table just typed as plain markdown (like Useful Links below) already
    matches the site instead of reading as the one unstyled leftover.
-   .skills-table/.food-alt-table still carry their own
+   .skills-table still carry their own
    more specific rules on top of this for the things that actually vary
    per-table (zebra striping, min-width, icon sizing) - those stay.
    This rule just sets the shared card language, so wrapper-less tables
@@ -492,7 +492,7 @@ h3 { color: var(--dbc-teal); }
      while the th header above it stayed a different, unrelated tint - an
      inconsistent half-tinted look. These are the same colors
      rgba(var(--dbc-purple-rgb), 0.045) [body] and rgba(var(--dbc-purple-rgb), 0.12)
-     [header] - the same tint .skills-table/.food-alt-table use - produce
+     [header] - the same tint .skills-table uses - produce
      against the page's #17161c background, just hardcoded so they no
      longer depend on what's underneath. */
   background-color: var(--dbc-surface-muted);
@@ -614,29 +614,6 @@ h3 { color: var(--dbc-teal); }
   object-fit: contain;
   vertical-align: middle;
   border-radius: var(--dbc-r);
-}
-
-/* ---------- Small reference tables inside admonitions/setup-notes ---------- */
-/* Same card polish as .skills-table (border/tint + tinted uppercase header)
-   but deliberately WITHOUT its tr:nth-child(even) zebra striping - that rule
-   earns its keep on the 14-row skill legend table where tracking a row
-   across four columns needs the extra help; a 4-row two-column table like
-   the "skip mana food" alt-setup table doesn't, and striping it would just
-   add visual noise for no readability gain. Wrap the markdown table in
-   <div class="food-alt-table" markdown>...</div>. */
-.md-typeset .food-alt-table table {
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  border-radius: var(--dbc-r-lg);
-  overflow: hidden;
-  background-color: rgba(var(--dbc-purple-rgb), 0.045);
-}
-.md-typeset .food-alt-table table th {
-  background-color: rgba(var(--dbc-purple-rgb), 0.12);
-  color: var(--dbc-lavender);
-  font-size: var(--dbc-fs-base);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
 /* ---------- Inline skill icons outside tables/rotation-lines ---------- */
@@ -10418,6 +10395,132 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .setup-panel[data-accent="neutral"] {
   border: 1px solid rgba(255, 255, 255, 0.14);
   background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* ===== Essentials setup card (first card on both Essentials pages) ===== */
+.md-typeset .ess {
+  container: ess / inline-size;
+  margin: 0.9em 0 1.2em;
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.3);
+  border-radius: var(--dbc-r-lg);
+  background: rgba(var(--dbc-rose-rgb), 0.045);
+}
+.md-typeset .ess :where(p) { margin: 0; }
+.md-typeset .ess-zone { position: relative; padding: 0.85em 1.2em; min-width: 0; }
+.md-typeset .ess-zone:has(> .ess-title) { padding-top: 1.05em; }
+.md-typeset .ess > * + * { border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.md-typeset .ess [data-c="teal"] { --ess-c: var(--dbc-teal); }
+.md-typeset .ess [data-c="gold"] { --ess-c: var(--dbc-gold); }
+.md-typeset .ess [data-c="lav"]  { --ess-c: var(--dbc-lavender); }
+.md-typeset .ess [data-c="green"]{ --ess-c: var(--dbc-green); }
+.md-typeset .ess [data-c="pink"] { --ess-c: var(--dbc-pink); }
+
+/* zone label: plain semibold text in the zone's accent, sitting on the divider
+   line above its zone so it costs no row of its own. The fill is the frame's
+   tint over the page colour, so the line breaks cleanly behind the text. */
+.md-typeset .ess-title {
+  position: absolute; top: 0; left: 0.95em; transform: translateY(-50%);
+  margin: 0; padding: 0 0.4em; max-width: calc(100% - 1.9em);
+  font-size: 0.86em; font-weight: 600; line-height: 1.2; white-space: nowrap;
+  color: var(--ess-c);
+  background: color-mix(in srgb, var(--dbc-rose) 4.5%, var(--md-default-bg-color));
+}
+.md-typeset .ess-title .skill-mention { color: inherit; }
+
+/* food: the site's own .food-option chips, a little shorter, with more room left of the icon so the round end clears it */
+.md-typeset .ess .food-options { gap: 0.4em; flex-wrap: wrap; }
+.md-typeset .ess .food-option { padding: 0.22em 0.8em 0.22em 0.4em; gap: 0.45em; border-radius: var(--dbc-r); }
+.md-typeset .ess .food-option p { font-size: 0.8em; }
+.md-typeset .ess .food-option .food-option-icon { display: block; height: 20px; width: 20px; }
+.md-typeset .ess .food-option { background-color: rgba(var(--dbc-rose-rgb), 0.06); border-color: rgba(var(--dbc-rose-rgb), 0.2); }
+.md-typeset .ess .food-required-lead { margin-bottom: 0.5em; font-size: 0.94em; line-height: 1.4; color: var(--dbc-lilac); }
+.md-typeset .ess .food-required-lead strong { font-weight: 600; }
+.md-typeset .ess .setup-notes { border-top: 0; margin: 0.6em 0 0; padding: 0; }
+.md-typeset .ess .setup-note { padding: 0.45em 0; }
+.md-typeset .ess .setup-note > summary + * { margin-top: 0.55em; }
+.md-typeset .ess .setup-note[data-kind="tip"] > summary + * { margin-top: 0.4em; }
+.md-typeset .ess-zone:last-child > .setup-notes { margin: 0; }
+
+/* alt swap list */
+.md-typeset .ess-swaps {
+  display: grid; grid-template-columns: max-content minmax(0, 1fr) auto;
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.12); border-radius: var(--dbc-r); background: rgba(var(--dbc-rose-rgb), 0.035);
+}
+.md-typeset .ess-swap {
+  display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center;
+  gap: 0 0.8em; padding: 0.42em 0.8em;
+  font-size: 0.86em; line-height: 1.4; color: var(--dbc-lilac);
+}
+.md-typeset .ess-swap + .ess-swap { border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.md-typeset .ess-swap-where {
+  font-size: var(--dbc-fs-cap); font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--ess-c, var(--dbc-lavender)); white-space: nowrap;
+}
+.md-typeset .ess-swap-cond { justify-self: end; font-size: var(--dbc-fs-base); color: var(--dbc-muted-text); white-space: nowrap; }
+.md-typeset .ess-swap-cond:empty { display: none; }
+.md-typeset .ess-swap-what img.food-option-icon { height: 18px; width: 18px; vertical-align: -4px; }
+.md-typeset .ess-swap-what .food-option-connector { font-size: 0.85em; }
+
+/* specialization */
+.md-typeset .ess-ladder { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4em; }
+.md-typeset .ess-step i { display: block; height: 6px; border-radius: 3px; background: var(--ess-c); opacity: 0.85; }
+.md-typeset .ess-step:first-child i { opacity: 0.5; }
+.md-typeset .ess-step b { display: block; margin-top: 0.45em; font-size: 0.92em; font-weight: 600; color: var(--ess-c); line-height: 1.2; }
+.md-typeset .ess-step span { display: block; margin-top: 0.15em; font-size: var(--dbc-fs-base); line-height: 1.35; color: var(--dbc-muted-text); }
+.md-typeset .ess-step span a { color: var(--dbc-pink); }
+.md-typeset .ess-ramp i {
+  position: relative; display: block; height: 6px; border-radius: 3px; margin-right: 8px;
+  background: linear-gradient(90deg, rgba(var(--dbc-gold-rgb), 0.5), var(--dbc-teal) 55%, var(--dbc-green));
+}
+.md-typeset .ess-ramp i::after {
+  content: ""; position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
+  border-left: 8px solid var(--dbc-green); border-top: 6px solid transparent; border-bottom: 6px solid transparent;
+}
+.md-typeset .ess-ramp b { display: block; margin-top: 0.45em; font-size: 0.92em; font-weight: 600; color: var(--dbc-green); line-height: 1.2; }
+.md-typeset .ess-ramp span { display: block; margin-top: 0.15em; font-size: var(--dbc-fs-base); line-height: 1.35; color: var(--dbc-muted-text); }
+.md-typeset .ess-flag { display: flex; align-items: baseline; gap: 0.55em; margin-top: 0.6em; font-size: 0.76em; line-height: 1.4; color: var(--dbc-lilac); }
+.md-typeset .ess-flag-key { flex-shrink: 0; font-weight: 600; color: var(--dbc-gold); }
+.md-typeset .ess-note { margin-top: 0.6em; font-size: var(--dbc-fs-base); line-height: 1.4; color: var(--dbc-muted-text); }
+.md-typeset .ess-note a { color: var(--dbc-pink); }
+
+/* CPM goals */
+.md-typeset .ess-goals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4em; }
+.md-typeset .ess-goal {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.4em;
+  padding: 0.35em 0.65em; min-width: 0;
+  border: 1px solid rgba(var(--dbc-teal-rgb), 0.3); border-radius: var(--dbc-r);
+  background: rgba(var(--dbc-teal-rgb), 0.06);
+}
+/* A build that is not viable is dashed and unfilled, as on the home page. */
+.md-typeset .ess-goal[data-kind="variant"] { border-style: dashed; background: transparent; }
+.md-typeset .ess-goal[data-kind="variant"] .ess-goal-num { color: var(--dbc-muted-text); }
+.md-typeset .ess-goal-name { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; font-size: 0.86em; font-weight: 600; color: var(--md-default-fg-color); }
+.md-typeset .ess-goal-name small { font-size: var(--dbc-fs-sm); font-weight: 400; color: var(--dbc-muted-text); white-space: nowrap; }
+.md-typeset .ess-goal-num { font-size: 1.2em; font-weight: 600; line-height: 1; color: var(--dbc-teal); }
+
+/* FPS / latency: site bullets, two columns */
+.md-typeset .ess-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.2em 1.6em; }
+.md-typeset .ess-col-head { font-size: 0.8em; font-weight: 600; color: var(--ess-c); margin-bottom: 0.15em; }
+.md-typeset .ess-col ul { margin: 0; }
+.md-typeset .ess-col li { margin: 0.15em 0; font-size: 0.76em; line-height: 1.45; color: var(--dbc-lilac); }
+
+/* layout: spec | goals side by side */
+.md-typeset .ess-pair { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); }
+.md-typeset .ess-pair > .ess-zone + .ess-zone { border-left: 1px solid rgba(255, 255, 255, 0.08); }
+@container ess (max-width: 640px) {
+  .md-typeset .ess-pair { grid-template-columns: minmax(0, 1fr); }
+  .md-typeset .ess-pair > .ess-zone + .ess-zone { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+}
+@container ess (max-width: 480px) {
+  .md-typeset .ess-goal { flex-direction: column; align-items: flex-start; justify-content: center; gap: 0.15em; }
+  .md-typeset .ess-goal-num { font-size: 1.1em; }
+  .md-typeset .ess-flag { flex-direction: column; gap: 0.1em; }
+}
+@container ess (max-width: 560px) {
+  .md-typeset .ess-swaps { grid-template-columns: minmax(0, 1fr); }
+  .md-typeset .ess-swap { grid-template-columns: minmax(0, 1fr); row-gap: 0.2em; }
+  .md-typeset .ess-swap-cond { justify-self: start; margin-top: 0.1em; white-space: normal; }
+  .md-typeset .ess-cols { grid-template-columns: minmax(0, 1fr); }
 }
 .md-typeset .setup-panel > .ark-cores,
 .md-typeset .setup-panel > .skill-setup,

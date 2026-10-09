@@ -1,9 +1,9 @@
 # Essentials
 
-<div class="setup-panel" data-accent="pink" markdown>
-<div class="setup-notes" markdown>
+<div class="ess" markdown>
+<div class="ess-zone" markdown>
 
-<p class="food-required-lead">Mana food and Atk/Move Speed feast are <strong>required</strong> to play <span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span> Remaining Energy as intended.</p>
+<p class="food-required-lead">Mana food and Atk/Move Speed feast are <strong>required</strong> for <span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span> Remaining Energy.</p>
 
 <div class="food-options" markdown>
 
@@ -40,44 +40,72 @@ Atk/Move Speed Feast
 
 </div>
 
+<div class="setup-notes" markdown>
 <details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alt</span>You can lower mana use at a DPS loss to save gold and skip mana food!<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Alt</span>Skip mana food by lowering mana use, at a DPS loss<span class="setup-note-arrow"></span></summary>
 
-<div class="food-alt-table" markdown>
-
-| Where | Change |
-|---|---|
-| Evolution Ark | Raise <span class="skill-mention" data-ap-id="illicitspell">Illicit Spell</span> instead of <span class="skill-mention" data-ap-id="limitbreakevo">Limit Break</span> (unimportant content only) |
-| Leap Ark | <span class="skill-mention" data-ap-id="releasepotential" data-level="3">Release Potential 3</span> / <span class="skill-mention" data-ap-id="instantspell" data-level="3">Instant Spell 3</span> / <span class="skill-mention" data-ap-id="awakeningamplifier" data-level="1">Awakening Amplifier 1</span> ★ |
-| Head Hunt | Magick Control tripod, <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> <span class="skill-mention" data-glossary-id="rune">rune</span>, or set to Lv 1 (Fatal Wave only)|
-| Maelstrom | <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Legendary Focus</span> rune (easier builds with excess orb generation only) |
-
+<div class="ess-swaps" markdown>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="gold">Evolution</span><span class="ess-swap-what">Raise <span class="skill-mention" data-ap-id="illicitspell">Illicit Spell</span> instead of <span class="skill-mention" data-ap-id="limitbreakevo">Limit Break</span></span><span class="ess-swap-cond">Unimportant content only</span></div>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="teal">Leap</span><span class="ess-swap-what"><span class="skill-mention" data-ap-id="releasepotential" data-level="3">Release Potential 3</span> / <span class="skill-mention" data-ap-id="instantspell" data-level="3">Instant Spell 3</span> / <span class="skill-mention" data-ap-id="awakeningamplifier" data-level="1">Awakening Amplifier 1</span> ★</span></div>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="lav">Head Hunt</span><span class="ess-swap-what">Magick Control tripod, <span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Focus</span> <span class="skill-mention" data-glossary-id="rune">rune</span>, or set to Lv 1</span><span class="ess-swap-cond">Fatal Wave only</span></div>
+<div class="ess-swap" markdown="span"><span class="ess-swap-where" data-c="lav">Maelstrom</span><span class="ess-swap-what"><span class="skill-mention" data-rune-name="Focus" data-rune-tier="legendary">Legendary Focus</span> rune</span><span class="ess-swap-cond">Excess orbs only</span></div>
 </div>
 
 </details>
+</div>
+</div>
+<div class="ess-pair" markdown>
+<div class="ess-zone" markdown>
+<div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="specializationstat">Specialization</span></div>
+<div class="ess-ladder" markdown>
+<div class="ess-step" data-c="gold" markdown="span"><i></i><b>Below 1818</b><span>Some downtime</span></div>
+<div class="ess-step" data-c="teal" markdown="span"><i></i><b>1818+</b><span>No downtime on [333 (Ceiling)](333-ceiling.md)</span></div>
+<div class="ess-step" data-c="green" markdown="span"><i></i><b>1830+</b><span>Future-proof, optional</span></div>
+</div>
+<div class="ess-flag" markdown="span"><span class="ess-flag-key">+CD% bracelet</span><span>Raises CD leap/gem needs. Fatal Wave builds need <span class="skill-mention" data-ap-id="releasepotential" data-level="4">RP 4</span>.</span></div>
+</div>
+<div class="ess-zone" markdown>
+<div class="ess-title" data-c="lav" markdown="span"><span class="skill-mention" data-glossary-id="trixion">Trixion</span> <span class="skill-mention" data-glossary-id="cpm">CPM</span> goal</div>
+<div class="ess-goals" markdown>
+<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>✨ 333</span><small>Ceiling</small></span><span class="ess-goal-num">15</span></div>
+<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>💜 313</span><small>High Floor</small></span><span class="ess-goal-num">16</span></div>
+<div class="ess-goal" markdown="span"><span class="ess-goal-name"><span>🔪 111</span><small>Head Hunt</small></span><span class="ess-goal-num">16</span></div>
+</div>
+<div class="ess-note" markdown="span">Check your Surge CPM against these in Trixion with the [DPS Meter](https://github.com/snoww/loa-logs) and maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> / <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.</div>
+</div>
+</div>
+<div class="ess-zone" markdown>
+<div class="ess-title" data-c="lav">FPS / Latency</div>
+<div class="ess-cols" markdown>
+<div class="ess-col" data-c="pink" markdown>
+<div class="ess-col-head">Why it matters</div>
 
+- Higher FPS raises CPM and helps fit skills under Maelstrom buff.
+- High latency or low FPS hinders skill queuing and can cause 2.9 orbs.
+
+</div>
+<div class="ess-col" data-c="teal" markdown>
+<div class="ess-col-head">What helps</div>
+
+- Low/OFF graphics and forced 21:9 can raise FPS.
+- Join nearer lobbies or avoid builds with tight orb generation.
+
+</div>
+</div>
+</div>
+<div class="ess-zone" markdown>
+<div class="setup-notes" markdown>
 <details class="setup-note" data-kind="tip" open markdown>
 <summary><span class="setup-note-tag">Tip</span>Quick Tips<span class="setup-note-arrow"></span></summary>
 
 - All Deathblade builds run a pet with the <span class="skill-mention" data-glossary-id="specializationstat">Specialization</span> stat bonus.
 - Optimize <span class="skill-mention" data-glossary-id="arkpassive">Ark Passive</span> nodes or compare <span class="skill-mention" data-glossary-id="bracelet">bracelets</span>/equipment [here!](../resources.md#ark-passive-calculator)
-- Always press the next skill during your current skill's animation (skill queuing).
-- If unsure, select <span class="skill-mention" data-skill-id="grudge">Grudge</span> and <span class="skill-mention" data-skill-id="ambushmaster">Ambush Master</span> as your <span class="skill-mention" data-glossary-id="abilitystone">Ability Stone</span> engravings.
-- <span class="skill-mention" data-glossary-id="trixion">Trixion</span> practice requires equipping maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span> and <span class="skill-mention" data-skill-id="maxmp">Max MP</span> engravings.
+- Press the next skill during the current animation (skill queuing).
+- If unsure, pick <span class="skill-mention" data-skill-id="grudge">Grudge</span> and <span class="skill-mention" data-skill-id="ambushmaster">Ambush Master</span> for your <span class="skill-mention" data-glossary-id="abilitystone">Ability Stone</span>.
 - <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">Optimized Training 1</span> may help smooth things out at lower gem levels.
 
 </details>
-
-<details class="setup-note" data-kind="danger" markdown>
-<summary><span class="setup-note-tag">Warn</span>09/16/26 Balance Patch<span class="setup-note-arrow"></span></summary>
-
-- Blitz Rush gained a 27% cast speed tripod and 20% more attack range.
-- Turning Slash's after-effect now also applies <span class="skill-mention" data-glossary-id="synergy">Synergy</span>.
-- Surge's buffed coefficient increased DPS for all RE builds by ~1%.
-- Buffed Ark Grid cores increased 111 DPS by ~2% and 313 DPS by ~1%.
-
-</details>
-
+</div>
 </div>
 </div>
 
@@ -151,41 +179,6 @@ Atk/Move Speed Feast
 
 </div>
 
-## Specialization
-
-<div class="setup-panel" data-accent="lavender" markdown>
-
-<div class="build-stats spec-breakpoints" markdown>
-<div class="stat" data-kind="good" markdown="span">
-<span class="stat-label">Magic Number</span><span class="stat-value">1830+</span><span class="food-req">Future-proof, but not required</span>
-</div>
-<div class="stat" data-kind="good" markdown="span">
-<span class="stat-label">Breakpoint</span><span class="stat-value">1818+</span><span class="food-req">No downtime on [333 (Ceiling)](333-ceiling.md)</span>
-</div>
-<div class="stat" data-kind="warn" markdown="span">
-<span class="stat-label">Raises CD leap/gem requirements</span><span class="stat-value">+CD% bracelet</span><span class="food-req"><span class="skill-mention" data-ap-id="releasepotential" data-level="4">RP 4</span> needed for Fatal Wave builds</span>
-</div>
-</div>
-
-Lower values are fine, but you may experience some downtime.
-{ .food-req }
-
-<div class="setup-notes" markdown>
-
-<details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span>Trixion CPM Goals<span class="setup-note-arrow"></span></summary>
-
-- Aim for your build's Surge <span class="skill-mention" data-glossary-id="cpm">CPM</span> goal in <span class="skill-mention" data-glossary-id="trixion">Trixion</span> to check for issues:
-    - For 333, try to approach 15 Surge CPM.
-    - For 111 and 313, try to approach 16 Surge CPM.
-    - Use the [DPS Meter](https://github.com/snoww/loa-logs) and equip maxed <span class="skill-mention" data-skill-id="spiritabsorption">Spirit Absorption</span>/<span class="skill-mention" data-skill-id="maxmp">Max MP</span>!
-
-</details>
-
-</div>
-
-</div>
-
 ## Gameplay
 
 ### Identity
@@ -241,13 +234,6 @@ Prioritize consistent uptime and good Maelstrom buff coverage over <span class="
 **Surge Casts Per Minute (CPM)** is a useful measure of how efficiently you are playing and generating orbs.
 
 Only compare CPM between the **same encounter and build**, as boss uptime and mechanics heavily affect it.
-
-## FPS/Latency
-
-- Higher FPS increases CPM and helps fit skills under Maelstrom buff.
-- High latency or low FPS hinders skill queuing and can cause 2.9 orbs.
-- Graphics settings on Low/OFF and forced 21:9 can increase FPS in some cases.
-- Join lobbies closer to your region or avoid builds with very tight orb generation.
 
 ## Remaining Energy Skills
 
