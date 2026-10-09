@@ -3,7 +3,7 @@
 // changes needed here, just point your build/essentials pages' JSON blocks
 // at your own data.
 //
-// Renders each family's "## <Family> Skills" reference table on
+// Renders each family's "## <Family> Skills" reference list (one card per skill) on
 // essentials.md from a compact per-row JSON blob (just icon id + name,
 // for row order and the bold name cell), joined at render time with the
 // SAME tags/note/lines data skill-setup.js's build-page cards AND
@@ -52,44 +52,44 @@
   var el = window.SiteUtils.el;
 
   function buildRow(entry, family) {
-    var tr = document.createElement("tr");
+    var data = (window.DB_SKILL_DATA && window.DB_SKILL_DATA[family] && window.DB_SKILL_DATA[family][entry.id]) || {};
 
-    var iconTd = document.createElement("td");
+    var li = el("li", "skill-row");
+
     var icon = document.createElement("img");
     icon.src = window.SiteUtils.iconSrc(SITE_ROOT, "icon-" + entry.id + ".png");
     icon.alt = "";
     icon.loading = "lazy";
     window.SiteUtils.hideOnError(icon);
-    iconTd.appendChild(icon);
-    tr.appendChild(iconTd);
+    li.appendChild(icon);
 
-    var data = (window.DB_SKILL_DATA && window.DB_SKILL_DATA[family] && window.DB_SKILL_DATA[family][entry.id]) || {};
+    var body = el("div", "skill-row-body");
 
-    var nameTd = document.createElement("td");
-    var strong = document.createElement("strong");
+    // Name, then the meter/stack lines as ONE pill joined with the same
+    // middle dot skill-tooltip.js uses, so "2 stacks" and "per cast" read
+    // as one value instead of two.
+    var top = el("div", "skill-row-top");
+    var strong = el("strong", "skill-row-name");
     strong.textContent = entry.name || (window.DB_SKILL_NAMES && window.DB_SKILL_NAMES[entry.id]) || entry.id;
-    nameTd.appendChild(strong);
-    (data.lines || []).forEach(function (line) {
-      nameTd.appendChild(document.createElement("br"));
-      var em = document.createElement("em");
-      em.textContent = line;
-      nameTd.appendChild(em);
-    });
-    tr.appendChild(nameTd);
+    top.appendChild(strong);
+    if (data.lines && data.lines.length) {
+      top.appendChild(el("span", "skill-row-meter", data.lines.join(" \u00B7 ")));
+    }
+    body.appendChild(top);
 
-    var tagsTd = document.createElement("td");
-    (data.tags || []).forEach(function (pair) {
-      var tag = el("span", "tag tag-" + pair[0]);
-      tag.textContent = pair[1];
-      tagsTd.appendChild(tag);
-    });
-    tr.appendChild(tagsTd);
+    if (data.tags && data.tags.length) {
+      var tags = el("div", "skill-row-tags");
+      data.tags.forEach(function (pair) {
+        var tag = el("span", "tag tag-" + pair[0]);
+        tag.textContent = pair[1];
+        tags.appendChild(tag);
+      });
+      body.appendChild(tags);
+    }
 
-    var noteTd = document.createElement("td");
-    noteTd.textContent = data.note || "\u2014";
-    tr.appendChild(noteTd);
-
-    return tr;
+    body.appendChild(el("div", "skill-row-note", data.note || "\u2014"));
+    li.appendChild(body);
+    return li;
   }
 
   function renderContainer(container) {
@@ -98,38 +98,17 @@
     if (!result) return;
     var entries = result.data;
 
-    // Drop any already-rendered table before rebuilding, same
+    // Drop any already-rendered list before rebuilding, same
     // idempotency reasoning as skill-setup.js (re-runs on nav swap and
     // shouldn't stack duplicates next to the kept, invisible script tag).
-    var old = container.querySelector("table");
+    var old = container.querySelector(".skill-rows");
     if (old) old.remove();
 
-    var table = document.createElement("table");
-    var thead = document.createElement("thead");
-    var headRow = document.createElement("tr");
-    ["", "Skill", "Tags", "Notes"].forEach(function (label) {
-      var th = document.createElement("th");
-      if (label) {
-        th.textContent = label;
-      } else {
-        // The icon column has no visible header; give screen readers one.
-        var hidden = document.createElement("span");
-        hidden.className = "dbc-sr-only";
-        hidden.textContent = "Icon";
-        th.appendChild(hidden);
-      }
-      headRow.appendChild(th);
-    });
-    thead.appendChild(headRow);
-    table.appendChild(thead);
-
-    var tbody = document.createElement("tbody");
+    var list = el("ul", "skill-rows");
     entries.forEach(function (entry) {
-      tbody.appendChild(buildRow(entry, family));
+      list.appendChild(buildRow(entry, family));
     });
-    table.appendChild(tbody);
-
-    container.appendChild(table);
+    container.appendChild(list);
   }
 
   window.SiteUtils.registerRenderer(".skills-table[data-family]", renderContainer);

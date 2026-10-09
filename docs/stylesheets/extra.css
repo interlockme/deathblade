@@ -462,17 +462,14 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---------- Tables ---------- */
-/* Every other boxed component on the site (.build-card,
-   .skills-table) uses the same lavender-tinted card
+/* Every other boxed component on the site (.build-card)
+   uses the same lavender-tinted card
    language - a lavender border, a faint lavender-tinted body, and an
    uppercase tinted header row. This generic rule is what any bare
    markdown table gets with zero markup (no wrapper class, no `{: .foo }`
    needed) - it's deliberately the DEFAULT, not a fallback, so a new
    table just typed as plain markdown (like Useful Links below) already
    matches the site instead of reading as the one unstyled leftover.
-   .skills-table still carry their own
-   more specific rules on top of this for the things that actually vary
-   per-table (zebra striping, min-width, icon sizing) - those stay.
    This rule just sets the shared card language, so wrapper-less tables
    get it for free. */
 .md-typeset table:not([class]) {
@@ -522,40 +519,29 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .tag-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.9em;
+  gap: 0.5em 1.2em;
   font-size: var(--dbc-fs-table);
   color: var(--dbc-lavender);
-  margin: 0.3em 0 0.8em;
+  margin: 0.8em 0 0.8em;
 }
 .md-typeset .tag-legend-item {
   display: inline-flex;
   align-items: center;
+  gap: 0.45em;
+  margin-right: 1.1em;
 }
 .md-typeset .tag-legend-dot {
   display: inline-block;
   width: 8px;
   height: 8px;
   border-radius: 2px;
-  margin-right: 5px;
 }
 .md-typeset .tag-legend-dmg { background-color: var(--dbc-rose); }
 .md-typeset .tag-legend-util { background-color: var(--dbc-teal); }
 .md-typeset .tag-legend-immune { background-color: var(--dbc-blue); }
 .md-typeset .tag-legend-warn { background-color: var(--dbc-gold); }
 
-/* ---------- Skill legend tables (Essentials pages) ---------- */
-/* Fixed 48x48 icons regardless of the source asset's resolution.
-   Wrap the table in <div class="skills-table" markdown>...</div>. */
-/* The wrapper itself - mainly here so the reference table can scroll
-   sideways on narrow/mobile viewports instead of overflowing the page or
-   getting crushed. Four columns (icon, skill+meter lines, tags, notes)
-   don't fit a phone width once the Tags column's own 140px min-width
-   (below) is honored, so let THIS scroll horizontally rather than the
-   whole page, with a min-width on the table so columns keep their
-   shape until the scrollbar takes over.
-   No -webkit-overflow-scrolling here - see the removal note next to
-   .quick-jump-pills further down in this file for why every horizontal
-   scroller on the site had that declaration deliberately dropped. */
+/* ---------- Skill reference list (Essentials pages) ---------- */
 /* Visually hidden but still read by screen readers. Used for column headers
    that are intentionally blank on screen (an icon column, a row-label column)
    so the <th> still has an accessible name. */
@@ -570,44 +556,90 @@ h3 { color: var(--dbc-teal); }
   white-space: nowrap;
   border: 0;
 }
-.md-typeset .skills-table {
-  overflow-x: auto;
+/* One card per skill (the child selector outranks Material's list-item margin): icon, then name + meter pill, tag pills and the note, in the same
+   lavender card tint as the build comparer rows. Two columns once the list itself is wide
+   enough (the list is its own query container, so the sidebar coming and going cannot put
+   the breakpoint in the wrong place), one column below that. The meter pill is the same
+   slate pill skill-tooltip.js shows for the same data. */
+.md-typeset .skills-table { container: skills / inline-size; }
+.md-typeset .skill-rows:not([hidden]) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-/* Card treatment: a lavender border and tint like the .build-compare card,
-   plus a tinted uppercase header row, rather than
-   the flat generic table:not([class]) styling every other bare table on
-   the site gets. Same specificity as that generic rule (.md-typeset +
-   one class + table element, in both cases), so as the later rule in the
-   file this wins on the properties it actually sets (border/background/
-   header) while still falling through to the generic rule for anything
-   it doesn't touch (row hover, base cell padding). This table has no
-   separate outer wrapper card the way .build-compare does (it's a bare
-   reference table sitting directly on the page, not nested inside a
-   picker/pentagon widget), so the border+tint that lives on
-   .build-compare's OUTER div there is folded directly onto the table
-   element itself here instead - one layer doing the job two layers do
-   there. */
-.md-typeset .skills-table table {
-  min-width: 560px;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
+@container skills (min-width: 640px) {
+  .md-typeset .skill-rows:not([hidden]) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.md-typeset .skill-rows > .skill-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.2);
   border-radius: var(--dbc-r-lg);
-  overflow: hidden;
-  background-color: rgba(var(--dbc-purple-rgb), 0.045);
+  background: rgba(var(--dbc-purple-rgb), 0.045);
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
-.md-typeset .skills-table table th {
-  background-color: rgba(var(--dbc-purple-rgb), 0.12);
-  color: var(--dbc-lavender);
-  font-size: var(--dbc-fs-base);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.md-typeset .skill-rows > .skill-row:hover {
+  border-color: rgba(var(--dbc-purple-rgb), 0.55);
+  background: rgba(var(--dbc-purple-rgb), 0.08);
 }
-.md-typeset .skills-table img {
-  height: 48px;
-  width: 48px;
+.md-typeset .skill-rows > .skill-row > img {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
   object-fit: contain;
-  vertical-align: middle;
-  border-radius: var(--dbc-r);
+  border-radius: 9px;
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.35);
+}
+.md-typeset .skill-row-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+.md-typeset .skill-row-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+.md-typeset .skill-row-name {
+  color: var(--dbc-white);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.md-typeset .skill-row-meter {
+  padding: 0 0.5em;
+  border: 1px solid rgba(var(--dbc-slate-rgb), 0.3);
+  border-radius: 999px;
+  background-color: rgba(var(--dbc-slate-rgb), 0.14);
+  color: var(--dbc-slate);
+  font-size: 0.52rem;
+  line-height: 1.7;
+}
+.md-typeset .skill-row-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.md-typeset .skill-row-tags .tag {
+  margin: 0;
+  padding: 0 0.5em;
+  font-size: 0.52rem;
+  line-height: 1.7;
+}
+.md-typeset .skill-row-note {
+  color: var(--dbc-muted-text);
+  font-size: var(--dbc-fs-base);
+  line-height: 1.4;
 }
 
 /* ---------- Inline skill icons outside tables/rotation-lines ---------- */
@@ -786,35 +818,6 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-gold);
   border-color: rgba(var(--dbc-gold-rgb), 0.35);
 }
-.md-typeset .skills-table td:nth-child(3) {
-  /* Tags column - allow badges to wrap onto multiple lines */
-  white-space: normal;
-  min-width: 140px;
-}
-/* Column balance for the reference table: the icon column hugs the 48px
-   icon, the Skill column shrinks to its longest name or value line
-   ("Surprise Attack", "Death Trance" stay on one line), and Tags gets
-   enough room for most rows to fit their badges on one line. Notes takes
-   the remainder. Percentages are preferred widths only (the table
-   stays table-layout: auto), so under the 560px min-width the columns fall
-   back to their content minimums and the wrapper scrolls sideways. */
-.md-typeset .skills-table th:nth-child(1),
-.md-typeset .skills-table td:nth-child(1) {
-  width: 1%;
-  padding-left: 0.9em;
-  padding-right: 0.5em;
-}
-.md-typeset .skills-table th:nth-child(2) {
-  width: 1%;
-}
-.md-typeset .skills-table td:nth-child(2) {
-  white-space: nowrap;
-  padding-right: 1.2em;
-}
-.md-typeset .skills-table th:nth-child(3) {
-  width: 31%;
-}
-
 /* ---------- Links: more visibly clickable ---------- */
 .md-typeset a:not(.md-button) {
   color: var(--dbc-rose);
@@ -8561,14 +8564,6 @@ h3 { color: var(--dbc-teal); }
   border-radius: 2px;
 }
 
-/* The long skills-table reference tables (14+ rows) benefit from actual
-   row striping on top of the flat table background every table gets -
-   easier to track a row across to Tags/Notes at that length. Regular
-   tables (shorter, usually a build comparison) stay flat/uncomplicated. */
-.md-typeset .skills-table tr:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.018);
-}
-
 /* ---------- Tabbed content ---------- */
 /* Previous version reused the same lavender fade gradient as the h2/hr
    section-break border, so a dense page (H2 -> tabs -> nested tabs) showed
@@ -9966,6 +9961,14 @@ body.page-333-blitz input[type="text"] {
 }
 .skill-tip-tags {
   margin-bottom: 0.3em;
+}
+/* Tooltip tags and the meter pill use the same smaller size as the Essentials skill cards,
+   and share one box height so they sit level in the row. */
+.skill-tip-tags .tag,
+.skill-tip-tags .skill-tip-meter {
+  padding: 0 0.5em;
+  font-size: 0.52rem;
+  line-height: 1.7;
 }
 .skill-tip-note {
   margin: 0;
