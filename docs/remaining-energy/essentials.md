@@ -74,8 +74,8 @@ Atk/Move Speed Feast
 </div>
 <div class="ess-box" markdown>
 <div class="ess-cols" markdown>
-<div class="ess-fx" data-c="teal" data-dir="up" markdown="span"><i></i><b>FPS</b><span class="ess-fx-eff">Raises CPM and helps fit skills under Maelstrom buff.</span><span class="ess-fx-fix"><span class="ess-fx-key">Try</span><span>Low/OFF graphics and forced 21:9.</span></span></div>
-<div class="ess-fx" data-c="pink" data-dir="down" markdown="span"><i></i><b>Latency</b><span class="ess-fx-eff">Hinders skill queuing and can cause 2.9 orbs, as low FPS does.</span><span class="ess-fx-fix"><span class="ess-fx-key">Try</span><span>Join nearer lobbies or avoid builds with tight orb generation.</span></span></div>
+<div class="ess-fx" data-c="teal" data-dir="up" markdown="span"><i></i><b>FPS</b><span class="ess-fx-eff">Raises CPM and helps fit skills under Maelstrom buff.</span><span class="ess-fx-fix"><span class="ess-fx-key">Try</span><span>Low/OFF graphical effects and forced 21:9 mode.</span></span></div>
+<div class="ess-fx" data-c="pink" data-dir="down" markdown="span"><i></i><b>Latency</b><span class="ess-fx-eff">Hinders skill queuing and can cause 2.9 orb cycles.</span><span class="ess-fx-fix"><span class="ess-fx-key">Try</span><span>Nearer lobbies or avoid builds with tight orb generation.</span></span></div>
 </div>
 </div>
 <div class="ess-zone" markdown>

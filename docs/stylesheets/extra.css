@@ -3159,9 +3159,9 @@ h3 { color: var(--dbc-teal); }
   gap: 0.8rem;
   margin-top: 1rem;
   padding: 0.8rem 1rem;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.45);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.2);
   border-radius: var(--dbc-r-lg);
-  background: var(--dbc-purple-card-bg);
+  background: rgba(var(--dbc-purple-rgb), 0.045);
   transition: border-color 0.15s ease;
 }
 .md-typeset .home-res:hover { border-color: var(--dbc-purple); }
@@ -10546,8 +10546,8 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess-goal {
   display: flex; align-items: center; justify-content: space-between; gap: 0.3em;
   padding: 0.35em 0.5em; min-width: 0;
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.2); border-radius: var(--dbc-r);
-  background: rgba(var(--dbc-rose-rgb), 0.06);
+  border: 1px solid rgba(var(--dbc-rose-rgb), 0.4); border-radius: var(--dbc-r);
+  background: color-mix(in srgb, var(--md-default-bg-color) 55%, transparent);
 }
 /* A build that is not viable is dashed and unfilled, as on the home page. */
 .md-typeset .ess-goal[data-kind="variant"] { border-style: dashed; background: transparent; }
@@ -10584,6 +10584,8 @@ body.page-333-blitz input[type="text"] {
 
 /* layout: spec | goals side by side */
 .md-typeset .ess-pair { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--ess-gap); }
+/* The Specialization box is stretched to the CPM box's height; its content sits in the middle. */
+.md-typeset .ess-pair > .ess-box:first-child { display: flex; flex-direction: column; justify-content: center; }
 /* Wide enough, the CPM box gets exactly what its note needs for two lines (about 380px of text
    in Poppins) and the Specialization box gets the rest, which is what the longest +CD% flag
    line (Surge, about 467px of text) needs to stay on one line. A ratio cannot do both at the

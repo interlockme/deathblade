@@ -45,7 +45,7 @@ Atk/Move Speed Feast
 </div>
 <div class="ess-pair" markdown>
 <div class="ess-box" markdown>
-<div class="ess-ramp" markdown="span"><i></i><b>More <span class="skill-mention" data-glossary-id="specializationstat">Specialization</span> is always better</b><span>Both cooldown reduction and damage scale highly with it.</span></div>
+<div class="ess-ramp" markdown="span"><i></i><b>More <span class="skill-mention" data-glossary-id="specializationstat">Specialization</span> is always better</b><span>Both cooldown reduction and damage scale with it.</span></div>
 <div class="ess-flag" markdown="span"><span class="ess-flag-key">+CD% bracelet</span><span>Raises already-high CD gem needs. Use <span class="skill-mention" data-ap-id="optimizedtraining" data-level="1">OT 1</span> or Lv 10 gems.</span></div>
 </div>
 <div class="ess-box" markdown>
