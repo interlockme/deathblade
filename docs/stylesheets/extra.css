@@ -3306,7 +3306,7 @@ h3 { color: var(--dbc-teal); }
    .gp-row     - a grid row: .gp-term (pink, teal inside .gp-syn) + .gp-desc [+ .gp-dur].
    .gp-buffs   - a grid of .gp-buff cells (value over label). Tiered values read
                  "10 / 15 / <b>20%</b>": the lower tiers and separators are muted and only
-                 the highest tier is teal, so a single value is fully teal.
+                 the highest tier is pink, so a single value is fully pink.
    .gp-meter   - the Surge stacks row: three labels at their ticks over a 0 to 80 bar.
                  The labels carry every number, so the text above does not repeat them.
                  The fill up to 60 and the dim zone above it are styling, not data.
@@ -3357,7 +3357,7 @@ h3 { color: var(--dbc-teal); }
   white-space: nowrap;
   color: var(--dbc-muted-text);
 }
-.md-typeset .gp-buff-val b { font-weight: inherit; color: var(--dbc-teal); }
+.md-typeset .gp-buff-val b { font-weight: inherit; color: var(--dbc-pink); }
 .md-typeset .gp-buff-name { display: block; font-size: var(--dbc-fs-cap); line-height: 1.35; color: var(--dbc-muted-text); }
 
 .md-typeset .gp-meter { position: relative; display: block; padding-top: 1.5em; }

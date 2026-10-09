@@ -218,9 +218,9 @@ Not the end of the world if you're forced to use it
 
 <div class="gp-panel" markdown>
 <div class="gp-row" markdown="span"><span class="gp-term">Orb Generation</span><span class="gp-desc">Normal skills generate Death Orbs when they hit a target.</span></div>
-<div class="gp-row" markdown="span"><span class="gp-term">Death Trance</span><span class="gp-desc">Press (Z) with 1+ orbs to enter the Death Trance identity state.</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term"><span class="skill-mention" data-skill-id="deathtrance">Death Trance</span></span><span class="gp-desc">Press (Z) with 1+ orbs to enter the Death Trance identity state.</span></div>
 <div class="gp-row" markdown="span"><span class="gp-term">Stack Generation</span><span class="gp-desc">Skills generate Surge stacks while in Death Trance. Stacks not consumed are retained.</span></div>
-<div class="gp-row" markdown="span"><span class="gp-term">Surge</span><span class="gp-desc">Press (Z) to consume up to 60 stacks, deal damage and end Death Trance.</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term"><span class="skill-mention" data-skill-id="surge">Surge</span></span><span class="gp-desc">Press (Z) to consume up to 60 stacks, deal damage and end Death Trance.</span></div>
 <div class="gp-row" markdown="span"><span class="gp-term">Surge stacks</span><span class="gp-desc"><span class="gp-meter" role="img" aria-label="Surge stacks: 40 is the minimum for a full orb refund, 60 are consumed by Surge, 80 is the cap"><span class="gp-m-label" data-at="40" aria-hidden="true"><b>40</b><span class="gp-m-full">full orb refund</span><span class="gp-m-short">full refund</span></span><span class="gp-m-label" data-at="60" aria-hidden="true"><b>60</b>Surge</span><span class="gp-m-label" data-at="80" aria-hidden="true"><b>80</b>cap</span><span class="gp-m-bar" aria-hidden="true"><span class="gp-m-fill"></span><span class="gp-m-over"></span><span class="gp-m-tick" data-at="40"></span><span class="gp-m-tick" data-at="60"></span><span class="gp-m-tick" data-at="80"></span></span></span></span></div>
 </div>
 
@@ -241,14 +241,14 @@ Aim to always enter Death Trance with 3 orbs to receive the highest level buffs 
 ### Party Synergies
 
 <div class="gp-panel gp-syn" markdown>
-<div class="gp-row" markdown="span"><span class="gp-term">Turning Slash</span><span class="gp-desc">+4% outgoing and +5% directional damage</span><span class="gp-dur">12s</span></div>
-<div class="gp-row" markdown="span"><span class="gp-term">Surprise Attack</span><span class="gp-desc">+4% outgoing and +5% directional damage</span><span class="gp-dur">6s</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term"><span class="skill-mention" data-skill-id="turningslash">Turning Slash</span></span><span class="gp-desc">+4% outgoing and +5% directional damage</span><span class="gp-dur">12s</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term"><span class="skill-mention" data-skill-id="surpriseattack">Surprise Attack</span></span><span class="gp-desc">+4% outgoing and +5% directional damage</span><span class="gp-dur">6s</span></div>
 <div class="gp-row" markdown="span"><span class="gp-term"><span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span></span><span class="gp-desc">+12.8% Attack/Move Speed</span><span class="gp-dur">6s</span></div>
 </div>
 
 ### Playstyle
 
-<div class="gp-cycle" markdown="span"><span>3 Orbs</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>Death Trance</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>Build Stacks</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>Surge</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span class="gp-repeat"><span aria-hidden="true">&#8635;</span> repeat</span></div>
+<div class="gp-cycle" markdown="span"><span>3 Orbs</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span><span class="skill-mention" data-skill-id="deathtrance">Death Trance</span></span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>Build Stacks</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span><span class="skill-mention" data-skill-id="surge">Surge</span></span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span class="gp-repeat"><span aria-hidden="true">&#8635;</span> repeat</span></div>
 
 Build toward 60 stacks using your multi-hit skills, then land Surge as a <span class="skill-mention" data-glossary-id="backattack">back attack</span>.
 

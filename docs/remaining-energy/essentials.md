@@ -185,7 +185,7 @@ Atk/Move Speed Feast
 
 <div class="gp-panel" markdown>
 <div class="gp-row" markdown="span"><span class="gp-term">Orb Generation</span><span class="gp-desc">Normal skills generate Death Orbs when they hit a target.</span></div>
-<div class="gp-row" markdown="span"><span class="gp-term">Surge</span><span class="gp-desc">Press (Z) with 1+ orbs to consume them and activate Surge.</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term"><span class="skill-mention" data-skill-id="surge">Surge</span></span><span class="gp-desc">Press (Z) with 1+ orbs to consume them and activate Surge.</span></div>
 </div>
 
 ### Identity Buffs
@@ -205,13 +205,13 @@ Aim to always cast Surge with 3 orbs to receive the highest level buffs and cool
 ### Party Synergies
 
 <div class="gp-panel gp-syn" markdown>
-<div class="gp-row" markdown="span"><span class="gp-term">Turning Slash</span><span class="gp-desc">+4% outgoing and +5% directional damage</span><span class="gp-dur">12s</span></div>
+<div class="gp-row" markdown="span"><span class="gp-term"><span class="skill-mention" data-skill-id="turningslash">Turning Slash</span></span><span class="gp-desc">+4% outgoing and +5% directional damage</span><span class="gp-dur">12s</span></div>
 <div class="gp-row" markdown="span"><span class="gp-term"><span class="skill-mention" data-skill-id="maelstrom">Maelstrom</span></span><span class="gp-desc">+12.8% Attack Speed and Move Speed</span><span class="gp-dur">6s</span></div>
 </div>
 
 ### Playstyle
 
-<div class="gp-cycle" markdown="span"><span>Generate Orbs</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>3 Orbs</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>Surge</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span class="gp-repeat"><span aria-hidden="true">&#8635;</span> repeat</span></div>
+<div class="gp-cycle" markdown="span"><span>Generate Orbs</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span>3 Orbs</span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span><span class="skill-mention" data-skill-id="surge">Surge</span></span><span class="gp-sep" aria-hidden="true">&rsaquo;</span><span class="gp-repeat"><span aria-hidden="true">&#8635;</span> repeat</span></div>
 
 Cooldown reduction is the core of this class; it resets your rotation so you can generate your next set of Orbs.
 Prioritize consistent uptime and good Maelstrom buff coverage over <span class="skill-mention" data-glossary-id="backattack">back attacks</span>, using Surge to reposition to the back.
