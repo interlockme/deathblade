@@ -9204,17 +9204,16 @@ body.page-333-blitz input[type="text"] {
   flex-shrink: 0;
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.28);
 }
-/* Chips (runes+tripods) sit to the right of the name on one row, same
-   place they've always been - NOT stacked below it. A previous pass
-   stacked these into two full-width rows to fix names truncating
-   ("S...", "Hea...") on narrow masonry columns, but that fix overcorrected:
-   it made every card taller everywhere, even the wide 2-column desktop
-   layout that had plenty of room for a single row all along. The real
-   fix only needed to apply where a card is actually narrow, which is
-   exactly what a container query does: .skill-card-main reads its OWN
-   card's rendered width (via container-type: inline-size on .skill-card
-   above) rather than reshaping every card in every column just because
-   SOME column, somewhere, might be tight. */
+/* Chips (runes+tripods) sit to the right of the name on one row while the
+   card is wide enough for the name to read in full. The chip cluster is a
+   fixed 171px, so the name needs a card of about 400px to show a long name
+   like "Surprise Attack"; below that a narrow-card query (right after the
+   .skill-card-chips rule) puts the chips on their own row under the name.
+   .skill-card-main reads its OWN card's rendered width via
+   container-type: inline-size on .skill-card, not the viewport, so a wide
+   2-column desktop card keeps the single row. Setup cards in the masonry
+   are never narrower than skill-setup.js's MASONRY_MIN_WIDTH (410px), so
+   only single-column phone cards reach the narrow layout. */
 .md-typeset .skill-card-main {
   display: flex;
   flex-direction: row;
@@ -9223,10 +9222,9 @@ body.page-333-blitz input[type="text"] {
   flex: 1 1 auto;
   min-width: 0;
 }
-/* Chips never wrap below the name - see .skill-card-name's
-   comment for why. Row layout stays fixed at every card width; the
-   name's own ellipsis is what absorbs a too-narrow card, not a stacked
-   second line. (A stacked-column @container fallback below 380px is deliberately not used: a plain single-column mobile card is very often ALREADY narrower than 380px on its own - e.g. an iPhone SE's 375px viewport minus page padding - so real phones would hit the stacked layout on every card, all the time, which is the exact "cards grow tall" symptom this was supposed to only be a rare fallback for.) */
+/* At card widths of 400px or more the chips share the row with the name and
+   the name's ellipsis absorbs any shortfall; the narrow-card query below
+   handles anything tighter. */
 .md-typeset .skill-card-meta {
   min-width: 0;
   /* Meta (level+name) takes whatever space the chip cluster doesn't
@@ -9257,10 +9255,9 @@ body.page-333-blitz input[type="text"] {
   color: var(--md-default-fg-color);
   font-size: 0.9em;
   line-height: 1.25;
-  /* The safety net for a narrow card, full-time now (not just past some
-     width threshold): truncates with an ellipsis rather than wrapping
-     or pushing the card taller. A truncated name reads better on a
-     small phone than every card on the page growing a second row. */
+  /* Safety net only: truncates with an ellipsis rather than wrapping or
+     pushing the card taller. In the narrow-card layout the name has the
+     whole row, so it is rarely reached. */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -9271,12 +9268,24 @@ body.page-333-blitz input[type="text"] {
   gap: 0.32em;
   flex-wrap: wrap;
   /* Row mode (default): never shrinks (chips have no ellipsis fallback
-     the way the name does) and sits pinned to the card's right edge, the
-     same place it occupied before the chips-below-name detour. Stacked
-     mode's container query above zeroes this back out, since there's no
-     name sharing the row to push away from at that point. */
+     the way the name does) and sits pinned to the card's right edge. */
   flex-shrink: 0;
   margin-left: auto;
+}
+/* Narrow card (single-column phone): the chip cluster would leave the name
+   under 100px, so the chips drop to their own row under the name, left
+   aligned with it. The card grows by one chip row. */
+@container (max-width: 400px) {
+  .md-typeset .skill-card-main {
+    flex-wrap: wrap;
+    row-gap: 0.35em;
+  }
+  .md-typeset .skill-card-meta {
+    flex: 1 1 100%;
+  }
+  .md-typeset .skill-card-chips {
+    margin-left: 0;
+  }
 }
 /* Tripod pick chips - flat placeholder squares (no tripod icon art yet),
    colored by tier so the tier ordering still reads at a glance. Tier

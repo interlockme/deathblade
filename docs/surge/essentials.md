@@ -1,3 +1,7 @@
+---
+title: Surge Essentials
+---
+
 # Essentials
 
 <div class="ess" markdown>
@@ -295,7 +299,7 @@ Only compare CPM between the **same encounter and build**, as boss uptime and me
 </script>
 </div>
 
-<div class="tag-legend" markdown>
+<div class="tag-legend" data-search-exclude markdown>
 <span class="tag-legend-item"><span class="tag-legend-dot tag-legend-dmg"></span>Damage</span>
 <span class="tag-legend-item"><span class="tag-legend-dot tag-legend-util"></span>Utility</span>
 <span class="tag-legend-item"><span class="tag-legend-dot tag-legend-immune"></span>Immune</span>

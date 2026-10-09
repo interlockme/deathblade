@@ -3,6 +3,7 @@ site_url: https://interlockme.github.io/deathblade/
 site_description: Remaining Energy & Surge Deathblade guides
 theme:
   name: material
+  custom_dir: overrides
   palette:
     scheme: slate
     primary: black

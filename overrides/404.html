@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Page not found</h1>
+<p>That page does not exist, or it moved. Try one of these instead:</p>
+<ul>
+  <li><a href="{{ config.site_url }}">Home</a></li>
+  <li><a href="{{ 'remaining-energy/essentials/' | url }}">RE Essentials</a></li>
+  <li><a href="{{ 'surge/essentials/' | url }}">Surge Essentials</a></li>
+  <li><a href="{{ 'resources/' | url }}">Additional Resources</a></li>
+</ul>
+{% endblock %}
