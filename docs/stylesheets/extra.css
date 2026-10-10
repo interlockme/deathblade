@@ -6317,6 +6317,10 @@ h3 { color: var(--dbc-teal); }
 @media screen and (min-width: 901px) {
   .md-typeset .ap-build-toggle-tier .ap-build-chip {
     padding-inline: 0.5rem;
+    padding-block: 0.25rem; /* chip 29.6px; with the tier's 2px padding and 1px border the box is 35.6px */
+  }
+  .md-typeset .ap-build-toggle-tier {
+    padding: 3px;
   }
   .md-typeset .ap-calc-bar .ap-build-toggle {
     gap: 0.4rem; /* the toolbar's gap, so both halves of the bar space their boxes alike */
@@ -8312,6 +8316,19 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-pink);
   background-color: rgba(var(--dbc-pink-rgb), 0.16);
   box-shadow: inset 0 0 0 1px rgba(var(--dbc-pink-rgb), 0.45);
+}
+
+/* Desktop: the Preset slots are as tall as the Build chips (29.6px chips in a
+   35.6px box), so the two groups match and read at least as large as the
+   toolbar buttons beside them. Touch widths keep their own minimum heights
+   below. */
+@media screen and (min-width: 901px) {
+  .md-typeset .ap-calc-toolbar .ap-calc-preset-group {
+    padding: 3px;
+  }
+  .md-typeset .ap-calc-toolbar .ap-calc-preset {
+    padding-block: 0.25rem;
+  }
 }
 
 /* Last imported character: a compact pill to the left of the Preset group
