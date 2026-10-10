@@ -128,27 +128,12 @@
   // no need to duplicate those four.
   // The +2% Skill Cooldown tag has a real downside: less time spent waiting
   // on cooldown means a lower effective cast rate than the flat +4.5/5/5.5%
-  // alone implies. Modeled as a flat CPM penalty - going from an uncapped
-  // CPM to one that's 2% shorter cooldown but otherwise the same uptime
-  // costs about 1.35% of your cast rate (e.g. a 15 CPM skill lands at ~14.8,
-  // and 15/14.8 - 1 ≈ 1.35%) - then folded into the flat Damage % via
-  // (1 + rawDamage) / (1 + 0.0135) - 1, rather than the flat 4.5/5/5.5%
-  // taken at face value.
-  const SKILL_CD_PENALTY = 0.0135;
+  // alone implies. Both classes model it as a flat -1 off the raw
+  // 4.5/5/5.5% (i.e. 3.5/4/4.5%), a fixed estimate rather than a live
+  // Swiftness/CDR calculation, so it will drift if your own cast rate
+  // loss from the downside is far from that assumption.
   const DAMAGE_CD_RAW_TABLE = { Low: 0.045, Mid: 0.05, High: 0.055 };
   const DAMAGE_CD_TABLE = {
-    Low: (1 + DAMAGE_CD_RAW_TABLE.Low) / (1 + SKILL_CD_PENALTY) - 1,
-    Mid: (1 + DAMAGE_CD_RAW_TABLE.Mid) / (1 + SKILL_CD_PENALTY) - 1,
-    High: (1 + DAMAGE_CD_RAW_TABLE.High) / (1 + SKILL_CD_PENALTY) - 1,
-  };
-  // Surge-only temporary override for the above: Surge Deathblade's actual
-  // in-game cast-rate loss from the +2% Cooldown downside doesn't match the
-  // SKILL_CD_PENALTY model RE was tuned against, so until a game balance
-  // patch reconciles the two classes, Surge instead takes a flat -1 off the
-  // raw 4.5/5/5.5% (i.e. 3.5/4/4.5%) rather than the divided-by-penalty
-  // figure above. RE is untouched. Remove this table (and the branch in the
-  // Damage+CD row below that picks it) once that patch lands.
-  const DAMAGE_CD_SURGE_TABLE = {
     Low: DAMAGE_CD_RAW_TABLE.Low - 0.01,
     Mid: DAMAGE_CD_RAW_TABLE.Mid - 0.01,
     High: DAMAGE_CD_RAW_TABLE.High - 0.01,
@@ -451,7 +436,7 @@
   // Smoldering's Burn tick damage, unlike its Boss Damage half above,
   // isn't Points-gated (it scales off weapon damage, not Core investment),
   // and its share of your damage depends on Bleed uptime, so it is a flat,
-  // grade-only %DPS estimate. Relic is 0.55%, the middle of the 0.5-0.6%
+  // grade-only %DPS estimate. Relic is 0.6%, the top of the 0.5-0.6%
   // of total damage that combat logs show at 20p. Ancient is 1.25x that:
   // 17p's Burn Damage bonus is +100% at Relic and +150% at Ancient, so a
   // tick goes from x2.0 to x2.5 of its base. Checked on a dummy with the
@@ -461,7 +446,7 @@
   // multiplied by them too, which is why the Boss Dmg and Burn halves are
   // multiplied together in the Smoldering row). The Boss Dmg multipliers
   // cancel out of the share, leaving the 1.25x.
-  const ARK_SMOLDERING_BURN_TABLE = { Relic: 0.0055, Ancient: 0.006875 };
+  const ARK_SMOLDERING_BURN_TABLE = { Relic: 0.006, Ancient: 0.0075 };
   const ARK_ABSORBING_DMG_TABLE = {
     "Relic|17P": 0.015050,
     "Relic|18P": 0.016674,
@@ -1129,7 +1114,7 @@
         mainStat: Math.max(10000, Math.min(16000, getNumber(root, base + "line" + n + "-mainstat", 14000))),
       })),
       demons: getCheckbox(root, base + "demons", false),
-      cdEstimate: getCheckbox(root, base + "cdest", true),
+      cdEstimate: getCheckbox(root, base + "cdest", false),
     };
   }
 
@@ -1975,8 +1960,8 @@
   // from the sheet's more complete model, not just an approximation of
   // implementation detail:
   //   - Damage +4.5/5/5.5% & Cooldown +2%: the flat Damage % discounted by
-  //     a flat 1.35% assumed cast-rate cost of the +2% Cooldown downside
-  //     (see SKILL_CD_PENALTY above) - a fixed estimate, not a live
+  //     a flat 1% assumed cast-rate cost of the +2% Cooldown downside
+  //     (see DAMAGE_CD_TABLE above) - a fixed estimate, not a live
   //     Swiftness/CDR calculation, so it'll drift if your own cast rate
   //     loss from the downside is far from that assumption.
   //   - Outgoing Dmg + Damage to Staggered: sheet takes a live "% of DPS
@@ -2224,13 +2209,9 @@
       {
         label: ["Outgoing Damage +", ...trip("4.5", "5", "5.5"), "% & Skill Cooldown +", { downside: true, text: "2" }, "%"],
         note: "Estimated damage accounts for +CD% penalty.",
-        // Surge uses the temporary flat -1 override (see
-        // DAMAGE_CD_SURGE_TABLE above) instead of the divided-by-penalty
-        // figures RE still uses. isSurge comes from the selected build's
-        // CLASS (any Surge 111/222/333 pick), not the specific build.
-        low: braceSpecConfig(inputs).isSurge ? DAMAGE_CD_SURGE_TABLE.Low : DAMAGE_CD_TABLE.Low,
-        mid: braceSpecConfig(inputs).isSurge ? DAMAGE_CD_SURGE_TABLE.Mid : DAMAGE_CD_TABLE.Mid,
-        high: braceSpecConfig(inputs).isSurge ? DAMAGE_CD_SURGE_TABLE.High : DAMAGE_CD_TABLE.High,
+        low: DAMAGE_CD_TABLE.Low,
+        mid: DAMAGE_CD_TABLE.Mid,
+        high: DAMAGE_CD_TABLE.High,
       },
       {
         label: ["Outgoing Damage +", ...trip("2", "2.5", "3"), "% & Damage to Staggered +", ...trip("4", "4.5", "5"), "%"],
@@ -2481,11 +2462,9 @@
   // where Bracelet vs. Bracelet's own per-side checkboxes (ctx.cdEstimate,
   // ctx.demons) let the reader opt out of an assumption computeBraceletComparison
   // always applies:
-  //   - damage_cd: ctx.cdEstimate defaults to true (checked) and picks the
-  //     usual CDR-penalty-adjusted table; unchecked skips the penalty
-  //     entirely and uses the tag's raw stated 4.5/5/5.5% instead
-  //     (DAMAGE_CD_RAW_TABLE - class-independent, since it's just the
-  //     line's literal value with no estimate layered on).
+  //   - damage_cd: ctx.cdEstimate defaults to false (unchecked), which uses
+  //     the tag's raw stated 4.5/5/5.5% with no estimate layered on; checked
+  //     applies the flat CD penalty (DAMAGE_CD_TABLE) instead.
   //   - add_b: ctx.demons defaults to false (unchecked) and values ONLY
   //     the Additional Damage half, same treatment computeBraceletComparison's
   //     own addB row always uses (see that row's comment); checked adds
@@ -2494,7 +2473,7 @@
     switch (typeId) {
       case "damage_cd":
         if (ctx.cdEstimate === false) return DAMAGE_CD_RAW_TABLE[tier] || 0;
-        return (ctx.surge ? DAMAGE_CD_SURGE_TABLE : DAMAGE_CD_TABLE)[tier] || 0;
+        return DAMAGE_CD_TABLE[tier] || 0;
       case "outgoing_stagger":
         return (OUTGOING_DMG_TABLE[tier] || 0) + (STAGGER_DMG_TABLE[tier] || 0) * STAGGER_DPS_SHARE;
       case "outgoing":
@@ -2604,7 +2583,6 @@
     const gridRatio = combo.mult / noBraceletMult;
 
     const specCfg = braceSpecConfig(inputs);
-    const isSurge = specCfg.isSurge;
     const specK = specGainPerPoint(deathbladeSpecMultiplier, specCfg.share, specCfg.awakeningShare);
     const specGain = specK * Math.max(0, side.spec || 0);
 
@@ -2613,7 +2591,6 @@
     let flatMult = 1;
     flatLines.forEach((sel) => {
       flatMult *= 1 + braceletFlatLineGain(sel.type, sel.tier, {
-        surge: isSurge,
         addDmgBaseline,
         demonDmgPct,
         demons: side.demons,
@@ -5719,8 +5696,8 @@
   // One card per side, filled from computeSingleBracelet's own result
   // shape - see computeBraceletVsBracelet above. Also toggles the Spec
   // field's two hover-icon warnings (mild "damage-only" note, shown on
-  // both RE and Surge with per-spec wording; stronger "recommended 83+
-  // Spec" warning, RE + below 83 only) since those depend on the same
+  // both RE and Surge with per-spec wording; stronger "recommended Spec"
+  // WARN, RE below 83 and Surge below 90) since those depend on the same
   // inputs this render pass already has in hand.
   //
   // There is no "estimated" cd-note beside vs No Bracelet: CD Estimate is
@@ -5732,6 +5709,10 @@
   // dropped rather than carried over as a dead phrase for a mechanic
   // Surge doesn't have.
   const SPEC_NOTE_TEXT_SURGE = "This only reflects Spec's damage share on Surge - it doesn't capture CDR.";
+  // WARN pill beside the note icon: RE below 83, Surge below 90. Surge's
+  // wording has no floor to name, just that more Spec is always better.
+  const SPEC_WARN_RE = { floor: 83, text: "Recommended to keep Specialization at 83 or higher on RE for CDR." };
+  const SPEC_WARN_SURGE = { floor: 90, text: "Recommended to keep Specialization as high as possible for CDR and Surge DMG." };
   function renderBvbCard(root, prefix, side, isSurgeSpec) {
     const card = root.querySelector(".ap-bvb-card-" + prefix);
     if (!card) return;
@@ -5750,15 +5731,17 @@
     const specNote = card.querySelector(".ap-bvb-spec-note");
     const specWarn = card.querySelector(".ap-bvb-spec-warn");
     const isRE = !isSurgeSpec;
-    // Shown for both specs now (RE and Surge each get their own wording,
-    // set on every render since which spec is active can change) - the
-    // 83+ CDR recommendation beside it stays RE-only, Surge has no such
-    // floor to recommend.
+    // Both icons show for both specs. Each spec has its own wording and
+    // WARN floor, set on every render since which spec is active can change.
     if (specNote) {
       specNote.hidden = false;
       specNote.title = isRE ? SPEC_NOTE_TEXT_RE : SPEC_NOTE_TEXT_SURGE;
     }
-    if (specWarn) specWarn.hidden = !(isRE && specInput && parseFloat(specInput.value) < 83);
+    if (specWarn) {
+      const warn = isRE ? SPEC_WARN_RE : SPEC_WARN_SURGE;
+      specWarn.title = warn.text;
+      specWarn.hidden = !(specInput && parseFloat(specInput.value) < warn.floor);
+    }
   }
 
   function renderBraceletVsBracelet(root, inputs, result) {
