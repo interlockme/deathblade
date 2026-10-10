@@ -67,25 +67,49 @@
 
   var el = window.SiteUtils.el;
 
-  // "Destiny" is the one keyword the in-game tooltip itself colors (see
-  // the reference screenshots this data was transcribed from) - matched
-  // as a whole word so it also picks up the leading "Destiny" in a named
-  // buff like "Destiny: Slaughter Spectacle" without matching unrelated text.
-  var DESTINY_RE = /\bDestiny\b/g;
+  // The in-game core tooltip colours four things in an option line, all
+  // transcribed from its reference screenshots:
+  //   - the keyword "Destiny", and a named Destiny effect as a whole
+  //     ("Destiny: Slaughter Spectacle", "Destiny: Enhanced Sharpness";
+  //     the colon after the name stays plain) -> purple
+  //   - a signed figure's number and unit ("+2.5%", "-4.0s", "-50%"): the
+  //     +/- sign itself stays plain. Green when the change helps the player,
+  //     red when it hurts. That is not the same as the sign: a Cooldown or
+  //     MP Cost figure is good when it goes DOWN ("cooldown -2.0s",
+  //     "MP Cost -50%" are green, "Cooldown +6.0s" is red)
+  //   - a duration ("30.0s") and a count ("1 time(s)", "up to 5 times"):
+  //     the number is yellow, the word after it stays plain
+  // One alternation, in this order, so a signed "-2.0s" is read as a signed
+  // figure and never as a bare duration. Groups: 1 keyword, 2 sign,
+  // 3 signed number and unit, 4 duration, 5 count.
+  var TOKEN_RE = /\b(Destiny(?:: [A-Z][a-z]+(?: [A-Z][a-z]+)*)?)|([+-])(\d+(?:\.\d+)?[%s]?)|(\d+(?:\.\d+)?s)\b|(\d+)(?= times\b| time\(s\))/g;
+  // A figure on these stats improves when it falls.
+  var LOWER_IS_BETTER_RE = /(?:cooldown|MP Cost)\s*$/i;
 
-  // Appends `text` to `parent` as plain text nodes, splitting out any
-  // "Destiny" occurrences into their own highlighted span. DOM-built
-  // rather than innerHTML, same as every other widget here.
+  // Appends `text` to `parent` as plain text nodes, wrapping each coloured
+  // piece (see TOKEN_RE) in its own span. DOM-built rather than innerHTML,
+  // same as every other widget here. Relic/ancient pairs never reach this
+  // function: SiteUtils.appendGradePairs renders them and only hands the text
+  // between them here.
   function appendHighlighted(parent, text) {
     var lastIndex = 0;
     var match;
-    DESTINY_RE.lastIndex = 0;
-    while ((match = DESTINY_RE.exec(text))) {
+    TOKEN_RE.lastIndex = 0;
+    while ((match = TOKEN_RE.exec(text))) {
       if (match.index > lastIndex) {
         parent.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
       }
-      parent.appendChild(el("span", "ark-core-tip-kw", match[0]));
-      lastIndex = DESTINY_RE.lastIndex;
+      if (match[1]) {
+        parent.appendChild(el("span", "ark-core-tip-kw", match[1]));
+      } else if (match[2]) {
+        var lowerIsBetter = LOWER_IS_BETTER_RE.test(text.slice(0, match.index));
+        var good = (match[2] === "-") === lowerIsBetter;
+        parent.appendChild(document.createTextNode(match[2]));
+        parent.appendChild(el("span", good ? "ark-core-tip-good" : "ark-core-tip-bad", match[3]));
+      } else {
+        parent.appendChild(el("span", "ark-core-tip-num", match[4] || match[5]));
+      }
+      lastIndex = TOKEN_RE.lastIndex;
     }
     if (lastIndex < text.length) {
       parent.appendChild(document.createTextNode(text.slice(lastIndex)));

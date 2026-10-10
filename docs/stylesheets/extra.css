@@ -9668,6 +9668,20 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-core-tip-kw {
   color: var(--dbc-purple);
 }
+/* The in-game tooltip's figure colours (ark-core-badge.js appendHighlighted):
+   green for a figure that helps, red for one that hurts, yellow for a
+   duration or a count. The +/- sign stays the line's own colour. Weight is
+   left alone: the game does not embolden them, and the relic/ancient pair
+   figures (.grade-relic-val / .grade-ancient-val) are the bold ones. */
+.md-typeset .ark-core-tip-good {
+  color: var(--dbc-green);
+}
+.md-typeset .ark-core-tip-bad {
+  color: var(--dbc-red);
+}
+.md-typeset .ark-core-tip-num {
+  color: color-mix(in srgb, var(--dbc-gold) 60%, white);
+}
 .md-typeset .ark-core-tip-note {
   margin-top: 0.6em;
   padding-top: 0.5em;
