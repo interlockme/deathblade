@@ -1916,6 +1916,122 @@
     return payload;
   }
 
+  // ----- Last imported character (per preset) -----
+  // The toolbar pill left of the Preset group (markup in resources.md) shows
+  // the character most recently loaded into each preset. It is kept in
+  // localStorage as { "1": { name, region, at, reasons }, ... } so it
+  // survives reloads and follows preset switches. reasons lists why the
+  // import is probably unreliable; any entry turns the pill red.
+  var LAST_IMPORT_KEY = "ap-calc-deathblade-v1-last-import";
+  // Field warnings beyond the three named causes that make an import suspect.
+  var IMPORT_WARNING_LIMIT = 3;
+  var applyingPayload = false;
+
+  function readLastImports() {
+    try {
+      var parsed = JSON.parse(localStorage.getItem(LAST_IMPORT_KEY));
+      if (parsed && typeof parsed === "object") return parsed;
+    } catch (e) {
+      // storage blocked or corrupt: treat as empty
+    }
+    return {};
+  }
+
+  function writeLastImports(all) {
+    try {
+      localStorage.setItem(LAST_IMPORT_KEY, JSON.stringify(all));
+    } catch (e) {
+      // storage blocked: the label lasts for this page view only
+    }
+  }
+
+  // Why an import is probably unreliable, as short phrases for the tooltip.
+  function importConcerns(payload) {
+    var reasons = [];
+    var warnings = payload.warnings || [];
+    var other = 0;
+    var chaos = false, noSnapshot = false;
+    warnings.forEach(function (w) {
+      if (/may be Chaos Dungeon|Couldn't confirm this was scanned/.test(w)) chaos = true;
+      else if (/^No raid loadout snapshot/.test(w)) noSnapshot = true;
+      else other++;
+    });
+    if (chaos) reasons.push("likely a Chaos Dungeon or unconfirmed loadout");
+    if (noSnapshot) reasons.push("no raid snapshot on Bible");
+    if (payload.data && payload.data["ap-gear-gem-base-ap"] === "0") reasons.push("no gems found");
+    if (other >= IMPORT_WARNING_LIMIT) reasons.push(other + " other field warnings");
+    return reasons;
+  }
+
+  function activePresetOf(root) {
+    var btn = root.querySelector(".ap-calc-preset-active");
+    var id = btn ? parseInt(btn.dataset.preset, 10) : NaN;
+    return id >= 1 ? id : 1;
+  }
+
+  function renderLastImport(root, presetId) {
+    var chip = root.querySelector(".bible-last-import");
+    if (!chip) return;
+    var entry = readLastImports()[String(presetId)];
+    if (!entry || !entry.name) { chip.hidden = true; return; }
+    var nameEl = chip.querySelector(".bible-last-import-name");
+    var reasons = Array.isArray(entry.reasons) ? entry.reasons : [];
+    var when = "";
+    if (entry.at) {
+      var d = new Date(entry.at);
+      if (!isNaN(d.getTime())) when = d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    }
+    var tip = entry.name + (entry.region ? " (" + entry.region + ")" : "") + (when ? ", imported " + when : "") + ".";
+    if (reasons.length) tip += " Check this import: " + reasons.join("; ") + ".";
+    nameEl.textContent = entry.name;
+    nameEl.setAttribute("title", tip);
+    chip.classList.toggle("bible-last-import--warn", reasons.length > 0);
+    chip.hidden = false;
+  }
+
+  function recordLastImport(root, payload) {
+    if (!payload.characterName) return;
+    var all = readLastImports();
+    all[String(activePresetOf(root))] = {
+      name: payload.characterName,
+      region: payload.region || "",
+      at: new Date().toISOString(),
+      reasons: importConcerns(payload)
+    };
+    writeLastImports(all);
+    renderLastImport(root, activePresetOf(root));
+  }
+
+  function clearLastImport(root, presetId) {
+    var all = readLastImports();
+    delete all[String(presetId)];
+    writeLastImports(all);
+    renderLastImport(root, presetId);
+  }
+
+  // Keeps the pill in step with the calculator: a preset switch shows that
+  // preset's label, while Reset and a manual Import replace the values, so
+  // the remembered character does not describe them and its label is dropped. The
+  // calculator's own import step while Load Character is applying a payload
+  // is ignored; recordLastImport sets the label afterwards.
+  function wireLastImport(root) {
+    var chip = root.querySelector(".bible-last-import");
+    if (!chip || chip.__wired) return;
+    chip.__wired = true;
+    root.addEventListener("ap-calc:preset-change", function (ev) {
+      var detail = ev.detail || {};
+      if (applyingPayload) return;
+      if (detail.reason === "reset" || detail.reason === "import") clearLastImport(root, detail.preset);
+      else renderLastImport(root, detail.preset);
+    });
+    chip.querySelector(".bible-last-import-clear").addEventListener("click", function () {
+      clearLastImport(root, activePresetOf(root));
+      var openBtn = root.querySelector(".bible-load-open");
+      if (openBtn) openBtn.focus();
+    });
+    renderLastImport(root, activePresetOf(root));
+  }
+
   // ----- Apply a payload (runs on this calculator page) -----
   // Hands payload.data to the calculator's own Import popover and reports
   // the result. Shared by the bookmarklet fragment and Load Character, so a
@@ -1934,11 +2050,16 @@
     var importBtn = root.querySelector(".ap-calc-import");
     var popover = root.querySelector('.ap-calc-popover[data-popover="import"]');
     if (!importBtn || !popover) { setStatus("Import control not found on this page.", true); return false; }
-    importBtn.click();
-    var textarea = popover.querySelector(".ap-calc-popover-textarea");
-    textarea.value = JSON.stringify(payload.data);
-    var loadBtn = popover.querySelector(".ap-calc-popover-load");
-    loadBtn.click();
+    applyingPayload = true;
+    try {
+      importBtn.click();
+      var textarea = popover.querySelector(".ap-calc-popover-textarea");
+      textarea.value = JSON.stringify(payload.data);
+      var loadBtn = popover.querySelector(".ap-calc-popover-load");
+      loadBtn.click();
+    } finally {
+      applyingPayload = false;
+    }
     // applyImportText (ark-passive-calculator.js) runs synchronously off
     // that click and writes its own result - including a skipped-field
     // list when a pipe/space17 value doesn't match any current <option>
@@ -1983,6 +2104,7 @@
       });
       warnList.hidden = !(payload.warnings && payload.warnings.length);
     }
+    recordLastImport(root, payload);
     return true;
   }
 
@@ -2054,6 +2176,7 @@
             // storage blocked: the region is simply not remembered
           }
         }
+        if (target && target.region) result.region = target.region;
         applyPayload(root, result);
         // The calculator's import resets every field in the calculator,
         // including this selector; put back the region just used.
@@ -2156,6 +2279,7 @@
 
     wireCharacterLoader(root, control);
     wireNoticeClear(root, control);
+    wireLastImport(root);
     applyBibleImport(root);
   }
 

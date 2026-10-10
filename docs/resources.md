@@ -30,7 +30,6 @@
     <span class="ap-build-dock-trigger-chevron" aria-hidden="true">&#9662;</span>
   </button>
   <div class="ap-build-toggle-row ap-build-toggle-row--master ap-build-dock-panel">
-    <span class="ap-build-toggle-label">Build</span>
     <div class="ap-build-toggle ap-build-toggle--master" role="group" aria-label="Build">
       <div class="ap-build-toggle-tier ap-build-toggle-tier--family">
         <button type="button" class="ap-build-chip ap-build-family-chip" data-family="re">RE</button>
@@ -66,6 +65,7 @@
      <a>, because a browser saves the link text as the bookmark title when it
      is dragged. -->
 <div class="ap-calc-toolbar">
+  <span class="bible-last-import" hidden><span class="bible-last-import-name" tabindex="0"></span><button type="button" class="bible-last-import-clear" aria-label="Forget the last imported character for this preset">&times;</button></span>
   <span class="ap-calc-preset-group" role="group" aria-label="Preset slot"><span class="ap-calc-preset-label">Preset</span><button type="button" class="ap-calc-preset" data-preset="1">1</button><button type="button" class="ap-calc-preset" data-preset="2">2</button><button type="button" class="ap-calc-preset" data-preset="3">3</button></span>
   <span class="bible-import-control" data-proxy="https://bible-relay.interlockme.workers.dev/">
     <button type="button" class="bible-load-open">Load Character</button>
@@ -105,7 +105,7 @@
     </span>
     <span class="bible-load-info">
       <span class="ap-calc-popover-msg" aria-live="polite"></span>
-      <span class="bible-load-note">Loads Bible's latest snapshot into the active preset. Main Stat % isn't on Bible, so set it yourself. Only as accurate as the character's Raid Loadout.</span>
+      <span class="bible-load-note">Loads your Bible profile into the active preset. Log out on your Raid Loadout and update your profile if needed. Main Stat % isn't on Bible; set it yourself.</span>
     </span>
     <details class="bible-load-manual">
       <summary>Load not working?</summary>

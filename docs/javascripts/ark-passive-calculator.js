@@ -6408,6 +6408,17 @@
     resetAvbMemory(root);
     // Instantly re-calculate calculations and refresh value/range displays
     update(root);
+    notifyPresetChange(root, "reset");
+  }
+
+  // Tells other scripts (bible-import.js keeps a per-preset "last imported
+  // character" label) that the active preset's values were replaced or the
+  // active preset changed. reason is "reset", "switch" or "import".
+  function notifyPresetChange(root, reason) {
+    root.dispatchEvent(new CustomEvent("ap-calc:preset-change", {
+      bubbles: true,
+      detail: { preset: getActivePresetId(), reason: reason },
+    }));
   }
 
   // Swaps which of the 3 slots is loaded into the form. The slot being
@@ -6427,6 +6438,7 @@
     resetAvbMemory(root);
     updatePresetButtonStates(root);
     update(root);
+    notifyPresetChange(root, "switch");
   }
 
   function updatePresetButtonStates(root) {
@@ -6551,6 +6563,7 @@
     resetAvbMemory(root);
     saveInputs(root, activeId);
     update(root);
+    notifyPresetChange(root, "import");
     let msg = "Imported into Preset " + activeId + ".";
     // Tell the person when something in their paste didn't take, instead
     // of letting it fail silently - a stale/renamed select option value
