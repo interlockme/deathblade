@@ -2,40 +2,6 @@
 
 ![313 sticker](assets/shared/sticker-313.png){: .page-sticker }
 
-## Bonus Skill Codes
-
-=== "Early Paradise"
-
-    ```
-    6DA43AC633E2CEC99E42A67CC7C650EF321176822375B4CE0FFFFD98E40F5C56F2FBEE9A1A60DBB0DE1D6F4FA2F83C63D4350F09E0A43F4536D632FEFD5E1B05
-    ```
-
-    - For the early Crucible levels, when Paradise equipment is at low restoration levels.
-
-=== "Late Paradise"
-
-    ```
-    BFE03CBB4F77DF0F01E5140695FA2010C9B1D47B03BBE27D7855E04EE259B1CA012D2AFD8D558CB98EE607B5D6FDB071244ABF56DDE760D513AC66FC26C6FBC8
-    ```
-
-    - For the later Crucible levels, when Paradise equipment is at higher restoration levels.
-
-=== "Chaos Dungeon"
-
-    ```
-    5BC069F349F703CA2B9B9B732BB3629E493826BE8BEA2FF11FF1575D1258D07FAA57A9FADBF188946EF1E2DB1CD6779759FF6F7EA4138A86EB19F6505242CC98
-    ```
-    
-    - Basic skill loadout without any requirements that can be used for Chaos Dungeons.
-
-=== "111 (Void Skip)"
-
-    ```
-    FB388C4F19F70DE5311D21E59D93BE5D1B9935691AB3B6F2457D466875600C7A581AE3DFA172017D17440BEC09FB7A05BEE420C68F6788139A428497A91B802E
-    ```
-
-    - Alternative to Standard RE. KR guide is available in Useful Links section.
-
 ## Ark Passive Calculator
 
 *Finds the optimal setup for your Deathblade and party composition. See spreadsheets [1](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) or [2](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) for verification.*
@@ -2306,6 +2272,40 @@
 <p class="bid-calc-footnote">Party Profit is each other member's cut if that row wins. Next Bidder needs a +10% raise to outbid you.</p>
 </div>
 </div>
+
+## Bonus Skill Codes
+
+=== "Early Paradise"
+
+    ```
+    6DA43AC633E2CEC99E42A67CC7C650EF321176822375B4CE0FFFFD98E40F5C56F2FBEE9A1A60DBB0DE1D6F4FA2F83C63D4350F09E0A43F4536D632FEFD5E1B05
+    ```
+
+    - For the early Crucible levels, when Paradise equipment is at low restoration levels.
+
+=== "Late Paradise"
+
+    ```
+    BFE03CBB4F77DF0F01E5140695FA2010C9B1D47B03BBE27D7855E04EE259B1CA012D2AFD8D558CB98EE607B5D6FDB071244ABF56DDE760D513AC66FC26C6FBC8
+    ```
+
+    - For the later Crucible levels, when Paradise equipment is at higher restoration levels.
+
+=== "Chaos Dungeon"
+
+    ```
+    5BC069F349F703CA2B9B9B732BB3629E493826BE8BEA2FF11FF1575D1258D07FAA57A9FADBF188946EF1E2DB1CD6779759FF6F7EA4138A86EB19F6505242CC98
+    ```
+    
+    - Basic skill loadout without any requirements that can be used for Chaos Dungeons.
+
+=== "111 (Void Skip)"
+
+    ```
+    FB388C4F19F70DE5311D21E59D93BE5D1B9935691AB3B6F2457D466875600C7A581AE3DFA172017D17440BEC09FB7A05BEE420C68F6788139A428497A91B802E
+    ```
+
+    - Alternative to Standard RE. KR guide is available in Useful Links section.
 
 ## Useful Links
 

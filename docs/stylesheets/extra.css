@@ -3892,11 +3892,11 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .engraving-card-badge {
   display: inline-block;
-  font-size: var(--dbc-fs-sm);
+  font-size: 0.52rem; /* the Essentials skill tables' tag size */
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 0.2em 0.55em;
+  padding: 0.15em 0.5em;
   border-radius: 999px;
   border: 1px solid transparent;
   white-space: nowrap;
@@ -11128,6 +11128,16 @@ body.page-333-blitz input[type="text"] {
   font-size: 1.1em;
   font-style: normal;
   color: var(--dbc-pink);
+}
+/* On a phone each pill sits on its own row, so a connector left inline would hang
+   at the right edge of the row above or below it. Under 430px it takes its own
+   row, indented to the pill's icon, so the column reads pill, "or", pill. */
+@media (max-width: 430px) {
+  .md-typeset .food-options > p:has(> .food-option-connector) {
+    flex: 0 0 100%;
+    line-height: 1;
+    padding-left: 1.1em;
+  }
 }
 
 /* Decorative sticker under a page title (Resources): centered in the
