@@ -167,7 +167,7 @@ Shared by both playstyles: bonus skill codes, calculators and useful links.
 
 </div>
 
-[Bonus Skill Codes](resources.md#bonus-skill-codes){ .home-chip } [Calculators](resources.md#ark-passive-calculator){ .home-chip } [Useful Links](resources.md#useful-links){ .home-chip }
+[Calculators](resources.md#ark-passive-calculator){ .home-chip } [Bonus Skill Codes](resources.md#bonus-skill-codes){ .home-chip } [Useful Links](resources.md#useful-links){ .home-chip }
 { .home-chips }
 
 </div>
