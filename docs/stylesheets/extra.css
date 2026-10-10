@@ -1916,13 +1916,13 @@ h3 { color: var(--dbc-teal); }
   background: none;
   overflow: visible;
   box-shadow: none;
-  /* Matches .stage-tag's own font-size context: .stage-tag's 0.78em is
+  /* Matches .stage-tag's own font-size context: .stage-tag's 0.85em is
      relative to .rotation-line's 0.87em (not the ambient .cycle-card
      1em this <details> otherwise sits in), so without this the summary
      label rendered visibly larger than the Cycle/Follow-up tags above it
-     despite using the same nominal 0.78em - see that rule's own
+     despite using the same nominal 0.85em - see that rule's own
      font-size comment. Setting the same 0.87em here first reproduces
-     the identical two-step 0.87em * 0.78em computation .stage-tag uses,
+     the identical two-step 0.87em * 0.85em computation .stage-tag uses,
      so the two stay in step by construction instead of by a hardcoded
      magic number that'd drift if either base ever changes. */
   font-size: 0.87em;
@@ -1937,24 +1937,18 @@ h3 { color: var(--dbc-teal); }
   display: flex;
   align-items: center;
   gap: 0.5em;
-  /* Horizontal padding needs the same calc(...)-based two-step
-     reproduction the font-size comment above already uses, not just a
-     matching nominal 0.9em: this summary's own font-size is 0.78em
-     *nested inside* the <details>'s 0.87em (0.6786em absolute), while
-     .stage-tag's sibling padding (.rotation-line's 0.9em) is computed
-     against .rotation-line's 0.87em directly (one nesting level, not
-     two) - so a plain "0.9em" here resolved to a visibly smaller
-     absolute offset (~0.61em) than the Cycle/Follow-up tags' effective
-     left inset above it (~0.78em), left-shifting this label out of line
-     with them. Dividing back out the 0.78 factor in calc() cancels that
-     extra nesting step so the two line up, the same way the font-size
-     rule above cancels it for text size. */
-  padding: 0.55em calc(0.9em / 0.78);
+  /* Horizontal padding is calc(0.9em / 0.85) so the label's left inset
+     equals .stage-tag's: this summary's font-size is 0.85em nested inside
+     the <details>'s 0.87em, while .stage-tag's sibling padding (0.9em) is
+     resolved against .rotation-line's 0.87em directly, one nesting level
+     less. Dividing out the 0.85 cancels that extra step, the same way the
+     font-size on the <details> above does for text size. */
+  padding: 0.55em calc(0.9em / 0.85);
   margin: 0;
   background: none;
   border-radius: 0;
   color: var(--dbc-gold);
-  font-size: 0.78em;
+  font-size: 0.85em;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -3936,7 +3930,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .engraving-card-body > p:not(.food-req),
 .md-typeset .engraving-card-body > ul {
   margin: 0.4em 0;
-  font-size: 0.94em;
+  font-size: var(--dbc-fs-table);
   color: var(--dbc-lilac);
   line-height: 1.5;
 }

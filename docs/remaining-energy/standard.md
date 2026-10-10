@@ -257,7 +257,7 @@ Recovery
 <div class="rotation-notes" markdown>
 
 1. Use spare Twin Shadows or Maelstrom stacks to recover if it'll help you reach 3 orbs.
-    - If not, just AFK or Surge with 2 orbs and AFK. Welcome to Standard Remaining Energy.
+2. If not, just AFK or Surge with 2 orbs and AFK. Welcome to Standard Remaining Energy.
 
 </div>
 

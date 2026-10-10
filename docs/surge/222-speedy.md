@@ -321,11 +321,8 @@ From 3 orbs
 
 </div>
 
-<div class="setup-panel" data-accent="lavender" markdown>
-<div class="setup-notes" markdown>
-
-<details class="setup-note" data-kind="tip" open markdown>
-<summary><span class="setup-note-tag">Tip</span>Leopard Mode (Recommended)<span class="setup-note-arrow"></span></summary>
+Leopard Mode (Recommended)
+{ .rotation-stage }
 
 After the opener, alternate between these two cycles as needed for ceiling DPS:
 
@@ -360,12 +357,8 @@ After the opener, alternate between these two cycles as needed for ceiling DPS:
 4. Surprise Attack always goes before Maelstrom on cycles with a Surprise Attack finisher so its CD aligns.
 5. It seems more complicated than it really is, so watch [this video](https://www.youtube.com/watch?v=V1UQhE37Yjs) to see how a full rotation plays out.
 
-It helps to think of everything within <span class="skill-inline" data-skill-id="deathtrance"><span class="skill-inline-name">Death Trance</span></span> and <span class="skill-inline" data-skill-id="deathlyslash"><span class="skill-inline-name">Deathly Slash</span></span> as 53 stacks, and the Wind Cut precast or Surprise Attack finisher as flexible options that give you the 7+ stacks needed to complete a 60+ stack Surge.
+It helps to think of everything within <span class="skill-inline" data-skill-id="deathtrance"><span class="skill-inline-name">Death Trance</span></span> and <span class="skill-inline" data-skill-id="deathlyslash"><span class="skill-inline-name">Deathly Slash</span></span> as a 53 stack constant, and the chained Wind Cut precast or Surprise Attack finisher as flexible options that give you the 7+ stacks needed to complete a 60+ stack Surge.
 
-</div>
-</details>
-
-</div>
 </div>
 
 All cycles
