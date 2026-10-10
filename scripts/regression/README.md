@@ -93,3 +93,10 @@ It prints `IDENTICAL to baseline` or the differing paths (exit 1). It reads only
     python3 scripts/regression/smoke.py --site site_out --workers 4
 
 Prints `OK` or one `FAIL` line per problem and exits 1. `--pages /surge/111-classic/` limits it to chosen pages, `--verbose` adds notes. It serves the site under the production path and rewrites `sitemap.xml` to the local origin, because Material only does instant navigation for links listed in the sitemap.
+
+## test_bible_load.py: Load Character popover
+
+    mkdocs build -d site_out
+    python3 scripts/regression/test_bible_load.py --site site_out
+
+Answers lostark.bible's character page from the fixtures (no network) and drives the popover for real. Each fixture is imported by name, by pasted page source, and through the `#bible-import=` fragment; the three results must match exactly. Also checks `htmlToLines` against each fixture's recorded lines, the error paths (blocked request, 404, 429, wrong character, wrong class, no data, invalid input), the optional proxy, Cancel and Escape. It finishes with negative controls that break the code on purpose and must be detected. Exit status is non-zero on any failure.

@@ -4643,9 +4643,9 @@ h3 { color: var(--dbc-teal); }
 
 /* ---------- Ark Passive node comparison calculator ---------- */
 /* Structure of the calculator:
-   - Top bar (.ap-calc-bar): Build chips on the left, preset slots and file
-     actions (Export, Import, Reset, Bible Import) on the right. Sticky under
-     the site header on desktop.
+   - Top bar (.ap-calc-bar): Build chips on the left, preset slots, Load
+     Character and file actions (Export, Import, Reset) on the right. Sticky
+     under the site header on desktop.
    - Two columns below it. Left: the inputs, grouped by the final stat they
      feed (Crit Rate, Crit Dmg, Crit Hit Dmg, Additional Dmg, Evolution
      Dmg) rather than by item slot, since "what is pushing my Crit Dmg" is
@@ -8204,11 +8204,14 @@ h3 { color: var(--dbc-teal); }
   }
 }
 
-/* Toolbar: preset slots plus Export, Import, Reset and the Bible Import
-   bookmarklet. Lives in the top bar (.ap-calc-bar), right-aligned. Inputs
-   are saved to this browser's localStorage on every change, so a reader
-   coming back later sees their own last setup; Reset is the way back to the
-   authored defaults and only clears the active preset. */
+/* Toolbar: preset slots, Load Character, Export, Import and Reset. Lives in
+   the top bar (.ap-calc-bar), right-aligned. Inputs are saved to this
+   browser's localStorage on every change, so a reader coming back later sees
+   their own last setup; Reset is the way back to the authored defaults and
+   only clears the active preset. Load Character is the one filled button: it
+   is the main way to bring a character in, and an import lands in the preset
+   chosen at its left. Export, Import and Reset are the quiet outlined
+   buttons (backup, restore, wipe). */
 .md-typeset .ap-calc-toolbar {
   position: relative; /* anchors the Export/Import popovers below */
   display: flex;
@@ -8239,9 +8242,30 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-pink);
   border-color: rgba(var(--dbc-pink-rgb), 0.5);
 }
+/* Primary button: the same filled-accent recipe as the home page's
+   .home-cta (accent fill, page-colour text, brightness on hover), with the
+   toolbar's own height and radius. */
+.md-typeset .ap-calc-toolbar .bible-load-open {
+  box-sizing: border-box;
+  height: 1.55rem;
+  padding: 0 0.85rem;
+  background-color: var(--dbc-pink);
+  border: 1px solid var(--dbc-pink);
+  border-radius: var(--ap-radius);
+  color: var(--md-default-bg-color);
+  font: inherit;
+  font-size: var(--ap-fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.12s ease;
+}
+.md-typeset .ap-calc-toolbar .bible-load-open:hover {
+  filter: brightness(1.1);
+}
 .md-typeset .ap-calc-toolbar .ap-calc-export:focus-visible,
 .md-typeset .ap-calc-toolbar .ap-calc-import:focus-visible,
 .md-typeset .ap-calc-toolbar .ap-calc-reset:focus-visible,
+.md-typeset .ap-calc-toolbar .bible-load-open:focus-visible,
 .md-typeset .ap-calc-toolbar .ap-calc-preset:focus-visible {
   outline: 2px solid rgba(var(--dbc-pink-rgb), 0.6);
   outline-offset: 2px;
@@ -8284,18 +8308,21 @@ h3 { color: var(--dbc-teal); }
   box-shadow: inset 0 0 0 1px rgba(var(--dbc-pink-rgb), 0.45);
 }
 
-/* Bible Import bookmarklet: deliberately not styled like the buttons next
-   to it. Those are click targets; this one only works when DRAGGED to a
-   bookmarks bar. Matching styling trained people to click it, which ran the
-   bookmarklet against this calculator page (no character data here) and
-   produced a confusing "couldn't find character data" message. A dashed
-   pill with a grab cursor reads as "drag this object"; the click handler in
-   bible-import.js is the other half of that fix. */
+/* Bible Import bookmarklet (inside the Load Character popover): deliberately
+   not styled like the buttons around it. Those are click targets; this one
+   only works when DRAGGED to a bookmarks bar. Matching styling trained
+   people to click it, which ran the bookmarklet against this calculator page
+   (no character data here) and produced a confusing "couldn't find
+   character data" message. A dashed pill with a grab cursor reads as "drag
+   this object"; the click handler in bible-import.js is the other half of
+   that fix. */
 .md-typeset .ap-calc-toolbar .bible-import-control {
   display: inline-flex;
+  align-items: center;
 }
-.md-typeset .ap-calc-toolbar .bible-import-bookmarklet {
+.md-typeset .bible-load-popover .bible-import-bookmarklet {
   display: inline-flex;
+  flex: none;
   align-items: center;
   box-sizing: border-box;
   height: 1.55rem;
@@ -8313,7 +8340,7 @@ h3 { color: var(--dbc-teal); }
    link to a bookmarks bar uses the anchor's text content as the saved
    title, and generated content is not part of that, so this is the only way
    to show the icon without it being saved as "⠿ Bible Import". */
-.md-typeset .ap-calc-toolbar .bible-import-bookmarklet::before {
+.md-typeset .bible-load-popover .bible-import-bookmarklet::before {
   content: "⠿";
   display: inline-flex;
   align-items: center;
@@ -8321,19 +8348,20 @@ h3 { color: var(--dbc-teal); }
   opacity: 0.7;
   line-height: 1;
 }
-.md-typeset .ap-calc-toolbar .bible-import-bookmarklet:hover {
+.md-typeset .bible-load-popover .bible-import-bookmarklet:hover {
   background: rgba(var(--dbc-pink-rgb), 0.16);
   border-color: var(--dbc-pink);
 }
-.md-typeset .ap-calc-toolbar .bible-import-bookmarklet:active {
+.md-typeset .bible-load-popover .bible-import-bookmarklet:active {
   cursor: grabbing;
 }
 
 /* Import result and skipped-field warnings from the bookmarklet. Takes no
    space until bible-import.js writes a status or un-hides the list. */
 .md-typeset .ap-calc-notice {
+  position: relative;
   margin: 0 0 var(--ap-gap);
-  padding: 0.55rem var(--ap-pad-x);
+  padding: 0.55rem calc(var(--ap-pad-x) + 1.1rem) 0.55rem var(--ap-pad-x);
   font-size: var(--ap-fs-sm);
   background-color: var(--ap-surface);
   border: 1px solid var(--ap-line);
@@ -8359,6 +8387,42 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-calc-notice .bible-import-warnings[hidden] {
   display: none;
+}
+/* Dismiss button in the card's top right corner: bible-import.js empties the
+   status and the warning list, which hides the card (the :not(:has()) rule
+   above). The icon is an inline SVG with no text, so the card's text content,
+   which the regression dump reads, is only the status and the warnings. */
+.md-typeset .ap-calc-notice .bible-import-clear {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 1.3rem;
+  height: 1.3rem;
+  margin: 0;
+  padding: 0;
+  color: var(--dbc-muted-text-soft);
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .ap-calc-notice .bible-import-clear:hover {
+  color: var(--dbc-lavender);
+  background-color: rgba(var(--dbc-purple-rgb), 0.18);
+}
+.md-typeset .ap-calc-notice .bible-import-clear:focus-visible {
+  outline: 2px solid var(--dbc-pink);
+  outline-offset: 1px;
+}
+.md-typeset .ap-calc-notice .bible-import-clear svg {
+  display: block;
+  width: 0.6rem;
+  height: 0.6rem;
 }
 
 /* Export/Import popovers: absolutely positioned under the toolbar so
@@ -8440,6 +8504,172 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-calc-popover-msg-error {
   color: var(--dbc-red);
+}
+
+/* Load Character popover (bible-import.js): the name or link box with its
+   region selector, a one-line note, and a collapsed "Load not working?"
+   fallback holding two routes (paste the page source, or the bookmarklet). It reuses the popover shell, title, textarea, action buttons and
+   message line above. The box and selector are 16px under a coarse pointer
+   (the touch block at the end of this file) so iOS Safari does not zoom. */
+.md-typeset .bible-load-row {
+  display: flex;
+  gap: 0.4em;
+}
+.md-typeset .bible-load-input,
+.md-typeset .bible-load-region {
+  box-sizing: border-box;
+  height: 1.9em;
+  font: inherit;
+  font-size: 0.85em;
+  color: var(--dbc-lilac);
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--dbc-r-sm);
+  padding: 0 0.6em;
+}
+.md-typeset .bible-load-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.md-typeset .bible-load-region {
+  flex: none;
+  cursor: pointer;
+}
+.md-typeset .bible-load-input:read-only {
+  opacity: 0.6;
+}
+.md-typeset .bible-load-note {
+  font-size: 0.78em;
+  color: var(--dbc-muted-text-soft);
+}
+/* Material draws every <details> as an admonition (border, tint, icon,
+   chevron); inside the popover it is a plain disclosure line instead. */
+.md-typeset details.bible-load-manual {
+  margin: 0;
+  padding: 0.5em 0 0;
+  font-size: 0.85em;
+  background: none;
+  border: 0;
+  border-top: 1px solid rgba(var(--dbc-purple-rgb), 0.2);
+  border-radius: 0;
+  box-shadow: none;
+}
+/* The sitewide closed-details rules (dimmed to 0.8 opacity, summary padded
+   0.28rem top and bottom) outrank the plain rules here, so without these two
+   the row sat lower and dimmer closed than open and jumped up on click. */
+.md-typeset details.bible-load-manual:not([open]) {
+  opacity: 1;
+}
+.md-typeset details.bible-load-manual:not([open]) > summary {
+  padding: 0;
+}
+/* Material's `html .md-typeset details > :last-child` gives the last route a
+   0.6rem bottom margin, which stacked on the popover's own bottom padding. */
+.md-typeset details.bible-load-manual > :last-child {
+  margin-bottom: 0;
+}
+.md-typeset .bible-load-manual > summary {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--dbc-lavender);
+}
+.md-typeset .bible-load-manual > summary::before {
+  content: "\25B8";
+  position: static;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  margin: 0 0.4em 0 0;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+  color: inherit;
+  font-size: 0.9em;
+  transform: none;
+}
+.md-typeset .bible-load-manual[open] > summary::before {
+  content: "\25BE";
+  transform: none;
+}
+.md-typeset .bible-load-manual > summary::after {
+  display: none;
+}
+.md-typeset .bible-load-manual[open] > summary {
+  margin-bottom: 0.4em;
+}
+.md-typeset .bible-load-popover .ap-calc-popover-msg {
+  text-align: left;
+}
+/* The message and the note share one grid cell: a message takes the note's
+   place (the note is hidden, not removed, so the cell keeps its height) and
+   nothing below moves when a status appears or clears. Only a message longer
+   than the note grows the cell. An empty message stays rendered so a later
+   one is announced. */
+.md-typeset .bible-load-info {
+  display: grid;
+}
+.md-typeset .bible-load-info > * {
+  grid-area: 1 / 1;
+  align-self: start;
+}
+.md-typeset .bible-load-info > .ap-calc-popover-msg {
+  min-height: 0;
+}
+.md-typeset .bible-load-info:has(> .ap-calc-popover-msg:not(:empty)) > .bible-load-note {
+  visibility: hidden;
+}
+.md-typeset .bible-load-steps {
+  margin: 0 0 0.5em;
+  padding-left: 1.3em;
+  font-size: 0.92em;
+  color: var(--dbc-muted-text-soft);
+}
+.md-typeset .bible-load-steps li {
+  margin: 0;
+}
+.md-typeset .bible-load-manual .ap-calc-popover-actions {
+  margin-top: 0.5em;
+}
+/* The two fallback routes inside the disclosure: a small title each, with a
+   rule between them. */
+.md-typeset .bible-load-route {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+.md-typeset .bible-load-route + .bible-load-route {
+  margin-top: 0.7em;
+  padding-top: 0.6em;
+  border-top: 1px solid rgba(var(--dbc-purple-rgb), 0.2);
+}
+.md-typeset .bible-load-route-title {
+  font-weight: 600;
+  color: var(--md-default-fg-color);
+}
+.md-typeset .bible-load-route .bible-load-steps {
+  margin: 0;
+}
+.md-typeset .bible-load-bm-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+}
+.md-typeset .bible-load-bm-text {
+  font-size: 0.92em;
+  color: var(--dbc-muted-text-soft);
+}
+.md-typeset .bible-load-popover button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+/* With the routes open, the space under the last button (padding plus the
+   1px border) matches the 0.7em of the route font between the bookmarklet and
+   the divider below it. */
+.md-typeset .bible-load-popover:has(.bible-load-manual[open]) {
+  padding-bottom: calc(0.6em - 1px);
 }
 
 @media screen and (max-width: 900px) {
@@ -11269,6 +11499,7 @@ html.image-lightbox-open {
 @media (pointer: coarse) {
   .md-typeset .ap-calc input:not([type="checkbox"]):not([type="radio"]),
   .md-typeset .ap-calc select,
+  .md-typeset .ap-calc .bible-load-source,
   .md-typeset .cpm-calc input[type="number"],
   .md-typeset .cpm-calc input[type="text"],
   .md-typeset .bid-calc input[type="number"],
@@ -11321,8 +11552,33 @@ html.image-lightbox-open {
   .md-typeset .ap-calc-export,
   .md-typeset .ap-calc-import,
   .md-typeset .ap-calc-reset,
+  .md-typeset .bible-load-open,
   .md-typeset .ap-build-dock-trigger {
     min-height: 36px;
+  }
+  .md-typeset .bible-load-input,
+  .md-typeset .bible-load-region,
+  .md-typeset .bible-load-popover .ap-calc-popover-actions button {
+    min-height: 36px;
+  }
+  .md-typeset .ap-calc-notice {
+    padding-right: calc(var(--ap-pad-x) + 1.6rem);
+  }
+  .md-typeset .ap-calc-notice .bible-import-clear {
+    top: 0.1rem;
+    right: 0.1rem;
+    width: 36px;
+    height: 36px;
+  }
+  /* The bookmarklet only works dragged to a bookmarks bar, which a touch
+     screen cannot do, so its route is not offered there. */
+  .md-typeset .bible-load-route:has(.bible-import-bookmarklet) {
+    display: none;
+  }
+  .md-typeset .bible-load-route:has(.bible-import-bookmarklet) + .bible-load-route {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
   }
   .md-typeset .ap-result-pin {
     min-width: 32px;

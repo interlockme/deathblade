@@ -49,22 +49,30 @@
   </div>
 </div>
 
-<!-- Preset slots plus Export/Import/Reset and the Bible Import bookmarklet.
-     Export and Import open the popovers at the end of this block, anchored
-     to the toolbar. The bookmarklet is wired up by bible-import.js: drag the
-     link to a bookmarks bar, then click it on a loaded lostark.bible
-     character page; it redirects back here and the data flows through the
-     same Import path (same validation, unknown options are skipped). The
-     grip icon is a CSS ::before, not text inside the <a>, because a
-     browser saves the link text as the bookmark title when it is dragged. -->
+<!-- Preset slots, Load Character (the primary button) and Export/Import/Reset.
+     Export, Import and Load Character open the popovers at the end of this
+     block, anchored to the toolbar. Load Character takes a name or Bible
+     link: bible-import.js fetches that character's page and feeds the same
+     Import path (same validation, unknown options are skipped).
+     data-proxy on .bible-import-control is the optional https URL of a proxy
+     that returns the page (scripts/bible-proxy/worker.js); empty means the
+     browser asks lostark.bible directly, which Bible's missing CORS headers
+     refuse. The fallback lives in the Load Character popover under "Load not
+     working?": the page-source box takes the same page pasted by hand, and
+     the Bible Import bookmarklet (wired up by bible-import.js; drag the link
+     to a bookmarks bar, then click it on a loaded lostark.bible character
+     page; it redirects back here and the data flows through the same Import
+     path). The bookmarklet's grip icon is a CSS ::before, not text inside the
+     <a>, because a browser saves the link text as the bookmark title when it
+     is dragged. -->
 <div class="ap-calc-toolbar">
   <span class="ap-calc-preset-group" role="group" aria-label="Preset slot"><span class="ap-calc-preset-label">Preset</span><button type="button" class="ap-calc-preset" data-preset="1">1</button><button type="button" class="ap-calc-preset" data-preset="2">2</button><button type="button" class="ap-calc-preset" data-preset="3">3</button></span>
+  <span class="bible-import-control" data-proxy="https://bible-relay.interlockme.workers.dev/">
+    <button type="button" class="bible-load-open">Load Character</button>
+  </span>
   <button type="button" class="ap-calc-export">Export</button>
   <button type="button" class="ap-calc-import">Import</button>
   <button type="button" class="ap-calc-reset" title="Reset every field to its default">Reset</button>
-  <span class="bible-import-control">
-    <a href="#" class="bible-import-bookmarklet" title="Drag to your bookmarks bar, then click it on a loaded lostark.bible character page. Doesn't capture Main Stat % (Stronghold Pet + Skins), so set them manually. Only as accurate as your Raid Loadout is.">Bible Import</a>
-  </span>
   <span class="ap-calc-popover" data-popover="export" hidden>
     <span class="ap-calc-popover-title" id="ap-calc-popover-title-export">Export Preset <span class="ap-calc-popover-preset-num"></span></span>
     <textarea class="ap-calc-popover-textarea" aria-labelledby="ap-calc-popover-title-export" readonly rows="4" spellcheck="false"></textarea>
@@ -85,17 +93,56 @@
     </span>
     <span class="ap-calc-popover-msg" aria-live="polite"></span>
   </span>
+  <div class="ap-calc-popover bible-load-popover" data-popover="bible" hidden>
+    <span class="ap-calc-popover-title" id="ap-calc-popover-title-bible">Load a character from Lost Ark Bible</span>
+    <span class="bible-load-row">
+      <input type="text" class="bible-load-input" aria-labelledby="ap-calc-popover-title-bible" placeholder="Character name or Bible link" maxlength="300" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <select class="bible-load-region" aria-label="Region (NA is North America, CE is Central Europe)"><option value="NA">NA</option><option value="CE">CE</option></select>
+    </span>
+    <span class="ap-calc-popover-actions">
+      <button type="button" class="bible-load-go">Load</button>
+      <button type="button" class="ap-calc-popover-close">Cancel</button>
+    </span>
+    <span class="bible-load-info">
+      <span class="ap-calc-popover-msg" aria-live="polite"></span>
+      <span class="bible-load-note">Loads Bible's latest snapshot into the active preset. Main Stat % isn't on Bible, so set it yourself. Only as accurate as the character's Raid Loadout.</span>
+    </span>
+    <details class="bible-load-manual">
+      <summary>Load not working?</summary>
+      <div class="bible-load-route">
+        <span class="bible-load-route-title">Use the bookmarklet</span>
+        <span class="bible-load-bm-row">
+          <a href="#" class="bible-import-bookmarklet">Bible Import</a>
+          <span class="bible-load-bm-text">Drag it to your bookmarks bar, then click it on a loaded Bible character page.</span>
+        </span>
+      </div>
+      <div class="bible-load-route">
+        <span class="bible-load-route-title">Paste the page source</span>
+        <ol class="bible-load-steps">
+          <li><a class="bible-load-page-link" href="https://lostark.bible/" target="_blank" rel="noopener noreferrer">Open the character on Bible</a>.</li>
+          <li>View the page source: Ctrl+U (Cmd+Option+U on a Mac).</li>
+          <li>Select all (Ctrl+A) and copy (Ctrl+C). Use Cmd on a Mac.</li>
+          <li>Paste it below and press Import.</li>
+        </ol>
+        <textarea class="ap-calc-popover-textarea bible-load-source" aria-label="Bible character page source" rows="3" spellcheck="false" placeholder="Paste the page source here."></textarea>
+        <span class="ap-calc-popover-actions">
+          <button type="button" class="bible-load-paste">Import</button>
+        </span>
+      </div>
+    </details>
+  </div>
 </div>
 </div>
 
 <!-- Import result and any skipped-field warnings from the Bible Import
      bookmarklet. A <div> rather than a <p>: the <ul> is block-level, and an
      HTML5 parser closes an open <p> right before it, which would move the
-     list out of this container. Hidden by CSS while both children are
-     empty. -->
+     list out of this container. Hidden by CSS while the status and the list
+     are both empty; the button in the corner empties them (bible-import.js). -->
 <div class="ap-calc-notice">
   <span class="bible-import-status" aria-live="polite"></span>
   <ul class="bible-import-warnings" hidden></ul>
+  <button type="button" class="bible-import-clear" aria-label="Dismiss import result"><svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 2l8 8M10 2l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
 </div>
 
 <div class="ap-calc-layout">

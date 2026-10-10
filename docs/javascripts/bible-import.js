@@ -18,6 +18,29 @@
 // renamed option values are just skipped rather than corrupting a field)
 // applies here too. This file does not write to calculator inputs itself.
 //
+// LOAD CHARACTER (no bookmarklet)
+// The "Load Character" popover takes a character name or a Bible character
+// link, gets that character's page HTML, and feeds it to the same
+// buildPayload the bookmarklet uses, then to the same Import popover (see
+// applyPayload). Two ways to get the HTML:
+//   - fetch: the browser requests lostark.bible/character/<region>/<name>
+//     directly, or, when the control carries data-proxy, a proxy URL that
+//     returns that page (scripts/bible-proxy/worker.js). A page on another
+//     origin can only read the response if Bible's server sends CORS headers
+//     for it; when the browser blocks the request the popover says so and
+//     offers the paste route. There is no way around that from a static site,
+//     and mode "no-cors" would only return an unreadable opaque response.
+//   - paste: the person pastes the page source (Ctrl+U on the Bible page).
+// buildPayload also wants the page's rendered text lines, which the
+// bookmarklet reads from document.body.innerText. A fetched page has no
+// layout to read, so htmlToLines rebuilds the same lines from the markup
+// (block and flex boundaries become line breaks, hidden elements are
+// skipped). scripts/regression/test_bible_load.py checks it against the
+// recorded fixtures' own lines.
+// A fetched page shows the account's default loadout tab, and there is no
+// tab to click, so the Raid Loadout check falls back to the page's own
+// "Current Loadout (Raid)" text and buildPayload warns when that is absent.
+//
 // WHERE THE DATA COMES FROM
 // Two sources on the Bible page, matched against a saved copy of a real
 // character page - see the two functions below for specifics:
@@ -857,7 +880,10 @@
     return null;
   }
 
-  function buildPayload(rawHtml, lines, onRaidLoadoutConfirmed) {
+  // unconfirmedWarning (optional) replaces the default text of the warning
+  // added when the Raid Loadout could not be confirmed; callers that did not
+  // scan a live page (the Load Character path) say something that fits.
+  function buildPayload(rawHtml, lines, onRaidLoadoutConfirmed, unconfirmedWarning) {
     var hydration = extractLoadoutJSON(rawHtml);
     if (!hydration) return { error: "Couldn't find character data on this page - make sure you're on a Bible character page and it's fully loaded." };
 
@@ -873,7 +899,7 @@
       return { error: "Couldn't confirm this is a Deathblade character page - make sure it's fully loaded and try again." };
     }
     if (classCheck === "wrong-class") {
-      return { error: "This doesn't look like a Deathblade character - Bible import only supports Deathblade." };
+      return { error: "This doesn't look like a Deathblade - Bible import only supports Deathblade." };
     }
     var characterName = extractCharacterName(lines);
 
@@ -1308,7 +1334,7 @@
     // rather than silently assuming success.
     var onRaidLoadout = onRaidLoadoutConfirmed != null ? onRaidLoadoutConfirmed : text.onRaidLoadoutText;
     if (!onRaidLoadout) {
-      warnings.unshift("Couldn't confirm this was scanned from \"Raid Loadout\" (auto-switch may have failed or hadn't finished rendering yet). Weapon Power/Main Stat/karma/grid points are always read correctly either way, but accessories, bracelet, gems, engravings, and Ark Grid core names may reflect the wrong loadout tab - click \"Raid Loadout\" on the character page yourself and re-run if any of those look off.");
+      warnings.unshift(unconfirmedWarning || "Couldn't confirm this was scanned from \"Raid Loadout\" (auto-switch may have failed or hadn't finished rendering yet). Weapon Power/Main Stat/karma/grid points are always read correctly either way, but accessories, bracelet, gems, engravings, and Ark Grid core names may reflect the wrong loadout tab - click \"Raid Loadout\" on the character page yourself and re-run if any of those look off.");
     }
 
     return { data: data, warnings: warnings, characterName: characterName };
@@ -1719,10 +1745,182 @@
     return "javascript:" + encodeURIComponent(body);
   }
 
-  // ----- Apply-on-load (runs on this calculator page) -----
-  function applyBibleImport(root) {
-    var hash = location.hash;
-    if (hash.indexOf("#bible-import=") !== 0) return;
+  // ----- Load by name or link (runs on this calculator page) -----
+  var BIBLE_ORIGIN = "https://lostark.bible";
+  // Regions the popover's selector offers for a bare name. A pasted link
+  // carries its own region, so other regions work through a link.
+  var LOAD_REGIONS = ["NA", "CE"];
+  var LOAD_TIMEOUT_MS = 20000;
+  // A character page is about 300 KB; anything far past that is not one.
+  var MAX_SOURCE_CHARS = 6000000;
+  var REGION_STORAGE_KEY = "bibleLoadRegion";
+
+  // Shown instead of buildPayload's default when the raid loadout cannot be
+  // confirmed on a page that was fetched or pasted (nothing to click there).
+  var FETCHED_UNCONFIRMED_WARNING = "This character's last-used loadout on Bible may be Chaos Dungeon, so accessories, bracelet, gems, engravings and core names might not be from Raid. Switch to Raid Loadout on Bible and load again, or use the bookmarklet under \"Load not working?\".";
+
+  // Rebuilds what document.body.innerText.split("\n") gives on the live page
+  // (trimmed, blanks dropped) from the page's HTML, for pages that were
+  // fetched or pasted instead of rendered. There is no layout here, so the
+  // line breaks come from the markup: a block-level tag, an element whose
+  // class sets a block-like display (flex, grid, block, table), and every
+  // child of a flex or grid container each start a new line, while plain
+  // inline elements (the spans that split "Additional Damage +" from
+  // "2.6%") join into one. Display classes are evaluated for a desktop
+  // viewport: a breakpoint prefix (sm: md: lg: xl: 2xl:) applies, a max-*
+  // variant does not. The HTML is parsed inertly (DOMParser: no scripts run,
+  // nothing loads) and never inserted into the page.
+  // Checked against the recorded fixtures' own lines at several viewport
+  // widths by scripts/regression/test_bible_load.py.
+  function htmlToLines(html) {
+    var VIEWPORT_WIDTH = 1280;
+    var BREAKPOINTS = { sm: 640, md: 768, lg: 1024, xl: 1280, "2xl": 1536 };
+    var BREAKPOINT_ORDER = ["sm", "md", "lg", "xl", "2xl"];
+    var SKIP_TAGS = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, TEMPLATE: 1, HEAD: 1, SVG: 1, TITLE: 1, META: 1, LINK: 1, IFRAME: 1, CANVAS: 1, TEXTAREA: 1 };
+    var BLOCK_TAGS = { ADDRESS: 1, ARTICLE: 1, ASIDE: 1, BLOCKQUOTE: 1, DETAILS: 1, DIALOG: 1, DIV: 1, DL: 1, DT: 1, DD: 1, FIELDSET: 1, FIGCAPTION: 1, FIGURE: 1, FOOTER: 1, FORM: 1, H1: 1, H2: 1, H3: 1, H4: 1, H5: 1, H6: 1, HEADER: 1, HGROUP: 1, HR: 1, LI: 1, MAIN: 1, NAV: 1, OL: 1, P: 1, PRE: 1, SECTION: 1, TABLE: 1, UL: 1, TR: 1, CAPTION: 1, THEAD: 1, TBODY: 1, TFOOT: 1, SUMMARY: 1 };
+    var DISPLAY_UTILITY = /^(hidden|block|inline|inline-block|flex|inline-flex|grid|inline-grid|table|contents|list-item|flow-root)$/;
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    var lines = [];
+    var cur = "";
+
+    function flush() {
+      var t = cur.replace(/[ \t\r\n\f]+/g, " ").trim();
+      if (t) lines.push(t);
+      cur = "";
+    }
+    function displayOf(el) {
+      var display = BLOCK_TAGS[el.tagName] ? "block" : "inline";
+      var classes = (el.getAttribute("class") || "").split(/\s+/);
+      var bestRank = -1;
+      for (var i = 0; i < classes.length; i++) {
+        var m = classes[i].match(/^(?:(sm|md|lg|xl|2xl):)?(.+)$/);
+        if (!m || !DISPLAY_UTILITY.test(m[2])) continue;
+        if (m[1] && VIEWPORT_WIDTH < BREAKPOINTS[m[1]]) continue;
+        var rank = m[1] ? 1 + BREAKPOINT_ORDER.indexOf(m[1]) : 0;
+        if (rank > bestRank) { bestRank = rank; display = m[2]; }
+      }
+      return display;
+    }
+    function startsLine(display) {
+      return display === "block" || display === "flex" || display === "grid" || display === "table" || display === "list-item" || display === "flow-root";
+    }
+    function isHidden(el, display) {
+      if (el.hasAttribute("hidden") || display === "hidden") return true;
+      var style = el.getAttribute("style") || "";
+      if (/(^|;)\s*(display\s*:\s*none|visibility\s*:\s*hidden)/i.test(style)) return true;
+      return (" " + (el.getAttribute("class") || "") + " ").indexOf(" invisible ") !== -1;
+    }
+    function walk(parent, parentIsFlex) {
+      for (var n = parent.firstChild; n; n = n.nextSibling) {
+        if (n.nodeType === 3) {
+          if (parentIsFlex) { flush(); cur = n.data; flush(); } else cur += n.data;
+          continue;
+        }
+        if (n.nodeType !== 1 || SKIP_TAGS[n.tagName]) continue;
+        var display = displayOf(n);
+        if (isHidden(n, display)) continue;
+        if (n.tagName === "BR") { flush(); continue; }
+        if (display === "contents") { walk(n, parentIsFlex); continue; }
+        var ownLine = startsLine(display) || parentIsFlex;
+        if (ownLine) flush();
+        walk(n, display === "flex" || display === "inline-flex" || display === "grid" || display === "inline-grid");
+        if (ownLine) flush();
+      }
+    }
+    walk(doc.body, false);
+    flush();
+    return lines;
+  }
+
+  // Turns the box's text into { region, name } or { error }. Accepts a bare
+  // character name (region from the selector) or a lostark.bible character
+  // link (region from the link). Only that one host is ever requested.
+  function parseCharacterTarget(input, defaultRegion) {
+    var raw = String(input || "").trim();
+    if (!raw) return { error: "Enter a character name or a Bible character link." };
+    var region = LOAD_REGIONS.indexOf(defaultRegion) !== -1 ? defaultRegion : LOAD_REGIONS[0];
+    var name = raw;
+    if (/^(https?:\/\/|(www\.)?lostark\.bible(\/|$))/i.test(raw)) {
+      var url;
+      try { url = new URL(/^https?:/i.test(raw) ? raw : "https://" + raw); }
+      catch (e) { return { error: "That link isn't valid." }; }
+      var host = url.hostname.toLowerCase();
+      if (host !== "lostark.bible" && host !== "www.lostark.bible") return { error: "Only lostark.bible character links work here." };
+      var m = url.pathname.match(/^\/character\/([A-Za-z]{2,4})\/([^/]+)/);
+      if (!m) return { error: "That isn't a character page link (it should look like lostark.bible/character/NA/Name)." };
+      region = m[1].toUpperCase();
+      try { name = decodeURIComponent(m[2]); }
+      catch (e2) { return { error: "That link's character name isn't valid." }; }
+    }
+    name = name.trim();
+    if (/[\/\\?#%\u0000-\u001f\u007f]/.test(name)) return { error: "Enter just the character name, or paste the full Bible link." };
+    if (!name || name.length > 40) return { error: "That doesn't look like a character name." };
+    return { region: region, name: name };
+  }
+
+  function characterPageUrl(target) {
+    return BIBLE_ORIGIN + "/character/" + target.region + "/" + encodeURIComponent(target.name);
+  }
+
+  function loadError(kind, message) {
+    var err = new Error(message);
+    err.kind = kind;
+    return err;
+  }
+
+  // A failed request is reported as kind "blocked": the browser gives no way
+  // to tell a CORS refusal from being offline. Without a relay the cause is
+  // known: Bible sends no CORS headers, so no site can read its pages.
+  function fetchFailure(err, viaProxy) {
+    if (err && err.name === "AbortError") return loadError("aborted", "");
+    if (viaProxy) {
+      return loadError("blocked", "Couldn't reach the relay that loads Bible pages: the request was blocked or you're offline. Try again in a moment, or use \"Load not working?\" below.");
+    }
+    return loadError("blocked", "Bible doesn't let other sites read its pages (it sends no CORS headers), so the browser blocked this request. Use \"Load not working?\" below.");
+  }
+
+  // GETs the character page (or the proxy's copy of it) as text. A plain GET
+  // with no custom headers is a CORS "simple" request, so no preflight is
+  // sent; credentials and the referrer are withheld.
+  function fetchCharacterHtml(target, proxyUrl, signal) {
+    var url = proxyUrl
+      ? proxyUrl + (proxyUrl.indexOf("?") === -1 ? "?" : "&") + "region=" + encodeURIComponent(target.region) + "&name=" + encodeURIComponent(target.name)
+      : characterPageUrl(target);
+    return fetch(url, { credentials: "omit", referrerPolicy: "no-referrer", signal: signal }).then(function (res) {
+      if (res.status === 404) throw loadError("notfound", "Bible has no character called \"" + target.name + "\" in " + target.region + ". Check the spelling and region.");
+      if (res.status === 429) throw loadError("ratelimit", "Bible is limiting requests right now. Wait a minute and try again.");
+      if (res.status === 504) throw loadError("http", "Bible didn't answer in time. Try again in a moment, or use \"Load not working?\" below.");
+      if (!res.ok) throw loadError("http", "Bible answered with an error (HTTP " + res.status + ").");
+      return res.text().catch(function (err) { throw fetchFailure(err, !!proxyUrl); });
+    }, function (err) {
+      throw fetchFailure(err, !!proxyUrl);
+    });
+  }
+
+  // Page HTML -> { data, warnings, characterName } or { error }. expectedName
+  // (when the page was fetched for a specific name) guards against Bible
+  // answering with a different character.
+  function payloadFromSource(html, expectedName) {
+    if (html.length > MAX_SOURCE_CHARS) return { error: "That's too large to be a Bible character page." };
+    if (html.indexOf("loadouts:[") === -1) {
+      return { error: "No character data in Bible (the character may be hidden or still loading on Bible, or Bible sent a verification page). Open the character on Bible once, then try again or paste its page source." };
+    }
+    var payload = buildPayload(html, htmlToLines(html), undefined, FETCHED_UNCONFIRMED_WARNING);
+    if (payload.error) {
+      if (/fully loaded/.test(payload.error)) return { error: "Couldn't read a character from Bible. Check the name and region, try again, or try an alternate import method." };
+      return payload;
+    }
+    if (expectedName && payload.characterName && payload.characterName.toLowerCase() !== expectedName.toLowerCase()) {
+      return { error: "Bible returned \"" + payload.characterName + "\" instead of \"" + expectedName + "\". Nothing was imported." };
+    }
+    return payload;
+  }
+
+  // ----- Apply a payload (runs on this calculator page) -----
+  // Hands payload.data to the calculator's own Import popover and reports
+  // the result. Shared by the bookmarklet fragment and Load Character, so a
+  // character imported either way takes exactly the same path.
+  function applyPayload(root, payload) {
     var statusEl = root.querySelector(".bible-import-status");
 
     function setStatus(text, isError) {
@@ -1731,68 +1929,203 @@
       statusEl.classList.toggle("bible-import-status-error", !!isError);
     }
 
+    if (payload.error) { setStatus(payload.error, true); return false; }
+
+    var importBtn = root.querySelector(".ap-calc-import");
+    var popover = root.querySelector('.ap-calc-popover[data-popover="import"]');
+    if (!importBtn || !popover) { setStatus("Import control not found on this page.", true); return false; }
+    importBtn.click();
+    var textarea = popover.querySelector(".ap-calc-popover-textarea");
+    textarea.value = JSON.stringify(payload.data);
+    var loadBtn = popover.querySelector(".ap-calc-popover-load");
+    loadBtn.click();
+    // applyImportText (ark-passive-calculator.js) runs synchronously off
+    // that click and writes its own result - including a skipped-field
+    // list when a pipe/space17 value doesn't match any current <option>
+    // (stale point tier, future option rename, etc.) - into this popover's
+    // own message element. Read it before closing the popover below: this
+    // is the only place that particular failure mode surfaces, and it's a
+    // different list from payload.warnings (which is bible-import.js's
+    // own, computed before ever touching the DOM) - without this, a
+    // failed field here fails completely silently, the same gap
+    // skippedOut was built to close for manual pastes.
+    var popoverMsgEl = popover.querySelector(".ap-calc-popover-msg");
+    if (popoverMsgEl && popoverMsgEl.classList.contains("ap-calc-popover-msg-error") && popoverMsgEl.textContent) {
+      payload.warnings = payload.warnings || [];
+      payload.warnings.push(popoverMsgEl.textContent);
+    }
+    // The Import popover is only opened here to reuse its own Load
+    // logic/validation - for a manual paste it's meant to stay open so
+    // you can read its "Imported into Preset N" message, but for this
+    // one-click flow that just leaves it sitting open until Cancel is
+    // clicked, duplicating the .bible-import-status message below.
+    // Dismiss it the same way the popover's own Close button would.
+    var closeBtn = popover.querySelector(".ap-calc-popover-close");
+    if (closeBtn) closeBtn.click();
+    else popover.hidden = true;
+    // closePopover (ark-passive-calculator.js) returns keyboard focus to
+    // whatever triggered the popover - correct for a manual Export/Import
+    // click, but this flow opens/closes the popover programmatically, so
+    // without this the Import button is left focused and shows a
+    // lingering highlight ring the user never actually clicked for.
+    importBtn.blur();
+
+    var msg = payload.characterName ? "Imported " + payload.characterName + " from Bible." : "Imported from Bible.";
+    if (payload.warnings && payload.warnings.length) msg += " " + payload.warnings.length + " field(s) need a manual look - see below.";
+    setStatus(msg, false);
+
+    var warnList = root.querySelector(".bible-import-warnings");
+    if (warnList) {
+      warnList.innerHTML = "";
+      (payload.warnings || []).forEach(function (w) {
+        var li = window.SiteUtils.el("li", null, w);
+        warnList.appendChild(li);
+      });
+      warnList.hidden = !(payload.warnings && payload.warnings.length);
+    }
+    return true;
+  }
+
+  // ----- Apply-on-load (runs on this calculator page) -----
+  function applyBibleImport(root) {
+    var hash = location.hash;
+    if (hash.indexOf("#bible-import=") !== 0) return;
+    var statusEl = root.querySelector(".bible-import-status");
+
     try {
       var decoded = decodeURIComponent(escape(atob(hash.slice("#bible-import=".length))));
       var payload = JSON.parse(decoded);
       history.replaceState(null, "", location.pathname + location.search);
-
-      if (payload.error) { setStatus(payload.error, true); return; }
-
-      var importBtn = root.querySelector(".ap-calc-import");
-      var popover = root.querySelector('.ap-calc-popover[data-popover="import"]');
-      if (!importBtn || !popover) { setStatus("Import control not found on this page.", true); return; }
-      importBtn.click();
-      var textarea = popover.querySelector(".ap-calc-popover-textarea");
-      textarea.value = JSON.stringify(payload.data);
-      var loadBtn = popover.querySelector(".ap-calc-popover-load");
-      loadBtn.click();
-      // applyImportText (ark-passive-calculator.js) runs synchronously off
-      // that click and writes its own result - including a skipped-field
-      // list when a pipe/space17 value doesn't match any current <option>
-      // (stale point tier, future option rename, etc.) - into this popover's
-      // own message element. Read it before closing the popover below: this
-      // is the only place that particular failure mode surfaces, and it's a
-      // different list from payload.warnings (which is bible-import.js's
-      // own, computed before ever touching the DOM) - without this, a
-      // failed field here fails completely silently, the same gap
-      // skippedOut was built to close for manual pastes.
-      var popoverMsgEl = popover.querySelector(".ap-calc-popover-msg");
-      if (popoverMsgEl && popoverMsgEl.classList.contains("ap-calc-popover-msg-error") && popoverMsgEl.textContent) {
-        payload.warnings = payload.warnings || [];
-        payload.warnings.push(popoverMsgEl.textContent);
-      }
-      // The Import popover is only opened here to reuse its own Load
-      // logic/validation - for a manual paste it's meant to stay open so
-      // you can read its "Imported into Preset N" message, but for this
-      // one-click flow that just leaves it sitting open until Cancel is
-      // clicked, duplicating the .bible-import-status message below.
-      // Dismiss it the same way the popover's own Close button would.
-      var closeBtn = popover.querySelector(".ap-calc-popover-close");
-      if (closeBtn) closeBtn.click();
-      else popover.hidden = true;
-      // closePopover (ark-passive-calculator.js) returns keyboard focus to
-      // whatever triggered the popover - correct for a manual Export/Import
-      // click, but this flow opens/closes the popover programmatically, so
-      // without this the Import button is left focused and shows a
-      // lingering highlight ring the user never actually clicked for.
-      importBtn.blur();
-
-      var msg = payload.characterName ? "Imported " + payload.characterName + " from Bible." : "Imported from Bible.";
-      if (payload.warnings && payload.warnings.length) msg += " " + payload.warnings.length + " field(s) need a manual look - see below.";
-      setStatus(msg, false);
-
-      var warnList = root.querySelector(".bible-import-warnings");
-      if (warnList) {
-        warnList.innerHTML = "";
-        (payload.warnings || []).forEach(function (w) {
-          var li = window.SiteUtils.el("li", null, w);
-          warnList.appendChild(li);
-        });
-        warnList.hidden = !(payload.warnings && payload.warnings.length);
-      }
+      applyPayload(root, payload);
     } catch (e) {
-      setStatus("Couldn't read that import link (" + e.message + ").", true);
+      if (statusEl) {
+        statusEl.textContent = "Couldn't read that import link (" + e.message + ").";
+        statusEl.classList.add("bible-import-status-error");
+      }
     }
+  }
+
+  // Wires the Load Character popover (markup in resources.md).
+  function wireCharacterLoader(root, control) {
+    var openBtn = control.querySelector(".bible-load-open");
+    var popover = root.querySelector('.ap-calc-popover[data-popover="bible"]');
+    if (!openBtn || !popover) return;
+    var input = popover.querySelector(".bible-load-input");
+    var regionSel = popover.querySelector(".bible-load-region");
+    var goBtn = popover.querySelector(".bible-load-go");
+    var msgEl = popover.querySelector(".ap-calc-popover-msg");
+    var manual = popover.querySelector(".bible-load-manual");
+    var sourceBox = popover.querySelector(".bible-load-source");
+    var pasteBtn = popover.querySelector(".bible-load-paste");
+    var pageLink = popover.querySelector(".bible-load-page-link");
+    var busy = false;
+    var controller = null;
+
+    try {
+      var savedRegion = localStorage.getItem(REGION_STORAGE_KEY);
+      if (savedRegion && LOAD_REGIONS.indexOf(savedRegion) !== -1) regionSel.value = savedRegion;
+    } catch (e) {
+      // storage blocked: the selector keeps its default
+    }
+
+    function setMsg(text, isError) {
+      msgEl.textContent = text;
+      msgEl.classList.toggle("ap-calc-popover-msg-error", !!isError);
+    }
+    function setBusy(on) {
+      busy = on;
+      goBtn.disabled = on;
+      pasteBtn.disabled = on;
+      input.readOnly = on;
+    }
+    // The paste route's first step points at the character just tried.
+    function showPageLink(target) {
+      if (pageLink) pageLink.href = characterPageUrl(target);
+    }
+    // Hands a finished payload (or error) to the page. An error stays in the
+    // popover so the person can fix the name; a success closes it through the
+    // Import popover's own open/close in applyPayload.
+    function deliver(result, target) {
+      if (result.error) { setMsg(result.error, true); return; }
+      try {
+        setMsg("", false);
+        if (target) {
+          try { localStorage.setItem(REGION_STORAGE_KEY, target.region); } catch (e) {
+            // storage blocked: the region is simply not remembered
+          }
+        }
+        applyPayload(root, result);
+        // The calculator's import resets every field in the calculator,
+        // including this selector; put back the region just used.
+        if (target && LOAD_REGIONS.indexOf(target.region) !== -1) regionSel.value = target.region;
+      } catch (e) {
+        setMsg("Couldn't apply that character (" + e.message + ").", true);
+      }
+    }
+
+    openBtn.addEventListener("click", function () {
+      root.querySelectorAll(".ap-calc-popover").forEach(function (p) { p.hidden = true; });
+      setMsg("", false);
+      popover.hidden = false;
+      popover.__triggerEl = openBtn;
+      input.focus();
+    });
+
+    // Dismissing the popover (Cancel, Escape, a click elsewhere) while a
+    // request is out abandons it rather than importing later.
+    new MutationObserver(function () {
+      if (popover.hidden && controller) controller.abort();
+    }).observe(popover, { attributes: true, attributeFilter: ["hidden"] });
+
+    function loadByName() {
+      if (busy) return;
+      var target = parseCharacterTarget(input.value, regionSel.value);
+      if (target.error) { setMsg(target.error, true); return; }
+      if (LOAD_REGIONS.indexOf(target.region) !== -1) regionSel.value = target.region;
+      showPageLink(target);
+      var proxyUrl = (control.getAttribute("data-proxy") || "").trim();
+      if (proxyUrl && !/^https:\/\//i.test(proxyUrl)) proxyUrl = "";
+      setMsg("Loading " + target.name + " from Bible...", false);
+      setBusy(true);
+      var ctl = new AbortController();
+      controller = ctl;
+      var timedOut = false;
+      var timer = setTimeout(function () { timedOut = true; ctl.abort(); }, LOAD_TIMEOUT_MS);
+      function finishRequest() {
+        clearTimeout(timer);
+        if (controller === ctl) controller = null;
+        setBusy(false);
+      }
+      fetchCharacterHtml(target, proxyUrl, ctl.signal).then(function (html) {
+        finishRequest();
+        deliver(payloadFromSource(html, target.name), target);
+      }, function (err) {
+        finishRequest();
+        if (err.kind === "aborted") {
+          if (timedOut) setMsg("Bible didn't answer in time. Try again in a moment.", true);
+          return;
+        }
+        setMsg(err.message, true);
+        if (err.kind === "blocked" && manual) manual.open = true;
+      });
+    }
+
+    function loadFromSource() {
+      if (busy) return;
+      var text = sourceBox.value.trim();
+      if (!text) { setMsg("Paste the character page's source above first.", true); return; }
+      setMsg("", false);
+      var result;
+      try { result = payloadFromSource(text, null); }
+      catch (e) { result = { error: "Couldn't read that page source (" + e.message + ")." }; }
+      deliver(result, null);
+    }
+
+    goBtn.addEventListener("click", loadByName);
+    input.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") { ev.preventDefault(); loadByName(); }
+    });
+    pasteBtn.addEventListener("click", loadFromSource);
   }
 
   function renderBibleControl(root) {
@@ -1801,8 +2134,8 @@
     control.__bibleWired = true;
 
     var calculatorUrl = location.origin + location.pathname;
-    var bookmarklet = control.querySelector(".bible-import-bookmarklet");
-    var statusEl = root.querySelector(".bible-import-status");
+    var bookmarklet = root.querySelector(".bible-import-bookmarklet");
+    var popoverMsg = root.querySelector('.ap-calc-popover[data-popover="bible"] .ap-calc-popover-msg');
     if (bookmarklet) {
       bookmarklet.href = buildBookmarklet(calculatorUrl);
       // Clicking (instead of dragging) this link would otherwise actually
@@ -1810,17 +2143,43 @@
       // data - producing a confusing "couldn't find character data"
       // message that looks like a bug rather than "wrong page." Intercept
       // the click and say the actual next step instead of letting that
-      // happen.
+      // happen. The link sits in the Load Character popover, so the hint
+      // goes to that popover's own message line, where the person is looking.
       bookmarklet.addEventListener("click", function (e) {
         e.preventDefault();
-        if (statusEl) {
-          statusEl.textContent = "Drag this to your bookmarks bar, then click it on a Bible character page.";
-          statusEl.classList.remove("bible-import-status-error");
+        if (popoverMsg) {
+          popoverMsg.textContent = "Drag this link to your bookmarks bar, then click it on a Bible character page.";
+          popoverMsg.classList.remove("ap-calc-popover-msg-error");
         }
       });
     }
 
+    wireCharacterLoader(root, control);
+    wireNoticeClear(root, control);
     applyBibleImport(root);
+  }
+
+  // The dismiss button in the import result card's corner empties the status
+  // and the warning list, which hides the card. The button disappears with
+  // the card, so focus goes to Load Character instead of falling back to the
+  // page.
+  function wireNoticeClear(root, control) {
+    var clearBtn = root.querySelector(".bible-import-clear");
+    if (!clearBtn) return;
+    clearBtn.addEventListener("click", function () {
+      var statusEl = root.querySelector(".bible-import-status");
+      var warnList = root.querySelector(".bible-import-warnings");
+      if (statusEl) {
+        statusEl.textContent = "";
+        statusEl.classList.remove("bible-import-status-error");
+      }
+      if (warnList) {
+        warnList.innerHTML = "";
+        warnList.hidden = true;
+      }
+      var openBtn = control.querySelector(".bible-load-open");
+      if (openBtn) openBtn.focus();
+    });
   }
 
   window.SiteUtils.registerRenderer(".ap-calc", renderBibleControl);
