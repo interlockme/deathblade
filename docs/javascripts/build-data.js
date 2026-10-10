@@ -95,7 +95,7 @@
           playstyle: "Fast & Comfy",
           emoji: "\uD83D\uDC9C",
           words: "comfort \u2022 transitional",
-          desc: "A faster, simpler, more forgiving build with a lower damage ceiling.",
+          desc: "A faster, simpler, more forgiving Fatal Wave build with a lower damage ceiling.",
           ark: "little",
           recommended: false,
           compareEnabled: true,
