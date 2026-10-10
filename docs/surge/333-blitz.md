@@ -269,7 +269,7 @@ From 3 orbs
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="example" markdown>
-<summary><span class="setup-note-tag">Alt</span>🐯 Mode (Optional)<span class="setup-note-arrow"></span></summary>
+<summary><span class="setup-note-tag">Alt</span>🐯 Mode<span class="setup-note-arrow"></span></summary>
 ![tiger mode](../assets/tigermode.png){ .setup-note-image .zoomable-image loading=lazy }
 </details>
 
