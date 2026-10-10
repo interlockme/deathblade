@@ -2121,8 +2121,8 @@ h3 { color: var(--dbc-teal); }
    [▶ Video Guide](url){ .video-chip }
    </div> */
 .md-typeset .build-card {
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.3);
-  background-color: rgba(var(--dbc-rose-rgb), 0.045);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
   border-radius: var(--dbc-r-lg);
   padding: 1em 1.2em 1.1em;
   margin: 1em 0 1.5em;
@@ -2171,7 +2171,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .last-updated-badge.has-note:hover,
 .md-typeset .last-updated-badge.has-note:focus-visible {
   opacity: 1;
-  background-color: rgba(var(--dbc-rose-rgb), 0.16);
+  background-color: rgba(var(--dbc-purple-rgb), 0.16);
 }
 .md-typeset .build-stats {
   display: flex;
@@ -2191,14 +2191,14 @@ h3 { color: var(--dbc-teal); }
   flex-direction: column;
   flex: 1 1 130px;
   background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.22);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.22);
   border-radius: var(--dbc-r);
   padding: 0.45em 0.9em;
   min-width: 108px;
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 .md-typeset .stat:hover {
-  border-color: rgba(var(--dbc-rose-rgb), 0.42);
+  border-color: rgba(var(--dbc-purple-rgb), 0.42);
   background-color: rgba(255, 255, 255, 0.05);
 }
 .md-typeset .stat-label {
@@ -2253,7 +2253,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .stat-bar-track {
   height: 4px;
   border-radius: 999px;
-  background-color: rgba(var(--dbc-rose-rgb), 0.15);
+  background-color: rgba(var(--dbc-purple-rgb), 0.15);
   margin-top: 0.4em;
   overflow: hidden;
 }
@@ -2310,6 +2310,14 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .build-card ul {
   margin: 0.4em 0 0.7em;
 }
+/* Body text matches the notes and panels further down the page
+   (.setup-note > p / > ul): 0.94em, lilac, 1.5 line height. */
+.md-typeset .build-card > p,
+.md-typeset .build-card > ul {
+  font-size: 0.94em;
+  color: var(--dbc-lilac);
+  line-height: 1.5;
+}
 /* Material's 0.5em li gap spaces these bullets about 37px apart, loose next
    to the 0.2em gap in .setup-note lists on the same page. The tighter gap
    also shortens the card, and the badge beside it is stretched to the card's
@@ -2346,10 +2354,6 @@ h3 { color: var(--dbc-teal); }
 .md-typeset a.video-chip:hover {
   background-color: rgba(var(--dbc-blue-rgb), 0.22);
   color: #90caf9 !important;
-}
-.md-typeset a.video-chip::before {
-  content: "▶";
-  font-size: 0.75em;
 }
 
 /* ---------- Build profile pentagon badge (sits beside .build-card) ---------- */
@@ -2399,8 +2403,8 @@ h3 { color: var(--dbc-teal); }
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.3);
-  background-color: rgba(var(--dbc-rose-rgb), 0.045);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
+  background-color: rgba(var(--dbc-purple-rgb), 0.045);
   border-radius: var(--dbc-r-lg);
   padding: 0.8em 0.35em 0.6em;
 }
@@ -2465,9 +2469,16 @@ h3 { color: var(--dbc-teal); }
   padding-top: 0.6em;
   width: 100%;
 }
+/* The chips sit in one markdown paragraph. One column as wide as the longest
+   chip label gives every chip the same width, so they line up whatever their
+   text. */
+.pentagon-badge-extra > p {
+  display: grid;
+  grid-template-columns: minmax(0, max-content);
+  justify-content: center;
+}
 .pentagon-badge-extra .video-chip {
   display: flex;
-  width: 100%;
   box-sizing: border-box;
   justify-content: center;
   margin-bottom: 0.4em;
@@ -3817,8 +3828,8 @@ h3 { color: var(--dbc-teal); }
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5em;
-  padding: 0.75em 0.9em;
+  gap: 0.4em 0.5em;
+  padding: 0.5em 0.8em;
   margin: 0;
   border: none;
   background: none;
@@ -3851,7 +3862,7 @@ h3 { color: var(--dbc-teal); }
 
 .md-typeset .engraving-card-name {
   font-weight: 700;
-  font-size: 1em;
+  font-size: var(--dbc-fs-md);
   color: var(--md-default-fg-color);
   margin-right: auto;
   transition: color 0.15s ease;
@@ -11144,7 +11155,9 @@ body.page-333-blitz input[type="text"] {
    content column instead of left-aligned beside empty space. */
 .md-typeset img.page-sticker {
   display: block;
-  margin: 0.4em auto 1em;
+  width: 6rem;
+  height: auto;
+  margin: 0.2em auto 0.7em;
 }
 
 /* Icon runs inside running text (a list item such as Surge's "Mana Food +
