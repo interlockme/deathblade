@@ -6,15 +6,16 @@
 // Click-to-advance "practice mode" for rotation sequences.
 //
 // Turns any .rotation-line (including the ones nested inside .cycle-card)
-// into a step-through drill: a small "Practice" toggle appears
+// into a step-through drill: a small play-icon toggle appears
 // automatically on any rotation-line with 2+ .skill steps, no markup
 // changes needed on any page. Once active:
 //   - click anywhere on the line (or press spacebar) to advance a step
 //   - the sequence loops back to the start after the last step
-//   - Escape, or clicking the toggle again, exits practice mode
+//   - Escape, or clicking the toggle again (now a stop icon with an "n / m"
+//     step counter), exits practice mode
 //
 // The toggle never reserves layout space:
-//   - standalone rotation-line -> absolutely-positioned pill floating
+//   - standalone rotation-line -> absolutely-positioned round button floating
 //     over the box's own top-right corner, inside a plain zero-margin
 //     wrapper (so the box's own overflow:hidden doesn't clip it)
 //   - rotation-line nested in a .cycle-card -> joins the existing
@@ -80,8 +81,10 @@
       .filter(function (s) { return !isAltBranch(s); });
   }
 
+  var PRACTICE_LABEL = "Practice this rotation step by step";
+
   function toggleLabel(idx, total) {
-    return (idx + 1) + " / " + total + " · Exit";
+    return (idx + 1) + " / " + total;
   }
 
   function updateHighlight(unit) {
@@ -92,6 +95,8 @@
     });
     if (unit._practiceToggle) {
       unit._practiceToggle.textContent = toggleLabel(idx, steps.length);
+      unit._practiceToggle.setAttribute("aria-label", "Exit practice, step " + (idx + 1) + " of " + steps.length);
+      unit._practiceToggle.title = "Exit practice";
       unit._practiceToggle.classList.add("is-active");
     }
   }
@@ -112,7 +117,9 @@
       step.classList.remove("practice-current");
     });
     if (unit._practiceToggle) {
-      unit._practiceToggle.textContent = "Practice";
+      unit._practiceToggle.textContent = "";
+      unit._practiceToggle.setAttribute("aria-label", PRACTICE_LABEL);
+      unit._practiceToggle.title = "Practice";
       unit._practiceToggle.classList.remove("is-active");
     }
     if (activeLine === unit) activeLine = null;
@@ -140,8 +147,8 @@
     var toggle = document.createElement("button");
     toggle.type = "button";
     toggle.className = "rotation-practice-toggle";
-    toggle.textContent = "Practice";
-    toggle.setAttribute("aria-label", "Practice this rotation step by step");
+    toggle.setAttribute("aria-label", PRACTICE_LABEL);
+    toggle.title = "Practice";
     line._practiceToggle = toggle;
 
     var card = line.closest(".cycle-card");
@@ -191,8 +198,8 @@
     var toggle = document.createElement("button");
     toggle.type = "button";
     toggle.className = "rotation-practice-toggle";
-    toggle.textContent = "Practice";
-    toggle.setAttribute("aria-label", "Practice this rotation step by step");
+    toggle.setAttribute("aria-label", PRACTICE_LABEL);
+    toggle.title = "Practice";
     card._practiceToggle = toggle;
 
     var header = card.querySelector(".cycle-card-header");

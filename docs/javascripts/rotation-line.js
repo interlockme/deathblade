@@ -254,7 +254,10 @@
   function buildArrow(swap) {
     var span = el("span", swap ? "arrow arrow-swap" : "arrow");
     span.textContent = " \u2192 ";
-    if (swap) span.title = "Order interchangeable";
+    // data-standalone-tip (not a native title) so skill-tooltip.js wires the
+    // same hover / focus / tap tooltip every other rotation hint uses; a title
+    // never shows on a touch screen.
+    if (swap) span.setAttribute("data-standalone-tip", "Order interchangeable");
     return span;
   }
 

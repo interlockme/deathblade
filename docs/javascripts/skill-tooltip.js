@@ -988,7 +988,7 @@
   window.SiteUtils.registerRenderer(".skill-inline, .food-req-item, .engraving-chip[data-skill-id], .engraving-card-name[data-skill-id], .skill-mention[data-skill-id]", attachSkillInline);
   window.SiteUtils.registerRenderer(".food-option", attachFoodOption);
   window.SiteUtils.registerRenderer(".food-option-icon, img.skill-icon", attachBareIcon);
-  window.SiteUtils.registerRenderer(".cycle-repeat-badge[data-repeat-tip], .skill-situational-tag[data-standalone-tip]", attachDataTip);
+  window.SiteUtils.registerRenderer(".cycle-repeat-badge[data-repeat-tip], .skill-situational-tag[data-standalone-tip], .rotation-line .arrow-swap[data-standalone-tip]", attachDataTip);
 
   // Exposed for gem-dps-tooltip.js: a Damage-column gem row already shows
   // this same skill's tags/note here for free (same DB_SKILL_DATA lookup,

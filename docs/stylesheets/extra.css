@@ -2007,12 +2007,19 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .rotation-practice-toggle {
   position: absolute;
+  /* Centred on the box's top border: the button is 1.7em tall, so half of
+     it (0.85em) sits above the edge and half below, and the border line
+     runs through its middle instead of cutting across a pill's text. */
   top: -0.85em;
   right: 0.8em;
   z-index: 3;
   display: inline-flex;
   align-items: center;
-  gap: 0.45em;
+  justify-content: center;
+  gap: 0.4em;
+  box-sizing: border-box;
+  min-width: 1.7em;
+  height: 1.7em;
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
   /* Opaque (tint over the card surface) because the floating variant
      overlaps the rotation box's own border; the header variant below
@@ -2023,26 +2030,41 @@ h3 { color: var(--dbc-teal); }
   border-radius: 999px;
   font-size: 0.8em;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
   font-family: inherit;
-  padding: 0.15em 0.85em;
-  line-height: 1.3;
+  padding: 0;
+  line-height: 1;
   white-space: nowrap;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
   transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
 }
-/* The play triangle is drawn here instead of with a "\25B6" character:
-   that glyph comes from a fallback font, so it sat off the text's
-   baseline and centre. A clip-path triangle in a flex row centres exactly.
-   Hidden while the toggle shows its "n / m \00B7 Exit" label. */
-.md-typeset .rotation-practice-toggle:not(.is-active)::before {
+/* Idle: a play triangle, no text. Active: a stop square plus the "n / m"
+   step counter, which turns the button into a round-ended pill (padding
+   only while it has text). The shapes are drawn here instead of with
+   "\25B6" / "\25A0" characters: those glyphs come from a fallback font and
+   sit off the text's baseline and centre, while a clip-path shape in a
+   flex row centres exactly. The triangle is nudged right by a tenth of its
+   width because its visual centre of mass is left of its box centre. */
+.md-typeset .rotation-practice-toggle::before {
   content: "";
   flex: none;
   width: 0.62em;
   height: 0.7em;
   background-color: currentColor;
   clip-path: polygon(0 0, 100% 50%, 0 100%);
+  margin-left: 0.1em;
+}
+.md-typeset .rotation-practice-toggle.is-active {
+  padding: 0 0.7em 0 0.6em;
+}
+.md-typeset .rotation-practice-toggle.is-active::before {
+  width: 0.6em;
+  height: 0.6em;
+  clip-path: none;
+  margin-left: 0;
+  border-radius: 1px;
 }
 .md-typeset .rotation-practice-toggle:hover {
   border-color: rgba(var(--dbc-pink-rgb), 0.7);
@@ -9462,8 +9484,12 @@ body.page-333-blitz input[type="text"] {
      the mockup never had a line to begin with; the fix was solving the
      wrong problem. */
 }
+/* Tag pills and the meter pill in an expanded card use the same box as the Essentials skill
+   tables' pills: 0.52rem text, 0.5em side padding, no vertical padding. */
 .md-typeset .skill-card-body .tag {
   margin: 0 4px 6px 0;
+  padding: 0 0.5em;
+  font-size: 0.52rem;
 }
 /* Same meter/stack value line skill-tooltip.js's .skill-tip-meter shows
    (e.g. "6314 meter", "7 stacks") - same slate/muted reference-data
@@ -9493,11 +9519,11 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .skill-card-meter {
   display: inline-block;
   margin: 0 4px 6px 0;
-  padding: 1px 6px;
+  padding: 0 0.5em;
   border-radius: 999px;
   background-color: rgba(var(--dbc-slate-rgb), 0.14);
   border: 1px solid rgba(var(--dbc-slate-rgb), 0.3);
-  font-size: var(--dbc-fs-sm);
+  font-size: 0.52rem;
   line-height: 1.7;
   color: var(--dbc-slate);
 }
@@ -11410,6 +11436,24 @@ html.image-lightbox-open {
     display: inline-flex;
     align-items: center;
     min-height: 32px;
+  }
+  /* Order-interchangeable arrow and Practice button: both are drawn small, so the tap area is
+     extended past the drawing. The arrow gets width and padding with matching negative margins
+     (its neighbours do not move); the button gets an invisible ::after, which a static header
+     variant needs a positioned box for. */
+  .md-typeset .rotation-line .arrow-swap {
+    box-sizing: content-box;
+    width: 10px;
+    padding: 6px 7px;
+    margin: -6px -7px;
+  }
+  .md-typeset .cycle-card-header .rotation-practice-toggle {
+    position: relative;
+  }
+  .md-typeset .rotation-practice-toggle::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
   }
   /* Update-note badge: 0.62rem text is far below a usable tap target. Grow the
      pill (negative margin keeps the text in place) instead of the text. */
