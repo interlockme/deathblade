@@ -88,7 +88,7 @@ Atk/Move Speed Feast
 
 ## Engravings
 
-<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-panel" data-accent="purple" markdown>
 
 <div class="engraving-loadout" markdown>
 <div class="engraving-loadout-group" markdown>

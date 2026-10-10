@@ -40,10 +40,11 @@
   --dbc-orange-rgb: 236, 175, 121;
   --dbc-blue: #7fbbed;         /* info accent */
   --dbc-blue-rgb: 127, 187, 237;
-  --dbc-blue-bright: #7aa9f0;  /* Material's default admonition/info blue */
   --dbc-sky: #88c7e9;          /* additional damage category accent */
   --dbc-sky-rgb: 136, 199, 233;
   --dbc-pink-bright: #fdbcd3;  /* hover/active state pink - links, tabs, chips */
+  --dbc-orchid: #d396c6;       /* the engraving Combo accent */
+  --dbc-orchid-rgb: 211, 150, 198;
   --dbc-arrow: #cf99c7;        /* rotation-line chevron color (.arrow/.arrow-swap) */
   --dbc-green: #8bc997;        /* rune-chip "uncommon" tier, tripod-chip tier 2 */
   --dbc-green-rgb: 139, 201, 151;
@@ -51,21 +52,19 @@
   --dbc-violet-rgb: 199, 156, 232;
   --dbc-surface: #1f1d24;          /* the card/panel surface: a lavender-tinted wash (rgba(--dbc-purple-rgb, 0.045)) over the page bg, mixed opaque so a card inside
     a card does not stack washes. Header/tabs bar, footer, plain-table rows, the chip buttons and the calculators' --ap-surface all use it */
+  --dbc-popover: #1c1a22;          /* the floating panels' surface: calculator popovers and the tooltip panels, darker than --dbc-surface so they read as above the page */
   --dbc-surface-raised: #26252b;   /* one step above --dbc-surface: chip button hover, the calculators' --ap-surface-2 */
 
   /* Colors below are named here like every other reused color on the site,
      rather than repeated as raw hex literals at 2-6 call sites each: one
      source of truth instead of N copies that could drift apart. */
-  --dbc-gold-dark: #292624;        /* dark gold tint - the
-    2nd Pre-Ark Grid option card, and .page-banner-warning, pairs with --dbc-gold */
-  --dbc-rose-dark: #2d242c;        /* dark rose tint - the 1st
-    .grid.cards/.prearc-cards option card, a rank-1 gem badge's on-fill text, and
+  --dbc-gold-dark: #292624;        /* dark gold tint - on-fill text for cycle-num-3, and
+    .page-banner-warning, pairs with --dbc-gold */
+  --dbc-rose-dark: #2d242c;        /* dark rose tint - a rank-1 gem badge's on-fill text and
     cycle-num-1's on-fill text, pairs with --dbc-rose */
   --dbc-teal-dark: #1d2227;        /* darkest teal tint - on-fill text for a rank-1
     Cooldown gem badge and cycle-num-2, pairs with --dbc-teal (see also
     --dbc-teal-card-bg below, a different/lighter teal-family tint) */
-  --dbc-teal-card-bg: #1e262b;     /* the 2nd .grid.cards option card and 3rd
-    .prearc-cards option card background, pairs with --dbc-teal */
   --dbc-gem-name-muted: #d8d2de;   /* rank-2 gem item name text + an alt-gem's bolded name */
   --dbc-chip-text: #cbb9e8;        /* text color paired with --dbc-surface on the purple-bordered chip buttons */
   --dbc-muted-text: #948fa0;       /* faint gray label text (kept at 4.5:1+ on the dark surfaces) - a "no diff" build-compare
@@ -76,12 +75,6 @@
   --dbc-rose-deep: #a8446b;        /* deep/muted rose - dark enough for the DPS
     distribution chart's white overlay label to read clearly on top of it,
     unlike the much lighter pastel --dbc-rose */
-  --dbc-rose-deep-rgb: 168, 68, 107;
-  --dbc-purple-card-bg: #26232e;
-  --dbc-violet-dark: #2a2532;      /* dark violet tint, same darkness as
-    --dbc-rose-dark/--dbc-gold-dark/--dbc-teal-dark - on-fill text for
-    cycle-num-4, pairs with --dbc-violet (already used for epic-tier
-    rune chips/.skill-card glow elsewhere on the site) */
 
   /* Radius scale: small (chips, inputs), base (cards, panels), large (hero cards), pill and circle stay literal 999px / 50%. */
   --dbc-r-sm: 4px;
@@ -95,6 +88,7 @@
   --dbc-fs-base: 0.65rem;
   --dbc-fs-table: 0.7rem;
   --dbc-fs-md: 0.75rem;
+  --dbc-fs-tag: 0.52rem;   /* the pill/tag text size shared by the Essentials tables, skill-card pills and engraving badges */
 }
 
 [data-md-color-scheme="slate"] {
@@ -102,7 +96,7 @@
   --md-default-fg-color: #e8e6ee;
   --md-default-fg-color--light: #c9c6d4;
   --md-accent-fg-color: var(--dbc-pink); /* softer than Material's default vibrant #f50056 hover pink */
-  --md-accent-fg-color--transparent: rgba(236, 145, 178, 0.1);
+  --md-accent-fg-color--transparent: rgba(var(--dbc-pink-rgb), 0.1);
 }
 
 /* Material's "black" primary preset hardcodes header/tabs background via
@@ -622,7 +616,7 @@ h3 { color: var(--dbc-teal); }
   border-radius: 999px;
   background-color: rgba(var(--dbc-slate-rgb), 0.14);
   color: var(--dbc-slate);
-  font-size: 0.52rem;
+  font-size: var(--dbc-fs-tag);
   line-height: 1.7;
 }
 .md-typeset .skill-row-tags {
@@ -633,7 +627,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .skill-row-tags .tag {
   margin: 0;
   padding: 0 0.5em;
-  font-size: 0.52rem;
+  font-size: var(--dbc-fs-tag);
   line-height: 1.7;
 }
 .md-typeset .skill-row-note {
@@ -861,12 +855,12 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---------- Gem priority: ranked row layout ---------- */
-/* Structure (lives inside a .setup-panel[data-accent="lavender"], same
+/* Structure (lives inside a .setup-panel[data-accent="purple"], same
    shell + accent as every other build-page section) - in practice this
    whole shape below the header is generated by gem-priority.js from a
    compact JSON blob (see that file's EASY EDIT GUIDE), not hand-authored
    markup. Kept here as a DOM-shape reference for these CSS rules:
-   <div class="setup-panel" data-accent="lavender" markdown>
+   <div class="setup-panel" data-accent="purple" markdown>
    <div class="gem-priority" markdown>
    <div class="gem-col gem-col-dmg" markdown>
    <div class="gem-col-header" markdown>
@@ -1714,14 +1708,6 @@ h3 { color: var(--dbc-teal); }
   background-color: var(--dbc-gold);
   color: var(--dbc-gold-dark);
 }
-.md-typeset .cycle-num-4 {
-  /* 4th accent, added for Surge 111's Stack Reserve alt rotation (its own
-     locally-numbered 1-4 cycle set inside that page's Alt details block) -
-     see the comment above .cycle-card for why a new number needs its own
-     rule rather than falling out automatically. */
-  background-color: var(--dbc-violet);
-  color: var(--dbc-violet-dark);
-}
 .md-typeset .cycle-title {
   color: var(--md-default-fg-color);
   font-weight: 700;
@@ -2216,38 +2202,6 @@ h3 { color: var(--dbc-teal); }
   line-height: 1.3;
 }
 
-/* Kind variants for .stat used outside a .build-card (e.g. Essentials'
-   Specialization breakpoints) - same box, recolored with the site's
-   existing teal ("good"/on-track) and gold ("warn"/conditional) accents
-   instead of a third bespoke component. Default (no data-kind) stays the
-   original pink, unchanged, so every existing .build-card stat row is
-   unaffected. */
-.md-typeset .stat[data-kind="good"] {
-  border-color: rgba(var(--dbc-teal-rgb), 0.3);
-  background-color: rgba(var(--dbc-teal-rgb), 0.045);
-}
-.md-typeset .stat[data-kind="good"]:hover {
-  border-color: rgba(var(--dbc-teal-rgb), 0.5);
-  background-color: rgba(var(--dbc-teal-rgb), 0.07);
-}
-.md-typeset .stat[data-kind="good"] .stat-label { color: var(--dbc-teal); }
-.md-typeset .stat[data-kind="warn"] {
-  border-color: rgba(var(--dbc-gold-rgb), 0.3);
-  background-color: rgba(var(--dbc-gold-rgb), 0.045);
-}
-.md-typeset .stat[data-kind="warn"]:hover {
-  border-color: rgba(var(--dbc-gold-rgb), 0.5);
-  background-color: rgba(var(--dbc-gold-rgb), 0.07);
-}
-.md-typeset .stat[data-kind="warn"] .stat-label { color: var(--dbc-gold); }
-/* .food-req (a small muted note line, defined further down) doubles here
-   as a stat's secondary description under .stat-value - same "quiet
-   footnote" role it already plays under an engraving card title, just
-   reused instead of a new one-off text style. */
-.md-typeset .stat > .food-req {
-  margin: 0.35em 0 0;
-}
-
 /* Difficulty bar: add <div class="stat-bar-track"><div class="stat-bar-fill"
    style="width: 85%"></div></div> after the stat-value, width = value/10*100% */
 .md-typeset .stat-bar-track {
@@ -2353,7 +2307,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset a.video-chip:hover {
   background-color: rgba(var(--dbc-blue-rgb), 0.22);
-  color: #90caf9 !important;
+  color: color-mix(in srgb, var(--dbc-blue) 75%, #fff) !important;
 }
 
 /* ---------- Build profile pentagon badge (sits beside .build-card) ---------- */
@@ -2806,30 +2760,6 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-muted-text);
   font-style: italic;
 }
-
-.md-typeset .grid.cards > ul > li {
-  border-radius: var(--dbc-r-lg);
-  transition: transform 0.15s ease, border-color 0.15s ease;
-}
-.md-typeset .grid.cards > ul > li:hover {
-  transform: translateY(-2px);
-}
-.md-typeset .grid.cards > ul > li:nth-child(1) {
-  background-color: var(--dbc-rose-dark);
-  border-color: rgba(var(--dbc-rose-rgb), 0.45);
-}
-.md-typeset .grid.cards > ul > li:nth-child(2) {
-  background-color: var(--dbc-teal-card-bg);
-  border-color: rgba(var(--dbc-teal-rgb), 0.45);
-}
-/* A third card takes the gold accent, the same trio as .prearc-cards. */
-.md-typeset .grid.cards > ul > li:nth-child(3) {
-  background-color: var(--dbc-gold-dark);
-  border-color: rgba(var(--dbc-gold-rgb), 0.45);
-}
-.md-typeset .grid.cards > ul > li:nth-child(1):hover { border-color: var(--dbc-rose); }
-.md-typeset .grid.cards > ul > li:nth-child(2):hover { border-color: var(--dbc-teal); }
-.md-typeset .grid.cards > ul > li:nth-child(3):hover { border-color: var(--dbc-gold); }
 
 /* ==========================================================================
    Home page (index.md)
@@ -3493,7 +3423,7 @@ h3 { color: var(--dbc-teal); }
    Weapon, but the card grid below showed Raid Captain (a FIXED engraving
    there) in Cursed Doll's place, with no Cursed Doll card at all.
 
-   Two pieces, both living inside a shared .setup-panel[data-accent="lavender"]
+   Two pieces, both living inside a shared .setup-panel[data-accent="purple"]
    (same wrapper as Ark Setup/Skill Setup, for the same "curated card, not a
    bolted-on admonition" reason - see that section's own comment):
 
@@ -3512,7 +3442,7 @@ h3 { color: var(--dbc-teal); }
       build pages already use for "which build should I pick" framing.
 
    Structure:
-   <div class="setup-panel" data-accent="lavender" markdown>
+   <div class="setup-panel" data-accent="purple" markdown>
 
    <div class="engraving-loadout" markdown>
    <div class="engraving-loadout-group" markdown>
@@ -3661,8 +3591,7 @@ h3 { color: var(--dbc-teal); }
    this exact requirement, so it's recognizable at a glance rather than a
    plain-text chip indistinguishable from the no-strings-attached ones next
    to it. Usage: ![](icon){: .skill-icon } Name wrapped in
-   `.engraving-chip.engraving-chip-food` - pair with an
-   .engraving-loadout-note right after it in the same line (see below). */
+   `.engraving-chip.engraving-chip-food`. */
 .md-typeset .engraving-chip-food {
   border-color: rgba(var(--dbc-rose-rgb), 0.45);
   background-color: rgba(var(--dbc-rose-rgb), 0.09);
@@ -3685,52 +3614,13 @@ h3 { color: var(--dbc-teal); }
   vertical-align: middle;
 }
 
-/* Food requirement tied to a fixed engraving chip (e.g. Raid Captain on
-   the RE page - see .engraving-chip-food above). Sits inline right after
-   the chip it explains, in the SAME line/paragraph (not a separate block
-   below the loadout row), so it visually reads as that chip's own note
-   instead of a stray line of text under the whole group. Wraps onto its
-   own line only if the row runs out of horizontal space.
-   Usage, inside the same .engraving-loadout-group as the chip:
-   <span class="engraving-chip engraving-chip-food">...Raid Captain</span>
-   <span class="engraving-loadout-note">![](icon){: .skill-icon } requires
-   Atk/Move Speed feast</span> */
-.md-typeset .engraving-loadout-note {
-  display: inline-flex;
-  vertical-align: middle;
-  align-items: center;
-  gap: 0.3em;
-  font-size: 0.78em;
-  color: var(--dbc-lavender);
-  font-style: italic;
-  white-space: nowrap;
-}
-.md-typeset .engraving-loadout-note img.skill-icon {
-  margin: 0;
-  height: 12px;
-  width: 12px;
-}
-.md-typeset .engraving-loadout-note strong {
-  color: var(--dbc-rose-text-soft);
-  font-style: normal;
-}
-
 /* Standalone "go check the calculator" plug at the bottom of an Essentials
    page's Engravings section - NOT paired with a chip, just a lone
-   sentence-with-link sitting on its own line. Does not reuse
-   .engraving-loadout-note for this (same muted-italic look), because that
-   class's white-space: nowrap (deliberate for the SHORT chip-paired note
-   it's actually meant for - see the usage comment above) forced this much
-   longer sentence into one unbroken ~730px-wide line with no wrap, well
-   past a phone's viewport width - real page-level horizontal overflow,
-   invisible at normal desktop widths but the root cause of the "essentials
-   pages render extremely zoomed out on iPhone" pinch-zoom bug report (a
-   page that's actually wider than the viewport is exactly what makes a
-   mobile browser's zoom bounds/snap-back behave like this - nothing to do
-   with the pinch gesture itself, the page was already too wide before you
-   ever touched it). Same visual language (muted, italic, slightly smaller)
-   minus inline-flex/nowrap, so it wraps normally like any other paragraph
-   text once the calculator link mention runs out of room. */
+   sentence-with-link sitting on its own line. It must wrap like any other
+   paragraph: a nowrap line this long (about 730px) is wider than a phone's
+   viewport, which makes the whole page wider than the screen and breaks the
+   mobile browser's zoom bounds. Same visual language as the hint above
+   (muted, italic, slightly smaller), block display, normal wrapping. */
 .md-typeset .engraving-calc-note {
   display: block;
   margin-top: 0.6em;
@@ -3804,9 +3694,9 @@ h3 { color: var(--dbc-teal); }
 .md-typeset details.engraving-card[data-accent="mass"]:hover,
 .md-typeset details.engraving-card[data-accent="mass"][open] { border-color: rgba(var(--dbc-purple-rgb), 0.6); }
 
-.md-typeset details.engraving-card[data-accent="combo"] { border-color: rgba(211, 150, 198, 0.35); background-color: rgba(211, 150, 198, 0.05); }
+.md-typeset details.engraving-card[data-accent="combo"] { border-color: rgba(var(--dbc-orchid-rgb), 0.35); background-color: rgba(var(--dbc-orchid-rgb), 0.05); }
 .md-typeset details.engraving-card[data-accent="combo"]:hover,
-.md-typeset details.engraving-card[data-accent="combo"][open] { border-color: rgba(211, 150, 198, 0.6); }
+.md-typeset details.engraving-card[data-accent="combo"][open] { border-color: rgba(var(--dbc-orchid-rgb), 0.6); }
 
 /* Deep pastel red - Cursed Doll's own in-game engraving color, kept
    within the same low-opacity pastel treatment as the other accents
@@ -3903,7 +3793,7 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .engraving-card-badge {
   display: inline-block;
-  font-size: 0.52rem; /* the Essentials skill tables' tag size */
+  font-size: var(--dbc-fs-tag);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -3935,9 +3825,9 @@ h3 { color: var(--dbc-teal); }
 /* Orchid - the same blended pink/lavender the old combo card used, still
    reserved for a combined-engraving ceiling pick. */
 .md-typeset .engraving-card-badge-ceiling {
-  color: #d396c6;
-  background-color: rgba(211, 150, 198, 0.14);
-  border-color: rgba(211, 150, 198, 0.4);
+  color: var(--dbc-orchid);
+  background-color: rgba(var(--dbc-orchid-rgb), 0.14);
+  border-color: rgba(var(--dbc-orchid-rgb), 0.4);
 }
 
 /* Cards don't collapse (see the summary rule above), so the arrow
@@ -4057,20 +3947,6 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .food-req-item.skill-tip-anchor:hover img.skill-icon,
 .md-typeset .food-req-item.skill-tip-anchor:focus-visible img.skill-icon {
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.65), 0 0 8px rgba(var(--dbc-purple-rgb), 0.4);
-}
-
-/* ---------- Pre-Ark Grid page option cards ---------- */
-.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(1) {
-  background-color: var(--dbc-rose-dark);
-  border-color: rgba(var(--dbc-rose-rgb), 0.45);
-}
-.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(2) {
-  background-color: var(--dbc-gold-dark);
-  border-color: rgba(var(--dbc-gold-rgb), 0.45);
-}
-.md-typeset .grid.cards.prearc-cards > ul > li:nth-child(3) {
-  background-color: var(--dbc-teal-card-bg);
-  border-color: rgba(var(--dbc-teal-rgb), 0.45);
 }
 
 /* ---------- Page-level availability banner ---------- */
@@ -8466,10 +8342,10 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-calc-notice .bible-import-status {
   display: block;
-  color: #7fd8b8;
+  color: var(--dbc-teal);
 }
 .md-typeset .ap-calc-notice .bible-import-status-error {
-  color: #f0a8a8;
+  color: var(--dbc-red);
 }
 /* Left-aligned prose: wrapped sentences are hard to read ragged-left, and
    these can run to a sentence or two per field. */
@@ -8499,7 +8375,7 @@ h3 { color: var(--dbc-teal); }
   padding: 0.9em 1em 1em;
   border-radius: var(--dbc-r-lg);
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  background-color: #1c1a22;
+  background-color: var(--dbc-popover);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
   text-align: left;
   font-size: var(--dbc-fs-sm);
@@ -8556,12 +8432,12 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-calc-popover-msg {
   font-size: 0.78em;
-  color: #7fd8b8;
+  color: var(--dbc-teal);
   min-height: 1.2em;
   text-align: right;
 }
 .md-typeset .ap-calc-popover-msg-error {
-  color: #f0a8a8;
+  color: var(--dbc-red);
 }
 
 @media screen and (max-width: 900px) {
@@ -9388,7 +9264,7 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .rune-chip.rune-uncommon {
   background-color: rgba(var(--dbc-green-rgb), 0.14);
-  color: #81c995;
+  color: var(--dbc-green);
   border-color: rgba(var(--dbc-green-rgb), 0.4);
 }
 .md-typeset .rune-chip.rune-rare {
@@ -9441,7 +9317,7 @@ body.page-333-blitz input[type="text"] {
   font-weight: 700;
 }
 .rune-tip-tier-uncommon {
-  color: #81c995;
+  color: var(--dbc-green);
 }
 .rune-tip-tier-rare {
   color: var(--dbc-blue);
@@ -9496,11 +9372,11 @@ body.page-333-blitz input[type="text"] {
      wrong problem. */
 }
 /* Tag pills and the meter pill in an expanded card use the same box as the Essentials skill
-   tables' pills: 0.52rem text, 0.5em side padding, no vertical padding. */
+   tables' pills: var(--dbc-fs-tag) text, 0.5em side padding, no vertical padding. */
 .md-typeset .skill-card-body .tag {
   margin: 0 4px 6px 0;
   padding: 0 0.5em;
-  font-size: 0.52rem;
+  font-size: var(--dbc-fs-tag);
 }
 /* Same meter/stack value line skill-tooltip.js's .skill-tip-meter shows
    (e.g. "6314 meter", "7 stacks") - same slate/muted reference-data
@@ -9534,7 +9410,7 @@ body.page-333-blitz input[type="text"] {
   border-radius: 999px;
   background-color: rgba(var(--dbc-slate-rgb), 0.14);
   border: 1px solid rgba(var(--dbc-slate-rgb), 0.3);
-  font-size: 0.52rem;
+  font-size: var(--dbc-fs-tag);
   line-height: 1.7;
   color: var(--dbc-slate);
 }
@@ -9561,11 +9437,9 @@ body.page-333-blitz input[type="text"] {
    6-core tree + a text legend) with just the 3 Order cores this site's
    builds actually invest in, each shown as an icon + name + which of its
    3 point breakpoints (10P/14P/17P) are reached.
-   Accent matches .build-card/.setup-panel[data-accent="pink"] (var(--dbc-rose))
-   rather than the Relic-red of the core icon art
-   (sun.png/moon.png/star.png are Relic-quality gems) - the red would read as an unrelated, more saturated component bolted onto a page whose build
-   cards and Ark Setup panel are both already pink, instead of a variant
-   of them. */
+   Accent is gold (var(--dbc-gold)) rather than the Relic-red of the core icon art
+   (sun.png/moon.png/star.png are Relic-quality gems), which would read as an
+   unrelated, more saturated component inside the purple setup panel. */
 .md-typeset .ark-core-row {
   display: grid;
   /* Same auto-fit/minmax formula and gap as .ark-passives above (not a
@@ -9623,15 +9497,15 @@ body.page-333-blitz input[type="text"] {
   padding: 0.6em 0.8em 0.6em 1.1em;
   /* Same subtle-tint-over-hairline-border surface as .stat/.skill-card
      rather than a bespoke dark gradient (and a much stronger 0.3 border), which would make this the one component on the site that looks like a separate skin instead of a variant of the same card. */
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.22);
+  border: 1px solid rgba(var(--dbc-gold-rgb), 0.22);
   border-radius: var(--dbc-r-lg);
   background-color: rgba(255, 255, 255, 0.02);
   transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .md-typeset .ark-core-item:hover {
-  border-color: rgba(var(--dbc-rose-rgb), 0.45);
+  border-color: rgba(var(--dbc-gold-rgb), 0.45);
   background-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.15), 0 0 10px rgba(var(--dbc-rose-rgb), 0.22);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-gold-rgb), 0.15), 0 0 10px rgba(var(--dbc-gold-rgb), 0.22);
 }
 .md-typeset .ark-core-icon {
   height: 38px;
@@ -9639,7 +9513,7 @@ body.page-333-blitz input[type="text"] {
   flex: 0 0 auto;
   object-fit: contain;
   border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.45), 0 0 8px rgba(var(--dbc-rose-rgb), 0.3);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-gold-rgb), 0.45), 0 0 8px rgba(var(--dbc-gold-rgb), 0.3);
 }
 .md-typeset .ark-core-info {
   /* Name and dots row share this column's left edge - no centering on
@@ -9726,7 +9600,7 @@ body.page-333-blitz input[type="text"] {
   padding: 0.75em 0.9em 0.8em;
   border-radius: var(--dbc-r-lg);
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  background-color: #1c1a22;
+  background-color: var(--dbc-popover);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
   text-align: left;
   white-space: normal;
@@ -9837,7 +9711,7 @@ body.page-333-blitz input[type="text"] {
   padding: 0.65em 0.8em 0.7em;
   border-radius: var(--dbc-r-lg);
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
-  background-color: #1c1a22;
+  background-color: var(--dbc-popover);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
   text-align: left;
   white-space: normal;
@@ -10007,7 +9881,7 @@ body.page-333-blitz input[type="text"] {
 .skill-tip-tags .tag,
 .skill-tip-tags .skill-tip-meter {
   padding: 0 0.5em;
-  font-size: 0.52rem;
+  font-size: var(--dbc-fs-tag);
   line-height: 1.7;
 }
 .skill-tip-note {
@@ -10138,7 +10012,7 @@ body.page-333-blitz input[type="text"] {
    Column accents intentionally reuse hues already meaningful elsewhere on
    the site rather than lifting the in-game gold/blue/green directly:
    amber (var(--dbc-orange), same as .ark-core-dot-on/.rune-legendary) for Evolution,
-   lavender (var(--dbc-purple), same as .setup-panel[data-accent="lavender"]) for
+   purple (var(--dbc-purple), same as .setup-panel[data-accent="purple"]) for
    Enlightenment, teal (var(--dbc-teal), same as .tag-util/.gem-col-cd) for Leap -
    so this reads as three accents from this site's own palette, not a
    re-skin of the game's UI or of mokokompendium's reference layout. */
@@ -10465,25 +10339,10 @@ body.page-333-blitz input[type="text"] {
   padding: 1em 1.2em 0.9em;
   margin: 0.9em 0 1.2em;
 }
-.md-typeset .setup-panel[data-accent="pink"] {
-  border: 1px solid rgba(var(--dbc-rose-rgb), 0.3);
-  background-color: rgba(var(--dbc-rose-rgb), 0.045);
-}
-.md-typeset .setup-panel[data-accent="lavender"] {
+.md-typeset .setup-panel[data-accent="purple"] {
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.3);
   background-color: rgba(var(--dbc-purple-rgb), 0.045);
 }
-/* "neutral" - for Ark Setup specifically, now that it holds the Ark
-   Passive tree's own three tinted column cards plus the pink-accented
-   Ark Grid cores cards. A pink outer panel on top of those competed with
-   them instead of framing them, so this is a quiet gray/white surface
-   (same border/background values as .engraving-card's untinted state)
-   that lets the colorful cards inside read as the content. */
-.md-typeset .setup-panel[data-accent="neutral"] {
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background-color: rgba(255, 255, 255, 0.03);
-}
-
 /* ===== Essentials setup card (first card on both Essentials pages) ===== */
 .md-typeset .ess {
   container: ess / inline-size;
@@ -11067,9 +10926,9 @@ body.page-333-blitz input[type="text"] {
   transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .md-typeset .food-option:hover {
-  border-color: rgba(var(--dbc-rose-rgb), 0.45);
+  border-color: rgba(var(--dbc-purple-rgb), 0.45);
   background-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.15), 0 0 10px rgba(var(--dbc-rose-rgb), 0.22);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.15), 0 0 10px rgba(var(--dbc-purple-rgb), 0.22);
 }
 /* 22px - down from the old 40px vertical-card icon, sized to sit inline
    in a pill next to the name instead of being the item's main visual. */
@@ -11079,7 +10938,7 @@ body.page-333-blitz input[type="text"] {
   width: 22px;
   object-fit: contain;
   border-radius: var(--dbc-r-sm);
-  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.4), 0 0 6px rgba(var(--dbc-rose-rgb), 0.25);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.4), 0 0 6px rgba(var(--dbc-purple-rgb), 0.25);
   transition: box-shadow 0.15s ease;
 }
 /* Bare .food-option-icon usages only (Surge's "Mana Food + Maelstrom
@@ -11088,12 +10947,12 @@ body.page-333-blitz input[type="text"] {
    pill (attachBareIcon in skill-tooltip.js explicitly skips those, since
    the whole pill is already its own trigger via attachFoodOption/
    .food-option:hover above) - so this can't double up with that rule.
-   Same rose family and box-shadow shape as .food-option:hover, just
+   Same purple family and box-shadow shape as .food-option:hover, just
    intensifying this icon's own always-on ring directly since there's no
    wrapping pill here to react on :hover instead. */
 .md-typeset .food-option-icon.skill-tip-anchor:hover,
 .md-typeset .food-option-icon.skill-tip-anchor:focus-visible {
-  box-shadow: 0 0 0 1px rgba(var(--dbc-rose-rgb), 0.75), 0 0 10px rgba(var(--dbc-rose-rgb), 0.5);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.75), 0 0 10px rgba(var(--dbc-purple-rgb), 0.5);
 }
 .md-typeset .food-option p {
   margin: 0;

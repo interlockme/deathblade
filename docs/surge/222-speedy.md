@@ -38,7 +38,7 @@
      a separate tab holding its own code + optional italic note above it -
      copy that pattern to add another import option (e.g. an easier variant). -->
 
-<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="danger" open markdown>
@@ -68,7 +68,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
      skill-setup pair for that alternative - copy the existing pattern
      rather than editing the main tree in place. -->
 
-<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-panel" data-accent="purple" markdown>
 
 <div class="ark-passives" data-family="surge" markdown>
 <script type="application/json">
@@ -140,7 +140,7 @@ Make sure you've read [Essentials](essentials.md), then apply both "<span class=
      tags resolve automatically by id from skill-data.js - only add "name" to
      override the display text for a genuine one-off case. -->
 
-<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-panel" data-accent="purple" markdown>
 
 <div class="skill-setup" data-family="surge" markdown>
 <script type="application/json">
@@ -242,7 +242,7 @@ Can replace Dark Axel if you find it more useful on bosses with a small hitbox o
      alternative, is in javascripts/gem-priority.js's "EASY EDIT GUIDE"
      comment. -->
 
-<div class="setup-panel" data-accent="lavender" markdown>
+<div class="setup-panel" data-accent="purple" markdown>
 
 <div class="gem-priority" markdown>
 <script type="application/json">

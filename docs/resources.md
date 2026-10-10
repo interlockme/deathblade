@@ -2335,7 +2335,7 @@
 
 </div>
 
-<div class="link-group" data-accent="lavender" markdown>
+<div class="link-group" data-accent="purple" markdown>
 
 <p class="link-group-title">Guides</p>
 
