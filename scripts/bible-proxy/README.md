@@ -19,7 +19,7 @@ A number and `true` means direct loading works and you do not need this. A CORS 
 2. Edit `ALLOWED_ORIGINS` in the script if the site is not at https://interlockme.github.io. It also lists `http://127.0.0.1:8000` and `http://localhost:8000` (`mkdocs serve`); add a LAN origin such as `http://192.168.1.20:8000` to test from a phone.
 3. Put the Worker's URL in `docs/resources.md`: `data-proxy="https://<name>.<account>.workers.dev/"`
    on the `.bible-import-control` span. Empty means "ask Bible directly".
-4. The Worker has no per-IP limit of its own, and a `workers.dev` Worker has no zone, so dashboard rate limiting rules do not apply to it. What limits it is the 15 second edge cache and the free plan's daily request limit.
+4. The Worker limits each caller IP to 20 requests a minute (RATE_LIMIT and RATE_WINDOW_SECONDS in worker.js), answering 429 beyond that. The count lives in the edge cache of the data center that serves the caller, so it is best effort, not exact. A `workers.dev` Worker has no zone, so dashboard rate limiting rules do not apply to it. The 15 second edge cache of each character page and the free plan's daily request limit still apply on top.
 
 ## Things to know
 

@@ -24,6 +24,12 @@ const TIMEOUT_MS = 10000;
 // Edge copy of a character page, kept briefly so repeat loads of one character do
 // not each reach Bible. The browser never keeps its own copy (no-store below).
 const EDGE_CACHE_SECONDS = 15;
+// Per-IP cap on requests that reach Bible: RATE_LIMIT per RATE_WINDOW_SECONDS.
+// Counted in the edge cache of the data center that answers the caller, so it is
+// best effort (not atomic, not shared between data centers), enough to stop one
+// script hammering the relay.
+const RATE_LIMIT = 20;
+const RATE_WINDOW_SECONDS = 60;
 
 function cors(origin) {
   return {
@@ -37,6 +43,18 @@ function reply(status, body, origin, extra) {
     status,
     headers: Object.assign({ "content-type": "text/plain; charset=utf-8" }, origin ? cors(origin) : {}, extra || {}),
   });
+}
+
+async function overLimit(request) {
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  const slot = Math.floor(Date.now() / (RATE_WINDOW_SECONDS * 1000));
+  const key = new Request("https://rate.invalid/" + encodeURIComponent(ip) + "/" + slot);
+  const cache = caches.default;
+  const hit = await cache.match(key);
+  const count = hit ? Number(await hit.text()) || 0 : 0;
+  if (count >= RATE_LIMIT) return true;
+  await cache.put(key, new Response(String(count + 1), { headers: { "cache-control": "max-age=" + RATE_WINDOW_SECONDS } }));
+  return false;
 }
 
 export default {
@@ -54,6 +72,8 @@ export default {
     const name = params.get("name") || "";
     if (!/^[A-Za-z]{2,4}$/.test(region)) return reply(400, "Bad region", allowed);
     if (!name || name.length > 40 || /[\/\\?#%\u0000-\u001f\u007f]/.test(name)) return reply(400, "Bad name", allowed);
+
+    if (await overLimit(request)) return reply(429, "Too many requests", allowed, { "retry-after": String(RATE_WINDOW_SECONDS) });
 
     const target = BIBLE_ORIGIN + "/character/" + region.toUpperCase() + "/" + encodeURIComponent(name);
     let res;
