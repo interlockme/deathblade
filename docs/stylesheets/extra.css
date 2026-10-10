@@ -65,6 +65,8 @@
   --dbc-teal-dark: #1d2227;        /* darkest teal tint - on-fill text for a rank-1
     Cooldown gem badge and cycle-num-2, pairs with --dbc-teal (see also
     --dbc-teal-card-bg below, a different/lighter teal-family tint) */
+  --dbc-teal-card-bg: #1e262b;     /* the top colour of the home page's Surge lane gradient
+    (.home-lane[data-accent="teal"] sets it as --home-lane-bg), pairs with --dbc-teal */
   --dbc-gem-name-muted: #d8d2de;   /* rank-2 gem item name text + an alt-gem's bolded name */
   --dbc-chip-text: #cbb9e8;        /* text color paired with --dbc-surface on the purple-bordered chip buttons */
   --dbc-muted-text: #948fa0;       /* faint gray label text (kept at 4.5:1+ on the dark surfaces) - a "no diff" build-compare
@@ -9497,15 +9499,15 @@ body.page-333-blitz input[type="text"] {
   padding: 0.6em 0.8em 0.6em 1.1em;
   /* Same subtle-tint-over-hairline-border surface as .stat/.skill-card
      rather than a bespoke dark gradient (and a much stronger 0.3 border), which would make this the one component on the site that looks like a separate skin instead of a variant of the same card. */
-  border: 1px solid rgba(var(--dbc-gold-rgb), 0.22);
+  border: 1px solid rgba(var(--dbc-orange-rgb), 0.22);
   border-radius: var(--dbc-r-lg);
   background-color: rgba(255, 255, 255, 0.02);
   transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .md-typeset .ark-core-item:hover {
-  border-color: rgba(var(--dbc-gold-rgb), 0.45);
+  border-color: rgba(var(--dbc-orange-rgb), 0.45);
   background-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 0 1px rgba(var(--dbc-gold-rgb), 0.15), 0 0 10px rgba(var(--dbc-gold-rgb), 0.22);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-orange-rgb), 0.15), 0 0 10px rgba(var(--dbc-orange-rgb), 0.22);
 }
 .md-typeset .ark-core-icon {
   height: 38px;
@@ -9513,7 +9515,7 @@ body.page-333-blitz input[type="text"] {
   flex: 0 0 auto;
   object-fit: contain;
   border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(var(--dbc-gold-rgb), 0.45), 0 0 8px rgba(var(--dbc-gold-rgb), 0.3);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-orange-rgb), 0.45), 0 0 8px rgba(var(--dbc-orange-rgb), 0.3);
 }
 .md-typeset .ark-core-info {
   /* Name and dots row share this column's left edge - no centering on
