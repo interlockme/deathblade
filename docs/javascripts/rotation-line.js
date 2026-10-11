@@ -262,7 +262,7 @@
   }
 
   // Toggles a "this arrow sits at the end of a wrapped row" state
-  // (.arrow-wrap, see extra.css) on every plain .arrow in `line`, based
+  // (.arrow-wrap, see extra.css) on every plain .arrow in a line, based
   // on the ACTUAL rendered layout rather than anything authored in the
   // step data - there's nothing for a build page's JSON to set here,
   // unlike swapNext above.
@@ -273,24 +273,31 @@
   // resize, a webfont swap changing chip widths), same "react to the
   // container's own width" instinct as the rest of this project's
   // width-dependent components - see project-context.md's CONVENTIONS
-  // section. It's called once synchronously right after building the
-  // line (below), then again by the ResizeObserver whenever the line's
-  // own box actually resizes, and once more after webfonts finish
-  // loading (see the fonts.ready hook below) to catch the one case a
-  // resize alone can't: the row count staying the same while the split
-  // point silently shifts from one arrow to the next because chip
-  // widths changed slightly.
+  // section. The ResizeObserver below delivers a first measurement for
+  // every line it starts observing and another whenever the line's own
+  // box resizes, and one more pass runs after webfonts finish loading
+  // (see the fonts.ready hook below) to catch the one case a resize
+  // alone can't: the row count staying the same while the split point
+  // silently shifts from one arrow to the next because chip widths
+  // changed slightly.
+  //
+  // Two phases so a batch of lines costs one layout, not one per line:
+  // measureWrapArrows only READS offsetTop (forcing at most one layout for
+  // the whole batch), applyWrapArrows only WRITES classes, titles and
+  // icons. Interleaving a write between two lines' reads would force a
+  // fresh layout for every line.
   //
   // Deliberately skips .arrow-swap: that glyph already carries its own
   // "order interchangeable" meaning, and stacking a second meaning onto
   // the same two-headed shape would read as neither. If a swap arrow
   // happens to land at a wrap point, it's left as-is - a known, accepted
   // gap rather than an oversight.
-  function updateWrapArrows(line) {
+  function measureWrapArrows(line) {
+    var results = [];
     var kids = Array.prototype.filter.call(line.children, function (child) {
       return child.tagName !== "SCRIPT";
     });
-    if (kids.length < 2) return;
+    if (kids.length < 2) return results;
 
     var TOLERANCE = 2; // px - guards against subpixel offsetTop jitter within one row
     for (var i = 0; i < kids.length; i++) {
@@ -304,9 +311,19 @@
       // it's sitting at the next row's start like any other mid-row
       // arrow. Only a `next` that's alone on the row below (this arrow
       // stayed up top) counts as a real wrap point.
-      var wraps = !!next && next.offsetTop > kid.offsetTop + TOLERANCE;
-      kid.classList.toggle("arrow-wrap", wraps);
-      if (wraps) {
+      results.push({
+        arrow: kid,
+        wraps: !!next && next.offsetTop > kid.offsetTop + TOLERANCE
+      });
+    }
+    return results;
+  }
+
+  function applyWrapArrows(results) {
+    results.forEach(function (r) {
+      var kid = r.arrow;
+      kid.classList.toggle("arrow-wrap", r.wraps);
+      if (r.wraps) {
         kid.title = "Continues below";
         // Idempotent: only add the icon if it isn't already there (this
         // runs on every resize, not just once).
@@ -320,7 +337,12 @@
         var existingIcon = kid.querySelector(".arrow-wrap-icon");
         if (existingIcon) existingIcon.remove();
       }
-    }
+    });
+  }
+
+  function updateWrapArrows(lines) {
+    var measured = Array.prototype.map.call(lines, measureWrapArrows);
+    measured.forEach(applyWrapArrows);
   }
 
   // One shared observer (rather than one per line, cheaper for pages
@@ -330,9 +352,7 @@
   // an actual resize, never on a timer.
   var wrapObserver = window.ResizeObserver
     ? new ResizeObserver(function (entries) {
-        entries.forEach(function (entry) {
-          updateWrapArrows(entry.target);
-        });
+        updateWrapArrows(entries.map(function (entry) { return entry.target; }));
       })
     : null;
 
@@ -357,7 +377,7 @@
   // trigger isn't quite enough on its own.
   if (window.document.fonts && document.fonts.ready) {
     document.fonts.ready.then(function () {
-      document.querySelectorAll(".rotation-line").forEach(updateWrapArrows);
+      updateWrapArrows(document.querySelectorAll(".rotation-line"));
     });
   }
 
@@ -448,8 +468,18 @@
     line.appendChild(frag);
     line._rotationRawData = raw;
 
-    updateWrapArrows(line);
-    if (wrapObserver) wrapObserver.observe(line);
+    // Observing delivers a first measurement once the line has a layout
+    // box (and again whenever it gains one, e.g. a closed tab or details
+    // opening), so no synchronous measure is needed here, which would
+    // force a layout per line during page load. unobserve first so a
+    // rebuilt line that is already observed still gets that first
+    // measurement. Without ResizeObserver, measure once now.
+    if (wrapObserver) {
+      wrapObserver.unobserve(line);
+      wrapObserver.observe(line);
+    } else {
+      updateWrapArrows([line]);
+    }
   }
 
   window.SiteUtils.registerRenderer(".rotation-line", renderLine);

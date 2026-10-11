@@ -4,16 +4,15 @@ minify_assets.py - strips comments from this site's OWN css/js in a BUILT
 site directory. CI-only, run after `mkdocs build`, never against docs/.
 
 WHY THIS EXISTS
-This site's css/js are deliberately comment-heavy (extra.css is ~9,600 lines,
+This site's css/js are deliberately comment-heavy (extra.css is ~11,800 lines,
 about two thirds of it explanatory prose). Those comments are the single most
 valuable thing in the repo for future edits, so they must stay in docs/ - but
 shipping them to every visitor is pure waste. Prose also compresses badly
 relative to css/js structure, so stripping comments helps far more than the
 raw byte count suggests:
 
-    extra.css          425 KB -> 141 KB raw, 126 KB -> 19 KB gzipped
-    eager js (29 files)               116 KB -> 38 KB gzipped
-    per guide page     242 KB -> 57 KB gzipped (what GitHub Pages sends)
+    extra.css          487 KB -> 207 KB raw, 137 KB -> 29 KB gzipped
+    eager js (29 files)               125 KB -> 41 KB gzipped
 
 WHY COMMENT-STRIPPING ONLY, NOT FULL MINIFICATION
 Full minification (collapsing whitespace, dropping the last semicolon in a

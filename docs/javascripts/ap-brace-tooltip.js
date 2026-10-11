@@ -120,8 +120,8 @@
       // a no-op here anyway once skill-tip-wired is set), then strip the
       // reapplied attribute again so the native tooltip doesn't return.
       if (text) {
-        var tip = tipByTrigger.get(trigger);
-        if (tip) tip.querySelector(".skill-tip-note").textContent = text;
+        var existing = tipByTrigger.get(trigger);
+        if (existing) existing.querySelector(".skill-tip-note").textContent = text;
         trigger.removeAttribute("title");
       }
       return;

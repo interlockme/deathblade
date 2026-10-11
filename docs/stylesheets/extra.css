@@ -119,7 +119,7 @@
    half-skinned. */
 [data-md-color-scheme="slate"] ::selection {
   background-color: rgba(var(--dbc-pink-rgb), 0.35);
-  color: #fff;
+  color: var(--dbc-white);
 }
 html {
   scrollbar-width: thin;
@@ -3332,7 +3332,7 @@ h3 { color: var(--dbc-teal); }
   white-space: nowrap;
   color: var(--dbc-muted-text);
 }
-.md-typeset .gp-m-label b { margin-right: 0.3em; font-weight: 700; color: #fff; }
+.md-typeset .gp-m-label b { margin-right: 0.3em; font-weight: 700; color: var(--dbc-white); }
 .md-typeset .gp-m-label[data-at="40"] { left: 50%; }
 .md-typeset .gp-m-label[data-at="60"] { left: 75%; }
 .md-typeset .gp-m-label[data-at="80"] { left: 100%; transform: translateX(-100%); }
@@ -3383,7 +3383,7 @@ h3 { color: var(--dbc-teal); }
   background-color: rgba(var(--dbc-purple-rgb), 0.045);
   font-size: var(--dbc-fs-base);
   font-weight: 600;
-  color: #fff;
+  color: var(--dbc-white);
 }
 .md-typeset .gp-cycle > span { white-space: nowrap; }
 .md-typeset .gp-cycle .gp-sep { font-weight: 400; color: var(--dbc-pink); }
@@ -6646,24 +6646,9 @@ h3 { color: var(--dbc-teal); }
   white-space: nowrap;
   cursor: help;
 }
-.md-typeset .ap-gear-inputs > .ap-brace-compare-inputs {
-  margin: 0;
-  /* padding-top was 0, so the first input row (Weapon Power / Weapon
-     Power % / Main Stat) sat right under the summary heading with no
-     breathing room, reading as overlapping it. */
-  padding: 0.5em 0.85em 0.7em;
-  border-bottom: none;
-  /* Safety net only: .ap-gear-cards below caps its tracks at this
-     container's own width, so nothing here normally overflows. The
-     scroller stays so an unexpectedly wide row is reachable sideways
-     instead of widening the whole page. No -webkit-overflow-scrolling -
-     see .quick-jump-pills' removal note further down for why. */
-  overflow-x: auto;
-}
-/* Bracelet Comparison's own .ap-brace-compare-inputs (the OTHER usage
-   the comment above refers to) wraps nothing but the hidden ap-brace-spec-build select (the docked toggle is the single source of truth - see resources.md's own comment on that select). The base rule's margin-bottom/padding-bottom/border-bottom is sized for a visible row; with nothing to separate FROM, it would render as a stray dashed line floating above "Candidate bracelet lines..." with nothing above it. Zero out spacing and the
-   border here the same way the Character Data usage above already
-   does, rather than deleting the wrapper div itself (still a real,
+/* Bracelet Comparison's own .ap-brace-compare-inputs (the OTHER usage) wraps nothing but the hidden ap-brace-spec-build select (the docked toggle is the single source of truth - see resources.md's own comment on that select). The base rule's margin-bottom/padding-bottom/border-bottom is sized for a visible row; with nothing to separate FROM, it would render as a stray dashed line floating above "Candidate bracelet lines..." with nothing above it. Zero out spacing and the
+   border here the same way the Character Data usage (further down)
+   already does, rather than deleting the wrapper div itself (still a real,
    non-hidden element in the DOM - the select inside it just is). */
 .md-typeset .ap-brace-compare-body > .ap-brace-compare-inputs {
   margin-bottom: 0;
@@ -7276,10 +7261,19 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-calc-field-row input[type="number"].ap-gear-input-narrow {
   width: 5em;
 }
+/* Character Data's use of .ap-brace-compare-inputs: the first input row
+   (Weapon Power / Weapon Power % / Main Stat) needs room under the summary
+   heading, so the padding is set here. */
 .md-typeset .ap-gear-inputs > .ap-brace-compare-inputs {
   margin: 0;
   padding: 0.9rem var(--ap-pad-x) 1rem;
   border-bottom: none;
+  /* Safety net only: .ap-gear-cards below caps its tracks at this
+     container's own width, so nothing here normally overflows. The
+     scroller stays so an unexpectedly wide row is reachable sideways
+     instead of widening the whole page. No -webkit-overflow-scrolling -
+     see .quick-jump-pills' removal note further down for why. */
+  overflow-x: auto;
 }
 .md-typeset .ap-brace-compare-inputs .ap-calc-field-row {
   flex: 0 0 auto;
@@ -9064,7 +9058,7 @@ h3 { color: var(--dbc-teal); }
   transform: translateY(-50%);
   font-size: 0.86em;
   font-weight: 700;
-  color: #fff;
+  color: var(--dbc-white);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
   white-space: nowrap;
   overflow: hidden;
@@ -11806,7 +11800,7 @@ html.image-lightbox-open {
   color: #111;
   font-weight: 600;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  outline: 2px solid #fff;
+  outline: 2px solid var(--dbc-white);
   outline-offset: 2px;
 }
 /* The skip target is focused by script only, so it needs no ring. */

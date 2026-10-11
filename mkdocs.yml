@@ -44,8 +44,8 @@ extra_css:
 #   1b. lazy-calculators.js - loads the five resources.md-only files
 #      (cpm-calculator.js, bid-calculator.js, ark-passive-calculator.js,
 #      bible-import.js, ap-brace-tooltip.js) on demand instead of on every
-#      page. They are deliberately NOT listed here: they were 543 KB of
-#      this site's 851 KB and no guide page uses any of them. Their load
+#      page. They are deliberately NOT listed here: they are most of
+#      this site's script weight and no guide page uses any of them. Their load
 #      order lives in that file's LAZY_BUNDLE array.
 #
 # No ?v= numbers anywhere: scripts/hash_assets.py adds a content hash to
