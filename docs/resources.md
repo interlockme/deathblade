@@ -8,8 +8,8 @@
 
 <div class="ap-calc">
 
-<!-- Top bar: Build chips on the left, preset slots and file actions on
-     the right. One instance for the whole calculator. Desktop (>900px):
+<!-- Top bar: Build chips and preset slots on the left, Load Character and
+     the file actions on the right. One instance for the whole calculator. Desktop (>900px):
      the whole bar is sticky under the site header (see .ap-calc-bar in
      extra.css). Mobile (<=900px): the toolbar scrolls with the page and
      only the Build pill (.ap-build-dock) is fixed to the bottom of the
@@ -48,7 +48,9 @@
   </div>
 </div>
 
-<!-- Preset slots, Load Character (the primary button) and Export/Import/Reset.
+<span class="ap-calc-preset-group" role="group" aria-label="Preset slot"><span class="ap-calc-preset-label">Preset</span><button type="button" class="ap-calc-preset" data-preset="1">1</button><button type="button" class="ap-calc-preset" data-preset="2">2</button><button type="button" class="ap-calc-preset" data-preset="3">3</button></span>
+
+<!-- Load Character (the primary button) and Export/Import/Reset.
      Export, Import and Load Character open the popovers at the end of this
      block, anchored to the toolbar. Load Character takes a name or Bible
      link: bible-import.js fetches that character's page and feeds the same
@@ -66,7 +68,6 @@
      is dragged. -->
 <div class="ap-calc-toolbar">
   <span class="bible-last-import" hidden><span class="bible-last-import-name" tabindex="0"></span><button type="button" class="bible-last-import-clear" aria-label="Forget the last imported character for this preset">&times;</button></span>
-  <span class="ap-calc-preset-group" role="group" aria-label="Preset slot"><span class="ap-calc-preset-label">Preset</span><button type="button" class="ap-calc-preset" data-preset="1">1</button><button type="button" class="ap-calc-preset" data-preset="2">2</button><button type="button" class="ap-calc-preset" data-preset="3">3</button></span>
   <span class="bible-import-control" data-proxy="https://bible-relay.interlockme.workers.dev/">
     <button type="button" class="bible-load-open">Load Character</button>
   </span>

@@ -4643,7 +4643,7 @@ h3 { color: var(--dbc-teal); }
 
 /* ---------- Ark Passive node comparison calculator ---------- */
 /* Structure of the calculator:
-   - Top bar (.ap-calc-bar): Build chips on the left, preset slots, Load
+   - Top bar (.ap-calc-bar): Build chips and preset slots on the left, Load
      Character and file actions (Export, Import, Reset) on the right. Sticky
      under the site header on desktop.
    - Two columns below it. Left: the inputs, grouped by the final stat they
@@ -6313,13 +6313,19 @@ h3 { color: var(--dbc-teal); }
 /* In the desktop bar the Build tiers' chips sit closer together than the Bid
    calculator's chips, to leave room for the last imported pill. Under 901px
    the tiers live in the phone's Build panel, which has the room and keeps the
-   wider chips as tap targets. */
+   wider chips as tap targets. The tiers (and the Preset group, see below) are
+   as tall as the toolbar buttons beside them, 1.58rem: min-height rather than
+   height so a coarse pointer's taller chips can still grow the box, and the
+   chips stretch to fill it (the 3px padding and 1px border are px, so at a
+   larger root font the chips' own height alone would fall short of the buttons). */
 @media screen and (min-width: 901px) {
   .md-typeset .ap-build-toggle-tier .ap-build-chip {
     padding-inline: 0.5rem;
-    padding-block: 0.25rem; /* chip 25.6px; with the tier's 3px padding and 1px border the box is 33.6px */
+    padding-block: 0.2rem;
   }
   .md-typeset .ap-build-toggle-tier {
+    box-sizing: border-box;
+    min-height: 1.58rem;
     padding: 3px;
   }
   .md-typeset .ap-calc-bar .ap-build-toggle {
@@ -6346,7 +6352,7 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* Top bar. One instance for the whole calculator, holding the Build chips
-   (.ap-build-dock) and the toolbar. Desktop: sticks directly under the site header
+   (.ap-build-dock), the Preset group and the toolbar. Desktop: sticks directly under the site header
    (2.4rem, the header's own height) with an opaque surface so scrolled content does not show through,
    and picks up a shadow while pinned. The JS-driven .ap-calc-bar--stuck
    class does that, because sticky has no ":stuck" selector (see
@@ -6359,7 +6365,7 @@ h3 { color: var(--dbc-teal); }
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem 1rem;
+  gap: 0.5rem 0.4rem; /* the column gap is the one between the Build tiers and the Preset group, and between the toolbar's buttons */
   margin: 0 0 var(--ap-gap);
   padding: 0.5rem 0.75rem;
   background-color: var(--dbc-surface);
@@ -8213,13 +8219,14 @@ h3 { color: var(--dbc-teal); }
   }
 }
 
-/* Toolbar: preset slots, Load Character, Export, Import and Reset. Lives in
-   the top bar (.ap-calc-bar), right-aligned. Inputs are saved to this
+/* Toolbar: Load Character, Export, Import and Reset (the Preset group is its
+   own item in the top bar, see below). Lives in the top bar (.ap-calc-bar),
+   right-aligned. Inputs are saved to this
    browser's localStorage on every change, so a reader coming back later sees
    their own last setup; Reset is the way back to the authored defaults and
    only clears the active preset. Load Character is the one filled button: it
    is the main way to bring a character in, and an import lands in the preset
-   chosen at its left. Export, Import and Reset are the quiet outlined
+   chosen at the bar's left. Export, Import and Reset are the quiet outlined
    buttons (backup, restore, wipe). */
 .md-typeset .ap-calc-toolbar {
   position: relative; /* anchors the Export/Import popovers below */
@@ -8277,14 +8284,14 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-calc-toolbar .ap-calc-import:focus-visible,
 .md-typeset .ap-calc-toolbar .ap-calc-reset:focus-visible,
 .md-typeset .ap-calc-toolbar .bible-load-open:focus-visible,
-.md-typeset .ap-calc-toolbar .ap-calc-preset:focus-visible {
+.md-typeset .ap-calc-bar .ap-calc-preset:focus-visible {
   outline: 2px solid rgba(var(--dbc-pink-rgb), 0.6);
   outline-offset: 2px;
 }
 /* Preset group: a segmented control. The active slot is picked out by tint
    and weight, not an underline, since the point is which slot is active
    rather than that all three are clickable. */
-.md-typeset .ap-calc-toolbar .ap-calc-preset-group {
+.md-typeset .ap-calc-bar .ap-calc-preset-group {
   display: inline-flex;
   align-items: center;
   gap: 2px;
@@ -8298,7 +8305,7 @@ h3 { color: var(--dbc-teal); }
   font-size: var(--ap-fs-sm);
   color: var(--dbc-muted-text);
 }
-.md-typeset .ap-calc-toolbar .ap-calc-preset {
+.md-typeset .ap-calc-bar .ap-calc-preset {
   min-width: 1.3rem;
   padding: 0.2rem 0.4rem;
   background: none;
@@ -8311,38 +8318,48 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-muted-text);
   cursor: pointer;
 }
-.md-typeset .ap-calc-toolbar .ap-calc-preset:hover {
+.md-typeset .ap-calc-bar .ap-calc-preset:hover {
   color: var(--dbc-lavender);
 }
-.md-typeset .ap-calc-toolbar .ap-calc-preset.ap-calc-preset-active {
+.md-typeset .ap-calc-bar .ap-calc-preset.ap-calc-preset-active {
   color: var(--dbc-pink);
   background-color: rgba(var(--dbc-pink-rgb), 0.16);
   box-shadow: inset 0 0 0 1px rgba(var(--dbc-pink-rgb), 0.45);
 }
 
-/* Desktop: the Preset slots are as tall as the Build chips (25.6px chips in a
-   33.6px box), so the two groups match and read at least as large as the
-   toolbar buttons beside them. Touch widths keep their own minimum heights
-   below. */
+/* Desktop: the Preset group is as tall as the Build tiers beside it and the
+   toolbar buttons (1.58rem, 31.6px at a 20px root: 23.6px slots inside the
+   3px padding and 1px border). The three recessed boxes sit together on the
+   left, so they can match the buttons' height without looking smaller than
+   them. min-height, not height, so touch widths keep their own taller slots
+   below; the slots stretch to fill the box. */
 @media screen and (min-width: 901px) {
-  .md-typeset .ap-calc-toolbar .ap-calc-preset-group {
+  .md-typeset .ap-calc-bar .ap-calc-preset-group {
+    box-sizing: border-box;
+    align-items: stretch;
+    min-height: 1.58rem;
     padding: 3px;
   }
-  .md-typeset .ap-calc-toolbar .ap-calc-preset {
-    padding-block: 0.25rem;
+  .md-typeset .ap-calc-bar .ap-calc-preset {
+    padding-block: 0.2rem;
+  }
+  /* The label is plain text, not a slot: centred, so stretching the slots
+     does not leave it at the top of the box. */
+  .md-typeset .ap-calc-bar .ap-calc-preset-label {
+    align-self: center;
   }
 }
 
-/* Last imported character: a compact pill to the left of the Preset group
-   showing the character most recently loaded into the active preset
+/* Last imported character: a compact pill at the left of the toolbar,
+   beside Load Character, showing the character most recently loaded into the active preset
    (bible-import.js keeps it per preset in localStorage). The x forgets the
    label only, never the values. It turns red with a "!" when the import was
    probably unreliable (Chaos Dungeon loadout, no raid snapshot, no gems, or
    too many field warnings); the tooltip on the name says why. The name is
    small and capped (6rem, then an ellipsis) so the pill plus the toolbar
    still fit beside the Build chips in a 938px bar (TOC layout). The toolbar
-   buttons and this pill are 1.58rem (31.6px) high and sit centred beside the Build
-   tiers' 33.6px boxes. */
+   buttons, this pill, the Build tiers and the Preset group are all 1.58rem (31.6px)
+   high. */
 .md-typeset .ap-calc-toolbar .bible-last-import {
   display: inline-flex;
   align-items: center;
@@ -8779,9 +8796,19 @@ h3 { color: var(--dbc-teal); }
 
 @media screen and (max-width: 900px) {
   /* The bar scrolls with the page on small screens (only the Build pill is
-     fixed, see .ap-build-dock), so the toolbar takes the whole row. */
+     fixed, see .ap-build-dock). The toolbar stops being a box of its own so
+     its buttons wrap in one row with the Preset group (Preset, then Load
+     Character, then Export, Import and Reset); the popovers then anchor to
+     the bar, which is as wide as the toolbar. order: -1 keeps the pill
+     first. */
+  .md-typeset .ap-calc-bar {
+    gap: 0.4rem;
+  }
   .md-typeset .ap-calc-toolbar {
-    margin-left: 0;
+    display: contents;
+  }
+  .md-typeset .ap-calc-toolbar .bible-last-import {
+    order: -1;
   }
 }
 @media screen and (max-width: 480px) {
@@ -11654,7 +11681,7 @@ html.image-lightbox-open {
     display: flex;
     align-items: center;
   }
-  .md-typeset .ap-calc-toolbar .ap-calc-preset {
+  .md-typeset .ap-calc-bar .ap-calc-preset {
     min-width: 32px;
   }
   .md-typeset .ap-bvb-line-row select {
