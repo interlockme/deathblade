@@ -322,7 +322,7 @@ h3 { color: var(--dbc-teal); }
    -> caveat" register at a glance, without touching vertical spacing. */
 .md-typeset li li {
   color: var(--md-default-fg-color--light);
-  font-size: 0.96em; /* was 0.92em - with body text now at 0.94em inside notes, 0.92 stacked to ~13.8px and read too small next to its parent */
+  font-size: var(--dbc-fs-table);
 }
 
 /* Nested list position and spacing (a sub-list under a bullet OR a number).
@@ -987,7 +987,7 @@ h3 { color: var(--dbc-teal); }
   height: 1.7em;
   border-radius: 50%;
   font-weight: 700;
-  font-size: 0.95em;
+  font-size: var(--dbc-fs-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1005,7 +1005,7 @@ h3 { color: var(--dbc-teal); }
   transition: box-shadow 0.15s ease;
 }
 .md-typeset .gem-item-name {
-  font-size: 0.92em;
+  font-size: var(--dbc-fs-table);
   color: #b8b2c0;
 }
 /* No gem-item row carries a `title` attribute: gem-dps-tooltip.js gives
@@ -1180,7 +1180,7 @@ h3 { color: var(--dbc-teal); }
   background-color: rgba(var(--dbc-teal-rgb), 0.03);
 }
 .md-typeset .gem-alt {
-  font-size: 0.85em;
+  font-size: var(--dbc-fs-base);
   color: #948da3;
   line-height: 1.5;
 }
@@ -1229,7 +1229,7 @@ h3 { color: var(--dbc-teal); }
   border-radius: var(--dbc-r-lg);
   padding: 0.7em 0.9em 0.1em;   /* bottom trimmed - the skill/arrow margin-bottom below supplies it, see note */
   margin: 0.35em 0;
-  font-size: 0.87em;   /* was 0.95em - felt heavier/larger than surrounding prose despite the same nominal size, mostly from the chips' bold (700) weight; trimmed down a notch (see .cycle-title below, kept in step with it) */
+  font-size: var(--dbc-fs-table);   /* a step under body text: the chips' bold (700) weight makes the line read heavier than prose of the same size */
   line-height: 1.7;
 }
 /* Depending on context (inside a tabbed block or not), pymdownx/md_in_html
@@ -1281,7 +1281,7 @@ h3 { color: var(--dbc-teal); }
   display: inline-flex;
   align-items: center;
   color: var(--dbc-rose);
-  font-size: 0.85em;
+  font-size: var(--dbc-fs-sm);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -1592,7 +1592,7 @@ h3 { color: var(--dbc-teal); }
   display: block;
   overflow: hidden;
   margin: 1.7em 0 0.3em;
-  font-size: 0.8em;
+  font-size: var(--dbc-fs-base);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1616,7 +1616,7 @@ h3 { color: var(--dbc-teal); }
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.32);
   border-radius: var(--dbc-r-lg);
   background-color: rgba(255, 255, 255, 0.035);
-  font-size: 0.94em;
+  font-size: var(--dbc-fs-md);
   line-height: 1.55;
 }
 .md-typeset .rotation-notes > :first-child { margin-top: 0.3em; }
@@ -1713,7 +1713,12 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .cycle-title {
   color: var(--md-default-fg-color);
   font-weight: 700;
-  font-size: 0.87em;   /* was 0.95em - see .rotation-line's font-size comment above, kept the two in step */
+  font-size: var(--dbc-fs-table);
+}
+/* Inside a .rotation-line the card title is a chip beside 14px skill
+   names, so it takes the next token down. */
+.md-typeset .rotation-line .cycle-title {
+  font-size: var(--dbc-fs-sm);
 }
 /* Repeat badge - lets a Cycle card's own title bar show "repeat this
    cycle several times in a row" as one small chip next to the title,
@@ -1739,7 +1744,7 @@ h3 { color: var(--dbc-teal); }
   border-radius: 999px;
   background-color: rgba(255, 255, 255, 0.07);
   color: var(--md-default-fg-color--light);
-  font-size: 0.9em;   /* was 0.78em - bumped so the "x3"/"x2" text reads clearly next to .cycle-title instead of feeling like fine print */
+  font-size: var(--dbc-fs-table);   /* was 0.78em - bumped so the "x3"/"x2" text reads clearly next to .cycle-title instead of feeling like fine print */
   font-weight: 600;
   letter-spacing: 0.01em;
 }
@@ -1904,16 +1909,9 @@ h3 { color: var(--dbc-teal); }
   background: none;
   overflow: visible;
   box-shadow: none;
-  /* Matches .stage-tag's own font-size context: .stage-tag's 0.85em is
-     relative to .rotation-line's 0.87em (not the ambient .cycle-card
-     1em this <details> otherwise sits in), so without this the summary
-     label rendered visibly larger than the Cycle/Follow-up tags above it
-     despite using the same nominal 0.85em - see that rule's own
-     font-size comment. Setting the same 0.87em here first reproduces
-     the identical two-step 0.87em * 0.85em computation .stage-tag uses,
-     so the two stay in step by construction instead of by a hardcoded
-     magic number that'd drift if either base ever changes. */
-  font-size: 0.87em;
+  /* Same 14px context as .rotation-line; the summary label below uses the
+     same token as .stage-tag, so the two read at one size. */
+  font-size: var(--dbc-fs-table);
 }
 .md-typeset details.cycle-alt-branch:not([open]) {
   opacity: 1;
@@ -1925,18 +1923,15 @@ h3 { color: var(--dbc-teal); }
   display: flex;
   align-items: center;
   gap: 0.5em;
-  /* Horizontal padding is calc(0.9em / 0.85) so the label's left inset
-     equals .stage-tag's: this summary's font-size is 0.85em nested inside
-     the <details>'s 0.87em, while .stage-tag's sibling padding (0.9em) is
-     resolved against .rotation-line's 0.87em directly, one nesting level
-     less. Dividing out the 0.85 cancels that extra step, the same way the
-     font-size on the <details> above does for text size. */
-  padding: 0.55em calc(0.9em / 0.85);
+  /* Horizontal padding is 1.05em of this 12px label, 12.6px, the same
+     inset as .stage-tag's sibling padding (0.9em of the 14px
+     .rotation-line). */
+  padding: 0.55em 1.05em;
   margin: 0;
   background: none;
   border-radius: 0;
   color: var(--dbc-gold);
-  font-size: 0.85em;
+  font-size: var(--dbc-fs-sm);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -2016,7 +2011,7 @@ h3 { color: var(--dbc-teal); }
   background-image: linear-gradient(rgba(var(--dbc-purple-rgb), 0.16), rgba(var(--dbc-purple-rgb), 0.16));
   color: var(--dbc-chip-text);
   border-radius: 999px;
-  font-size: 0.8em;
+  font-size: var(--dbc-fs-base);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
@@ -2212,7 +2207,7 @@ h3 { color: var(--dbc-teal); }
   margin-bottom: 2px;
 }
 .md-typeset .stat-value {
-  font-size: 0.95em;
+  font-size: var(--dbc-fs-md);
   font-weight: 600;
   color: var(--md-default-fg-color);
   line-height: 1.3;
@@ -2281,10 +2276,10 @@ h3 { color: var(--dbc-teal); }
   margin: 0.4em 0 0.7em;
 }
 /* Body text matches the notes and panels further down the page
-   (.setup-note > p / > ul): 0.94em, lilac, 1.5 line height. */
+   (.setup-note > p / > ul): --dbc-fs-md, lilac, 1.5 line height. */
 .md-typeset .build-card > p,
 .md-typeset .build-card > ul {
-  font-size: 0.94em;
+  font-size: var(--dbc-fs-md);
   color: var(--dbc-lilac);
   line-height: 1.5;
 }
@@ -2312,7 +2307,7 @@ h3 { color: var(--dbc-teal); }
   justify-content: center;
   text-align: center;
   gap: 0.35em;
-  font-size: 0.8em;
+  font-size: var(--dbc-fs-base);
   font-weight: 600;
   padding: 0.25em 0.8em;
   border-radius: 999px;
@@ -2735,7 +2730,7 @@ h3 { color: var(--dbc-teal); }
   padding: 0.1em 0.35em;
   margin: -0.1em -0.35em;
   border-radius: var(--dbc-r-sm);
-  font-size: 0.88em;
+  font-size: var(--dbc-fs-table);
   font-weight: 700;
   text-decoration: none;
   transition: background-color 0.15s ease;
@@ -2768,7 +2763,7 @@ h3 { color: var(--dbc-teal); }
    read as "this build's advantage" without a heavy filled chip. */
 .md-typeset .build-compare-diffchip {
   display: inline-block;
-  font-size: 0.72em;
+  font-size: var(--dbc-fs-cap);
   font-weight: 500;
   letter-spacing: 0.01em;
   padding: 0.22em 0.6em;
@@ -3258,7 +3253,7 @@ h3 { color: var(--dbc-teal); }
   margin: 0 0 0.5em;
   padding-bottom: 0.5em;
   border-bottom: 1px solid rgba(var(--link-accent-rgb), 0.25);
-  font-size: 0.8em;
+  font-size: var(--dbc-fs-base);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -3273,7 +3268,7 @@ h3 { color: var(--dbc-teal); }
   margin: 0;
   padding: 0.5em 0;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
-  font-size: 0.95em;
+  font-size: var(--dbc-fs-md);
   overflow-wrap: anywhere;
 }
 .md-typeset .link-group > ul > li:first-child {
@@ -3282,7 +3277,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .link-group .link-desc {
   display: block;
   margin-top: 0.15em;
-  font-size: 0.84em;
+  font-size: var(--dbc-fs-base);
   font-style: italic;
   color: var(--dbc-muted-text-soft);
 }
@@ -3583,7 +3578,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .engraving-chip {
   display: inline-block;
   vertical-align: middle;
-  font-size: 0.8em;
+  font-size: var(--dbc-fs-base);
   font-weight: 600;
   line-height: 1.4;
   padding: 0.3em 0.8em;
@@ -3639,7 +3634,7 @@ h3 { color: var(--dbc-teal); }
   width: 14px;
 }
 .md-typeset .engraving-loadout-hint {
-  font-size: 0.78em;
+  font-size: var(--dbc-fs-base);
   color: var(--dbc-muted-text);
   font-style: italic;
   vertical-align: middle;
@@ -3655,7 +3650,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .engraving-calc-note {
   display: block;
   margin-top: 0.6em;
-  font-size: 0.78em;
+  font-size: var(--dbc-fs-base);
   color: var(--dbc-lavender);
   font-style: italic;
 }
@@ -3905,7 +3900,7 @@ h3 { color: var(--dbc-teal); }
   align-items: center;
   flex-wrap: wrap;
   gap: 0.3em;
-  font-size: 0.85em;
+  font-size: var(--dbc-fs-table);
   color: var(--dbc-lavender);
   margin: 0.3em 0 0.6em;
 }
@@ -3988,7 +3983,7 @@ h3 { color: var(--dbc-teal); }
   display: flex;
   align-items: center;
   gap: 0.5em;
-  font-size: 0.85em;
+  font-size: var(--dbc-fs-table);
   font-weight: 600;
   padding: 0.5em 0.9em;
   border-radius: var(--dbc-r);
@@ -5614,7 +5609,7 @@ h3 { color: var(--dbc-teal); }
   flex: 1 1 100%;
   min-width: 0;
   padding: 0 0.3em;
-  font-size: 0.85em;
+  font-size: var(--dbc-fs-base);
   color: var(--md-default-fg-color--light);
 }
 .md-typeset .skill-compare-foot strong {
@@ -6496,7 +6491,7 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-lavender);
   border-radius: 999px;
   font-family: inherit;
-  font-size: 0.78em;
+  font-size: var(--dbc-fs-base);
   font-weight: 600;
   padding: 0.4em 0.9em;
   align-items: center;
@@ -7023,7 +7018,7 @@ h3 { color: var(--dbc-teal); }
 @container (max-width: 380px) {
   .md-typeset .ap-gear-ap-readout {
     gap: 0.25em 0.3em;
-    font-size: 0.85em;
+    font-size: var(--dbc-fs-table);
     padding-inline: 0.25rem;
   }
   .md-typeset .ap-gear-ap-readout-label {
@@ -7781,7 +7776,7 @@ h3 { color: var(--dbc-teal); }
 }
 @media screen and (max-width: 600px) {
   .md-typeset .ap-brace-compare-table {
-    font-size: 0.86em;
+    font-size: var(--ap-fs-table);
   }
   .md-typeset .ap-engr-contrib-panel .ap-engr-stone-row {
     padding-left: calc(var(--ap-fs-cap) * 0.4);
@@ -8875,6 +8870,7 @@ h3 { color: var(--dbc-teal); }
   border-bottom: none;
 }
 .md-typeset .tabbed-set > .tabbed-labels > label {
+  font-size: var(--dbc-fs-base);
   font-weight: 400;
   color: var(--md-default-fg-color--light);
   opacity: 0.75;
@@ -9085,7 +9081,7 @@ h3 { color: var(--dbc-teal); }
   left: 0.85em;
   right: 0.85em;
   transform: translateY(-50%);
-  font-size: 0.86em;
+  font-size: var(--dbc-fs-table);
   font-weight: 700;
   color: var(--dbc-white);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
@@ -9107,7 +9103,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .dps-showcase-caption {
   flex-basis: 100%;
   text-align: center;
-  font-size: 0.92em;
+  font-size: var(--dbc-fs-table);
   color: var(--dbc-lavender);
   margin: 0.2em 0 0;
 }
@@ -9249,7 +9245,7 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .quick-jump-pills a {
   flex: 0 0 auto;
   white-space: nowrap;
-  font-size: 0.78em;
+  font-size: var(--dbc-fs-base);
   font-weight: 600;
   padding: 0.4em 0.95em;
   border-radius: 999px;
@@ -9554,7 +9550,7 @@ body.page-333-blitz input[type="text"] {
      600 for their own rank-1 row, plain weight otherwise). */
   font-weight: 500;
   color: var(--md-default-fg-color);
-  font-size: 0.9em;
+  font-size: var(--dbc-fs-table);
   line-height: 1.25;
   /* Safety net only: truncates with an ellipsis rather than wrapping or
      pushing the card taller. In the narrow-card layout the name has the
@@ -9815,13 +9811,13 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .skill-card-note {
   margin: 0.3em 0 0;
   color: var(--dbc-lilac);
-  font-size: 0.88em;
+  font-size: var(--dbc-fs-table);
   line-height: 1.5;
 }
 .md-typeset .skill-card-picks {
   margin: 0.5em 0 0;
   padding-left: 1.1em;
-  font-size: 0.86em;
+  font-size: var(--dbc-fs-table);
   color: var(--dbc-lilac);
 }
 .md-typeset .skill-card-picks li {
@@ -10499,7 +10495,7 @@ body.page-333-blitz input[type="text"] {
   letter-spacing: 0.06em;
 }
 .md-typeset .ark-passive-col-points {
-  font-size: 0.68rem;
+  font-size: var(--dbc-fs-table);
   color: var(--dbc-muted-text);
   font-weight: 700;
 }
@@ -10563,7 +10559,7 @@ body.page-333-blitz input[type="text"] {
   box-shadow: 0 0 0 1px rgba(var(--dbc-teal-rgb), 0.45), 0 0 6px rgba(var(--dbc-teal-rgb), 0.25);
 }
 .md-typeset .ark-passive-node-name {
-  font-size: 0.85em;
+  font-size: var(--dbc-fs-table);
   color: var(--md-default-fg-color);
   font-weight: 500;
   flex: 1 1 auto;
@@ -10689,7 +10685,7 @@ body.page-333-blitz input[type="text"] {
   padding-bottom: 0.3em;
 }
 .md-typeset .ark-passives-compact .ark-passive-col-title {
-  font-size: 0.68rem;
+  font-size: var(--dbc-fs-table);
 }
 .md-typeset .ark-passives-compact .ark-passive-col-points {
   font-size: var(--dbc-fs-sm);
@@ -10709,7 +10705,7 @@ body.page-333-blitz input[type="text"] {
   min-width: 14px;
 }
 .md-typeset .ark-passives-compact .ark-passive-node-name {
-  font-size: 0.72em;
+  font-size: var(--dbc-fs-cap);
 }
 .md-typeset .ark-passives-compact .ark-passive-node-level {
   font-size: var(--dbc-fs-cap);
@@ -10796,7 +10792,7 @@ body.page-333-blitz input[type="text"] {
 /* food: the site's own .food-option chips, a little shorter, with more room left of the icon so the round end clears it */
 .md-typeset .ess .food-options { gap: 0.4em; flex-wrap: wrap; }
 .md-typeset .ess .food-option { padding: 0.33em 0.8em 0.33em 0.4em; gap: 0.45em; border-radius: var(--dbc-r); }
-.md-typeset .ess .food-option p { font-size: 0.8em; }
+.md-typeset .ess .food-option p { font-size: var(--dbc-fs-base); }
 .md-typeset .ess .food-option .food-option-icon { display: block; height: 20px; width: 20px; }
 .md-typeset .ess .food-option { background-color: rgba(var(--dbc-purple-rgb), 0.035); border-color: rgba(var(--dbc-purple-rgb), 0.12); }
 .md-typeset .ess .food-required-lead { margin-bottom: 0.5em; font-size: var(--dbc-fs-md); line-height: 1.4; color: var(--dbc-lilac); }
@@ -10826,7 +10822,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ess-swap-cond { justify-self: end; font-size: var(--dbc-fs-base); color: var(--dbc-muted-text); white-space: nowrap; }
 .md-typeset .ess-swap-cond:empty { display: none; }
 .md-typeset .ess-swap-what img.food-option-icon { height: 18px; width: 18px; vertical-align: -4px; }
-.md-typeset .ess-swap-what .food-option-connector { font-size: 0.85em; }
+.md-typeset .ess-swap-what .food-option-connector { font-size: var(--dbc-fs-cap); }
 
 /* specialization */
 .md-typeset .ess-ladder { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4em; }
@@ -11083,7 +11079,7 @@ body.page-333-blitz input[type="text"] {
   cursor: pointer;
   list-style: none;
   font-weight: 700;
-  font-size: 0.85em;
+  font-size: var(--dbc-fs-table);
   color: var(--md-default-fg-color);
   /* Material's base `.md-typeset summary` rule sets `overflow: hidden` on
      every summary - harmless for the text, but .setup-note-arrow's
@@ -11193,7 +11189,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .setup-note > p,
 .md-typeset .setup-note > ul {
   margin: 0.3em 0;
-  font-size: 0.94em; /* was 0.88em - read a touch small even before the nested-list compounding above */
+  font-size: var(--dbc-fs-md);
   color: var(--dbc-lilac);
   line-height: 1.5;
 }
@@ -11216,7 +11212,7 @@ body.page-333-blitz input[type="text"] {
    back out (bright color, size restored to the pre-shrink 16px); the foot
    has its own footnote rules and sits outside the column. */
 .md-typeset .setup-note .skill-compare-col {
-  font-size: 0.94em;
+  font-size: var(--dbc-fs-md);
   color: var(--dbc-lilac);
   line-height: 1.5;
 }
@@ -11368,7 +11364,7 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset .food-option p {
   margin: 0;
-  font-size: 0.85em;
+  font-size: var(--dbc-fs-table);
   font-weight: 600;
   color: var(--md-default-fg-color);
   line-height: 1.3;
@@ -11380,7 +11376,7 @@ body.page-333-blitz input[type="text"] {
    less-recommended pick without needing a second line. */
 .md-typeset .food-option-tag {
   margin: 0 !important;
-  font-size: 0.78em;
+  font-size: var(--dbc-fs-base);
   font-weight: 600;
   color: var(--dbc-lavender);
   white-space: nowrap;
@@ -11396,7 +11392,7 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .food-option-connector {
   flex: 0 0 auto;
   align-self: center;
-  font-size: 0.78em;
+  font-size: var(--dbc-fs-sm);
   font-weight: 600;
   font-style: italic;
   color: var(--md-default-fg-color--light);

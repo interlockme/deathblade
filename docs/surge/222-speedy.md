@@ -207,7 +207,7 @@ The build's signature. It recreates RE's Surge using two skills: Dark Axel carri
 - Usually better <span class="skill-mention" data-glossary-id="cpm">CPM</span> when repositioning; faster than 2 or more casts of (tapped) Spincutter.
 - Always cast right before Deathly Slash and Surge, leaving very little to chance.
 - Push immunity panic button that saves your spacebar and lets you greed twice as much.
-    - Using it that way limits your mobility for the cycle, but increases uptime on the boss.
+    - Using it that way limits your mobility for that cycle, but increases uptime on the boss.
 
 **Best For:**{: .best-for } Getting the most out of the build.
 
