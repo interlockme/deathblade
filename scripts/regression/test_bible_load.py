@@ -49,6 +49,7 @@ FIX = HERE / "fixtures"
 BASELINE = json.loads((HERE / "baselines" / "importer.json").read_text())
 PAGE = "/resources/"
 NAMES = ["ancient-chaos", "ancient-sun-relic-moon-star", "no-raid-loadout", "relic-chaos-star", "relic-chaos-sun-moon"]
+OTHER_CLASS_NAMES = ["other-class-support-t4", "other-class-t3-gear"]
 CORS = {"access-control-allow-origin": "*", "content-type": "text/html; charset=utf-8"}
 
 
@@ -162,6 +163,35 @@ def reference(h, name):
     return h.result(), payload["characterName"]
 
 
+# The fetch and paste routes decode the page's own raid loadout (bible-decode.js); the bookmarklet
+# (fragment) route reads the visible tab. When the last raid snapshot has no gems (or there is no
+# snapshot) the decoder uses Bible's estimated loadout on purpose, so those fixtures may differ from
+# the fragment route in exactly these fields, and the first warning must say so.
+ESTIMATED_MAY_DIFFER = {"ap-gear-gem-base-ap", "ap-gear-main-stat", "ap-crit-stat", "ap-evo-karma", "ap-gear-wp", "ap-gear-wp-karma-lv"}
+ESTIMATED_NOTE = "Used Bible's estimated raid loadout because"
+
+
+# Main Stat % is not in the page text, so the fragment route leaves the calculator's own value
+# (the result lists every field, default included) while the fetch and paste routes write the
+# decoded multiplier. It must equal the decoder's value and is then ignored in the equality below.
+MAIN_STAT_PCT = "ap-gear-main-stat-pct"
+
+
+def route_matches(h, html, got, ref):
+    info = h.page.evaluate("(html) => { const d = window.BibleDecode && window.BibleDecode.decode(html); return d && d.ok ? { kind: d.kind, pct: d.hydration.mainStatPct } : { kind: 'none', pct: null }; }", html)
+    kind = info["kind"]
+    if info["pct"] is None or float(got["data"].get(MAIN_STAT_PCT, "nan")) != float(info["pct"]):
+        return False
+    got = {**got, "data": {k: v for k, v in got["data"].items() if k != MAIN_STAT_PCT}}
+    ref = {**ref, "data": {k: v for k, v in ref["data"].items() if k != MAIN_STAT_PCT}}
+    if kind == "raid":
+        return got == ref
+    if kind != "estimated":
+        return False
+    diff = {k for k in got["data"] if got["data"][k] != ref["data"].get(k)} | {k for k in ref["data"] if k not in got["data"]}
+    return bool(got["warnings"]) and got["warnings"][0].startswith(ESTIMATED_NOTE) and diff <= ESTIMATED_MAY_DIFFER
+
+
 def run_all(h, label=""):
     """Everything except the negative controls. Returns nothing; results land in h.failures."""
     bad = lines_equal_fixtures(h)
@@ -180,7 +210,7 @@ def run_all(h, label=""):
         h.page.wait_for_function("(document.querySelector('.bible-import-status')||{}).textContent", timeout=8000)
         got = h.result()
         h.check(seen == [f"https://lostark.bible/character/NA/{char}"], f"{name}: requested URL", str(seen))
-        h.check(got == ref, f"{name}: fetch route equals fragment route",
+        h.check(route_matches(h, html, got, ref), f"{name}: fetch route equals fragment route",
                 json.dumps({k: (got[k], ref[k]) for k in got if got[k] != ref[k]})[:600])
         h.check(h.page.evaluate("document.querySelector('.bible-load-popover').hidden"), f"{name}: popover closes after import")
 
@@ -191,7 +221,7 @@ def run_all(h, label=""):
         h.page.click(".bible-load-paste")
         h.page.wait_for_function("(document.querySelector('.bible-import-status')||{}).textContent", timeout=8000)
         got2 = h.result()
-        h.check(got2 == ref, f"{name}: paste route equals fragment route")
+        h.check(route_matches(h, html, got2, ref), f"{name}: paste route equals fragment route")
     h.check(not h.errors, "no page errors", str(h.errors))
 
 
@@ -261,6 +291,16 @@ def run_behaviour(h):
     h.load(char)
     h.page.wait_for_function("document.querySelector('.bible-load-popover .ap-calc-popover-msg').textContent.length>0", timeout=8000)
     h.check("Deathblade" in h.popover_msg(), "wrong class message", h.popover_msg())
+
+    # real pages of other classes: a T3-gear character the decoder reads and a support the decoder
+    # refuses (an unknown bracelet stat). Both must end at the class message with nothing imported,
+    # never at a decoder refusal warning.
+    for other in OTHER_CLASS_NAMES:
+        h.fresh(routes={"bible": fulfill_html(fixture_html(other))})
+        h.load("Fixture-" + other)
+        h.page.wait_for_function("document.querySelector('.bible-load-popover .ap-calc-popover-msg').textContent.length>0", timeout=8000)
+        h.check("Deathblade" in h.popover_msg(), f"{other}: class message", h.popover_msg())
+        h.check(h.status_text() == "", f"{other}: nothing imported", h.status_text())
 
     # reply with no character data (an error or verification page)
     h.fresh(routes={"bible": fulfill_html("<html><body>Just a moment...</body></html>")})

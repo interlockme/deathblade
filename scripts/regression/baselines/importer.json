@@ -505,6 +505,255 @@
     "raid": null
    }
   },
+  "other-class-support-t4": {
+   "gradeDebug": {},
+   "payload": {
+    "error": "This doesn't look like a Deathblade - Bible import only supports Deathblade."
+   },
+   "structured": {
+    "loadouts": [
+     "most_recent_chaos_dungeon",
+     "most_recent_raid"
+    ],
+    "raid": {
+     "accessoryRolls": {
+      "ear1": [
+       [
+        152,
+        300
+       ],
+       [
+        151,
+        195
+       ],
+       [
+        27,
+        1300
+       ]
+      ],
+      "ear2": [
+       [
+        34,
+        25
+       ],
+       [
+        152,
+        300
+       ],
+       [
+        0,
+        210
+       ]
+      ],
+      "finger1": [
+       [
+        16000001,
+        750
+       ],
+       [
+        34,
+        10
+       ],
+       [
+        0,
+        300
+       ]
+      ],
+      "finger2": [
+       [
+        0,
+        500
+       ],
+       [
+        16000001,
+        450
+       ],
+       [
+        34,
+        10
+       ]
+      ],
+      "neck": [
+       [
+        6002,
+        0
+       ],
+       [
+        46,
+        480
+       ],
+       [
+        106,
+        20
+       ]
+      ]
+     },
+     "cores": [
+      {
+       "base": 10001,
+       "gemPoints": 17,
+       "id": 673004516,
+       "idLastDigit": 6
+      },
+      {
+       "base": 10002,
+       "gemPoints": 17,
+       "id": 673015515,
+       "idLastDigit": 5
+      },
+      {
+       "base": 10003,
+       "gemPoints": 20,
+       "id": 673023515,
+       "idLastDigit": 5
+      },
+      {
+       "base": 10004,
+       "gemPoints": 18,
+       "id": 673103006,
+       "idLastDigit": 6
+      },
+      {
+       "base": 10005,
+       "gemPoints": 18,
+       "id": 673113006,
+       "idLastDigit": 6
+      },
+      {
+       "base": 10006,
+       "gemPoints": 17,
+       "id": 673121005,
+       "idLastDigit": 5
+      }
+     ],
+     "gemApEffectValues": [
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80
+     ],
+     "iconGradientGrades": {
+      "chaos_moon": "Ancient",
+      "chaos_star": "Relic",
+      "chaos_sun": "Ancient",
+      "order_moon": "Relic",
+      "order_star": "Relic",
+      "order_sun": "Ancient"
+     },
+     "stoneNodes": [
+      {
+       "id": 255,
+       "nodes": 6
+      },
+      {
+       "id": 134,
+       "nodes": 10
+      },
+      {
+       "id": 800,
+       "nodes": 2
+      }
+     ]
+    }
+   }
+  },
+  "other-class-t3-gear": {
+   "gradeDebug": {},
+   "payload": {
+    "error": "This doesn't look like a Deathblade - Bible import only supports Deathblade."
+   },
+   "structured": {
+    "loadouts": [
+     "most_recent_chaos_dungeon",
+     "most_recent_raid"
+    ],
+    "raid": {
+     "accessoryRolls": {
+      "ear1": [
+       [
+        49,
+        54
+       ],
+       [
+        0,
+        121
+       ]
+      ],
+      "ear2": [
+       [
+        49,
+        54
+       ],
+       [
+        0,
+        121
+       ]
+      ],
+      "finger1": [
+       [
+        74,
+        54
+       ],
+       [
+        0,
+        172
+       ]
+      ],
+      "finger2": [
+       [
+        74,
+        54
+       ],
+       [
+        0,
+        172
+       ]
+      ],
+      "neck": [
+       [
+        621000021,
+        0
+       ],
+       [
+        46,
+        276
+       ]
+      ]
+     },
+     "cores": [],
+     "gemApEffectValues": [],
+     "iconGradientGrades": {
+      "chaos_moon": null,
+      "chaos_star": null,
+      "chaos_sun": null,
+      "order_moon": null,
+      "order_star": null,
+      "order_sun": null
+     },
+     "stoneNodes": [
+      {
+       "id": 254,
+       "nodes": 7
+      },
+      {
+       "id": 244,
+       "nodes": 8
+      },
+      {
+       "id": 803,
+       "nodes": 2
+      }
+     ]
+    }
+   }
+  },
   "relic-chaos-star": {
    "gradeDebug": {
     "chaos_moon": {

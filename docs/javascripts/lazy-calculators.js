@@ -55,6 +55,8 @@
     "bid-calculator.js",
     "order-core-data.js",  // data for ark-passive-calculator.js, must precede it
     "ark-passive-calculator.js",
+    "bible-id-tables.js", // generated game-data id tables, must precede bible-decode.js
+    "bible-decode.js",   // structured-data decoder, must precede bible-import.js
     "bible-import.js",   // must follow ark-passive-calculator.js
     "ap-brace-tooltip.js", // needs skill-tooltip.js, which is still global
   ];

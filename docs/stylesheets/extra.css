@@ -8251,25 +8251,27 @@ h3 { color: var(--dbc-teal); }
   color: var(--dbc-pink);
   border-color: rgba(var(--dbc-pink-rgb), 0.5);
 }
-/* Primary button: the same filled-accent recipe as the home page's
-   .home-cta (accent fill, page-colour text, brightness on hover), with the
-   toolbar's own height and radius. */
+/* Primary button, kept quiet: the same pink tint and text as the Bible Import bookmarklet in the
+   popover (.bible-import-bookmarklet), with a solid border instead of its dashed one (dashed means
+   "draggable" there). Height, side padding and the 1px border are unchanged, so the toolbar's row
+   thresholds depend only on the text width (weight 500 like its neighbours). */
 .md-typeset .ap-calc-toolbar .bible-load-open {
   box-sizing: border-box;
   height: 1.58rem;
   padding: 0 0.4rem;
-  background-color: var(--dbc-pink);
-  border: 1px solid var(--dbc-pink);
+  background-color: rgba(var(--dbc-pink-rgb), 0.08);
+  border: 1px solid rgba(var(--dbc-pink-rgb), 0.5);
   border-radius: var(--ap-radius);
-  color: var(--md-default-bg-color);
+  color: var(--dbc-pink);
   font: inherit;
   font-size: var(--ap-fs-sm);
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: filter 0.12s ease;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
 }
 .md-typeset .ap-calc-toolbar .bible-load-open:hover {
-  filter: brightness(1.1);
+  background-color: rgba(var(--dbc-pink-rgb), 0.16);
+  border-color: var(--dbc-pink);
 }
 .md-typeset .ap-calc-toolbar .ap-calc-export:focus-visible,
 .md-typeset .ap-calc-toolbar .ap-calc-import:focus-visible,

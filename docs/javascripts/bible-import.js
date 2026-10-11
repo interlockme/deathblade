@@ -68,17 +68,17 @@
 //     It is read from the last digit of the core's id in the page's own
 //     data (5 = Relic, 6 = Ancient, see CHAOS_GRADE_BY_ID_DIGIT). The icon
 //     background-color gradient on the page (see findChaosGrade) is decoded
-//     as well: it is the cross-check that warns when it disagrees with the
-//     id, and the fallback when the character has no raid snapshot to read
-//     ids from. An unrecognized digit or gradient leaves that source unset,
+//     as well on the text path and the bookmarklet: it is the cross-check that
+//     warns when it disagrees with the id, and the fallback when the character
+//     has no raid snapshot to read ids from. The decoded route reads it only
+//     when the id digit gives no grade. An unrecognized digit or gradient leaves that source unset,
 //     and if neither gives a grade the field is not imported.
 //   - Main Stat % (ap-gear-main-stat-pct - Stronghold Pet + Skins bonus,
-//     see its label in resources.md) is never written by this file at
-//     all, deliberately - it isn't shown anywhere on a Bible character
-//     page (pet/skin cosmetics aren't gear data), so there's nothing to
-//     read it from. Whatever value is already sitting in that field is
-//     left untouched by an import, same as any other field this file
-//     doesn't produce data for.
+//     see its label in resources.md) is not shown anywhere in a Bible
+//     page's text, so the bookmarklet and the text fallback never write it
+//     and whatever value is already in that field is left untouched. The
+//     decoded route (bible-decode.js) reads it from the loadout's own
+//     stats (the main stat's multiplier) and writes it.
 
 (function () {
   // ----- Tier tables (must match resources.md's <option> values exactly -
@@ -883,8 +883,10 @@
   // unconfirmedWarning (optional) replaces the default text of the warning
   // added when the Raid Loadout could not be confirmed; callers that did not
   // scan a live page (the Load Character path) say something that fits.
-  function buildPayload(rawHtml, lines, onRaidLoadoutConfirmed, unconfirmedWarning) {
-    var hydration = extractLoadoutJSON(rawHtml);
+  function buildPayload(rawHtml, lines, onRaidLoadoutConfirmed, unconfirmedWarning, decoded) {
+    // decoded (optional, from bible-decode.js) replaces the visible-text read and the
+    // tab-dependent hydration read with the raid loadout's own structured data.
+    var hydration = decoded ? decoded.hydration : extractLoadoutJSON(rawHtml);
     if (!hydration) return { error: "Couldn't find character data on this page - make sure you're on a Bible character page and it's fully loaded." };
 
     // Class check: reject anything that isn't confirmed as a Deathblade,
@@ -903,9 +905,12 @@
     }
     var characterName = extractCharacterName(lines);
 
-    var text = parseVisibleText(lines);
+    var text = decoded ? decoded.text : parseVisibleText(lines);
     var data = {};
     var warnings = [];
+    if (decoded && decoded.kind === "estimated") {
+      warnings.push("Used Bible's estimated raid loadout because " + decoded.why + ". It is the best raid gear Bible has seen, which can differ from what the character wears now.");
+    }
 
     if (hydration.noRaidLoadout) {
       warnings.push("No raid loadout snapshot found for this character - Weapon Power, Main Stat, Crit Stat, and Karma couldn't be auto-filled from that source. Chaos Grid core grades fall back to the icon colors in the page HTML, so they are still read. Accessories, bracelet, gems, engravings, and ability stone were still read from the page text below; fill in the rest manually.");
@@ -914,6 +919,7 @@
     if (hydration.weaponPower != null) data["ap-gear-wp"] = String(hydration.weaponPower);
     if (hydration.mainStat != null) data["ap-gear-main-stat"] = String(hydration.mainStat);
     if (hydration.critStat != null) data["ap-crit-stat"] = String(hydration.critStat);
+    if (hydration.mainStatPct != null) data["ap-gear-main-stat-pct"] = String(hydration.mainStatPct);
     // Weapon quality: default to "0" (nothing to report), then overwrite if
     // a weapon-slot quality reading was actually found. Same bug family as
     // astrogem/bracelet/Chaos-core above: the calculator's own HTML default
@@ -1060,7 +1066,9 @@
       ["Chaos Sun", "Chaos Moon", "Chaos Star"].forEach(function (slotLabel) {
         var slotCore = text.chaosCores[slotLabel];
         if (!slotCore) return;
-        var hit = matchChaosCore(hydration.chaosCores, claimedCores, slotCore.points, function () { return chaosIconGrade(CHAOS_SLOT_TO_KEY[slotLabel]); });
+        var hit = slotCore.coreRef
+          ? { core: slotCore.coreRef, ambiguous: false }
+          : matchChaosCore(hydration.chaosCores, claimedCores, slotCore.points, function () { return chaosIconGrade(CHAOS_SLOT_TO_KEY[slotLabel]); });
         if (hit) { claimedCores.push(hit.core); chaosMatch[slotLabel] = hit; }
       });
     }
@@ -1169,8 +1177,11 @@
           return;
         }
         var gradeKey = CHAOS_SLOT_TO_KEY[slotLabel];
-        var iconGrade = chaosIconGrade(gradeKey);
         var idGrade = matched && !matched.ambiguous ? matched.core.grade : null;
+        // On the decoded route the core id digit is authoritative, so the icon colors (tied to
+        // Bible's CSS) are read only when the id gave no grade; the text path and the bookmarklet
+        // still read them every time as the cross-check.
+        var iconGrade = decoded && idGrade ? null : chaosIconGrade(gradeKey);
         var grade = idGrade || iconGrade;
         if (idGrade && iconGrade && idGrade !== iconGrade) {
           warnings.push(slotLabel + " (" + core.name + ", " + core.points + "P): the core id says " + idGrade + " but the icon colors say " + iconGrade + " - used " + idGrade + ". Worth a second look.");
@@ -1905,10 +1916,21 @@
     if (html.indexOf("loadouts:[") === -1) {
       return { error: "No character data in Bible (the character may be hidden or still loading on Bible, or Bible sent a verification page). Open the character on Bible once, then try again or paste its page source." };
     }
-    var payload = buildPayload(html, htmlToLines(html), undefined, FETCHED_UNCONFIRMED_WARNING);
+    var decoded = window.BibleDecode ? window.BibleDecode.decode(html) : null;
+    // The page data names the character's class (classId), so another class ends here with the
+    // same message the text check gives, before any decoder refusal or warning can mention a
+    // bracelet or gem of a class this importer does not read. Kept as its own string because
+    // buildPayload is embedded in the bookmarklet and cannot share a constant.
+    if (decoded && decoded.notDeathblade) return { error: "This doesn't look like a Deathblade - Bible import only supports Deathblade." };
+    var payload = decoded && decoded.ok
+      ? buildPayload(html, htmlToLines(html), true, undefined, decoded)
+      : buildPayload(html, htmlToLines(html), undefined, FETCHED_UNCONFIRMED_WARNING);
     if (payload.error) {
       if (/fully loaded/.test(payload.error)) return { error: "Couldn't read a character from Bible. Check the name and region, try again, or try an alternate import method." };
       return payload;
+    }
+    if (decoded && !decoded.ok && payload.warnings) {
+      payload.warnings.push("Bible's loadout data could not be read (" + decoded.reason + "), so the visible page was read instead.");
     }
     if (expectedName && payload.characterName && payload.characterName.toLowerCase() !== expectedName.toLowerCase()) {
       return { error: "Bible returned \"" + payload.characterName + "\" instead of \"" + expectedName + "\". Nothing was imported." };
