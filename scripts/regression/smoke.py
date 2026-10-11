@@ -60,6 +60,7 @@ MOUSE_PARK = (2, 2)
 HOVER_WAIT = 350       # tooltip hover-open settle
 CLOSE_WAIT = 480       # HOVER_CLOSE_DELAY_MS (250) plus the 0.15s visibility delay, with margin
 MAX_TIPS = 6           # tooltip triggers sampled per page
+FOCUS_OPEN_MAX = 2000     # keyboard focus: longest wait for the tooltip panel to show
 
 
 class _Quiet(http.server.SimpleHTTPRequestHandler):
@@ -138,6 +139,19 @@ TIP_STATE_JS = r"""(el) => {
     if (!best || shown) best = s;
   }
   return best || { shown: false, text: 0, left: 0, right: 0, vw, tips: 0 };
+}"""
+
+FOCUS_DIAG_JS = r"""(el) => {
+  const a = document.activeElement;
+  const name = n => n ? n.tagName + '.' + [...n.classList].slice(0, 3).join('.') : 'none';
+  const ids = (el.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+  const t = ids.map(i => document.getElementById(i)).filter(Boolean)[0];
+  const cs = t ? getComputedStyle(t) : null;
+  const r = el.getBoundingClientRect();
+  return 'active=' + name(a) + ' self=' + (a === el) + ' focus-visible=' + el.matches(':focus-visible')
+    + ' panels=' + ids.length + (cs ? ' vis=' + cs.visibility + ' op=' + cs.opacity : '')
+    + ' chipTop=' + Math.round(r.top) + ' scrollY=' + Math.round(window.scrollY)
+    + ' details-open=' + (el.closest('details') ? el.closest('details').open : 'n/a');
 }"""
 
 VISIBLE_JS = r"""(el) => {
@@ -492,9 +506,14 @@ def check_tooltips_desktop(pg, run, path):
         el.focus()
         pg.keyboard.press("Shift+Tab")
         pg.keyboard.press("Tab")
-        pg.wait_for_timeout(HOVER_WAIT)
+        # Poll instead of one fixed wait: a loaded runner can take longer than HOVER_WAIT to paint the panel.
+        waited = 0
+        while waited < FOCUS_OPEN_MAX and not tip_state(el)["shown"]:
+            pg.wait_for_timeout(50)
+            waited += 50
         if not tip_state(el)["shown"]:
-            run.fail(path, f"keyboard focus did not open the tooltip on {sig} #{i}")
+            why = el.evaluate(FOCUS_DIAG_JS)
+            run.fail(path, f"keyboard focus did not open the tooltip on {sig} #{i} (waited {FOCUS_OPEN_MAX}ms; {why})")
         el.evaluate("e => e.blur()")
         pg.wait_for_timeout(CLOSE_WAIT)
         run.ok("tooltips")
