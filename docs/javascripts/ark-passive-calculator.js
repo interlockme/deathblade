@@ -277,22 +277,40 @@
   // list) so the two can never be double-counted; this is added on top of
   // gearAttackPowerPercentTotal instead, same as Atropine.
   //
-  // Scaled by the same Adrenaline Uptime % slider as the Crit Rate side.
-  // It always assumes full 6 stacks and does NOT derive an average stack
-  // count from uptime (that would be wrong: 0% Crit uptime means near-0%
-  // actual uptime on the buff, not "half stacks on average"). What it
-  // does is a plain linear scale of the full-stacks total by Uptime %:
-  // the simple assumption that the AP component is only live as often as
-  // the buff itself is, same as every other uptime-gated source on this
-  // page (Atropine, Strength Orb, Maelstrom, etc.).
+  // Driven by the same Adrenaline Uptime % input as the Crit Rate side, but
+  // the two halves behave differently. Uptime is the share of hits landed
+  // at 6 stacks (the only figure a third-party meter reports; it is
+  // derived from hits only, so idle time never enters it). The Crit Rate
+  // bonus needs all 6 stacks, so it is all or nothing and scales by Uptime
+  // alone. The AP bonus applies per stack, so it also counts on the hits
+  // landed while stacks are being rebuilt. A skill cast gives a stack and a
+  // knockdown or other downtime wipes all of them, so a hit never lands at
+  // 0 stacks: the first five hits after a wipe land at 1, 2, 3, 4 and 5
+  // stacks, which averages 3 of 6 stacks (half of the full AP).
+  // Result: full x (U + (1 - U) x 0.5).
+  // Two simplifications, both small: the five rebuild hits are weighted
+  // equally, although stronger skills tend to come later in a cycle (which
+  // would push the share slightly above one half), and every hit counts the
+  // same. A 0.45 to 0.6 share would move the AP total by about 0.1 points
+  // at 80% uptime. The input has no floor: the Crit side is exact at any
+  // value, and a lower value is a legitimate what-if.
   const ADRENALINE_AP_PER_STACK = 0.009;
   const ADRENALINE_STACKS = 6;
+  const ADRENALINE_REBUILD_AP_SHARE = (1 + 2 + 3 + 4 + 5) / 5 / ADRENALINE_STACKS;
   const ADRENALINE_STONE_AP_TABLE = { "0 Lv.": 0, "1 Lv.": 0.0048, "2 Lv.": 0.006, "3 Lv.": 0.0083, "4 Lv.": 0.0095 };
 
-  function adrenalineApFraction(inputs) {
+  // The fully stacked value, before any uptime scaling. Only the Attack
+  // Power readout's Adrenaline stage reads this directly (display only);
+  // everything that feeds math goes through adrenalineApFraction below.
+  function adrenalineApFullFraction(inputs) {
     if (inputs.adrenaline === "Not Used") return 0;
     const stoneAp = ADRENALINE_STONE_AP_TABLE[inputs.adrenalineStone] || 0;
-    return ADRENALINE_STACKS * (ADRENALINE_AP_PER_STACK + stoneAp) * (inputs.adrenalineUptime / 100);
+    return ADRENALINE_STACKS * (ADRENALINE_AP_PER_STACK + stoneAp);
+  }
+
+  function adrenalineApFraction(inputs) {
+    const uptime = inputs.adrenalineUptime / 100;
+    return adrenalineApFullFraction(inputs) * (uptime + (1 - uptime) * ADRENALINE_REBUILD_AP_SHARE);
   }
 
   // Attack Power %'s individual sources (see Calc!P7's own source-list
@@ -588,8 +606,8 @@
     return inputs.gearGemBaseAp + (inputs.gearAbilityStoneBaseAp ? ABILITY_STONE_BASE_AP_BONUS : 0);
   }
 
-  // ----- Attack Power readout (base -> Adrenaline -> Support, each stage
-  // cumulative) -----
+  // ----- Attack Power readout (base -> fully stacked Adrenaline -> Support,
+  // each stage cumulative) -----
   // A plain restatement of the exact same gearApTotal() layer the
   // Bracelet Comparison's 5 WP/AP rows already use below (see that
   // section's own comment) - not a second formula, just that one run
@@ -599,10 +617,14 @@
   // rows use. Only Adrenaline and Support are staged in one at a time,
   // since those are the two buffs this readout is specifically about:
   //   - base: neither Adrenaline nor Support
-  //   - afterAdrenaline: Adrenaline included, Support still excluded
-  //   - final: both included (your real total) - this is what every
-  //     other reader on the page (Bracelet Comparison, etc.) already
-  //     calls "after"
+  //   - afterAdrenaline: Adrenaline at FULL stacks (100% uptime, whatever
+  //     the Adrenaline Uptime input says), Support still excluded. Display
+  //     only: it shows what the character sheet reads with the buff fully
+  //     stacked, and nothing else reads this value
+  //   - final: everything that applies in a raid (Adrenaline at its
+  //     Uptime %, Support, Atropine, Strength Orb, AP% Other) - the same
+  //     total every other reader on the page (Bracelet Comparison, etc.)
+  //     already calls "after"
   // Unlike every other AP-based reader on this page, base and
   // afterAdrenaline additionally EXCLUDE AP% Other, Atropine, and
   // Strength Orb (excludedPct below) - those three are all
@@ -613,9 +635,8 @@
   // keeps them (via percentApTotal, untouched) alongside Support, same
   // as the real total everywhere else on the page.
   // adrenalineUsed mirrors the dropdown itself (inputs.adrenaline !==
-  // "Not Used"), not just whether its % happens to be nonzero, so the
-  // middle stage still shows (as an equal-to-base stepping stone) at
-  // e.g. 0% Adrenaline Uptime rather than silently vanishing.
+  // "Not Used"): the middle stage shows whenever the engraving is in use,
+  // at any Adrenaline Uptime %, since it always reads fully stacked.
   function gearApBeforeAfter(inputs) {
     const wp = inputs.gearWp;
     const mainStat = inputs.gearMainStat;
@@ -623,12 +644,13 @@
     const flatAp = inputs.gearFlatAp + gearChaosStarFlat(inputs.gearApChaosStar);
     const percentApTotal = gearAttackPowerPercentTotal(inputs);
     const adrenalinePct = adrenalineApFraction(inputs) * 100;
+    const adrenalineFullPct = adrenalineApFullFraction(inputs) * 100;
     const excludedPct =
       inputs.gearApOther +
       (inputs.gearAtropineUptime / 100) * GEAR_AP_ATROPINE_FULL +
       (inputs.gearStrengthOrbUptime / 100) * STRENGTH_ORB_FULL_AP;
     const percentApMultAfter = 1 + percentApTotal / 100;
-    const percentApMultAfterExcludingOther = 1 + (percentApTotal - excludedPct) / 100;
+    const percentApMultAfterExcludingOther = 1 + (percentApTotal - excludedPct - adrenalinePct + adrenalineFullPct) / 100;
     const percentApMultBeforeAdrenalineExcludingOther = 1 + (percentApTotal - excludedPct - adrenalinePct) / 100;
     const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
     return {

@@ -230,7 +230,7 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
       </select>
     </div>
     <div class="ap-calc-field-row">
-      <label class="ap-calc-field-label" for="ap-adrenaline-uptime" title="% of the fight spent at full Adrenaline stacks. Scales both the Crit Rate bonus above and an Ability Stone's Adrenaline AP bonus.">Adrenaline Uptime %</label>
+      <label class="ap-calc-field-label" for="ap-adrenaline-uptime" title="% of damage dealt at 6 Adrenaline stacks. The Crit Rate bonus needs all 6 stacks, so it scales by this alone. The Attack Power bonus applies per stack, so it gets partial credit while stacks are rebuilt.">Adrenaline Uptime %</label>
       <input type="number" id="ap-adrenaline-uptime" class="ap-adrenaline-uptime" min="0" max="100" step="1" value="97">
     </div>
     <!-- Flash Orb Uptime sits with the other Crit Rate inputs even though it
@@ -824,7 +824,7 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
             <input type="number" id="ap-gear-ap-astrogem-lv" class="ap-gear-ap-astrogem-lv" min="0" max="120" step="1" value="35">
           </div>
           <div class="ap-calc-field-row ap-gear-ap-select-row">
-            <label class="ap-calc-field-label" for="ap-adrenaline-stone" title="A fixed 0.9% per stack, scaled by Adrenaline Uptime %, plus this stone's own bonus, same scaling (Lv.1 +0.48% / Lv.2 +0.60% / Lv.3 +0.83% / Lv.4 +0.95% per stack).">Ability Stone: Adrenaline</label>
+            <label class="ap-calc-field-label" for="ap-adrenaline-stone" title="A fixed 0.9% per stack plus this stone's own bonus (Lv.1 +0.48% / Lv.2 +0.60% / Lv.3 +0.83% / Lv.4 +0.95% per stack), both scaled by Adrenaline Uptime % with partial credit while stacks are rebuilt.">Ability Stone: Adrenaline</label>
             <span class="ap-value-display" data-for="ap-adrenaline-stone"></span>
             <select id="ap-adrenaline-stone" class="ap-adrenaline-stone">
               <option value="0 Lv." selected>Lv. 0</option>
@@ -855,8 +855,10 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
            Weapon Power and Main Stat are both filled in (same guard as
            those rows). Three cumulative stages, not a single before/after
            pair: Base (every Attack Power % source except Adrenaline, no
-           Support buff) -> Adrenaline (Adrenaline's bonus added in, still
-           no Support) -> Attack Power (your real total, both included).
+           Support buff) -> Adrenaline (Adrenaline's AP bonus fully stacked,
+           ignoring the Uptime % input, display only, still no Support) ->
+           Attack Power (everything that applies in a raid, the total the
+           calculator's AP-based math uses).
            The Adrenaline stage - its arrow AND value together - is hidden
            by the JS whenever Adrenaline is "Not Used" above, so the chain
            reads as a plain Base -> Attack Power step instead of implying a
@@ -866,10 +868,10 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
         <span class="ap-gear-ap-readout-base" title="Your Attack Power, as calculated and displayed on your Character Profile.">&mdash;</span>
         <span class="ap-gear-ap-readout-adrenaline-stage">
           <span class="ap-gear-ap-readout-arrow">&rarr;</span>
-          <span class="ap-gear-ap-readout-adrenaline" title="Your Attack Power with Adrenaline's AP bonus added.">&mdash;</span>
+          <span class="ap-gear-ap-readout-adrenaline" title="Your Attack Power with fully stacked Adrenaline.">&mdash;</span>
         </span>
         <span class="ap-gear-ap-readout-arrow">&rarr;</span>
-        <span class="ap-gear-ap-readout-final" title="Your Attack Power in a raid setting, factoring in an estimated AP buff from a similarly geared Support.">&mdash;</span>
+        <span class="ap-gear-ap-readout-final" title="Your estimated Attack Power in a raid, factoring in every buff that applies (Support, Adrenaline, Atropine, Strength Orb) but excluding Enlightenment bonuses. This is the value used for the calculations.">&mdash;</span>
       </div>
       </div>
     </div>
