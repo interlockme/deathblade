@@ -1,3 +1,7 @@
+---
+description: "Remaining Energy 111 (Head Hunt) Deathblade build: Ark Passive, Ark Grid cores, engravings, skill setup, gems and rotation."
+---
+
 # 111 (Head Hunt) 🔪
 
 <div class="build-card-row" markdown>

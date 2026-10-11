@@ -1,6 +1,8 @@
 ---
 hide:
   - navigation
+description: "Lost Ark Deathblade class guide for Remaining Energy and Surge: builds, skill rotations, engravings, Ark Passive and Ark Grid setups."
+title: Lost Ark Class Guide
 ---
 
 # Deathblade Class Guide
@@ -27,7 +29,7 @@ page" block in extra.css. -->
 🌸 Remaining Energy
 { .home-lane-title role="heading" aria-level="2" }
 
-[Start with essentials →](remaining-energy/essentials.md){ .home-cta }
+[Essentials →](remaining-energy/essentials.md){ .home-cta }
 
 </div>
 
@@ -94,7 +96,7 @@ Then pick a build
 ⚡ Surge
 { .home-lane-title role="heading" aria-level="2" }
 
-[Start with essentials →](surge/essentials.md){ .home-cta }
+[Essentials →](surge/essentials.md){ .home-cta }
 
 </div>
 

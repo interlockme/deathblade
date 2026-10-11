@@ -1,3 +1,7 @@
+---
+description: "Surge 111 (Classic) Deathblade build: Ark Passive, Ark Grid cores, engravings, skill setup, gems and rotation."
+---
+
 # 111 (Classic) 🦁
 
 <div class="build-card-row" markdown>

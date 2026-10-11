@@ -1,3 +1,7 @@
+---
+description: "Standard Remaining Energy Deathblade build, the pre-Ark Grid setup: Ark Passive, engravings, skill setup, gems and rotation."
+---
+
 # Standard 🌱
 
 <div class="build-card-row" markdown>

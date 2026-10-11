@@ -1,8 +1,9 @@
 ---
 title: RE Essentials
+description: "Remaining Energy Deathblade essentials: food, swaps, Specialization and CPM goals, FPS and latency fixes, and quick tips."
 ---
 
-# Essentials
+# RE Essentials
 
 <div class="ess" markdown>
 <div class="ess-zone" markdown>

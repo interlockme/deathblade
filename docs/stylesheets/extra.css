@@ -591,7 +591,7 @@ h3 { color: var(--dbc-teal); }
   width: 38px;
   height: 38px;
   object-fit: contain;
-  border-radius: 9px;
+  border-radius: var(--dbc-r);
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.35);
 }
 .md-typeset .skill-row-body {
@@ -2168,6 +2168,20 @@ h3 { color: var(--dbc-teal); }
   gap: 0.6em;
   margin-bottom: 0.9em;
 }
+/* build-stats-badge.js fills this div after the page's scripts load. Until
+   then it is empty, and without a reserved height everything below it
+   (Best For, the list, the Skill Codes panel) jumps down when the stats
+   arrive (about 135px on a phone, a layout shift score of about 0.16 under
+   throttling). The heights are the filled heights measured per viewport
+   band with Poppins loaded: the three stat boxes wrap to 1, 2 or 3 rows
+   as the card narrows. :empty stops matching once the script has filled
+   the div, so the natural height takes over. */
+.md-typeset .build-stats:empty { min-height: 67.7px; }
+@media (min-width: 1600px) { .md-typeset .build-stats:empty { min-height: 73.7px; } }
+@media (max-width: 509px) { .md-typeset .build-stats:empty { min-height: 87.5px; } }
+@media (max-width: 489px) { .md-typeset .build-stats:empty { min-height: 134.6px; } }
+@media (max-width: 359px) { .md-typeset .build-stats:empty { min-height: 154.4px; } }
+@media (max-width: 349px) { .md-typeset .build-stats:empty { min-height: 211.9px; } }
 /* Not a fixed min-width: with one, 3 stats left a chunk of dead space on
    anything wider than a phone, and a stat with a bar (taller) didn't match
    the height of one without (e.g. Playstyle next to Difficulty). flex-grow
@@ -2381,6 +2395,12 @@ h3 { color: var(--dbc-teal); }
      all in one gap under the radar. */
   margin: auto 0;
 }
+/* pentagon-badge.js draws the radar into this div after load. Reserve the
+   drawn height (per viewport band, Poppins loaded) so the stacked badge on a
+   phone does not grow when the radar arrives. */
+.pentagon-svg-mount:empty { min-height: 129px; }
+@media (min-width: 760px) { .pentagon-svg-mount:empty { min-height: 140.5px; } }
+@media (max-width: 359px) { .pentagon-svg-mount:empty { min-height: 155.6px; } }
 .pentagon-svg {
   width: 100%;
   height: auto;
@@ -2865,6 +2885,15 @@ h3 { color: var(--dbc-teal); }
   text-decoration: none;
   color: var(--md-default-bg-color);
   filter: brightness(1.1);
+}
+/* In a narrow lane the Remaining Energy title plus the button do not fit one
+   row but Surge's do, so the two headers would differ. Below the row query's
+   width the button always sits under the title in both lanes. */
+@container home-lane (max-width: 460px) {
+  .md-typeset .home-lane-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 .md-typeset .home-lane-line {
   color: var(--home-accent);

@@ -1,3 +1,7 @@
+---
+description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible character import, bonus skill codes and useful links."
+---
+
 # Additional Resources
 
 ![313 sticker](assets/shared/sticker-313.png){: .page-sticker }

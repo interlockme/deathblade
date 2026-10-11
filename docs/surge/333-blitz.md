@@ -1,3 +1,7 @@
+---
+description: "Surge 333 (Blitz) Deathblade build. Not viable and not played, so its information is likely out of date."
+---
+
 # 333 (Blitz) <span class="tiger-emoji" title="rawr">🐯</span>
 
 <p class="page-banner page-banner-warning">This build is not viable and no one plays it, so information here WILL be wrong. Do not disrespect the tiger, however.</p>

@@ -1,3 +1,7 @@
+---
+description: "Remaining Energy 313 (High Floor) Deathblade build: Ark Passive, Ark Grid cores, engravings, skill setup, gems and rotation."
+---
+
 # 313 (High Floor) 💜
 
 <div class="build-card-row" markdown>

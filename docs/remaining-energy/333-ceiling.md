@@ -1,3 +1,7 @@
+---
+description: "Remaining Energy 333 (Ceiling) Deathblade build: the highest-damage Remaining Energy setup, with Ark Passive, cores, engravings, gems and rotation."
+---
+
 # 333 (Ceiling) ✨
 
 <div class="build-card-row" markdown>

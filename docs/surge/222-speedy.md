@@ -1,3 +1,7 @@
+---
+description: "Surge 222 (Speedy) Deathblade build, the recommended Surge setup: Ark Passive, cores, engravings, gems and rotation."
+---
+
 # 222 (Speedy) 🐆
 
 <div class="build-card-row" markdown>

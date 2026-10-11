@@ -1,8 +1,9 @@
 ---
 title: Surge Essentials
+description: "Surge Deathblade essentials: food, swaps, Specialization and CPM goals, and quick tips."
 ---
 
-# Essentials
+# Surge Essentials
 
 <div class="ess" markdown>
 <div class="ess-zone" markdown>
