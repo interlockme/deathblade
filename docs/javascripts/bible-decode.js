@@ -26,6 +26,8 @@
   var CHAOS_GRADE_BY_ID_DIGIT = { 5: "Relic", 6: "Ancient" };
   var SLOT_BY_SHAPE = ["Sun", "Moon", "Star"];
   var BRACELET_STAT_INDEXES = { 11: 1, 12: 1, 13: 1, 14: 1, 15: 1, 16: 1, 17: 1, 18: 1, 19: 1, 20: 1 };
+  var BRACELET_LINE_INDEX = { addDmg: 50, critRate: 74, critDmg: 76 };
+  var BRACELET_IGNORED_LINES = { 27: 1, 34: 1, 55: 1, 56: 1, 149: 1, 151: 1 };
   var ACCESSORY_INDEX = { neckAdd: 50, atkPct: 49, weaponPct: 152, critRate: 74, critDmg: 76, atkFlat: 124 };
   var PENALTY_ENGRAVING_FROM = 1800;
 
@@ -147,7 +149,11 @@
     for (var i = 0; i < stats.length; i++) {
       var s = stats[i];
       if (s.type === 2) {
-        if (!BRACELET_STAT_INDEXES[s.index]) return "unknown bracelet stat index " + s.index;
+        if (BRACELET_STAT_INDEXES[s.index] || BRACELET_IGNORED_LINES[s.index]) continue;
+        if (s.index === BRACELET_LINE_INDEX.addDmg) addA.push(s.value / 100);
+        else if (s.index === BRACELET_LINE_INDEX.critRate) rate.push(s.value / 100);
+        else if (s.index === BRACELET_LINE_INDEX.critDmg) dmg.push(s.value / 100);
+        else return "unknown bracelet stat index " + s.index;
         continue;
       }
       if (s.type !== 3 && s.type !== 4) return "unknown bracelet stat type " + s.type;

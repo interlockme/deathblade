@@ -59,6 +59,7 @@ const MAIN_STAT_PCT = {
   "no-raid-loadout": "9",
   "relic-chaos-star": "5",
   "relic-chaos-sun-moon": "5",
+  "bracelet-stat-lines": "5",
 };
 
 // The class comes from the page data (classId), checked before anything else is decoded: the five
@@ -70,6 +71,7 @@ const CLASS_ID = {
   "no-raid-loadout": "blade",
   "relic-chaos-star": "blade",
   "relic-chaos-sun-moon": "blade",
+  "bracelet-stat-lines": "blade",
   "other-class-support-t4": "yinyangshi",
   "other-class-t3-gear": "force_master",
 };

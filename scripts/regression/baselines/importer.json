@@ -433,6 +433,232 @@
     }
    }
   },
+  "bracelet-stat-lines": {
+   "gradeDebug": {
+    "chaos_moon": {
+     "gradientsInWindow": [
+      "linear-gradient(135deg, #341a09, #a24006)"
+     ],
+     "lastColor": "#341a09, #a24006",
+     "markerFound": true,
+     "resolvedGrade": "Relic"
+    },
+    "chaos_star": {
+     "gradientsInWindow": [
+      "linear-gradient(135deg, #3d3325, #dcc999)"
+     ],
+     "lastColor": "#3d3325, #dcc999",
+     "markerFound": true,
+     "resolvedGrade": "Ancient"
+    },
+    "chaos_sun": {
+     "gradientsInWindow": [
+      "linear-gradient(135deg, #341a09, #a24006)"
+     ],
+     "lastColor": "#341a09, #a24006",
+     "markerFound": true,
+     "resolvedGrade": "Relic"
+    }
+   },
+   "payload": {
+    "characterName": "Fixture-bracelet-stat-lines",
+    "data": {
+     "ap-adrenaline": "4 Nodes",
+     "ap-adrenaline-stone": "0 Lv.",
+     "ap-astrogem-lv": "33",
+     "ap-brace-spec-build": "surge-222",
+     "ap-bracelet-addA": "High",
+     "ap-bracelet-addB": "None",
+     "ap-bracelet-dmg": "High",
+     "ap-bracelet-dmg-2": "None",
+     "ap-bracelet-rate": "None",
+     "ap-bracelet-rate-2": "None",
+     "ap-crit-dmg-dual": false,
+     "ap-crit-rate-dual": false,
+     "ap-crit-stat": "645",
+     "ap-crushing-core": "None|0P",
+     "ap-evo-karma": "6",
+     "ap-flashy-atk": "Relic 17P",
+     "ap-gear-ability-stone-base-ap": true,
+     "ap-gear-ap-astrogem-lv": "36",
+     "ap-gear-ap-chaos-star": "Ancient|18P",
+     "ap-gear-ap-earring1": "Mid",
+     "ap-gear-ap-earring2": "High",
+     "ap-gear-flat-ap": "0",
+     "ap-gear-gem-base-ap": "9.2",
+     "ap-gear-main-stat": "633161",
+     "ap-gear-weapon-core": "None|0P",
+     "ap-gear-wp": "208798",
+     "ap-gear-wp-earring1": "Mid",
+     "ap-gear-wp-earring2": "Low",
+     "ap-gear-wp-karma-lv": "28",
+     "ap-kbw": "Not Used",
+     "ap-kbw-stone": "0 Lv.",
+     "ap-necklace": "High",
+     "ap-ring1-dmg": "High",
+     "ap-ring1-rate": "Mid",
+     "ap-ring2-dmg": "High",
+     "ap-ring2-rate": "Mid",
+     "ap-stable-atk": "None|0P",
+     "ap-swift-core": "None|0P",
+     "ap-weapon-quality": "100"
+    },
+    "warnings": []
+   },
+   "structured": {
+    "loadouts": [
+     "most_recent_chaos_dungeon",
+     "most_recent_raid"
+    ],
+    "raid": {
+     "accessoryRolls": {
+      "ear1": [
+       [
+        152,
+        180
+       ],
+       [
+        49,
+        95
+       ],
+       [
+        34,
+        10
+       ]
+      ],
+      "ear2": [
+       [
+        49,
+        155
+       ],
+       [
+        27,
+        3250
+       ],
+       [
+        152,
+        80
+       ]
+      ],
+      "finger1": [
+       [
+        74,
+        95
+       ],
+       [
+        16000001,
+        200
+       ],
+       [
+        76,
+        400
+       ]
+      ],
+      "finger2": [
+       [
+        74,
+        95
+       ],
+       [
+        106,
+        50
+       ],
+       [
+        76,
+        400
+       ]
+      ],
+      "neck": [
+       [
+        50,
+        260
+       ],
+       [
+        34,
+        25
+       ],
+       [
+        27,
+        6500
+       ]
+      ]
+     },
+     "cores": [
+      {
+       "base": 10001,
+       "gemPoints": 18,
+       "id": 673001405,
+       "idLastDigit": 5
+      },
+      {
+       "base": 10002,
+       "gemPoints": 18,
+       "id": 673011406,
+       "idLastDigit": 6
+      },
+      {
+       "base": 10003,
+       "gemPoints": 20,
+       "id": 673021405,
+       "idLastDigit": 5
+      },
+      {
+       "base": 10004,
+       "gemPoints": 19,
+       "id": 673100005,
+       "idLastDigit": 5
+      },
+      {
+       "base": 10005,
+       "gemPoints": 18,
+       "id": 673110005,
+       "idLastDigit": 5
+      },
+      {
+       "base": 10006,
+       "gemPoints": 18,
+       "id": 673120006,
+       "idLastDigit": 6
+      }
+     ],
+     "gemApEffectValues": [
+      80,
+      60,
+      60,
+      100,
+      100,
+      120,
+      80,
+      80,
+      100,
+      60,
+      80
+     ],
+     "iconGradientGrades": {
+      "chaos_moon": "Relic",
+      "chaos_star": "Ancient",
+      "chaos_sun": "Relic",
+      "order_moon": "Ancient",
+      "order_star": "Relic",
+      "order_sun": "Relic"
+     },
+     "stoneNodes": [
+      {
+       "id": 249,
+       "nodes": 6
+      },
+      {
+       "id": 118,
+       "nodes": 10
+      },
+      {
+       "id": 801,
+       "nodes": 0
+      }
+     ]
+    }
+   }
+  },
   "no-raid-loadout": {
    "gradeDebug": {
     "chaos_star": {
@@ -1182,5 +1408,5 @@
    }
   }
  },
- "importerSource": "docs/javascripts/bible-import.js"
+ "importerSource": "../../docs/javascripts/bible-import.js"
 }

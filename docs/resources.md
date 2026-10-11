@@ -105,7 +105,7 @@
     </span>
     <span class="bible-load-info">
       <span class="ap-calc-popover-msg" aria-live="polite"></span>
-      <span class="bible-load-note">Loads your Bible profile into the active preset. Log out on your Raid Loadout and update your profile if needed. Main Stat % isn't on Bible; set it yourself.</span>
+      <span class="bible-load-note">Loads your Bible profile into the active preset. Make sure your Bible Raid Loadout is the one you want used, and update your profile if needed.</span>
     </span>
     <details class="bible-load-manual">
       <summary>Load not working?</summary>
