@@ -9104,13 +9104,17 @@ h3 { color: var(--dbc-teal); }
    with a .build-card near the top - 333-ceiling, 313-high-floor, 111-head-hunt,
    111-classic, 222-speedy, 333-blitz) end on a dense DPS-distribution image or
    tab set and read better with more breathing room than shorter pages like
-   index/resources/essentials/pre-ark-grid, so they get more. Selects on
-   .build-card's presence rather than duplicating a page list here, so a future
-   build page picks up 5rem automatically just by using the component. */
+   index/resources/essentials, so they get more. Selects on the presence of
+   the page's top-level .build-card-row (which holds the .build-card) rather
+   than duplicating a page list here, so a future build page picks it up just
+   by using the component. The child combinator inside :has() is deliberate:
+   a descendant form (:has(.build-card)) makes the browser re-check the whole
+   article after every DOM change inside it, which put about 50ms of style
+   recalculation on every calculator edit on /resources/. */
 .md-content__inner > :last-child {
   margin-bottom: 3rem;
 }
-.md-content__inner:has(.build-card) > :last-child {
+.md-content__inner:has(> .build-card-row) > :last-child {
   margin-bottom: 9rem;
 }
 
