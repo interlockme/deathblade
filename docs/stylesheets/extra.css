@@ -6317,7 +6317,7 @@ h3 { color: var(--dbc-teal); }
 @media screen and (min-width: 901px) {
   .md-typeset .ap-build-toggle-tier .ap-build-chip {
     padding-inline: 0.5rem;
-    padding-block: 0.25rem; /* chip 29.6px; with the tier's 2px padding and 1px border the box is 35.6px */
+    padding-block: 0.25rem; /* chip 25.6px; with the tier's 3px padding and 1px border the box is 33.6px */
   }
   .md-typeset .ap-build-toggle-tier {
     padding: 3px;
@@ -8320,8 +8320,8 @@ h3 { color: var(--dbc-teal); }
   box-shadow: inset 0 0 0 1px rgba(var(--dbc-pink-rgb), 0.45);
 }
 
-/* Desktop: the Preset slots are as tall as the Build chips (29.6px chips in a
-   35.6px box), so the two groups match and read at least as large as the
+/* Desktop: the Preset slots are as tall as the Build chips (25.6px chips in a
+   33.6px box), so the two groups match and read at least as large as the
    toolbar buttons beside them. Touch widths keep their own minimum heights
    below. */
 @media screen and (min-width: 901px) {
@@ -8341,7 +8341,8 @@ h3 { color: var(--dbc-teal); }
    too many field warnings); the tooltip on the name says why. The name is
    small and capped (6rem, then an ellipsis) so the pill plus the toolbar
    still fit beside the Build chips in a 938px bar (TOC layout). The toolbar
-   buttons are 1.58rem high, the height of the Build tiers beside them. */
+   buttons and this pill are 1.58rem (31.6px) high and sit centred beside the Build
+   tiers' 33.6px boxes. */
 .md-typeset .ap-calc-toolbar .bible-last-import {
   display: inline-flex;
   align-items: center;
