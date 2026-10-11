@@ -140,5 +140,44 @@ for (const name of names) {
   } else console.log("  icon colors: no Relic/Ancient gradient in this page to swap");
   console.log("  " + (diffs ? diffs + " field difference(s)" : "all " + keys.length + " fields identical"));
 }
+// Estimated route reads ONLY the estimated loadout. For every fixture that decodes from raid_merged,
+// the other snapshots' gear, engravings, cores, karma, weapon power, main stat and quality are
+// rewritten; the decoded text and hydration must not move (the one cross-snapshot read is the Crit
+// donor lookup, which looks at their stats table, so those stats are left alone here). Control:
+// the same rewrite on the estimated loadout itself must move them, or the rewrite proved nothing.
+const scramble = (o) => o
+  .replace(/weaponPower:\d+/g, "weaponPower:1").replace(/mainStat:\d+/g, "mainStat:2").replace(/quality:\d+/g, "quality:3")
+  .replace(/engrave_grade05/g, "engrave_grade01").replace(/progress:\d+/g, "progress:7")
+  .replace(/enlightenment:\d+/g, "enlightenment:1").replace(/corePoints:\d+/g, "corePoints:1")
+  .replace(/(index:\d+,base:(?:true|false),id:\d+,value:)\d+/g, "$11");
+const ownShape = (d) => JSON.stringify({ text: d.text, hydration: d.hydration });
+let isolationChecked = 0, isolationControl = 0;
+for (const name of names) {
+  const html = zlib.gunzipSync(fs.readFileSync(path.join(fixDir, name + ".html.gz"))).toString("utf8");
+  const dec = sandbox.window.BibleDecode.decode(html);
+  if (!dec.ok || dec.kind !== "estimated") continue;
+  const objs = sandbox.window.BibleDecode.loadoutObjects(html);
+  let others = html, own = html;
+  for (const k of Object.keys(objs)) {
+    if (k === "raid_merged") own = own.replace(objs[k], scramble(objs[k]));
+    else others = others.replace(objs[k], scramble(objs[k]));
+  }
+  const d2 = sandbox.window.BibleDecode.decode(others);
+  const same = d2.ok && ownShape(d2) === ownShape(dec);
+  const d3 = sandbox.window.BibleDecode.decode(own);
+  const moved = !d3.ok || ownShape(d3) !== ownShape(dec);
+  isolationChecked++;
+  if (moved) isolationControl++;
+  if (!same || !moved) unexpected++;
+  console.log("\n== " + name + ": estimated route ignores the other snapshots: " + (same ? "yes" : "NO (DIFF)") + "; control (same rewrite on the estimated loadout) " + (moved ? "moved it" : "did NOT move it (DIFF)"));
+  // No donor (no other snapshot shares the estimated Crit and Swiftness totals): Crit is left as is.
+  let noDonor = html;
+  for (const k of Object.keys(objs)) if (k !== "raid_merged") noDonor = noDonor.replace(objs[k], objs[k].replace(/\{type:15,value:\d+\}/, "{type:15,value:999}"));
+  const d4 = sandbox.window.BibleDecode.decode(noDonor);
+  const keptRaw = d4.ok && d4.hydration.critStat === ((objs.raid_merged.match(/\{type:15,value:(\d+)\}/) || [])[1] | 0);
+  if (!keptRaw) unexpected++;
+  console.log("   no donor snapshot: Crit left as the estimated loadout's own total: " + (keptRaw ? "yes" : "NO (DIFF)"));
+}
+if (!isolationChecked || !isolationControl) { unexpected++; console.log("\nDIFF     estimated-route isolation check never ran or never moved: it proved nothing"); }
 if (!controlFired) { unexpected++; console.log("\nDIFF     icon-color control never fired: the swap test proved nothing"); }
 if (strict && unexpected) { console.error("\n" + unexpected + " unexpected difference(s)"); process.exit(1); }
