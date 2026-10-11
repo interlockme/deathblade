@@ -1,7 +1,7 @@
 // FORK GUIDE: DATA - every build entry (pentagon stats, accent colors,
 // descriptions) is one of Deathblade's own builds. Replace the re/surge
 // families and their builds arrays with your class's own lineup; the
-// axisLabels/invert/axisNote fields let you define your own 5th axis
+// axisLabels/invert/axisTips fields let you define your own 5th axis
 // (this site uses Recovery for RE, Exposure for Surge).
 //
 // SINGLE SOURCE OF TRUTH for build pentagon/compare stats. Both
@@ -54,11 +54,11 @@
 //   better), and DPS is ranked within each family on its own 0-10 scale.
 //   Overlaying the two would silently mix incompatible axes.
 //
-//   axisNoteIndex/axisNote (family-level, Surge only): the pentagon badge
-//   shows this as a hover tooltip + caption line under the SVG, on
-//   whichever axis index it points at (3 = Recovery/Exposure here) - a
-//   reminder that Exposure is a risk stat where lower is better, unlike
-//   the other four axes.
+//   axisTips (family-level, optional): one string or null per axis, same
+//   order as axisLabels. The pentagon badge and the compare overlay add it
+//   to that axis label's hover tooltip. Surge uses it on Exposure to say
+//   what the axis measures and that it is a risk stat where lower is
+//   better, unlike the other four axes.
 
 (function () {
   window.DB_BUILD_DATA = {
@@ -137,12 +137,10 @@
     surge: {
       axisLabels: ["Difficulty", "DPS", "Mobility", "Exposure", "Speed"],
       // Exposure is back-attack/positional risk - lower is better, unlike
-      // every other axis (matches the data-caption on each build's own
-      // pentagon-badge).
+      // every other axis (the axisTips entry below says so in the tooltip).
       invert: [false, false, false, true, false],
       defaultPair: [0, 1], // 111 (Classic) vs 222 (Speedy)
-      axisNoteIndex: 3,
-      axisNote: "Exposure: back-attack & positional risk.",
+      axisTips: [null, null, null, "Back-attack and positional risk. Lower is better.", null],
       builds: [
         {
           id: "111-classic",

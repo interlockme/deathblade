@@ -2342,11 +2342,8 @@ h3 { color: var(--dbc-teal); }
    </div>
    </div>
 
-   Optional attributes on .pentagon-badge:
-   - data-accent="var(--dbc-pink)"   (defaults to the site pink if omitted)
-   - data-caption="..."      (small italic note under the badge, e.g.
-                               used on Surge pages to flag that Exposure
-                               is inverted - lower is safer, not higher) */
+   Optional attribute on .pentagon-badge:
+   - data-accent="var(--dbc-pink)"   (defaults to the site pink if omitted) */
 .build-card-row {
   display: flex;
   align-items: stretch;
@@ -2457,17 +2454,6 @@ h3 { color: var(--dbc-teal); }
 .pentagon-badge-extra .video-chip:last-child {
   margin-bottom: 0;
 }
-/* Clarifying note under a badge - currently only used on Surge pages,
-   since Exposure is the one axis where higher reads as worse rather
-   than better like the other four. */
-.pentagon-badge-caption {
-  font-size: var(--dbc-fs-sm);
-  color: var(--dbc-lavender);
-  text-align: center;
-  margin-top: 0.5em;
-  line-height: 1.35;
-  font-style: italic;
-}
 @media screen and (max-width: 720px) {
   .build-card-row {
     flex-direction: column;
@@ -2508,7 +2494,7 @@ h3 { color: var(--dbc-teal); }
   }
   .md-typeset .pentagon-svg-mount {
     grid-column: 1;
-    grid-row: 2 / 4;
+    grid-row: 2;
     margin: 0;
   }
   .md-typeset .pentagon-badge-extra {
@@ -2516,14 +2502,7 @@ h3 { color: var(--dbc-teal); }
     grid-row: 2;
     margin-top: 0;
     padding-top: 0;
-    align-self: end;
-  }
-  .md-typeset .pentagon-badge-caption {
-    grid-column: 2;
-    grid-row: 3;
-    margin-top: 0.4em;
-    text-align: left;
-    align-self: start;
+    align-self: center;
   }
 }
 
@@ -10489,8 +10468,8 @@ body.page-333-blitz input[type="text"] {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .md-typeset .ark-passive-col-title {
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: var(--dbc-fs-table);
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -10683,9 +10662,6 @@ body.page-333-blitz input[type="text"] {
 .md-typeset .ark-passives-compact .ark-passive-col-header {
   margin-bottom: 0.5em;
   padding-bottom: 0.3em;
-}
-.md-typeset .ark-passives-compact .ark-passive-col-title {
-  font-size: var(--dbc-fs-table);
 }
 .md-typeset .ark-passives-compact .ark-passive-col-points {
   font-size: var(--dbc-fs-sm);

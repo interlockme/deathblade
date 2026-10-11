@@ -77,7 +77,7 @@
   // but draws two translucent data polygons (one per selected build)
   // instead of one solid one, so their silhouettes can be compared at a
   // glance instead of read as two separate numbers.
-  function buildOverlaySvg(axisLabels, buildA, buildB) {
+  function buildOverlaySvg(axisLabels, buildA, buildB, tips) {
     var angles = radar.angles(axisLabels.length);
 
     var svg = svgEl("svg", {
@@ -117,10 +117,9 @@
     });
 
     radar.drawLabels(svg, angles, axisLabels, function (text, i) {
-      text.setAttribute(
-        "data-radar-tip",
-        axisLabels[i] + ": " + buildA.name + " " + fmt1(buildA.pentagon[i]) + " vs " + buildB.name + " " + fmt1(buildB.pentagon[i])
-      );
+      var tip = axisLabels[i] + ": " + buildA.name + " " + fmt1(buildA.pentagon[i]) + " vs " + buildB.name + " " + fmt1(buildB.pentagon[i]);
+      if (tips && tips[i]) tip += ". " + tips[i];
+      text.setAttribute("data-radar-tip", tip);
     });
 
     return svg;
@@ -268,7 +267,7 @@
 
       panel.innerHTML = "";
       var svgMount = el("div", "build-compare-svg-mount");
-      var overlay = buildOverlaySvg(data.axisLabels, buildA, buildB);
+      var overlay = buildOverlaySvg(data.axisLabels, buildA, buildB, data.axisTips);
       svgMount.appendChild(overlay);
       radar.wireLabelTips(overlay);
       panel.appendChild(svgMount);

@@ -41,16 +41,16 @@
 //   Recovery vs Exposure: Remaining Energy builds use "Recovery" (higher
 //   is better - more self-sustain). Surge builds don't really have a
 //   Recovery stat, so that axis is repurposed as "Exposure" (back-attack
-//   / positional risk) where HIGHER IS WORSE. The family-level axisNote
-//   in build-data.js (Surge only) supplies the caption line under the
-//   badge reminding readers that axis is inverted, so it doesn't read as
-//   "bigger = stronger" like the other four do.
+//   / positional risk) where HIGHER IS WORSE. The family-level axisTips
+//   in build-data.js (Surge only) puts that explanation, including that
+//   the axis is inverted, in the Exposure label's hover tooltip so it
+//   doesn't read as "bigger = stronger" like the other four do.
 //
 //   To add a badge to a new build page: add the build's entry to
 //   build-data.js first, then drop <div class="pentagon-badge"
 //   data-build="new-build-id" data-family="re"> (or "surge") wherever
 //   the badge belongs. Backward compat: a badge can still be given raw
-//   data-values/data-labels/data-accent/data-caption directly instead,
+//   data-values/data-labels/data-accent directly instead,
 //   for a one-off pentagon that isn't part of a build family.
 
 (function () {
@@ -59,7 +59,7 @@
   var svgEl = window.SiteUtils.svgEl;
   var radar = window.SiteUtils.radar;
 
-  function buildPentagonSvg(values, labels, accent) {
+  function buildPentagonSvg(values, labels, accent, tips) {
     var angles = radar.angles(5);
 
     var svg = svgEl("svg", {
@@ -97,13 +97,15 @@
     });
 
     radar.drawLabels(svg, angles, labels, function (text, i) {
-      text.setAttribute("data-radar-tip", labels[i] + ": " + fmt(values[i]) + "/10");
+      var tip = labels[i] + ": " + fmt(values[i]) + "/10";
+      if (tips && tips[i]) tip += ". " + tips[i];
+      text.setAttribute("data-radar-tip", tip);
     });
 
     return svg;
   }
 
-  // Resolves a badge's values/labels/accent/caption either from
+  // Resolves a badge's values/labels/accent/tips either from
   // build-data.js (the normal case: data-build + data-family) or from
   // raw data-values/data-labels/etc on the badge itself (backward-compat
   // path for a one-off pentagon not tied to a build family). Returns
@@ -117,15 +119,11 @@
       if (!family || !build || !build.pentagon) {
         return null; // unknown id, or a build with no pentagon (e.g. Standard)
       }
-      var caption = null;
-      if (family.axisNote && typeof family.axisNoteIndex === "number") {
-        caption = family.axisNote;
-      }
       return {
         values: build.pentagon,
         labels: family.axisLabels,
         accent: build.accent || "#ec91b2",
-        caption: caption,
+        tips: family.axisTips || null,
       };
     }
 
@@ -144,7 +142,7 @@
       values: rawValues,
       labels: rawLabels,
       accent: badge.getAttribute("data-accent") || "#ec91b2",
-      caption: badge.getAttribute("data-caption") || null,
+      tips: null,
     };
   }
 
@@ -156,21 +154,13 @@
     if (!resolved) return;
 
     mount.innerHTML = "";
-    var svg = buildPentagonSvg(resolved.values, resolved.labels, resolved.accent);
+    var svg = buildPentagonSvg(resolved.values, resolved.labels, resolved.accent, resolved.tips);
     mount.appendChild(svg);
     radar.wireLabelTips(svg);
-
-    if (resolved.caption && !badge.querySelector(".pentagon-badge-caption")) {
-      var captionEl = document.createElement("div");
-      captionEl.className = "pentagon-badge-caption";
-      captionEl.textContent = resolved.caption;
-      badge.appendChild(captionEl);
-    }
   }
 
-  // Was a lone document$ subscription - renderBadge() was already
-  // idempotent (mount.innerHTML reset every call, caption guarded by its
-  // own existence check), so this is a drop-in swap to the shared
-  // hard-load/instant-nav/mutation trigger set. See site-utils.js.
+  // renderBadge() is idempotent (mount.innerHTML is reset every call), so it
+  // runs on the shared hard-load/instant-nav/mutation trigger set. See
+  // site-utils.js.
   window.SiteUtils.registerRenderer(".pentagon-badge[data-build], .pentagon-badge[data-values]", renderBadge);
 })();
