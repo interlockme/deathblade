@@ -42,6 +42,12 @@ const EXPECTED = {
   "ancient-sun-relic-moon-star|ap-gear-gem-base-ap": "estimated loadout has gems",
   "ancient-sun-relic-moon-star|ap-gear-main-stat": "main stat comes from the estimated loadout",
   // No raid snapshot at all: the text path leaves these empty, the decoder fills them from raid_merged.
+  // Gemless last raid snapshot, so the estimated loadout is used. Its stats table is the Chaos
+  // Dungeon snapshot's (Crit 158, Swiftness 577) while its Ark Passive is the raid one (Crit node
+  // 10, no Swiftness node), so the decoder moves the Crit total by the node difference (658).
+  // The text path reads the raid tab and gets 658 too, which is why crit is not listed here.
+  "estimated-chaos-stats|ap-gear-gem-base-ap": "estimated loadout has gems",
+  "estimated-chaos-stats|ap-gear-main-stat": "main stat comes from the estimated loadout",
   "no-raid-loadout|ap-crit-stat": "filled from estimated loadout",
   "no-raid-loadout|ap-evo-karma": "filled from estimated loadout",
   "no-raid-loadout|ap-gear-gem-base-ap": "estimated loadout has gems",
@@ -57,6 +63,7 @@ const MAIN_STAT_PCT = {
   "ancient-chaos": "9",
   "ancient-sun-relic-moon-star": "9",
   "no-raid-loadout": "9",
+  "estimated-chaos-stats": "9",
   "relic-chaos-star": "5",
   "relic-chaos-sun-moon": "5",
   "bracelet-stat-lines": "5",
@@ -69,6 +76,7 @@ const CLASS_ID = {
   "ancient-chaos": "blade",
   "ancient-sun-relic-moon-star": "blade",
   "no-raid-loadout": "blade",
+  "estimated-chaos-stats": "blade",
   "relic-chaos-star": "blade",
   "relic-chaos-sun-moon": "blade",
   "bracelet-stat-lines": "blade",

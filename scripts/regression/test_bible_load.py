@@ -48,7 +48,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 FIX = HERE / "fixtures"
 BASELINE = json.loads((HERE / "baselines" / "importer.json").read_text())
 PAGE = "/resources/"
-NAMES = ["ancient-chaos", "ancient-sun-relic-moon-star", "no-raid-loadout", "relic-chaos-star", "relic-chaos-sun-moon", "bracelet-stat-lines"]
+NAMES = ["ancient-chaos", "ancient-sun-relic-moon-star", "no-raid-loadout", "estimated-chaos-stats", "relic-chaos-star", "relic-chaos-sun-moon", "bracelet-stat-lines"]
 OTHER_CLASS_NAMES = ["other-class-support-t4", "other-class-t3-gear"]
 CORS = {"access-control-allow-origin": "*", "content-type": "text/html; charset=utf-8"}
 

@@ -30,6 +30,8 @@
   var BRACELET_IGNORED_LINES = { 27: 1, 34: 1, 55: 1, 56: 1, 149: 1, 151: 1 };
   var ACCESSORY_INDEX = { neckAdd: 50, atkPct: 49, weaponPct: 152, critRate: 74, critDmg: 76, atkFlat: 124 };
   var PENALTY_ENGRAVING_FROM = 1800;
+  var ARK_CRIT_NODE_ID = 1010100;
+  var CRIT_STAT_PER_NODE_LEVEL = 50;
 
   function fail(reason) { return { ok: false, reason: reason }; }
 
@@ -344,6 +346,41 @@
     return null;
   }
 
+
+  // Bible's estimated raid loadout (raid_merged) can carry the stats table of another snapshot
+  // (the Chaos Dungeon one) while its Ark Passive is the raid one, so its Crit total misses the
+  // Ark Passive Crit node when the Chaos Dungeon runs Swiftness there instead (50 stat per node
+  // level). The donor is the snapshot whose Crit and Swiftness totals match the estimated ones
+  // exactly; the total is then moved by the difference in that node's level. No donor, or a donor
+  // with the same node level, leaves the total as it is.
+  function statValue(stats, type) {
+    for (var i = 0; i < (stats || []).length; i++) if (stats[i] && stats[i].type === type) return stats[i].value;
+    return undefined;
+  }
+
+  function arkCritLevel(obj) {
+    var ap = fieldJSON(obj, "arkPassive");
+    var list = ap && Array.isArray(ap.evolution) ? ap.evolution : [];
+    for (var i = 0; i < list.length; i++) if (list[i] && list[i].id === ARK_CRIT_NODE_ID) return list[i].level || 0;
+    return 0;
+  }
+
+  function estimatedCritStat(byClass, obj, stats) {
+    var crit = statValue(stats, 15);
+    if (typeof crit !== "number") return crit;
+    var swift = statValue(stats, 18);
+    var own = arkCritLevel(obj);
+    var names = ["most_recent_raid", "most_recent_chaos_dungeon"];
+    for (var i = 0; i < names.length; i++) {
+      var other = byClass[names[i]];
+      if (!other || other === obj) continue;
+      var otherStats = fieldJSON(other, "stats");
+      if (statValue(otherStats, 15) !== crit || statValue(otherStats, 18) !== swift) continue;
+      return crit + (own - arkCritLevel(other)) * CRIT_STAT_PER_NODE_LEVEL;
+    }
+    return crit;
+  }
+
   function decode(rawHtml) {
     if (!T) return fail("id tables are not loaded");
     var byClass = loadoutObjects(rawHtml);
@@ -381,7 +418,10 @@
     });
     if (hydration.mainStat == null || hydration.weaponPower == null) return fail("no weapon power or main stat in the loadout");
     var crit = (stats || []).filter(function (s) { return s.type === 15; })[0];
-    if (crit) hydration.critStat = crit.value;
+    if (crit) {
+      try { hydration.critStat = picked.kind === "estimated" ? estimatedCritStat(byClass, obj, stats) : crit.value; }
+      catch (e) { hydration.critStat = crit.value; }
+    }
     var mainPct = mainStatPercent(stats);
     if (mainPct != null) hydration.mainStatPct = mainPct;
     if (karma && typeof karma.enlightenment === "number" && typeof karma.leap === "number") {
