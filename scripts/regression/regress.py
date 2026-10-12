@@ -332,37 +332,6 @@ FACADE_SEQUENCES = [
 ]
 
 
-# Bracelet vs Bracelet, Additional Damage & vs Demons line. The vs Demons checkbox (in the Keystone Lines row)
-# is hidden until the line is picked, so each probe picks the line first and then ticks the box. Per side:
-# the line alone (the control the ticked probes must differ from), the line ticked, the High tier ticked,
-# two vs Demons lines ticked, the line ticked and then changed to Additional Damage, the line beside an
-# Outgoing Damage & CD +2% line with both boxes ticked, and the line ticked on Surge 111.
-def bvb_key(side, part):
-    cls = {"demons": f"input.ap-bvb-{side}-demons:0", "cdest": f"input.ap-bvb-{side}-cdest:0"}
-    if part in cls:
-        return cls[part]
-    n, kind = part[4], part[6:]
-    return f"select.ap-bvb-{side}-line{n}-{kind}.ap-bvb-line-{kind}:0"
-
-
-BVB_DEMONS_SEQUENCES = []
-for _side in ("a", "b"):
-    _t1, _t2, _ty1 = bvb_key(_side, "line1-tier"), bvb_key(_side, "line2-tier"), bvb_key(_side, "line1-type")
-    _ty2, _dm, _cd = bvb_key(_side, "line2-type"), bvb_key(_side, "demons"), bvb_key(_side, "cdest")
-    BVB_DEMONS_SEQUENCES += [
-        (f"bvb {_side}: vs Demons line picked, box not ticked", "re-333", [(_ty1, "add_b")]),
-        (f"bvb {_side}: vs Demons line picked, box ticked", "re-333", [(_ty1, "add_b"), ("toggle", _dm)]),
-        (f"bvb {_side}: vs Demons line High tier, box ticked", "re-333", [(_ty1, "add_b"), (_t1, "High"), ("toggle", _dm)]),
-        (f"bvb {_side}: two vs Demons lines, box ticked", "re-333",
-         [(_ty1, "add_b"), (_ty2, "add_b"), (_t2, "High"), ("toggle", _dm)]),
-        (f"bvb {_side}: box ticked, then line changed to Additional Damage", "re-333",
-         [(_ty1, "add_b"), ("toggle", _dm), (_ty1, "add_a")]),
-        (f"bvb {_side}: vs Demons line beside CD line, both boxes ticked", "re-333",
-         [(_ty1, "add_b"), (_ty2, "damage_cd"), ("toggle", _dm), ("toggle", _cd)]),
-        (f"bvb {_side}: vs Demons line, box ticked, surge-111", "surge-111", [(_ty1, "add_b"), ("toggle", _dm)]),
-    ]
-
-
 # Setup A vs Setup B stone targets: a side's Ability Stones can only boost the 3 core engravings or the
 # 2 competing engravings in its own Option slots (5 engravings total). Steps are (control, value) pairs
 # set in order (a programmatic set skips the disabled-option check on purpose, like a preset load or an
@@ -397,6 +366,44 @@ for _side in ("a", "b"):
         (f"svs {_side}: stone on mi, then switch to RE", "surge-111", [
             (svs_key(_side, "slot1-type"), "mi"), (svs_key(_side, "stone1-target"), "mi"),
             (svs_key(_side, "stone1-level"), "2 Lv."), "@re-333"]),
+    ]
+
+
+# Bracelet vs Bracelet, Additional Damage & vs Demons: the vs Demons half is a flat factor folded into the
+# Keystone Lines (grid) value, and its checkbox sits in that row. The single-control probes never see the
+# box, because it stays hidden until an add_b line is picked, so these sequences pick the line first and
+# then tick the box. Steps are (control, value) pairs or a ("toggle", control) click, like the sequences
+# above. Each side is run on its own.
+def bvb_key(side, part):
+    tag = {"line1-type": "select", "line2-type": "select", "line3-type": "select",
+           "line1-tier": "select", "line2-tier": "select", "line3-tier": "select",
+           "demons": "input", "cdest": "input"}[part]
+    suffix = ".ap-bvb-line-type" if part.endswith("-type") else ".ap-bvb-line-tier" if part.endswith("-tier") else ""
+    return f"{tag}.ap-bvb-{side}-{part}{suffix}:0"
+
+
+BVB_DEMONS_SEQUENCES = []
+for _side in ("a", "b"):
+    BVB_DEMONS_SEQUENCES += [
+        (f"bvb {_side}: add_b Mid line, vs Demons off", "re-333", [
+            (bvb_key(_side, "line3-type"), "add_b")]),
+        (f"bvb {_side}: add_b Mid line, vs Demons ticked", "re-333", [
+            (bvb_key(_side, "line3-type"), "add_b"), ("toggle", bvb_key(_side, "demons"))]),
+        (f"bvb {_side}: add_b High line, vs Demons ticked", "re-333", [
+            (bvb_key(_side, "line3-type"), "add_b"), (bvb_key(_side, "line3-tier"), "High"),
+            ("toggle", bvb_key(_side, "demons"))]),
+        (f"bvb {_side}: two add_b High lines, vs Demons ticked", "re-333", [
+            (bvb_key(_side, "line1-type"), "add_b"), (bvb_key(_side, "line1-tier"), "High"),
+            (bvb_key(_side, "line3-type"), "add_b"), (bvb_key(_side, "line3-tier"), "High"),
+            ("toggle", bvb_key(_side, "demons"))]),
+        (f"bvb {_side}: add_b ticked, then the line changed to add_a", "re-333", [
+            (bvb_key(_side, "line3-type"), "add_b"), ("toggle", bvb_key(_side, "demons")),
+            (bvb_key(_side, "line3-type"), "add_a")]),
+        (f"bvb {_side}: add_b and damage_cd lines, both boxes ticked", "re-333", [
+            (bvb_key(_side, "line3-type"), "add_b"), (bvb_key(_side, "line2-type"), "damage_cd"),
+            ("toggle", bvb_key(_side, "demons")), ("toggle", bvb_key(_side, "cdest"))]),
+        (f"bvb {_side}: add_b ticked on surge-111", "surge-111", [
+            (bvb_key(_side, "line3-type"), "add_b"), ("toggle", bvb_key(_side, "demons"))]),
     ]
 
 
