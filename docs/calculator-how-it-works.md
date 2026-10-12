@@ -10,6 +10,12 @@ This page explains what the [Ark Passive Calculator](resources.md) computes, wha
 
 ## In short
 
+<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Short</span>Key points<span class="setup-note-arrow"></span></summary>
+
 - **Everything is a ratio against your current setup.** "% of best" and "gain" compare one choice to another with everything else held equal. The calculator never predicts absolute DPS and does not simulate a rotation. It models your damage chain: crit, Crit Damage, Evolution Damage, Additional Damage and Attack Power.
 - **Top Combinations** scores nine Evolution setups (three keystone pairs times three point splits) against your own stats and shows the best five. Gaps under 0.5 percentage points are a tie, so pick what is easier to play.
 - **Sometimes-on bonuses** (Adrenaline, Back Attack, Flash Orb, Maelstrom) are not averaged before the crit cap. Each on/off combination is worked out, capped, and then weighted by how likely it is.
@@ -18,18 +24,33 @@ This page explains what the [Ark Passive Calculator](resources.md) computes, wha
 - **Defaults are typical values from combat logs.** Change them to your own. The numbers are best-effort estimates from in-game tooltips, in-game tests and logs of many players, not a measurement of your character.
 - **Not modeled:** skill-by-skill differences, Optimized Training 1's cooldown reduction, Attack Speed, Ability Stone penalties and the Support's own gearing. The full list is at the end.
 
+</details>
+
+</div>
+</div>
+
 ## Top Combinations
 
 **In plain terms.** The Evolution tree lets you pick two of three Tier 4 keystones (Critical, Master, Pulverize) and split your Limit Break and Keen Sense points. That gives nine setups. The calculator scores all nine against your stats and shows the best five, each as a percentage of the best one. A tab click previews a lower-ranked setup, and the pin button makes the panels below use it, which is how you test a setup you prefer.
 
-**Reading close results.** Gaps under 0.5 percentage points of DPS are a tie for practical purposes: choose by what is easier to play or what you already have. In the example below the first three are inside that band. The 0.5 is a rule of thumb, not a measured error bar. The model uses one blended crit rate for the whole fight, so differences much smaller than that are below what it can resolve.
+<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-notes" markdown>
 
-<details markdown="1">
-<summary>The math</summary>
+<details class="setup-note" data-kind="tip" open markdown>
+<summary><span class="setup-note-tag">Tie</span>Reading close results<span class="setup-note-arrow"></span></summary>
+
+Gaps under 0.5 percentage points of DPS are a tie for practical purposes: choose by what is easier to play or what you already have. In the example below the first three are inside that band. The 0.5 is a rule of thumb, not a measured error bar. The model uses one blended crit rate for the whole fight, so differences much smaller than that are below what it can resolve.
+
+</details>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
 
 Each of the nine cells (3 keystone pairs times 3 point splits) gets a score:
 
-    score = ((1 - c) + c * CritDmg * (1 + onCrit)) * (1 + evo) * (1 + add)
+```text
+score = ((1 - c) + c * CritDmg * (1 + onCrit)) * (1 + evo) * (1 + add)
+```
 
 then times 0.98 if Keen Blunt Weapon is equipped (its downside, see Assumptions).
 
@@ -56,19 +77,28 @@ With the best cell your effective crit rate reads 92.38% (77.38% before the pick
 
 </details>
 
-**Assumptions and limits.**
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
 
 - One blended crit rate and one multiplier chain for the whole fight. Skill-by-skill differences are not modeled.
 - Optimized Training 1's cooldown reduction is not modeled, only its Evolution Damage.
 - The party Damage Synergy scalar from the reference spreadsheets is omitted. It multiplies all nine cells equally, so it cannot change which cell wins or any "% of best".
 - Keen Blunt Weapon's downside is an expected value: a 10% chance of -20% damage, a flat x0.98 on the score.
 
+</details>
+
+</div>
+</div>
+
 ## Uptimes and estimated inputs
 
 **In plain terms.** Many bonuses are only on part of the time: Adrenaline stacks, Back Attack, Flash Orb, Maelstrom. The calculator does not simply add "bonus times uptime" to your crit rate, because crit rate is capped at 100% and averaging before the cap overstates what you get near the cap. It works out every on/off combination first, caps each one, and only then averages.
 
-<details markdown="1">
-<summary>The math</summary>
+<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
 
 **Crit rate.** There are three independent sometimes-on terms: Adrenaline (bonus times uptime), Back Attack (10% times your effective back attack share) and Flash Orb (bonus times uptime). `blendCritTerms` enumerates every on/off combination, caps each at 100%, and weights each by its joint probability. Averaging first and capping afterwards would be wrong because the cap is concave.
 
@@ -85,8 +115,10 @@ Weighted: 0.873 + 0.09215 + 0.02295 + 0.00225 = 0.99035. Raid Captain's Move Spe
 
 **Adrenaline.** Your uptime input is the share of damage dealt at 6 stacks, which is the figure a damage meter reports. The Crit Rate bonus needs all 6 stacks, so it scales by that uptime alone. The Attack Power bonus applies per stack, so it gets partial credit while stacks rebuild. Outside 6 stacks you rebuild one stack per cast, so the first five casts average 3 of 6 stacks, or 0.5:
 
-    AP from Adrenaline = full * (U + (1 - U) * 0.5)
-    full = 6 stacks * (0.9% + stone bonus per stack)
+```text
+AP from Adrenaline = full * (U + (1 - U) * 0.5)
+full = 6 stacks * (0.9% + stone bonus per stack)
+```
 
 At the defaults (4 nodes, no stone) the full value is 5.4% Attack Power:
 
@@ -101,12 +133,18 @@ At the defaults (4 nodes, no stone) the full value is 5.4% Attack Power:
 
 </details>
 
-**Assumptions and limits.**
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
 
 - The sometimes-on terms are treated as independent. In practice you aim to back attack as much as possible and keep Adrenaline stacks, so they are usually on together, and Flash Orb is RNG with low uptime. High uptimes make the independence assumption close to harmless.
 - The 0.5 rebuild share is a derivation, not a measurement. Later skills hit harder and would push it slightly higher, by about 0.1 Attack Power points at 80% uptime.
 - The Adrenaline input has no floor. Very low values are legitimate what-ifs, but an uptime of 0 still reports half the AP bonus, which cannot happen in a fight.
 - Defaults (Adrenaline 97%, Support 98%, Back Attack Rate 85%, Maelstrom 85/80/90, Rage Rune 20%, Paladin 35%) are typical values from logs, not claims about your character.
+
+</details>
+
+</div>
+</div>
 
 ## Support
 
@@ -114,11 +152,16 @@ At the defaults (4 nodes, no stone) the full value is 5.4% Attack Power:
 
 When you compare "what if I had this line", the Support is held at its current value, because the line is yours, not your Support's. So lines that raise only your own Weapon Power, Main Stat or flat Attack Power are diluted, and Percent Attack Power is not. This is the low end of a range. The real answer for your party sits between the shown value and the case where your Support gears up alongside you.
 
-<details markdown="1">
-<summary>The math</summary>
+<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-notes" markdown>
 
-    AP = floor( ( sqrt(WP * MainStat / 6) * BaseAP + FlatAP + SupportBuff ) * PercentAP )
-    SupportBuff = sqrt(WP * MainStat / 6) * BaseAP * 0.4 * (SupportUptime / 100)
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
+
+```text
+AP = floor( ( sqrt(WP * MainStat / 6) * BaseAP + FlatAP + SupportBuff ) * PercentAP )
+SupportBuff = sqrt(WP * MainStat / 6) * BaseAP * 0.4 * (SupportUptime / 100)
+```
 
 The Support's buff is a flat amount inside the bracket, so Percent AP multiplies it too. The 0.4 comes from the reference spreadsheet's Support profile with specific gearing. That profile is the one modeled, rather than gearing a Support ourselves, so the Support bracelet's own "Ally Atk. Power Enhancement" line is not modeled separately.
 
@@ -140,25 +183,38 @@ The Weapon Power rows keep about 72% of their no-Support value, which is 1 / (1 
 
 </details>
 
-**Assumptions and limits.**
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
 
 - The 0.4 coefficient and the generic gearing are one reference profile. A Support that is much better or worse shifts every Weapon Power, Main Stat, flat AP and Base AP row by roughly the same factor.
 - The Support is assumed to match your Weapon Power and Main Stat. A Support that itemizes Weapon Power harder or not does not change the model, since both reach similar maximums. Support uptime defaults to 98%.
+
+</details>
+
+</div>
+</div>
 
 ## Why every comparison is re-optimized
 
 **In plain terms.** Suppose you compare two bracelets. A bracelet changes your crit rate, Crit Damage or Additional Damage, and those decide which of the nine keystone setups is best. So the honest question is not "how much better is the new bracelet if I keep my keystones" but "how much better is my best setup with it than my best setup without it". That is what the calculator reports, and it calls it the realized gain: the DPS you actually get if you re-pick keystones for each option.
 
-<details markdown="1">
-<summary>The math</summary>
+<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
 
 For each candidate the calculator searches all nine cells for the best one with the candidate, searches all nine again for your current setup, and divides:
 
-    realized gain = best(candidate) / best(current) - 1
+```text
+realized gain = best(candidate) / best(current) - 1
+```
 
 The alternative, a fixed-keystone gain, evaluates the candidate in your current best cell:
 
-    fixed gain = candidate in current best cell / best(current) - 1
+```text
+fixed gain = candidate in current best cell / best(current) - 1
+```
 
 The realized gain is never below the fixed gain. Your current best cell is one of the candidate's options, so the candidate's best is at least as good, and both gains share the same denominator. This was also checked on 4,000 random input sets with no violations. The difference can be real: the largest gap seen was 3.2 percentage points of DPS. When you pin a combination, both sides use the pinned cell, so the two gains are equal by construction.
 
@@ -166,10 +222,16 @@ Cases where the best cell actually flips: Keen Blunt Weapon at the default setti
 
 </details>
 
-**Assumptions and limits.**
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
 
 - Realized gain assumes you will re-pick your keystones. It is the gain for a player who does, not a measurement of the gain with fixed keystones.
 - Bracelet vs Bracelet re-optimizes every line that feeds the nine cells: Crit Rate, Crit Damage, Crit Stat and Additional Damage (any number of Additional Damage lines on one bracelet). Back Attack, Outgoing, Stagger and Damage plus Cooldown lines multiply every cell by the same factor, so they cannot change which cell wins and need no search. The vs Demon/Archdemon half of the Additional Damage line is that kind of factor too.
+
+</details>
+
+</div>
+</div>
 
 ## Reference: how each panel is valued
 
@@ -179,8 +241,11 @@ The sections below describe how individual parts of the calculator are valued. S
 
 **In plain terms.** Attack Power comes from your Weapon Power and Main Stat, scaled up by the Base Attack Power % from your gems, plus any flat Attack Power and the Support's buff, all multiplied by your Attack Power %. The readout in the Weapon Power / Main Stat card shows it in three stages so you can hold it against your character sheet.
 
-<details markdown="1">
-<summary>The math</summary>
+<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
 
 The formula is the one in the Support section. Its pieces:
 
@@ -202,14 +267,25 @@ The final value is the baseline every Attack Power based comparison uses. The fi
 
 </details>
 
-**Assumptions and limits.** The Adrenaline middle stage is display only. Weapon Power and Main Stat are what you type: the calculator does not rebuild them from gear, so a wrong entry shifts every row that depends on them.
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+
+The Adrenaline middle stage is display only. Weapon Power and Main Stat are what you type: the calculator does not rebuild them from gear, so a wrong entry shifts every row that depends on them.
+
+</details>
+
+</div>
+</div>
 
 ### Crit and damage layers
 
 **In plain terms.** Your damage chain is four layers that multiply: how often you crit and how hard (crit rate and Crit Damage), the extra damage on crit hits (Crit Hit Damage), Evolution Damage, and Additional Damage. Each layer is its own multiplier, so a point added to a small layer is worth more than a point added to a big one. The summary card shows all of them, and every row on this page changes one of them.
 
-<details markdown="1">
-<summary>The math</summary>
+<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
 
 The sources of each layer, with the RE 333 default value:
 
@@ -229,28 +305,41 @@ The summary card shows two crit figures. Eff. Crit Rate is the capped, probabili
 
 Check at the defaults for the best cell (LB1/KS2, Master + Pulverize): effective crit 92.38%, Crit Damage 2.988, Crit Hit Damage 1.0472, Evolution 1 + 0.81, Additional 1 + 0.4686.
 
-    ((1 - 0.9238) + 0.9238 * 2.988 * 1.0472) * 1.81 * 1.4686 * 0.98 = 7.73
+```text
+((1 - 0.9238) + 0.9238 * 2.988 * 1.0472) * 1.81 * 1.4686 * 0.98 = 7.73
+```
 
 Only ratios of this number are ever shown, so the absolute value means nothing on its own. Reproducing all nine cells this way by hand gives the same five percentages as the Top Combinations table.
 
 </details>
 
-**Assumptions and limits.**
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
 
 - Which sources multiply and which add follows the game's own tooltips and in-game tests. A source that turns out to sit in a different layer would change its value but not the rest of the chain.
 - Breaking Moon (Surge 111 only) is folded into Crit Damage as an average per cast, see the assumption register.
 - Crit Rate Dual and Crit Damage Dual are the bracelet lines that carry a 1.5% Crit Hit Damage bonus. A bracelet can roll two Crit Rate or two Crit Damage lines, and both are modeled.
 
+</details>
+
+</div>
+</div>
+
 ### Ark Grid cores
 
 **In plain terms.** The Ark Grid Core Comparison answers one question per core: how much more DPS would this core give than having none of that kind. Each Chaos Core row removes your current core of that kind, adds the candidate at the grade and point level shown, and compares the two. Only the damage half of each core counts.
 
-<details markdown="1">
-<summary>The math</summary>
+<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
 
 Chaos Core effects unlock at 10, 14, 17, 18, 19 and 20 points. The tables hold the cumulative totals at each level from in-game tooltips and tests. Relic and Ancient are identical below 17 points. Every gain is DPS with the core divided by DPS without it, minus 1, and the Relic to Ancient column is
 
-    upgrade = (1 + Ancient 20P gain) / (1 + Relic 20P gain) - 1
+```text
+upgrade = (1 + Ancient 20P gain) / (1 + Relic 20P gain) - 1
+```
 
 How each row is valued:
 
@@ -275,21 +364,34 @@ Examples at the defaults, Ancient 20 points: Smoldering is (1 + 3.0028%) x (1 + 
 
 **Order cores** are valued differently, because an Order core changes how much damage one skill does, not a stat. Only the 17 point line differs between Relic and Ancient, so that line is the whole comparison. With `s` the share of your damage the line touches, `r` the Relic bonus and `a` the Ancient bonus:
 
-    relic total = 1 - s + s * (1 + r) / (1 + a)
-    gain = 1 / relic total - 1
+```text
+relic total = 1 - s + s * (1 + r) / (1 + a)
+gain = 1 / relic total - 1
+```
 
 The shares are measured with the core already Ancient (they come from the build pages' Trixion damage charts), so the Relic total is the Ancient one with the extra bonus divided back out. A Damage to foes line touches everything (s = 1). A Normal Skill Damage line touches everything except Surge and Awakening. That is a proxy: bleed and other non-skill damage stay in the share, a small amount. Example: Swift Resolution on Surge 222 touches Deathly Slash, 35.5% of damage, at +15% versus +20%, so 1 / (0.645 + 0.355 x 1.15 / 1.20) - 1 = 1.50%. Arts Core on RE 111 touches 78.6% of damage (100% minus Surge 19.9% minus Awakening 1.5%) at +5% versus +6%, which gives 0.75%. Some cores carry a stack count or a coverage below 100%, and the table's detail line states it.
 
 </details>
 
-**Assumptions and limits.** Each Order core is judged on one build, the one it is used on, so the table is not a ranking across builds. The shares come from the build pages' charts, which are measured values, and a script keeps the calculator's copy in step with them. Smoldering's Burn estimate and the grade tables are the assumptions to watch, see the register.
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+
+Each Order core is judged on one build, the one it is used on, so the table is not a ranking across builds. The shares come from the build pages' charts, which are measured values, and a script keeps the calculator's copy in step with them. Smoldering's Burn estimate and the grade tables are the assumptions to watch, see the register.
+
+</details>
+
+</div>
+</div>
 
 ### Bracelet, Accessory and A vs B comparisons
 
 **In plain terms.** The comparison panels value one line or one whole piece at a time, always as a ratio to a baseline. The Bracelet table and the Accessory table answer "what is this line worth". The two A vs B panels are sandboxes: you pick two things and see which is better, without any of it changing your own setup above.
 
-<details markdown="1">
-<summary>The math</summary>
+<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
 
 **Bracelet Line Comparison.** Every row is valued against your setup with your own bracelet removed: bracelet lines off, the two Dual checkboxes off, and your Crit Stat reset to a bracelet-free 576 (a character with all side content done, only used so your current bracelet is not counted twice). One candidate line is added, the nine cell search runs for both sides, and the result is the ratio. How the row kinds are valued:
 
@@ -307,14 +409,25 @@ Check: High Crit Rate +5% with its +1.5% Crit Hit Damage bonus reads 5.18% both 
 
 </details>
 
-**Assumptions and limits.** Layers are treated as independent, so an interaction between, say, Spec and Attack Power is ignored. This is a standard simplification for a sandbox, not a claim about the game. The reference table applies the Damage plus Cooldown penalty and Bracelet vs Bracelet leaves it to you.
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+
+Layers are treated as independent, so an interaction between, say, Spec and Attack Power is ignored. This is a standard simplification for a sandbox, not a claim about the game. The reference table applies the Damage plus Cooldown penalty and Bracelet vs Bracelet leaves it to you.
+
+</details>
+
+</div>
+</div>
 
 ### Engravings and Raid Captain
 
 **In plain terms.** The Engraving Comparison shows what each engraving is worth and which two flexible engravings are best together. Raid Captain is the one that depends on how fast you move, so its value follows a Move Speed estimate.
 
-<details markdown="1">
-<summary>The math</summary>
+<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-notes" markdown>
+
+<details class="setup-note" data-kind="example" markdown>
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
 
 - Grudge, Cursed Doll and Mass Increase are tabled values by node level, plus your Ability Stone level. Grudge at 4 nodes reads 21.00% and Cursed Doll 17.00%.
 - Ambush Master is two multiplying parts: the Back Attack Damage half (15% times your effective back attack share, 0.833 at the defaults) and the book-level Damage half (7.6% at 4 nodes). That is 1.12495 x 1.076 - 1 = 21.04%.
@@ -330,12 +443,18 @@ Sources: base 106.32, plus 12 from the class on RE (10 on Surge), Passionate Dan
 
 </details>
 
-**Assumptions and limits.**
+<details class="setup-note" data-kind="note" open markdown>
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
 
 - Move Speed sources are treated as independent, as the crit terms are.
 - Mass Increase's Attack Speed drawback is not modeled, which is why it is an opt-in checkbox. Attack Speed is not tracked at all, because nothing on this page depends on it.
 - Ability Stone penalties are not tracked, because very few characters carry one. Attack Power Reduction (listed in game as 2%, 4% and 6%) subtracts from your other Attack Power % sources, such as Adrenaline or the Kazeros astrogems, so it would lower every Attack Power based row. Move Speed Reduction (also 2%, 4% and 6%) subtracts from Move Speed, which Raid Captain reads. The Bible importer skips the penalty engravings today, so modeling either one also means reading them from the page data.
 - The Ability Stone threshold bonus is covered by the exception in the Support section.
+
+</details>
+
+</div>
+</div>
 
 ## Assumption register
 

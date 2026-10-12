@@ -1948,9 +1948,8 @@
   // That's the only way to compare candidates against each other on equal
   // footing (you can't actually run two bracelets at once).
   //
-  // Formulas verified against Arsonistic's "Brace" sheet (Brace!C2:E22),
-  // cross-checked against the sheet's own cached values where available,
-  // with the following deliberate simplifications - each is a real gap
+  // Formulas follow Arsonistic's "Brace" sheet (Brace!C2:E22), with the
+  // following deliberate simplifications - each is a real gap
   // from the sheet's more complete model, not just an approximation of
   // implementation detail:
   //   - Damage +4.5/5/5.5% & Cooldown +2%: the flat Damage % discounted by
@@ -3788,19 +3787,19 @@
   // adrenalineStone/kbw/kbwStone) - this section adds the 5 remaining
   // Deathblade-relevant engravings the grid doesn't track at all (Grudge,
   // Ambush Master, Cursed Doll, Mass Increase, Raid Captain), then searches
-  // for Deathblade's actual competing-slot decision: RE only ever swaps ONE
-  // slot (Keen Blunt Weapon vs Cursed Doll) - Raid Captain is assumed to
-  // always fill RE's other flex slot, since RE reliably reaches the Move
-  // Speed cap and doesn't realistically trade it away. Surge has no such
-  // fixed slot, so it searches every 2-of-N combination of the whole
-  // competing pool instead (Mass Increase opt-in, see below). Every
+  // for Deathblade's actual competing-slot decision: both specs search
+  // every 2-of-N combination of the competing pool (Raid Captain, Keen Blunt
+  // Weapon, Cursed Doll, plus Mass Increase on Surge as an opt-in, see
+  // below). Raid Captain is a core engraving on RE, but it stays in the
+  // pool so a reader who would not run it, or who wants its numbers, still
+  // gets them. Every
   // candidate is run back through bestComboFor() - the same per-candidate
   // keystone/split search Bracelet vs. Bracelet already uses - since a
   // different competing pool can genuinely change which keystone/split wins.
   //
-  // Sourced from Arsonistic's "Engr+Stone" sheet, matching the reference
-  // screenshot cell-for-cell (see the constants below for the couple of
-  // rows needing an actual mechanic instead of a straight lookup). Level
+  // The tables below start from Arsonistic's "Engr+Stone" sheet (see the
+  // constants below for the couple of rows needing an actual mechanic
+  // instead of a straight lookup). Level
   // labels reuse the "0 Nodes".."4 Nodes" scheme Adrenaline/Keen Blunt
   // Weapon already use above - the sheet's own L4/R1-R4 columns are the
   // same 5 tiers, just labeled for book grade instead of node count. 0
@@ -4130,10 +4129,11 @@
   // section already models exactly which 2 engravings hold your ability
   // stone and at what level via its own isolated stone slots, so reusing
   // the checkbox's generic assumption on top would double up. Instead,
-  // this recreates the game's own actual rule: 5+ total Ability Stone
-  // nodes across both stones (Lv. IS the node count for that slot, 0 if
-  // its Stone Slot isn't assigned to a real engraving) grants the same
-  // flat +1.5% the checkbox would, added the same "additive to Gem Base
+  // this recreates the game's own actual rule: engraving levels adding up
+  // to 5 or more across both stone slots (Lv.1 to Lv.4 are 6, 7, 9 and 10
+  // nodes, so 9/7 and 10/6 qualify; a slot counts 0 if its Stone Slot isn't
+  // assigned to a real engraving) grants the same flat +1.5% the checkbox
+  // would, added the same "additive to Gem Base
   // AP%" way this page already does it. See abilityStoneBaseApGain right
   // below for where that actually turns into a DPS number - this
   // function is purely the yes/no threshold check.
@@ -4423,8 +4423,8 @@
   // "Engraving Bonus" (nodeOnlyMult) reruns engravingCandidateMultiplier
   // with both isolated Stone slots zeroed - same technique `neither`
   // itself is built with - which incidentally also zeroes
-  // abilityStoneBaseApGain for free (it requires 5+ combined Stone nodes,
-  // impossible with both slots at "None"), so nodeOnlyMult is a clean
+  // abilityStoneBaseApGain for free (it requires combined Stone levels of
+  // 5 or more, impossible with both slots at "None"), so nodeOnlyMult is a clean
   // Node-only multiplier with nothing else riding along in it, and
   // `neither`'s own flatMult IS its nodeOnlyMult already for the exact
   // same reason - no separate lookup needed for the denominator. The
@@ -4795,9 +4795,9 @@
     // above (which everything else on this page still correctly uses).
     const isolatedInputs = engravingIsolatedGridInputs(inputs, engrInputs);
 
-    // Raid Captain competes for its slot on both specs: RE has the same
-    // 2-competing-slot structure Surge does, so RC belongs in the same
-    // pool-of-2-combinations search rather than being pinned on. Mass Increase stays Surge-only (its
+    // Raid Captain competes for its slot on both specs: it is a core
+    // engraving on RE, but staying in the same pool-of-2-combinations search
+    // lets a reader see its value or compare setups without it. Mass Increase stays Surge-only (its
     // -10% Attack Speed drawback isn't modeled - see the opt-in
     // checkbox's own tooltip - so it's never added to RE's pool
     // regardless of miOptIn).
@@ -4877,8 +4877,8 @@
         label: "Ability Stone Base AP",
         gain: abilityStoneBaseApGain(inputs, engrInputs),
         // Mirrors engravingStoneImpliesBaseAp's own threshold check
-        // (5+ total nodes across BOTH isolated stone slots combined, not
-        // one stone alone - a single stone tops out at Lv.4) - reader
+        // (levels adding up to 5+ across BOTH isolated stone slots combined,
+        // not one stone alone - a single stone tops out at Lv.4) - reader
         // otherwise has no way to tell why this row reads 0% even with a
         // stone slotted, if the other slot isn't carrying enough to clear
         // the combined threshold.
