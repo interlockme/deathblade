@@ -7901,7 +7901,7 @@ h3 { color: var(--dbc-teal); }
   padding-top: 0.6em;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
-/* The four contributing layers (Keystone/Crit, Spec, Other Lines, WP/AP)
+/* The four contributing layers (Keystone Lines, Spec, Other Lines, WP/AP)
    are real numbers but secondary to the headline "vs No Bracelet" row -
    dimmed and slightly smaller so the card reads as one clear answer with
    its math available on closer look, not five equally-weighted rows. */
@@ -7909,14 +7909,15 @@ h3 { color: var(--dbc-teal); }
   font-size: var(--ap-fs-sm);
   opacity: 0.85;
 }
-/* "Other Lines" groups its two per-side checkboxes (vs Demons, CD
-   Estimate - see enforceBvbLineControls/braceletFlatLineGain) with the
-   row's value at its right edge, instead of a checkbox becoming
+/* Keystone Lines and Other Lines each group one per-side checkbox (vs
+   Demons on Keystone Lines, CD Estimate on Other Lines - see
+   enforceBvbLineControls/computeSingleBracelet/braceletFlatLineGain) with
+   the row's value at its right edge, instead of a checkbox becoming
    justify-content: space-between's third participant and landing in the
-   middle of the row on its own. Each checkbox is only shown while its
+   middle of the row on its own. A checkbox is only shown while its
    matching line type is actually picked in one of the 3 free lines, so
-   this wrap can hold 0, 1, or both at once - gap collapses on its own via
-   flex when a hidden label contributes nothing. */
+   this wrap can hold 0 or 1 - gap collapses on its own via flex when a
+   hidden label contributes nothing. */
 .md-typeset .ap-bvb-other-wrap {
   display: inline-flex;
   flex-wrap: wrap;
@@ -7926,13 +7927,21 @@ h3 { color: var(--dbc-teal); }
   min-width: 0;
   margin-left: auto;
 }
-/* With both checkboxes shown the row is wider than a phone's card, so the
-   group drops under the label instead of being clipped by the card. */
+/* The value is right-aligned in a fixed-width slot (tabular digits), so the
+   checkbox beside it keeps its place when the value changes width, such as
+   +0.00% to +5.00% after ticking CD Estimate. */
+.md-typeset .ap-bvb-other-wrap > .ap-summary-value {
+  min-width: 4.8em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+/* A checkbox plus the value can be wider than a phone's card, so the group
+   drops under the label instead of being clipped by the card. */
 .md-typeset .ap-bvb-breakdown-row:has(.ap-bvb-other-wrap) {
   flex-wrap: wrap;
-  /* The row is as tall as a checkbox line (1.7rem) even while both checkboxes
-     are hidden, so picking vs Demons or CD% never makes the card taller and
-     the two side-by-side cards stay the same height. */
+  /* Each of these rows is as tall as a checkbox line (1.7rem) even while its
+     checkbox is hidden, so picking vs Demons or CD% never makes the card
+     taller and the two side-by-side cards stay the same height. */
   min-height: 1.7rem;
 }
 .md-typeset .ap-bvb-inline-check {

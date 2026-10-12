@@ -13,8 +13,9 @@
 // a % of the grid's best cell (best = 100.00%) rather than a raw multiplier -
 // see the CSS comment above .ap-calc for why.
 //
-// Formulas verified cell-for-cell against Ark_Passive_Calculator.xlsx's own
-// computed output - see the reference block at the bottom of this file.
+// The formulas follow the structure of Ark_Passive_Calculator.xlsx. That
+// sheet is not a current reference, and the reference block at the bottom
+// of this file does not reproduce it exactly.
 //
 // NOT MODELED: the sheet's trailing "0.85 * (1 + 12%/18% Damage Synergy)"
 // scalar (and the "6% Damage Synergy" checkbox that fed it). It's a constant
@@ -27,24 +28,14 @@
 // cap, so they're kept as pure "+10% Crit Rate" toggles with nothing else
 // attached.
 //
-// ONE OPEN ACCURACY QUESTION, not yet confirmed - flagged rather than
-// silently trusted: "Crit Hit Damage Synergy 1" (ap-crit-hit-syn-1) is
-// modeled as a flat +8% on-crit damage multiplier, first attributed to
-// Glaivier's party synergy. A pass over current sources describes
-// Glaivier's actual party synergy ("Critical Spear") as a Crit Resistance
-// debuff on the target instead - i.e. a Crit RATE-side effect, not an
-// on-crit DAMAGE multiplier - so this may be modeling the wrong stat
-// entirely. The label was genericized to avoid asserting a source that
-// might be wrong; "Crit Hit Damage Synergy 2" mirrors the same +8%
-// mechanism for a second, different source and carries the same caveat.
-// Both default OFF; confirm the real figures/mechanics before relying on
-// either checked.
+// Crit Hit Damage Synergy 1 and 2 (ap-crit-hit-syn-1/2) are party
+// synergies that raise damage on crit hits, each modeled as a flat +8%
+// on-crit damage multiplier (Glaivier's synergy is on crit damage). Both
+// default OFF.
 //
-// Also unconfirmed: whether a real Deathblade bracelet can actually roll
-// two separate Crit Rate lines (or two Crit Dmg lines) at once - the
-// "2nd line" bracelet fields assume yes. If a bracelet can only ever have
-// one line of a given stat type, those two fields double-count and should
-// be dropped instead.
+// A bracelet can roll two Crit Rate lines or two Crit Damage lines at
+// once, so the "2nd line" bracelet fields (braceletRate2/braceletDmg2)
+// are valid.
 //
 // The Bracelet Line Comparison's 5 Weapon Power / Attack Power rows
 // (STR/DEX/INT, Weapon Power, and the 3 hybrid on-hit/periodic/HP-gated
@@ -278,9 +269,9 @@
   // gearAttackPowerPercentTotal instead, same as Atropine.
   //
   // Driven by the same Adrenaline Uptime % input as the Crit Rate side, but
-  // the two halves behave differently. Uptime is the share of hits landed
-  // at 6 stacks (the only figure a third-party meter reports; it is
-  // derived from hits only, so idle time never enters it). The Crit Rate
+  // the two halves behave differently. Uptime is the damage coverage at
+  // 6 stacks: the share of damage dealt at 6 stacks, which is what a
+  // third-party meter reports. The Crit Rate
   // bonus needs all 6 stacks, so it is all or nothing and scales by Uptime
   // alone. The AP bonus applies per stack, so it also counts on the hits
   // landed while stacks are being rebuilt. A skill cast gives a stack and a
@@ -394,7 +385,7 @@
   // below a cap this build assumes is already met, same precedent as the
   // Bracelet panel's own on-hit Atk/Move Speed line). Each other type's
   // non-damage half (Stable's DR, Swift's Attack Speed, Crushing's
-  // Weapon Power Cooldown reduction, Absorbing's Healing) is excluded
+  // weak point utility buff, Absorbing's Healing) is excluded
   // the same way - defensive/utility, not DPS - leaving just the damage-
   // relevant half of each modeled below.
   const ARK_SWIFT_CDMG_TABLE = {
@@ -795,10 +786,12 @@
   // Single source of truth for turning the reader's Back Attack Rate %
   // input into the actual fraction of DPS that lands as a Back Attack.
   // Combat Analyzer's own Overview "Back Attack Rate" stat (NOT its
-  // "Back Attack Percentage" - that one is damage-weighted and answers a
-  // different question) was verified against two real logs' Attack
-  // Information tabs to already be a Damage-Share-weighted average
-  // restricted to Back-Attack-capable skills, and for RE builds it reads
+  // "Back Attack Percentage", which is a different stat) is a hit rate:
+  // the share of hits that landed as Back Attacks, restricted to Back-
+  // Attack-capable skills (checked against two real logs' Attack
+  // Information tabs). It is not damage-weighted. This function uses it
+  // as the damage share of those skills, which holds when their hits are
+  // similar in size. For RE builds it reads
   // as if Deathblade Surge is excluded from that average - RE's Surge
   // always lands as a Back Attack regardless of positioning, so folding
   // it into a "how good is your positioning" stat would just water the
@@ -1115,7 +1108,8 @@
   // `demons`/`cdEstimate` are per-SIDE, not per-line, since only one of a
   // side's 3 free lines can ever be add_b (or damage_cd) at once - see
   // enforceBvbLineExclusivity - so one checkbox each covers the whole side.
-  // See braceletFlatLineGain's own comment for what each toggles.
+  // `cdEstimate` is read by braceletFlatLineGain, `demons` by
+  // computeSingleBracelet (see each for what it toggles).
   function readBvbSide(root, prefix) {
     const base = ".ap-bvb-" + prefix + "-";
     return {
@@ -1508,28 +1502,6 @@
     };
   }
 
-  // Isolated DPS gain from one flat Crit Dmg contributor (e.g. Keen Blunt
-  // Weapon's engraving bonus/Ability Stone, or Breaking Moon's average
-  // per-cast add - see breakingMoonContribution), expressed as "% damage
-  // you'd lose if this one line were removed and everything else (Crit
-  // Rate, on-crit multipliers, Evo Dmg, Add Dmg) stayed exactly as-is".
-  //
-  // This works as a clean closed-form instead of a full counterfactual
-  // recompute because the final multiplier is *linear* in critDmgTotal -
-  // effCrit/onCrit/evo/add never depend on kbw or kbwStone, so:
-  //   mult = [(1 - effCrit) + effCrit * (1 + onCrit) * critDmgTotal] * (1 + evo) * (1 + add)
-  // is an affine function of critDmgTotal alone. The (1+evo)*(1+add) factor
-  // is common to "with" and "without" and cancels out of the ratio, so it's
-  // dropped entirely below - only the crit-dmg-bearing term matters.
-  function marginalCritDmgGainPct(effCrit, onCrit, critDmgTotal, value) {
-    if (!value) return 0;
-    const withTerm = (1 - effCrit) + effCrit * (1 + onCrit) * critDmgTotal;
-    const contribution = effCrit * (1 + onCrit) * value;
-    const withoutTerm = withTerm - contribution;
-    if (withoutTerm <= 0) return 0;
-    return (contribution / withoutTerm) * 100;
-  }
-
   // Keen Blunt Weapon's actual in-game downside: attacks have a 10% chance
   // to deal -20% damage, i.e. an expected-value multiplier of
   // 1 - 0.10*0.20 = 0.98 on every hit, independent of the Crit Dmg bonus
@@ -1664,12 +1636,12 @@
     );
   }
 
-  // Downstream (combinedMultiplier's mult, marginalCritDmgGainPct) all
-  // take effCrit as an already-fixed scalar
-  // and are affine in it / in critDmgTotal with effCrit held constant, so
-  // fixing the value at this one computation point is sufficient -
-  // E[mult] = mult(E[effCrit]) exactly, no need to re-derive those
-  // formulas or touch combinedMultiplier/bestComboFor themselves.
+  // Downstream (combinedMultiplier's mult) takes effCrit as an
+  // already-fixed scalar and is affine in it / in critDmgTotal with
+  // effCrit held constant, so fixing the value at this one computation
+  // point is sufficient - E[mult] = mult(E[effCrit]) exactly, no need to
+  // re-derive those formulas or touch combinedMultiplier/bestComboFor
+  // themselves.
   function effectiveCritRate(inputs, keenSenseLv, extra) {
     const adrenalineBonus = ADRENALINE_TABLE[inputs.adrenaline] || 0;
     const adrenalineUptime = inputs.adrenalineUptime / 100;
@@ -2093,26 +2065,6 @@
     return best;
   }
 
-  // Finds the pinned combo's OWN cell (with its real effCrit/.stats, not
-  // just mult/pair/split like bestComboFor returns) inside an already-
-  // computed grid, for the few spots that need a cell's full stat
-  // breakdown rather than just its multiplier - currently only KBW's
-  // stone-level preview sweep below. computeGridAndSummary itself
-  // deliberately never calls bestComboFor (see that function's own
-  // comment - the Top Combinations RANKING has to stay pin-independent),
-  // so any caller that grabs a grid's `.best`/`.bestStats` directly - the
-  // way this function's own isolatedBest/isolatedBestStats would -
-  // silently reads the TRUE best cell even while a different combo is
-  // pinned. Falls back to fallbackCell (normally the grid's own `.best`)
-  // when nothing's pinned, the pin doesn't resolve, or - defensively -
-  // the pinned combo somehow isn't one of this specific grid's 9 cells.
-  function pinnedCellFrom(grid, fallbackCell) {
-    if (!activePinnedCombo || !grid || !grid.cells) return fallbackCell;
-    const { split, pair } = activePinnedCombo;
-    const match = grid.cells.find((c) => c.split.key === split.key && c.keystone === pair);
-    return match || fallbackCell;
-  }
-
   function computeBraceletComparison(inputs) {
     const gridResult = computeGridAndSummary(inputs);
     const best = gridResult.best;
@@ -2443,13 +2395,19 @@
   //   - Spec is its own damage-share layer (see computeBraceletComparison's
   //     Spec row above) that never touches the grid at all, so it's simply
   //     multiplied in afterward using the same specGainPerPoint machinery.
-  //   - Outgoing/Stagger/Damage+CD/Back Attack/Additional Damage lines are
-  //     already flat, grid-independent fractions in computeBraceletComparison
-  //     (see that function's own comment) - multiplied together here the
-  //     same way, just with as many as were actually picked instead of one
-  //     at a time. Additional Damage's denominator (addDmgBaseline) is
-  //     recomputed against THIS bracelet's own winning keystone, not the
-  //     reader's real Best Setup, since Master keystones change it.
+  //   - Additional Damage lines (add_a, add_b) feed addDmgBase/addDmgMaster,
+  //     which are part of the cell formula, so they go through the same
+  //     nine cell search as the crit lines: their values are summed onto
+  //     the shared object handed to bestComboFor, which also copes with
+  //     any number of Additional Damage lines on one bracelet. Only the
+  //     vs Demon/Archdemon half of add_b is a separate flat factor, but it
+  //     belongs to the same line, so it is folded into the keystone layer
+  //     (gridRatio) beside that line's Additional Damage half.
+  //   - Outgoing/Stagger/Damage+CD/Back Attack lines are flat, grid-
+  //     independent fractions (see computeBraceletComparison): each
+  //     multiplies every cell by the same factor, so it cannot change which
+  //     cell wins and needs no search. They are multiplied together here,
+  //     with as many as were actually picked instead of one at a time.
   //   - The 5 Weapon Power/Attack Power lines scale the same separate
   //     gearApTotal() layer computeBraceletComparison's own WP rows use,
   //     entirely independent of the keystone grid - their deltas are just
@@ -2468,8 +2426,8 @@
     damage_cd: { kind: "flat" },
     outgoing_stagger: { kind: "flat" },
     outgoing: { kind: "flat" },
-    add_a: { kind: "flat" },
-    add_b: { kind: "flat" },
+    add_a: { kind: "add", table: BRACELET_ADD_A_TABLE },
+    add_b: { kind: "add", table: BRACELET_ADD_B_TABLE },
     back_attack: { kind: "flat" },
     stat_main: { kind: "wp" },
     wp_flat: { kind: "wp" },
@@ -2479,18 +2437,16 @@
   };
 
   // Values one flat, grid-independent line at the given tier - mirrors the
-  // matching row's formula in computeBraceletComparison above exactly (see
-  // that function for the full derivation of each), except for two spots
-  // where Bracelet vs. Bracelet's own per-side checkboxes (ctx.cdEstimate,
-  // ctx.demons) let the reader opt out of an assumption computeBraceletComparison
-  // always applies:
-  //   - damage_cd: ctx.cdEstimate defaults to false (unchecked), which uses
-  //     the tag's raw stated 4.5/5/5.5% with no estimate layered on; checked
-  //     applies the flat CD penalty (DAMAGE_CD_TABLE) instead.
-  //   - add_b: ctx.demons defaults to false (unchecked) and values ONLY
-  //     the Additional Damage half, same treatment computeBraceletComparison's
-  //     own addB row always uses (see that row's comment); checked adds
-  //     the vs Demon/Archdemon half back in via the same compounding.
+  // matching row's formula in computeBraceletComparison above (see that
+  // function for the full derivation of each), except damage_cd, where
+  // Bracelet vs. Bracelet's own per-side checkbox (ctx.cdEstimate) lets the
+  // reader opt out of an assumption computeBraceletComparison always
+  // applies: ctx.cdEstimate defaults to false (unchecked), which uses the
+  // tag's raw stated 4.5/5/5.5% with no estimate layered on; checked
+  // applies the flat CD penalty (DAMAGE_CD_TABLE) instead.
+  // add_b is not here: its Additional Damage half goes through the nine
+  // cell search and its vs Demon/Archdemon half is a flat factor that
+  // computeSingleBracelet folds into the keystone layer with it.
   function braceletFlatLineGain(typeId, tier, ctx) {
     switch (typeId) {
       case "damage_cd":
@@ -2500,13 +2456,6 @@
         return (OUTGOING_DMG_TABLE[tier] || 0) + (STAGGER_DMG_TABLE[tier] || 0) * STAGGER_DPS_SHARE;
       case "outgoing":
         return OUTGOING_DMG_TABLE[tier] || 0;
-      case "add_a":
-        return (BRACELET_ADD_A_TABLE[tier] || 0) / (1 + ctx.addDmgBaseline);
-      case "add_b":
-        if (ctx.demons) {
-          return ((BRACELET_ADD_B_TABLE[tier] || 0) / (1 + ctx.addDmgBaseline) + 1) * (DEMON_DMG_ADD / (1 + ctx.demonDmgPct) + 1) - 1;
-        }
-        return (BRACELET_ADD_B_TABLE[tier] || 0) / (1 + ctx.addDmgBaseline);
       case "back_attack":
         return (BACK_DMG_TABLE[tier] || 0) * BACK_ATTACK_DPS_SHARE;
       default:
@@ -2543,7 +2492,7 @@
   // bracelet at all - see the methodology comment above BRACELET_LINE_TYPES.
   // `side` is { spec, critStat, lines: [{type, tier}, ...] } as read from
   // the Bracelet vs. Bracelet inputs (readBvbSide below).
-  function computeSingleBracelet(inputsNB, sharedNB, noBraceletMult, inputs, side) {
+  function computeSingleBracelet(inputsNB, noBraceletMult, inputs, side) {
     const cloned = Object.assign({}, inputsNB);
     // Basic Effect 2 isn't guaranteed to be Crit Stat - see readBvbSide's
     // own comment - so Crit Stat here only counts while that's actually
@@ -2556,6 +2505,10 @@
     let critRateDualFlag = false;
     let critDmgDualFlag = false;
     const flatLines = [];
+    let addDmgTotal = 0;
+    // vs Demon/Archdemon half of an add_b line (flat, valued against your
+    // Demon damage), only while this side's vs Demons box is ticked.
+    let demonFactor = 1;
     let wpDeltaTotal = 0;
     let mainStatDeltaTotal = 0;
     let hasWpLine = false;
@@ -2571,6 +2524,13 @@
         } else {
           if (dmgSlot === 0) { cloned.braceletDmg = tier; dmgSlot = 1; } else { cloned.braceletDmg2 = tier; }
           if (def.dual) critDmgDualFlag = true;
+        }
+      } else if (def.kind === "add") {
+        // Summed, so any number of Additional Damage lines is valued, not
+        // only the one each select slot could hold.
+        addDmgTotal += def.table[tier] || 0;
+        if (line.type === "add_b" && side.demons) {
+          demonFactor *= 1 + DEMON_DMG_ADD / (1 + inputs.demonDmgPct / 100);
         }
       } else if (def.kind === "flat") {
         flatLines.push({ type: line.type, tier });
@@ -2601,21 +2561,25 @@
     cloned.critRateDual = critRateDualFlag;
     cloned.critDmgDual = critDmgDualFlag;
 
-    const combo = bestComboFor(cloned);
-    const gridRatio = combo.mult / noBraceletMult;
+    // Additional Damage lines enter the cell formula through the shared
+    // object (addDmgBase, and addDmgMaster which adds the Master keystone's
+    // own 8.5% on top), so the keystone and split are re-picked with them.
+    const sharedWithAdd = computeShared(cloned);
+    sharedWithAdd.addDmgBase += addDmgTotal;
+    sharedWithAdd.addDmgMaster += addDmgTotal;
+    const combo = bestComboFor(cloned, sharedWithAdd);
+    // The demon half multiplies every cell by the same factor, so it cannot
+    // change the winner; it sits in this layer so the Keystone Lines row
+    // holds the whole Additional Damage & vs Demons line and its checkbox.
+    const gridRatio = (combo.mult / noBraceletMult) * demonFactor;
 
     const specCfg = braceSpecConfig(inputs);
     const specK = specGainPerPoint(deathbladeSpecMultiplier, specCfg.share, specCfg.awakeningShare);
     const specGain = specK * Math.max(0, side.spec || 0);
 
-    const addDmgBaseline = combo.pair.indexOf("master") !== -1 ? sharedNB.addDmgMaster : sharedNB.addDmgBase;
-    const demonDmgPct = inputs.demonDmgPct / 100;
     let flatMult = 1;
     flatLines.forEach((sel) => {
       flatMult *= 1 + braceletFlatLineGain(sel.type, sel.tier, {
-        addDmgBaseline,
-        demonDmgPct,
-        demons: side.demons,
         cdEstimate: side.cdEstimate,
       });
     });
@@ -2658,10 +2622,10 @@
   }
 
   function computeBraceletVsBracelet(inputs) {
-    const { inputsNB, sharedNB } = zeroedBraceletInputs(inputs);
+    const { inputsNB } = zeroedBraceletInputs(inputs);
     const noBraceletBest = bestComboFor(inputsNB);
-    const a = computeSingleBracelet(inputsNB, sharedNB, noBraceletBest.mult, inputs, inputs.bvbA || {});
-    const b = computeSingleBracelet(inputsNB, sharedNB, noBraceletBest.mult, inputs, inputs.bvbB || {});
+    const a = computeSingleBracelet(inputsNB, noBraceletBest.mult, inputs, inputs.bvbA || {});
+    const b = computeSingleBracelet(inputsNB, noBraceletBest.mult, inputs, inputs.bvbB || {});
     return {
       noBracelet: { keystoneLabel: KEYSTONE_LABELS[noBraceletBest.pair], splitLabel: noBraceletBest.split.label },
       a,
@@ -2677,13 +2641,11 @@
   // (Necklace / Earrings / Rings) plus a 4th "Any Accessory Slot" group
   // for the sheet's 3 universal lines.
   //
-  // Matches the Bracelet panel's own methodology exactly (a previous pass
-  // deliberately diverged from this - "valued as an addition on top of
-  // your full actual current gear" - which double-counts whatever your
-  // real currently-equipped necklace/rings already contribute, silently
-  // undervaluing every candidate through the same diminishing-returns
-  // math a stacked calculation always hits; reverted to the Bracelet
-  // precedent below): Necklace and Rings each get baselined against your
+  // Matches the Bracelet panel's own methodology exactly. Valuing a line
+  // as an addition on top of your full actual current gear would double-
+  // count whatever your real currently-equipped necklace/rings already
+  // contribute and undervalue every candidate, so instead Necklace and
+  // Rings each get baselined against your
   // Best Setup with THAT slot's own tracked field(s) zeroed first
   // (.ap-necklace / .ap-ring1-rate+dmg/.ap-ring2-rate+dmg - the same
   // fields that feed the overall DPS calc elsewhere in this file), then
@@ -3111,7 +3073,7 @@
   // vs. Bracelet's bestComboFor() call is, so there's no flip-footnote
   // here either, matching that table's own reasoning for omitting one.
   // gridLabel intentionally carries no "(Grid)" suffix - matches Bracelet
-  // vs. Bracelet's own analogous row ("Keystone/Crit Lines", see its
+  // vs. Bracelet's own analogous row ("Keystone Lines", see its
   // markup above), which names what the line IS rather than how it's
   // computed. The row still only shows for slots with hasGrid: true.
   // line1Table/line2Table let enforceAvbSlotUI stamp each Low/Mid/High
@@ -3273,24 +3235,19 @@
     // than writing ring1Dmg's tier name directly, for consistency with
     // Add Dmg and to avoid re-coupling two tables that were tracked
     // separately on purpose. Writing the tier name into the real field
-    // silently pulled the wrong table for Add Dmg's Low roll, so this
-    // tool's numbers didn't always match the reference panel above for
-    // the exact same tier. Same fix computeAccessoryComparison's own
-    // ringDmgGain already applies.
+    // would pull the wrong table for Add Dmg's Low roll, so the numbers
+    // would not match the reference panel above for the same tier. This is
+    // the same approach computeAccessoryComparison's own ringDmgGain uses.
     //
-    // Re-optimized (bestComboFor), not a fixed-pair eval, for the exact
-    // same reason Bracelet/Accessory Line Comparison/Chaos Core were
-    // fixed - addDmgDelta/critDmgDelta feed addDmgBase/addDmgMaster/
+    // Re-optimized (bestComboFor), not a fixed-pair eval, for the same
+    // reason as the Bracelet/Accessory Line Comparison and Chaos Core rows:
+    // addDmgDelta/critDmgDelta feed addDmgBase/addDmgMaster/
     // critDmgTotal directly (the grid formula itself), so the winning
-    // pair can genuinely differ between the "no accessory" baseline and
-    // each candidate. This call site was NOT included in that earlier
-    // pass - it was incorrectly assumed to already re-optimize (it
-    // didn't; it reused one fixed keenSense/limitBreak/pair from the
-    // reader's live Best Setup for every zeroedGridMult/evalSide call)
-    // - fixed the same way here. Called once for the "no accessory"
-    // baseline (zeroedGridMult below) and once per candidate side inside
-    // evalSide, so both ends of the gridRatio now re-search independently,
-    // same shape as every other Line Comparison gain function.
+    // pair can differ between the "no accessory" baseline and each
+    // candidate. It is called once for the "no accessory" baseline
+    // (zeroedGridMult below) and once per candidate side inside
+    // evalSide, so both ends of the gridRatio re-search independently,
+    // the same shape as every other Line Comparison gain function.
     function gridMultFor(clonedInputs, addDmgDelta, critDmgDelta) {
       const shared = computeShared(clonedInputs);
       if (addDmgDelta) {
@@ -3586,10 +3543,8 @@
     const baselineMult = baselineArkBest.mult;
     // Stable's Additional Dmg row feeds addDmgBase/addDmgMaster the same
     // way Bracelet's addA/addB and Accessory's Necklace Additional Damage
-    // do above, and was left on the old fixed-pair `/ (1 + addDmgBaseline)`
-    // shortcut when those two were fixed - same latent bug, just not
-    // caught in the original scoping pass. Fixed the same way here:
-    // bestComboFor's sharedOverride with addDmgBase/addDmgMaster bumped
+    // do above, so it is re-optimized the same way rather than divided by
+    // a fixed-pair addDmgBaseline: bestComboFor's sharedOverride with addDmgBase/addDmgMaster bumped
     // by the candidate's own STABLE_ATK_TABLE value, keeping the table
     // itself untouched.
     function stableAddGain(value) {
@@ -3667,8 +3622,9 @@
       ...gradeCells((grade, pts) => critLikeGain((c) => { c.swiftCore = grade + "|" + pts; })),
     });
 
-    // Chaos Core: Crushing - Crit Rate only (Weapon Power Cooldown
-    // reduction excluded). Own tracked field (zeroed in arkNB above).
+    // Chaos Core: Crushing - Crit Rate only (its other half is a weak
+    // point utility buff with no DPS value). Own tracked field (zeroed in
+    // arkNB above).
     rows.push({
       label: "Crushing Strike - Crit Rate",
       ...gradeCells((grade, pts) => critLikeGain((c) => { c.crushingCore = grade + "|" + pts; })),
@@ -3897,8 +3853,10 @@
   // Support: Artist/Valkyrie - a party-wide Move Speed buff, not a personal
   // consumable choice, so unlike Wine/Mana Food it isn't part of their
   // 2-way mutually-exclusive set (see that listener's own comment below)
-  // and applies on both RE and Surge alike, same as Rage Rune just above. Modeled as a flat add at its full value - "100%
-  // uptime" is the assumption baked into the flat number itself, not a
+  // and applies on both RE and Surge alike, same as Rage Rune just above. Modeled as a flat add of 8, which is
+  // Valkyrie's Move Speed at 100% uptime exactly. Artist is grouped in for
+  // simplicity: its buff is 10% Move Speed at 70-100% uptime and depends on
+  // player skill, so no uptime or skill input is needed. It is not a
   // tracked uptime input like Maelstrom's. Only ever a real source while a
   // Support is actually in the party though (gated on `yearning`, same
   // "Support: Passionate Dance" checkbox as supportApBuff/gearSupportUptime
@@ -3957,11 +3915,11 @@
   // EV - min() is concave, so capping first then averaging systematically
   // overstates the real value whenever the uncapped sum sits near/over
   // the cap, which is the common case here since Raid Captain's baseline
-  // already sits close to the 140% cap on its own. This is the "proper,
-  // overcap-aware" formula every Move Speed source above should go
-  // through - Maelstrom, Rage Rune, and Paladin are each independent
-  // sources plugged into this the same way, rather than each needing its
-  // own bespoke overlap model.
+  // already sits close to the 140% cap on its own. The Raid Captain Move
+  // Speed estimate (raidCaptainMoveSpeed) goes through this: Maelstrom,
+  // Rage Rune, and Paladin are independent sources plugged in the same
+  // way, rather than each needing its own overlap model. Flat adds (Mana
+  // Food, Support, Wine) go into `base` before the cap.
   function expectedCappedMoveSpeed(base, cap, sources) {
     let total = 0;
     for (let mask = 0; mask < 1 << sources.length; mask++) {
@@ -4420,14 +4378,14 @@
 
   // Splits a candidate's totalMult into the 3 sources that actually feed
   // it, the same "headline number, then here's what it's made of" shape
-  // computeBraceletComparison's Keystone/Crit+Spec+Other+WP/AP breakdown
+  // computeBraceletComparison's Keystone+Spec+Other+WP/AP breakdown
   // already gives Bracelet vs. Bracelet - Best Combo/Runner-Up and Setup
   // A/B would otherwise surface only the single vsRunnerUp/vsNeither/
   // stoneApGain numbers, with no way to tell how much of that total was
   // the engravings' own Node levels vs. the Ability Stone's marginal bump
   // to those same Nodes vs. the Stone's separate flat AP layer.
   //
-  // There is no 4th "Keystone/Crit" row (unlike Bracelet vs. Bracelet's
+  // There is no 4th "Keystone" row (unlike Bracelet vs. Bracelet's
   // grid ratio row): Keen Blunt Weapon and Adrenaline both feed the crit
   // grid (bestComboFor) rather than flatMult, so a naive
   // combo.mult/neither.combo.mult ratio would sweep BOTH of their Node
@@ -4436,7 +4394,7 @@
   // miscategorization this function avoids. Once KBW/Adrenaline's own grid contribution is pulled out
   // (nodeGridRatio/stoneGridRatio below) and folded into the same 2
   // buckets the flat-layer engravings already use, nothing is left that
-  // varies the crit grid on this page - a standalone "Keystone/Crit"
+  // varies the crit grid on this page - a standalone "Keystone"
   // residual would read 0.00% on every candidate, always. The grid ratio
   // telescopes cleanly regardless (gNodeOnly/G0 * gFull/gNodeOnly =
   // gFull/G0 is exact algebra, not an approximation - see the `neither`
@@ -4806,31 +4764,36 @@
     return kbwRealizedGainPct(isolatedInputs) / 100;
   }
 
+  // Isolated DPS gain from JUST the Keen Blunt Weapon Ability Stone at one
+  // level, holding the engraving's own Node level fixed (the stone-level
+  // preview columns sweep all 4 levels through this, not only the slotted
+  // one). Same re-optimized with/without search as kbwRealizedGainPct:
+  // the stone's Crit Dmg feeds shared.critDmgTotal, which is part of the
+  // grid formula, so removing it can flip the winning keystone/split and
+  // a fixed-cell marginal could not see that. Both sides go through
+  // bestComboFor, so a pinned combo is honoured on both like everywhere
+  // else. isolatedInputs carries this section's own Node level (the
+  // Node's malus and Crit Dmg are common to both sides and cancel); its
+  // own kbwStone is overridden here on both sides, so the result never
+  // depends on which stone level is actually slotted.
+  function kbwStoneMarginalGain(isolatedInputs, stoneLevel) {
+    const withBest = bestComboFor(Object.assign({}, isolatedInputs, { kbwStone: stoneLevel }));
+    if (!withBest || withBest.mult <= 0) return 0;
+    const withoutBest = bestComboFor(Object.assign({}, isolatedInputs, { kbwStone: "0 Lv." }));
+    if (!withoutBest || withoutBest.mult <= 0) return 0;
+    return withBest.mult / withoutBest.mult - 1;
+  }
+
   function computeEngravingComparison(inputs, engrInputs) {
     const gridResult = computeGridAndSummary(inputs);
     const best = gridResult.best;
     if (!best) return null;
 
     // See engravingIsolatedGridInputs's comment - KBW's own row and stone
-    // breakdown need their own grid+shared recompute, isolated from the
-    // live Ark Passive section's KBW/Adrenaline state, instead of reusing
-    // gridResult/best above (which everything else on this page
-    // still correctly uses, since only KBW's closed form is affected).
+    // breakdown run on their own inputs, isolated from the live Ark Passive
+    // section's KBW/Adrenaline state, instead of reusing gridResult/best
+    // above (which everything else on this page still correctly uses).
     const isolatedInputs = engravingIsolatedGridInputs(inputs, engrInputs);
-    const isolatedGrid = computeGridAndSummary(isolatedInputs);
-    // Pin-aware (see pinnedCellFrom's own comment) - isolatedBest/
-    // isolatedBestStats feed the stone-level preview sweep below
-    // (kbwOnCrit, marginalCritDmgGainPct's effCrit arg), which needs to
-    // reflect whatever combo is actually pinned, the same as KBW's own
-    // headline DPS Contribution row (kbwContributionGain -> bestComboFor)
-    // already does. Reading isolatedGrid.best directly would not do that:
-    // computeGridAndSummary never calls bestComboFor, so it would use the
-    // TRUE best cell even while a different combo is pinned, an
-    // inconsistency within this same row (the headline % would follow the
-    // pin while these 4 columns kept tracking the true best instead).
-    const isolatedBest = pinnedCellFrom(isolatedGrid, isolatedGrid.best) || best;
-    const isolatedBestStats = (isolatedBest && isolatedBest.stats) || gridResult.bestStats;
-    const isolatedShared = computeShared(isolatedInputs);
 
     // Raid Captain competes for its slot on both specs: RE has the same
     // 2-competing-slot structure Surge does, so RC belongs in the same
@@ -4970,13 +4933,16 @@
     // KBW and Adrenaline's own rows are NOT flat additive layers like the
     // 4 above (see kbwContributionGain/adrenalineContributionGain) - their
     // stone's raw tooltip value isn't itself a DPS%, so unlike the 4 raw
-    // tables above, these two run each of the 4 stone levels through the
-    // same non-linear formula their own DPS Contribution column already
-    // uses for the currently-slotted level, just swept across all 4.
-    // Isolated the same way as the row above (see
-    // engravingIsolatedGridInputs) - this sweep must move with engrInputs'
-    // own KBW/Adrenaline node selectors only, never the live Ark Passive
-    // section's equipped values.
+    // tables above, these two sweep each of the 4 stone levels through the
+    // same kind of calculation their own DPS Contribution column already
+    // uses for the currently-slotted level: KBW through a re-optimized
+    // with/without grid search (kbwStoneMarginalGain), Adrenaline through
+    // its AP-only ratio (adrenalineStoneMarginalGain). Isolated the same
+    // way as the row above (see engravingIsolatedGridInputs) - this sweep
+    // must move with engrInputs' own KBW/Adrenaline node selectors only,
+    // never the live Ark Passive section's equipped values. Each column
+    // previews \"if this were the ONLY Ability Stone level applied\", never
+    // \"in addition to whatever's currently slotted\".
     //
     // Ambush Master's stone sits INSIDE ambushMasterGain's own
     // (1+backDmg)*(1+secondary+stone)-1 multiplicative shape, so the
@@ -4996,24 +4962,6 @@
     // much the node's own already-active value dilutes the stone's
     // marginal), so this needs its own version of the ratio rather than
     // reusing flatBucketStoneMarginal as-is.
-    const kbwOnCrit = isolatedBestStats.onCritDmg / 100;
-    // KBW's own isolated sweep must never depend on which Ability Stone
-    // level happens to be actually slotted right now (engravingStoneLevel
-    // above) - each of the 4 columns previews "if this were the ONLY
-    // Ability Stone level applied", not "in addition to whatever's
-    // currently there". isolatedShared.critDmgTotal above already has the
-    // CURRENTLY slotted kbwStone value baked in (from
-    // engravingIsolatedGridInputs), so it has to be subtracted back out
-    // first to get a true 0-stone baseline, then each swept level's own
-    // value added back on top of that same baseline before calling
-    // marginalCritDmgGainPct - otherwise the "without" term it
-    // reconstructs internally silently mismatches whichever level is
-    // actually equipped, and only the column matching the real selection
-    // comes out right (confirmed: with no stone slotted, sweeping the
-    // real selection through 1-4 Lv. visibly drifted every column's
-    // number instead of holding it fixed).
-    const actualKbwStoneValue = KBW_STONE_TABLE[engravingStoneLevel("kbw", engrInputs)] || 0;
-    const kbwBaselineCritDmgTotal = isolatedShared.critDmgTotal - actualKbwStoneValue;
     const rcFrac = raidCaptainMoveSpeedFraction(engrInputs, inputs.yearning);
     const rcNodeVal = RAID_CAPTAIN_TABLE[engrInputs.rcLevel] || 0;
     const stoneBreakdown = {
@@ -5027,10 +4975,7 @@
       }),
       cd: flatBucketStoneMarginal(CURSED_DOLL_TABLE[engrInputs.cdLevel] || 0, CURSED_DOLL_STONE_TABLE),
       mi: flatBucketStoneMarginal(MASS_INCREASE_TABLE[engrInputs.miLevel] || 0, MASS_INCREASE_STONE_TABLE),
-      kbw: ENGRAVING_STONE_OPTIONS.map((lv) => {
-        const testValue = KBW_STONE_TABLE[lv] || 0;
-        return marginalCritDmgGainPct(isolatedBest.effCrit, kbwOnCrit, kbwBaselineCritDmgTotal + testValue, testValue) / 100;
-      }),
+      kbw: ENGRAVING_STONE_OPTIONS.map((lv) => kbwStoneMarginalGain(isolatedInputs, lv)),
       adrenaline: ENGRAVING_STONE_OPTIONS.map((lv) => adrenalineStoneMarginalGain(inputs, engrInputs, lv)),
     };
 
@@ -6147,7 +6092,7 @@
       // Same 3-row breakdown Setup A/B's renderEngravingSvsCard sets below
       // (Engraving Bonus, Ability Stone Engraving Bonus, Ability Stone
       // Base AP) - see engravingCandidateBreakdown's own comment for what
-      // each isolates, and why there's no separate "Keystone/Crit" row
+      // each isolates, and why there's no separate "Keystone" row
       // here (KBW/Adrenaline's own grid contribution is already folded
       // into the two Stone-aware buckets, not left as a residual). "—" on
       // a missing candidate (no Runner-Up when only one candidate exists)
@@ -6219,7 +6164,7 @@
     // Same 3-row breakdown as Best Combo/Runner-Up's fillCard (see
     // engravingCandidateBreakdown's own comment) - "Ability Stone Base AP"
     // is part of this group (not a separate row under vs No Setup). No
-    // separate "Keystone/Crit" row - see fillCard's own comment for why.
+    // separate "Keystone" row - see fillCard's own comment for why.
     set(".ap-esvs-" + prefix + "-engr-gain", formatBvbPct(side.breakdown.engravingGain));
     set(".ap-esvs-" + prefix + "-stone-engr-gain", formatBvbPct(side.breakdown.stoneEngravingGain));
     set(".ap-esvs-" + prefix + "-stone-ap", formatBvbPct(side.breakdown.stoneBaseApGain));
@@ -7101,9 +7046,9 @@
   // vs No Bracelet result instead of inline here (see renderBvbCard):
   // inline, it would shrink that row's type <select> to fit the icon, so
   // its box would read as a different width than the other two rows.
-  // Also toggles the two per-side "Other Lines" checkboxes (vs Demons,
-  // CD Estimate - see braceletFlatLineGain's own comment for what each
-  // does) on/off alongside each line row's tier/mainstat swap: each only
+  // Also toggles the two per-side checkboxes (vs Demons beside Keystone
+  // Lines, CD Estimate beside Other Lines - see computeSingleBracelet and
+  // braceletFlatLineGain for what each does) on/off alongside each line row's tier/mainstat swap: each only
   // makes sense - and only shows - while its matching line type (add_b,
   // damage_cd) is actually picked in one of that side's 3 free lines. Both
   // are per-SIDE rather than per-line since a real bracelet can only roll
@@ -8137,17 +8082,3 @@
     COMBINED_KEYSTONES,
   };
 })();
-
-// ---------------------------------------------------------------------
-// Reference check (not executed on the page - run manually with node after
-// any edit to this file). Using the sheet's own example inputs (Crit Stat
-// 658, Ring/Bracelet Mid+High, Adrenaline/KBW maxed, Crit Rate+Dmg Dual on,
-// Ancient 17P Flashy Atk, Yearning on, Evo Karma 6, no Stable Atk/Crit Hit
-// Dmg Synergies, Back-Attack Rate 100%) at the LB1/KS2 split, the three
-// combined-keystone cells must equal (sheet's S35/S36/S37, divided by the
-// 0.85*1.12 scalar, which the formula omits - see the note at the top
-// of this file):
-//   Critical+Master    -> 7.902313487
-//   Critical+Pulverize -> 7.930274126
-//   Master+Pulverize   -> 7.947222029
-// ---------------------------------------------------------------------

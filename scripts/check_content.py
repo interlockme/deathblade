@@ -340,6 +340,59 @@ def check_home_rows(problems):
                             f"names it {names[(fam, bid)]!r}")
 
 
+# Numbers the "How the calculator works" page quotes straight from the calculator's
+# constants: (JS constant, text that must appear on the page with {v} filled in from the JS).
+# "pct" shows the value x 100. A renamed constant, a changed value or an edited sentence
+# fails here, so the page cannot drift from the code unnoticed. Add a row when the page
+# quotes a new constant; numbers computed from several constants are read from the real
+# calculator by hand instead.
+PAGE_CONSTANTS = [
+    ("SUPPORT_AP_BUFF_COEFFICIENT", "BaseAP * {v} *", False),
+    ("SUPPORT_ETHER_EFFECTIVENESS", "Ether effectiveness of {v}", False),
+    ("MAELSTROM_SPEED_BONUS", "Maelstrom adds {v}%", False),
+    ("RAID_CAPTAIN_BASE_MOVE_SPEED", "({v} base", False),
+    ("RAID_CAPTAIN_MOVE_SPEED_CAP", "capped at {v}%", False),
+    ("SUPPORT_PALADIN_MOVE_SPEED", "({v}% at a", False),
+    ("SUPPORT_PALADIN_MOVE_SPEED_UPTIME", "{v}% assumed uptime", False),
+    ("KBW_EV_MALUS", "times {v} if Keen", False),
+    ("BACK_ATTACK_DPS_SHARE", "times the {v} back attack share", False),
+    ("STAGGER_DPS_SHARE", "at the {v}% share", True),
+    ("CRIT_BASE", "bracelet-free {v}", False),
+    ("SPEC_BASE", "(m - 1) / ({v} * m)", False),
+]
+
+
+def _fmt_number(v):
+    return str(int(v)) if float(v).is_integer() else repr(round(v, 10))
+
+
+def check_page_constants(problems):
+    page = ROOT / "docs" / "calculator-how-it-works.md"
+    if not page.exists():
+        return
+    text = page.read_text()
+    js = (JS / "ark-passive-calculator.js").read_text()
+    rel = str(page.relative_to(ROOT))
+    for name, template, pct in PAGE_CONSTANTS:
+        m = re.search(r"^\s*const " + name + r" = (-?[0-9.]+);", js, re.M)
+        if not m:
+            problems.append(f"{rel}: constant {name} not found in ark-passive-calculator.js (renamed or removed?)")
+            continue
+        value = float(m.group(1)) * (100 if pct else 1)
+        expected = template.format(v=_fmt_number(value))
+        if expected not in text:
+            problems.append(f"{rel}: expected the text {expected!r} ({name} = {m.group(1)} in the JS)")
+    burn = re.search(r"const ARK_SMOLDERING_BURN_TABLE = \{ Relic: ([0-9.]+), Ancient: ([0-9.]+) \}", js)
+    if not burn:
+        problems.append(f"{rel}: ARK_SMOLDERING_BURN_TABLE not found in ark-passive-calculator.js")
+    else:
+        relic = float(burn.group(1)) * 100
+        ratio = float(burn.group(2)) / float(burn.group(1))
+        for expected in (f"It is {_fmt_number(relic)}% of total damage at Relic", f"{_fmt_number(ratio)} times that at Ancient"):
+            if expected not in text:
+                problems.append(f"{rel}: expected the text {expected!r} (ARK_SMOLDERING_BURN_TABLE in the JS)")
+
+
 def check():
     problems = []
     today = datetime.date.today()
@@ -449,6 +502,7 @@ def check():
 
     # 11. home rows match build-data.js
     check_home_rows(problems)
+    check_page_constants(problems)
 
     return problems
 

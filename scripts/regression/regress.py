@@ -332,6 +332,37 @@ FACADE_SEQUENCES = [
 ]
 
 
+# Bracelet vs Bracelet, Additional Damage & vs Demons line. The vs Demons checkbox (in the Keystone Lines row)
+# is hidden until the line is picked, so each probe picks the line first and then ticks the box. Per side:
+# the line alone (the control the ticked probes must differ from), the line ticked, the High tier ticked,
+# two vs Demons lines ticked, the line ticked and then changed to Additional Damage, the line beside an
+# Outgoing Damage & CD +2% line with both boxes ticked, and the line ticked on Surge 111.
+def bvb_key(side, part):
+    cls = {"demons": f"input.ap-bvb-{side}-demons:0", "cdest": f"input.ap-bvb-{side}-cdest:0"}
+    if part in cls:
+        return cls[part]
+    n, kind = part[4], part[6:]
+    return f"select.ap-bvb-{side}-line{n}-{kind}.ap-bvb-line-{kind}:0"
+
+
+BVB_DEMONS_SEQUENCES = []
+for _side in ("a", "b"):
+    _t1, _t2, _ty1 = bvb_key(_side, "line1-tier"), bvb_key(_side, "line2-tier"), bvb_key(_side, "line1-type")
+    _ty2, _dm, _cd = bvb_key(_side, "line2-type"), bvb_key(_side, "demons"), bvb_key(_side, "cdest")
+    BVB_DEMONS_SEQUENCES += [
+        (f"bvb {_side}: vs Demons line picked, box not ticked", "re-333", [(_ty1, "add_b")]),
+        (f"bvb {_side}: vs Demons line picked, box ticked", "re-333", [(_ty1, "add_b"), ("toggle", _dm)]),
+        (f"bvb {_side}: vs Demons line High tier, box ticked", "re-333", [(_ty1, "add_b"), (_t1, "High"), ("toggle", _dm)]),
+        (f"bvb {_side}: two vs Demons lines, box ticked", "re-333",
+         [(_ty1, "add_b"), (_ty2, "add_b"), (_t2, "High"), ("toggle", _dm)]),
+        (f"bvb {_side}: box ticked, then line changed to Additional Damage", "re-333",
+         [(_ty1, "add_b"), ("toggle", _dm), (_ty1, "add_a")]),
+        (f"bvb {_side}: vs Demons line beside CD line, both boxes ticked", "re-333",
+         [(_ty1, "add_b"), (_ty2, "damage_cd"), ("toggle", _dm), ("toggle", _cd)]),
+        (f"bvb {_side}: vs Demons line, box ticked, surge-111", "surge-111", [(_ty1, "add_b"), ("toggle", _dm)]),
+    ]
+
+
 # Setup A vs Setup B stone targets: a side's Ability Stones can only boost the 3 core engravings or the
 # 2 competing engravings in its own Option slots (5 engravings total). Steps are (control, value) pairs
 # set in order (a programmatic set skips the disabled-option check on purpose, like a preset load or an
@@ -576,7 +607,7 @@ def run_calculator(base_url, payloads, fast=False):
                     return False
             return True
 
-        for name, build, steps in SVS_STONE_SEQUENCES + MAIN_AMOUNT_SEQUENCES + FACADE_SEQUENCES:
+        for name, build, steps in SVS_STONE_SEQUENCES + MAIN_AMOUNT_SEQUENCES + FACADE_SEQUENCES + BVB_DEMONS_SEQUENCES:
             if not probe(name, lambda b=build, q=steps: run_kv(b, q)):
                 skipped.append(name)
                 restart()
