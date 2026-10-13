@@ -740,13 +740,13 @@ Every estimate the calculator uses, where it comes from, and what it moves. "Log
 <tr>
 <td>Stagger share</td>
 <td>5%</td>
-<td>Reference sheet</td>
+<td>Assumed</td>
 <td>Stagger bracelet rows</td>
 </tr>
 <tr>
 <td>On-hit stacks, periodic fight length, HP-gated uptime</td>
 <td>5 of 6, 10 minutes, 99%</td>
-<td>Reference sheet</td>
+<td>Assumed</td>
 <td>The matching Weapon Power bracelet lines</td>
 </tr>
 <tr>
