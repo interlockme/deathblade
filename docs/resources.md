@@ -8,7 +8,7 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
 
 ## Ark Passive Calculator
 
-*Finds the optimal setup for your Deathblade and party composition. See spreadsheets [1](https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing) or [2](https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing) for verification.*
+*Finds the optimal setup for your Deathblade and party composition.* [How it works](resources/calculator.md){ .calc-doc-link }
 
 <div class="ap-calc">
 

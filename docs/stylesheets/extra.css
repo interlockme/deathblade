@@ -99,6 +99,11 @@
   --md-default-fg-color--light: #c9c6d4;
   --md-accent-fg-color: var(--dbc-pink); /* softer than Material's default vibrant #f50056 hover pink */
   --md-accent-fg-color--transparent: rgba(var(--dbc-pink-rgb), 0.1);
+  /* Material's slate code colours are a blue-gray (hsla(232, 15%, 18%)) that belongs to no other
+     surface on the site. Blocks sit on the popover surface (a step darker than the cards they
+     are nested in) with lilac text, the same text colour as the setup-note body. */
+  --md-code-bg-color: var(--dbc-popover);
+  --md-code-fg-color: var(--dbc-lilac);
 }
 
 /* Material's "black" primary preset hardcodes header/tabs background via
@@ -443,18 +448,58 @@ h3 { color: var(--dbc-teal); }
   background-color: var(--md-code-bg-color);
 }
 /* The copy button sits in its own strip at the right edge, so a long import
-   string scrolls inside the code box instead of running underneath the icon. */
+   string scrolls inside the code box instead of running underneath the button.
+   Text size and padding use the same scale as the table body text. */
 .md-typeset .highlight pre > code {
-  margin-right: 2.4rem;
+  margin-right: 2.8rem;
+  padding: 0.65rem 0.85rem;
+  font-size: var(--dbc-fs-table);
+  line-height: 1.55;
 }
-/* The copy-to-clipboard button (content.code.copy) inherits Material's
-   default gray icon color - recolor to the site's lavender accent so it
-   doesn't stand out as the one untouched default element. */
+/* Inline code (formula symbols in running text): a small purple-tinted chip,
+   the same wash and radius the tag pills use, instead of Material's gray box. */
+.md-typeset :not(pre) > code {
+  background-color: rgba(var(--dbc-purple-rgb), 0.14);
+  color: var(--dbc-chip-text);
+  border-radius: var(--dbc-r-sm);
+  padding: 0.05em 0.35em;
+  font-size: 0.88em;
+}
+/* The copy button (content.code.copy). Material draws it as an icon inside a
+   gray rounded square (.md-code__nav) tinted from its own variables, which is
+   the one stock element left in a code box. It gets the recipe the site's other
+   floating controls use (.rotation-practice-toggle, .image-lightbox-close): a
+   round pill with a purple border, the card surface, the chip text colour and
+   the soft drop shadow, brightening its border on hover. The 2.8rem gutter on
+   the code (above) clears it, and top/right are set so it is centred on a
+   one-line skill code and sits at the corner of a taller block. */
+.md-typeset .highlight .md-code__nav {
+  top: 0.25rem;
+  right: 0.35rem;
+  padding: 0.15rem;
+  gap: 0;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
+  border-radius: 999px;
+  background-color: var(--dbc-surface);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.md-typeset .highlight .md-code__nav:hover {
+  border-color: rgba(var(--dbc-purple-rgb), 0.75);
+  background-color: var(--dbc-surface-raised);
+}
 .md-typeset .highlight button.md-code__button {
-  color: var(--dbc-lavender);
+  width: 1.3rem;
+  height: 1.3rem;
+  font-size: var(--dbc-fs-base);
+  color: var(--dbc-chip-text);
 }
 .md-typeset .highlight button.md-code__button:hover {
-  color: var(--dbc-pink);
+  color: var(--dbc-pink-bright);
+}
+/* Material marks the button active for a moment after a copy. */
+.md-typeset .highlight button.md-code__button.md-code__button--active {
+  color: var(--dbc-teal) !important;
 }
 
 /* ---------- Tables ---------- */
@@ -7484,6 +7529,47 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .ap-brace-compare-table tr:last-child td {
   border-bottom: none;
 }
+
+/* ---------- Calculator docs page tables ---------- */
+/* The docs page builds its tables with the calculator's own comparison table
+   (.ap-brace-compare-table inside an .ap-acc-table-scroll wrapper), so a doc
+   table is the same panel as the ones in the calculator. They sit outside
+   .ap-calc, so the tokens that table reads are declared here. Figures are
+   right-aligned with tabular numerals (header and cells agree); text columns
+   are left-aligned through .ap-brace-th-label. Tables with four or more
+   columns keep a minimum width and scroll inside the wrapper below it. */
+.md-typeset .doc-table-scroll {
+  --ap-fs-cap: var(--dbc-fs-cap);
+  --ap-fs-table: var(--dbc-fs-table);
+  --ap-radius-lg: var(--dbc-r-lg);
+  --ap-surface: var(--dbc-surface);
+  --ap-surface-2: var(--dbc-surface-raised);
+  --ap-surface-head: var(--dbc-surface);
+  --ap-line: rgba(255, 255, 255, 0.09);
+  margin: 0.8em 0 1em;
+}
+.md-typeset .doc-table--wide {
+  min-width: 34rem;
+}
+/* Cells that wrap are balanced, so a two-line cell never ends on a lone word
+   (the register has long labels in narrow columns). Balancing only evens out
+   the lines a cell already has, it never adds one. */
+.md-typeset .doc-table td,
+.md-typeset .doc-table th {
+  text-wrap: balance;
+}
+.md-typeset .doc-table td.doc-num {
+  text-align: right;
+  white-space: nowrap;
+}
+/* Relic red and Ancient orange, the colours the calculator's Chaos Core table
+   gives its Relic and Ancient column headers. */
+.md-typeset .doc-table th.doc-th-relic {
+  color: var(--dbc-red);
+}
+.md-typeset .doc-table th.doc-th-ancient {
+  color: var(--dbc-orange);
+}
 .md-typeset .ap-brace-row-label {
   font-weight: 400;
   color: var(--md-default-fg-color);
@@ -8858,7 +8944,7 @@ h3 { color: var(--dbc-teal); }
   border-bottom: none;
 }
 .md-typeset .tabbed-set > .tabbed-labels > label {
-  font-size: var(--dbc-fs-base);
+  font-size: var(--dbc-fs-md);
   font-weight: 400;
   color: var(--md-default-fg-color--light);
   opacity: 0.75;
@@ -11401,6 +11487,31 @@ body.page-333-blitz input[type="text"] {
     line-height: 1;
     padding-left: 1.1em;
   }
+}
+
+/* The calculator's docs link, a small pill after the one-line intro above the
+   calculator. It is inline with no vertical padding, so it never makes the line
+   taller than plain text, and it carries the purple tint of the tag pills. Class
+   is outside ap- on purpose: the link sits above .ap-calc, so the regression dump
+   never sees it. Specificity beats the global link rule (0,2,1). */
+.md-typeset a.calc-doc-link {
+  display: inline-block;
+  margin-left: 0.4em;
+  padding: 0 0.6em;
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
+  border-radius: 999px;
+  background-color: rgba(var(--dbc-purple-rgb), 0.14);
+  color: var(--dbc-chip-text);
+  font-style: normal;
+  line-height: 1.2;
+  text-decoration: none;
+  vertical-align: baseline;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.md-typeset a.calc-doc-link:hover,
+.md-typeset a.calc-doc-link:focus-visible {
+  border-color: rgba(var(--dbc-purple-rgb), 0.75);
+  color: var(--dbc-pink-bright);
 }
 
 /* Decorative sticker under a page title (Resources): centered in the

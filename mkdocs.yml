@@ -1,11 +1,6 @@
 site_name: Deathblade
 site_url: https://interlockme.github.io/deathblade/
 site_description: Remaining Energy & Surge Deathblade guides
-# Pages that are built but deliberately not in the nav (a page missing from the nav
-# fails `mkdocs build --strict`). Remove an entry once the page is linked.
-not_in_nav: |
-  /calculator-how-it-works.md
-
 theme:
   name: material
   custom_dir: overrides
@@ -147,7 +142,9 @@ nav:
       - 111 Classic: surge/111-classic.md
       - 222 Speedy ★: surge/222-speedy.md
       - 333 Blitz: surge/333-blitz.md
-  - Additional Resources: resources.md
+  - Additional Resources:
+      - Resources: resources.md
+      - Calculator Guide: resources/calculator.md
 
 validation:
   nav:

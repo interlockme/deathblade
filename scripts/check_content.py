@@ -367,7 +367,7 @@ def _fmt_number(v):
 
 
 def check_page_constants(problems):
-    page = ROOT / "docs" / "calculator-how-it-works.md"
+    page = ROOT / "docs" / "resources" / "calculator.md"
     if not page.exists():
         return
     text = page.read_text()
