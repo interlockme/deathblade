@@ -20,6 +20,7 @@ theme:
     - navigation.instant.prefetch
     - navigation.footer
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.top
     - navigation.indexes

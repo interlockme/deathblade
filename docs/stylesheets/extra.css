@@ -8957,47 +8957,66 @@ h3 { color: var(--dbc-teal); }
 }
 
 /* ---------- Tabbed content ---------- */
-/* Previous version reused the same lavender fade gradient as the h2/hr
-   section-break border, so a dense page (H2 -> tabs -> nested tabs) showed
-   the identical line motif three times in a row. Rather than tone that
-   line down further, drop lines entirely for tabs: no border-image, no
-   sliding underline. The active tab is marked purely by dimming the
-   *inactive* labels (opacity) and giving the active one full opacity plus
-   the accent color. Nothing here is a geometric element (no bar, no border,
-   no background), so nothing compounds or stacks when tabs nest. */
+/* A tab group is a recessed track holding one chip per tab, the same box recipe as the calculator's
+   Build tiers and Preset group (popover fill, 1px purple hairline, 3px padding). Material's sliding
+   .tabbed-labels::before bar is kept as the sliding ACTIVE CHIP: it is positioned by the same
+   --md-indicator-x / --md-indicator-width variables, so it moves between tabs with no script. It sits
+   behind the labels (z-index 0), and the label text paints above it (position: relative, z-index 1).
+   Because Material measures the indicator from each label's offsetLeft, the track padding is part of
+   that offset and the chip stays aligned. The track is as wide as its tabs (the content panel that
+   follows is a width: 100% flex item, so it still starts a new row). */
 .md-typeset .tabbed-set > .tabbed-labels {
+  align-self: flex-start;
+  width: auto;
+  max-width: 100%;
+  padding: 3px;
+  gap: 2px;
+  margin: 0 0 0.4rem;
+  scroll-padding-inline-start: 0;
+  background: var(--dbc-popover);
+  border: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
+  border-radius: 10px;
   box-shadow: none;
-  border-bottom: none;
+}
+.md-typeset .tabbed-set > .tabbed-labels::before {
+  top: 3px;
+  bottom: 3px;
+  height: auto;
+  background: rgba(var(--dbc-purple-rgb), 0.14);
+  box-shadow: inset 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.38);
+  border-radius: 7px;
+  z-index: 0;
 }
 .md-typeset .tabbed-set > .tabbed-labels > label {
-  font-size: var(--dbc-fs-md);
-  font-weight: 400;
-  color: var(--md-default-fg-color--light);
-  opacity: 0.75;
+  position: relative;
+  z-index: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  font-size: var(--dbc-fs-base);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--dbc-slate);
+  opacity: 1;
   text-decoration: none;
-  transition: opacity 0.15s ease, color 0.15s ease;
+  transition: color 0.15s ease;
 }
 .md-typeset .tabbed-set > .tabbed-labels > label:hover {
-  opacity: 0.9;
   color: var(--dbc-pink-bright);
 }
-/* Material's sliding accent bar (.tabbed-labels::before) - the shared
-   element that animates between tabs - stays, that's "the tab underline"
-   that's fine as-is. What actually needed killing is a totally separate
-   thing: Material also puts a border-bottom directly on each label
-   (border-color: transparent normally, switched to solid on the active
-   tab via a long :checked selector) - that's the underline sitting right
-   against the text. !important because Material's own selector chain
-   for that rule is long/specific enough to otherwise win. */
-.md-typeset .tabbed-set > .tabbed-labels > label {
-  border-bottom-color: transparent !important;
+/* Material wraps each label's text in a full-size <a> (the whole chip is the click target), and that <a> carries
+   the padding; a label with no <a> carries it itself. */
+.md-typeset .tabbed-set > .tabbed-labels > label > a,
+.md-typeset .tabbed-set > .tabbed-labels > label:not(:has(> a)) {
+  display: block;
+  margin: 0;
+  padding: 0.28rem 0.62rem;
 }
-/* Material lists every tab's <input> first, then one .tabbed-labels div
-   with all the <label>s after - an input and its label are siblings by
-   position, not adjacent, so pairing them up needs nth-of-type matching
-   rather than a plain + selector. Covers up to 8 tabs per group; unused
-   pairs are harmless, and this naturally scopes to each nesting level
-   since every .tabbed-set only matches its own inputs/labels. */
+/* Material lists every tab's <input> first, then one .tabbed-labels div with all the <label>s after:
+   an input and its label are siblings by position, not adjacent, so pairing them up needs nth-of-type
+   matching rather than a plain + selector. Covers up to 8 tabs per group (check_content.py fails a
+   group with more); unused pairs are harmless, and each .tabbed-set only matches its own inputs and
+   labels, so nesting needs nothing extra. */
 .md-typeset .tabbed-set > input:nth-of-type(1):checked ~ .tabbed-labels > label:nth-of-type(1),
 .md-typeset .tabbed-set > input:nth-of-type(2):checked ~ .tabbed-labels > label:nth-of-type(2),
 .md-typeset .tabbed-set > input:nth-of-type(3):checked ~ .tabbed-labels > label:nth-of-type(3),
@@ -9007,20 +9026,29 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .tabbed-set > input:nth-of-type(7):checked ~ .tabbed-labels > label:nth-of-type(7),
 .md-typeset .tabbed-set > input:nth-of-type(8):checked ~ .tabbed-labels > label:nth-of-type(8) {
   color: var(--dbc-purple);
-  font-weight: 400;
-  opacity: 1;
 }
-
-/* A tab group with only one tab is a heading, not a switcher: drop the
-   dimming and hover so it reads as a plain caption. */
-.md-typeset .tabbed-set > .tabbed-labels:has(> label:only-child) > label {
-  opacity: 1;
-  color: var(--dbc-purple);
-  cursor: default;
+/* The panel's first block starts right under the track (the gap is the track's own margin, not that margin
+   plus the first block's top margin). */
+.md-typeset .tabbed-set > .tabbed-content > .tabbed-block > :first-child {
+  margin-top: 0;
 }
-
-.md-typeset .tabbed-set > .tabbed-labels:has(> label:only-child)::before {
-  display: none;
+/* A nested group is a smaller track, so two levels never read as the same control twice. */
+.md-typeset .tabbed-set .tabbed-set > .tabbed-labels {
+  padding: 2px;
+  border-radius: 8px;
+}
+.md-typeset .tabbed-set .tabbed-set > .tabbed-labels::before {
+  top: 2px;
+  bottom: 2px;
+  border-radius: 6px;
+}
+.md-typeset .tabbed-set .tabbed-set > .tabbed-labels > label {
+  font-size: var(--dbc-fs-sm);
+  border-radius: 6px;
+}
+.md-typeset .tabbed-set .tabbed-set > .tabbed-labels > label > a,
+.md-typeset .tabbed-set .tabbed-set > .tabbed-labels > label:not(:has(> a)) {
+  padding: 0.18rem 0.5rem;
 }
 
 /* ---------- Trixion DPS distribution chart ---------- */
@@ -11572,6 +11600,266 @@ body.page-333-blitz input[type="text"] {
 }
 .md-typeset li > .food-option-connector-plus {
   font-size: 1.15em;
+}
+
+/* ---------- Page chrome: header, left navigation, footer ---------- */
+/* Header: one bar. overrides/partials/header.html puts Material's top-level tabs inside the header
+   (navigation.tabs.sticky makes the base template skip the stock second row), so from 76.25em the bar reads logo, wordmark,
+   section chips, search. The chips are the same box as the tab chips (active = purple tint plus a
+   purple hairline). Below 76.25em Material hides the tabs and the drawer takes over, unchanged. */
+.md-header {
+  border-bottom: 1px solid rgba(var(--dbc-purple-rgb), 0.14);
+}
+@media screen and (min-width: 76.25em) {
+  /* The wordmark is always shown: the page title that normally slides in on scroll is redundant next to
+     the section chips and the sidebar. */
+  .md-header .md-header__title {
+    flex: 0 0 6.6rem;
+    margin-left: 0.6rem;
+    margin-right: 0.2rem;
+  }
+  .md-header .md-header__title--active .md-header__topic:first-child {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .md-header .md-header__topic + .md-header__topic {
+    display: none;
+  }
+  .md-header .md-tabs {
+    width: auto;
+    overflow: visible;
+    background: none;
+  }
+  .md-header .md-tabs[hidden] {
+    pointer-events: auto;
+  }
+  .md-header .md-tabs .md-grid {
+    max-width: none;
+    margin: 0;
+  }
+  .md-header .md-tabs__list {
+    margin: 0;
+    overflow: visible;
+    contain: none;
+    gap: 2px;
+  }
+  .md-header .md-tabs__item {
+    height: auto;
+    padding: 0;
+  }
+  .md-header .md-tabs__link,
+  .md-header .md-tabs[hidden] .md-tabs__link {
+    margin: 0;
+    padding: 0.28rem 0.62rem;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    font-size: var(--dbc-fs-base);
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--dbc-slate);
+    opacity: 1;
+    transform: none;
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .md-header .md-tabs__link:hover {
+    color: var(--dbc-pink-bright);
+  }
+  .md-header .md-tabs__item--active .md-tabs__link {
+    color: var(--dbc-purple);
+    background: rgba(var(--dbc-purple-rgb), 0.14);
+    border-color: rgba(var(--dbc-purple-rgb), 0.38);
+  }
+  .md-header .md-search {
+    margin-left: auto;
+  }
+  /* The open search field is 34.4rem wide and, unlike Material's own header, the title and chips do not
+     shrink for it, so it leaves the flex row and opens over the chips (which fade out) from the same right
+     edge Material uses. In the row it ran up to 115px past the viewport at 1221px and scrolled the page. */
+  .md-header__inner {
+    position: relative;
+  }
+  .md-header .md-tabs {
+    transition: opacity 0.15s ease;
+  }
+  [data-md-toggle="search"]:checked ~ .md-header .md-search {
+    position: absolute;
+    top: 0;
+    right: 0.2rem;
+    margin: 0;
+  }
+  [data-md-toggle="search"]:checked ~ .md-header .md-tabs {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+/* Search field: the page-colour field with the site's hairline, 8px radius, like the calculators' inputs. */
+@media screen and (min-width: 60em) {
+  .md-search__form {
+    background-color: var(--md-default-bg-color);
+    border: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
+    border-radius: var(--dbc-r);
+  }
+  .md-search__form:hover {
+    border-color: rgba(var(--dbc-purple-rgb), 0.35);
+  }
+}
+
+/* Left navigation (desktop sidebar): the family name is a small-caps label like the home page's section
+   dividers, pages are rounded rows with the active page tinted, and the page's own sections sit under it
+   on a thin guide line. The sticky title keeps the page colour so a long list scrolls under it cleanly. */
+@media screen and (min-width: 76.25em) {
+  .md-nav--primary .md-nav__title[for] {
+    background-color: var(--md-default-bg-color) !important;
+    box-shadow: none;
+    padding: 0.2rem 0.5rem 0.45rem;
+    font-size: var(--dbc-fs-cap);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dbc-slate) !important;
+  }
+  .md-nav--primary .md-nav__title {
+    box-shadow: none;
+  }
+  .md-nav--primary .md-nav__item > .md-nav__link {
+    padding: 0.2rem 0.5rem;
+    margin-left: -0.5rem;
+    margin-top: 0;
+    border-radius: 7px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+  .md-nav--primary .md-nav__item > a.md-nav__link--active {
+    background: rgba(var(--dbc-purple-rgb), 0.14);
+  }
+  /* A section heading (navigation.sections: "Surge" above its pages) is a label, not a row. The colour needs
+     !important to beat the site's ancestor-section purple rule near the top of this file. */
+  .md-nav--primary .md-nav__item--section > .md-nav__link {
+    padding: 0.2rem 0.5rem 0.45rem;
+    font-size: var(--dbc-fs-cap);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dbc-slate) !important;
+    background: var(--md-default-bg-color);
+    box-shadow: none !important;
+  }
+  /* The page's own sections: the guide line is indented only as far as keeps these links as wide as Material's
+     (a deeper indent plus the row padding wrapped long headings onto an extra line). */
+  .md-nav--secondary > .md-nav__list {
+    margin: 0.15rem 0 0.35rem 0.3rem;
+    padding-left: 0.4rem;
+    border-left: 1px solid rgba(var(--dbc-purple-rgb), 0.2);
+  }
+  .md-nav--primary .md-nav--secondary .md-nav__item > .md-nav__link {
+    margin-left: 0;
+    padding-left: 0.1rem;
+    padding-right: 0;
+  }
+  .md-nav--secondary .md-nav__link {
+    color: var(--dbc-slate);
+  }
+  .md-nav--secondary .md-nav__link:hover {
+    color: var(--dbc-pink-bright);
+  }
+  .md-nav--secondary .md-nav__item > a.md-nav__link--active {
+    color: var(--dbc-purple) !important;
+    background: none;
+  }
+}
+
+/* Phone header and drawer (below 76.25em, where the section chips are hidden): the header buttons are
+   the same hairline chips as the rest of the site, and the drawer is the popover surface with pages as
+   44px rounded rows, the current page tinted and section names as small-caps labels. */
+@media screen and (max-width: 76.234375em) {
+  .md-header__button.md-icon {
+    padding: 0.3rem;
+    border: 1px solid rgba(var(--dbc-purple-rgb), 0.16);
+    border-radius: 8px;
+    color: var(--dbc-chip-text);
+  }
+  .md-header__button.md-icon:hover {
+    color: var(--dbc-pink-bright);
+    border-color: rgba(var(--dbc-purple-rgb), 0.35);
+  }
+  .md-sidebar--primary .md-nav--primary,
+  .md-nav--primary .md-nav__title[for] {
+    background-color: var(--dbc-popover) !important;
+  }
+  .md-nav--primary .md-nav__title[for] {
+    box-shadow: none;
+    color: var(--dbc-slate) !important;
+    font-size: var(--dbc-fs-cap);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  /* Material draws the line under a panel's title as an inset shadow on the list, so a tinted first row
+     would sit on it; the list's top padding keeps the row clear of the line. */
+  .md-nav--primary .md-nav__title ~ .md-nav__list {
+    padding-top: 0.4rem;
+  }
+  .md-nav--primary .md-nav__item {
+    border-top: 0;
+    padding: 0 0.5rem;
+  }
+  .md-nav--primary .md-nav__item > .md-nav__link {
+    min-height: 2.2rem;
+    align-items: center;
+    padding: 0.5rem 0.6rem;
+    margin: 0 0 1px;
+    border-radius: 8px;
+  }
+  /* The current page can be a <label> here (it toggles its own section list), so no `a` in the selector. */
+  .md-nav--primary .md-nav__item > .md-nav__link--active {
+    background: rgba(var(--dbc-purple-rgb), 0.14);
+  }
+}
+
+/* Footer: previous and next are plain links on a hairline, the small-caps label over the page title,
+   with no box. Hover lifts the title and arrow to --dbc-pink-bright, like the other links and chips. */
+.md-footer {
+  background: none;
+  border-top: 1px solid rgba(var(--dbc-purple-rgb), 0.14);
+}
+.md-footer-meta {
+  display: none;
+}
+.md-footer__link {
+  margin: 0;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  opacity: 1;
+}
+.md-footer__direction {
+  font-size: var(--dbc-fs-cap);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 1;
+  color: var(--dbc-slate);
+}
+/* Material sets the title's line-height to a 2.4rem bar and pins the direction label above it with absolute
+   positioning; here they are a plain two-line stack so the footer is only as tall as its text. */
+.md-footer__title {
+  font-size: var(--dbc-fs-md);
+  font-weight: 500;
+  line-height: 1.35;
+  margin: 0;
+  padding: 0 0.6rem;
+}
+.md-footer__direction {
+  position: static;
+  margin: 0 0 0.1rem;
+  padding: 0;
+}
+.md-footer__button {
+  color: var(--dbc-purple);
+  transition: color 0.15s ease;
+}
+.md-footer__link:hover .md-footer__title,
+.md-footer__link:hover .md-footer__button {
+  color: var(--dbc-pink-bright);
 }
 
 /* ---------- Click-to-zoom lightbox for standalone content images ---------- */
