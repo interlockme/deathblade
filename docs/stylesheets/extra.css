@@ -3813,13 +3813,16 @@ h3 { color: var(--dbc-teal); }
    RC + MI name has text, two mentions and emoji in one run, and a flex
    container would drop the spaces around the "+". The icon is a round chip
    with the site's purple ring and glow (as .food-option-icon); 1.25em keeps
-   it in scale with the 14px name text. The markup's own space after the
+   it in scale with the 14px name text. vertical-align is a baseline offset
+   that centres the icon on the capitals' ink (measured at 4x with Poppins:
+   centre within 0.02px; `middle` sat 1.5px low, centring on the x-height).
+   The markup's own space after the
    icon supplies the rest of the icon-to-text gap. */
 .md-typeset .engraving-card-name img.skill-icon {
   height: 1.25em;
   width: 1.25em;
   margin: 0 0.2em 0 0;
-  vertical-align: middle;
+  vertical-align: -0.24em;
   border-radius: 50%;
   box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.4), 0 0 6px rgba(var(--dbc-purple-rgb), 0.25);
   transition: box-shadow 0.15s ease;
