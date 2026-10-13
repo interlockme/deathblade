@@ -22,7 +22,7 @@ The Evolution tree lets you take two of the three Tier 4 keystones (Critical, Ma
 **Close results are a tie.** Gaps under 0.5 percentage points of DPS do not matter in practice, so choose what is easier to play or what you already have. The 0.5 is a rule of thumb, not a measured error bar: the model uses one blended crit rate for the whole fight and cannot resolve much smaller differences.
 
 <div class="ap-acc-table-scroll doc-table-scroll">
-<table class="ap-brace-compare-table doc-table">
+<table class="ap-brace-compare-table doc-table doc-table--fit">
 <thead>
 <tr>
 <th class="ap-brace-th-label">Rank</th>
@@ -62,7 +62,7 @@ The Evolution tree lets you take two of the three Tier 4 keystones (Critical, Ma
 
 With the best setup your effective crit rate reads 92.38% (77.38% before the picks), Evolution Damage 81.00% (41.00% before) and Additional Damage 46.86% (38.36% before).
 
-<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="example" markdown>
@@ -103,7 +103,7 @@ Many bonuses are only on part of the time. The calculator does not just add "bon
 
 Two inputs are worth knowing exactly. **Adrenaline uptime** is the share of damage dealt at 6 stacks, which is what a DPS meter reports. Its Crit Rate bonus needs all 6 stacks, so it scales with that uptime, while its Attack Power bonus works per stack and gets partial credit as stacks rebuild. **Back Attack Rate** is the figure from the Combat Analyzer's Overview tab. It counts hits, not damage, and only for skills that can back attack.
 
-<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="example" markdown>
@@ -229,7 +229,7 @@ Most raid parties have a Support, and a Support raises your Attack Power. A calc
 
 When you compare "what if I had this line", the Support stays at its current value, because the line is yours and not your Support's. Lines that raise only your own Weapon Power, Main Stat or flat Attack Power are diluted that way. Percent Attack Power is not. This is the low end of a range: the real answer for your party sits between the number shown and the case where your Support gears up alongside you.
 
-<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="example" markdown>
@@ -247,7 +247,7 @@ At the defaults (98% uptime) the Support adds about 39% to your Attack Power: th
 **Why some gains are diluted and others are not.** A Weapon Power line acts on only your part of the bracket, while Percent Attack Power multiplies all of it, Support included. From the bracelet table at the defaults:
 
 <div class="ap-acc-table-scroll doc-table-scroll">
-<table class="ap-brace-compare-table doc-table">
+<table class="ap-brace-compare-table doc-table doc-table--fit">
 <thead>
 <tr>
 <th class="ap-brace-th-label">Bracelet line</th>
@@ -295,7 +295,7 @@ The 0.4 coefficient and the generic gearing are one reference profile. A much be
 
 Say you compare two bracelets. A bracelet changes your crit rate, Crit Damage or Additional Damage, and those decide which of the nine keystone setups is best. So the honest question is not "how much better is the new bracelet if I keep my keystones" but "how much better is my best setup with it than my best setup without it". That is what the calculator reports, and it calls it the **realized gain**.
 
-<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="example" markdown>
@@ -365,7 +365,7 @@ Attack Power comes from your Weapon Power and Main Stat, scaled by the Base Atta
 
 The final value is the baseline every Attack Power based comparison uses.
 
-<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="example" markdown>
@@ -399,7 +399,7 @@ Your damage is four layers that multiply: crit rate and Crit Damage, the extra d
 
 Each keystone changes one layer: Critical boosts the extra damage on crit hits, Master adds crit rate and Additional Damage, and Pulverize adds Evolution Damage. The summary card shows two crit figures. **Eff. Crit Rate** is the capped, probability-weighted value the score uses. **Peak Crit Rate** adds every bonus at full strength with no cap, can read above 100%, and only shows the ceiling in a burst window.
 
-<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="example" markdown>
@@ -539,7 +539,7 @@ The Ark Grid Core Comparison answers one question per core: how much more DPS th
 
 For Order cores, only their 17 point line differs between Relic and Ancient, so that line is the whole comparison.
 
-<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="example" markdown>
@@ -592,7 +592,7 @@ Each Order core is judged on one build, the one it is used on, so that table is 
 
 These panels value one line or one whole piece at a time, always as a ratio to a baseline. The Bracelet and Accessory tables answer "what is this line worth". The two A vs B panels are sandboxes: pick two things and see which is better.
 
-<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="example" markdown>
@@ -628,7 +628,7 @@ Layers are treated as independent, so an interaction between, say, Spec and Atta
 
 The Engraving Comparison shows what each engraving is worth and which two flexible engravings work best together. Raid Captain depends Move Speed, so its value follows a Move Speed estimate. That estimate uses the same expand-then-cap method as the crit rate, so a high average does not hide the time spent below the cap.
 
-<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="example" markdown>
@@ -666,7 +666,7 @@ Move Speed sources are treated as independent. Ability Stone penalties and Attac
 
 Every estimate the calculator uses, where it comes from, and what it moves. "Logs" means typical figures across many players' logs, not measurements of one character. The headline ones: the Support (0.4 coefficient, 98% uptime), Adrenaline at 97% damage coverage, the 0.95 back attack share, and the Keen Blunt Weapon downside.
 
-<div class="setup-panel" data-accent="purple" markdown>
+<div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
 
 <details class="setup-note" data-kind="note" markdown>

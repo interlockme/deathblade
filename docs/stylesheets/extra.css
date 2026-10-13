@@ -7562,6 +7562,32 @@ h3 { color: var(--dbc-teal); }
   text-align: right;
   white-space: nowrap;
 }
+/* A table with few, short columns (rank, setup, one figure) is capped instead of
+   stretching to the full column, where the figure ends up far from its label. */
+.md-typeset .doc-table--fit {
+  max-width: 30rem;
+}
+/* Notes on the docs page (.doc-panel) hold long paragraphs, formulas and tables, not the
+   one-line tips the site's .setup-note spacing is sized for. Every block inside a note gets
+   one vertical rhythm (0.75em between paragraphs, 0.8em around tables and code) so the
+   paragraphs stop running together. The last child still ends flush, as in any note. */
+.md-typeset .setup-panel.doc-panel .setup-note {
+  padding: 0.7em 0;
+}
+.md-typeset .setup-panel.doc-panel .setup-note > summary + * {
+  margin-top: 0.75em;
+}
+.md-typeset .setup-panel.doc-panel .setup-note > p,
+.md-typeset .setup-panel.doc-panel .setup-note > ul {
+  margin: 0.75em 0;
+}
+.md-typeset .setup-panel.doc-panel .setup-note > .doc-table-scroll,
+.md-typeset .setup-panel.doc-panel .setup-note > .highlight {
+  margin: 0.8em 0;
+}
+.md-typeset .setup-panel.doc-panel .setup-note > :last-child {
+  margin-bottom: 0;
+}
 /* Relic red and Ancient orange, the colours the calculator's Chaos Core table
    gives its Relic and Ancient column headers. */
 .md-typeset .doc-table th.doc-th-relic {
@@ -11489,29 +11515,35 @@ body.page-333-blitz input[type="text"] {
   }
 }
 
-/* The calculator's docs link, a small pill after the one-line intro above the
-   calculator. It is inline with no vertical padding, so it never makes the line
-   taller than plain text, and it carries the purple tint of the tag pills. Class
-   is outside ap- on purpose: the link sits above .ap-calc, so the regression dump
-   never sees it. Specificity beats the global link rule (0,2,1). */
+/* The calculator's docs link, a small button after the one-line intro above the
+   calculator. It copies the toolbar's Export/Import/Reset buttons (raised fill, hairline
+   border, lilac text, the 8px-scale radius, pink text and a pink 50% border on hover), so
+   the two read as the same control family. It is inline with no vertical padding, so it
+   never makes the line taller than plain text. Class is outside ap- on purpose: the link
+   sits above .ap-calc, so the regression dump never sees it. Specificity beats the global
+   link rule (0,2,1). */
 .md-typeset a.calc-doc-link {
   display: inline-block;
   margin-left: 0.4em;
-  padding: 0 0.6em;
-  border: 1px solid rgba(var(--dbc-purple-rgb), 0.4);
-  border-radius: 999px;
-  background-color: rgba(var(--dbc-purple-rgb), 0.14);
-  color: var(--dbc-chip-text);
+  padding: 0 0.5em;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--dbc-r-sm);
+  background-color: var(--dbc-surface-raised);
+  color: var(--dbc-lilac);
+  font-size: var(--dbc-fs-base);
   font-style: normal;
-  line-height: 1.2;
+  font-weight: 500;
+  line-height: 1.5;
   text-decoration: none;
-  vertical-align: baseline;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  /* Raised 0.1em so the box is centred on the sentence's letters; on the baseline its
+     smaller text made it sit low. */
+  vertical-align: 0.1em;
+  transition: border-color 0.12s ease, color 0.12s ease;
 }
 .md-typeset a.calc-doc-link:hover,
 .md-typeset a.calc-doc-link:focus-visible {
-  border-color: rgba(var(--dbc-purple-rgb), 0.75);
-  color: var(--dbc-pink-bright);
+  border-color: rgba(var(--dbc-pink-rgb), 0.5);
+  color: var(--dbc-pink);
 }
 
 /* Decorative sticker under a page title (Resources): centered in the
