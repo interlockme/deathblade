@@ -237,6 +237,19 @@
   //     nodes) - this is the one piece that can't scale off your own
   //     inputs, since it depends on the support's engraving/ArkGrid
   //     choices rather than WP/MainStat
+  //
+  // The candidate rows hold this buff FIXED at the value for your real,
+  // typed gear: a bracelet, accessory line or core you buy upgrades you,
+  // not your teammate, so letting the Support follow the candidate would
+  // credit every Weapon Power, Main Stat and Base AP gain with a buff the
+  // Support never got (exactly 1 + coefficient x uptime times the row's
+  // value, about 1.39x at the default 98% uptime; Attack Power % lines are
+  // unaffected). The sheet does the same, but that is not the reason: the
+  // fixed value answers "what is this line worth in this party". The
+  // Ability Stone row follows the same rule: its Support is fixed at the
+  // value with the stone on both sides (see abilityStoneBaseApGain).
+  // Every other call site passes the REAL typed Weapon Power, Main Stat and
+  // Base AP, never a zeroed or candidate copy.
   const SUPPORT_AP_BUFF_COEFFICIENT = 0.4;
 
   function gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff) {
@@ -592,6 +605,12 @@
   // checkbox since it's genuinely binary - you either have that roll or
   // you don't.
   const ABILITY_STONE_BASE_AP_BONUS = 1.5;
+
+  // Hover text for every "Ability Stone Base AP" row. The five rows in
+  // docs/resources.md carry the same sentence by hand (the four card rows)
+  // so the wording stays identical.
+  const STONE_BASE_AP_NOTE =
+    "Only applies once Stone 1 + Stone 2 add up to Lv.5 or higher combined. The stone's +1.5% Base AP adds on top of your gem Base AP, so the damage gain is smaller than 1.5%, and the Support's share of Attack Power lowers it further.";
 
   function gearBaseApPercentTotal(inputs) {
     return inputs.gearGemBaseAp + (inputs.gearAbilityStoneBaseAp ? ABILITY_STONE_BASE_AP_BONUS : 0);
@@ -2868,7 +2887,7 @@
         gearWpEarring1: "None",
         gearWpEarring2: "None",
       });
-      const wp = earringsNB.gearWp;
+      const typedWp = earringsNB.gearWp;
       const mainStat = earringsNB.gearMainStat;
       const baseApMult = 1 + gearBaseApPercentTotal(earringsNB) / 100;
       // Flat AP = accessories (the manual field) + Chaos Core: Attack's
@@ -2881,7 +2900,16 @@
       // would double-count them).
       const percentApMult = 1 + gearAttackPowerPercentTotal(earringsNB) / 100;
       const wpPercentMult = 1 + gearWpPercentTotal(earringsNB) / 100;
-      const supApBuff = supportApBuff(earringsNB, wp, mainStat, baseApMult);
+      // The typed Weapon Power already has your real earrings' WP%
+      // multiplied in, so zeroing the two earring dropdowns above only
+      // drops their share of the % sum. Divide the real full % back out
+      // and re-apply the earring-free %: the baseline is a no-earring
+      // Weapon Power, and each candidate line is valued as the only line
+      // on the slot. Same reverse-derivation Accessory vs. Accessory's
+      // apTotalFor uses for the Earring slot. The Support stays at the
+      // value for your real, typed Weapon Power (see supportApBuff).
+      const wp = (typedWp / (1 + gearWpPercentTotal(inputs) / 100)) * wpPercentMult;
+      const supApBuff = supportApBuff(inputs, typedWp, mainStat, baseApMult);
       const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
 
       if (wp > 0 && mainStat > 0 && baselineAp > 0) {
@@ -3663,7 +3691,12 @@
       const flatAp = arkNB.gearFlatAp + gearChaosStarFlat(arkNB.gearApChaosStar);
       const percentApMult = 1 + gearAttackPowerPercentTotal(arkNB) / 100;
       const wpPercentMult = 1 + gearWpPercentTotal(arkNB) / 100;
-      const supApBuff = supportApBuff(arkNB, wp, mainStat, baseApMult);
+      // The Support stays at the value for your real, typed Weapon Power
+      // (see SUPPORT_AP_BUFF_COEFFICIENT's comment), not the coreless
+      // `wp` above: a currently equipped Weapon Core is baked into the
+      // typed figure, and swapping your own core does not change your
+      // teammate's gear.
+      const supApBuff = supportApBuff(inputs, inputs.gearWp, inputs.gearMainStat, 1 + gearBaseApPercentTotal(inputs) / 100);
       const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
 
       if (wp > 0 && mainStat > 0 && baselineAp > 0) {
@@ -4150,9 +4183,14 @@
   // adrenalineContributionGain: that row compares Adrenaline on vs off
   // with the SAME baseApMult on both sides (so the bonus cancels out of
   // that ratio on purpose); this row's whole point IS the presence of
-  // the bonus itself, so it stays in the numerator only. Gated on Weapon
-  // Power/Main Stat being filled in, same convention as every other
-  // AP-based candidate on the page.
+  // the bonus itself, so it stays in the numerator only. The Support's
+  // buff is the same on both sides, like every other candidate row: it is
+  // computed once with the stone (the Support is assumed to carry the same
+  // kind of stone as you) so only your own Base AP changes between the two
+  // totals. A Support whose buff grew with your stone would make the whole
+  // bracket scale and read about 1 + coefficient x uptime times higher.
+  // Gated on Weapon Power/Main Stat being filled in, same convention as
+  // every other AP-based candidate on the page.
   function abilityStoneBaseApGain(inputs, engrInputs) {
     const wp = inputs.gearWp;
     const mainStat = inputs.gearMainStat;
@@ -4162,8 +4200,9 @@
     const percentApMult = 1 + gearAttackPowerPercentTotal(inputs) / 100;
     const withMult = 1 + (inputs.gearGemBaseAp + ABILITY_STONE_BASE_AP_BONUS) / 100;
     const withoutMult = 1 + inputs.gearGemBaseAp / 100;
-    const withAp = gearApTotal(wp, mainStat, withMult, flatAp, percentApMult, supportApBuff(inputs, wp, mainStat, withMult));
-    const withoutAp = gearApTotal(wp, mainStat, withoutMult, flatAp, percentApMult, supportApBuff(inputs, wp, mainStat, withoutMult));
+    const supportBuff = supportApBuff(inputs, wp, mainStat, withMult);
+    const withAp = gearApTotal(wp, mainStat, withMult, flatAp, percentApMult, supportBuff);
+    const withoutAp = gearApTotal(wp, mainStat, withoutMult, flatAp, percentApMult, supportBuff);
     if (withoutAp <= 0) return 0;
     return withAp / withoutAp - 1;
   }
@@ -4882,7 +4921,7 @@
         // otherwise has no way to tell why this row reads 0% even with a
         // stone slotted, if the other slot isn't carrying enough to clear
         // the combined threshold.
-        note: "Only applies once Stone 1 + Stone 2 add up to Lv.5 or higher combined.",
+        note: STONE_BASE_AP_NOTE,
       },
       {
         label: "Mana Food",
