@@ -129,8 +129,8 @@ Atk/Move Speed Feast
 <div class="engraving-cards" markdown>
 
 <details class="engraving-card" data-accent="kbw" open markdown>
-<summary>
-<span class="engraving-card-name" data-skill-id="keenbluntweapon">Keen Blunt Weapon</span>
+<summary markdown="span">
+<span class="engraving-card-name" data-skill-id="keenbluntweapon">![](../assets/shared/icon-keenbluntweapon.png){: .skill-icon } Keen Blunt Weapon</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-top">★ Recommended</span>
 <span class="engraving-card-badge engraving-card-badge-safe">Safe Pick</span>
@@ -147,8 +147,8 @@ Atk/Move Speed Feast
 </details>
 
 <details class="engraving-card" data-accent="cursed" open markdown>
-<summary>
-<span class="engraving-card-name" data-skill-id="curseddoll">Cursed Doll</span>
+<summary markdown="span">
+<span class="engraving-card-name" data-skill-id="curseddoll">![](../assets/shared/icon-curseddoll.png){: .skill-icon } Cursed Doll</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-safe">Alternative</span>
 </span>

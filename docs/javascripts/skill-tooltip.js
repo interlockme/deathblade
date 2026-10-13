@@ -853,6 +853,12 @@
     // trigger inside that span's own (same reason as the .food-option
     // skip just above).
     if (trigger.closest(".food-req-item")) return;
+    // The engraving icon at the left of an Essentials engraving card's name
+    // (.engraving-card-name, wired whole through attachSkillInline, or the
+    // .skill-mention spans inside the combined RC + MI name) is decorative
+    // (alt=""): the name already carries the tooltip, so wiring the icon
+    // would add a second, nested tab stop with the same text.
+    if (trigger.closest(".engraving-card-name")) return;
     var match = ICON_ID_RE.exec(trigger.getAttribute("src") || "");
     if (!match) return;
     var id = match[1];

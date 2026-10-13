@@ -3801,11 +3801,41 @@ h3 { color: var(--dbc-teal); }
 }
 
 .md-typeset .engraving-card-name {
-  font-weight: 700;
-  font-size: var(--dbc-fs-md);
+  font-weight: 600;
+  font-size: var(--dbc-fs-table);
   color: var(--md-default-fg-color);
   margin-right: auto;
   transition: color 0.15s ease;
+}
+/* The engraving's own icon sits at the left of the name, inside the name
+   span so the name's tooltip covers it (skill-tooltip.js skips it as a
+   separate trigger). The name stays inline flow, not flex: the combined
+   RC + MI name has text, two mentions and emoji in one run, and a flex
+   container would drop the spaces around the "+". The icon is a round chip
+   with the site's purple ring and glow (as .food-option-icon); 1.25em keeps
+   it in scale with the 14px name text. The markup's own space after the
+   icon supplies the rest of the icon-to-text gap. */
+.md-typeset .engraving-card-name img.skill-icon {
+  height: 1.25em;
+  width: 1.25em;
+  margin: 0 0.2em 0 0;
+  vertical-align: middle;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.4), 0 0 6px rgba(var(--dbc-purple-rgb), 0.25);
+  transition: box-shadow 0.15s ease;
+}
+/* The second mention of the combined RC + MI name follows a "+": a little
+   room before its icon matches the room after it. */
+.md-typeset .engraving-card-name .skill-mention:not(:first-child) img.skill-icon {
+  margin-left: 0.2em;
+}
+/* Same ring-brightens-on-hover cue as a wired .skill-icon; the name (or the
+   mention) is the trigger, so the icon follows it. */
+.md-typeset .engraving-card-name.skill-tip-anchor:hover img.skill-icon,
+.md-typeset .engraving-card-name.skill-tip-anchor:focus-visible img.skill-icon,
+.md-typeset .engraving-card-name .skill-mention.skill-tip-anchor:hover img.skill-icon,
+.md-typeset .engraving-card-name .skill-mention.skill-tip-anchor:focus-visible img.skill-icon {
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.65), 0 0 8px rgba(var(--dbc-purple-rgb), 0.4);
 }
 /* Same "only a wired anchor gets the cue" rule as .engraving-chip above -
    color shift here instead of a border-brighten since a card-name is

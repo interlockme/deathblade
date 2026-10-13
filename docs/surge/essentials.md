@@ -107,8 +107,8 @@ Atk/Move Speed Feast
 <div class="engraving-cards" markdown>
 
 <details class="engraving-card" data-accent="captain" open markdown>
-<summary>
-<span class="engraving-card-name" data-skill-id="raidcaptain">Raid Captain</span>
+<summary markdown="span">
+<span class="engraving-card-name" data-skill-id="raidcaptain">![](../assets/shared/icon-raidcaptain.png){: .skill-icon } Raid Captain</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-top">★ Recommended</span>
 <span class="engraving-card-badge engraving-card-badge-food">Food Option</span>
@@ -128,8 +128,8 @@ Atk/Move Speed Feast
 </details>
 
 <details class="engraving-card" data-accent="kbw" open markdown>
-<summary>
-<span class="engraving-card-name" data-skill-id="keenbluntweapon">Keen Blunt Weapon</span>
+<summary markdown="span">
+<span class="engraving-card-name" data-skill-id="keenbluntweapon">![](../assets/shared/icon-keenbluntweapon.png){: .skill-icon } Keen Blunt Weapon</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-top">★ Recommended</span>
 <span class="engraving-card-badge engraving-card-badge-safe">Safe Pick</span>
@@ -149,8 +149,8 @@ Pair with <span class="skill-mention" data-skill-id="curseddoll">Cursed Doll</sp
 </details>
 
 <details class="engraving-card" data-accent="mass" open markdown>
-<summary>
-<span class="engraving-card-name" data-skill-id="massincrease">Mass Increase</span>
+<summary markdown="span">
+<span class="engraving-card-name" data-skill-id="massincrease">![](../assets/shared/icon-massincrease.png){: .skill-icon } Mass Increase</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-food">Food Option</span>
 </span>
@@ -169,8 +169,8 @@ Pair with <span class="skill-mention" data-skill-id="curseddoll">Cursed Doll</sp
 </details>
 
 <details class="engraving-card" data-accent="cursed" open markdown>
-<summary>
-<span class="engraving-card-name" data-skill-id="curseddoll">Cursed Doll</span>
+<summary markdown="span">
+<span class="engraving-card-name" data-skill-id="curseddoll">![](../assets/shared/icon-curseddoll.png){: .skill-icon } Cursed Doll</span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-safe">Alternative</span>
 </span>
@@ -189,8 +189,8 @@ Not the end of the world if you're forced to use it
 </details>
 
 <details class="engraving-card" data-accent="combo" open markdown>
-<summary>
-<span class="engraving-card-name"><span class="skill-mention" data-skill-id="raidcaptain">Raid Captain</span> + <span class="skill-mention" data-skill-id="massincrease">Mass Increase</span> 🦁 🐆</span>
+<summary markdown="span">
+<span class="engraving-card-name"><span class="skill-mention" data-skill-id="raidcaptain">![](../assets/shared/icon-raidcaptain.png){: .skill-icon } Raid Captain</span> + <span class="skill-mention" data-skill-id="massincrease">![](../assets/shared/icon-massincrease.png){: .skill-icon } Mass Increase</span></span>
 <span class="engraving-card-badges" markdown>
 <span class="engraving-card-badge engraving-card-badge-ceiling">★ Ceiling</span>
 <span class="engraving-card-badge engraving-card-badge-food">Food Option</span>

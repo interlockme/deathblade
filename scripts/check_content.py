@@ -461,7 +461,10 @@ def check():
         # 4. display-text drift
         for m in re.finditer(r'<span class="skill-(?:mention|inline)"([^>]*)>(.*?)</span>', text, re.S):
             attrs, inner = m.group(1), m.group(2)
-            shown = re.sub(r"<[^>]+>", "", inner).strip()
+            shown = re.sub(r"<[^>]+>", "", inner)
+            # A leading icon written as markdown (an engraving card's name) is
+            # not display text.
+            shown = re.sub(r"!\[[^\]]*\]\([^)]*\)(\{:[^}]*\})?", "", shown).strip()
             sid = re.search(r'data-skill-id="([^"]+)"', attrs)
             aid = re.search(r'data-ap-id="([^"]+)"', attrs)
             lvl = re.search(r'data-level="([^"]+)"', attrs)
