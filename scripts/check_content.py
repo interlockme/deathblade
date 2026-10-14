@@ -297,7 +297,8 @@ def data_names(filename, pattern):
 
 
 HISTORY_WORDS = re.compile(
-    r"\bpreviously\b|\bformerly\b|\bno longer\b|\bno more\b|\bused to (?:be|have|sit|work|force|reuse|live|read)\b",
+    r"\bpreviously\b|\bformerly\b|\bno longer\b|\bno more\b|\bused to (?:be|have|sit|work|force|reuse|live|read)\b"
+    r"|\bearlier (?:draft|version)\b|\b(?:a )?prior version\b|\braised \d+ ?(?:->|to) ?\d+|\bwas (?:a )?mistranscri",
     re.I)
 MD_COMMENT = re.compile(r"<!--(.*?)-->", re.S)
 BLOCK_COMMENT = re.compile(r"/\*(.*?)\*/", re.S)
@@ -359,6 +360,33 @@ PAGE_CONSTANTS = [
     ("STAGGER_DPS_SHARE", "at the {v}% share", True),
     ("CRIT_BASE", "bracelet-free {v}", False),
     ("SPEC_BASE", "(m - 1) / ({v} * m)", False),
+    ("SPEC_REF", "reference Spec of {v}", False),
+    ("SPEC_SKILL_COEFFICIENT", "m = 1 + ({v} * shareRatio", False),
+    ("AWAKENING_COEFFICIENT", "+ {v} * awakeningRatio", False),
+    ("RE_AWAKENING_SHARE", "Awakening is {v}% of damage on RE", True),
+    ("SURGE_AWAKENING_SHARE", "and {v}% on Surge", True),
+    ("MAELSTROM_UPTIME_DEFAULT_RE", "{v}% on RE, ", False),
+    ("MAELSTROM_UPTIME_DEFAULT_SURGE", "{v}% on Surge 111 and 333", False),
+    ("MAELSTROM_UPTIME_DEFAULT_SURGE_222", "{v}% on Surge 222", False),
+    ("RAGE_RUNE_SPEED_BONUS", "Rage Rune ({v} on Surge)", False),
+    ("MANA_FOOD_BLEED_DMG", "Maelstrom Bleed rune's +{v}% damage", True),
+    ("AMBUSH_MASTER_BACK_DMG", "({v}% times your effective back attack share", True),
+    ("GEAR_AP_ASTROGEM_MAX", "level / 120 x {v}%", False),
+    ("GEAR_AP_ASTROGEM_MAX_LEVEL", "level / {v} x 4.4%", False),
+    ("ADRENALINE_STACKS", "3 of {v} stacks", False),
+]
+
+# Literals that are not named constants: (pattern in the JS, whether the value is shown x 100,
+# the text the page must contain, a name for the message).
+PAGE_LITERALS = [
+    (r"const addDmgMaster = addDmgBase \+ ([0-9.]+);", True, "Master adds {v} points", "Master Additional Damage"),
+    (r"const T19 = S19 \+ ([0-9.]+);", True, "Pulverize adds {v} points", "Pulverize Evolution Damage"),
+]
+
+# Defaults that live in the page markup: (file, pattern, template, name).
+PAGE_HTML_DEFAULTS = [
+    ("resources.md", r'id="ap-adrenaline-uptime"[^>]*value="([0-9.]+)"', '<td>{v}%</td>\n<td class="doc-num">', "Adrenaline uptime default"),
+    ("resources.md", r'id="ap-gear-support-uptime"[^>]*value="([0-9.]+)"', "At the defaults ({v}% uptime)", "Support uptime default"),
 ]
 
 
@@ -382,6 +410,23 @@ def check_page_constants(problems):
         expected = template.format(v=_fmt_number(value))
         if expected not in text:
             problems.append(f"{rel}: expected the text {expected!r} ({name} = {m.group(1)} in the JS)")
+    for pattern, pct, template, label in PAGE_LITERALS:
+        m = re.search(pattern, js)
+        if not m:
+            problems.append(f"{rel}: {label} not found in ark-passive-calculator.js (code changed?)")
+            continue
+        expected = template.format(v=_fmt_number(round(float(m.group(1)) * (100 if pct else 1), 10)))
+        if expected not in text:
+            problems.append(f"{rel}: expected the text {expected!r} ({label} = {m.group(1)} in the JS)")
+    for fname, pattern, template, label in PAGE_HTML_DEFAULTS:
+        src = (ROOT / "docs" / fname).read_text()
+        m = re.search(pattern, src)
+        if not m:
+            problems.append(f"docs/{fname}: {label} not found (markup changed?)")
+            continue
+        expected = template.format(v=_fmt_number(float(m.group(1))))
+        if expected not in text:
+            problems.append(f"{rel}: expected the text {expected!r} ({label} = {m.group(1)} in {fname})")
     burn = re.search(r"const ARK_SMOLDERING_BURN_TABLE = \{ Relic: ([0-9.]+), Ancient: ([0-9.]+) \}", js)
     if not burn:
         problems.append(f"{rel}: ARK_SMOLDERING_BURN_TABLE not found in ark-passive-calculator.js")
@@ -391,6 +436,65 @@ def check_page_constants(problems):
         for expected in (f"It is {_fmt_number(relic)}% of total damage at Relic", f"{_fmt_number(ratio)} times that at Ancient"):
             if expected not in text:
                 problems.append(f"{rel}: expected the text {expected!r} (ARK_SMOLDERING_BURN_TABLE in the JS)")
+
+
+# Dropdowns whose option labels quote a tier table: (select id, table in the JS).
+TIER_DROPDOWNS = [
+    ("ap-necklace", "NECKLACE_ADD_TABLE"),
+    ("ap-ring1-rate", "RING_RATE_TABLE"), ("ap-ring2-rate", "RING_RATE_TABLE"),
+    ("ap-ring1-dmg", "RING_DMG_TABLE"), ("ap-ring2-dmg", "RING_DMG_TABLE"),
+]
+# Candidate-line tables that must hold the same Low/Mid/High figures as the live-field table.
+TWIN_TABLES = [("ACC_NECKLACE_ADD_TABLE", "NECKLACE_ADD_TABLE"), ("ACC_RING_DMG_TABLE", "RING_DMG_TABLE")]
+
+
+def _tier_table(js, name):
+    m = re.search(r"const " + name + r" = NONE_LOW_MID_HIGH\(([^)]*)\);", js)
+    if m:
+        v = [float(x) for x in m.group(1).split(",")]
+        return {"None": v[0], "Low": v[1], "Mid": v[2], "High": v[3]}
+    m = re.search(r"const " + name + r" = \{([^}]*)\};", js)
+    if m:
+        return {k: float(v) for k, v in re.findall(r"(\w+):\s*([0-9.]+)", m.group(1))}
+    return None
+
+
+def check_tier_dropdowns(problems):
+    """Every tier dropdown label must equal its table value, so a mistyped table cannot hide."""
+    js = (JS / "ark-passive-calculator.js").read_text()
+    res = (DOCS / "resources.md").read_text()
+    for sel_id, table in TIER_DROPDOWNS:
+        values = _tier_table(js, table)
+        m = re.search(r'<select id="' + sel_id + r'"[^>]*>(.*?)</select>', res, re.S)
+        if values is None or not m:
+            problems.append(f"docs/resources.md: tier dropdown {sel_id} or table {table} not found")
+            continue
+        for tier, label in re.findall(r'<option value="(\w+)"[^>]*>([0-9.]+)%</option>', m.group(1)):
+            if abs(float(label) - values[tier] * 100) > 1e-9:
+                problems.append(f"docs/resources.md: {sel_id} {tier} says {label}% but {table}[{tier}] = {values[tier]}")
+    for twin, base in TWIN_TABLES:
+        a, b = _tier_table(js, twin), _tier_table(js, base)
+        if a is None or b is None:
+            problems.append(f"ark-passive-calculator.js: {twin} or {base} not found")
+        elif any(abs(a[k] - b[k]) > 1e-9 for k in a):
+            problems.append(f"ark-passive-calculator.js: {twin} and {base} hold different figures (tracked apart on purpose, so update the guide if this is intended)")
+
+
+def check_surge_share_row(problems):
+    """The register row quoting each build's Surge share must match order-core-data.js."""
+    data = (JS / "order-core-data.js").read_text()
+    page = (DOCS / "resources" / "calculator.md").read_text()
+    names = [("re-111", "RE 111"), ("re-333", "RE 333"), ("surge-111", "Surge 111"), ("surge-222", "Surge 222"), ("surge-333", "Surge 333")]
+    parts = []
+    for build, label in names:
+        m = re.search(r'"' + build + r'": \{[^}]*?\bsurge: ([0-9.]+)', data)
+        if not m:
+            problems.append(f"order-core-data.js: no Surge share for {build}")
+            return
+        parts.append(f"{label} {_fmt_number(float(m.group(1)))}%")
+    expected = ", ".join(parts)
+    if expected not in page:
+        problems.append(f"docs/resources/calculator.md: the Surge share register row should read {expected!r}")
 
 
 def check():
@@ -506,6 +610,8 @@ def check():
     # 11. home rows match build-data.js
     check_home_rows(problems)
     check_page_constants(problems)
+    check_tier_dropdowns(problems)
+    check_surge_share_row(problems)
 
     return problems
 

@@ -2,7 +2,9 @@
 """Keep the Order Core Comparison's damage shares in step with the build pages.
 
 docs/javascripts/order-core-data.js holds one object of skill shares per
-calculator build, copied from that build page's dps-chart block. This script
+calculator build, copied from that build page's dps-chart block. The calculator also
+reads each build's Surge share from it (the Spec row, Breaking Moon and the RE back
+attack split), so this block is the one source of those shares. This script
 rewrites that block from the pages (default), or only reports drift (--check,
 which check_content.py also runs so a stale block fails the deploy).
 

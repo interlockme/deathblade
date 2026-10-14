@@ -60,7 +60,7 @@ The Evolution tree lets you take two of the three Tier 4 keystones (Critical, Ma
 </table>
 </div>
 
-With the best setup your effective crit rate reads 92.38% (77.38% before the picks), Evolution Damage 81.00% (41.00% before) and Additional Damage 46.86% (38.36% before).
+With the best setup your effective crit rate reads 92.37% (77.37% before the picks), Evolution Damage 81.00% (41.00% before) and Additional Damage 46.86% (38.36% before).
 
 <div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
@@ -79,11 +79,11 @@ then times 0.98 if Keen Blunt Weapon is equipped. "% of best" is a cell's score 
 - `c` is your effective crit rate, capped at 100% (how it is averaged is in the next section).
 - `CritDmg` is your Crit Damage: base 2.0 plus rings, bracelet, Keen Blunt Weapon, the Swift core and others.
 - `onCrit` is the extra damage on crit hits (Crit Hit Damage Synergy and similar). Critical multiplies it by 1.12.
-- `evo` is Evolution Damage. Pulverize adds 20% of it.
-- `add` is Additional Damage. Master adds 8.5% of it.
+- `evo` is Evolution Damage. Pulverize adds 20 points to it.
+- `add` is Additional Damage. Master adds 8.5 points to it.
 - Master also adds 7% crit rate. That shares the 100% cap, so Master is worth less as your crit rate nears the cap.
 
-Keen Blunt Weapon's downside is an expected value, a 10% chance of -20% damage, so a flat x0.98. Optimized Training 1 counts only for its Evolution Damage, not its cooldown reduction.
+Keen Blunt Weapon's downside is an expected value, a 10% chance of -20% damage, so a flat x0.98. Optimized Training 1 takes one of the three keystone points, so with it ticked the splits become OT1/LB2, OT1/LB1/KS1 and OT1/KS2 (there is no LB3), and it adds its own 5 points of Evolution Damage. Its cooldown reduction is not counted, so at the defaults it reads -2.8% DPS: the best split with it against the best without it.
 
 </details>
 
@@ -186,7 +186,7 @@ At the defaults (4 nodes, no stone) the full value is 5.4% Attack Power:
 <td>97%</td>
 <td class="doc-num">5.32%</td>
 <td class="doc-num">19.4%</td>
-<td class="doc-num">77.38%</td>
+<td class="doc-num">77.37%</td>
 <td class="doc-num">346,161</td>
 </tr>
 <tr>
@@ -222,6 +222,30 @@ The terms are treated as independent. In practice they are usually on together, 
 
 </div>
 </div>
+
+## Build, presets and loading a character
+
+**The Build toggle.** The five builds (RE 111/313, RE 333, Surge 111, Surge 222, Surge 333) change the following:
+
+- **Spec share.** The Spec row and the Bracelet vs Bracelet Spec input use the Surge skill's share of that build's damage, read from the build pages' Trixion charts. Awakening is 1.5% of damage on RE and 1% on Surge.
+- **Back attack.** On RE, Surge always lands as a back attack, so its chart share is the always-back-attack share and the Back Attack rate covers only the rest. On Surge builds the share is 0.95 times the rate.
+- **Maelstrom uptime default.** 85% on RE, 80% on Surge 111 and 333, 90% on Surge 222. It is reset when you switch between groups (RE, Surge 111/333, Surge 222) and left alone inside a group, so a value you typed survives.
+- **Food and runes.** Mana Food, Vernese Wine, Mass Increase and the Rage Rune only apply where the build uses them. On RE, Mana Food is informational and left out of the DPS totals.
+- **Breaking Moon.** Surge 111 only: its average Crit Damage is added.
+- **Move Speed.** The class passive is 12 on RE and 10 on Surge.
+
+The Order Core table does not follow the toggle. Each core is judged on the build it belongs to.
+
+**Presets.** There are three slots. Every change is saved to the active slot in your browser, and switching slots loads that slot. Reset clears only the active slot, after a confirmation.
+
+**Export and Import.** Export writes the active slot as text. Import first resets every field to its default, then applies what the text contains, so a field missing from the text ends up at its default and not at your previous value. Options the calculator does not recognise are skipped and listed. The Setup A vs B, Bracelet A vs B and Ability Stone sandbox fields are not part of an export and always start fresh.
+
+**Load Character.** Enter a character name or a Bible link. The calculator reads the raid loadout from that character's lostark.bible page and runs it through the same Import path. When it can tell from the Order cores, it also sets the Build for you. Some rules decide what gets loaded and how much to trust it:
+
+- It uses the character's most recent raid loadout. The Chaos Dungeon loadout is never used.
+- If that raid loadout has no gems, or there is none, it falls back to Bible's estimated raid loadout and says so. That is the best raid gear Bible has seen, which can differ from what the character wears now.
+- Anything it could not read (an unknown tier, an unreadable core grade, a Build it could not match) is listed as a warning and left at its default, so check the list before trusting the numbers.
+- It refuses characters that are not Deathblades.
 
 ## Support
 
@@ -373,7 +397,7 @@ The final value is the baseline every Attack Power based comparison uses.
 
 The formula is the one in the Support section. Its pieces:
 
-- `BaseAP` is 1 plus your gem Base AP % (summed over every gem, so eleven Lv. 10 gems at 1.2% each is 13.2%), plus 1.5% for the 9/7 or 10/6 Ability Stone.
+- `BaseAP` is 1 plus your gem Base AP % (summed over every gem, so eleven Lv. 10 gems at 1.2% each is 13.2%), plus 1.5% when your Ability Stone's two engraving levels add up to 5 or more (9/7 and 10/6 nodes are the smallest that do).
 - `FlatAP` is your flat Attack Power plus the flat half of Chaos Core: Attack.
 - `PercentAP` is 1 plus: both Attack Power earrings, Kazeros (2%), Guardian (3%), the Attack % half of Chaos Core: Attack, Astrogem Attack Power, the Attack Power % Other field, Atropine (30% times its uptime), Strength Orb (10% times 1.31 times its uptime) and the Adrenaline model.
 - Astrogem Attack Power is level / 120 x 4.4%, rounded down to two decimals as the game shows it (level 35: 1.28%).
@@ -420,7 +444,7 @@ The sources of each layer, with the RE 333 default value:
 <tr>
 <td>Crit rate</td>
 <td>Added, then capped at 100% with the uptime blend</td>
-<td>Crit stat 658 gives 23.55% (stat x 0.03579099 / 100 as a fraction, 0.2355 after rounding down to 4 decimals), rings 1.90, bracelet 4.20, Adrenaline 19.40, strike 20, Back Attack 8.33, total 77.38%</td>
+<td>Crit stat 658 gives 23.55% (stat x 0.03579099 / 100 as a fraction, 0.2355 after rounding down to 4 decimals), rings 1.90, bracelet 4.20, Adrenaline 19.40, strike 20, Back Attack 8.32, total 77.37%</td>
 </tr>
 <tr>
 <td>Crit Damage</td>
@@ -448,7 +472,7 @@ The sources of each layer, with the RE 333 default value:
 
 Other sources: Keen Sense adds Crit Rate (4% per level) and Evolution Damage (5% per level). Limit Break adds 10% Evolution Damage per level. Crit Rate synergies add 10% each, two Crit Hit Damage synergies multiply by 1.08 each, and Optimized Training 1 adds 5% Evolution Damage. Weapon quality adds 10% plus 0.002% times quality squared (quality 100 gives 30%). Astrogem Additional Damage is the level times 8.0834, rounded down, over 10,000 (level 59 gives 4.76%). Keen Blunt Weapon adds 44% to 52% Crit Damage by node and its stone adds 7.5% to 15%.
 
-Check for the best cell at the defaults (LB1/KS2, Master + Pulverize): effective crit 92.38%, Crit Damage 2.988, Crit Hit Damage 1.0472, Evolution 1 + 0.81, Additional 1 + 0.4686.
+Check for the best cell at the defaults (LB1/KS2, Master + Pulverize): effective crit 92.37%, Crit Damage 2.988, Crit Hit Damage 1.0472, Evolution 1 + 0.81, Additional 1 + 0.4686.
 
 ```text
 ((1 - 0.9238) + 0.9238 * 2.988 * 1.0472) * 1.81 * 1.4686 * 0.98 = 7.73
@@ -602,15 +626,15 @@ These panels value one line or one whole piece at a time, always as a ratio to a
 
 - Crit Rate, Crit Damage, Crit Stat and Additional Damage lines go through the full search.
 - Back Attack Damage is the tabled value times the 0.95 back attack share (2.5% reads 2.38%). Outgoing Damage plus Damage to Staggered adds the Stagger line at the 5% share (2% + 4% x 0.05 reads 2.20%). Damage plus Cooldown reads the damage value minus 1 point as an estimate for the cooldown half (4.5% reads 3.50%).
-- Weapon Power, Main Stat and Attack Power lines use the Attack Power formula with the Support fixed, so a Weapon Power line reads about 72% of its no-Support value. They are added on top of the Weapon Power and Main Stat you typed, and there is no field for your equipped bracelet's own line to remove, so a Weapon Power or Main Stat line already on your bracelet stays in the baseline (Bracelet vs Bracelet does remove it: side A is your worn bracelet). At the defaults, with an equipped Mid line (8,100 Weapon Power or 14,000 Main Stat), the Weapon Power rows read about 0.03 to 0.05 points low (about 3% of their value) and the Main Stat rows about 0.01 points low, both well inside the 0.5 point tie band.
-- Spec Stat has its own model. The gain per point is `(m - 1) / (1735 * m)` where `m = 1 + (0.86 * shareRatio + 0.1528 * awakeningRatio) / 699 * 1735`. The two ratios say how much of your damage comes from the skill Spec scales and from your Awakening, each normalized at a reference Spec of 1855. On RE 333 (17% skill share, 1.5% Awakening) +100 Spec reads 0.67%. It counts damage only, not cooldown reduction.
+- Weapon Power, Main Stat and Attack Power lines use the Attack Power formula with the Support fixed, so a Weapon Power line reads about 72% of its no-Support value. They are added on top of the Weapon Power and Main Stat you typed, and there is no field for your equipped bracelet's own line to remove, so a Weapon Power or Main Stat line already on your bracelet stays in the baseline (Bracelet vs Bracelet does remove it: side A is your worn bracelet). At the defaults, with an equipped Mid line (8,100 Weapon Power or 14,000 Main Stat), the Weapon Power rows read about 0.03 to 0.05 points low and the Main Stat rows about 0.01 points low. Both are well inside the 0.5 point tie band.
+- Spec Stat has its own model. The gain per point is `(m - 1) / (1735 * m)` where `m = 1 + (0.86 * shareRatio + 0.1528 * awakeningRatio) / 699 * 1735`. The two ratios say how much of your damage comes from the skill Spec scales and from your Awakening, each normalized at a reference Spec of 1855. On RE 333 (16.6% skill share, 1.5% Awakening) +100 Spec reads 0.65%. It counts damage only, not cooldown reduction.
 - A few Weapon Power lines use an assumed stack count, fight length or uptime, listed in the register.
 
 Check: High Crit Rate +5% with its +1.5% Crit Hit Damage bonus reads 5.18% in the table and in a hand computation.
 
 **Accessory Line Comparison.** Same idea, but each table clears only the piece it lists and keeps the rest of your gear. Necklace clears your necklace line, Rings clears both rings' Crit lines, and Earrings clears both earrings' Attack Power % and Weapon Power % lines, so each candidate is valued as the only line on that slot. The lines that can roll on any accessory (flat Weapon Power, flat Attack Power and Quality STR/DEX/INT) clear nothing and are added on top of your full gear, so a line of that kind already on one of your pieces stays in the baseline; Accessory vs Accessory is the tool for swapping one. Necklace, earring and ring tables also show the two lines of one piece rolled together (LL, ML, MM, HL, HM, HH, for Low, Mid and High). Earrings are the one case where a line feeds Weapon Power %, so your base Weapon Power is reverse-derived from the total you typed and your Weapon Power % fields, and is only as exact as those fields.
 
-**Bracelet vs Bracelet and Accessory vs Accessory.** Each side is valued as four layers: the keystone, crit and Additional Damage lines (searched), Spec, the flat lines, and Attack Power plus Weapon Power. Each layer is computed alone against the same baseline, and the layers are multiplied. The default bracelet reads +14.73%, about 1.1397 x 1.0067 x 1.0000 x 1.0000 (its lines are Crit Rate, Crit Damage and Additional Damage, so the flat layer is empty). Damage plus Cooldown uses the raw tag in the sandbox unless you tick the box, because the cooldown value is personal. Side A is always treated as your equipped piece, and any Main Stat or flat Weapon Power line on it is backed out of the shared baseline (Bracelet vs Bracelet backs out only its Weapon Power and Main Stat lines, since the other layers already start from a bracelet-free baseline). Main Stat counts with your Main Stat %, and flat Weapon Power with your Weapon Power %, on both sides. The reference table applies the Damage plus Cooldown penalty by default.
+**Bracelet vs Bracelet and Accessory vs Accessory.** Each side is valued as four layers: the keystone, crit and Additional Damage lines (searched), Spec, the flat lines, and Attack Power plus Weapon Power. Each layer is computed alone against the same baseline, and the layers are multiplied. The default bracelet reads +14.71%, about 1.1397 x 1.0065 x 1.0000 x 1.0000 (its lines are Crit Rate, Crit Damage and Additional Damage, so the flat layer is empty). Damage plus Cooldown uses the raw tag in the sandbox unless you tick the box, because the cooldown value is personal. Side A is always treated as your equipped piece, and any Main Stat or flat Weapon Power line on it is backed out of the shared baseline (Bracelet vs Bracelet backs out only its Weapon Power and Main Stat lines, since the other layers already start from a bracelet-free baseline). Main Stat counts with your Main Stat %, and flat Weapon Power with your Weapon Power %, on both sides. The reference table applies the Damage plus Cooldown penalty by default.
 
 </details>
 
@@ -626,7 +650,7 @@ Layers are treated as independent, so an interaction between, say, Spec and Atta
 
 ### Engravings and Raid Captain
 
-The Engraving Comparison shows what each engraving is worth and which two flexible engravings work best together. Raid Captain depends Move Speed, so its value follows a Move Speed estimate. That estimate uses the same expand-then-cap method as the crit rate, so a high average does not hide the time spent below the cap.
+The Engraving Comparison shows what each engraving is worth and which two flexible engravings work best together. Raid Captain depends on Move Speed, so its value follows a Move Speed estimate. That estimate uses the same expand-then-cap method as the crit rate, so a high average does not hide the time spent below the cap.
 
 <div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
@@ -635,15 +659,15 @@ The Engraving Comparison shows what each engraving is worth and which two flexib
 <summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
 
 - Grudge, Cursed Doll and Mass Increase are tabled values by node level, plus your Ability Stone level. Grudge at 4 nodes reads 21.00% and Cursed Doll 17.00%.
-- Ambush Master is two multiplying parts: the Back Attack Damage half (15% times your effective back attack share, 0.833 at the defaults) and the book-level Damage half (7.6% at 4 nodes). That is 1.12495 x 1.076 - 1 = 21.04%.
+- Ambush Master is two multiplying parts: the Back Attack Damage half (15% times your effective back attack share, 0.832 at the defaults) and the book-level Damage half (7.6% at 4 nodes). That is 1.12486 x 1.076 - 1 = 21.03%.
 - Adrenaline and Keen Blunt Weapon use a real with-and-without search, so the winning keystone can flip, as in the Ark Grid rows. The Keen Blunt Weapon stone-level preview works the same way.
-- Raid Captain's tabled value (48% at 4 nodes) is its bonus at the 140% Move Speed cap. It scales linearly from 0% at 100% Move Speed, so the row is the node value times (expected capped Move Speed minus 100) over 100.
+- Raid Captain's tabled value (48% at 4 nodes) is its bonus per 100 points of Move Speed above 100%. Move Speed is capped at 140%, so the cap pays 40% of the tabled value (19.2% at 4 nodes). The row is the node value times (expected capped Move Speed minus 100) over 100.
 - The Ability Stone's Base AP row is your Attack Power with and without the stone's +1.5% Base AP, with the Support's buff the same on both sides (it is assumed to carry the same kind of stone as you). The +1.5% adds to your gem Base AP, so the gain is below 1.5%, and the Support's share of Attack Power lowers it further: at the defaults the row reads 0.94% with the Support and 1.31% with none. It applies when the two stone levels add up to 5 or more.
 - Mana Food's row is the Main Stat gain through the Attack Power formula, Support fixed. On Surge 111 and 333 it also carries the Maelstrom Bleed rune's +0.75% damage. On RE it is informational and left out of every DPS total.
 - Best Combo and Runner-Up search every pair of the flexible engravings (Raid Captain, Keen Blunt Weapon, Cursed Doll, plus Mass Increase on Surge if you opt in), valued together. Raid Captain is in the pool on both specs so you can see its value even if you would not drop it. At the defaults the best pair is Raid Captain plus Keen Blunt Weapon at +39.42%, 0.74% ahead of Raid Captain plus Cursed Doll at +38.40%. The 0.74% compares the two whole setups (1.3942 / 1.3840 - 1), so it is not the 1.02 point difference between the displayed gains.
-- Setup A vs Setup B compares two whole loadouts of your choice the same way.
+- Setup A vs Setup B compares two whole loadouts of your choice the same way, with your food held fixed. On Surge that can mislead, because Wine only helps a setup that has Raid Captain. Overall Best therefore lets each setup pick its better food (Wine, or Mana Food with its Main Stat and Bleed gain) before comparing the two. Best Combo has the same note for the best pair under each food. RE has no second food choice, so neither note appears there.
 
-**Move Speed.** Every on/off combination of the sometimes-on sources is capped at 140% and weighted by its joint probability. At the RE 333 defaults the base is 127.32% (106.32 base, 12 class passive, 9 Passionate Dance) and Maelstrom adds 12.8% at 85% uptime. The expected capped Move Speed is 138.10%, shown as Raid Captain Efficiency 95.25% (the share of the way from 100% to the 140% cap). Capping the average instead would read 95.50%. With the Paladin checkbox added (24.6% at a 35% assumed uptime) the true figure is 96.91%, while capping the average would read 100.00% and hide that you are still below the cap part of the time. The Raid Captain row in the engraving table is its node value times that fraction: 0.48 (4 nodes, no stone) times 0.38098 gives 18.29%.
+**Move Speed.** Every on/off combination of the sometimes-on sources is capped at 140% and weighted by its joint probability. At the RE 333 defaults the base is 127.32% (106.32 base, 12 class passive, 9 Passionate Dance) and Maelstrom adds 12.8% at 85% uptime. The expected capped Move Speed is 138.10%, shown as Raid Captain Efficiency 95.25% (the share of the way from 100% to the 140% cap). Capping the average instead would read 95.50%. With the Paladin checkbox added (24.6% at a 35% assumed uptime) the true figure is 96.91%, while capping the average would read 100.00% and hide that you are still below the cap part of the time. The Raid Captain row in the engraving table is its node value times the Move Speed above 100% as a fraction, (138.10 - 100) / 100 = 0.38098. That is the 95.25% efficiency times the 0.40 the cap allows. So 0.48 (4 nodes, no stone) times 0.38098 gives 18.29%.
 
 Sources: base 106.32, plus 12 from the class on RE (10 on Surge), Passionate Dance 9 with a Support, Valkyrie or Artist 8, and Vernese Wine 3 on Surge when you do not use Mana Food. The 8 is exactly Valkyrie's Move Speed at 100% uptime. Artist (a skill-based 10% at 70-100% uptime) is grouped in for simplicity, so no uptime or skill input is needed. Maelstrom (12.8), Rage Rune (16 on Surge) and Paladin (24.6) are sometimes-on, at the register's uptimes. The cap is 140.
 
@@ -776,8 +800,8 @@ Every estimate the calculator uses, where it comes from, and what it moves. "Log
 </tr>
 <tr>
 <td>Breaking Moon average Crit Damage</td>
-<td>+11.25 points</td>
-<td>75% Surge share times 1 in 4 casts times 60%; a stricter weighting gives about 11.1 points, about 0.04% DPS</td>
+<td>+11.475 points</td>
+<td>76.5% Surge share times 1 in 4 casts times 60%; a stricter weighting gives about 11.4 points, about 0.04% DPS</td>
 <td>Surge 111 Crit Damage</td>
 </tr>
 <tr>
@@ -805,6 +829,12 @@ Every estimate the calculator uses, where it comes from, and what it moves. "Log
 <td>Order Core table</td>
 </tr>
 <tr>
+<td>Surge skill share per build</td>
+<td>RE 111 19.9%, RE 333 16.6%, Surge 111 76.5%, Surge 222 47.8%, Surge 333 42%</td>
+<td>The same Trixion chart values as the Order cores, read from the same data</td>
+<td>Spec row, Bracelet vs Bracelet Spec, back attack split on RE, Breaking Moon</td>
+</tr>
+<tr>
 <td>Normal Skill Damage share</td>
 <td>100% minus Surge minus Awakening</td>
 <td>Simplification; bleed and other non-skill damage left in</td>
@@ -824,8 +854,8 @@ Every estimate the calculator uses, where it comes from, and what it moves. "Log
 </tr>
 <tr>
 <td>Raid Captain scaling</td>
-<td>Linear, 0% at 100 Move Speed to full at 140</td>
-<td>The tabled value is the bonus at the cap</td>
+<td>Linear in Move Speed above 100, capped at 140</td>
+<td>The tabled value is the bonus per 100 points of Move Speed, so the cap pays 40% of it</td>
 <td>Raid Captain row</td>
 </tr>
 <tr>

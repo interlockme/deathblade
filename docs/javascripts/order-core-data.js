@@ -13,6 +13,11 @@
 // Trixion charts), which is why the Relic total is derived by dividing the
 // Ancient bonus back out rather than multiplying a Relic base up.
 //
+// The same shares also feed the rest of the calculator: BRACE_SPEC_BUILDS
+// reads each build's Surge share from here for the Spec row, Breaking Moon
+// and the RE back attack split, so a chart edit followed by the sync script
+// moves those too. This file must load before ark-passive-calculator.js.
+//
 // SHARES
 // One object per calculator build id (the BRACE_SPEC_BUILDS keys), skill id
 // to percent of total damage, copied from that build page's dps-chart block.

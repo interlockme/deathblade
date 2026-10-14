@@ -30,7 +30,7 @@
 //
 // Crit Hit Damage Synergy 1 and 2 (ap-crit-hit-syn-1/2) are party
 // synergies that raise damage on crit hits, each modeled as a flat +8%
-// on-crit damage multiplier (Glaivier's synergy is on crit damage). Both
+// on-crit damage multiplier (the synergy raises damage on crit hits). Both
 // default OFF.
 //
 // A bracelet can roll two Crit Rate lines or two Crit Damage lines at
@@ -60,7 +60,7 @@
   const BRACELET_DMG_TABLE = NONE_LOW_MID_HIGH(0, 0.068, 0.084, 0.1);
   const BRACELET_ADD_A_TABLE = NONE_LOW_MID_HIGH(0, 0.03, 0.035, 0.04);
   const BRACELET_ADD_B_TABLE = NONE_LOW_MID_HIGH(0, 0.025, 0.03, 0.035);
-  const NECKLACE_ADD_TABLE = NONE_LOW_MID_HIGH(0, 0.006, 0.016, 0.026);
+  const NECKLACE_ADD_TABLE = NONE_LOW_MID_HIGH(0, 0.007, 0.016, 0.026);
   const SH_PET_TABLE = NONE_LOW_MID_HIGH(0, 0.004, 0.007, 0.01);
   // Support's own Crit Rate/Crit Dmg bracelet lines (Arsonistic's SupBrace
   // sheet, "On hit, party Crit Rate/Crit Dmg +.../8s, assumes 100% debuff
@@ -148,11 +148,11 @@
   // divided by addDmgBaseline; Crit Rate/Dmg run through critLikeGain);
   // Earrings reuse the shared Gearing inputs' gearApTotal machinery, same
   // as the Bracelet section's 5 WP/AP rows. Deliberately its own tables
-  // rather than reusing NECKLACE_ADD_TABLE/RING_DMG_TABLE above where
-  // values are close but not identical (those two track this site's
-  // "your actual equipped piece" baseline figures, tuned separately) -
-  // RING_RATE_TABLE is the one exception, its Acc!C6:E6 values are an
-  // exact match, so that one IS reused as-is below.
+  // rather than reusing NECKLACE_ADD_TABLE/RING_DMG_TABLE above: those
+  // two track this site's "your actual equipped piece" figures and may be
+  // tuned separately (today they hold the same values as their candidate
+  // twins). RING_RATE_TABLE is the one exception, its Acc!C6:E6 values
+  // are an exact match, so that one IS reused as-is below.
   const ACC_NECKLACE_ADD_TABLE = { Low: 0.007, Mid: 0.016, High: 0.026 };
   const ACC_NECKLACE_OUT_TABLE = { Low: 0.0055, Mid: 0.012, High: 0.02 };
   const ACC_EARRING_AP_TABLE = { Low: 0.004, Mid: 0.0095, High: 0.0155 };
@@ -336,7 +336,7 @@
   // Weapon Power's own earring table, same "None/Low/Mid/High" shape and
   // percentage-point units as GEAR_AP_EARRING_TABLE above - see
   // .ap-gear-wp-earring1/2's own comment in resources.md for why Weapon
-  // Power Earrings is a paired dropdown row now instead of a freeform
+  // Power Earrings is a paired dropdown row rather than a freeform
   // number, matching Attack Power's own Earrings row exactly.
   const GEAR_WP_EARRING_TABLE = { "None": 0, "Low": 0.8, "Mid": 1.8, "High": 3 };
   // Karmic Enlightenment elixir effect: +0.1% Weapon Power per level, up
@@ -541,7 +541,7 @@
   // Atropine's own AP contribution (time-averaged, see
   // GEAR_AP_ATROPINE_FULL/gearAtropineUptime below) and Adrenaline's own
   // AP contribution (adrenalineApFraction, see that function's own
-  // comment) both fold straight into this total now - they're genuine
+  // comment) both fold straight into this total - they're genuine
   // Attack Power % sources like everything else here, only ever kept as
   // separate terms for implementation convenience (each has its own
   // toggle/table elsewhere), not because they're conceptually different
@@ -710,7 +710,7 @@
   // Ported from the sheet's per-class Spec DPS-multiplier model
   // (Calc!AY:BJ, rows for "RE Deathblade" and "Surge Deathblade"), with
   // the RE-only CDR term (the sheet's separate Trance-reset-via-Spec
-  // mechanic) dropped - RE and Surge now use one shared formula,
+  // mechanic) left out - RE and Surge use one shared formula,
   // parameterized on:
   //   - share: the % of your total DPS that comes from the skill Spec
   //     scales (RE's Trance-triggering skill / Surge's namesake skill)
@@ -756,8 +756,8 @@
   // Ark Passive (500) + roster/card bonuses (76): the non-bracelet
   // portion of a typical 658 Crit Stat total (658 - 82 current-bracelet
   // Crit = 576). Used ONLY as the Bracelet Comparison "no bracelet"
-  // baseline (see zeroedBraceletInputs below), replacing the old second
-  // "current bracelet's Crit Stat" input entirely. Like SPEC_BASE, this
+  // baseline (see zeroedBraceletInputs below); there is no second
+  // "current bracelet's Crit Stat" input. Like SPEC_BASE, this
   // isn't exact for every reader (roster/card totals vary a little, and
   // future balance passes may shift them) - readers whose non-bracelet
   // Crit differs from 576 will see a correspondingly off no-bracelet
@@ -770,31 +770,44 @@
   // RE 313 the way the namesake skill's own share does.
   const RE_AWAKENING_SHARE = 0.015;
   const SURGE_AWAKENING_SHARE = 0.01;
+  // The Surge skill's share of total damage per build. It comes from the
+  // build pages' Trixion damage charts through order-core-data.js (the
+  // block scripts/sync_order_core_shares.py writes), the same numbers the
+  // Order Core table uses, so the Spec row, Breaking Moon, the back
+  // attack split and the Order cores can never disagree about a build.
+  // order-core-data.js loads before this file (lazy-calculators.js).
+  function surgeShareFromCharts(buildId) {
+    const data = window.DB_ORDER_CORE_DATA;
+    const shares = data && data.shares && data.shares[buildId];
+    if (!shares || typeof shares.surge !== "number") {
+      throw new Error("order-core-data.js has no Surge share for " + buildId);
+    }
+    return shares.surge / 100;
+  }
   // One entry per selectable build - the master Build toggle at the top
   // of the calculator (and its ap-brace-spec-build select) picks one of
-  // these five directly (RE 111 and RE 313 merged into one "re-111"
-  // entry - see normalizeBraceSpecBuild), and its own `share` drives the
-  // Spec +80/100/120 row (and the Bracelet vs. Bracelet Spec input)
-  // straight from that selection. Every build is directly selectable, so
-  // every build's share lives here on equal footing.
+  // these five directly (RE 111 and RE 313 are one "re-111" entry - see
+  // normalizeBraceSpecBuild), and its own `share` drives the Spec
+  // +80/100/120 row (and the Bracelet vs. Bracelet Spec input) straight
+  // from that selection. Every build is directly selectable, so every
+  // build's share lives here on equal footing.
   const BRACE_SPEC_BUILDS = {
-    "re-111": { label: "RE 111/313", isSurge: false, share: 0.20, awakeningShare: RE_AWAKENING_SHARE },
-    "re-333": { label: "RE 333", isSurge: false, share: 0.17, awakeningShare: RE_AWAKENING_SHARE },
-    "surge-111": { label: "Surge 111", isSurge: true, share: 0.75, awakeningShare: SURGE_AWAKENING_SHARE },
-    "surge-222": { label: "Surge 222", isSurge: true, share: 0.50, awakeningShare: SURGE_AWAKENING_SHARE },
-    "surge-333": { label: "Surge 333", isSurge: true, share: 0.45, awakeningShare: SURGE_AWAKENING_SHARE },
+    "re-111": { label: "RE 111/313", isSurge: false, share: surgeShareFromCharts("re-111"), awakeningShare: RE_AWAKENING_SHARE },
+    "re-333": { label: "RE 333", isSurge: false, share: surgeShareFromCharts("re-333"), awakeningShare: RE_AWAKENING_SHARE },
+    "surge-111": { label: "Surge 111", isSurge: true, share: surgeShareFromCharts("surge-111"), awakeningShare: SURGE_AWAKENING_SHARE },
+    "surge-222": { label: "Surge 222", isSurge: true, share: surgeShareFromCharts("surge-222"), awakeningShare: SURGE_AWAKENING_SHARE },
+    "surge-333": { label: "Surge 333", isSurge: true, share: surgeShareFromCharts("surge-333"), awakeningShare: SURGE_AWAKENING_SHARE },
   };
-  // "re-313" is retired as its own entry: every formula that reads
-  // BRACE_SPEC_BUILDS was traced and RE 111/RE 313 turned out to be
-  // 100% computationally identical (same share, same awakeningShare,
-  // nothing anywhere else branches on which of the two is selected) -
-  // see the Family/Variant Build toggle redesign. "re-111" is now the
-  // one canonical id for both; this normalizes any lingering "re-313"
-  // (an old Export string, a pre-redesign localStorage blob, or a Bible
-  // import) to it. The hidden select's own <option value="re-313"> is
-  // deliberately kept (see resources.md) so an old saved value still
-  // resolves to a real option instead of silently clearing - this is
-  // the only place that needs to know "re-313" ever existed.
+  // "re-313" is not its own entry: every formula that reads
+  // BRACE_SPEC_BUILDS treats RE 111 and RE 313 identically (same share,
+  // same awakeningShare, nothing anywhere else branches on which of the
+  // two is selected). "re-111" is the one canonical id for both; this
+  // normalizes any lingering "re-313" (an old Export string, a
+  // pre-redesign localStorage blob, or a Bible import) to it. The hidden
+  // select's own <option value="re-313"> is deliberately kept (see
+  // resources.md) so an old saved value still resolves to a real option
+  // instead of silently clearing - this is the only place that needs to
+  // know "re-313" exists.
   function normalizeBraceSpecBuild(id) {
     return id === "re-313" ? "re-111" : id;
   }
@@ -960,8 +973,8 @@
     }
   }
 
-  // RE and Surge use the identical formula now that the CDR-driven term
-  // (Trance getting reset more often as Spec goes up) has been dropped -
+  // RE and Surge use the identical formula; the CDR-driven term
+  // (Trance getting reset more often as Spec goes up) is not modeled -
   // only the damage share and Awakening share differ between the two
   // builds.
   function deathbladeSpecMultiplier(spec, share, awakeningShare) {
@@ -1336,12 +1349,11 @@
       // ceiling here.
       gearGemBaseAp: Math.max(0, Math.min(50, getNumber(root, ".ap-gear-gem-base-ap", 13.2))),
       gearAbilityStoneBaseAp: getCheckbox(root, ".ap-gear-ability-stone-base-ap", true),
-      // Flat AP now covers accessories ONLY - Chaos Core: Attack's own
-      // flat contribution is looked up automatically from the dropdown
-      // below (gearChaosStarFlat) and added in wherever flatAp is used,
-      // instead of being hand-added into this field. Default (390)
-      // reflects a High-tier accessory roll rather than the old
-      // default's Chaos Core figure.
+      // Flat AP covers accessories ONLY - Chaos Core: Attack's own flat
+      // contribution is looked up automatically from the dropdown below
+      // (gearChaosStarFlat) and added in wherever flatAp is used, so it
+      // is never hand-added into this field. The default is 0 (a High-tier
+      // accessory roll adds 390).
       gearFlatAp: Math.max(0, Math.min(2000, getNumber(root, ".ap-gear-flat-ap", 0))),
       // Attack Power % is split into its individual sources (the
       // reference sheet's own Calc!N7 is a single hand-typed sum) - see
@@ -1366,13 +1378,13 @@
       // Catch-all for anything not individually listed (the reference
       // sheet's own comment ends its source list with "some in-raid
       // buffs", too variable/situational to enumerate) - defaults to 0
-      // rather than baking in an assumed value nobody can see. Ceiling
-      // raised 10 -> 50.
+      // rather than baking in an assumed value nobody can see. The
+      // ceiling is 50.
       gearApOther: Math.max(0, Math.min(50, getNumber(root, ".ap-gear-ap-other", 0))),
       // % of the fight Atropine is actually active, not a plain on/off -
       // see gearAttackPowerPercentTotal's own comment for how this
       // averages into the running Attack Power % total. Defaults to 0
-      // (not used), same as the old checkbox's unchecked default.
+      // (not used).
       gearAtropineUptime: Math.max(0, Math.min(100, getNumber(root, ".ap-gear-atropine-uptime", 0))),
       // Support's Strength Orb (Drops of Ether) - same "% of the fight
       // it's up" pattern as Atropine Uptime just above, see
@@ -1411,14 +1423,13 @@
     // actually in the party (.ap-yearning / gearSupport checked) - the same
     // dependency supportApBuff already enforces at the code level via its
     // own `if (!inputs.gearSupport) return 0;` guard. Without this, a value
-    // picked while Support was checked stays sitting in the (now merely UI-
-    // disabled) DOM control and every downstream consumer -
+    // picked while Support was checked stays sitting in the merely UI-
+    // disabled DOM control and every downstream consumer -
     // gearAttackPowerPercentTotal, critRateTotal, computeShared's
     // critDmgTotal, and anything else that reads these fields - would keep
-    // counting it even after Support is unchecked (real bug, caught by
-    // reader report: None+Support-off and High+Support-off produced
-    // different effective Crit Rate, when they must be identical since
-    // neither state has a Support). Normalizing once here, at the single
+    // counting it even after Support is unchecked (None+Support-off and
+    // High+Support-off would produce different effective Crit Rate, when
+    // they must be identical since neither state has a Support). Normalizing once here, at the single
     // point every formula reads inputs from, means no individual consumer
     // needs its own repeated `if (!inputs.gearSupport)` check - and no
     // future consumer can forget one. gearSupportUptime itself doesn't need
@@ -1440,11 +1451,11 @@
 
   // Breaking Moon (Surge 111 only): every 4th Surge cast (1st, 5th, 9th...)
   // gets +60% Crit Damage - a 25% empowered-cast rate. Surge 111's own
-  // `share` in BRACE_SPEC_BUILDS (0.75) already bakes in this elevated-
-  // cast-rate swing (confirmed real data, not re-derived here), so the
-  // average per-cast Crit Dmg contribution is just
-  // share * 0.25 (empowered-cast rate) * 0.60 (Breaking Moon's own bonus)
-  // - about +11.25 percentage points for Surge 111. Additive into
+  // `share` in BRACE_SPEC_BUILDS (the Surge slice of its damage chart,
+  // 76.5%) already bakes in this elevated-cast-rate swing (real data, not
+  // re-derived here), so the average per-cast Crit Dmg contribution is
+  // just share * 0.25 (empowered-cast rate) * 0.60 (Breaking Moon's own
+  // bonus) - about +11.5 percentage points for Surge 111. Additive into
   // critDmgTotal exactly like every other Crit Dmg source below, so it
   // automatically flows through the keystone grid (getKeystoneComponents/
   // combinedMultiplier), KBW/Adrenaline math, and Spec math with no
@@ -2025,11 +2036,8 @@
       critDmgDual: false,
       // The no-bracelet baseline IS CRIT_BASE - a fixed constant, same
       // as SPEC_BASE just above, not derived from the reader's live
-      // .ap-crit-stat. (Earlier draft of this line computed
-      // inputs.critStat - CRIT_BASE, which backwards-computes the
-      // bracelet's OWN contribution, not what's left without it - wrong
-      // direction entirely, caught via before/after screenshot diffing
-      // per the verify workflow.)
+      // .ap-crit-stat. (inputs.critStat - CRIT_BASE would be the
+      // bracelet's OWN contribution, not what is left without it.)
       critStat: CRIT_BASE,
     });
     return { inputsNB, sharedNB: computeShared(inputsNB) };
@@ -2146,10 +2154,10 @@
     // (addDmgBase/addDmgMaster) exactly like Crit Rate/Dmg feed
     // effCrit/critDmgTotal, so they get the same bestComboFor treatment -
     // confirmed by direct computation that a High Additional Damage line
-    // can also flip the winning pair, not just Crit Rate/Dmg. Replaces the
-    // old `value / (1 + addDmgBaseline)` closed form, which silently
-    // assumed the baseline's fixed pair stayed optimal with the candidate
-    // line added too.
+    // can also flip the winning pair, not just Crit Rate/Dmg. A closed
+    // form like `value / (1 + addDmgBaseline)` would silently assume the
+    // baseline's fixed pair stays optimal with the candidate line added
+    // too.
     function addDmgGain(field, tier) {
       const cloned = Object.assign({}, inputsNB);
       cloned[field] = tier;
@@ -2233,7 +2241,7 @@
         // displayed High value the rest of this sort otherwise uses - see
         // the sort call below. Keeps it from reading as a strictly better
         // pick than the plain Additional Damage line by default, without
-        // the old hard-coded "always sort directly below addA" special case.
+        // a hard-coded "always sort directly below addA" special case.
         sortKey: addDmgGain("braceletAddB", "High"),
       },
       {
@@ -2266,8 +2274,8 @@
         low: k * 80,
         mid: k * 100,
         high: k * 120,
-        // Both RE and Surge are now pure damage-share models (the CDR
-        // term is gone entirely, not just for RE) - so this line only
+        // Both RE and Surge are pure damage-share models (no CDR
+        // term, for either) - so this line only
         // reflects the selected build's direct damage share and misses
         // whatever Spec does outside raw DPS (e.g. cooldown/meter
         // effects) for either class. Shown as a small always-visible tag
@@ -2776,17 +2784,17 @@
     // Damage: 1,067 flips out of ~180k synthetic gear profiles tested).
     const baselineNecklaceBest = bestComboFor(necklaceNB, sharedNecklaceNB);
     const baselineMultNecklaceNB = baselineNecklaceBest.mult;
-    // ACC_NECKLACE_ADD_TABLE is deliberately NOT the same table as the
-    // live .ap-necklace field's NECKLACE_ADD_TABLE (see that table's own
-    // comment above - close but not identical, tuned separately), so this
-    // can't just clone necklaceNB with a swapped `necklace` tier the way
-    // ringRateGain below swaps ring1Rate - that would silently pull the
-    // WRONG table's values back in through computeShared. Instead this
-    // hands bestComboFor a manually-built `shared` override (the same
-    // sharedOverride parameter ringDmgGain below uses, for the same
-    // reason) with the candidate's own addDmgBase/addDmgMaster bumped
-    // directly, keeping ACC_NECKLACE_ADD_TABLE's own tuned figures intact
-    // while still letting the pair search see the change.
+    // ACC_NECKLACE_ADD_TABLE is its own table, separate from the live
+    // .ap-necklace field's NECKLACE_ADD_TABLE (they hold the same figures
+    // today but are tracked apart on purpose), so this does not clone
+    // necklaceNB with a swapped `necklace` tier the way ringRateGain
+    // below swaps ring1Rate - that would pull the live table's values
+    // back in through computeShared. Instead this hands bestComboFor a
+    // manually-built `shared` override (the same sharedOverride parameter
+    // ringDmgGain below uses, for the same reason) with the candidate's
+    // own addDmgBase/addDmgMaster bumped directly, keeping
+    // ACC_NECKLACE_ADD_TABLE's own figures intact while still letting the
+    // pair search see the change.
     function necklaceAddGain(tier) {
       const value = ACC_NECKLACE_ADD_TABLE[tier] || 0;
       if (!value) return 0;
@@ -2854,12 +2862,12 @@
       const withBest = bestComboFor(cloned);
       return withBest.mult / baselineMultRingsNB - 1;
     }
-    // Crit Damage: ACC_RING_DMG_TABLE and RING_DMG_TABLE are now confirmed
-    // identical at every tier (see ACC_RING_DMG_TABLE's own comment), but
+    // Crit Damage: ACC_RING_DMG_TABLE and RING_DMG_TABLE hold identical
+    // values at every tier (see ACC_RING_DMG_TABLE's own comment), but
     // this still adds the candidate's own magnitude as a manual
     // critDmgTotal delta rather than swapping ring1Dmg to a tier name -
-    // no functional difference today, just avoids re-coupling two tables
-    // that were tracked separately on purpose. Uses bestComboFor's
+    // no functional difference today, it just keeps the two tables
+    // tracked separately on purpose. Uses bestComboFor's
     // sharedOverride parameter to hand in that manually-built `shared`
     // directly (see bestComboFor's own comment on the parameter) rather
     // than a fixed combinedMultiplier call.
@@ -3284,17 +3292,11 @@
     // directly onto shared's running totals, instead of writing a tier
     // name into cloned.necklace/cloned.ring1Dmg and letting computeShared
     // re-derive it through NECKLACE_ADD_TABLE/RING_DMG_TABLE - those two
-    // are this site's "your actual equipped piece" tracked tables. Add
-    // Dmg's pair still differs at Low (0.006 vs 0.007 - see
-    // ACC_NECKLACE_ADD_TABLE's own comment); Ring Crit Dmg's pair is now
-    // confirmed an exact match at every tier (see ACC_RING_DMG_TABLE's own
-    // comment - RING_DMG_TABLE's old 0.012 Low was a mistranscription),
-    // but this still routes through the same manual-delta path rather
-    // than writing ring1Dmg's tier name directly, for consistency with
-    // Add Dmg and to avoid re-coupling two tables that were tracked
-    // separately on purpose. Writing the tier name into the real field
-    // would pull the wrong table for Add Dmg's Low roll, so the numbers
-    // would not match the reference panel above for the same tier. This is
+    // are this site's "your actual equipped piece" tracked tables. Both
+    // pairs (Necklace Add Dmg, Ring Crit Dmg) hold the same figures at
+    // every tier today, but this routes through the manual-delta path
+    // rather than writing a tier name into the real field, so the panel
+    // keeps using its own table if the two are ever tuned apart. This is
     // the same approach computeAccessoryComparison's own ringDmgGain uses.
     //
     // Re-optimized (bestComboFor), not a fixed-pair eval, for the same
@@ -3344,9 +3346,8 @@
       // dropped their share from gearWpPercentTotal's SUM, it can't
       // un-bake a % that's already multiplied into the raw number - so
       // using it as-is here would silently ignore every candidate's own
-      // Line 2 entirely (the bug this comment is fixing: WP% did
-      // nothing, since only wpDelta - always 0 for Earring - was ever
-      // scaled by wpPercentMult). Divide the real total back out by the
+      // Line 2 entirely (WP% would do nothing, since
+      // only wpDelta - always 0 for Earring - is scaled by wpPercentMult). Divide the real total back out by the
       // REAL full % (fullWpPercentMult, captured before zeroing) to
       // recover the underlying raw figure, then re-multiply by whatever
       // % this side actually represents - same reverse-derivation Chaos
@@ -3387,8 +3388,8 @@
     // Ring and Earring, never Necklace.
     // otherCritDmgDelta folds Ring's "Other Ring" Crit Damage into the
     // baseline as an additive delta rather than writing it into
-    // zeroed.ring2Dmg - RING_DMG_TABLE and ACC_RING_DMG_TABLE are now
-    // confirmed an exact match at every tier (see ACC_RING_DMG_TABLE's
+    // zeroed.ring2Dmg - RING_DMG_TABLE and ACC_RING_DMG_TABLE are an
+    // exact match at every tier (see ACC_RING_DMG_TABLE's
     // own comment), so a direct write would be equally correct today, but
     // this keeps the same delta approach used elsewhere on this page for
     // the candidate lines themselves rather than re-coupling two tables
@@ -3917,10 +3918,11 @@
   const AMBUSH_MASTER_SECONDARY_TABLE = { "0 Nodes": 0.048, "1 Nodes": 0.055, "2 Nodes": 0.062, "3 Nodes": 0.069, "4 Nodes": 0.076 };
   const AMBUSH_MASTER_STONE_TABLE = { "0 Lv.": 0, "1 Lv.": 0.027, "2 Lv.": 0.034, "3 Lv.": 0.047, "4 Lv.": 0.054 };
 
-  // Raid Captain: the sheet's MSpdDmg values are the bonus AT the 140%
-  // Move Speed cap. Scales linearly with Move Speed from 0% bonus at
-  // exactly 100% up to the full tabled value at 140%+ (clamped) - e.g.
-  // 48% table value * (140-100)/100 = 19.2% at the cap. The Ability
+  // Raid Captain: the sheet's MSpdDmg values are the bonus per 100 points
+  // of Move Speed above 100%. The bonus is the tabled value times
+  // (Move Speed - 100) / 100, with Move Speed clamped to the 140% cap, so
+  // it is 0 at exactly 100% and the cap pays 40% of the tabled value -
+  // e.g. 48% table value * (140-100)/100 = 19.2% at the cap. The Ability
   // Stone shares the same MSpdDmg type as the base engraving, so it's
   // assumed to scale the same way rather than apply as a flat add.
   const RAID_CAPTAIN_TABLE = { "0 Nodes": 0.40, "1 Nodes": 0.42, "2 Nodes": 0.44, "3 Nodes": 0.46, "4 Nodes": 0.48 };
@@ -5010,14 +5012,13 @@
     // (node only) to 127% (node+Lv.4 stone) is a (1.27/1.21 - 1) = 4.96%
     // marginal gain, NOT the raw 6-point stone value - the node's own
     // already-active value in the denominator dilutes it, same shape as
-    // Ambush Master's (1+backDmg) denominator just below. A prior version
-    // of this file validated the raw values by diffing two "gain vs.
-    // nothing" percentages (both measured from a mult=1 baseline) instead
-    // of taking the with/without-stone RATIO - that diff trivially
-    // reproduces the raw table value no matter what, so it could never
-    // have caught this; the ratio check below is what actually confirms
-    // it (matches the DPS Contribution column's own 0-stone vs. 4-stone
-    // ratio, not its point-difference).
+    // Ambush Master's (1+backDmg) denominator just below. Validate the
+    // stone values with the with/without-stone RATIO, not by diffing two
+    // "gain vs. nothing" percentages (both measured from a mult=1
+    // baseline): that diff trivially reproduces the raw table value no
+    // matter what, so it can never catch this. The ratio matches the DPS
+    // Contribution column's own 0-stone vs. 4-stone ratio, not its
+    // point-difference.
     function flatBucketStoneMarginal(nodeVal, stoneTable) {
       return ENGRAVING_STONE_OPTIONS.map((lv) => (stoneTable[lv] || 0) / (1 + nodeVal));
     }
