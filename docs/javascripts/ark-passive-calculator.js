@@ -184,7 +184,7 @@
 
   // ----- Gearing (Weapon Power / Attack Power) constants -----
   // Sourced from Arsonistic's "Brace"/"Acc" sheets. Attack Power there is:
-  //   AP = FLOOR(SQRT(WP * MainStat / 6) * BaseAP + FlatAP + SupAPBuff) * PercentAP
+  //   AP = FLOOR((SQRT(WP * MainStat / 6) * BaseAP + FlatAP + SupAPBuff) * PercentAP)
   // WP, MainStat, BaseAP%, FlatAP, and Attack Power% (PercentAP) are all
   // read from the .ap-gear-* inputs (see resources.md) - real personalized
   // stats/sums the player reads off their own character panel, same as
@@ -2193,7 +2193,6 @@
       },
       {
         label: ["Crit Stat +", ...trip("80", "100", "120")],
-        note: "Set your current bracelet's Crit Stat so this isn't double-counted.",
         low: critStatGain(CRIT_STAT_TABLE.Low),
         mid: critStatGain(CRIT_STAT_TABLE.Mid),
         high: critStatGain(CRIT_STAT_TABLE.High),
@@ -2510,7 +2509,32 @@
   // bracelet at all - see the methodology comment above BRACELET_LINE_TYPES.
   // `side` is { spec, critStat, lines: [{type, tier}, ...] } as read from
   // the Bracelet vs. Bracelet inputs (readBvbSide below).
-  function computeSingleBracelet(inputsNB, noBraceletMult, inputs, side) {
+  // Raw Weapon Power and Main Stat a bracelet side's lines add (before the
+  // Weapon Power % and Main Stat % multipliers), the same sums
+  // computeSingleBracelet applies. Side A of Bracelet vs. Bracelet is the
+  // reader's worn bracelet, so its sums are what the typed totals already hold.
+  function bvbSideWpMainStat(side) {
+    let wp = 0;
+    let mainStat = 0;
+    ((side && side.lines) || []).forEach((line) => {
+      const def = line && BRACELET_LINE_TYPES[line.type];
+      if (!def || def.kind !== "wp") return;
+      const tier = line.tier === "Low" || line.tier === "High" ? line.tier : "Mid";
+      if (line.type === "stat_main") {
+        mainStat += Math.max(10000, Math.min(16000, line.mainStat || 14000));
+      } else {
+        const delta = braceletWpLineDelta(line.type, tier);
+        wp += delta.wp;
+        mainStat += delta.mainStat;
+      }
+    });
+    if (side && (side.effect2Type || "crit") === "main") {
+      mainStat += Math.max(10000, Math.min(16000, side.effect2MainStat || 14000));
+    }
+    return { wp, mainStat };
+  }
+
+  function computeSingleBracelet(inputsNB, noBraceletMult, inputs, side, worn) {
     const cloned = Object.assign({}, inputsNB);
     // Basic Effect 2 isn't guaranteed to be Crit Stat - see readBvbSide's
     // own comment - so Crit Stat here only counts while that's actually
@@ -2608,14 +2632,21 @@
     // line was picked, or the Character Data inputs aren't filled in yet.
     let wpRatio = 1;
     if (hasWpLine) {
-      const wp = inputs.gearWp;
-      const mainStat = inputs.gearMainStat;
+      const wpPercentMult = 1 + gearWpPercentTotal(inputs) / 100;
+      const mainStatPercentMult = 1 + inputs.gearMainStatPercent / 100;
+      // The typed totals already hold the worn bracelet's (side A's) Weapon
+      // Power and Main Stat, each with its own % multiplier, so they come out
+      // of the baseline before either side is added; otherwise the worn lines
+      // would count twice.
+      const wornWp = worn ? worn.wp * wpPercentMult : 0;
+      const wornMainStat = worn ? worn.mainStat * mainStatPercentMult : 0;
+      const wp = Math.max(0, inputs.gearWp - wornWp);
+      const mainStat = Math.max(0, inputs.gearMainStat - wornMainStat);
       const baseApMult = 1 + gearBaseApPercentTotal(inputs) / 100;
       const flatAp = inputs.gearFlatAp + gearChaosStarFlat(inputs.gearApChaosStar);
       const percentApMult = 1 + gearAttackPowerPercentTotal(inputs) / 100;
-      const wpPercentMult = 1 + gearWpPercentTotal(inputs) / 100;
-      const mainStatPercentMult = 1 + inputs.gearMainStatPercent / 100;
-      const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
+      // The Support stays frozen at your typed totals, like every other row.
+      const supApBuff = supportApBuff(inputs, inputs.gearWp, inputs.gearMainStat, baseApMult);
       const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
       if (wp > 0 && mainStat > 0 && baselineAp > 0) {
         const newAp = gearApTotal(
@@ -2642,8 +2673,9 @@
   function computeBraceletVsBracelet(inputs) {
     const { inputsNB } = zeroedBraceletInputs(inputs);
     const noBraceletBest = bestComboFor(inputsNB);
-    const a = computeSingleBracelet(inputsNB, noBraceletBest.mult, inputs, inputs.bvbA || {});
-    const b = computeSingleBracelet(inputsNB, noBraceletBest.mult, inputs, inputs.bvbB || {});
+    const worn = bvbSideWpMainStat(inputs.bvbA);
+    const a = computeSingleBracelet(inputsNB, noBraceletBest.mult, inputs, inputs.bvbA || {}, worn);
+    const b = computeSingleBracelet(inputsNB, noBraceletBest.mult, inputs, inputs.bvbB || {}, worn);
     return {
       noBracelet: { keystoneLabel: KEYSTONE_LABELS[noBraceletBest.pair], splitLabel: noBraceletBest.split.label },
       a,
@@ -3080,11 +3112,10 @@
   //
   // Main Stat is the one piece of real state this tool needs beyond what
   // the Line Comparison table tracks - Gearing's Main Stat field is one
-  // aggregate total across all gear, so exactly like the Bracelet panel's
-  // "Current Bracelet's Crit Stat" field, SOME Main Stat has to come back
+  // aggregate total across all gear, so SOME Main Stat has to come back
   // out of that aggregate to build the "slot empty" baseline before a
-  // candidate's own typed Main Stat gets added on top. Unlike Bracelet's
-  // field, this doesn't need its own separate input - Accessory A always
+  // candidate's own typed Main Stat gets added on top. That needs no
+  // separate input of its own - Accessory A always
   // IS the real current piece (unless avbSlotEmpty is checked), and its
   // own typed Main Stat (a real absolute value off its tooltip, not a
   // quality-tier lookup) is what's subtracted, so there's nothing for
@@ -3394,7 +3425,11 @@
     // field, so there's nothing for the reader to keep in sync by hand -
     // it always matches exactly whatever's currently typed into
     // Accessory A's own Main Stat field, even as they tweak it.
-    const equippedMainStat = equippedSide.mainStat;
+    // Accessory Main Stat is the raw tooltip value, so it counts with the
+    // Main Stat % multiplier, like every other flat Main Stat source on this
+    // page (the typed Main Stat total already includes that multiplier).
+    const mainStatPercentMult = 1 + inputs.gearMainStatPercent / 100;
+    const equippedMainStat = equippedSide.mainStat * mainStatPercentMult;
     const noSlotMainStat = Math.max(0, zeroed.gearMainStat - equippedMainStat);
     // Line 3's Flat AP/Flat WP need the exact same "back it out of the
     // baseline first" treatment as Main Stat just above - gearFlatAp/gearWp
@@ -3417,7 +3452,10 @@
     // above) so it needs no equivalent mutation here.
     zeroed.gearFlatAp = Math.max(0, zeroed.gearFlatAp - equippedFlatApDelta);
     if (slot !== "earring") {
-      zeroed.gearWp = Math.max(0, zeroed.gearWp - equippedWpDelta);
+      // Scaled by the full Weapon Power %, the same factor a candidate's flat
+      // Weapon Power is added with (wpDelta * wpPercentMult in apTotalFor), so
+      // an identical line on A and B cancels exactly.
+      zeroed.gearWp = Math.max(0, zeroed.gearWp - equippedWpDelta * fullWpPercentMult);
     }
     const noAccessoryAp = apTotalFor(zeroed, noSlotMainStat, 0, 0);
 
@@ -3469,8 +3507,8 @@
       let lineRatio = 1;
       let wpRatio = 1;
       if (cloned.gearWp > 0 && noAccessoryAp > 0) {
-        const apOnlyMainStat = apTotalFor(zeroed, noSlotMainStat + side.mainStat, flatApDelta, wpDelta);
-        const apWithOwnLines = apTotalFor(cloned, noSlotMainStat + side.mainStat, flatApDelta, wpDelta);
+        const apOnlyMainStat = apTotalFor(zeroed, noSlotMainStat + side.mainStat * mainStatPercentMult, flatApDelta, wpDelta);
+        const apWithOwnLines = apTotalFor(cloned, noSlotMainStat + side.mainStat * mainStatPercentMult, flatApDelta, wpDelta);
         mainStatLine3Ratio = apOnlyMainStat / noAccessoryAp;
         lineRatio = apWithOwnLines / apOnlyMainStat;
         wpRatio = apWithOwnLines / noAccessoryAp;
@@ -3492,9 +3530,10 @@
   // elsewhere on this page - flashyAtk/stableAtk/swiftCore feed the
   // main grid directly, gearApChaosStar/gearWeaponCore/crushingCore
   // feed the Gearing section and main grid respectively - so their
-  // candidates are valued by zeroing those SAME existing fields first,
-  // exactly like Bracelet zeroes its own tracked fields before valuing
-  // a candidate. The other 2 included types (Smoldering/Absorbing) have
+  // candidates are valued by zeroing the existing fields of their own
+  // Ark Grid slot (Sun, Moon or Star) first, keeping the other two slots'
+  // cores, exactly like Bracelet zeroes its own tracked fields before
+  // valuing a candidate. The other 2 included types (Smoldering/Absorbing) have
   // no existing field to double-count against, so their candidates are
   // valued as a straight addition on top of your current totals - the
   // same treatment the Bracelet panel's own 5 WP/AP rows already give
@@ -3515,22 +3554,32 @@
     if (!best) return [];
     // best.split/best.keystone not destructured here - Flashy/Swift/
     // Crushing/Stable all re-derive their own winning cell per candidate
-    // via bestComboFor instead (see baselineArkBest's own comment below);
+    // via bestComboFor instead (see slotBaseline's own comment below);
     // `best` itself is kept only for the `if (!best)` guard above.
 
-    // Zeroes ONLY the 3 ArkGrid-tracked current-state fields - every
-    // other field (bracelet, rings, Gearing, etc.) stays at its real
-    // current value, since those aren't part of what this panel
-    // isolates. Safe to reuse as the shared base for every row below
-    // (including Weapon/Swift/Crushing/Smoldering/Absorbing, which
-    // don't touch any of these 3 fields at all).
-    const arkNB = Object.assign({}, inputs, {
+    // An Ark Grid holds one Sun core, one Moon core and one Star core, so a
+    // candidate replaces only the core in its own slot and every row is valued
+    // against a baseline that clears just that slot:
+    //   Sun  (Flashy, Stable, Swift Attack): clears flashyAtk, stableAtk and
+    //        swiftCore, keeps your Moon and Star cores.
+    //   Moon (Smoldering, Absorbing, Crushing Strike): clears crushingCore,
+    //        keeps your Sun and Star cores. Smoldering and Absorbing have no
+    //        tracked field, so there is nothing of theirs to clear.
+    //   Star (Attack, Weapon): clears gearApChaosStar and gearWeaponCore, keeps
+    //        your Sun and Moon cores.
+    // Fields outside the slot (bracelet, rings, Gearing, the other two cores)
+    // stay at their real values.
+    const sunNB = Object.assign({}, inputs, {
       flashyAtk: "None",
       stableAtk: "None|0P",
       swiftCore: "None|0P",
+    });
+    const moonNB = Object.assign({}, inputs, {
+      crushingCore: "None|0P",
+    });
+    const arkNB = Object.assign({}, inputs, {
       gearApChaosStar: "None|0P",
       gearWeaponCore: "None|0P",
-      crushingCore: "None|0P",
     });
     // Chaos Core: Attack's own AP/flat-AP contribution zeroes cleanly
     // above (it's a separate term added on top of raw stats - see
@@ -3556,18 +3605,22 @@
         (arkNB.gearWp - currentWeaponCore.flat * wpPercentMultNB) / (1 + currentWeaponCore.pct / 100 / wpPercentMultNB)
       );
     }
-    const sharedNB = computeShared(arkNB);
-    // Re-optimized baseline, not a fixed-pair eval - Flashy/Swift/
-    // Crushing feed effCrit/critDmgTotal directly (the grid formula
-    // itself), so the winning pair can genuinely differ once a candidate
-    // is added, same failure mode Bracelet/Ring/
-    // Necklace above already guard against - confirmed to actually flip on Flashy specifically
-    // (Chaos Core: Flashy, Crit Hit Dmg: 228 flips out of ~180k synthetic
-    // gear profiles tested); Swift/Crushing run through this exact same
-    // critLikeGain-shaped code (same formula, so a fixed-pair call would
-    // fail the same way), so there's no reason to think they're exempt.
-    const baselineArkBest = bestComboFor(arkNB, sharedNB);
-    const baselineMult = baselineArkBest.mult;
+    // Re-optimized baselines, not fixed-pair evals - Flashy/Swift/Crushing
+    // feed effCrit/critDmgTotal directly (the grid formula itself), so the
+    // winning pair can genuinely differ once a candidate is added, same
+    // failure mode Bracelet/Ring/Necklace above already guard against -
+    // confirmed to actually flip on Flashy specifically (Chaos Core: Flashy,
+    // Crit Hit Dmg: 228 flips out of ~180k synthetic gear profiles tested);
+    // Swift/Crushing run through this exact same critLikeGain-shaped code
+    // (same formula, so a fixed-pair call would fail the same way), so there
+    // is no reason to think they are exempt. One baseline per slot that
+    // feeds the grid (Sun and Moon); the Star rows are Attack Power only.
+    function slotBaseline(nb) {
+      const shared = computeShared(nb);
+      return { nb, shared, mult: bestComboFor(nb, shared).mult };
+    }
+    const sunBase = slotBaseline(sunNB);
+    const moonBase = slotBaseline(moonNB);
     // Stable's Additional Dmg row feeds addDmgBase/addDmgMaster the same
     // way Bracelet's addA/addB and Accessory's Necklace Additional Damage
     // do above, so it is re-optimized the same way rather than divided by
@@ -3576,12 +3629,12 @@
     // itself untouched.
     function stableAddGain(value) {
       if (!value) return 0;
-      const shared = Object.assign({}, sharedNB, {
-        addDmgBase: sharedNB.addDmgBase + value,
-        addDmgMaster: sharedNB.addDmgMaster + value,
+      const shared = Object.assign({}, sunBase.shared, {
+        addDmgBase: sunBase.shared.addDmgBase + value,
+        addDmgMaster: sunBase.shared.addDmgMaster + value,
       });
-      const withBest = bestComboFor(arkNB, shared);
-      return withBest.mult / baselineMult - 1;
+      const withBest = bestComboFor(sunBase.nb, shared);
+      return withBest.mult / sunBase.mult - 1;
     }
 
     // Crit Hit Dmg (Flashy)/Crit Dmg (Swift)/Crit Rate (Crushing) all
@@ -3590,12 +3643,12 @@
     // Dmg row - these go through a full bestComboFor recompute (full
     // 9-cell re-search) rather than a fixed-pair combinedMultiplier call.
     // Swift/Crushing each have their own tracked field now (swiftCore/
-    // crushingCore, zeroed in arkNB above), same as Flashy/Stable.
-    function critLikeGain(mutateFn) {
-      const cloned = Object.assign({}, arkNB);
+    // crushingCore, zeroed in sunNB / moonNB above), same as Flashy/Stable.
+    function critLikeGain(base, mutateFn) {
+      const cloned = Object.assign({}, base.nb);
       mutateFn(cloned);
       const withBest = bestComboFor(cloned);
-      return withBest.mult / baselineMult - 1;
+      return withBest.mult / base.mult - 1;
     }
 
     // Builds one row's cells from a single per-grade gain function: the
@@ -3626,7 +3679,7 @@
       label: "Flashy Attack - Crit Hit Dmg & Dmg%",
       ...gradeCells((grade, pts) => {
         const chitKey = grade + " 17P";
-        const chit = critLikeGain((c) => { c.flashyAtk = chitKey; });
+        const chit = critLikeGain(sunBase, (c) => { c.flashyAtk = chitKey; });
         const dmg = ARK_FLASHY_DMG_TABLE[grade + "|" + pts];
         return (1 + chit) * (1 + dmg) - 1;
       }),
@@ -3643,18 +3696,18 @@
     });
 
     // Chaos Core: Swift - Crit Dmg only (Attack Speed excluded). Own
-    // tracked field (zeroed in arkNB above), same treatment as Flashy.
+    // tracked field (zeroed in sunNB above), same treatment as Flashy.
     rows.push({
       label: "Swift Attack - Crit Dmg",
-      ...gradeCells((grade, pts) => critLikeGain((c) => { c.swiftCore = grade + "|" + pts; })),
+      ...gradeCells((grade, pts) => critLikeGain(sunBase, (c) => { c.swiftCore = grade + "|" + pts; })),
     });
 
     // Chaos Core: Crushing - Crit Rate only (its other half is a weak
     // point utility buff with no DPS value). Own tracked field (zeroed in
-    // arkNB above).
+    // moonNB above).
     rows.push({
       label: "Crushing Strike - Crit Rate",
-      ...gradeCells((grade, pts) => critLikeGain((c) => { c.crushingCore = grade + "|" + pts; })),
+      ...gradeCells((grade, pts) => critLikeGain(moonBase, (c) => { c.crushingCore = grade + "|" + pts; })),
     });
 
     // Chaos Core: Smoldering - Boss Dmg (untracked elsewhere, a flat

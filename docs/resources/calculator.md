@@ -472,7 +472,7 @@ Which sources multiply and which add follows the game's tooltips and in-game tes
 
 ### Ark Grid cores
 
-The Ark Grid Core Comparison answers one question per core: how much more DPS this core gives than having none of that kind. Each Chaos Core row removes your current core of that kind, adds the candidate at the grade and points shown, and compares the two. Only the damage half of each core counts.
+The Ark Grid Core Comparison answers one question per core: how much more DPS this core gives than an empty slot. A grid holds one Sun core (Flashy, Stable, Swift), one Moon core (Smoldering, Absorbing, Crushing) and one Star core (Attack, Weapon), so each row removes only your current core in its own slot and keeps the other two.
 
 <div class="ap-acc-table-scroll doc-table-scroll">
 <table class="ap-brace-compare-table doc-table doc-table--wide">
@@ -517,9 +517,9 @@ The Ark Grid Core Comparison answers one question per core: how much more DPS th
 </tr>
 <tr>
 <td>Crushing Strike</td>
-<td class="doc-num">1.84%</td>
-<td class="doc-num">2.76%</td>
-<td class="doc-num">+0.91%</td>
+<td class="doc-num">1.85%</td>
+<td class="doc-num">2.78%</td>
+<td class="doc-num">+0.92%</td>
 </tr>
 <tr>
 <td>Swift Attack</td>
@@ -556,7 +556,7 @@ By kind of row:
 - Crit Hit Damage (Flashy), Crit Damage (Swift), Crit Rate (Crushing) and Additional Damage (Stable) feed the grid, so both sides use the nine cell search.
 - Damage to foes lines (Flashy's Damage %, Smoldering's Boss Damage, Absorbing's Damage) multiply instead of adding. A core's 14, 17 and 18 to 20 point lines combine as (1 + a)(1 + b)(1.0016)^n - 1, about 0.01 to 0.02 points above the plain sum of the tooltip figures.
 - Smoldering's Burn half does not depend on points. It is 0.6% of total damage at Relic and 1.25 times that at Ancient, and it multiplies with the Boss Damage half.
-- Chaos Core: Attack and Weapon use the Attack Power formula with the Support held fixed. A core you already equip is removed first: the Attack core's lines drop out of Attack Power, and the Weapon core's share is divided back out of your typed Weapon Power. The Support stays at the value for your real typed Weapon Power. Weapon is folded into your typed Weapon Power: the new value is `WP * (1 + (pct / 100) / WPmult) + flat * WPmult`, where `pct` is the core's Weapon Power % in points and `WPmult` is your Weapon Power multiplier (1 + total Weapon Power % / 100).
+- Chaos Core: Attack and Weapon use the Attack Power formula with the Support held fixed. Attack and Weapon share the Star slot, so whichever Star core you wear is removed first: the Attack core's lines drop out of Attack Power, and the Weapon core's share is divided back out of your typed Weapon Power. Sun and Moon cores do not affect these rows. The Support stays at the value for your real typed Weapon Power. Weapon is folded into your typed Weapon Power: the new value is `WP * (1 + (pct / 100) / WPmult) + flat * WPmult`, where `pct` is the core's Weapon Power % in points and `WPmult` is your Weapon Power multiplier (1 + total Weapon Power % / 100).
 - Not modeled: Speed, Stable's damage reduction, Swift's Attack Speed, Absorbing's healing and the non-damage half of Crushing (a weak point utility buff with no DPS value). Crushing's Crit Rate half is valued.
 
 At the defaults, Ancient 20 points: Smoldering is (1 + 3.0028%) x (1 + 0.75%) - 1 = 3.78%, Absorbing is simply 3.00%, and Chaos Core: Weapon turns 259,216 Weapon Power into 273,732 (+5.6%) for a 1.98% gain after the fixed Support dilutes it. Swift's +8.35% Crit Damage reads 2.72%, which a hand computation of the nine cells with and without it also gives.
@@ -590,7 +590,7 @@ Each Order core is judged on one build, the one it is used on, so that table is 
 
 ### Bracelet, Accessory and A vs B comparisons
 
-These panels value one line or one whole piece at a time, always as a ratio to a baseline. The Bracelet and Accessory tables answer "what is this line worth". The two A vs B panels are sandboxes: pick two things and see which is better.
+These panels value one line or one whole piece at a time, always as a ratio to a baseline. The Bracelet and Accessory tables answer "what is this line worth". The two A vs B panels are sandboxes: enter your equipped piece as A and a candidate replacement as B, and see which is better.
 
 <div class="setup-panel doc-panel" data-accent="purple" markdown>
 <div class="setup-notes" markdown>
@@ -602,7 +602,7 @@ These panels value one line or one whole piece at a time, always as a ratio to a
 
 - Crit Rate, Crit Damage, Crit Stat and Additional Damage lines go through the full search.
 - Back Attack Damage is the tabled value times the 0.95 back attack share (2.5% reads 2.38%). Outgoing Damage plus Damage to Staggered adds the Stagger line at the 5% share (2% + 4% x 0.05 reads 2.20%). Damage plus Cooldown reads the damage value minus 1 point as an estimate for the cooldown half (4.5% reads 3.50%).
-- Weapon Power, Main Stat and Attack Power lines use the Attack Power formula with the Support fixed, so a Weapon Power line reads about 72% of its no-Support value. They are added on top of the Weapon Power and Main Stat you typed, and there is no field for your equipped bracelet's own line to remove, so a Weapon Power or Main Stat line already on your bracelet stays in the baseline. At the defaults, with an equipped Mid line (8,100 Weapon Power or 14,000 Main Stat), the Weapon Power rows read about 0.03 to 0.05 points low (about 3% of their value) and the Main Stat rows about 0.01 points low, both well inside the 0.5 point tie band.
+- Weapon Power, Main Stat and Attack Power lines use the Attack Power formula with the Support fixed, so a Weapon Power line reads about 72% of its no-Support value. They are added on top of the Weapon Power and Main Stat you typed, and there is no field for your equipped bracelet's own line to remove, so a Weapon Power or Main Stat line already on your bracelet stays in the baseline (Bracelet vs Bracelet does remove it: side A is your worn bracelet). At the defaults, with an equipped Mid line (8,100 Weapon Power or 14,000 Main Stat), the Weapon Power rows read about 0.03 to 0.05 points low (about 3% of their value) and the Main Stat rows about 0.01 points low, both well inside the 0.5 point tie band.
 - Spec Stat has its own model. The gain per point is `(m - 1) / (1735 * m)` where `m = 1 + (0.86 * shareRatio + 0.1528 * awakeningRatio) / 699 * 1735`. The two ratios say how much of your damage comes from the skill Spec scales and from your Awakening, each normalized at a reference Spec of 1855. On RE 333 (17% skill share, 1.5% Awakening) +100 Spec reads 0.67%. It counts damage only, not cooldown reduction.
 - A few Weapon Power lines use an assumed stack count, fight length or uptime, listed in the register.
 
@@ -610,14 +610,14 @@ Check: High Crit Rate +5% with its +1.5% Crit Hit Damage bonus reads 5.18% in th
 
 **Accessory Line Comparison.** Same idea, but each table clears only the piece it lists and keeps the rest of your gear. Necklace clears your necklace line, Rings clears both rings' Crit lines, and Earrings clears both earrings' Attack Power % and Weapon Power % lines, so each candidate is valued as the only line on that slot. The lines that can roll on any accessory (flat Weapon Power, flat Attack Power and Quality STR/DEX/INT) clear nothing and are added on top of your full gear, so a line of that kind already on one of your pieces stays in the baseline; Accessory vs Accessory is the tool for swapping one. Necklace, earring and ring tables also show the two lines of one piece rolled together (LL, ML, MM, HL, HM, HH, for Low, Mid and High). Earrings are the one case where a line feeds Weapon Power %, so your base Weapon Power is reverse-derived from the total you typed and your Weapon Power % fields, and is only as exact as those fields.
 
-**Bracelet vs Bracelet and Accessory vs Accessory.** Each side is valued as four layers: the keystone, crit and Additional Damage lines (searched), Spec, the flat lines, and Attack Power plus Weapon Power. Each layer is computed alone against the same baseline, and the layers are multiplied. The default bracelet reads +14.73%, about 1.1397 x 1.0067 x 1.0000 x 1.0000 (its lines are Crit Rate, Crit Damage and Additional Damage, so the flat layer is empty). Damage plus Cooldown uses the raw tag in the sandbox unless you tick the box, because the cooldown value is personal. Accessory A is always treated as your equipped piece, and any Main Stat or flat line on it is backed out of the shared baseline. The reference table applies the Damage plus Cooldown penalty, while Bracelet vs Bracelet leaves it to you.
+**Bracelet vs Bracelet and Accessory vs Accessory.** Each side is valued as four layers: the keystone, crit and Additional Damage lines (searched), Spec, the flat lines, and Attack Power plus Weapon Power. Each layer is computed alone against the same baseline, and the layers are multiplied. The default bracelet reads +14.73%, about 1.1397 x 1.0067 x 1.0000 x 1.0000 (its lines are Crit Rate, Crit Damage and Additional Damage, so the flat layer is empty). Damage plus Cooldown uses the raw tag in the sandbox unless you tick the box, because the cooldown value is personal. Side A is always treated as your equipped piece, and any Main Stat or flat Weapon Power line on it is backed out of the shared baseline (Bracelet vs Bracelet backs out only its Weapon Power and Main Stat lines, since the other layers already start from a bracelet-free baseline). Main Stat counts with your Main Stat %, and flat Weapon Power with your Weapon Power %, on both sides. The reference table applies the Damage plus Cooldown penalty by default.
 
 </details>
 
 <details class="setup-note" data-kind="note" open markdown>
 <summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
 
-Layers are treated as independent, so an interaction between, say, Spec and Attack Power is ignored. The Bracelet Weapon Power and Main Stat rows and the Any Accessory Slot rows sit on top of your typed totals, so a line of the same kind already on your gear stays in the baseline.
+Layers are treated as independent, so an interaction between, say, Spec and Attack Power is ignored. The Bracelet Weapon Power and Main Stat rows and the Any Accessory Slot rows sit on top of your typed totals, so a line of the same kind already on your gear stays in the baseline. The A vs B panels remove side A's lines instead.
 
 </details>
 
@@ -819,7 +819,7 @@ Every estimate the calculator uses, where it comes from, and what it moves. "Log
 <tr>
 <td>Equipped lines in the Bracelet Weapon Power and Main Stat rows and the Any Accessory Slot rows</td>
 <td>Not removed</td>
-<td>No field for the equipped line, so it stays in your typed totals</td>
+<td>No field for the equipped line, so it stays in your typed totals (the A vs B panels remove side A's)</td>
 <td>Bracelet Weapon Power rows about 0.03 to 0.05 points low, Main Stat rows about 0.01</td>
 </tr>
 <tr>

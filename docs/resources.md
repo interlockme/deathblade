@@ -946,11 +946,14 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
       <tbody class="ap-brace-compare-rows"></tbody>
     </table>
 
-    <!-- Bracelet vs. Bracelet: compares two WHOLE candidate bracelets (5
-         real lines each - Spec Stat plus Basic Effect 2 (Crit Stat, Main
-         Stat, or None - see that field's own comment below) plus 3 free
-         picks from the same line pool the table above values one at a
-         time) against each other and against running no bracelet at all,
+    <!-- Bracelet vs. Bracelet: compares two WHOLE bracelets (5 real lines
+         each - Spec Stat plus Basic Effect 2 (Crit Stat, Main Stat, or
+         None - see that field's own comment below) plus 3 free picks from
+         the same line pool the table above values one at a time). Bracelet
+         A is the one you wear: its Weapon Power and Main Stat lines are
+         backed out of the typed totals before either side is added.
+         Bracelet B is the candidate. Both are compared against each other
+         and against running no bracelet at all,
          including each bracelet's own best keystone (which can genuinely
          differ between two bracelets - see computeBraceletVsBracelet's own
          comment in the JS). Nested INSIDE Bracelet Line Comparison
@@ -963,7 +966,7 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
          them rather than something you'd reach for on its own. -->
     <details class="ap-bvb">
       <summary>
-        <span class="ap-gear-summary-text"><span class="ap-gear-title">Bracelet vs. Bracelet</span><span class="ap-gear-summary-desc">Two full 5-line bracelets compared against each other and against no bracelet</span></span>
+        <span class="ap-gear-summary-text"><span class="ap-gear-title">Bracelet vs. Bracelet</span><span class="ap-gear-summary-desc">Your equipped bracelet against a candidate replacement, and both against neither</span></span>
       </summary>
       <div class="ap-brace-compare-body">
         <!-- Basic Effect 2: a bracelet's 2nd fixed line isn't guaranteed
@@ -1000,7 +1003,7 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
              do - keep new accessibility work on this card off id/for. -->
         <div class="ap-bvb-cards">
           <div class="ap-bvb-card ap-bvb-card-a">
-            <p class="ap-gear-card-title ap-bvb-card-title">Bracelet A</p>
+            <p class="ap-gear-card-title ap-bvb-card-title">Bracelet A<span class="ap-avb-equipped-badge"> (Currently Equipped)</span></p>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label">Spec Stat</label>
               <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE for CDR." hidden>WARN</span>
@@ -1106,7 +1109,7 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
           </div>
 
           <div class="ap-bvb-card ap-bvb-card-b">
-            <p class="ap-gear-card-title ap-bvb-card-title">Bracelet B</p>
+            <p class="ap-gear-card-title ap-bvb-card-title">Bracelet B<span class="ap-avb-equipped-badge"> (Candidate)</span></p>
             <div class="ap-calc-field-row">
               <label class="ap-calc-field-label">Spec Stat</label>
               <span class="ap-brace-warn-icon ap-bvb-spec-warn" title="Recommended to keep Specialization at 83 or higher on RE for CDR." hidden>WARN</span>
@@ -2064,7 +2067,7 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
      line as the 17/20 Points group headers. -->
 <details class="ap-arkgrid-compare">
   <summary>
-    <span class="ap-gear-summary-text"><span class="ap-gear-title">Ark Grid Core Comparison</span><span class="ap-gear-summary-desc">Each Core against your Best Setup, and what upgrading each one from Relic to Ancient is worth</span></span>
+    <span class="ap-gear-summary-text"><span class="ap-gear-title">Ark Grid Core Comparison</span><span class="ap-gear-summary-desc">Each Core against an empty slot, and what upgrading each one from Relic to Ancient is worth</span></span>
   </summary>
   <div class="ap-brace-compare-body">
     <div class="ap-acc-table-scroll">

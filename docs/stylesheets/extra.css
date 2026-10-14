@@ -3437,8 +3437,13 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .gp-cycle .gp-sep { font-weight: 400; color: var(--dbc-pink); }
 .md-typeset .gp-cycle .gp-repeat { font-weight: 500; color: var(--dbc-muted-text); }
 
+/* A last row that comes up short stretches its final cell across the empty tracks: the
+   cell borders are top and left only, so an empty track would leave the line under the cell
+   above it, and the divider beside the last cell, undrawn. */
 @container gp (max-width: 700px) {
   .md-typeset .gp-buffs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .md-typeset .gp-buff:last-child:nth-child(3n + 2) { grid-column: span 2; }
+  .md-typeset .gp-buff:last-child:nth-child(3n + 1) { grid-column: span 3; }
 }
 /* the long 40 label needs about 450px of meter to clear the 60 label; the short one needs about 300px */
 @container gp (max-width: 620px) {
@@ -3459,6 +3464,9 @@ h3 { color: var(--dbc-teal); }
 }
 @container gp (max-width: 440px) {
   .md-typeset .gp-buffs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md-typeset .gp-buff:last-child:nth-child(3n + 2),
+  .md-typeset .gp-buff:last-child:nth-child(3n + 1) { grid-column: auto; }
+  .md-typeset .gp-buff:last-child:nth-child(odd) { grid-column: span 2; }
 }
 
 /* ==========================================================================
@@ -7977,6 +7985,14 @@ h3 { color: var(--dbc-teal); }
 }
 .md-typeset .ap-bvb-card-title {
   color: var(--ap-cat);
+}
+/* The "(Currently Equipped)" / "(Candidate)" suffix on the two bracelet
+   cards is one unbreakable word, so on a narrow card the title row wraps
+   it onto its own line instead of cutting it at the card edge. */
+.md-typeset .ap-bvb-card-a .ap-bvb-card-title,
+.md-typeset .ap-bvb-card-b .ap-bvb-card-title {
+  flex-wrap: wrap;
+  row-gap: 0;
 }
 /* Each free line is its own row: a type <select> that gets whatever room
    it needs plus a fixed-width Low/Mid/High tier <select> beside it -
