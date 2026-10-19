@@ -22,7 +22,7 @@ description: "Surge 333 (Blitz) Deathblade build. Not viable and not played, so 
 **Tradeoff:**{: .tradeoff } The juice is not worth the squeeze.
 
 - Uses Blitz Rush as two fast casts (<span class="skill-mention" data-glossary-id="btbcombo">BTB</span> combo) via a skill reset.
-- High gem efficiency: Surge and Blitz Rush are most of your DPS.
+- High DMG gem efficiency: Surge and Blitz Rush are most of the DPS.
 - Must balance Surge, Blitz Rush, and Deathly Slash <span class="skill-mention" data-glossary-id="backattack">back attack</span> rate with <span class="skill-mention" data-glossary-id="cpm">CPM</span>.
 
 </div>

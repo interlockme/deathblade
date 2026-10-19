@@ -22,7 +22,8 @@ description: "Surge 222 (Speedy) Deathblade build, the recommended Surge setup: 
 - Simple uptime-focused gameplay with no gimmicks.
 - Incorporates Dark Axel for higher mobility and utility.
 - Lots of <span class="skill-mention" data-glossary-id="pushimmunity">push immunity</span>, excess stacks and skill expression.
-- Very high gem efficiency: Surge and Deathly Slash are nearly all of your DPS.
+- Very high DMG gem efficiency: Surge is most of the DPS.
+- Requires very high CD gem investment to play as intended.
 - Must constantly balance Surge and Deathly Slash back attack rate with <span class="skill-mention" data-glossary-id="cpm">CPM</span>.
 
 </div>

@@ -21,8 +21,9 @@ description: "Surge 111 (Classic) Deathblade build: Ark Passive, Ark Grid cores,
 
 - Powerful burst windows with the Breaking Moon combo.
 - No need to hold <span class="skill-mention" data-glossary-id="counter">Counter</span>, it charges up to two stacks.
-- Very high gem efficiency: Surge is nearly all of your DPS.
 - Accessible from zero <span class="skill-mention" data-glossary-id="arkgrid">Ark Grid</span> cores with minor adjustments.
+- Very high DMG gem efficiency: Surge is most of the DPS.
+- Requires high CD gem investment to play as intended.
 - Must constantly balance Surge <span class="skill-mention" data-glossary-id="backattack">back attack</span> rate with <span class="skill-mention" data-glossary-id="cpm">CPM</span>.
 
 </div>
