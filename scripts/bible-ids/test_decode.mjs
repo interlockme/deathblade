@@ -54,6 +54,17 @@ const EXPECTED = {
   "no-raid-loadout|ap-gear-main-stat": "filled from estimated loadout",
   "no-raid-loadout|ap-gear-wp": "filled from estimated loadout",
   "no-raid-loadout|ap-gear-wp-karma-lv": "filled from estimated loadout",
+  // This page's visible text is laid out differently from the older fixtures (a Full Breakdown
+  // block, the engravings as 20/20 rows, no Ark Grid core lines the text parser recognizes), so
+  // the text parser reads none of these; the decoded route reads them all from the page data.
+  "vambrace-epic-10|ap-adrenaline": "visible-text layout this parser does not read",
+  "vambrace-epic-10|ap-adrenaline-stone": "visible-text layout this parser does not read",
+  "vambrace-epic-10|ap-astrogem-lv": "visible-text layout this parser does not read",
+  "vambrace-epic-10|ap-brace-spec-build": "visible-text layout this parser does not read",
+  "vambrace-epic-10|ap-flashy-atk": "visible-text layout this parser does not read",
+  "vambrace-epic-10|ap-gear-ability-stone-base-ap": "visible-text layout this parser does not read",
+  "vambrace-epic-10|ap-gear-ap-astrogem-lv": "visible-text layout this parser does not read",
+  "vambrace-epic-10|ap-gear-weapon-core": "visible-text layout this parser does not read",
 };
 
 // Main Stat % exists only in the decoded data (stats 7-9, see bible-decode.js), never in the
@@ -67,6 +78,7 @@ const MAIN_STAT_PCT = {
   "relic-chaos-star": "5",
   "relic-chaos-sun-moon": "5",
   "bracelet-stat-lines": "5",
+  "vambrace-epic-10": "9",
 };
 
 // The class comes from the page data (classId), checked before anything else is decoded: the five
@@ -80,6 +92,7 @@ const CLASS_ID = {
   "relic-chaos-star": "blade",
   "relic-chaos-sun-moon": "blade",
   "bracelet-stat-lines": "blade",
+  "vambrace-epic-10": "blade",
   "other-class-support-t4": "yinyangshi",
   "other-class-t3-gear": "force_master",
 };
@@ -139,6 +152,53 @@ for (const name of names) {
     console.log("  icon colors swapped: decoded payload " + (same ? "unchanged" : "CHANGED") + "; text path " + (fired ? "warned (control fired)" : "did not warn"));
   } else console.log("  icon colors: no Relic/Ancient gradient in this page to swap");
   console.log("  " + (diffs ? diffs + " field difference(s)" : "all " + keys.length + " fields identical"));
+}
+// Vambrace: the decoded grade and level must match the item (grade from its id, level from its
+// honing) and the flat Basic Atk. Power they imply must equal the game's own stat 114. Anything
+// that cannot be read or disagrees leaves the Vambrace at None with a warning, and the rest of the
+// loadout still decodes. Every fixture without a Vambrace decodes to None.
+{
+  const read = (name) => zlib.gunzipSync(fs.readFileSync(path.join(fixDir, name + ".html.gz"))).toString("utf8");
+  const html = read("vambrace-epic-10");
+  const item = '{id:134301406,slot:"bracer",data:{type:"equipment",stats:[],honing:10,advancedHoning:0}}';
+  const stat = "{type:114,value:2030}";
+  if (!html.includes(item) || !html.includes(stat)) throw new Error("vambrace-epic-10 no longer holds the literals this check rewrites");
+  const check = (label, got, want) => {
+    const ok = JSON.stringify(got) === JSON.stringify(want);
+    if (!ok) unexpected++;
+    console.log("\n== vambrace: " + label + ": " + (ok ? "ok" : "DIFF got " + JSON.stringify(got) + " want " + JSON.stringify(want)));
+  };
+  const D = (h) => sandbox.window.BibleDecode.decode(h);
+  const shape = (d) => d.ok ? { grade: d.text.vambraceGrade, level: d.text.vambraceLevel, warnings: d.warnings } : { refused: d.reason };
+  const none = (why) => ({ grade: "none", level: 0, warnings: ["Couldn't read the Vambrace (" + why + "), so it was left at None. Enter its grade and level by hand."] });
+  check("Epic +10 reads Epic, level 10", shape(D(html)), { grade: "epic", level: 10, warnings: [] });
+  check("Legendary +10 (grade digit 4) reads Legendary, level 10", shape(D(html.replace(item, item.replace("134301406", "134401406")))), { grade: "legendary", level: 10, warnings: [] });
+  check("Relic +17 against stat 2030 is left at None", shape(D(html.replace(item, item.replace("134301406", "134501406").replace("honing:10", "honing:17")))), none("+17 should add 3690 Basic Atk. Power but the page's stats say 2030"));
+  check("Epic +11 (out of the Epic range) is left at None", shape(D(html.replace(item, item.replace("honing:10", "honing:11")))), none("level 11 is outside its grade's range"));
+  check("Epic +9 against stat 2030 is left at None", shape(D(html.replace(item, item.replace("honing:10", "honing:9")))), none("+9 should add 850 Basic Atk. Power but the page's stats say 2030"));
+  check("stat 114 of 0 on a +10 Vambrace is left at None", shape(D(html.replace(stat, "{type:114,value:0}"))), none("+10 should add 2030 Basic Atk. Power but the page's stats say 0"));
+  check("an item id outside 134xxxxxx is left at None", shape(D(html.replace(item, item.replace("134301406", "135301406")))), none("unknown item id 135301406"));
+  check("a stat 114 with no Vambrace item is left at None", shape(D(html.replace(item, '{id:657830001,slot:"trinity_core",data:{type:"orb"}}'))), none("the page's stats show Basic Atk. Power 2030 but list no Vambrace"));
+  for (const name of names) {
+    if (name === "vambrace-epic-10") continue;
+    const d = D(read(name));
+    if (d.ok) check(name + " (no Vambrace)", shape(d), { grade: "none", level: 0, warnings: [] });
+  }
+  // Payload level: the decoded data carries grade and level, and the visible-text route reads
+  // them from the "Vambrace +N" line (lower grade and a warning at 10, 15 and 20).
+  const fixLines = JSON.parse(fs.readFileSync(path.join(fixDir, "vambrace-epic-10.lines.json"), "utf8"));
+  const at = fixLines.indexOf("Vambrace +10 T4");
+  const withLine = (line) => fixLines.map((l, k) => (k === at ? line : l)).filter((l) => l !== null);
+  const payload = (lines, dec) => {
+    const p = sandbox.__buildBiblePayload(html, lines, true, undefined, dec);
+    return { grade: p.data["ap-gear-vambrace-grade"], level: p.data["ap-gear-vambrace-level"], ambiguous: p.warnings.some((w) => w.includes("exists in two grades")) };
+  };
+  check("decoded payload", payload(fixLines, D(html)), { grade: "epic", level: "10", ambiguous: false });
+  check("text route +10 takes Epic and warns", payload(fixLines), { grade: "epic", level: "10", ambiguous: true });
+  check("text route +12 reads Legendary", payload(withLine("Vambrace +12 T4")), { grade: "legendary", level: "12", ambiguous: false });
+  check("text route +15 takes Legendary and warns", payload(withLine("Vambrace +15 T4")), { grade: "legendary", level: "15", ambiguous: true });
+  check("text route +22 reads Ancient", payload(withLine("Vambrace +22 T4")), { grade: "ancient", level: "22", ambiguous: false });
+  check("text route with no Vambrace line is None", payload(fixLines.filter((l, k) => k !== at)), { grade: "none", level: "0", ambiguous: false });
 }
 // Estimated route reads ONLY the estimated loadout. For every fixture that decodes from raid_merged,
 // the other snapshots' gear, engravings, cores, karma, weapon power, main stat and quality are

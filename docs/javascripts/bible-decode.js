@@ -22,6 +22,9 @@
   var T = window.BibleIdTables;
 
   var GEM_BASE_AP_TABLE = { 1: 0, 2: 0.05, 3: 0.1, 4: 0.2, 5: 0.3, 6: 0.45, 7: 0.6, 8: 0.8, 9: 1, 10: 1.2 };
+  var VAMBRACE_FLAT_AP_BY_HONING = [0,0,0,0,0,850,850,850,850,850,2030,2030,2030,2030,2030,3690,3690,3690,3690,3690,5980,5980,5980,5980,5980,9050];
+  var VAMBRACE_HONING_RANGE = [[0, 10], [10, 15], [15, 20], [20, 25]];
+  var VAMBRACE_STAT_FLAT_AP = 114;
   var DEATHBLADE_CLASS_ID = "blade";
   var CHAOS_GRADE_BY_ID_DIGIT = { 5: "Relic", 6: "Ancient" };
   var SLOT_BY_SHAPE = ["Sun", "Moon", "Star"];
@@ -211,6 +214,42 @@
       var v = accessoryValue(bySlot[slot], ACCESSORY_INDEX.atkFlat);
       if (v != null) text.flatApLines.push(v);
     });
+  }
+
+  var VAMBRACE_GRADE_NAMES = ["epic", "legendary", "relic", "ancient"];
+
+  // The Vambrace is item slot bracer (or vambrace), id 134xxxxxx: the digit at 10^5 minus 3 is
+  // the grade (0 Epic, 1 Legendary, 2 Relic, 3 Ancient) and data.honing is +0 to +25 within that
+  // grade's range. Its Main Stat and Weapon Power are already inside Bible's Main Stat and Weapon
+  // Power totals, so the calculator only needs its grade and level (it derives the Basic Atk.
+  // Power from them). The flat part the grade and level imply must equal the game's own stat 114;
+  // if the item cannot be read or disagrees, the Vambrace is left at None with a warning rather
+  // than refusing the whole loadout, since everything else decodes independently of it.
+  function decodeVambrace(items, stats, text) {
+    text.vambraceGrade = "none";
+    text.vambraceLevel = 0;
+    text.vambraceWarning = null;
+    var item = null;
+    items.forEach(function (i) { if (i.slot === "bracer" || i.slot === "vambrace") item = i; });
+    var reported = Array.isArray(stats) ? stats.filter(function (s) { return s.type === VAMBRACE_STAT_FLAT_AP; })[0] : null;
+    function skip(why) {
+      text.vambraceWarning = "Couldn't read the Vambrace (" + why + "), so it was left at None. Enter its grade and level by hand.";
+    }
+    if (!item) {
+      if (reported && reported.value > 0) skip("the page's stats show Basic Atk. Power " + reported.value + " but list no Vambrace");
+      return;
+    }
+    var id = item.id;
+    if (typeof id !== "number" || Math.floor(id / 1e6) !== 134 || Math.floor(id / 1e4) % 10 !== 0) return skip("unknown item id " + id);
+    var gradeIndex = Math.floor(id / 1e5) % 10 - 3;
+    var honing = item.data && item.data.honing;
+    if (gradeIndex < 0 || gradeIndex > 3) return skip("unknown grade in item id " + id);
+    var range = VAMBRACE_HONING_RANGE[gradeIndex];
+    if (!isFinite(honing) || Math.floor(honing) !== honing || honing < range[0] || honing > range[1]) return skip("level " + honing + " is outside its grade's range");
+    var flat = VAMBRACE_FLAT_AP_BY_HONING[honing];
+    if (reported && reported.value !== flat) return skip("+" + honing + " should add " + flat + " Basic Atk. Power but the page's stats say " + reported.value);
+    text.vambraceGrade = VAMBRACE_GRADE_NAMES[gradeIndex];
+    text.vambraceLevel = honing;
   }
 
   function decodeGems(gems, text) {
@@ -433,10 +472,11 @@
     if (!problem) problem = decodeCores(cores, text, hydration);
     if (!problem) problem = decodeAstrogems(cores, text);
     if (problem) return fail(problem);
+    decodeVambrace(items, stats, text);
     decodeAccessories(items, text);
     decodeEngravings(engravings, items, text);
 
-    return { ok: true, kind: picked.kind, why: picked.why || null, classId: classId, text: text, hydration: hydration };
+    return { ok: true, kind: picked.kind, why: picked.why || null, classId: classId, text: text, hydration: hydration, warnings: text.vambraceWarning ? [text.vambraceWarning] : [] };
   }
 
   window.BibleDecode = { decode: decode, pickLoadout: pickLoadout, loadoutObjects: loadoutObjects };

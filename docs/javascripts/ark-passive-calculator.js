@@ -352,7 +352,7 @@
   // was built from). Each entry carries BOTH of the core's payouts -
   // pct (Atk. Power %) and flat (Flat AP) - since a single dropdown
   // selection determines both at once; gearFlatAp (the manual Flat AP
-  // input) covers ONLY accessories, with this core's own flat
+  // inputs) covers the accessories and the Vambrace, with this core's own flat
   // contribution added in automatically wherever flatAp is computed
   // (see the two gearApTotal call sites below) rather than asking the
   // reader to hand-add it into that field themselves.
@@ -1111,6 +1111,23 @@
   const PARTY_CHECKBOX_LIMIT = 3;
 
   // ----- Safe DOM helpers -----
+  // Vambrace (equipment slot, grades Epic to Ancient, levels +0 to +25). Its Main Stat and
+  // Weapon Power are already inside the Weapon Power and Main Stat totals, so only its Basic
+  // Atk. Power matters: a flat amount by level (the table below, one entry per level 0 to 25) and
+  // a percent equal to the grade's index (Epic +0%, Legendary +1%, Relic +2%, Ancient +3%).
+  // A level's valid range depends on the grade (Epic 0-10, Legendary 10-15, Relic 15-20, Ancient
+  // 20-25), so levels 10, 15 and 20 exist in two grades.
+  const VAMBRACE_GRADES = ["epic", "legendary", "relic", "ancient"];
+  const VAMBRACE_LEVEL_RANGE = [[0, 10], [10, 15], [15, 20], [20, 25]];
+  const VAMBRACE_FLAT_AP_BY_LEVEL = [0, 0, 0, 0, 0, 850, 850, 850, 850, 850, 2030, 2030, 2030, 2030, 2030, 3690, 3690, 3690, 3690, 3690, 5980, 5980, 5980, 5980, 5980, 9050];
+  function vambraceBasicAp(grade, level) {
+    const gradeIndex = VAMBRACE_GRADES.indexOf(grade);
+    if (gradeIndex < 0) return { flat: 0, pct: 0, level: null, gradeIndex: -1 };
+    const [lo, hi] = VAMBRACE_LEVEL_RANGE[gradeIndex];
+    const lv = Math.min(hi, Math.max(lo, isFinite(level) ? Math.trunc(level) : lo));
+    return { flat: VAMBRACE_FLAT_AP_BY_LEVEL[lv], pct: gradeIndex, level: lv, gradeIndex: gradeIndex };
+  }
+
   function getNumber(root, selector, fallback) {
     const el = root.querySelector(selector);
     if (!el) return fallback;
@@ -1191,6 +1208,7 @@
   }
 
   function readInputs(root) {
+    const vambrace = vambraceBasicAp(getSelect(root, ".ap-gear-vambrace-grade", "none"), getNumber(root, ".ap-gear-vambrace-level", 0));
     const inputs = {
       critStat: Math.max(0, Math.min(900, getNumber(root, ".ap-crit-stat", 658))),
       weaponQuality: Math.max(0, Math.min(100, getNumber(root, ".ap-weapon-quality", 100))),
@@ -1340,21 +1358,29 @@
       // constants block near the top of this file. Default (9%): Pet
       // Ranch + 4 Legendary Skins.
       gearMainStatPercent: Math.max(0, Math.min(15, getNumber(root, ".ap-gear-main-stat-pct", 9))),
-      // Base AP % - split into its two separate sources (Gem total,
+      // Base AP % - split into its separate sources (Gem total, Vambrace,
       // Ability Stone bonus) - see gearBaseApPercentTotal above for how
       // they're combined. Gem Base AP % is a free-typed SUM across all
       // your gems, not one gem's level (see that function's own
       // comment) - sanity-capped at 50 (well above any real total) to
       // catch a stray typo without pretending there's a real game-side
-      // ceiling here.
-      gearGemBaseAp: Math.max(0, Math.min(50, getNumber(root, ".ap-gear-gem-base-ap", 13.2))),
+      // ceiling here. The Vambrace's Basic AP % (its grade index, 0 to 3)
+      // is added into this same number: it multiplies the same
+      // sqrt(Weapon Power x Main Stat / 6) term the gems do, and nothing
+      // downstream tells the two apart.
+      gearGemBaseAp:
+        Math.max(0, Math.min(50, getNumber(root, ".ap-gear-gem-base-ap", 13.2))) + vambrace.pct,
       gearAbilityStoneBaseAp: getCheckbox(root, ".ap-gear-ability-stone-base-ap", true),
-      // Flat AP covers accessories ONLY - Chaos Core: Attack's own flat
-      // contribution is looked up automatically from the dropdown below
-      // (gearChaosStarFlat) and added in wherever flatAp is used, so it
-      // is never hand-added into this field. The default is 0 (a High-tier
-      // accessory roll adds 390).
-      gearFlatAp: Math.max(0, Math.min(2000, getNumber(root, ".ap-gear-flat-ap", 0))),
+      // Flat AP covers the accessories (the Accessory Flat AP input) plus
+      // the Vambrace's flat Basic Atk. Power (looked up from its grade and
+      // level, up to 9,050 at Ancient +25) - Chaos Core: Attack's own flat contribution is looked
+      // up automatically from the dropdown below (gearChaosStarFlat) and
+      // added in wherever flatAp is used, so it is never hand-added into
+      // this field. The accessory comparisons only ever remove accessory
+      // amounts from it, so the Vambrace share always stays. The default
+      // is 0 for both (a High-tier accessory roll adds 390).
+      gearFlatAp:
+        Math.max(0, Math.min(2000, getNumber(root, ".ap-gear-flat-ap", 0))) + vambrace.flat,
       // Attack Power % is split into its individual sources (the
       // reference sheet's own Calc!N7 is a single hand-typed sum) - see
       // gearAttackPowerPercentTotal below for how they're combined, so
@@ -6696,8 +6722,32 @@
     });
   }
 
+  // Keeps the Vambrace level field inside its grade's range and fills the live readout between
+  // the row's label and controls (same "(pct + flat)" shape as the Chaos Core rows, empty at None).
+  // The level's min/max attributes follow the grade so the shared blur clamp snaps a typed value;
+  // an out-of-range value is only rewritten while the field does not have focus.
+  function enforceVambraceUI(root) {
+    const gradeEl = root.querySelector(".ap-gear-vambrace-grade");
+    const levelEl = root.querySelector(".ap-gear-vambrace-level");
+    const readout = root.querySelector('.ap-value-display[data-for="ap-gear-vambrace-grade"]');
+    if (!gradeEl || !levelEl) return;
+    const gradeIndex = VAMBRACE_GRADES.indexOf(gradeEl.value);
+    const range = gradeIndex < 0 ? [0, 25] : VAMBRACE_LEVEL_RANGE[gradeIndex];
+    levelEl.min = String(range[0]);
+    levelEl.max = String(range[1]);
+    levelEl.disabled = gradeIndex < 0;
+    const result = vambraceBasicAp(gradeEl.value, parseFloat(levelEl.value));
+    if (gradeIndex >= 0 && document.activeElement !== levelEl && String(result.level) !== levelEl.value) {
+      levelEl.value = String(result.level);
+    }
+    if (readout) {
+      readout.textContent = gradeIndex < 0 ? "" : "(" + result.pct + "% + " + result.flat + " AP)";
+    }
+  }
+
   function update(root) {
     syncBuildToggleUI(root);
+    enforceVambraceUI(root);
     enforcePartyCheckboxLimit(root);
     enforceKbwStoneDependency(root);
     enforceGearSupportUptimeGate(root);

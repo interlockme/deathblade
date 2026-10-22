@@ -38,11 +38,16 @@ a missing name or a table whose shape changed makes the script fail instead of w
   therefore say nothing about the bonus.
 - Items have a `slot`: weapon, head, upper_body, lower_body, hand, shoulder (honing, advancedHoning),
   neck, ear1, ear2, finger1, finger2 (stats), ability_stone, bracelet, the `avatar_*` slots (dye
-  only) and `trinity_core`. A `bracer` (or `vambrace`) slot with item ids 134xxxxxx is the Korea-only
-  preview: the grade is the digit at 10^5 minus 3 (0 epic, 1 legendary, 2 relic, 3 ancient) and the
-  honing level is `data.honing` (epic 0-10, legendary 10-15, relic 15-20, ancient 20-25). The archive's
-  `bracerStatsByHoning[honing]` is [main stat, vitality, weapon power, flat attack power]. None of
-  this is checked against a real Bracer yet: no fixture has one.
+  only) and `trinity_core`. The Vambrace is slot `bracer` (the decoder also accepts `vambrace`) with
+  item ids 134xxxxxx and no stat lines: the grade is the digit at 10^5 minus 3 (0 epic, 1 legendary,
+  2 relic, 3 ancient) and the level is `data.honing` (epic 0-10, legendary 10-15, relic 15-20,
+  ancient 20-25). The archive's `bracerStatsByHoning[honing]` is [main stat, vitality, weapon power,
+  flat attack power]; the Epic +2 and Epic +10 rows match real pages and LOA-SIM's tooltip, and the
+  table is identical in the NA LOA-SIM chunk. The Vambrace's main stat and weapon power are already
+  inside the loadout's Main Stat and Weapon Power (Weapon Power rebuilt from the honing tables
+  matches to within 1 on two real pages only when the Vambrace's is added). Its flat Basic Atk.
+  Power is the game's own stat 114 (0 without a Vambrace), and its percent is the grade index
+  (LOA-SIM: epic +0%, legendary +1%, relic +2%, ancient +3%; only epic is seen on a real page).
 - The multiplier slots are positional: a STR character's fixture has STR (type 3) as its large base
   stat and its multiplier at type 7 (10400, the others 10100), so type 3/4/5 pairs with 7/8/9.
 - A T3 bracelet (item ids 2133xxxxx) carries only type 2 stat lines (for example indexes 15 and 18)

@@ -615,6 +615,23 @@
     // +480) - the calculator has no equipped-state field for that at all,
     // only isolated manual what-if comparisons, so there's nothing to
     // import it into.
+    // Vambrace: "Vambrace +10 T4" on one line (or "Vambrace" then "+10" on the next). The level
+    // sets the grade except at 10, 15 and 20 (two grades each), where the lower grade is taken
+    // and vambraceAmbiguousGrade makes buildPayload warn.
+    out.vambraceGrade = "none";
+    out.vambraceLevel = 0;
+    out.vambraceAmbiguousGrade = false;
+    for (var vi = 0; vi < lines.length; vi++) {
+      var vm = /^Vambrace\s*\+(\d+)/.exec(lines[vi]) || (lines[vi] === "Vambrace" ? /^\+(\d+)$/.exec(lines[vi + 1] || "") : null);
+      if (!vm) continue;
+      var vl = Number(vm[1]);
+      if (vl < 0 || vl > 25) break;
+      out.vambraceLevel = vl;
+      out.vambraceGrade = vl <= 10 ? "epic" : vl <= 15 ? "legendary" : vl <= 20 ? "relic" : "ancient";
+      out.vambraceAmbiguousGrade = vl === 10 || vl === 15 || vl === 20;
+      break;
+    }
+
     out.flatApLines = [];
     accessoryBlocks.forEach(function (block) {
       block.flat.forEach(function (pair) {
@@ -1325,6 +1342,18 @@
     // than being left unset - same reasoning as everything above.
     var flatApSum = (text.flatApLines || []).reduce(function (a, b) { return a + b; }, 0);
     data["ap-gear-flat-ap"] = String(flatApSum);
+
+    // Vambrace: only its grade and level are set (the calculator derives the Basic Atk. Power
+    // from them; its Main Stat and Weapon Power are already in the totals above). The decoded
+    // route reads both from the item. The visible-text route reads the level from the "Vambrace
+    // +N" line and the grade from it where the level fixes it; levels 10, 15 and 20 exist in two
+    // grades, so it takes the lower one and warns.
+    data["ap-gear-vambrace-grade"] = text.vambraceGrade || "none";
+    data["ap-gear-vambrace-level"] = String(text.vambraceLevel || 0);
+    if (decoded && decoded.warnings) decoded.warnings.forEach(function (w) { warnings.push(w); });
+    if (!decoded && text.vambraceAmbiguousGrade) {
+      warnings.push("Bible's page text doesn't say the Vambrace's grade and +" + text.vambraceLevel + " exists in two grades, so it was set to " + text.vambraceGrade + ". Check the grade against your Vambrace.");
+    }
 
     // KNOWN GAP: hydration.* fields (Weapon Power, Main Stat, Crit Stat,
     // karma, grid core points) always come from the raid loadout's embedded

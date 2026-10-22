@@ -46,6 +46,8 @@
      "ap-gear-flat-ap": "0",
      "ap-gear-gem-base-ap": "13.2",
      "ap-gear-main-stat": "841796",
+     "ap-gear-vambrace-grade": "none",
+     "ap-gear-vambrace-level": "0",
      "ap-gear-weapon-core": "None|0P",
      "ap-gear-wp": "257297",
      "ap-gear-wp-earring1": "Mid",
@@ -272,6 +274,8 @@
      "ap-gear-flat-ap": "80",
      "ap-gear-gem-base-ap": "0",
      "ap-gear-main-stat": "766672",
+     "ap-gear-vambrace-grade": "none",
+     "ap-gear-vambrace-level": "0",
      "ap-gear-weapon-core": "None|0P",
      "ap-gear-wp": "247197",
      "ap-gear-wp-earring1": "Mid",
@@ -487,6 +491,8 @@
      "ap-gear-flat-ap": "0",
      "ap-gear-gem-base-ap": "9.2",
      "ap-gear-main-stat": "633161",
+     "ap-gear-vambrace-grade": "none",
+     "ap-gear-vambrace-level": "0",
      "ap-gear-weapon-core": "None|0P",
      "ap-gear-wp": "208798",
      "ap-gear-wp-earring1": "Mid",
@@ -705,6 +711,8 @@
      "ap-gear-flat-ap": "0",
      "ap-gear-gem-base-ap": "0",
      "ap-gear-main-stat": "811188",
+     "ap-gear-vambrace-grade": "none",
+     "ap-gear-vambrace-level": "0",
      "ap-gear-weapon-core": "None|0P",
      "ap-gear-wp": "260193",
      "ap-gear-wp-earring1": "High",
@@ -910,6 +918,8 @@
      "ap-gear-ap-earring2": "Mid",
      "ap-gear-flat-ap": "80",
      "ap-gear-gem-base-ap": "0",
+     "ap-gear-vambrace-grade": "none",
+     "ap-gear-vambrace-level": "0",
      "ap-gear-weapon-core": "None|0P",
      "ap-gear-wp-earring1": "Mid",
      "ap-gear-wp-earring2": "High",
@@ -1241,6 +1251,8 @@
      "ap-gear-flat-ap": "80",
      "ap-gear-gem-base-ap": "4.95",
      "ap-gear-main-stat": "698727",
+     "ap-gear-vambrace-grade": "none",
+     "ap-gear-vambrace-level": "0",
      "ap-gear-weapon-core": "None|0P",
      "ap-gear-wp": "228069",
      "ap-gear-wp-earring1": "Low",
@@ -1442,6 +1454,8 @@
      "ap-gear-flat-ap": "160",
      "ap-gear-gem-base-ap": "6.6",
      "ap-gear-main-stat": "539851",
+     "ap-gear-vambrace-grade": "none",
+     "ap-gear-vambrace-level": "0",
      "ap-gear-weapon-core": "None|0P",
      "ap-gear-wp": "176021",
      "ap-gear-wp-earring1": "None",
@@ -1613,7 +1627,213 @@
      ]
     }
    }
+  },
+  "vambrace-epic-10": {
+   "gradeDebug": {},
+   "payload": {
+    "characterName": "Fixture-vambrace-epic-10",
+    "data": {
+     "ap-adrenaline": "Not Used",
+     "ap-adrenaline-stone": "0 Lv.",
+     "ap-astrogem-lv": "0",
+     "ap-bracelet-addA": "None",
+     "ap-bracelet-addB": "None",
+     "ap-bracelet-dmg": "Low",
+     "ap-bracelet-dmg-2": "None",
+     "ap-bracelet-rate": "Low",
+     "ap-bracelet-rate-2": "None",
+     "ap-crit-dmg-dual": false,
+     "ap-crit-rate-dual": true,
+     "ap-crit-stat": "687",
+     "ap-crushing-core": "None|0P",
+     "ap-evo-karma": "6",
+     "ap-flashy-atk": "None",
+     "ap-gear-ability-stone-base-ap": false,
+     "ap-gear-ap-astrogem-lv": "0",
+     "ap-gear-ap-chaos-star": "None|0P",
+     "ap-gear-ap-earring1": "High",
+     "ap-gear-ap-earring2": "Low",
+     "ap-gear-flat-ap": "630",
+     "ap-gear-gem-base-ap": "9.6",
+     "ap-gear-main-stat": "781111",
+     "ap-gear-vambrace-grade": "epic",
+     "ap-gear-vambrace-level": "10",
+     "ap-gear-weapon-core": "None|0P",
+     "ap-gear-wp": "283366",
+     "ap-gear-wp-earring1": "Low",
+     "ap-gear-wp-earring2": "High",
+     "ap-gear-wp-karma-lv": "30",
+     "ap-kbw": "4 Nodes",
+     "ap-kbw-stone": "0 Lv.",
+     "ap-necklace": "Low",
+     "ap-ring1-dmg": "High",
+     "ap-ring1-rate": "Low",
+     "ap-ring2-dmg": "High",
+     "ap-ring2-rate": "Low",
+     "ap-stable-atk": "None|0P",
+     "ap-swift-core": "None|0P",
+     "ap-weapon-quality": "100"
+    },
+    "warnings": [
+     "Couldn't find Order Sun/Moon cores on this page (Order Grid not equipped, or a read failure) - Build wasn't auto-set, verify it matches your actual build manually.",
+     "Chaos Sun, Chaos Moon, Chaos Star: the page's own data shows 20P, 20P, 18P invested in Chaos cores that no slot read from the page text accounts for, but this file couldn't read a core name for them from the page text - left unset, pick it manually.",
+     "Bible's page text doesn't say the Vambrace's grade and +10 exists in two grades, so it was set to epic. Check the grade against your Vambrace."
+    ]
+   },
+   "structured": {
+    "loadouts": [
+     "most_recent_raid",
+     "most_recent_chaos_dungeon"
+    ],
+    "raid": {
+     "accessoryRolls": {
+      "ear1": [
+       [
+        49,
+        155
+       ],
+       [
+        124,
+        390
+       ],
+       [
+        152,
+        80
+       ]
+      ],
+      "ear2": [
+       [
+        152,
+        300
+       ],
+       [
+        49,
+        40
+       ],
+       [
+        124,
+        80
+       ]
+      ],
+      "finger1": [
+       [
+        76,
+        400
+       ],
+       [
+        74,
+        40
+       ],
+       [
+        124,
+        80
+       ]
+      ],
+      "finger2": [
+       [
+        124,
+        80
+       ],
+       [
+        76,
+        400
+       ],
+       [
+        74,
+        40
+       ]
+      ],
+      "neck": [
+       [
+        50,
+        70
+       ],
+       [
+        106,
+        20
+       ],
+       [
+        621000002,
+        0
+       ]
+      ]
+     },
+     "cores": [
+      {
+       "base": 10001,
+       "gemPoints": 20,
+       "id": 673005406,
+       "idLastDigit": 6
+      },
+      {
+       "base": 10002,
+       "gemPoints": 20,
+       "id": 673015406,
+       "idLastDigit": 6
+      },
+      {
+       "base": 10003,
+       "gemPoints": 20,
+       "id": 673025405,
+       "idLastDigit": 5
+      },
+      {
+       "base": 10004,
+       "gemPoints": 20,
+       "id": 673100005,
+       "idLastDigit": 5
+      },
+      {
+       "base": 10005,
+       "gemPoints": 20,
+       "id": 673110006,
+       "idLastDigit": 6
+      },
+      {
+       "base": 10006,
+       "gemPoints": 18,
+       "id": 673121006,
+       "idLastDigit": 6
+      }
+     ],
+     "gemApEffectValues": [
+      80,
+      80,
+      80,
+      80,
+      100,
+      120,
+      100,
+      80,
+      80,
+      80,
+      80
+     ],
+     "iconGradientGrades": {
+      "chaos_moon": "Ancient",
+      "chaos_star": "Ancient",
+      "chaos_sun": "Relic",
+      "order_moon": "Ancient",
+      "order_star": "Relic",
+      "order_sun": "Ancient"
+     },
+     "stoneNodes": [
+      {
+       "id": 118,
+       "nodes": 9
+      },
+      {
+       "id": 299,
+       "nodes": 7
+      },
+      {
+       "id": 801,
+       "nodes": 2
+      }
+     ]
+    }
+   }
   }
  },
- "importerSource": "../../docs/javascripts/bible-import.js"
+ "importerSource": "docs/javascripts/bible-import.js"
 }

@@ -5008,6 +5008,11 @@ h3 { color: var(--dbc-teal); }
   width: 5.5em;
   min-width: 0;
 }
+/* The Vambrace row's level field is narrower than the shared number width; its grade dropdown
+   keeps the shared select sizing so "Legendary" is not cut off. */
+.md-typeset .ap-calc-field-row input[type="number"].ap-gear-vambrace-level {
+  width: 4em;
+}
 /* Number fields keep the compact width; tighter side padding plus a small
    gap before the browser's up/down spinner (which appears on hover and sits
    inside the field) stops the value from touching or sitting under it. */
@@ -6885,6 +6890,13 @@ h3 { color: var(--dbc-teal); }
   }
   .md-typeset .ap-gear-inputs .ap-calc-field-row > :last-child {
     margin-left: auto;
+  }
+  /* The Vambrace row's two controls drop to their own line together, both at the right edge. */
+  .md-typeset .ap-gear-inputs .ap-calc-field-row > select.ap-gear-vambrace-grade {
+    margin-left: auto;
+  }
+  .md-typeset .ap-gear-inputs .ap-calc-field-row > input.ap-gear-vambrace-level {
+    margin-left: 0;
   }
   /* The live value, such as 3.00%, belongs to the label, so it sits right after it
      instead of at the far edge of the line the control dropped away from. */

@@ -750,6 +750,18 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
           <input type="number" id="ap-gear-flat-ap" class="ap-gear-flat-ap ap-gear-input-narrow" min="0" max="2000" step="1" value="0">
         </div>
         <div class="ap-calc-field-row">
+          <label class="ap-calc-field-label" for="ap-gear-vambrace-grade" title="Your Vambrace's grade and level (Epic +10, say). Only its Basic Atk. Power matters here: its Main Stat and Weapon Power are already inside the totals above.">Vambrace</label>
+          <span class="ap-value-display" data-for="ap-gear-vambrace-grade"></span>
+          <select id="ap-gear-vambrace-grade" class="ap-gear-vambrace-grade">
+            <option value="none" selected>None</option>
+            <option value="epic">Epic</option>
+            <option value="legendary">Legendary</option>
+            <option value="relic">Relic</option>
+            <option value="ancient">Ancient</option>
+          </select>
+          <input type="number" id="ap-gear-vambrace-level" class="ap-gear-vambrace-level ap-gear-input-narrow" min="0" max="25" step="1" value="0" aria-label="Vambrace level">
+        </div>
+        <div class="ap-calc-field-row">
           <label class="ap-calc-field-label" for="ap-gear-support-uptime" title="Assumes an equally-geared support providing their AP buff.">Support AP Buff Uptime %</label>
           <input type="number" id="ap-gear-support-uptime" class="ap-gear-support-uptime ap-gear-input-narrow" min="0" max="100" step="1" value="98">
         </div>
