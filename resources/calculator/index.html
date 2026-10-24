@@ -1,0 +1,1953 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="How the Ark Passive Calculator works: what Top Combinations ranks, how uptimes and the Support are modeled, how Attack Power, crit layers, Ark Grid cores, comparison panels and engravings are valued, and every assumption behind the numbers.">
+      
+      
+      
+        <link rel="canonical" href="https://interlockme.github.io/deathblade/resources/calculator/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Calculator Guide - Deathblade</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../../assets/external/fonts.googleapis.com/css.9a3d0420.css">
+        <style>:root{--md-text-font:"Poppins";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/external/fonts.googleapis.com/css2.54fa675b.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css?v=bfbe90c238">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#calculator-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Deathblade" class="md-header__button md-logo" aria-label="Deathblade" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m6.2 2.44 11.9 11.9 2.12-2.12 1.41 1.41-2.47 2.47 3.18 3.18c.39.39.39 1.02 0 1.41l-.71.71a.996.996 0 0 1-1.41 0L17 18.23l-2.44 2.47-1.41-1.41 2.12-2.12-11.9-11.9V2.44zM15.89 10l4.74-4.74V2.44H17.8l-4.74 4.74zm-4.95 5-2.83-2.87-2.21 2.21-2.12-2.12-1.41 1.41 2.47 2.47-3.18 3.19a.996.996 0 0 0 0 1.41l.71.71c.39.39 1.02.39 1.41 0L7 18.23l2.44 2.47 1.41-1.41-2.12-2.12z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Deathblade
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Calculator Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../remaining-energy/essentials/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Remaining Energy
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../surge/essentials/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Surge
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Additional Resources
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Deathblade" class="md-nav__button md-logo" aria-label="Deathblade" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m6.2 2.44 11.9 11.9 2.12-2.12 1.41 1.41-2.47 2.47 3.18 3.18c.39.39.39 1.02 0 1.41l-.71.71a.996.996 0 0 1-1.41 0L17 18.23l-2.44 2.47-1.41-1.41 2.12-2.12-11.9-11.9V2.44zM15.89 10l4.74-4.74V2.44H17.8l-4.74 4.74zm-4.95 5-2.83-2.87-2.21 2.21-2.12-2.12-1.41 1.41 2.47 2.47-3.18 3.19a.996.996 0 0 0 0 1.41l.71.71c.39.39 1.02.39 1.41 0L7 18.23l2.44 2.47 1.41-1.41-2.12-2.12z"/></svg>
+
+    </a>
+    Deathblade
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remaining Energy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Remaining Energy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../remaining-energy/essentials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Essentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../remaining-energy/standard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../remaining-energy/111-head-hunt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    111 Head Hunt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../remaining-energy/313-high-floor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    313 High Floor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../remaining-energy/333-ceiling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    333 Ceiling ★
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Surge
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Surge
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../surge/essentials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Essentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../surge/111-classic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    111 Classic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../surge/222-speedy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    222 Speedy ★
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../surge/333-blitz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    333 Blitz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Additional Resources
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Additional Resources
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculator Guide
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calculator Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-short-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The short version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-combinations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top Combinations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uptimes-and-estimated-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uptimes and estimated inputs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build-presets-and-loading-a-character" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build, presets and loading a character
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-every-comparison-is-re-optimized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why every comparison is re-optimized
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-how-each-panel-is-valued" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference: how each panel is valued
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference: how each panel is valued">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#attack-power" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attack Power
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crit-and-damage-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crit and damage layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ark-grid-cores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ark Grid cores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bracelet-accessory-and-a-vs-b-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bracelet, Accessory and A vs B comparisons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engravings-and-raid-captain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engravings and Raid Captain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assumption-register" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assumption register
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-limits-and-how-to-challenge-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limits and how to challenge it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="calculator-guide">Calculator Guide<a class="headerlink" href="#calculator-guide" title="Permanent link">&para;</a></h1>
+<p>This page explains what the <a href="../#ark-passive-calculator">Ark Passive Calculator</a> works out, what it assumes, and why. Each section starts in plain terms. Where there is a formula, a collapsed <strong>The math</strong> block holds it with worked examples, so you can check any number yourself. Examples use the default inputs on the RE 333 build unless stated.</p>
+<h2 id="the-short-version">The short version<a class="headerlink" href="#the-short-version" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Everything is a ratio against your current setup.</strong> "% of best" and "gain" compare one choice with another while everything else stays equal. The calculator does not predict absolute DPS or simulate a rotation. It models your damage chain: crit, Crit Damage, Evolution Damage, Additional Damage and Attack Power.</li>
+<li><strong>Top Combinations</strong> scores nine Evolution setups against your stats and shows the best five. Gaps under 0.5 percentage points are a tie, so pick whichever is easier to play.</li>
+<li><strong>Bonuses that are only on part of the time</strong> (Adrenaline, Back Attack, Flash Orb, Maelstrom) are not averaged before the crit cap. Each on/off combination is capped first, then weighted by how likely it is.</li>
+<li><strong>A Support is assumed by default</strong>, a generic above-average one. Lines that raise only your own Weapon Power or Main Stat are worth less because of it. Percent Attack Power is not diluted.</li>
+<li><strong>Comparisons re-pick your best keystones for each option</strong>, so a bracelet gets credit for a keystone change it makes possible. This "realized gain" is never lower than the gain with keystones held fixed.</li>
+<li><strong>Defaults are typical values from combat logs.</strong> Change them to your own. Everything here is a best-effort estimate from tooltips, in-game tests and logs, not a measurement of your character.</li>
+</ul>
+<h2 id="top-combinations">Top Combinations<a class="headerlink" href="#top-combinations" title="Permanent link">&para;</a></h2>
+<p>The Evolution tree lets you take two of the three Tier 4 keystones (Critical, Master, Pulverize) and split your Limit Break and Keen Sense points. That makes nine setups. The calculator scores all nine against your stats and lists the best five, each as a percentage of the best. Clicking a tab previews a lower-ranked setup. The pin button makes every panel below use it, which is how you test a setup you prefer.</p>
+<p><strong>Close results are a tie.</strong> Gaps under 0.5 percentage points of DPS do not matter in practice, so choose what is easier to play or what you already have. The 0.5 is a rule of thumb, not a measured error bar: the model uses one blended crit rate for the whole fight and cannot resolve much smaller differences.</p>
+<div class="ap-acc-table-scroll doc-table-scroll">
+<table class="ap-brace-compare-table doc-table doc-table--fit">
+<thead>
+<tr>
+<th class="ap-brace-th-label">Rank</th>
+<th class="ap-brace-th-label">Setup</th>
+<th>% of best</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>LB1/KS2, Master + Pulverize</td>
+<td class="doc-num">100.00%</td>
+</tr>
+<tr>
+<td>2</td>
+<td>LB2/KS1, Master + Pulverize</td>
+<td class="doc-num">99.81%</td>
+</tr>
+<tr>
+<td>3</td>
+<td>LB1/KS2, Critical + Pulverize</td>
+<td class="doc-num">99.66%</td>
+</tr>
+<tr>
+<td>4</td>
+<td>LB3, Master + Pulverize</td>
+<td class="doc-num">99.47%</td>
+</tr>
+<tr>
+<td>5</td>
+<td>LB1/KS2, Critical + Master</td>
+<td class="doc-num">99.35%</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>With the best setup your effective crit rate reads 92.37% (77.37% before the picks), Evolution Damage 81.00% (41.00% before) and Additional Damage 46.86% (38.36% before).</p>
+<div class="setup-panel doc-panel" data-accent="purple">
+<div class="setup-notes">
+<details class="setup-note" data-kind="example">
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
+<p>Each of the nine cells gets a score:</p>
+<div class="highlight"><pre><span></span><code>score = ((1 - c) + c * CritDmg * (1 + onCrit)) * (1 + evo) * (1 + add)
+</code></pre></div>
+<p>then times 0.98 if Keen Blunt Weapon is equipped. "% of best" is a cell's score divided by the best score.</p>
+<ul>
+<li><code>c</code> is your effective crit rate, capped at 100% (how it is averaged is in the next section).</li>
+<li><code>CritDmg</code> is your Crit Damage: base 2.0 plus rings, bracelet, Keen Blunt Weapon, the Swift core and others.</li>
+<li><code>onCrit</code> is the extra damage on crit hits (Crit Hit Damage Synergy and similar). Critical multiplies it by 1.12.</li>
+<li><code>evo</code> is Evolution Damage. Pulverize adds 20 points to it.</li>
+<li><code>add</code> is Additional Damage. Master adds 8.5 points to it.</li>
+<li>Master also adds 7% crit rate. That shares the 100% cap, so Master is worth less as your crit rate nears the cap.</li>
+</ul>
+<p>Keen Blunt Weapon's downside is an expected value, a 10% chance of -20% damage, so a flat x0.98. Optimized Training 1 takes one of the three keystone points, so with it ticked the splits become OT1/LB2, OT1/LB1/KS1 and OT1/KS2 (there is no LB3), and it adds its own 5 points of Evolution Damage. Its cooldown reduction is not counted, so at the defaults it reads -2.8% DPS: the best split with it against the best without it.</p>
+</details>
+<details class="setup-note" data-kind="note" open="open">
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+<p>One blended crit rate and one multiplier chain for the whole fight, so skill-by-skill differences are not modeled.</p>
+</details>
+</div>
+</div>
+<h2 id="uptimes-and-estimated-inputs">Uptimes and estimated inputs<a class="headerlink" href="#uptimes-and-estimated-inputs" title="Permanent link">&para;</a></h2>
+<p>Many bonuses are only on part of the time. The calculator does not just add "bonus times uptime" to your crit rate. Crit rate is capped at 100%, and averaging before the cap overstates what you get near it. So it works out every on/off combination first, caps each one, and only then averages.</p>
+<p>Two inputs are worth knowing exactly. <strong>Adrenaline uptime</strong> is the share of damage dealt at 6 stacks, which is what a DPS meter reports. Its Crit Rate bonus needs all 6 stacks, so it scales with that uptime, while its Attack Power bonus works per stack and gets partial credit as stacks rebuild. <strong>Back Attack Rate</strong> is the figure from the Combat Analyzer's Overview tab. It counts hits, not damage, and only for skills that can back attack.</p>
+<div class="setup-panel doc-panel" data-accent="purple">
+<div class="setup-notes">
+<details class="setup-note" data-kind="example">
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
+<p><strong>Crit rate.</strong> Three independent sometimes-on terms: Adrenaline (bonus times uptime), Back Attack (10% times your effective back attack share) and Flash Orb (bonus times uptime). <code>blendCritTerms</code> takes every on/off combination, caps each at 100% and weights it by its joint probability. Averaging first is wrong because the cap is concave.</p>
+<p>Example (Flash Orb left out for simplicity): base crit 75%, Adrenaline +20% at 97% uptime, Back Attack +10% at 90%. Averaging first gives 75% + 19.4% + 9% = 103.4%, capped to 100.000%. The joint-probability method gives 99.035%:</p>
+<div class="ap-acc-table-scroll doc-table-scroll">
+<table class="ap-brace-compare-table doc-table doc-table--wide">
+<thead>
+<tr>
+<th class="ap-brace-th-label">Adrenaline</th>
+<th class="ap-brace-th-label">Back Attack</th>
+<th>Probability</th>
+<th class="ap-brace-th-label">Crit rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>on</td>
+<td>on</td>
+<td class="doc-num">87.3%</td>
+<td>105% capped to 100%</td>
+</tr>
+<tr>
+<td>on</td>
+<td>off</td>
+<td class="doc-num">9.7%</td>
+<td>95%</td>
+</tr>
+<tr>
+<td>off</td>
+<td>on</td>
+<td class="doc-num">2.7%</td>
+<td>85%</td>
+</tr>
+<tr>
+<td>off</td>
+<td>off</td>
+<td class="doc-num">0.3%</td>
+<td>75%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Weighted: 0.873 + 0.09215 + 0.02295 + 0.00225 = 0.99035. <a href="#engravings-and-raid-captain">Raid Captain's Move Speed</a> works the same way.</p>
+<p><strong>Adrenaline.</strong> Outside 6 stacks you rebuild one stack per cast, so the first five casts average 3 of 6 stacks, or 0.5. The AP half of the bonus uses that:</p>
+<div class="highlight"><pre><span></span><code>AP from Adrenaline = full * (U + (1 - U) * 0.5)
+full = 6 stacks * (0.9% + stone bonus per stack)
+</code></pre></div>
+<p>At the defaults (4 nodes, no stone) the full value is 5.4% Attack Power:</p>
+<div class="ap-acc-table-scroll doc-table-scroll">
+<table class="ap-brace-compare-table doc-table doc-table--wide">
+<thead>
+<tr>
+<th class="ap-brace-th-label">Uptime</th>
+<th>Adrenaline AP</th>
+<th>Adrenaline crit</th>
+<th>Effective crit rate (before picks)</th>
+<th>Final Attack Power</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100%</td>
+<td class="doc-num">5.40%</td>
+<td class="doc-num">20.0%</td>
+<td class="doc-num">77.98%</td>
+<td class="doc-num">346,412</td>
+</tr>
+<tr>
+<td>97%</td>
+<td class="doc-num">5.32%</td>
+<td class="doc-num">19.4%</td>
+<td class="doc-num">77.37%</td>
+<td class="doc-num">346,161</td>
+</tr>
+<tr>
+<td>80%</td>
+<td class="doc-num">4.86%</td>
+<td class="doc-num">16.0%</td>
+<td class="doc-num">73.98%</td>
+<td class="doc-num">344,741</td>
+</tr>
+<tr>
+<td>50%</td>
+<td class="doc-num">4.05%</td>
+<td class="doc-num">10.0%</td>
+<td class="doc-num">67.98%</td>
+<td class="doc-num">342,233</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Back Attack.</strong> The rate is used as the damage share of the skills that can back attack, which holds when their hits are similar in size. On Surge builds the share is 0.95 times the rate. On RE builds the skills that always land as back attacks (Surge, which also scales with Specialization) take their own share, your rate gates the rest, with no double counting.</p>
+<p>The 0.5 rebuild share is a derivation, not a measurement. Later skills hit harder and would push it up slightly, by about 0.1 Attack Power points at 80% uptime. The Adrenaline input has no floor: low values are fair what-ifs, but an uptime of 0 still reports half the AP bonus, which cannot happen in a fight.</p>
+</details>
+<details class="setup-note" data-kind="note" open="open">
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+<p>The terms are treated as independent. In practice they are usually on together, since you aim to back attack constantly and keep your stacks, while Flash Orb is RNG with low uptime. At high uptimes this does little harm.</p>
+</details>
+</div>
+</div>
+<h2 id="build-presets-and-loading-a-character">Build, presets and loading a character<a class="headerlink" href="#build-presets-and-loading-a-character" title="Permanent link">&para;</a></h2>
+<p><strong>The Build toggle.</strong> The five builds (RE 111/313, RE 333, Surge 111, Surge 222, Surge 333) change the following:</p>
+<ul>
+<li><strong>Spec share.</strong> The Spec row and the Bracelet vs Bracelet Spec input use the Surge skill's share of that build's damage, read from the build pages' Trixion charts. Awakening is 1.5% of damage on RE and 1% on Surge.</li>
+<li><strong>Back attack.</strong> On RE, Surge always lands as a back attack, so its chart share is the always-back-attack share and the Back Attack rate covers only the rest. On Surge builds the share is 0.95 times the rate.</li>
+<li><strong>Maelstrom uptime default.</strong> 85% on RE, 80% on Surge 111 and 333, 90% on Surge 222. It is reset when you switch between groups (RE, Surge 111/333, Surge 222) and left alone inside a group, so a value you typed survives.</li>
+<li><strong>Food and runes.</strong> Mana Food, Vernese Wine, Mass Increase and the Rage Rune only apply where the build uses them. On RE, Mana Food is informational and left out of the DPS totals.</li>
+<li><strong>Breaking Moon.</strong> Surge 111 only: its average Crit Damage is added.</li>
+<li><strong>Move Speed.</strong> The class passive is 12 on RE and 10 on Surge.</li>
+</ul>
+<p>The Order Core table does not follow the toggle. Each core is judged on the build it belongs to.</p>
+<p><strong>Presets.</strong> There are three slots. Every change is saved to the active slot in your browser, and switching slots loads that slot. Reset clears only the active slot, after a confirmation.</p>
+<p><strong>Export and Import.</strong> Export writes the active slot as text. Import first resets every field to its default, then applies what the text contains, so a field missing from the text ends up at its default and not at your previous value. Options the calculator does not recognise are skipped and listed. The Setup A vs B, Bracelet A vs B and Ability Stone sandbox fields are not part of an export and always start fresh.</p>
+<p><strong>Load Character.</strong> Enter a character name or a Bible link. The calculator reads the raid loadout from that character's lostark.bible page and runs it through the same Import path. When it can tell from the Order cores, it also sets the Build for you. Some rules decide what gets loaded and how much to trust it:</p>
+<ul>
+<li>It uses the character's most recent raid loadout. The Chaos Dungeon loadout is never used.</li>
+<li>If that raid loadout has no gems, or there is none, it falls back to Bible's estimated raid loadout and says so. That is the best raid gear Bible has seen, which can differ from what the character wears now.</li>
+<li>Anything it could not read (an unknown tier, an unreadable core grade, a Build it could not match) is listed as a warning and left at its default, so check the list before trusting the numbers.</li>
+<li>It refuses characters that are not Deathblades.</li>
+</ul>
+<h2 id="support">Support<a class="headerlink" href="#support" title="Permanent link">&para;</a></h2>
+<p>Most raid parties have a Support, and a Support raises your Attack Power. A calculator that ignored this would overvalue upgrades that only raise your own Weapon Power or Main Stat, because the Support's share does not grow with them. So Support is on by default, modeled as a generic one: above average, not maxed, with the same Weapon Power, Main Stat and kind of Ability Stone as you, and the gearing a Support like that would likely have.</p>
+<p>When you compare "what if I had this line", the Support stays at its current value, because the line is yours and not your Support's. Lines that raise only your own Weapon Power, Main Stat or flat Attack Power are diluted that way. Percent Attack Power is not. This is the low end of a range: the real answer for your party sits between the number shown and the case where your Support gears up alongside you.</p>
+<div class="setup-panel doc-panel" data-accent="purple">
+<div class="setup-notes">
+<details class="setup-note" data-kind="example">
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
+<div class="highlight"><pre><span></span><code>AP = floor( ( sqrt(WP * MainStat / 6) * BaseAP + FlatAP + SupportBuff ) * PercentAP )
+SupportBuff = sqrt(WP * MainStat / 6) * BaseAP * 0.4 * (SupportUptime / 100)
+</code></pre></div>
+<p>The buff sits inside the bracket, so Percent AP multiplies it too. The 0.4 comes from the reference spreadsheet's Support profile, which has specific gearing. That profile is what is modeled, so the Support bracelet's own "Ally Atk. Power Enhancement" line is not modeled separately.</p>
+<p>At the defaults (98% uptime) the Support adds about 39% to your Attack Power: the final readout is 249,529 without it and 346,161 with it, a difference of 96,632. The Support's own term inside the bracket is 86,411, and Percent AP multiplies it like everything else, which is why the final difference is larger. The checkbox also turns on the +14% Evolution Damage that goes with having a Support and the Support's Move Speed bonus (its Attack Speed bonus is not scored), so switching it off changes more than Attack Power. At the defaults it also moves LB2/KS1 Master + Pulverize to first.</p>
+<p><strong>Why some gains are diluted and others are not.</strong> A Weapon Power line acts on only your part of the bracket, while Percent Attack Power multiplies all of it, Support included. From the bracelet table at the defaults:</p>
+<div class="ap-acc-table-scroll doc-table-scroll">
+<table class="ap-brace-compare-table doc-table doc-table--fit">
+<thead>
+<tr>
+<th class="ap-brace-th-label">Bracelet line</th>
+<th>With Support</th>
+<th>Without Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weapon Power +7200</td>
+<td class="doc-num">1.05%</td>
+<td class="doc-num">1.45%</td>
+</tr>
+<tr>
+<td>Weapon Power +9000</td>
+<td class="doc-num">1.31%</td>
+<td class="doc-num">1.81%</td>
+</tr>
+<tr>
+<td>Attack Power +0.4% (percent)</td>
+<td class="doc-num">0.37%</td>
+<td class="doc-num">0.37%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The Weapon Power rows keep about 72% of their no-Support value, which is 1 / (1 + 0.4 * 0.98). If the Support gears up alongside you, nothing is diluted. The Attack Power readout shows that end of the range: +5% Weapon Power there, with the Support following your stats, gives +2.45% with a Support and +2.44% without.</p>
+<p><strong>Orbs.</strong> Flash Orb and Strength Orb use an Ether effectiveness of 0.31, from a maxed relic Drops of Ether engraving (16%) plus a Level 2 stone (15%). Flash Orb adds 15% crit rate and Strength Orb adds 10% Attack Power, each times 1.31.</p>
+</details>
+<details class="setup-note" data-kind="note" open="open">
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+<p>The 0.4 coefficient and the generic gearing are one reference profile. A much better or worse Support shifts every Weapon Power, Main Stat, flat AP and Base AP row by roughly the same factor.</p>
+</details>
+</div>
+</div>
+<h2 id="why-every-comparison-is-re-optimized">Why every comparison is re-optimized<a class="headerlink" href="#why-every-comparison-is-re-optimized" title="Permanent link">&para;</a></h2>
+<p>Say you compare two bracelets. A bracelet changes your crit rate, Crit Damage or Additional Damage, and those decide which of the nine keystone setups is best. So the honest question is not "how much better is the new bracelet if I keep my keystones" but "how much better is my best setup with it than my best setup without it". That is what the calculator reports, and it calls it the <strong>realized gain</strong>.</p>
+<div class="setup-panel doc-panel" data-accent="purple">
+<div class="setup-notes">
+<details class="setup-note" data-kind="example">
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
+<p>For each candidate it finds the best of the nine cells with the candidate and for your current setup, then divides:</p>
+<div class="highlight"><pre><span></span><code>realized gain = best(candidate) / best(current) - 1
+fixed gain    = candidate in current best cell / best(current) - 1
+</code></pre></div>
+<p>The realized gain is never below the fixed gain. Your current best cell is one of the candidate's options, so the candidate's best is at least as good, and both gains share the same denominator. A check on 4,000 random input sets found no violations. The gap can be real: the largest seen was 3.2 percentage points of DPS. With a pin, both sides use the pinned cell and the two gains are equal.</p>
+<p>The best cell flips in cases like Keen Blunt Weapon at the defaults (with it Master + Pulverize at LB1/KS2, without it Critical + Pulverize at LB1/KS2), the Chaos Core Flashy comparison (228 flips in about 180,000 synthetic gear profiles), and bracelet lines such as High Crit Rate or High Additional Damage.</p>
+<p>Bracelet vs Bracelet re-optimizes every line that feeds the nine cells: Crit Rate, Crit Damage, Crit Stat and Additional Damage. Back Attack, Outgoing, Stagger and Damage plus Cooldown lines, and the vs Demon/Archdemon half of an Additional Damage line, multiply every cell by the same factor, so they cannot change the winner.</p>
+</details>
+<details class="setup-note" data-kind="note" open="open">
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+<p>Realized gain is the gain for a player who re-picks keystones, not a measurement of the gain with fixed ones.</p>
+</details>
+</div>
+</div>
+<h2 id="reference-how-each-panel-is-valued">Reference: how each panel is valued<a class="headerlink" href="#reference-how-each-panel-is-valued" title="Permanent link">&para;</a></h2>
+<p>The sections below cover how individual parts of the calculator are valued. Skip to the one you are checking.</p>
+<h3 id="attack-power">Attack Power<a class="headerlink" href="#attack-power" title="Permanent link">&para;</a></h3>
+<p>Attack Power comes from your Weapon Power and Main Stat, scaled by the Base Attack Power % from your gems, plus any flat Attack Power and the Support's buff, all multiplied by your Attack Power %. The readout in the Weapon Power / Main Stat card shows three stages so you can hold it against your character sheet.</p>
+<div class="ap-acc-table-scroll doc-table-scroll">
+<table class="ap-brace-compare-table doc-table">
+<thead>
+<tr>
+<th class="ap-brace-th-label">Stage</th>
+<th>Value</th>
+<th class="ap-brace-th-label">What is in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base</td>
+<td class="doc-num">237,661</td>
+<td>What the Character Profile shows in a town: no Adrenaline, no Support, no raid buffs</td>
+</tr>
+<tr>
+<td>With Adrenaline</td>
+<td class="doc-num">249,710</td>
+<td>Adds Adrenaline at all 6 stacks (5.40%)</td>
+</tr>
+<tr>
+<td>Final</td>
+<td class="doc-num">346,161</td>
+<td>Adrenaline at your uptime (5.32%), the Support, plus Atropine, Strength Orb and others if set</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>The final value is the baseline every Attack Power based comparison uses.</p>
+<div class="setup-panel doc-panel" data-accent="purple">
+<div class="setup-notes">
+<details class="setup-note" data-kind="example">
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
+<p>The formula is the one in the Support section. Its pieces:</p>
+<ul>
+<li><code>BaseAP</code> is 1 plus your gem Base AP % (summed over every gem, so eleven Lv. 10 gems at 1.2% each is 13.2%), plus 1.5% when your Ability Stone's two engraving levels add up to 5 or more (9/7 and 10/6 nodes are the smallest that do).</li>
+<li><code>FlatAP</code> is your flat Attack Power plus the flat half of Chaos Core: Attack.</li>
+<li><code>PercentAP</code> is 1 plus: both Attack Power earrings, Kazeros (2%), Guardian (3%), the Attack % half of Chaos Core: Attack, Astrogem Attack Power, the Attack Power % Other field, Atropine (30% times its uptime), Strength Orb (10% times 1.31 times its uptime) and the Adrenaline model.</li>
+<li>Astrogem Attack Power is level / 120 x 4.4%, rounded down to two decimals as the game shows it (level 35: 1.28%).</li>
+<li>The whole bracket, including the final multiply, sits inside the floor.</li>
+</ul>
+<p><strong>Worked example.</strong> Weapon Power 259,216, Main Stat 854,918, gem Base AP 13.2% plus the 1.5% stone bonus, Chaos Core: Attack at Relic 20 points (+2.13% and 2,700 flat). The square root part is 192,184, times 1.147 is 220,435. Attack Power % is 3.10 (two High earrings) + 2.13 (Chaos Core) + 1.28 (Astrogem) = 6.51, plus Adrenaline. Base is floor((220,435 + 2,700) x 1.0651) = 237,661. Final has the Support's 86,411 inside the bracket, about +96,632 after Percent AP. The first two stages leave out Atropine, Strength Orb and Attack Power % Other so they match the Character Profile.</p>
+</details>
+<details class="setup-note" data-kind="note" open="open">
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+<p>Weapon Power and Main Stat are not rebuilt from gear, so a wrong entry shifts every row that uses them.</p>
+</details>
+</div>
+</div>
+<h3 id="crit-and-damage-layers">Crit and damage layers<a class="headerlink" href="#crit-and-damage-layers" title="Permanent link">&para;</a></h3>
+<p>Your damage is four layers that multiply: crit rate and Crit Damage, the extra damage on crit hits (Crit Hit Damage), Evolution Damage, and Additional Damage. Each layer is its own multiplier, so a point added to a small layer is worth more than a point added to a big one. Every row on this page changes one of them.</p>
+<p>Each keystone changes one layer: Critical boosts the extra damage on crit hits, Master adds crit rate and Additional Damage, and Pulverize adds Evolution Damage. The summary card shows two crit figures. <strong>Eff. Crit Rate</strong> is the capped, probability-weighted value the score uses. <strong>Peak Crit Rate</strong> adds every bonus at full strength with no cap, can read above 100%, and only shows the ceiling in a burst window.</p>
+<div class="setup-panel doc-panel" data-accent="purple">
+<div class="setup-notes">
+<details class="setup-note" data-kind="example">
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
+<p>The sources of each layer, with the RE 333 default value:</p>
+<div class="ap-acc-table-scroll doc-table-scroll">
+<table class="ap-brace-compare-table doc-table">
+<thead>
+<tr>
+<th class="ap-brace-th-label">Layer</th>
+<th class="ap-brace-th-label">How sources combine</th>
+<th class="ap-brace-th-label">Default build</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Crit rate</td>
+<td>Added, then capped at 100% with the uptime blend</td>
+<td>Crit stat 658 gives 23.55% (stat x 0.03579099 / 100 as a fraction, 0.2355 after rounding down to 4 decimals), rings 1.90, bracelet 4.20, Adrenaline 19.40, strike 20, Back Attack 8.32, total 77.37%</td>
+</tr>
+<tr>
+<td>Crit Damage</td>
+<td>Added to the base 200%</td>
+<td>Rings 8, bracelet 6.8, Keen Blunt Weapon 52, strike 32, total 298.80%</td>
+</tr>
+<tr>
+<td>Crit Hit Damage</td>
+<td>Each source multiplies the others</td>
+<td>Two bracelet lines at 1.5% and Chaos Core: Flashy Ancient 17P at 1.65% give 1.015 x 1.015 x 1.0165, which is +4.72%</td>
+</tr>
+<tr>
+<td>Evolution Damage</td>
+<td>Added</td>
+<td>Yearning 14, Evolution Karma rank 6 gives 6, Standing Striker 21, total 41%</td>
+</tr>
+<tr>
+<td>Additional Damage</td>
+<td>Added</td>
+<td>Pet 1.0, weapon quality 30, necklace 2.6, Astrogem 4.76, total 38.36%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Other sources: Keen Sense adds Crit Rate (4% per level) and Evolution Damage (5% per level). Limit Break adds 10% Evolution Damage per level. Crit Rate synergies add 10% each, two Crit Hit Damage synergies multiply by 1.08 each, and Optimized Training 1 adds 5% Evolution Damage. Weapon quality adds 10% plus 0.002% times quality squared (quality 100 gives 30%). Astrogem Additional Damage is the level times 8.0834, rounded down, over 10,000 (level 59 gives 4.76%). Keen Blunt Weapon adds 44% to 52% Crit Damage by node and its stone adds 7.5% to 15%.</p>
+<p>Check for the best cell at the defaults (LB1/KS2, Master + Pulverize): effective crit 92.37%, Crit Damage 2.988, Crit Hit Damage 1.0472, Evolution 1 + 0.81, Additional 1 + 0.4686.</p>
+<div class="highlight"><pre><span></span><code>((1 - 0.9238) + 0.9238 * 2.988 * 1.0472) * 1.81 * 1.4686 * 0.98 = 7.73
+</code></pre></div>
+<p>Only ratios of this number are ever shown, so the absolute value means nothing alone. Doing all nine cells this way by hand gives the same five percentages as the Top Combinations table.</p>
+<p>Crit Rate Dual and Crit Damage Dual are the bracelet lines that carry a 1.5% Crit Hit Damage bonus.</p>
+</details>
+<details class="setup-note" data-kind="note" open="open">
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+<p>Which sources multiply and which add follows the game's tooltips and in-game tests. A source in a different layer would change its own value, not the rest of the chain. Breaking Moon is folded into Crit Damage as an average per cast.</p>
+</details>
+</div>
+</div>
+<h3 id="ark-grid-cores">Ark Grid cores<a class="headerlink" href="#ark-grid-cores" title="Permanent link">&para;</a></h3>
+<p>The Ark Grid Core Comparison answers one question per core: how much more DPS this core gives than an empty slot. A grid holds one Sun core (Flashy, Stable, Swift), one Moon core (Smoldering, Absorbing, Crushing) and one Star core (Attack, Weapon), so each row removes only your current core in its own slot and keeps the other two.</p>
+<div class="ap-acc-table-scroll doc-table-scroll">
+<table class="ap-brace-compare-table doc-table doc-table--wide">
+<thead>
+<tr>
+<th class="ap-brace-th-label">Chaos Core, 20 points</th>
+<th class="doc-th-relic">Relic</th>
+<th class="doc-th-ancient">Ancient</th>
+<th>Relic to Ancient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flashy Attack</td>
+<td class="doc-num">3.09%</td>
+<td class="doc-num">4.14%</td>
+<td class="doc-num">+1.03%</td>
+</tr>
+<tr>
+<td>Smoldering Strike</td>
+<td class="doc-num">2.60%</td>
+<td class="doc-num">3.78%</td>
+<td class="doc-num">+1.14%</td>
+</tr>
+<tr>
+<td>Attack</td>
+<td class="doc-num">2.84%</td>
+<td class="doc-num">3.64%</td>
+<td class="doc-num">+0.78%</td>
+</tr>
+<tr>
+<td>Absorbing Strike</td>
+<td class="doc-num">1.99%</td>
+<td class="doc-num">3.00%</td>
+<td class="doc-num">+0.99%</td>
+</tr>
+<tr>
+<td>Stable Attack</td>
+<td class="doc-num">1.90%</td>
+<td class="doc-num">2.85%</td>
+<td class="doc-num">+0.94%</td>
+</tr>
+<tr>
+<td>Crushing Strike</td>
+<td class="doc-num">1.85%</td>
+<td class="doc-num">2.78%</td>
+<td class="doc-num">+0.92%</td>
+</tr>
+<tr>
+<td>Swift Attack</td>
+<td class="doc-num">1.81%</td>
+<td class="doc-num">2.72%</td>
+<td class="doc-num">+0.90%</td>
+</tr>
+<tr>
+<td>Weapon</td>
+<td class="doc-num">1.55%</td>
+<td class="doc-num">1.98%</td>
+<td class="doc-num">+0.43%</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>For Order cores, only their 17 point line differs between Relic and Ancient, so that line is the whole comparison.</p>
+<div class="setup-panel doc-panel" data-accent="purple">
+<div class="setup-notes">
+<details class="setup-note" data-kind="example">
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
+<p>Chaos Core effects unlock at 10, 14, 17, 18, 19 and 20 points. The tables hold the cumulative totals at each level from in-game tooltips and tests. Relic and Ancient are identical below 17 points. Every gain is DPS with the core divided by DPS without it, minus 1, and the last column is</p>
+<div class="highlight"><pre><span></span><code>upgrade = (1 + Ancient 20P gain) / (1 + Relic 20P gain) - 1
+</code></pre></div>
+<p>By kind of row:</p>
+<ul>
+<li>Crit Hit Damage (Flashy), Crit Damage (Swift), Crit Rate (Crushing) and Additional Damage (Stable) feed the grid, so both sides use the nine cell search.</li>
+<li>Damage to foes lines (Flashy's Damage %, Smoldering's Boss Damage, Absorbing's Damage) multiply instead of adding. A core's 14, 17 and 18 to 20 point lines combine as (1 + a)(1 + b)(1.0016)^n - 1, about 0.01 to 0.02 points above the plain sum of the tooltip figures.</li>
+<li>Smoldering's Burn half does not depend on points. It is 0.6% of total damage at Relic and 1.25 times that at Ancient, and it multiplies with the Boss Damage half.</li>
+<li>Chaos Core: Attack and Weapon use the Attack Power formula with the Support held fixed. Attack and Weapon share the Star slot, so whichever Star core you wear is removed first: the Attack core's lines drop out of Attack Power, and the Weapon core's share is divided back out of your typed Weapon Power. Sun and Moon cores do not affect these rows. The Support stays at the value for your real typed Weapon Power. Weapon is folded into your typed Weapon Power: the new value is <code>WP * (1 + (pct / 100) / WPmult) + flat * WPmult</code>, where <code>pct</code> is the core's Weapon Power % in points and <code>WPmult</code> is your Weapon Power multiplier (1 + total Weapon Power % / 100).</li>
+<li>Not modeled: Speed, Stable's damage reduction, Swift's Attack Speed, Absorbing's healing and the non-damage half of Crushing (a weak point utility buff with no DPS value). Crushing's Crit Rate half is valued.</li>
+</ul>
+<p>At the defaults, Ancient 20 points: Smoldering is (1 + 3.0028%) x (1 + 0.75%) - 1 = 3.78%, Absorbing is simply 3.00%, and Chaos Core: Weapon turns 259,216 Weapon Power into 273,732 (+5.6%) for a 1.98% gain after the fixed Support dilutes it. Swift's +8.35% Crit Damage reads 2.72%, which a hand computation of the nine cells with and without it also gives.</p>
+<p><strong>Order cores.</strong> With <code>s</code> the share of your damage the line touches, <code>r</code> the Relic bonus and <code>a</code> the Ancient bonus:</p>
+<div class="highlight"><pre><span></span><code>relic total = 1 - s + s * (1 + r) / (1 + a)
+gain = 1 / relic total - 1
+</code></pre></div>
+<p>The shares are measured with the core already Ancient (they come from the build pages' Trixion damage charts), so the Relic total is the Ancient one with the extra bonus divided back out. A Damage to foes line touches everything (s = 1). A Normal Skill Damage line touches everything except Surge and Awakening, a proxy that leaves a small amount of bleed and other non-skill damage in the share.</p>
+<ul>
+<li>Swift Resolution (222) hits Deathly Slash (35.5% of damage), 15% vs 20%: 1 / (0.645 + 0.355 x 1.15 / 1.20) - 1 = 1.50%.</li>
+<li>Arts Core on RE 111 touches 78.6% of damage (100% minus Surge 19.9% minus Awakening 1.5%) at +5% vs +6%: 0.75%.</li>
+<li>Some cores carry a stack count or a coverage below 100%, which the table's detail line states.</li>
+</ul>
+<p>The shares are the build pages' measured chart values, and a script keeps the calculator's copy in step with them.</p>
+</details>
+<details class="setup-note" data-kind="note" open="open">
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+<p>Each Order core is judged on one build, the one it is used on, so that table is not a ranking across builds. Smoldering's Burn estimate and the grade tables are the assumptions to watch.</p>
+</details>
+</div>
+</div>
+<h3 id="bracelet-accessory-and-a-vs-b-comparisons">Bracelet, Accessory and A vs B comparisons<a class="headerlink" href="#bracelet-accessory-and-a-vs-b-comparisons" title="Permanent link">&para;</a></h3>
+<p>These panels value one line or one whole piece at a time, always as a ratio to a baseline. The Bracelet and Accessory tables answer "what is this line worth". The two A vs B panels are sandboxes: enter your equipped piece as A and a candidate replacement as B, and see which is better.</p>
+<div class="setup-panel doc-panel" data-accent="purple">
+<div class="setup-notes">
+<details class="setup-note" data-kind="example">
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
+<p><strong>Bracelet Line Comparison.</strong> The crit, damage and Additional Damage rows are valued against your setup with your own bracelet removed: bracelet lines off, both Dual checkboxes off, and your Crit Stat reset to a bracelet-free 576 (a character with all side content done, used only so your current bracelet is not counted twice). One candidate line is added, the nine cell search runs for both sides, and the result is the ratio. The Weapon Power and Main Stat rows work differently, as the list below says. By kind of row:</p>
+<ul>
+<li>Crit Rate, Crit Damage, Crit Stat and Additional Damage lines go through the full search.</li>
+<li>Back Attack Damage is the tabled value times the 0.95 back attack share (2.5% reads 2.38%). Outgoing Damage plus Damage to Staggered adds the Stagger line at the 5% share (2% + 4% x 0.05 reads 2.20%). Damage plus Cooldown reads the damage value minus 1 point as an estimate for the cooldown half (4.5% reads 3.50%).</li>
+<li>Weapon Power, Main Stat and Attack Power lines use the Attack Power formula with the Support fixed, so a Weapon Power line reads about 72% of its no-Support value. They are added on top of the Weapon Power and Main Stat you typed, and there is no field for your equipped bracelet's own line to remove, so a Weapon Power or Main Stat line already on your bracelet stays in the baseline (Bracelet vs Bracelet does remove it: side A is your worn bracelet). At the defaults, with an equipped Mid line (8,100 Weapon Power or 14,000 Main Stat), the Weapon Power rows read about 0.03 to 0.05 points low and the Main Stat rows about 0.01 points low. Both are well inside the 0.5 point tie band.</li>
+<li>Spec Stat has its own model. The gain per point is <code>(m - 1) / (1735 * m)</code> where <code>m = 1 + (0.86 * shareRatio + 0.1528 * awakeningRatio) / 699 * 1735</code>. The two ratios say how much of your damage comes from the skill Spec scales and from your Awakening, each normalized at a reference Spec of 1855. On RE 333 (16.6% skill share, 1.5% Awakening) +100 Spec reads 0.65%. It counts damage only, not cooldown reduction.</li>
+<li>A few Weapon Power lines use an assumed stack count, fight length or uptime, listed in the register.</li>
+</ul>
+<p>Check: High Crit Rate +5% with its +1.5% Crit Hit Damage bonus reads 5.18% in the table and in a hand computation.</p>
+<p><strong>Accessory Line Comparison.</strong> Same idea, but each table clears only the piece it lists and keeps the rest of your gear. Necklace clears your necklace line, Rings clears both rings' Crit lines, and Earrings clears both earrings' Attack Power % and Weapon Power % lines, so each candidate is valued as the only line on that slot. The lines that can roll on any accessory (flat Weapon Power, flat Attack Power and Quality STR/DEX/INT) clear nothing and are added on top of your full gear, so a line of that kind already on one of your pieces stays in the baseline; Accessory vs Accessory is the tool for swapping one. Necklace, earring and ring tables also show the two lines of one piece rolled together (LL, ML, MM, HL, HM, HH, for Low, Mid and High). Earrings are the one case where a line feeds Weapon Power %, so your base Weapon Power is reverse-derived from the total you typed and your Weapon Power % fields, and is only as exact as those fields.</p>
+<p><strong>Bracelet vs Bracelet and Accessory vs Accessory.</strong> Each side is valued as four layers: the keystone, crit and Additional Damage lines (searched), Spec, the flat lines, and Attack Power plus Weapon Power. Each layer is computed alone against the same baseline, and the layers are multiplied. The default bracelet reads +14.71%, about 1.1397 x 1.0065 x 1.0000 x 1.0000 (its lines are Crit Rate, Crit Damage and Additional Damage, so the flat layer is empty). Damage plus Cooldown uses the raw tag in the sandbox unless you tick the box, because the cooldown value is personal. Side A is always treated as your equipped piece, and any Main Stat or flat Weapon Power line on it is backed out of the shared baseline (Bracelet vs Bracelet backs out only its Weapon Power and Main Stat lines, since the other layers already start from a bracelet-free baseline). Main Stat counts with your Main Stat %, and flat Weapon Power with your Weapon Power %, on both sides. The reference table applies the Damage plus Cooldown penalty by default.</p>
+</details>
+<details class="setup-note" data-kind="note" open="open">
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+<p>Layers are treated as independent, so an interaction between, say, Spec and Attack Power is ignored. The Bracelet Weapon Power and Main Stat rows and the Any Accessory Slot rows sit on top of your typed totals, so a line of the same kind already on your gear stays in the baseline. The A vs B panels remove side A's lines instead.</p>
+</details>
+</div>
+</div>
+<h3 id="engravings-and-raid-captain">Engravings and Raid Captain<a class="headerlink" href="#engravings-and-raid-captain" title="Permanent link">&para;</a></h3>
+<p>The Engraving Comparison shows what each engraving is worth and which two flexible engravings work best together. Raid Captain depends on Move Speed, so its value follows a Move Speed estimate. That estimate uses the same expand-then-cap method as the crit rate, so a high average does not hide the time spent below the cap.</p>
+<div class="setup-panel doc-panel" data-accent="purple">
+<div class="setup-notes">
+<details class="setup-note" data-kind="example">
+<summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
+<ul>
+<li>Grudge, Cursed Doll and Mass Increase are tabled values by node level, plus your Ability Stone level. Grudge at 4 nodes reads 21.00% and Cursed Doll 17.00%.</li>
+<li>Ambush Master is two multiplying parts: the Back Attack Damage half (15% times your effective back attack share, 0.832 at the defaults) and the book-level Damage half (7.6% at 4 nodes). That is 1.12486 x 1.076 - 1 = 21.03%.</li>
+<li>Adrenaline and Keen Blunt Weapon use a real with-and-without search, so the winning keystone can flip, as in the Ark Grid rows. The Keen Blunt Weapon stone-level preview works the same way.</li>
+<li>Raid Captain's tabled value (48% at 4 nodes) is its bonus per 100 points of Move Speed above 100%. Move Speed is capped at 140%, so the cap pays 40% of the tabled value (19.2% at 4 nodes). The row is the node value times (expected capped Move Speed minus 100) over 100.</li>
+<li>The Ability Stone's Base AP row is your Attack Power with and without the stone's +1.5% Base AP, with the Support's buff the same on both sides (it is assumed to carry the same kind of stone as you). The +1.5% adds to your gem Base AP, so the gain is below 1.5%, and the Support's share of Attack Power lowers it further: at the defaults the row reads 0.94% with the Support and 1.31% with none. It applies when the two stone levels add up to 5 or more.</li>
+<li>Mana Food's row is the Main Stat gain through the Attack Power formula, Support fixed. On Surge 111 and 333 it also carries the Maelstrom Bleed rune's +0.75% damage. On RE it is informational and left out of every DPS total.</li>
+<li>Best Combo and Runner-Up search every pair of the flexible engravings (Raid Captain, Keen Blunt Weapon, Cursed Doll, plus Mass Increase on Surge if you opt in), valued together. Raid Captain is in the pool on both specs so you can see its value even if you would not drop it. At the defaults the best pair is Raid Captain plus Keen Blunt Weapon at +39.42%, 0.74% ahead of Raid Captain plus Cursed Doll at +38.40%. The 0.74% compares the two whole setups (1.3942 / 1.3840 - 1), so it is not the 1.02 point difference between the displayed gains.</li>
+<li>Setup A vs Setup B compares two whole loadouts of your choice the same way, with your food held fixed. On Surge that can mislead, because Wine only helps a setup that has Raid Captain. Overall Best therefore lets each setup pick its better food (Wine, or Mana Food with its Main Stat and Bleed gain) before comparing the two. Best Combo has the same note for the best pair under each food. RE has no second food choice, so neither note appears there.</li>
+</ul>
+<p><strong>Move Speed.</strong> Every on/off combination of the sometimes-on sources is capped at 140% and weighted by its joint probability. At the RE 333 defaults the base is 127.32% (106.32 base, 12 class passive, 9 Passionate Dance) and Maelstrom adds 12.8% at 85% uptime. The expected capped Move Speed is 138.10%, shown as Raid Captain Efficiency 95.25% (the share of the way from 100% to the 140% cap). Capping the average instead would read 95.50%. With the Paladin checkbox added (24.6% at a 35% assumed uptime) the true figure is 96.91%, while capping the average would read 100.00% and hide that you are still below the cap part of the time. The Raid Captain row in the engraving table is its node value times the Move Speed above 100% as a fraction, (138.10 - 100) / 100 = 0.38098. That is the 95.25% efficiency times the 0.40 the cap allows. So 0.48 (4 nodes, no stone) times 0.38098 gives 18.29%.</p>
+<p>Sources: base 106.32, plus 12 from the class on RE (10 on Surge), Passionate Dance 9 with a Support, Valkyrie or Artist 8, and Vernese Wine 3 on Surge when you do not use Mana Food. The 8 is exactly Valkyrie's Move Speed at 100% uptime. Artist (a skill-based 10% at 70-100% uptime) is grouped in for simplicity, so no uptime or skill input is needed. Maelstrom (12.8), Rage Rune (16 on Surge) and Paladin (24.6) are sometimes-on, at the register's uptimes. The cap is 140.</p>
+<p>Mass Increase's Attack Speed drawback is not modeled, which is why it is an opt-in checkbox. Attack Speed is not tracked at all, because nothing on this page depends on it.</p>
+<p><strong>Ability Stone penalties</strong> are not tracked. Attack Power Reduction (2%, 4% or 6% in game) subtracts from your other Attack Power % sources, such as Adrenaline or the Kazeros astrogems, so it would lower every Attack Power based row. Move Speed Reduction (also 2%, 4% or 6%) subtracts from Move Speed, which Raid Captain reads.</p>
+</details>
+<details class="setup-note" data-kind="note" open="open">
+<summary><span class="setup-note-tag">Limits</span>Assumptions and limits<span class="setup-note-arrow"></span></summary>
+<p>Move Speed sources are treated as independent. Ability Stone penalties and Attack Speed are not tracked.</p>
+</details>
+</div>
+</div>
+<h2 id="assumption-register">Assumption register<a class="headerlink" href="#assumption-register" title="Permanent link">&para;</a></h2>
+<p>Every estimate the calculator uses, where it comes from, and what it moves. "Logs" means typical figures across many players' logs, not measurements of one character. The headline ones: the Support (0.4 coefficient, 98% uptime), Adrenaline at 97% damage coverage, the 0.95 back attack share, and the Keen Blunt Weapon downside.</p>
+<div class="setup-panel doc-panel" data-accent="purple">
+<div class="setup-notes">
+<details class="setup-note" data-kind="note">
+<summary><span class="setup-note-tag">Table</span>All assumptions<span class="setup-note-arrow"></span></summary>
+<div class="ap-acc-table-scroll doc-table-scroll">
+<table class="ap-brace-compare-table doc-table doc-table--wide">
+<thead>
+<tr>
+<th class="ap-brace-th-label">Assumption</th>
+<th class="ap-brace-th-label">Value</th>
+<th class="ap-brace-th-label">Basis</th>
+<th class="ap-brace-th-label">Moves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Adrenaline uptime default</td>
+<td>97%</td>
+<td>Logs; the meter shows damage coverage at 6 stacks</td>
+<td>Crit rate, Attack Power</td>
+</tr>
+<tr>
+<td>Adrenaline AP rebuild share</td>
+<td>0.5</td>
+<td>Average of stacks 1 to 5 of 6</td>
+<td>About 0.1 AP points at 80%</td>
+</tr>
+<tr>
+<td>Support Attack Power coefficient</td>
+<td>0.4</td>
+<td>Reference sheet Support with specific gearing</td>
+<td>Every Weapon Power, Main Stat, flat AP and Base AP row</td>
+</tr>
+<tr>
+<td>Support uptime and gearing</td>
+<td>98%; same Weapon Power and Main Stat as you</td>
+<td>Estimate; a generic Support</td>
+<td>Same rows</td>
+</tr>
+<tr>
+<td>Support held fixed for candidate rows</td>
+<td>n/a</td>
+<td>A bracelet, accessory line or core you buy upgrades you, not the Support</td>
+<td>Rows read at the low end of a range</td>
+</tr>
+<tr>
+<td>Ether effectiveness</td>
+<td>0.31</td>
+<td>Maxed relic engraving (16%) plus Lv. 2 stone (15%)</td>
+<td>Flash Orb, Strength Orb</td>
+</tr>
+<tr>
+<td>Back Attack Rate default</td>
+<td>85%</td>
+<td>Logs</td>
+<td>Crit rate, back attack rows</td>
+</tr>
+<tr>
+<td>Back attack share of DPS</td>
+<td>0.95</td>
+<td>Assumed</td>
+<td>Back Attack rows, Ambush Master</td>
+</tr>
+<tr>
+<td>Stagger share</td>
+<td>5%</td>
+<td>Assumed</td>
+<td>Stagger bracelet rows</td>
+</tr>
+<tr>
+<td>On-hit stacks, periodic fight length, HP-gated uptime</td>
+<td>5 of 6, 10 minutes, 99%</td>
+<td>Assumed</td>
+<td>The matching Weapon Power bracelet lines</td>
+</tr>
+<tr>
+<td>Damage + Cooldown downside</td>
+<td>-1 point</td>
+<td>Arbitrary estimate</td>
+<td>Reference table applies it; Bracelet vs Bracelet leaves it to you</td>
+</tr>
+<tr>
+<td>Keen Blunt Weapon downside</td>
+<td>x0.98</td>
+<td>10% chance of -20%</td>
+<td>Keen Blunt Weapon and what it touches</td>
+</tr>
+<tr>
+<td>Specialization base and reference</td>
+<td>1735 and 1855</td>
+<td>Reference sheet, confirmed in game</td>
+<td>Specialization rows</td>
+</tr>
+<tr>
+<td>Crit stat for a typical non-bracelet build</td>
+<td>576</td>
+<td>A character with all side content done; only used to back out your current bracelet</td>
+<td>Bracelet crit rows</td>
+</tr>
+<tr>
+<td>Awakening damage share</td>
+<td>Per build</td>
+<td>Fits the latest raid, varies by content</td>
+<td>Specialization rows</td>
+</tr>
+<tr>
+<td>Breaking Moon average Crit Damage</td>
+<td>+11.475 points</td>
+<td>76.5% Surge share times 1 in 4 casts times 60%; a stricter weighting gives about 11.4 points, about 0.04% DPS</td>
+<td>Surge 111 Crit Damage</td>
+</tr>
+<tr>
+<td>Maelstrom, Rage Rune, Paladin uptime</td>
+<td>85/80/90, 20%, 35%</td>
+<td>Logs and representative values</td>
+<td>Move Speed, Raid Captain</td>
+</tr>
+<tr>
+<td>Artist/Valkyrie Move Speed</td>
+<td>Flat 8</td>
+<td>Exactly Valkyrie at 100% uptime; Artist grouped in</td>
+<td>Move Speed, Raid Captain</td>
+</tr>
+<tr>
+<td>Smoldering Burn share</td>
+<td>0.6% Relic, 0.75% Ancient</td>
+<td>Logs of many players and an in-game dummy test</td>
+<td>Smoldering row</td>
+</tr>
+<tr>
+<td>Order core damage shares</td>
+<td>Per build and core</td>
+<td>Build pages' Trixion charts, kept in step by a script</td>
+<td>Order Core table</td>
+</tr>
+<tr>
+<td>Surge skill share per build</td>
+<td>RE 111 19.9%, RE 333 16.6%, Surge 111 76.5%, Surge 222 47.8%, Surge 333 42%</td>
+<td>The same Trixion chart values as the Order cores, read from the same data</td>
+<td>Spec row, Bracelet vs Bracelet Spec, back attack split on RE, Breaking Moon</td>
+</tr>
+<tr>
+<td>Normal Skill Damage share</td>
+<td>100% minus Surge minus Awakening</td>
+<td>Simplification; bleed and other non-skill damage left in</td>
+<td>Arts Core row</td>
+</tr>
+<tr>
+<td>Weapon Power base for earring rows</td>
+<td>Reverse-derived from your typed total</td>
+<td>Only as exact as your Weapon Power % fields</td>
+<td>Earring Line 2 rows</td>
+</tr>
+<tr>
+<td>Equipped lines in the Bracelet Weapon Power and Main Stat rows and the Any Accessory Slot rows</td>
+<td>Not removed</td>
+<td>No field for the equipped line, so it stays in your typed totals (the A vs B panels remove side A's)</td>
+<td>Bracelet Weapon Power rows about 0.03 to 0.05 points low, Main Stat rows about 0.01</td>
+</tr>
+<tr>
+<td>Raid Captain scaling</td>
+<td>Linear in Move Speed above 100, capped at 140</td>
+<td>The tabled value is the bonus per 100 points of Move Speed, so the cap pays 40% of it</td>
+<td>Raid Captain row</td>
+</tr>
+<tr>
+<td>Ability Stone penalties</td>
+<td>Not tracked</td>
+<td>Rare, and the importer does not read them yet</td>
+<td>Attack Power Reduction would lower the Attack Power % total, Move Speed Reduction the Raid Captain Move Speed</td>
+</tr>
+<tr>
+<td>Independent sometimes-on terms</td>
+<td>n/a</td>
+<td>Stated simplification</td>
+<td>Crit rate and Move Speed near their caps</td>
+</tr>
+<tr>
+<td>Independent layers in A vs B panels</td>
+<td>n/a</td>
+<td>Sandbox simplification</td>
+<td>Interactions between layers</td>
+</tr>
+</tbody>
+</table>
+</div>
+</details>
+</div>
+</div>
+<h2 id="known-limits-and-how-to-challenge-it">Known limits and how to challenge it<a class="headerlink" href="#known-limits-and-how-to-challenge-it" title="Permanent link">&para;</a></h2>
+<p><strong>Not modeled:</strong> skill-by-skill crit differences, rotation effects, Optimized Training 1's cooldown reduction, each Chaos Core's non-damage half (Speed, damage reduction, healing and Crushing's weak point utility buff), Mass Increase's Attack Speed drawback, Attack Speed in general and Ability Stone penalties.</p>
+<p><strong>What would improve it:</strong> your own measured values. Every default can be changed, and the Combat Analyzer figures (Adrenaline coverage, Back Attack Rate, Raid Captain Efficiency) are the most useful ones to replace. If you think a rule is wrong, report the section, the input values you used and the number you expected.</p>
+<p><strong>How it was checked:</strong> tooltips and in-game tests for Ark Grid and engraving values, combat logs for the estimated rates, and the reference spreadsheets (<a href="https://docs.google.com/spreadsheets/d/1RKpzg6sPNe7fuPDudJHAs0qbFukOwSyhMynDOijfoKY/edit?usp=sharing">1</a>, <a href="https://docs.google.com/spreadsheets/d/1_0J7liyM_yw16pyn6TKlF1YGaIt5n_A9hSoLnT3yTUc/edit?usp=sharing">2</a>) for formula structure. Credit to their authors: this calculator started from that work and has since moved well beyond it for this class, so the sheets are no longer a current reference.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Resources">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Resources
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.instant.prefetch", "navigation.footer", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "navigation.tracking", "toc.integrate", "toc.follow", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/site-utils.js?v=0c49423a2d"></script>
+      
+        <script src="../../javascripts/lazy-calculators.js?v=590b4041c8"></script>
+      
+        <script src="../../javascripts/extra.js?v=f53dec7def"></script>
+      
+        <script src="../../javascripts/build-data.js?v=82128278fb"></script>
+      
+        <script src="../../javascripts/build-stats-badge.js?v=4b72dd024c"></script>
+      
+        <script src="../../javascripts/skill-data.js?v=aee025dbc5"></script>
+      
+        <script src="../../javascripts/skill-names.js?v=498ce03e2f"></script>
+      
+        <script src="../../javascripts/rune-data.js?v=45b64d68b5"></script>
+      
+        <script src="../../javascripts/skill-setup.js?v=2623b29d11"></script>
+      
+        <script src="../../javascripts/essentials-table.js?v=2b7969099e"></script>
+      
+        <script src="../../javascripts/core-options-data.js?v=b508f1983e"></script>
+      
+        <script src="../../javascripts/ap-node-names.js?v=3960ebd5d9"></script>
+      
+        <script src="../../javascripts/ap-node-effects.js?v=d056808878"></script>
+      
+        <script src="../../javascripts/ark-passive-tree.js?v=839aec2635"></script>
+      
+        <script src="../../javascripts/gem-priority.js?v=501b2782b6"></script>
+      
+        <script src="../../javascripts/rotation-line.js?v=7bf744b795"></script>
+      
+        <script src="../../javascripts/skill-tooltip.js?v=9ad7375de8"></script>
+      
+        <script src="../../javascripts/pentagon-badge.js?v=70a6e94d89"></script>
+      
+        <script src="../../javascripts/ark-core-badge.js?v=6144fe65b2"></script>
+      
+        <script src="../../javascripts/ark-passive-tooltip.js?v=4ba370683b"></script>
+      
+        <script src="../../javascripts/rune-tooltip.js?v=befa2ff1a5"></script>
+      
+        <script src="../../javascripts/glossary-data.js?v=69c4c0086b"></script>
+      
+        <script src="../../javascripts/glossary-tooltip.js?v=e4aec86486"></script>
+      
+        <script src="../../javascripts/rotation-practice.js?v=443a455059"></script>
+      
+        <script src="../../javascripts/dps-chart.js?v=99be41c5d1"></script>
+      
+        <script src="../../javascripts/gem-dps-tooltip.js?v=12d4785244"></script>
+      
+        <script src="../../javascripts/gem-upgrade-table.js?v=b66dab6957"></script>
+      
+        <script src="../../javascripts/build-compare.js?v=71b78c82b6"></script>
+      
+        <script src="../../javascripts/last-updated.js?v=fd194b24c4"></script>
+      
+        <script src="../../javascripts/image-lightbox.js?v=5a1ad2e4e5"></script>
+      
+    
+  </body>
+</html>
