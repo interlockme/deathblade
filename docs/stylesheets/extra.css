@@ -9297,6 +9297,139 @@ h3 { color: var(--dbc-teal); }
   margin: 0.2em 0 0;
 }
 
+/* ---------- Damage gem upgrade table (gem-upgrade-table.js) ---------- */
+/* Sits under the DPS Spread chart inside .dps-showcase-frame and is built from
+   the calculator's own comparison table, like the docs page tables, so it
+   declares the tokens that table reads outside .ap-calc. It is as wide as the
+   chart (the same min(620px, ...) rule) and scrolls inside its wrapper on a
+   phone, with the skill column pinned. Column widths are set on the <col>s:
+   the group header spans four columns, so the first row alone would split the
+   rest evenly. The figures need about 7rem each, which is why the skill column
+   cannot grow past 42% without the ranges in the footer row touching. */
+.md-typeset .gem-upgrade-scroll {
+  --ap-fs-cap: var(--dbc-fs-cap);
+  --ap-fs-table: var(--dbc-fs-table);
+  --ap-fs-sm: var(--dbc-fs-sm);
+  --ap-radius-lg: var(--dbc-r-lg);
+  --ap-surface: var(--dbc-surface);
+  --ap-surface-2: var(--dbc-surface-raised);
+  --ap-surface-head: var(--dbc-surface);
+  --ap-line: rgba(255, 255, 255, 0.09);
+  margin: 1.1em auto 0;
+  width: min(620px, calc(92vw - 3.2em));
+}
+.md-typeset .gem-upgrade-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 30rem;
+}
+.md-typeset .gem-upgrade-table col.gem-upgrade-col-skill { width: 42%; }
+.md-typeset .gem-upgrade-table col.gem-upgrade-col-step { width: 14%; }
+.md-typeset .gem-upgrade-table col.gem-upgrade-col-total { width: 16%; }
+.md-typeset .gem-upgrade-table th,
+.md-typeset .gem-upgrade-table td {
+  padding-inline: 0.45rem;
+}
+.md-typeset .gem-upgrade-table th {
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.md-typeset .gem-upgrade-table th.ap-brace-th-label,
+.md-typeset .gem-upgrade-table td:first-child {
+  padding-left: 0.6rem;
+}
+.md-typeset .gem-upgrade-table th.ap-brace-th-label {
+  vertical-align: middle;
+}
+.md-typeset .gem-upgrade-table th:not(.ap-brace-th-label),
+.md-typeset .gem-upgrade-table td.gem-upgrade-val {
+  text-align: center;
+}
+.md-typeset .gem-upgrade-table td.gem-upgrade-val,
+.md-typeset .gem-upgrade-table th.gem-upgrade-th-total {
+  padding-inline: 0.2rem;
+}
+.md-typeset .gem-upgrade-table th.gem-upgrade-th-total {
+  color: var(--dbc-teal);
+}
+.md-typeset .gem-upgrade-table td {
+  vertical-align: middle;
+  padding-block: 0.4rem;
+}
+.md-typeset .gem-upgrade-skill-in {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  min-width: 0;
+}
+.md-typeset .gem-upgrade-icon {
+  width: 1.5em;
+  height: 1.5em;
+  flex: none;
+  border-radius: var(--dbc-r-sm);
+  box-shadow: 0 0 0 1px rgba(var(--dbc-purple-rgb), 0.28);
+}
+.md-typeset .gem-upgrade-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* The calculator's own Optional tag, sitting beside the name instead of
+   pushed to the row end. */
+.md-typeset .gem-upgrade-skill-in .ap-gear-optional-badge {
+  margin-left: 0;
+  padding-inline: 0.4rem;
+  cursor: default;
+}
+.md-typeset .gem-upgrade-val {
+  white-space: nowrap;
+}
+.md-typeset .gem-upgrade-val.gem-upgrade-total {
+  font-weight: 700;
+  color: var(--dbc-teal);
+}
+/* Footer row: one tint across every cell, laid over the table surface so the
+   pinned first cell matches the scrolling ones. */
+.md-typeset .gem-upgrade-foot td {
+  border-top: 1px solid var(--ap-line);
+  color: var(--dbc-lavender);
+  background-color: var(--ap-surface);
+  background-image: linear-gradient(rgba(var(--dbc-purple-rgb), 0.05), rgba(var(--dbc-purple-rgb), 0.05));
+}
+.md-typeset .gem-upgrade-foot td.gem-upgrade-val.gem-upgrade-total {
+  color: var(--dbc-teal);
+}
+.md-typeset .gem-upgrade-table td:first-child,
+.md-typeset .gem-upgrade-table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: var(--ap-surface);
+}
+/* Phone: the table keeps its own width and scrolls. The skill column is
+   narrowed so a figure column shows beside it, which means no icons (the chart
+   above carries them), the Optional tag wraps under the name, and the group
+   header is left-aligned so its text is on screen before any scrolling. */
+@media (max-width: 600px) {
+  .md-typeset .gem-upgrade-table {
+    width: 36rem;
+    min-width: 36rem;
+  }
+  .md-typeset .gem-upgrade-table col.gem-upgrade-col-skill { width: 8rem; }
+  .md-typeset .gem-upgrade-table col.gem-upgrade-col-step { width: 6.6rem; }
+  .md-typeset .gem-upgrade-table col.gem-upgrade-col-total { width: 8rem; }
+  .md-typeset .gem-upgrade-icon { display: none; }
+  .md-typeset .gem-upgrade-skill-in {
+    flex-wrap: wrap;
+    row-gap: 0.2rem;
+  }
+  .md-typeset .gem-upgrade-table th.ap-arkgrid-th-group {
+    text-align: left;
+    padding-left: 0.9rem;
+  }
+}
+
 /* ---------- Reduced motion ---------- */
 /* Every transition on the site so far is small/cosmetic (hover states,
    opacity fades) rather than load-bearing animation, so this costs

@@ -61,8 +61,8 @@ extra_css:
 #      rotation-line.js, dps-chart.js, build-compare.js, last-updated.js,
 #      image-lightbox.js
 #   5. widgets that read the DOM step 4 just built: rotation-practice.js
-#      (after rotation-line.js), gem-dps-tooltip.js (after gem-priority.js
-#      AND dps-chart.js), ark-core-badge.js AND ark-passive-tooltip.js AND
+#      (after rotation-line.js), gem-dps-tooltip.js AND gem-upgrade-table.js
+#      (each after gem-priority.js AND dps-chart.js), ark-core-badge.js AND ark-passive-tooltip.js AND
 #      rune-tooltip.js AND glossary-tooltip.js (each after skill-tooltip.js -
 #      all four reuse the latter's SkillTooltip.wireCustom; glossary-tooltip.js also
 #      needs glossary-data.js loaded first). ap-brace-tooltip.js belongs to
@@ -101,6 +101,7 @@ extra_javascript:
   - javascripts/rotation-practice.js
   - javascripts/dps-chart.js
   - javascripts/gem-dps-tooltip.js
+  - javascripts/gem-upgrade-table.js
   - javascripts/build-compare.js
   - javascripts/last-updated.js
   - javascripts/image-lightbox.js
