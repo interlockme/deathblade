@@ -252,7 +252,7 @@
   // Base AP, never a zeroed or candidate copy.
   const SUPPORT_AP_BUFF_COEFFICIENT = 0.4;
 
-  function gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff) {
+  function gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff, vambraceFlat) {
     // FLOOR wraps the *entire* bracket, including the final *PercentAP
     // multiply (confirmed against Brace!C6's exact formula) - not just the
     // sqrt/FlatAP/SupAPBuff sum before it. Doesn't change these rows' %
@@ -262,7 +262,10 @@
     // percentApMult below), but it's the actual formula, and getting the
     // order right matters for anything built on this helper later that
     // needs a real AP total rather than just a ratio.
-    return Math.floor((Math.sqrt((wp * mainStat) / 6) * baseApMult + flatAp + supApBuff) * percentApMult);
+    // vambraceFlat is the Vambrace's flat Basic Atk. Power: unlike every other flat
+    // source it sits inside the Base AP % multiplier, beside the square root term.
+    // The Support's buff is built from the square root term alone, so it ignores it.
+    return Math.floor(((Math.sqrt((wp * mainStat) / 6) + (vambraceFlat || 0)) * baseApMult + flatAp + supApBuff) * percentApMult);
   }
 
   function supportApBuff(inputs, wp, mainStat, baseApMult) {
@@ -352,7 +355,7 @@
   // was built from). Each entry carries BOTH of the core's payouts -
   // pct (Atk. Power %) and flat (Flat AP) - since a single dropdown
   // selection determines both at once; gearFlatAp (the manual Flat AP
-  // inputs) covers the accessories and the Vambrace, with this core's own flat
+  // input) covers the accessories, with this core's own flat
   // contribution added in automatically wherever flatAp is computed
   // (see the two gearApTotal call sites below) rather than asking the
   // reader to hand-add it into that field themselves.
@@ -664,9 +667,9 @@
     const percentApMultBeforeAdrenalineExcludingOther = 1 + (percentApTotal - excludedPct - adrenalinePct) / 100;
     const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
     return {
-      base: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultBeforeAdrenalineExcludingOther, 0),
-      afterAdrenaline: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultAfterExcludingOther, 0),
-      final: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultAfter, supApBuff),
+      base: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultBeforeAdrenalineExcludingOther, 0, inputs.gearVambraceFlat),
+      afterAdrenaline: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultAfterExcludingOther, 0, inputs.gearVambraceFlat),
+      final: gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMultAfter, supApBuff, inputs.gearVambraceFlat),
       adrenalineUsed: inputs.adrenaline !== "Not Used",
     };
   }
@@ -1115,6 +1118,8 @@
   // Weapon Power are already inside the Weapon Power and Main Stat totals, so only its Basic
   // Atk. Power matters: a flat amount by level (the table below, one entry per level 0 to 25) and
   // a percent equal to the grade's index (Epic +0%, Legendary +1%, Relic +2%, Ancient +3%).
+  // The flat amount is multiplied by Base AP % like the square root term (gearApTotal's
+  // vambraceFlat), so it travels as its own input (gearVambraceFlat) and never joins gearFlatAp.
   // A level's valid range depends on the grade (Epic 0-10, Legendary 10-15, Relic 15-20, Ancient
   // 20-25), so levels 10, 15 and 20 exist in two grades.
   const VAMBRACE_GRADES = ["epic", "legendary", "relic", "ancient"];
@@ -1371,16 +1376,17 @@
       gearGemBaseAp:
         Math.max(0, Math.min(50, getNumber(root, ".ap-gear-gem-base-ap", 13.2))) + vambrace.pct,
       gearAbilityStoneBaseAp: getCheckbox(root, ".ap-gear-ability-stone-base-ap", true),
-      // Flat AP covers the accessories (the Accessory Flat AP input) plus
-      // the Vambrace's flat Basic Atk. Power (looked up from its grade and
-      // level, up to 9,050 at Ancient +25) - Chaos Core: Attack's own flat contribution is looked
+      // Flat AP covers the accessories (the Accessory Flat AP input) only.
+      // Chaos Core: Attack's own flat contribution is looked
       // up automatically from the dropdown below (gearChaosStarFlat) and
       // added in wherever flatAp is used, so it is never hand-added into
-      // this field. The accessory comparisons only ever remove accessory
-      // amounts from it, so the Vambrace share always stays. The default
-      // is 0 for both (a High-tier accessory roll adds 390).
-      gearFlatAp:
-        Math.max(0, Math.min(2000, getNumber(root, ".ap-gear-flat-ap", 0))) + vambrace.flat,
+      // this field. The accessory comparisons remove accessory amounts
+      // from it. The default is 0 (a High-tier accessory roll adds 390).
+      gearFlatAp: Math.max(0, Math.min(2000, getNumber(root, ".ap-gear-flat-ap", 0))),
+      // The Vambrace's flat Basic Atk. Power, kept apart from gearFlatAp because
+      // it is multiplied by Base AP % (see gearApTotal's vambraceFlat), which
+      // varies from row to row.
+      gearVambraceFlat: vambrace.flat,
       // Attack Power % is split into its individual sources (the
       // reference sheet's own Calc!N7 is a single hand-typed sum) - see
       // gearAttackPowerPercentTotal below for how they're combined, so
@@ -2337,7 +2343,7 @@
       const wpPercentMult = 1 + gearWpPercentTotal(inputs) / 100;
       const mainStatPercentMult = 1 + inputs.gearMainStatPercent / 100;
       const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
-      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff, inputs.gearVambraceFlat);
 
       // Require real WP and Main Stat values, not just a nonzero
       // baseline - Flat AP alone can make baselineAp > 0 even while one
@@ -2345,11 +2351,11 @@
       // these 5 rows render off a nonsensical partial state.
       if (wp > 0 && mainStat > 0 && baselineAp > 0) {
         const statGain = (delta) =>
-          gearApTotal(wp, mainStat + delta * mainStatPercentMult, baseApMult, flatAp, percentApMult, supApBuff) /
+          gearApTotal(wp, mainStat + delta * mainStatPercentMult, baseApMult, flatAp, percentApMult, supApBuff, inputs.gearVambraceFlat) /
             baselineAp -
           1;
         const wpGain = (deltaWp) =>
-          gearApTotal(wp + deltaWp * wpPercentMult, mainStat, baseApMult, flatAp, percentApMult, supApBuff) / baselineAp - 1;
+          gearApTotal(wp + deltaWp * wpPercentMult, mainStat, baseApMult, flatAp, percentApMult, supApBuff, inputs.gearVambraceFlat) / baselineAp - 1;
 
         rows.push({
           label: ["STR/DEX/INT +", ...trip("12000", "14000", "16000")],
@@ -2681,12 +2687,12 @@
       const percentApMult = 1 + gearAttackPowerPercentTotal(inputs) / 100;
       // The Support stays frozen at your typed totals, like every other row.
       const supApBuff = supportApBuff(inputs, inputs.gearWp, inputs.gearMainStat, baseApMult);
-      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff, inputs.gearVambraceFlat);
       if (wp > 0 && mainStat > 0 && baselineAp > 0) {
         const newAp = gearApTotal(
           wp + wpDeltaTotal * wpPercentMult,
           mainStat + mainStatDeltaTotal * mainStatPercentMult,
-          baseApMult, flatAp, percentApMult, supApBuff
+          baseApMult, flatAp, percentApMult, supApBuff, inputs.gearVambraceFlat
         );
         wpRatio = newAp / baselineAp;
       }
@@ -2976,7 +2982,7 @@
       // value for your real, typed Weapon Power (see supportApBuff).
       const wp = (typedWp / (1 + gearWpPercentTotal(inputs) / 100)) * wpPercentMult;
       const supApBuff = supportApBuff(inputs, typedWp, mainStat, baseApMult);
-      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff, earringsNB.gearVambraceFlat);
 
       if (wp > 0 && mainStat > 0 && baselineAp > 0) {
         // Attack Power% is a straight scalar on the whole AP total (see
@@ -2985,14 +2991,14 @@
         // that exactly, same pattern as the Bracelet panel's statGain/
         // wpGain closures.
         const apPctGain = (deltaPct) =>
-          gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult + deltaPct, supApBuff) / baselineAp - 1;
+          gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult + deltaPct, supApBuff, earringsNB.gearVambraceFlat) / baselineAp - 1;
         // Weapon Power% raises the WP feeding the sqrt term directly
         // (Acc!C5), on top of whatever Weapon Power% you've already
         // entered above - so a delta of X% adds X%/(1+existing WP%) to
         // your CURRENT (already-%'d) Weapon Power figure, not X% of it
         // flat, matching the sheet's WP*(1+$M9+delta)/WP*(1+$M9) ratio.
         const wpPctGain = (deltaPct) =>
-          gearApTotal(wp * (1 + deltaPct / wpPercentMult), mainStat, baseApMult, flatAp, percentApMult, supApBuff) /
+          gearApTotal(wp * (1 + deltaPct / wpPercentMult), mainStat, baseApMult, flatAp, percentApMult, supApBuff, earringsNB.gearVambraceFlat) /
             baselineAp -
           1;
         const earringAp = {
@@ -3046,7 +3052,7 @@
           universalBaseApMult,
           universalFlatAp,
           universalPercentApMult,
-          universalSupApBuff
+          universalSupApBuff, inputs.gearVambraceFlat
         );
 
         if (universalWp > 0 && universalMainStat > 0 && universalBaselineAp > 0) {
@@ -3057,7 +3063,7 @@
               universalBaseApMult,
               universalFlatAp + delta,
               universalPercentApMult,
-              universalSupApBuff
+              universalSupApBuff, inputs.gearVambraceFlat
             ) /
               universalBaselineAp -
             1;
@@ -3068,7 +3074,7 @@
               universalBaseApMult,
               universalFlatAp,
               universalPercentApMult,
-              universalSupApBuff
+              universalSupApBuff, inputs.gearVambraceFlat
             ) /
               universalBaselineAp -
             1;
@@ -3079,7 +3085,7 @@
               universalBaseApMult,
               universalFlatAp,
               universalPercentApMult,
-              universalSupApBuff
+              universalSupApBuff, inputs.gearVambraceFlat
             ) /
               universalBaselineAp -
             1;
@@ -3400,7 +3406,7 @@
       // own Acc!C5/E5 formulas, which reuse one frozen SupAPBuff cell in
       // both the numerator and denominator of every ratio on the sheet.
       const supApBuff = supportApBuff(inputs, inputs.gearWp, inputs.gearMainStat, 1 + gearBaseApPercentTotal(inputs) / 100);
-      return gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+      return gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff, cloned.gearVambraceFlat);
     }
 
     // zeroed starts as a full copy of inputs. Only ring1Rate/Dmg or
@@ -3777,7 +3783,7 @@
       // typed figure, and swapping your own core does not change your
       // teammate's gear.
       const supApBuff = supportApBuff(inputs, inputs.gearWp, inputs.gearMainStat, 1 + gearBaseApPercentTotal(inputs) / 100);
-      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff, arkNB.gearVambraceFlat);
 
       if (wp > 0 && mainStat > 0 && baselineAp > 0) {
         // Chaos Core: Attack grants flat AP and AP% simultaneously -
@@ -3788,7 +3794,7 @@
           ...gradeCells((grade, pts) => {
             const t = GEAR_AP_CHAOS_STAR_TABLE[grade + "|" + pts] || { pct: 0, flat: 0 };
             return (
-              gearApTotal(wp, mainStat, baseApMult, flatAp + t.flat, percentApMult + t.pct / 100, supApBuff) /
+              gearApTotal(wp, mainStat, baseApMult, flatAp + t.flat, percentApMult + t.pct / 100, supApBuff, arkNB.gearVambraceFlat) /
                 baselineAp -
               1
             );
@@ -3809,7 +3815,7 @@
           ...gradeCells((grade, pts) => {
             const t = ARK_WEAPON_CORE_TABLE[grade + "|" + pts] || { pct: 0, flat: 0 };
             const newWp = wp * (1 + t.pct / 100 / wpPercentMult) + t.flat * wpPercentMult;
-            return gearApTotal(newWp, mainStat, baseApMult, flatAp, percentApMult, supApBuff) / baselineAp - 1;
+            return gearApTotal(newWp, mainStat, baseApMult, flatAp, percentApMult, supApBuff, arkNB.gearVambraceFlat) / baselineAp - 1;
           }),
         });
       }
@@ -4096,7 +4102,7 @@
       const percentApMult = 1 + gearAttackPowerPercentTotal(inputs) / 100;
       const mainStatPercentMult = 1 + inputs.gearMainStatPercent / 100;
       const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
-      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff);
+      const baselineAp = gearApTotal(wp, mainStat, baseApMult, flatAp, percentApMult, supApBuff, inputs.gearVambraceFlat);
       if (baselineAp > 0) {
         const newAp = gearApTotal(
           wp,
@@ -4104,7 +4110,7 @@
           baseApMult,
           flatAp,
           percentApMult,
-          supApBuff
+          supApBuff, inputs.gearVambraceFlat
         );
         statRatio = newAp / baselineAp;
       }
@@ -4282,8 +4288,8 @@
     const withMult = 1 + (inputs.gearGemBaseAp + ABILITY_STONE_BASE_AP_BONUS) / 100;
     const withoutMult = 1 + inputs.gearGemBaseAp / 100;
     const supportBuff = supportApBuff(inputs, wp, mainStat, withMult);
-    const withAp = gearApTotal(wp, mainStat, withMult, flatAp, percentApMult, supportBuff);
-    const withoutAp = gearApTotal(wp, mainStat, withoutMult, flatAp, percentApMult, supportBuff);
+    const withAp = gearApTotal(wp, mainStat, withMult, flatAp, percentApMult, supportBuff, inputs.gearVambraceFlat);
+    const withoutAp = gearApTotal(wp, mainStat, withoutMult, flatAp, percentApMult, supportBuff, inputs.gearVambraceFlat);
     if (withoutAp <= 0) return 0;
     return withAp / withoutAp - 1;
   }
@@ -4343,8 +4349,8 @@
       const onPctMult = 1 + gearAttackPowerPercentTotal(full) / 100;
       const offPctMult = 1 + gearAttackPowerPercentTotal(off) / 100;
       const supApBuff = supportApBuff(full, wp, mainStat, baseApMult);
-      const fullAp = gearApTotal(wp, mainStat, baseApMult, flatAp, onPctMult, supApBuff);
-      const baseAp = gearApTotal(wp, mainStat, baseApMult, flatAp, offPctMult, supApBuff);
+      const fullAp = gearApTotal(wp, mainStat, baseApMult, flatAp, onPctMult, supApBuff, full.gearVambraceFlat);
+      const baseAp = gearApTotal(wp, mainStat, baseApMult, flatAp, offPctMult, supApBuff, full.gearVambraceFlat);
       if (baseAp > 0) apRatio = fullAp / baseAp;
     }
     return gridRatio * apRatio - 1;
@@ -4374,8 +4380,8 @@
     const onPctMult = 1 + gearAttackPowerPercentTotal(on) / 100;
     const offPctMult = 1 + gearAttackPowerPercentTotal(off) / 100;
     const supApBuff = supportApBuff(inputs, wp, mainStat, baseApMult);
-    const onAp = gearApTotal(wp, mainStat, baseApMult, flatAp, onPctMult, supApBuff);
-    const offAp = gearApTotal(wp, mainStat, baseApMult, flatAp, offPctMult, supApBuff);
+    const onAp = gearApTotal(wp, mainStat, baseApMult, flatAp, onPctMult, supApBuff, inputs.gearVambraceFlat);
+    const offAp = gearApTotal(wp, mainStat, baseApMult, flatAp, offPctMult, supApBuff, inputs.gearVambraceFlat);
     if (offAp <= 0) return 0;
     return onAp / offAp - 1;
   }

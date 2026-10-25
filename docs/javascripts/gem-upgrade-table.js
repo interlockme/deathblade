@@ -40,7 +40,9 @@
 //   figured for a high-end setup, where a gem is worth the least: 9/7 Ability
 //   Stone and Ancient +25 Vambrace, through the Ark Passive calculator's own
 //   AP model and defaults (Weapon Power and Main Stat as typed there, Support
-//   held fixed at 98% uptime). The other gems are taken to be at the level
+//   held fixed at 98% uptime). The Vambrace's flat Basic AP sits inside the Base
+//   AP % multiplier beside the square root term, as in the calculator
+//   (confirmed against the in-game Attack Power). The other gems are taken to be at the level
 //   the step starts from, so 7 to 8 has all 11 at Lv 7, 8 to 9 all 11 at Lv 8,
 //   and 9 to 10 all 11 at Lv 9. The 7 to 10 column chains those three steps,
 //   which is what levelling every gem together does.
@@ -50,11 +52,9 @@
 //   times the Base AP gain of all the gems at once. It is drawn for two or
 //   more gems.
 //
-// OPEN QUESTION (Vambrace flat Basic AP): the live calculator adds it outside
-//   the Base AP % multiplier. A calculator branch multiplies it by Base AP %
-//   instead; that is not confirmed. VAMBRACE_FLAT_INSIDE_BASE_AP below follows
-//   whichever the calculator does. Change it only together with the
-//   calculator, then update the figures quoted in project-context.md.
+// The Vambrace constants below must match the calculator's (gearApTotal's
+//   vambraceFlat argument); change them only together with it, then update the
+//   figures quoted in project-context.md.
 
 (function () {
   var SITE_ROOT = window.SiteUtils.detectSiteRoot("gem-upgrade-table.js");
@@ -77,7 +77,6 @@
   var STONE_BASE_AP = 1.5;
   var GEM_COUNT = 11;
   var VAMBRACE_ANCIENT_25 = { pct: 3, flat: 9050 };
-  var VAMBRACE_FLAT_INSIDE_BASE_AP = false;
   var CORE_AP = Math.sqrt((WEAPON_POWER * MAIN_STAT) / 6);
 
   // Relative Attack Power gained when `count` gems each go from level a to b,
@@ -89,10 +88,11 @@
     var dPct = count * (GEM_BASE_AP[b] - GEM_BASE_AP[a]);
     var before = 1 + basePct / 100;
     var support = CORE_AP * before * SUPPORT_COEFFICIENT * SUPPORT_UPTIME;
-    var scaled = CORE_AP + (VAMBRACE_FLAT_INSIDE_BASE_AP ? VAMBRACE_ANCIENT_25.flat : 0);
-    var outside = VAMBRACE_FLAT_INSIDE_BASE_AP ? 0 : VAMBRACE_ANCIENT_25.flat;
-    var apBefore = scaled * before + outside + support;
-    var apAfter = scaled * (before + dPct / 100) + outside + support;
+    // The Vambrace's flat Basic AP is multiplied by Base AP % like the square
+    // root term; the Support's buff is built from the square root term alone.
+    var scaled = CORE_AP + VAMBRACE_ANCIENT_25.flat;
+    var apBefore = scaled * before + support;
+    var apAfter = scaled * (before + dPct / 100) + support;
     return apAfter / apBefore - 1;
   }
 

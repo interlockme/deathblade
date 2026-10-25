@@ -260,7 +260,7 @@ When you compare "what if I had this line", the Support stays at its current val
 <summary><span class="setup-note-tag">Math</span>The math<span class="setup-note-arrow"></span></summary>
 
 ```text
-AP = floor( ( sqrt(WP * MainStat / 6) * BaseAP + FlatAP + SupportBuff ) * PercentAP )
+AP = floor( ( ( sqrt(WP * MainStat / 6) + VambraceFlat ) * BaseAP + FlatAP + SupportBuff ) * PercentAP )
 SupportBuff = sqrt(WP * MainStat / 6) * BaseAP * 0.4 * (SupportUptime / 100)
 ```
 
@@ -399,6 +399,7 @@ The formula is the one in the Support section. Its pieces:
 
 - `BaseAP` is 1 plus your gem Base AP % (summed over every gem, so eleven Lv. 10 gems at 1.2% each is 13.2%), plus 1.5% when your Ability Stone's two engraving levels add up to 5 or more (9/7 and 10/6 nodes are the smallest that do).
 - `FlatAP` is your flat Attack Power plus the flat half of Chaos Core: Attack.
+- `VambraceFlat` is the flat Basic Attack Power of your Vambrace. Unlike the other flat sources it sits inside Base AP, beside the square root part, so Base AP multiplies it. The Support's buff is built from the square root part alone and ignores it. The Vambrace's own Base AP % (+1 Legendary, +2 Relic, +3 Ancient) is part of `BaseAP`; its Main Stat and Weapon Power are already in the totals you type.
 - `PercentAP` is 1 plus: both Attack Power earrings, Kazeros (2%), Guardian (3%), the Attack % half of Chaos Core: Attack, Astrogem Attack Power, the Attack Power % Other field, Atropine (30% times its uptime), Strength Orb (10% times 1.31 times its uptime) and the Adrenaline model.
 - Astrogem Attack Power is level / 120 x 4.4%, rounded down to two decimals as the game shows it (level 35: 1.28%).
 - The whole bracket, including the final multiply, sits inside the floor.
