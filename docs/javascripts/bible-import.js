@@ -1282,7 +1282,7 @@
         // and let them pick manually.
         warnings.push("Order Sun/Moon (\"" + text.orderCores["Order Sun"].name + "\" / \"" + text.orderCores["Order Moon"].name + "\") didn't match a known build - Build wasn't auto-set, pick it manually.");
       }
-    } else {
+    } else if (!(text.unread && text.unread.indexOf("arkGrid") !== -1)) {
       // No fallback value to write here (unlike Chaos cores/adrenaline/
       // KBW, ap-brace-spec-build has no "None" option - it's always one
       // of the 6 real builds per resources.md). A silent skip would leave
@@ -1384,7 +1384,29 @@
       warnings.unshift(unconfirmedWarning || "Couldn't confirm this was scanned from \"Raid Loadout\" (auto-switch may have failed or hadn't finished rendering yet). Weapon Power/Main Stat/karma/grid points are always read correctly either way, but accessories, bracelet, gems, engravings, and Ark Grid core names may reflect the wrong loadout tab - click \"Raid Loadout\" on the character page yourself and re-run if any of those look off.");
     }
 
-    return { data: data, warnings: warnings, characterName: characterName };
+    // Sections a __data.json decode could not read: leave their calculator fields alone (a field
+    // absent from data is never touched) instead of writing the "nothing equipped" defaults above.
+    var UNREAD_FIELDS = {
+      bracelet: ["ap-bracelet-rate", "ap-bracelet-rate-2", "ap-bracelet-dmg", "ap-bracelet-dmg-2", "ap-crit-rate-dual", "ap-crit-dmg-dual", "ap-bracelet-addA", "ap-bracelet-addB"],
+      gems: ["ap-gear-gem-base-ap"],
+      arkGrid: ["ap-astrogem-lv", "ap-gear-ap-astrogem-lv", "ap-flashy-atk", "ap-stable-atk", "ap-swift-core", "ap-crushing-core", "ap-gear-ap-chaos-star", "ap-gear-weapon-core", "ap-brace-spec-build"],
+    };
+    // The calculator resets every field to its default before an import writes anything, so a
+    // field left out of data would end up at its default, not as it was: keepKeys names them so
+    // applyPayload can carry the calculator's current values through (see keepCurrentValues).
+    var keepKeys = [];
+    if (text.unread) {
+      text.unread.forEach(function (section) {
+        (UNREAD_FIELDS[section] || []).forEach(function (field) {
+          delete data[field];
+          keepKeys.push(field);
+        });
+      });
+    }
+
+    var result = { data: data, warnings: warnings, characterName: characterName };
+    if (keepKeys.length) result.keepKeys = keepKeys;
+    return result;
   }
 
   // ----- Bookmarklet (runs on lostark.bible) -----
@@ -2121,6 +2143,37 @@
   // Hands payload.data to the calculator's own Import popover and reports
   // the result. Shared by the bookmarklet fragment and Load Character, so a
   // character imported either way takes exactly the same path.
+  // The calculator's own current values, read the way Export shows them (same keys and value
+  // formats Import reads back), or null when the Export popover is not on the page.
+  function currentFieldData(root) {
+    var exportBtn = root.querySelector(".ap-calc-export");
+    var popover = root.querySelector('.ap-calc-popover[data-popover="export"]');
+    if (!exportBtn || !popover) return null;
+    var data = null;
+    exportBtn.click();
+    try { data = JSON.parse(popover.querySelector(".ap-calc-popover-textarea").value).data || null; } catch (e) { data = null; }
+    var closeBtn = popover.querySelector(".ap-calc-popover-close");
+    if (closeBtn) closeBtn.click();
+    else popover.hidden = true;
+    exportBtn.blur();
+    return data;
+  }
+
+  // Fields a decode could not read keep the value they have now. Importing resets every field to
+  // its default first, so without this they would show defaults that look like real gear.
+  function keepCurrentValues(root, payload) {
+    if (!payload.keepKeys || !payload.keepKeys.length) return;
+    var current = currentFieldData(root);
+    if (!current) {
+      payload.warnings = payload.warnings || [];
+      payload.warnings.push("Couldn't read the calculator's current values, so the fields named above are at their defaults, not as they were.");
+      return;
+    }
+    payload.keepKeys.forEach(function (key) {
+      if (key in current) payload.data[key] = current[key];
+    });
+  }
+
   function applyPayload(root, payload) {
     var statusEl = root.querySelector(".bible-import-status");
 
@@ -2135,6 +2188,7 @@
     var importBtn = root.querySelector(".ap-calc-import");
     var popover = root.querySelector('.ap-calc-popover[data-popover="import"]');
     if (!importBtn || !popover) { setStatus("Import control not found on this page.", true); return false; }
+    keepCurrentValues(root, payload);
     applyingPayload = true;
     try {
       importBtn.click();

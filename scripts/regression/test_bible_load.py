@@ -442,6 +442,75 @@ def run_behaviour(h):
     h.check(not h.errors, "behaviour: no page errors", str(h.errors))
 
 
+UNREAD_FIELDS = {
+    "bracelet": ["ap-bracelet-rate", "ap-bracelet-rate-2", "ap-bracelet-dmg", "ap-bracelet-dmg-2", "ap-crit-rate-dual", "ap-crit-dmg-dual", "ap-bracelet-addA", "ap-bracelet-addB"],
+    "gems": ["ap-gear-gem-base-ap"],
+    "arkGrid": ["ap-astrogem-lv", "ap-gear-ap-astrogem-lv", "ap-flashy-atk", "ap-stable-atk", "ap-swift-core", "ap-crushing-core", "ap-gear-ap-chaos-star", "ap-gear-weapon-core", "ap-brace-spec-build"],
+}
+
+
+def unflatten(values):
+    """SvelteKit's flat data format (see scripts/bible-ids/devalue-lite.mjs); -1 is undefined."""
+    done = {}
+
+    def get(i):
+        if i == -1:
+            return None
+        if i in done:
+            return done[i]
+        v = values[i]
+        if isinstance(v, list):
+            out = done[i] = []
+            out.extend(get(j) for j in v)
+        elif isinstance(v, dict):
+            out = done[i] = {}
+            for k, j in v.items():
+                out[k] = get(j)
+        else:
+            out = done[i] = v
+        return out
+
+    return get(0)
+
+
+def flatten(root):
+    values, prims = [], {}
+
+    def add(v):
+        if v is None or not isinstance(v, (list, dict)):
+            key = (type(v).__name__, v)
+            if key not in prims:
+                values.append(v)
+                prims[key] = len(values) - 1
+            return prims[key]
+        i = len(values)
+        values.append(None)
+        values[i] = [add(x) for x in v] if isinstance(v, list) else {k: add(x) for k, x in v.items()}
+        return i
+
+    add(root)
+    return values
+
+
+def broken_real_data():
+    """The real raid data with one id broken in each of the bracelet, gems and Ark Grid sections."""
+    body = json.loads(fixture_data(REAL_RAID))
+    for node in body["nodes"]:
+        if not (node and node.get("type") == "data"):
+            continue
+        tree = unflatten(node["data"])
+        if not (isinstance(tree, dict) and "loadouts" in tree):
+            continue
+        raid = [x for x in tree["loadouts"] if x["classification"] == "most_recent_raid"][0]
+        bracelet = next(i for i in raid["items"] if i["slot"] == "bracelet")
+        next(st for st in bracelet["data"]["stats"] if st["type"] == 3)["index"] = 999999
+        raid["gems"][0]["id"] = 999999999
+        core = next(c for c in raid["arkGridCores"] if any(g.get("opts") for g in c.get("gems", [])))
+        next(g for g in core["gems"] if g.get("opts"))["opts"][0]["id"] = 9999
+        node["data"] = flatten(tree)
+    return json.dumps(body)
+
+
 def wait_popover_msg(h):
     h.page.wait_for_function("document.querySelector('.bible-load-popover .ap-calc-popover-msg').textContent.length>0", timeout=8000)
 
@@ -480,20 +549,42 @@ def run_data_behaviour(h):
     h.check("no loadout data" in h.popover_msg(), "data without loadouts: message", h.popover_msg())
     h.check(h.status_text() == "", "data without loadouts: nothing imported")
 
-    raw = fixture_data(REAL_RAID)
-    body = json.loads(raw)
-    changed = 0
-    for node in body["nodes"]:
-        if node and node.get("type") == "data":
-            for i, v in enumerate(node["data"]):
-                if v == 11012 and isinstance(v, int):
-                    node["data"][i] = 999999
-                    changed += 1
-    h.check(changed == 1, "unknown-effect probe: the real data holds one 11012 entry to rewrite", str(changed))
-    h.fresh(routes={"bible": fulfill_json(json.dumps(body))})
+    # Partial import: break one id in each of the bracelet, gems and Ark Grid sections of the real
+    # data. The page imports everything else, names each unread section, and leaves those
+    # calculator fields exactly as they were (a sentinel is set in each before the import).
+    broken = broken_real_data()
+    h.fresh(routes={"bible": fulfill_json(broken)})
+    sentinels = h.page.evaluate("""() => {
+      const out = {};
+      const b = document.querySelector('.ap-bracelet-dmg');
+      b.value = b.options[b.options.length - 1].value;
+      b.dispatchEvent(new Event('change', { bubbles: true }));
+      out['ap-bracelet-dmg'] = b.value;
+      for (const [cls, v] of [['ap-astrogem-lv', '33'], ['ap-gear-gem-base-ap', '77']]) {
+        const el = document.querySelector('.' + cls);
+        el.value = v;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+        out[cls] = el.value;
+      }
+      return out;
+    }""")
     h.load(char)
-    wait_popover_msg(h)
-    h.check("unknown bracelet effect id 3:999999" in h.popover_msg() and h.status_text() == "", "data with an unknown bracelet effect: refused with the id, nothing imported", h.popover_msg())
+    wait_imported(h)
+    part = h.result()
+    h.check(part["status"].startswith(f"Imported {char} from Bible."), "partial import: still imports", part["status"])
+    h.check([w.split(" (")[0] for w in part["warnings"] if w.startswith("Couldn't read")] == ["Couldn't read the bracelet", "Couldn't read the gems", "Couldn't read the Ark Grid"], "partial import: each unread section is named", str(part["warnings"]))
+    h.check(all(part["data"].get(k) == v for k, v in sentinels.items()), "partial import: unread sections' fields are left as they were", json.dumps({k: (part["data"].get(k), v) for k, v in sentinels.items()}))
+    # The Mana Food row follows the Build (ap-brace-spec-build), which belongs to the unread Ark Grid
+    # here, so it legitimately differs from the unbroken import.
+    skipped = {k for fields in UNREAD_FIELDS.values() for k in fields} | {"ap-engr-manafood"}
+    h.fresh(routes={"bible": fulfill_json(fixture_data(REAL_RAID))})
+    h.load(char)
+    wait_imported(h)
+    whole = h.result()
+    rest = lambda d: {k: v for k, v in d.items() if k not in skipped}
+    h.check(rest(part["data"]) == rest(whole["data"]), "partial import: every other field imports as in the unbroken data",
+            json.dumps({k: (rest(part["data"]).get(k), rest(whole["data"]).get(k)) for k in rest(whole["data"]) if rest(part["data"]).get(k) != rest(whole["data"]).get(k)})[:400])
 
     pair = {}
     for fx in (REAL_RAID, REAL_ESTIMATED):
@@ -533,6 +624,17 @@ def data_control(browser, base, patch, scenario):
         hh.load("Fixture-" + other)
         hh.page.wait_for_timeout(1200)
         return "Deathblade" not in hh.popover_msg()
+    if scenario == "partial":
+        hh.fresh(routes={"bible": fulfill_json(broken_real_data())}, js_patch=patch)
+        sentinel = hh.page.evaluate("""() => {
+          const el = document.querySelector('.ap-bracelet-dmg');
+          el.value = el.options[el.options.length - 1].value;
+          el.dispatchEvent(new Event('change', { bubbles: true }));
+          return el.value;
+        }""")
+        hh.load(char)
+        hh.page.wait_for_timeout(1500)
+        return hh.page.evaluate("document.querySelector('.ap-bracelet-dmg').value") != sentinel
     hh.fresh(routes={"bible": fulfill_json(fixture_data("ancient-chaos")[:3000])}, js_patch=patch)
     hh.load(char)
     hh.page.wait_for_timeout(1200)
@@ -695,6 +797,7 @@ def main():
         data_controls = [
             ("data route no longer reports the name asked for", "name", [("    if (expectedName) payload.characterName = expectedName;\n    return payload;", "    return payload;")]),
             ("data route skips the other-class refusal", "class", [("if (decoded.notDeathblade) return { error: \"This doesn't look like a Deathblade - Bible import only supports Deathblade.\" };\n    if (!decoded.ok) {", "if (false) return { error: \"This doesn't look like a Deathblade - Bible import only supports Deathblade.\" };\n    if (!decoded.ok) {")]),
+            ("unread sections' current values are no longer carried through the import", "partial", [("    if (keepKeys.length) result.keepKeys = keepKeys;", "    void keepKeys;")]),
             ("data refusal no longer stops the import", "refusal", [("    if (!decoded.ok) {\n      if (/^no (loadouts|raid loadout)/", "    if (false) {\n      if (/^no (loadouts|raid loadout)/")]),
         ]
         for label, scenario, patch in data_controls:

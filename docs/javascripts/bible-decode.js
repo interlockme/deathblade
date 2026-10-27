@@ -11,8 +11,9 @@
 // exists. A Chaos Dungeon loadout is never used.
 //
 // Refuse rule: anything this file cannot decode with certainty returns { ok: false,
-// reason }. On a page's HTML the caller then falls back to the visible-text path; a
-// __data.json body has no visible text, so the caller reports the reason. Unknown ids that could be
+// reason }. On a page's HTML the caller then falls back to the visible-text path. A
+// __data.json body has no visible text: an unreadable bracelet, gem set or Ark Grid is
+// reported in warnings and left out (text.unread), and anything else the caller reports. Unknown ids that could be
 // read as a calculator input (bracelet effects, Chaos core names, gem values) refuse;
 // ids the calculator never reads (other accessory lines, other engravings) are ignored,
 // exactly as the text path ignores them.
@@ -536,16 +537,49 @@
       hydration.karma = { evolution: karma.evolution, enlightenment: karma.enlightenment, leap: karma.leap };
     }
 
+    // A __data.json body has no visible text to fall back on, so a section this file cannot read
+    // (an id added by a game patch, say) is left out and named in a warning while everything else
+    // still imports; text.unread tells buildPayload which calculator fields to leave alone. A
+    // page's HTML keeps the all-or-nothing refusal, because the visible-text path can take over.
+    var partial = isDataJson(input);
+    var unread = [], unreadWarnings = [];
+    function unreadSection(section, problem, what, after, clean) {
+      unread.push(section);
+      unreadWarnings.push("Couldn't read " + what + " (" + problem + "). " + after);
+      clean();
+    }
     var problem = decodeBracelet(items, text);
-    if (!problem) problem = decodeGems(gems, text);
-    if (!problem) problem = decodeCores(cores, text, hydration);
+    if (problem) {
+      if (!partial) return fail(problem);
+      unreadSection("bracelet", problem, "the bracelet", "Its fields were left as they were; enter them by hand.", function () {
+        ["braceRateLines", "braceDmgLines", "braceDualHitDmgCount", "braceAddA", "braceAddB"].forEach(function (k) { delete text[k]; });
+      });
+    }
+    problem = decodeGems(gems, text);
+    if (problem) {
+      if (!partial) return fail(problem);
+      unreadSection("gems", problem, "the gems", "The gem Base Atk. Power field was left as it was; enter it by hand.", function () { delete text.gemBaseApSum; });
+    }
+    problem = decodeCores(cores, text, hydration);
     if (!problem) problem = decodeAstrogems(cores, text);
-    if (problem) return fail(problem);
+    if (problem) {
+      if (!partial) return fail(problem);
+      unreadSection("arkGrid", problem, "the Ark Grid", "The astrogem levels, Chaos cores and Build were left as they were; enter them by hand.", function () {
+        text.hasArkGrid = false;
+        text.chaosCores = {};
+        text.orderCores = {};
+        delete text.astrogemAddDmgLv;
+        delete text.astrogemApLv;
+        hydration.gridPoints = {};
+        hydration.chaosCores = [];
+      });
+    }
+    if (unread.length) text.unread = unread;
     decodeVambrace(items, stats, text);
     decodeAccessories(items, text);
     decodeEngravings(engravings, items, text);
 
-    return { ok: true, kind: picked.kind, why: picked.why || null, classId: classId, text: text, hydration: hydration, warnings: text.vambraceWarning ? [text.vambraceWarning] : [] };
+    return { ok: true, kind: picked.kind, why: picked.why || null, classId: classId, text: text, hydration: hydration, warnings: (text.vambraceWarning ? [text.vambraceWarning] : []).concat(unreadWarnings) };
   }
 
   function parseLoadout(str) { return JSON.parse(jsonish(str)); }

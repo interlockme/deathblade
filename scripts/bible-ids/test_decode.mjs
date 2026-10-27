@@ -326,11 +326,72 @@ for (const name of names) {
   refused("a body with an unsupported data tag is refused with a reason", JSON.stringify({ type: "data", nodes: [{ type: "skip" }, { type: "data", data: [{ loadouts: 1 }, ["Map", [2, 3]]] }] }), /unsupported data tag Map/);
   refused("a body with no loadouts is refused", JSON.stringify({ type: "data", nodes: [{ type: "skip" }, { type: "data", data: [{ header: 1 }, { class: 2 }, "blade"] }] }), /no loadouts/);
   refused("a body with an out-of-range reference is refused", JSON.stringify({ type: "data", nodes: [{ type: "data", data: [{ loadouts: 9 }] }] }), /bad reference/);
-  refused("an unknown bracelet effect id is refused", withPage((p) => {
-    const l = p.loadouts.find((x) => x.classification === "most_recent_raid");
-    const br = l.items.find((i) => i.slot === "bracelet");
-    br.data.stats.find((st) => st.type === 3).index = 999999;
-  }), /unknown bracelet effect id 3:999999/);
+
+  // Partial import: on the data route a section the decoder cannot read is left out and named in
+  // a warning, and every other field still imports. Each case breaks one id the way a game patch
+  // would; the page HTML keeps the all-or-nothing refusal (its visible text can take over).
+  const UNREAD_FIELDS = {
+    bracelet: ["ap-bracelet-rate", "ap-bracelet-rate-2", "ap-bracelet-dmg", "ap-bracelet-dmg-2", "ap-crit-rate-dual", "ap-crit-dmg-dual", "ap-bracelet-addA", "ap-bracelet-addB"],
+    gems: ["ap-gear-gem-base-ap"],
+    arkGrid: ["ap-astrogem-lv", "ap-gear-ap-astrogem-lv", "ap-flashy-atk", "ap-stable-atk", "ap-swift-core", "ap-crushing-core", "ap-gear-ap-chaos-star", "ap-gear-weapon-core", "ap-brace-spec-build"],
+  };
+  const raidLoadout = (p) => p.loadouts.find((x) => x.classification === "most_recent_raid");
+  const breakIt = {
+    bracelet: [(p) => { raidLoadout(p).items.find((i) => i.slot === "bracelet").data.stats.find((st) => st.type === 3).index = 999999; }, /unknown bracelet effect id 3:999999/],
+    gems: [(p) => { raidLoadout(p).gems[0].id = 999999999; }, /unknown gem id 999999999/],
+    arkGridOption: [(p) => { raidLoadout(p).arkGridCores.find((c) => (c.gems || []).some((g) => (g.opts || []).length)).gems.find((g) => (g.opts || []).length).opts[0].id = 9999; }, /unknown astrogem option id 9999/],
+    arkGridCore: [(p) => { raidLoadout(p).arkGridCores[0].id = 999999999; }, /unrecognized Ark Grid core id 999999999/],
+  };
+  const sectionOf = { bracelet: "bracelet", gems: "gems", arkGridOption: "arkGrid", arkGridCore: "arkGrid" };
+  const baseline = sandbox.__buildBiblePayload("", null, true, undefined, raid);
+  check("a full decode has no keepKeys", baseline.keepKeys === undefined);
+  for (const [name, [edit, expectProblem]] of Object.entries(breakIt)) {
+    const d = Dec.decode(withPage(edit));
+    const sec = sectionOf[name];
+    check(name + ": decodes with the section left out and named", d.ok && JSON.stringify(d.text.unread) === JSON.stringify([sec]) && d.warnings.length === 1 && /^Couldn't read /.test(d.warnings[0]) && expectProblem.test(d.warnings[0]), JSON.stringify([d.ok, d.text && d.text.unread, d.warnings, d.reason]));
+    if (!d.ok) continue;
+    const p = sandbox.__buildBiblePayload("", null, true, undefined, d);
+    const gone = Object.keys(baseline.data).filter((k) => !(k in p.data)).sort();
+    const same = Object.keys(p.data).every((k) => JSON.stringify(p.data[k]) === JSON.stringify(baseline.data[k]));
+    check(name + ": the section's calculator fields are left out, every other field is unchanged", !p.error && same && JSON.stringify(gone) === JSON.stringify(UNREAD_FIELDS[sec].filter((k) => k in baseline.data).sort()) && gone.length === UNREAD_FIELDS[sec].length, JSON.stringify({ err: p.error, same, gone }));
+    check(name + ": keepKeys names exactly the skipped fields (the calculator resets everything on import, so they are carried over from its current values)", JSON.stringify([...(p.keepKeys || [])].sort()) === JSON.stringify([...UNREAD_FIELDS[sec]].sort()), JSON.stringify(p.keepKeys));
+    check(name + ": the only new warning is the unread-section one", JSON.stringify(p.warnings) === JSON.stringify(baseline.warnings.concat(d.warnings)), JSON.stringify(p.warnings).slice(0, 300));
+  }
+  {
+    const d = Dec.decode(withPage((p) => { Object.values(breakIt).forEach(([edit]) => edit(p)); }));
+    check("every section broken at once: all three left out, the rest of the loadout still imports", d.ok && JSON.stringify(d.text.unread) === JSON.stringify(["bracelet", "gems", "arkGrid"]) && d.hydration.weaponPower === 275046 && d.hydration.critStat === 658 && d.warnings.length === 3, JSON.stringify([d.ok, d.text && d.text.unread, d.reason, d.warnings.length]));
+    const p = sandbox.__buildBiblePayload("", null, true, undefined, d);
+    const gone = Object.keys(baseline.data).filter((k) => !(k in p.data));
+    check("every section broken at once: only the three skip lists disappear from the payload", !p.error && gone.length === Object.values(UNREAD_FIELDS).flat().length && p.data["ap-gear-wp"] === "275046", JSON.stringify([p.error, gone.length]));
+  }
+  check("an essential section missing is still a refusal on the data route", (() => { const d = Dec.decode(withPage((p) => { raidLoadout(p).battlePoint.parts = []; })); return d.ok === false && /weapon power/.test(d.reason); })());
+
+  // The skip lists must cover everything a section can drive: blank each section out of every
+  // fixture's decode and any payload field that changes has to be on that section's list.
+  const blank = {
+    bracelet: (d) => { ["braceRateLines", "braceDmgLines", "braceDualHitDmgCount", "braceAddA", "braceAddB"].forEach((k) => delete d.text[k]); },
+    gems: (d) => { delete d.text.gemBaseApSum; },
+    arkGrid: (d) => { d.text.hasArkGrid = false; d.text.chaosCores = {}; d.text.orderCores = {}; delete d.text.astrogemAddDmgLv; delete d.text.astrogemApLv; d.hydration.gridPoints = {}; d.hydration.chaosCores = []; },
+  };
+  let uncovered = [];
+  for (const name of names) {
+    const html = read(name + ".html.gz");
+    const lines = JSON.parse(fs.readFileSync(path.join(fixDir, name + ".lines.json"), "utf8"));
+    const dd = Dec.decode(read(name + ".data.json.gz"));
+    if (!dd.ok) continue;
+    const full = sandbox.__buildBiblePayload("", null, true, undefined, dd);
+    for (const sec of Object.keys(blank)) {
+      const copy = JSON.parse(JSON.stringify(dd));
+      blank[sec](copy);
+      copy.text.unread = undefined;
+      const q = sandbox.__buildBiblePayload("", null, true, undefined, copy);
+      for (const k of new Set([...Object.keys(full.data), ...Object.keys(q.data)])) {
+        if (JSON.stringify(full.data[k]) !== JSON.stringify(q.data[k]) && !UNREAD_FIELDS[sec].includes(k)) uncovered.push(name + ":" + sec + ":" + k);
+      }
+    }
+  }
+  check("the skip lists cover every field each section changes, on every fixture", uncovered.length === 0, uncovered.join(", "));
+
   const other = Dec.decode(read("other-class-support-t4.data.json.gz"));
   check("another class on the data route is refused as notDeathblade", !other.ok && other.notDeathblade === true && other.classId === "yinyangshi", JSON.stringify(other).slice(0, 160));
   const noGems = Dec.decode(withPage((p) => { p.loadouts.forEach((l) => { if (l.classification === "most_recent_raid") l.gems = []; }); }));
