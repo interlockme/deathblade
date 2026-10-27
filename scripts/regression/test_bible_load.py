@@ -39,6 +39,7 @@ import json
 import pathlib
 import re
 import socketserver
+import urllib.parse
 import sys
 import threading
 
@@ -55,6 +56,17 @@ CORS = {"access-control-allow-origin": "*", "content-type": "text/html; charset=
 
 def fixture_html(name):
     return gzip.open(FIX / f"{name}.html.gz", "rt", encoding="utf8").read()
+
+
+def fixture_data(name):
+    return gzip.open(FIX / f"{name}.data.json.gz", "rt", encoding="utf8").read()
+
+
+JSON_CORS = {"access-control-allow-origin": "*", "content-type": "application/json; charset=utf-8"}
+
+
+def data_url(region, name):
+    return f"https://lostark.bible/character/{region}/{urllib.parse.quote(name, safe='')}/__data.json?x-sveltekit-invalidated=011"
 
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
@@ -155,6 +167,12 @@ def fulfill_html(html, status=200):
     return h
 
 
+def fulfill_json(body, status=200):
+    def h(r):
+        r.fulfill(status=status, headers=JSON_CORS, body=body)
+    return h
+
+
 def reference(h, name):
     payload = BASELINE["fixtures"][name]["payload"]
     frag = "#bible-import=" + base64.b64encode(json.dumps(payload, ensure_ascii=False).encode("utf8")).decode("ascii")
@@ -199,20 +217,46 @@ def run_all(h, label=""):
     for name in NAMES:
         ref, char = reference(h, name)
         html = fixture_html(name)
+        data = fixture_data(name)
         seen = []
 
-        def bible(r, html=html):
+        # The character's data (what the Worker relays): fetched by name and pasted.
+        def bible(r, data=data):
             seen.append(r.request.url)
-            r.fulfill(status=200, headers=CORS, body=html)
+            r.fulfill(status=200, headers=JSON_CORS, body=data)
 
         h.fresh(routes={"bible": bible})
         h.load(char)
         h.page.wait_for_function("(document.querySelector('.bible-import-status')||{}).textContent", timeout=8000)
         got = h.result()
-        h.check(seen == [f"https://lostark.bible/character/NA/{char}"], f"{name}: requested URL", str(seen))
-        h.check(route_matches(h, html, got, ref), f"{name}: fetch route equals fragment route",
+        h.check(seen == [data_url("NA", char)], f"{name}: requested URL", str(seen))
+        h.check(route_matches(h, html, got, ref), f"{name}: data fetch route equals fragment route",
                 json.dumps({k: (got[k], ref[k]) for k in got if got[k] != ref[k]})[:600])
         h.check(h.page.evaluate("document.querySelector('.bible-load-popover').hidden"), f"{name}: popover closes after import")
+
+        h.fresh()
+        h.open_loader()
+        h.page.evaluate("document.querySelector('.bible-load-manual').open = true")
+        h.page.fill(".bible-load-source", data)
+        h.page.click(".bible-load-paste")
+        h.page.wait_for_function("(document.querySelector('.bible-import-status')||{}).textContent", timeout=8000)
+        got2 = h.result()
+        # No name in the pasted data, so the status line has none either; every field and warning matches.
+        h.check(got2["status"] == got["status"].replace(f"Imported {char} from Bible.", "Imported from Bible.") and {**got2, "status": ""} == {**got, "status": ""}, f"{name}: data paste route equals data fetch route",
+                json.dumps({k: (got2[k], got[k]) for k in got if got2[k] != got[k]})[:600])
+
+        # A relay deployed before the data route existed answers with the page HTML: still read.
+        legacy = []
+
+        def old_relay(r, html=html):
+            legacy.append(r.request.url)
+            r.fulfill(status=200, headers=CORS, body=html)
+
+        h.fresh(routes={"bible": old_relay})
+        h.load(char)
+        h.page.wait_for_function("(document.querySelector('.bible-import-status')||{}).textContent", timeout=8000)
+        got3 = h.result()
+        h.check(route_matches(h, html, got3, ref), f"{name}: HTML answer from an older relay equals fragment route")
 
         h.fresh()
         h.open_loader()
@@ -220,8 +264,7 @@ def run_all(h, label=""):
         h.page.fill(".bible-load-source", html)
         h.page.click(".bible-load-paste")
         h.page.wait_for_function("(document.querySelector('.bible-import-status')||{}).textContent", timeout=8000)
-        got2 = h.result()
-        h.check(route_matches(h, html, got2, ref), f"{name}: paste route equals fragment route")
+        h.check(route_matches(h, html, h.result(), ref), f"{name}: pasted page source equals fragment route")
     h.check(not h.errors, "no page errors", str(h.errors))
 
 
@@ -326,7 +369,7 @@ def run_behaviour(h):
     h.fresh(routes={"bible": bible})
     h.load(f"https://lostark.bible/character/CE/{char}/__data.json?x-sveltekit-invalidated=011")
     h.page.wait_for_timeout(800)
-    h.check(seen == [f"https://lostark.bible/character/CE/{char}"], "pasted link requests the CE page", str(seen))
+    h.check(seen == [data_url("CE", char)], "pasted link requests the CE data", str(seen))
     h.check(h.page.evaluate("document.querySelector('.bible-load-region').value") == "CE", "region selector shows the region used")
 
     # a name with characters that need encoding is percent-encoded as one path segment
@@ -334,7 +377,7 @@ def run_behaviour(h):
     h.fresh(routes={"bible": bible})
     h.load("Bläde")
     h.page.wait_for_timeout(500)
-    h.check(seen == ["https://lostark.bible/character/NA/Bl%C3%A4de"], "name is encoded", str(seen))
+    h.check(seen == [data_url("NA", "Bläde")], "name is encoded", str(seen))
 
     # optional proxy
     pseen = []
@@ -397,6 +440,103 @@ def run_behaviour(h):
     h.page.wait_for_timeout(300)
     h.check("Couldn't read that import link" in h.status_text(), "bad fragment message", h.status_text())
     h.check(not h.errors, "behaviour: no page errors", str(h.errors))
+
+
+def wait_popover_msg(h):
+    h.page.wait_for_function("document.querySelector('.bible-load-popover .ap-calc-popover-msg').textContent.length>0", timeout=8000)
+
+
+def wait_imported(h):
+    h.page.wait_for_function("(document.querySelector('.bible-import-status')||{}).textContent", timeout=8000)
+
+
+NO_LOADOUTS = json.dumps({"type": "data", "nodes": [{"type": "skip"}, {"type": "data", "data": [{"header": 1}, {"class": 2}, "blade"]}, {"type": "data", "data": [{"loadouts": 1, "stale": 2}, [], False]}]})
+REAL_RAID = "data-raid-with-gems"
+REAL_ESTIMATED = "data-estimated-gemless-raid"
+# Calculator fields the real character must import to (the same gear, from either snapshot).
+REAL_FIELDS = {"ap-gear-wp": "275046", "ap-gear-main-stat": "879873", "ap-crit-stat": "658"}
+
+
+def run_data_behaviour(h):
+    """The data route's own paths: other classes, bodies it cannot read, and the two real files."""
+    char = BASELINE["fixtures"]["ancient-chaos"]["payload"]["characterName"]
+
+    for other in OTHER_CLASS_NAMES:
+        h.fresh(routes={"bible": fulfill_json(fixture_data(other))})
+        h.load("Fixture-" + other)
+        wait_popover_msg(h)
+        h.check("Deathblade" in h.popover_msg(), f"data {other}: class message", h.popover_msg())
+        h.check(h.status_text() == "", f"data {other}: nothing imported", h.status_text())
+
+    h.fresh(routes={"bible": fulfill_json(fixture_data("ancient-chaos")[:3000])})
+    h.load(char)
+    wait_popover_msg(h)
+    h.check("Couldn't read Bible's character data" in h.popover_msg() and "Nothing was imported" in h.popover_msg(), "data truncated: reported with its reason", h.popover_msg())
+    h.check(h.status_text() == "", "data truncated: nothing imported")
+
+    h.fresh(routes={"bible": fulfill_json(NO_LOADOUTS)})
+    h.load(char)
+    wait_popover_msg(h)
+    h.check("no loadout data" in h.popover_msg(), "data without loadouts: message", h.popover_msg())
+    h.check(h.status_text() == "", "data without loadouts: nothing imported")
+
+    raw = fixture_data(REAL_RAID)
+    body = json.loads(raw)
+    changed = 0
+    for node in body["nodes"]:
+        if node and node.get("type") == "data":
+            for i, v in enumerate(node["data"]):
+                if v == 11012 and isinstance(v, int):
+                    node["data"][i] = 999999
+                    changed += 1
+    h.check(changed == 1, "unknown-effect probe: the real data holds one 11012 entry to rewrite", str(changed))
+    h.fresh(routes={"bible": fulfill_json(json.dumps(body))})
+    h.load(char)
+    wait_popover_msg(h)
+    h.check("unknown bracelet effect id 3:999999" in h.popover_msg() and h.status_text() == "", "data with an unknown bracelet effect: refused with the id, nothing imported", h.popover_msg())
+
+    pair = {}
+    for fx in (REAL_RAID, REAL_ESTIMATED):
+        h.fresh(routes={"bible": fulfill_json(fixture_data(fx))})
+        h.load("Fixture-" + fx)
+        wait_imported(h)
+        pair[fx] = h.result()
+        h.check(pair[fx]["status"].startswith(f"Imported Fixture-{fx} from Bible."), f"real {fx}: status names the character asked for", pair[fx]["status"])
+        h.check(all(pair[fx]["data"].get(k) == v for k, v in REAL_FIELDS.items()), f"real {fx}: weapon power, main stat and Crit stat", json.dumps({k: pair[fx]["data"].get(k) for k in REAL_FIELDS}))
+    a, b = pair[REAL_RAID], pair[REAL_ESTIMATED]
+    h.check(a["data"] == b["data"], "real data: the estimated and the raid loadout of one character import the same fields",
+            json.dumps({k: (a["data"].get(k), b["data"].get(k)) for k in set(a["data"]) | set(b["data"]) if a["data"].get(k) != b["data"].get(k)})[:500])
+    h.check(not any(w.startswith(ESTIMATED_NOTE) for w in a["warnings"]), "real raid loadout: no estimated-loadout warning", str(a["warnings"]))
+    h.check(b["warnings"] and b["warnings"][0].startswith(ESTIMATED_NOTE), "real estimated loadout: says so first", str(b["warnings"]))
+
+    h.fresh()
+    h.open_loader()
+    h.page.fill(".bible-load-input", "Some Name")
+    h.check(h.page.evaluate("document.querySelector('.bible-load-page-link').href") == data_url("NA", "Some Name"), "paste link follows the typed name")
+    h.page.select_option(".bible-load-region", "CE")
+    h.check(h.page.evaluate("document.querySelector('.bible-load-page-link').href") == data_url("CE", "Some Name"), "paste link follows the region")
+    h.check(not h.errors, "data behaviour: no page errors", str(h.errors))
+
+
+def data_control(browser, base, patch, scenario):
+    """True when the negative control (a patched bible-import.js) is caught by its data scenario."""
+    hh = Harness(browser, base)
+    char = BASELINE["fixtures"]["ancient-chaos"]["payload"]["characterName"]
+    if scenario == "name":
+        hh.fresh(routes={"bible": fulfill_json(fixture_data("ancient-chaos"))}, js_patch=patch)
+        hh.load(char)
+        hh.page.wait_for_timeout(1200)
+        return hh.status_text() != f"Imported {char} from Bible."
+    if scenario == "class":
+        other = OTHER_CLASS_NAMES[0]
+        hh.fresh(routes={"bible": fulfill_json(fixture_data(other))}, js_patch=patch)
+        hh.load("Fixture-" + other)
+        hh.page.wait_for_timeout(1200)
+        return "Deathblade" not in hh.popover_msg()
+    hh.fresh(routes={"bible": fulfill_json(fixture_data("ancient-chaos")[:3000])}, js_patch=patch)
+    hh.load(char)
+    hh.page.wait_for_timeout(1200)
+    return "Couldn't read Bible's character data" not in hh.popover_msg() or hh.status_text() != ""
 
 
 def dismiss_checks(h, js_patch=None):
@@ -525,6 +665,7 @@ def main():
         h = Harness(browser, base)
         run_all(h)
         run_behaviour(h)
+        run_data_behaviour(h)
         fold_checks(h)
         dismiss_checks(h)
         layout_checks(h)
@@ -549,6 +690,15 @@ def main():
             else:
                 # detected when either the direct lines check or the payload comparison breaks
                 detected = bool(lines_equal_fixtures(Harness(browser, base), patch)) or negative(browser, base, patch, label)
+            print(f"negative control ({label}): {'detected' if detected else 'NOT DETECTED'}")
+            ok = ok and detected
+        data_controls = [
+            ("data route no longer reports the name asked for", "name", [("    if (expectedName) payload.characterName = expectedName;\n    return payload;", "    return payload;")]),
+            ("data route skips the other-class refusal", "class", [("if (decoded.notDeathblade) return { error: \"This doesn't look like a Deathblade - Bible import only supports Deathblade.\" };\n    if (!decoded.ok) {", "if (false) return { error: \"This doesn't look like a Deathblade - Bible import only supports Deathblade.\" };\n    if (!decoded.ok) {")]),
+            ("data refusal no longer stops the import", "refusal", [("    if (!decoded.ok) {\n      if (/^no (loadouts|raid loadout)/", "    if (false) {\n      if (/^no (loadouts|raid loadout)/")]),
+        ]
+        for label, scenario, patch in data_controls:
+            detected = data_control(browser, base, patch, scenario)
             print(f"negative control ({label}): {'detected' if detected else 'NOT DETECTED'}")
             ok = ok and detected
         fold_controls = [

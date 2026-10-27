@@ -122,14 +122,13 @@ description: "Ark Passive, CPM and Bid calculators for Deathblade, Bible charact
         </span>
       </div>
       <div class="bible-load-route">
-        <span class="bible-load-route-title">Paste the page source</span>
+        <span class="bible-load-route-title">Paste the character data</span>
         <ol class="bible-load-steps">
-          <li><a class="bible-load-page-link" href="https://lostark.bible/" target="_blank" rel="noopener noreferrer">Open the character on Bible</a>.</li>
-          <li>View the page source: Ctrl+U (Cmd+Option+U on a Mac).</li>
+          <li>Type the character's name above, then <a class="bible-load-page-link" href="https://lostark.bible/" target="_blank" rel="noopener noreferrer">open its data on Bible</a>.</li>
           <li>Select all (Ctrl+A) and copy (Ctrl+C). Use Cmd on a Mac.</li>
           <li>Paste it below and press Import.</li>
         </ol>
-        <textarea class="ap-calc-popover-textarea bible-load-source" aria-label="Bible character page source" rows="3" spellcheck="false" placeholder="Paste the page source here."></textarea>
+        <textarea class="ap-calc-popover-textarea bible-load-source" aria-label="Bible character data" rows="3" spellcheck="false" placeholder="Paste the character data here."></textarea>
         <span class="ap-calc-popover-actions">
           <button type="button" class="bible-load-paste">Import</button>
         </span>

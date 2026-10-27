@@ -1,14 +1,15 @@
 # Optional Bible proxy
 
-The Load Character box asks lostark.bible for a character's page straight from the visitor's
-browser. That works only if Bible's server allows other sites to read its pages (CORS). If the
+The Load Character box asks lostark.bible for a character's data (the `__data.json` that Bible's own
+page is built from) straight from the visitor's browser. That works only if Bible's server allows
+other sites to read it (CORS). If the
 popover says the browser blocked the request, a small server-side relay is the only fix that keeps
 the one-box experience; a static site cannot work around it. `worker.js` is that relay for
 Cloudflare Workers (free tier is plenty).
 
 Check first whether you need it: open the calculator page, open the browser console and run
 
-    fetch("https://lostark.bible/character/NA/SomeName").then(r => r.text()).then(t => console.log(t.length, t.includes("loadouts:["))).catch(e => console.error(e))
+    fetch("https://lostark.bible/character/NA/SomeName/__data.json?x-sveltekit-invalidated=011").then(r => r.text()).then(t => console.log(t.length, t.startsWith('{"type":"data"'))).catch(e => console.error(e))
 
 A number and `true` means direct loading works and you do not need this. A CORS error or
 `Failed to fetch` means you do.
@@ -25,7 +26,8 @@ A number and `true` means direct loading works and you do not need this. A CORS 
 
 - Bible's terms and bot protection are not something this repo can check. The Worker identifies
   itself in its User-Agent, caches each character for 15 seconds at the edge (never in the browser), and sends one request per load,
-  but Bible may still block it (a Cloudflare challenge page comes back as "No character data").
-  Consider asking Bible's developers before pointing real traffic at it.
-- It forwards nothing from the visitor (no cookies, no headers) and returns only the character page.
-- Without the Worker, the paste-the-page-source route in the popover still works for everyone.
+  but Bible may still block it (a Cloudflare challenge page is not relayed: the Worker answers 502,
+  "Bible did not send character data"). Bible's developer has allowed server-side fetches of one
+  character per user action.
+- It forwards nothing from the visitor (no cookies, no headers) and returns only character data (a response that is not a `{"type":"data"...` body is not relayed).
+- Without the Worker, the paste route in the popover still works for everyone: open the character's data link, select all, copy, paste.

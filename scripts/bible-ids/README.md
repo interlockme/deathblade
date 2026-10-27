@@ -4,9 +4,13 @@
 (raid loadout, or Bible's estimated raid loadout when the last raid snapshot has no gems), so the
 importer no longer depends on which loadout tab the page was showing.
 
-- `extract_tables.mjs` regenerates `docs/javascripts/bible-id-tables.js` from a saved LOA-SIM chunk.
-  Open https://loa-sim.vercel.app/ with F12, search all files for `11012`, open that chunk's URL and
-  save it. Run `node scripts/bible-ids/extract_tables.mjs saved-chunk.js`.
+- `extract_tables.mjs` regenerates `docs/javascripts/bible-id-tables.js` from LOA-SIM. Preferred: its source
+  repo, `node scripts/bible-ids/extract_tables.mjs --from-source path/to/loa-sim` (imports
+  `src/lib/upgrade-planner/{game-data,tables,stones}.ts` with Node's built-in type stripping, Node 22.18+ or 24+;
+  a missing or empty table makes it fail). Fallback: a saved chunk of the live site. Open
+  https://loa-sim.vercel.app/ with F12, search all files for `11012`, open that chunk's URL and save it, then run
+  `node scripts/bible-ids/extract_tables.mjs saved-chunk.js`. Both routes write the same tables (checked
+  byte for byte on the repo snapshot of Oct 26 2026). Use `--out file` to write somewhere else and diff first.
 - `test_decode.mjs` runs the real `buildPayload` through the text path and the decoded path on every
   fixture in `scripts/regression/fixtures/` and prints each field that differs. `--strict` exits 1 on
   a difference not listed in its EXPECTED map.
@@ -60,3 +64,5 @@ a missing name or a table whose shape changed makes the script fail instead of w
 - T3 Deathblade bracelets are not modelled. They decode as no bracelet effects without a warning; Crit comes from the loadout Crit total (type 15), Specialization has no calculator field.
 - Every loadout object carries `classId` (`blade` is the Deathblade; `force_master` and `yinyangshi` are the other two seen), plus `lastUpdated`, `itemLevel` and `apPoints`. The decoder checks `classId` first and refuses any other class as `notDeathblade`.
 - A bracelet can carry only type 2 lines (no type 3 effect ids): combat stats 15/16 plus random lines such as 149 Mana Recovery (value 800 = 8%), 76 Crit Damage (1000 = 10%) and 50 Additional Damage (400 = 4%). The decoder reads 50, 74 and 76 as bracelet clauses (value / 100) and skips 27, 34, 55, 56, 149 and 151; fixture bracelet-stat-lines pins it.
+- `devalue-lite.mjs` reads and writes the flat data format of `__data.json` (tests and fixtures only; the site has its own reader in `bible-decode.js`).
+- `make_data_fixture.mjs` builds `__data.json` fixtures: `--real NAME file` anonymizes a saved response (open `https://lostark.bible/character/NA/<Name>/__data.json?x-sveltekit-invalidated=011` in a fresh tab, select all, copy, save), `--derive-all` writes a data twin of every HTML fixture.

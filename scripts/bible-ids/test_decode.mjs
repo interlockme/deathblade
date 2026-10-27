@@ -9,6 +9,7 @@ import path from "node:path";
 import vm from "node:vm";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
+import { flatten, unflatten } from "./devalue-lite.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(here, "..", "..");
@@ -237,6 +238,111 @@ for (const name of names) {
   const keptRaw = d4.ok && d4.hydration.critStat === ((objs.raid_merged.match(/\{type:15,value:(\d+)\}/) || [])[1] | 0);
   if (!keptRaw) unexpected++;
   console.log("   no donor snapshot: Crit left as the estimated loadout's own total: " + (keptRaw ? "yes" : "NO (DIFF)"));
+}
+// Data route: the character's __data.json body must decode exactly like the page HTML it twins.
+// Every HTML fixture has a derived data twin (make_data_fixture.mjs --derive-all); the whole
+// decode result, refusals included, must match. Two real files of one character are pinned on top:
+// one body has a gemless last raid snapshot plus the estimated loadout, the other has every gem on
+// the last raid snapshot, and both describe the same gear, so they must decode to the same values.
+{
+  const read = (f) => zlib.gunzipSync(fs.readFileSync(path.join(fixDir, f))).toString("utf8");
+  const Dec = sandbox.window.BibleDecode;
+  const check = (label, ok, detail) => {
+    if (!ok) unexpected++;
+    console.log("\n== data route: " + label + ": " + (ok ? "ok" : "DIFF " + (detail || "")));
+  };
+  let twins = 0;
+  for (const name of names) {
+    const twin = name + ".data.json.gz";
+    if (!fs.existsSync(path.join(fixDir, twin))) { check(name + " has a data twin", false, "run make_data_fixture.mjs --derive-all"); continue; }
+    const a = JSON.stringify(Dec.decode(read(name + ".html.gz")));
+    const b = JSON.stringify(Dec.decode(read(twin)));
+    twins++;
+    check(name + " decodes the same from HTML and from data", a === b, a.slice(0, 200) + " | " + b.slice(0, 200));
+  }
+  check("every HTML fixture was compared", twins === names.length && twins >= 10, twins + " of " + names.length);
+
+  // Same through buildPayload: no visible text and no HTML on the data route, yet the payload
+  // (every calculator field and every warning) must equal the HTML route's.
+  let payloadsCompared = 0;
+  for (const name of names) {
+    const html = read(name + ".html.gz");
+    const lines = JSON.parse(fs.readFileSync(path.join(fixDir, name + ".lines.json"), "utf8"));
+    const dh = Dec.decode(html), dd = Dec.decode(read(name + ".data.json.gz"));
+    if (!dh.ok) continue;
+    const ph = sandbox.__buildBiblePayload(html, lines, true, undefined, dh);
+    const pd = sandbox.__buildBiblePayload("", null, true, undefined, dd);
+    payloadsCompared++;
+    check(name + " payload from data (no text lines) equals the HTML route's", !pd.error && JSON.stringify(ph.data) === JSON.stringify(pd.data) && JSON.stringify(ph.warnings) === JSON.stringify(pd.warnings), pd.error || "");
+  }
+  check("payloads were compared", payloadsCompared >= 8, String(payloadsCompared));
+
+  const raid = Dec.decode(read("data-raid-with-gems.data.json.gz"));
+  const est = Dec.decode(read("data-estimated-gemless-raid.data.json.gz"));
+  check("real data, gems on the last raid snapshot: raid loadout", raid.ok && raid.kind === "raid" && raid.classId === "blade", JSON.stringify([raid.ok, raid.kind, raid.reason]));
+  check("real data, gemless last raid snapshot: estimated loadout", est.ok && est.kind === "estimated" && est.why === "the last raid snapshot had no gems", JSON.stringify([est.ok, est.kind, est.why, est.reason]));
+  if (raid.ok && est.ok) {
+    check("estimated and raid loadouts of the same character decode to the same text and hydration (Crit total included)", ownShape(raid) === ownShape(est));
+    const t = raid.text, h = raid.hydration;
+    const pinned = {
+      weaponPower: h.weaponPower, mainStat: h.mainStat, critStat: h.critStat, mainStatPct: h.mainStatPct, karma: h.karma,
+      quality: t.weaponQuality, gemBaseApSum: t.gemBaseApSum, astrogemAddDmgLv: t.astrogemAddDmgLv, astrogemApLv: t.astrogemApLv,
+      braceRateLines: t.braceRateLines, braceDmgLines: t.braceDmgLines, braceDualHitDmgCount: t.braceDualHitDmgCount,
+      vambrace: [t.vambraceGrade, t.vambraceLevel], necklaceAddDmg: t.necklaceAddDmg, engravings: t.engravings, stone: t.engravingStonePoints,
+      chaos: Object.entries(t.chaosCores).map(([k, v]) => [k, v.name, v.points]), order: Object.entries(t.orderCores).map(([k, v]) => [k, v.name, v.points]),
+    };
+    const want = {
+      weaponPower: 275046, mainStat: 879873, critStat: 658, mainStatPct: 9, karma: { evolution: 28, enlightenment: 30, leap: 28 },
+      quality: 100, gemBaseApSum: 13.2, astrogemAddDmgLv: 60, astrogemApLv: 48,
+      braceRateLines: [4.2], braceDmgLines: [6.8], braceDualHitDmgCount: 2,
+      vambrace: ["epic", 10], necklaceAddDmg: 2.6, engravings: { Grudge: 20, "Ambush Master": 20, "Raid Captain": 20, Adrenaline: 20, "Mass Increase": 20 }, stone: { Grudge: 3, "Ambush Master": 2 },
+      chaos: [["Chaos Sun", "Flashy Attack", 20], ["Chaos Moon", "Absorbing Strike", 20], ["Chaos Star", "Attack", 19]],
+      order: [["Order Sun", "Slaughter Spectacle", 20], ["Order Moon", "Twin Swords Dance", 20], ["Order Star", "Swift Resolution", 20]],
+    };
+    check("real data values are pinned", JSON.stringify(pinned) === JSON.stringify(want), JSON.stringify(pinned));
+  }
+
+  // The reader in bible-decode.js and the helper the tests use must agree on the real files.
+  const raw = JSON.parse(read("data-estimated-gemless-raid.data.json.gz"));
+  const viaHelper = raw.nodes.filter((n) => n && n.type === "data").map((n) => unflatten(n.data)).find((p) => p.loadouts).loadouts;
+  const viaDecoder = Dec.loadoutObjects !== undefined && Dec.decode(read("data-estimated-gemless-raid.data.json.gz")).ok;
+  check("both readers accept the real body", Array.isArray(viaHelper) && viaHelper.length === 3 && viaDecoder);
+
+  // Refusals on the data route are reported, never thrown.
+  const base = JSON.parse(read("data-raid-with-gems.data.json.gz"));
+  const withPage = (edit) => {
+    const pages = base.nodes.map((n) => (n && n.type === "data" ? unflatten(n.data) : null));
+    const page = pages.find((p) => p && p.loadouts);
+    edit(page);
+    const nodes = base.nodes.map((n, i) => (pages[i] ? { type: "data", data: flatten(pages[i]) } : n));
+    return JSON.stringify({ type: "data", nodes });
+  };
+  const refused = (label, body, expect) => {
+    let d;
+    try { d = Dec.decode(body); } catch (e) { d = { threw: e.message }; }
+    check(label, d && d.ok === false && !d.threw && expect.test(d.reason || ""), JSON.stringify(d).slice(0, 200));
+  };
+  refused("a truncated body is refused with a reason", read("data-raid-with-gems.data.json.gz").slice(0, 3000), /could not read the character data/);
+  refused("a body with an unsupported data tag is refused with a reason", JSON.stringify({ type: "data", nodes: [{ type: "skip" }, { type: "data", data: [{ loadouts: 1 }, ["Map", [2, 3]]] }] }), /unsupported data tag Map/);
+  refused("a body with no loadouts is refused", JSON.stringify({ type: "data", nodes: [{ type: "skip" }, { type: "data", data: [{ header: 1 }, { class: 2 }, "blade"] }] }), /no loadouts/);
+  refused("a body with an out-of-range reference is refused", JSON.stringify({ type: "data", nodes: [{ type: "data", data: [{ loadouts: 9 }] }] }), /bad reference/);
+  refused("an unknown bracelet effect id is refused", withPage((p) => {
+    const l = p.loadouts.find((x) => x.classification === "most_recent_raid");
+    const br = l.items.find((i) => i.slot === "bracelet");
+    br.data.stats.find((st) => st.type === 3).index = 999999;
+  }), /unknown bracelet effect id 3:999999/);
+  const other = Dec.decode(read("other-class-support-t4.data.json.gz"));
+  check("another class on the data route is refused as notDeathblade", !other.ok && other.notDeathblade === true && other.classId === "yinyangshi", JSON.stringify(other).slice(0, 160));
+  const noGems = Dec.decode(withPage((p) => { p.loadouts.forEach((l) => { if (l.classification === "most_recent_raid") l.gems = []; }); }));
+  check("a gemless raid loadout with no estimated one still decodes as the raid loadout", noGems.ok && noGems.kind === "raid", JSON.stringify(noGems).slice(0, 160));
+  // Control: the comparison above must be able to fail.
+  const perturbed = Dec.decode(withPage((p) => { p.loadouts[0].battlePoint.parts.forEach((x) => { if (x.type === 1) x.weaponPower += 1; }); }));
+  check("control: a changed weapon power changes the decode", perturbed.ok && perturbed.hydration.weaponPower === raid.hydration.weaponPower + 1);
+  // Shared references and special values, the parts of the format the real files do not use.
+  const probe = unflatten(JSON.parse('[{"a":1,"b":1,"c":2,"d":-1},[3,-2,-1],[3],7]'));
+  const dv = Dec.decode(JSON.stringify({ type: "data", nodes: [{ type: "data", data: [{ loadouts: 1 }, [2, -2], { classification: 3, classId: 4, gems: -1, lastUpdated: 5 }, "most_recent_raid", "force_master", ["Date", "2026-01-01T00:00:00.000Z"]] }] }));
+  check("the test helper reads holes, undefined and shared values as the format says", probe.a === probe.b && probe.a.length === 3 && probe.a[0] === 7 && !(1 in probe.a) && probe.a[2] === undefined && probe.c[0] === 7 && probe.d === undefined, JSON.stringify(probe));
+  check("the reader in bible-decode.js takes a hole, undefined and a Date tag", !dv.ok && dv.notDeathblade === true && dv.classId === "force_master", JSON.stringify(dv));
 }
 if (!isolationChecked || !isolationControl) { unexpected++; console.log("\nDIFF     estimated-route isolation check never ran or never moved: it proved nothing"); }
 if (!controlFired) { unexpected++; console.log("\nDIFF     icon-color control never fired: the swap test proved nothing"); }

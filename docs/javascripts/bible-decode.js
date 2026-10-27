@@ -1,15 +1,18 @@
 // FORK GUIDE: DEATHBLADE-SPECIFIC (field meanings), tables are class-neutral game data.
-// Decodes a lostark.bible character page's own structured loadout data (the SvelteKit
-// hydration payload, loadouts:[...]) into the same "text" and "hydration" shapes that
-// bible-import.js's buildPayload reads from the visible page text. That makes the
-// import independent of which loadout tab (Raid or Chaos Dungeon) the page was showing.
+// Decodes a lostark.bible character's own structured loadout data into the same "text" and
+// "hydration" shapes that bible-import.js's buildPayload reads from the visible page text.
+// That makes the import independent of which loadout tab (Raid or Chaos Dungeon) the page was
+// showing. Two inputs are accepted and give the same result: the character's __data.json body
+// (SvelteKit's flat data format, read by unflatten below), or the character page's HTML, whose
+// embedded hydration payload (loadouts:[...]) is a JavaScript literal read by the scanners below.
 //
 // Loadout choice: most_recent_raid, unless it has no gems, then raid_merged (Bible's
 // "estimated raid loadout"). With no most_recent_raid at all, raid_merged is used if it
 // exists. A Chaos Dungeon loadout is never used.
 //
 // Refuse rule: anything this file cannot decode with certainty returns { ok: false,
-// reason } and the caller falls back to the visible-text path. Unknown ids that could be
+// reason }. On a page's HTML the caller then falls back to the visible-text path; a
+// __data.json body has no visible text, so the caller reports the reason. Unknown ids that could be
 // read as a calculator input (bracelet effects, Chaos core names, gem values) refuse;
 // ids the calculator never reads (other accessory lines, other engravings) are ignored,
 // exactly as the text path ignores them.
@@ -118,7 +121,65 @@
     return byClass;
   }
 
+  function unflatten(values) {
+    var out = new Array(values.length), done = new Array(values.length);
+    var special = { "-1": undefined, "-3": NaN, "-4": Infinity, "-5": -Infinity, "-6": -0 };
+    function get(i) {
+      if (typeof i !== "number" || i !== Math.floor(i) || i < -6 || i >= values.length || (i < 0 && !(String(i) in special))) throw new Error("bad reference " + i);
+      if (i < 0) return special[String(i)];
+      if (done[i]) return out[i];
+      done[i] = true;
+      var v = values[i];
+      if (v === null || typeof v !== "object") { out[i] = v; return v; }
+      if (Array.isArray(v)) {
+        if (typeof v[0] === "string") {
+          if (v[0] === "Date") { out[i] = new Date(v[1]); return out[i]; }
+          throw new Error("unsupported data tag " + v[0]);
+        }
+        var arr = (out[i] = new Array(v.length));
+        for (var a = 0; a < v.length; a++) if (v[a] !== -2) arr[a] = get(v[a]);
+        return arr;
+      }
+      var obj = (out[i] = {});
+      Object.keys(v).forEach(function (k) { obj[k] = get(v[k]); });
+      return obj;
+    }
+    return get(0);
+  }
+
+  function isDataJson(text) {
+    return typeof text === "string" && /^\s*\{\s*"type"\s*:\s*"data"/.test(text);
+  }
+
+  function dataPages(text) {
+    var body = JSON.parse(text);
+    if (!body || !Array.isArray(body.nodes)) throw new Error("no nodes");
+    var pages = [];
+    body.nodes.forEach(function (n) {
+      if (n && n.type === "data" && Array.isArray(n.data)) pages.push(unflatten(n.data));
+    });
+    return pages;
+  }
+
+  function loadoutObjectsFromData(text) {
+    var pages = dataPages(text);
+    var byClass = null;
+    pages.forEach(function (pg) {
+      if (byClass || !pg || !Array.isArray(pg.loadouts)) return;
+      byClass = {};
+      pg.loadouts.forEach(function (l) {
+        if (l && typeof l.classification === "string" && !(l.classification in byClass)) byClass[l.classification] = l;
+      });
+    });
+    return byClass;
+  }
+
+  function getField(obj, key) {
+    return typeof obj === "string" ? fieldJSON(obj, key) : obj[key];
+  }
+
   function hasGems(obj) {
+    if (typeof obj !== "string") return Array.isArray(obj.gems) && obj.gems.some(function (g) { return g && typeof g === "object"; });
     var raw = fieldRaw(obj, "gems");
     return raw != null && /\{/.test(raw);
   }
@@ -379,6 +440,10 @@
   // Returns the first one found, or null when the page data has none.
   function loadoutClassId(byClass) {
     for (var k in byClass) {
+      if (typeof byClass[k] !== "string") {
+        if (typeof byClass[k].classId === "string") return byClass[k].classId;
+        continue;
+      }
       var m = byClass[k].match(/classId:"([^"]*)"/);
       if (m) return m[1];
     }
@@ -398,7 +463,7 @@
   }
 
   function arkCritLevel(obj) {
-    var ap = fieldJSON(obj, "arkPassive");
+    var ap = getField(obj, "arkPassive");
     var list = ap && Array.isArray(ap.evolution) ? ap.evolution : [];
     for (var i = 0; i < list.length; i++) if (list[i] && list[i].id === ARK_CRIT_NODE_ID) return list[i].level || 0;
     return 0;
@@ -413,16 +478,20 @@
     for (var i = 0; i < names.length; i++) {
       var other = byClass[names[i]];
       if (!other || other === obj) continue;
-      var otherStats = fieldJSON(other, "stats");
+      var otherStats = getField(other, "stats");
       if (statValue(otherStats, 15) !== crit || statValue(otherStats, 18) !== swift) continue;
       return crit + (own - arkCritLevel(other)) * CRIT_STAT_PER_NODE_LEVEL;
     }
     return crit;
   }
 
-  function decode(rawHtml) {
+  function decode(input) {
     if (!T) return fail("id tables are not loaded");
-    var byClass = loadoutObjects(rawHtml);
+    var byClass;
+    if (isDataJson(input)) {
+      try { byClass = loadoutObjectsFromData(input); }
+      catch (e) { return fail("could not read the character data (" + e.message + ")"); }
+    } else byClass = loadoutObjects(input);
     if (!byClass) return fail("no loadouts in the page data");
     var classId = loadoutClassId(byClass);
     if (classId != null && classId !== DEATHBLADE_CLASS_ID) {
@@ -433,13 +502,13 @@
     var obj = picked.obj;
     var items, gems, engravings, cores, stats, battlePoint, karma;
     try {
-      items = fieldJSON(obj, "items");
-      gems = fieldJSON(obj, "gems");
-      engravings = fieldJSON(obj, "engravings");
-      cores = fieldJSON(obj, "arkGridCores");
-      stats = fieldJSON(obj, "stats");
-      battlePoint = fieldJSON(obj, "battlePoint");
-      karma = fieldJSON(obj, "karma");
+      items = getField(obj, "items");
+      gems = getField(obj, "gems");
+      engravings = getField(obj, "engravings");
+      cores = getField(obj, "arkGridCores");
+      stats = getField(obj, "stats");
+      battlePoint = getField(obj, "battlePoint");
+      karma = getField(obj, "karma");
     } catch (e) {
       return fail("could not parse the loadout data (" + e.message + ")");
     }
@@ -479,5 +548,7 @@
     return { ok: true, kind: picked.kind, why: picked.why || null, classId: classId, text: text, hydration: hydration, warnings: text.vambraceWarning ? [text.vambraceWarning] : [] };
   }
 
-  window.BibleDecode = { decode: decode, pickLoadout: pickLoadout, loadoutObjects: loadoutObjects };
+  function parseLoadout(str) { return JSON.parse(jsonish(str)); }
+
+  window.BibleDecode = { decode: decode, pickLoadout: pickLoadout, loadoutObjects: loadoutObjects, isDataJson: isDataJson, parseLoadout: parseLoadout };
 })();

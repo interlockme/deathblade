@@ -20,19 +20,21 @@
 //
 // LOAD CHARACTER (no bookmarklet)
 // The "Load Character" popover takes a character name or a Bible character
-// link, gets that character's page HTML, and feeds it to the same
+// link, gets that character's data (the __data.json Bible's own page is built
+// from), decodes it with bible-decode.js and feeds the result to the same
 // buildPayload the bookmarklet uses, then to the same Import popover (see
-// applyPayload). Two ways to get the HTML:
-//   - fetch: the browser requests lostark.bible/character/<region>/<name>
+// applyPayload). Two ways to get the data:
+//   - fetch: the browser requests lostark.bible/character/<region>/<name>/__data.json
 //     directly, or, when the control carries data-proxy, a proxy URL that
-//     returns that page (scripts/bible-proxy/worker.js). A page on another
+//     returns that data (scripts/bible-proxy/worker.js). A page on another
 //     origin can only read the response if Bible's server sends CORS headers
 //     for it; when the browser blocks the request the popover says so and
 //     offers the paste route. There is no way around that from a static site,
 //     and mode "no-cors" would only return an unreadable opaque response.
-//   - paste: the person pastes the page source (Ctrl+U on the Bible page).
-// buildPayload also wants the page's rendered text lines, which the
-// bookmarklet reads from document.body.innerText. A fetched page has no
+//   - paste: the person pastes the character's data link text (or the page source, Ctrl+U).
+// Page HTML is still accepted on both routes (a relay deployed before the data route
+// existed answers with it): buildPayload then also wants the page's rendered text lines,
+// which the bookmarklet reads from document.body.innerText. A fetched page has no
 // layout to read, so htmlToLines rebuilds the same lines from the markup
 // (block and flex boundaries become line breaks, hidden elements are
 // skipped). scripts/regression/test_bible_load.py checks it against the
@@ -913,14 +915,19 @@
     // (e.g. Berserker, Artist) character page, and a page that hasn't
     // fully loaded yet (no "Combat Power" line to anchor off at all) -
     // both get rejected, not just the clearly-wrong-class case.
-    var classCheck = checkDeathbladeClass(lines);
-    if (classCheck === "not-loaded") {
-      return { error: "Couldn't confirm this is a Deathblade character page - make sure it's fully loaded and try again." };
+    // A character's __data.json body has no visible text (lines is null); its class was already
+    // checked from the data itself, and the caller supplies the name it asked for.
+    var characterName = null;
+    if (lines) {
+      var classCheck = checkDeathbladeClass(lines);
+      if (classCheck === "not-loaded") {
+        return { error: "Couldn't confirm this is a Deathblade character page - make sure it's fully loaded and try again." };
+      }
+      if (classCheck === "wrong-class") {
+        return { error: "This doesn't look like a Deathblade - Bible import only supports Deathblade." };
+      }
+      characterName = extractCharacterName(lines);
     }
-    if (classCheck === "wrong-class") {
-      return { error: "This doesn't look like a Deathblade - Bible import only supports Deathblade." };
-    }
-    var characterName = extractCharacterName(lines);
 
     var text = decoded ? decoded.text : parseVisibleText(lines);
     var data = {};
@@ -1902,6 +1909,12 @@
     return BIBLE_ORIGIN + "/character/" + target.region + "/" + encodeURIComponent(target.name);
   }
 
+  // The character's own data, which the page is built from: the same loadouts as the page's
+  // embedded payload, without the page around them. The query is what Bible's page itself sends.
+  function characterDataUrl(target) {
+    return characterPageUrl(target) + "/__data.json?x-sveltekit-invalidated=011";
+  }
+
   function loadError(kind, message) {
     var err = new Error(message);
     err.kind = kind;
@@ -1919,13 +1932,14 @@
     return loadError("blocked", "Bible doesn't let other sites read its pages (it sends no CORS headers), so the browser blocked this request. Use \"Load not working?\" below.");
   }
 
-  // GETs the character page (or the proxy's copy of it) as text. A plain GET
+  // GETs the character's data (or the proxy's copy of it) as text. A plain GET
   // with no custom headers is a CORS "simple" request, so no preflight is
-  // sent; credentials and the referrer are withheld.
-  function fetchCharacterHtml(target, proxyUrl, signal) {
+  // sent; credentials and the referrer are withheld. A relay deployed before the
+  // data route existed still answers with the page HTML, which payloadFromSource reads too.
+  function fetchCharacterSource(target, proxyUrl, signal) {
     var url = proxyUrl
       ? proxyUrl + (proxyUrl.indexOf("?") === -1 ? "?" : "&") + "region=" + encodeURIComponent(target.region) + "&name=" + encodeURIComponent(target.name)
-      : characterPageUrl(target);
+      : characterDataUrl(target);
     return fetch(url, { credentials: "omit", referrerPolicy: "no-referrer", signal: signal }).then(function (res) {
       if (res.status === 404) throw loadError("notfound", "Bible has no character called \"" + target.name + "\" in " + target.region + ". Check the spelling and region.");
       if (res.status === 429) throw loadError("ratelimit", "Bible is limiting requests right now. Wait a minute and try again.");
@@ -1937,11 +1951,31 @@
     });
   }
 
-  // Page HTML -> { data, warnings, characterName } or { error }. expectedName
-  // (when the page was fetched for a specific name) guards against Bible
-  // answering with a different character.
+  // The character's __data.json body -> { data, warnings, characterName } or { error }. The body
+  // holds no name, so the name asked for (when fetched by name) is the one reported, and there is
+  // no visible text to fall back on: anything the decoder refuses is reported with its reason.
+  function payloadFromData(body, expectedName) {
+    var decoded = window.BibleDecode ? window.BibleDecode.decode(body) : null;
+    if (!decoded) return { error: "Couldn't read Bible's character data (the decoder did not load)." };
+    if (decoded.notDeathblade) return { error: "This doesn't look like a Deathblade - Bible import only supports Deathblade." };
+    if (!decoded.ok) {
+      if (/^no (loadouts|raid loadout)/.test(decoded.reason)) {
+        return { error: "Bible has no loadout data for this character (it may be hidden or not refreshed yet). Open the character on Bible once, then try again." };
+      }
+      return { error: "Couldn't read Bible's character data (" + decoded.reason + "). Nothing was imported. Try again later, or use the bookmarklet on the character's Bible page." };
+    }
+    var payload = buildPayload("", null, true, undefined, decoded);
+    if (payload.error) return payload;
+    if (expectedName) payload.characterName = expectedName;
+    return payload;
+  }
+
+  // Page HTML or a character's __data.json body -> { data, warnings, characterName } or
+  // { error }. expectedName (when the page was fetched for a specific name) guards against
+  // Bible answering with a different character; it can only be checked on the HTML.
   function payloadFromSource(html, expectedName) {
     if (html.length > MAX_SOURCE_CHARS) return { error: "That's too large to be a Bible character page." };
+    if (window.BibleDecode && window.BibleDecode.isDataJson(html)) return payloadFromData(html, expectedName);
     if (html.indexOf("loadouts:[") === -1) {
       return { error: "No character data in Bible (the character may be hidden or still loading on Bible, or Bible sent a verification page). Open the character on Bible once, then try again or paste its page source." };
     }
@@ -2211,9 +2245,9 @@
       pasteBtn.disabled = on;
       input.readOnly = on;
     }
-    // The paste route's first step points at the character just tried.
+    // The paste route's first step points at the character's data link.
     function showPageLink(target) {
-      if (pageLink) pageLink.href = characterPageUrl(target);
+      if (pageLink) pageLink.href = characterDataUrl(target);
     }
     // Hands a finished payload (or error) to the page. An error stays in the
     // popover so the person can fix the name; a success closes it through the
@@ -2270,7 +2304,7 @@
         if (controller === ctl) controller = null;
         setBusy(false);
       }
-      fetchCharacterHtml(target, proxyUrl, ctl.signal).then(function (html) {
+      fetchCharacterSource(target, proxyUrl, ctl.signal).then(function (html) {
         finishRequest();
         deliver(payloadFromSource(html, target.name), target);
       }, function (err) {
@@ -2287,11 +2321,11 @@
     function loadFromSource() {
       if (busy) return;
       var text = sourceBox.value.trim();
-      if (!text) { setMsg("Paste the character page's source above first.", true); return; }
+      if (!text) { setMsg("Paste the character data above first.", true); return; }
       setMsg("", false);
       var result;
       try { result = payloadFromSource(text, null); }
-      catch (e) { result = { error: "Couldn't read that page source (" + e.message + ")." }; }
+      catch (e) { result = { error: "Couldn't read that (" + e.message + ")." }; }
       deliver(result, null);
     }
 
@@ -2299,6 +2333,13 @@
     input.addEventListener("keydown", function (ev) {
       if (ev.key === "Enter") { ev.preventDefault(); loadByName(); }
     });
+    // The paste route's link follows the name as it is typed, so it works without trying Load first.
+    function syncPageLink() {
+      var t = parseCharacterTarget(input.value, regionSel.value);
+      if (!t.error) showPageLink(t);
+    }
+    input.addEventListener("input", syncPageLink);
+    regionSel.addEventListener("change", syncPageLink);
     pasteBtn.addEventListener("click", loadFromSource);
   }
 

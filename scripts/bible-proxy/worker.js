@@ -3,8 +3,9 @@
 // Needed only if the browser cannot read lostark.bible directly (the Load
 // Character popover then says the request was blocked). A page on another
 // origin can read a response only when the server sends CORS headers for it;
-// this Worker fetches the character page server side and returns it with CORS
-// headers for the calculator's own origin. See README.md in this folder.
+// this Worker fetches the character's data (the __data.json that Bible's own page
+// is built from) server side and returns it with CORS headers for the calculator's
+// own origin. See README.md in this folder.
 //
 // It is deliberately narrow: GET only, one host, a validated region and name,
 // no cookies or caller headers forwarded, response size and time capped, and
@@ -21,7 +22,7 @@ const ALLOWED_ORIGINS = [
 const BIBLE_ORIGIN = "https://lostark.bible";
 const MAX_BYTES = 3 * 1024 * 1024;
 const TIMEOUT_MS = 10000;
-// Edge copy of a character page, kept briefly so repeat loads of one character do
+// Edge copy of a character's data, kept briefly so repeat loads of one character do
 // not each reach Bible. The browser never keeps its own copy (no-store below).
 const EDGE_CACHE_SECONDS = 15;
 // Per-IP cap on requests that reach Bible: RATE_LIMIT per RATE_WINDOW_SECONDS.
@@ -75,13 +76,13 @@ export default {
 
     if (await overLimit(request)) return reply(429, "Too many requests", allowed, { "retry-after": String(RATE_WINDOW_SECONDS) });
 
-    const target = BIBLE_ORIGIN + "/character/" + region.toUpperCase() + "/" + encodeURIComponent(name);
+    const target = BIBLE_ORIGIN + "/character/" + region.toUpperCase() + "/" + encodeURIComponent(name) + "/__data.json?x-sveltekit-invalidated=011";
     let res;
     try {
       res = await fetch(target, {
         method: "GET",
         redirect: "follow",
-        headers: { "accept": "text/html", "user-agent": "deathblade-guide-calculator-importer" },
+        headers: { "accept": "application/json", "user-agent": "deathblade-guide-calculator-importer (https://interlockme.github.io/deathblade/; one character per user action)" },
         signal: AbortSignal.timeout(TIMEOUT_MS),
         cf: { cacheTtl: EDGE_CACHE_SECONDS, cacheEverything: true },
       });
@@ -98,11 +99,14 @@ export default {
     if (declared > MAX_BYTES) return reply(502, "Response too large", allowed);
     const buf = await res.arrayBuffer();
     if (buf.byteLength > MAX_BYTES) return reply(502, "Response too large", allowed);
+    // Only character data goes back: anything else (a verification page, an error page) is not relayed.
+    const head = new TextDecoder().decode(buf.slice(0, 64));
+    if (!/^\s*\{\s*"type"\s*:\s*"data"/.test(head)) return reply(502, "Bible did not send character data", allowed);
 
     return new Response(buf, {
       status: 200,
       headers: Object.assign({
-        "content-type": "text/html; charset=utf-8",
+        "content-type": "application/json; charset=utf-8",
         "cache-control": "no-store",
       }, cors(allowed)),
     });
