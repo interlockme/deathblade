@@ -6550,9 +6550,9 @@
   // + version) rather than handing back the bare {id: value} object - so
   // a reader who pastes something unrelated into Import gets a clear
   // "that's not an export from this calculator" instead of it silently
-  // half-applying whatever keys happen to match by coincidence. Import
-  // still accepts a bare {id: value} object too (no envelope) for anyone
-  // hand-editing or scripting against the format directly.
+  // half-applying whatever keys happen to match by coincidence (validateImport
+  // checks them). Import still accepts a bare {id: value} object too (no
+  // envelope) for anyone hand-editing or scripting against the format directly.
   const EXPORT_FORMAT_MARKER = "deathblade-ap-calc";
   const EXPORT_FORMAT_VERSION = 1;
 
@@ -6565,21 +6565,52 @@
     };
   }
 
-  // Returns the {id: value} data object from a parsed import payload, or
-  // null if the shape is unrecognized. Accepts the envelope Export
-  // produces, OR a bare data object (envelope-less).
-  function extractImportData(parsed) {
-    if (!parsed || typeof parsed !== "object") return null;
-    if (parsed.data && typeof parsed.data === "object") return parsed.data;
-    // No "data" key - treat the whole object as bare field data as long
-    // as it isn't obviously something else entirely (has at least one
-    // key, none of which are itself an object/array - a real field value
-    // is always a string or boolean).
-    const values = Object.values(parsed);
-    if (values.length && values.every((v) => typeof v === "string" || typeof v === "boolean")) {
-      return parsed;
+  // Import reads text from a paste or a file; nothing a person pastes should be able to cost them
+  // their preset, so this cap is far above any real export (a few KB) and well below a stall.
+  const MAX_IMPORT_CHARS = 2000000;
+  const NOT_AN_EXPORT = "Doesn't look like a Deathblade Ark Passive Calculator export.";
+
+  // Checks a parsed import payload against this page BEFORE anything is changed. Returns
+  // { data } with a clean {id: string|boolean} map, or { error } with what to tell the person.
+  // Accepts the envelope Export produces, an envelope without format/version, or a bare {id: value}
+  // object (hand-edited or scripted, as the Bible import does). Applying resets every field to its
+  // default first, so a payload that can't import anything must be refused here, not after.
+  function validateImport(root, parsed) {
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return { error: NOT_AN_EXPORT };
+    let raw = parsed;
+    if ("data" in parsed) {
+      if ("format" in parsed && parsed.format !== EXPORT_FORMAT_MARKER) {
+        return { error: "That's not a Deathblade Ark Passive Calculator export (it comes from a different tool)." };
+      }
+      if ("version" in parsed) {
+        const v = parsed.version;
+        if (typeof v !== "number" || !Number.isInteger(v) || v < 1) return { error: NOT_AN_EXPORT };
+        if (v > EXPORT_FORMAT_VERSION) {
+          return { error: "That export is from a newer version of the calculator (version " + v + "). Reload the page for the latest one, or export it again." };
+        }
+      }
+      raw = parsed.data;
+      if (!raw || typeof raw !== "object" || Array.isArray(raw)) return { error: NOT_AN_EXPORT };
     }
-    return null;
+    const controls = {};
+    root.querySelectorAll("input, select").forEach((el) => { if (el.id) controls[el.id] = el; });
+    const data = {};
+    let known = 0;
+    const ids = Object.keys(raw);
+    if (!ids.length) return { error: NOT_AN_EXPORT };
+    for (const id of ids) {
+      const v = raw[id];
+      const el = controls[id];
+      let ok;
+      if (!el) ok = typeof v === "string" || typeof v === "boolean" || (typeof v === "number" && Number.isFinite(v));
+      else if (el.type === "checkbox" || el.type === "radio") ok = typeof v === "boolean";
+      else ok = typeof v === "string" || (typeof v === "number" && Number.isFinite(v));
+      if (!ok) return { error: "The value for \"" + id.slice(0, 40) + "\" isn't valid for that field, so nothing was imported." };
+      if (el) known++;
+      data[id] = typeof v === "number" ? String(v) : v;
+    }
+    if (!known) return { error: "None of the fields in that data exist on this page, so nothing was imported." };
+    return { data: data };
   }
 
   function showPopoverMessage(popoverEl, text, isError) {
@@ -6632,6 +6663,10 @@
   }
 
   function applyImportText(root, popoverEl, text) {
+    if (text.length > MAX_IMPORT_CHARS) {
+      showPopoverMessage(popoverEl, "That's too large to be a calculator export, so nothing was imported.", true);
+      return;
+    }
     let parsed;
     try {
       parsed = JSON.parse(text);
@@ -6639,11 +6674,12 @@
       showPopoverMessage(popoverEl, "That's not valid JSON - check for a truncated paste.", true);
       return;
     }
-    const data = extractImportData(parsed);
-    if (!data) {
-      showPopoverMessage(popoverEl, "Doesn't look like a Deathblade Ark Passive Calculator export.", true);
+    const checked = validateImport(root, parsed);
+    if (checked.error) {
+      showPopoverMessage(popoverEl, checked.error, true);
       return;
     }
+    const data = checked.data;
     const activeId = getActivePresetId();
     const skipped = [];
     resetFieldsToDefaults(root);
@@ -8032,10 +8068,19 @@
           fileInput.addEventListener("change", () => {
             const file = fileInput.files && fileInput.files[0];
             if (!file) return;
+            // Cleared afterwards so choosing the same file again still fires a change.
+            const done = () => { fileInput.value = ""; };
+            if (file.size > MAX_IMPORT_CHARS) {
+              showPopoverMessage(popoverEl, "That file is too large to be a calculator export, so nothing was imported.", true);
+              done();
+              return;
+            }
             file.text().then((text) => {
               popoverEl.querySelector(".ap-calc-popover-textarea").value = text;
               applyImportText(root, popoverEl, text);
-            });
+            }).catch(() => {
+              showPopoverMessage(popoverEl, "Couldn't read that file.", true);
+            }).then(done, done);
           });
         }
       });

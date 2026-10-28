@@ -100,3 +100,11 @@ Prints `OK` or one `FAIL` line per problem and exits 1. `--pages /surge/111-clas
     python3 scripts/regression/test_bible_load.py --site site_out
 
 Answers lostark.bible's character data from the fixtures (no network) and drives the popover for real. Each fixture is imported by name and by pasted data from its `.data.json.gz` twin (see `scripts/bible-ids/make_data_fixture.mjs`), and by name and pasted page source from its HTML, which an older relay still sends, and through the `#bible-import=` fragment; the three results must match exactly. Also checks `htmlToLines` against each fixture's recorded lines, the error paths (blocked request, 404, 429, wrong character, wrong class, no data, invalid input), the optional proxy, Cancel and Escape. It finishes with negative controls that break the code on purpose and must be detected. Exit status is non-zero on any failure.
+
+## test_import_validation.py: calculator Import
+
+    mkdocs build -d site_out
+    python3 scripts/regression/test_import_validation.py --site site_out
+
+Import resets every field to its default before it applies anything, so what it is given is validated first (`validateImport` in `ark-passive-calculator.js`): the envelope's `format` and `version`, a plain `data` object, string or number values for text fields, booleans for checkboxes, at least one field that exists on the page, and a 2,000,000 character cap on pasted text and chosen files. This test pastes valid and malformed payloads (an empty or array `data`, another tool's format marker, a newer version, nested values, a string for a checkbox, JSON that matches no field, truncated JSON, oversized text and files) and checks a refusal leaves the preset exactly as it was, and that the Export envelope, an envelope without format and version, a bare field map, numbers, and unknown fields next to known ones still import. It also checks the file chooser clears itself after an import. Each negative control patches a copy of the built site to remove one safeguard and expects the suite to fail. It takes about 7 minutes because every control reruns the suite; it is not part of CI.
+
