@@ -11029,8 +11029,12 @@ body.page-333-blitz input[type="text"] {
      width, causing a few px of horizontal overflow. Capping it at 100%
      lets the single track shrink to whatever room actually exists
      instead of blowing out, with no visible effect at any width wide
-     enough to honor 230px anyway. */
-  grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr));
+     enough to honor the minimum anyway. The minimum is 11.5rem (230px at
+     the 20px root), not px: Material raises the root to 22px from 1600px
+     and 24px from 2000px, the row grows with it, and a px minimum would
+     fit a 4th track there, shrinking each card until long node names
+     ellipsize. In rem the row holds the same 3 tracks at every root. */
+  grid-template-columns: repeat(auto-fill, minmax(min(11.5rem, 100%), 1fr));
 }
 .md-typeset .ark-passives-compact .ark-passive-col {
   padding: 0.6em 0.7em 0.75em;
@@ -11460,11 +11464,13 @@ body.page-333-blitz input[type="text"] {
    horizontal space regardless of label length (TIP vs NOTE vs WARN) -
    otherwise each summary's title starts at a different x position and
    the whole stack reads as misaligned. Centered text inside that fixed
-   box keeps each label looking intentional rather than left-crammed. */
+   box keeps each label looking intentional rather than left-crammed. The
+   width is rem (52px at the 20px root) because the label text scales with
+   the root: a px width wrapped "Limits" onto two lines at the 24px root. */
 .md-typeset .setup-note-tag {
   display: inline-block;
   flex-shrink: 0;
-  width: 52px;
+  width: 2.6rem;
   text-align: center;
   font-size: var(--dbc-fs-sm);
   font-weight: 700;
