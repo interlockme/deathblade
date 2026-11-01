@@ -9305,7 +9305,11 @@ h3 { color: var(--dbc-teal); }
    phone, with the skill column pinned. Column widths are set on the <col>s:
    the group header spans four columns, so the first row alone would split the
    rest evenly. The figures need about 7rem each, which is why the skill column
-   cannot grow past 42% without the ranges in the footer row touching. */
+   cannot grow past 42% without the ranges in the footer row touching. The
+   floor is capped at the wrapper's own 620px: Material raises the root font
+   to 22px from 1600px (24px from 2400px), so a plain 30rem would be 660px or
+   720px, wider than the wrapper, and the table would scroll sideways on the
+   largest desktops. */
 .md-typeset .gem-upgrade-scroll {
   --ap-fs-cap: var(--dbc-fs-cap);
   --ap-fs-table: var(--dbc-fs-table);
@@ -9321,11 +9325,20 @@ h3 { color: var(--dbc-teal); }
 .md-typeset .gem-upgrade-table {
   table-layout: fixed;
   width: 100%;
-  min-width: 30rem;
+  min-width: min(30rem, 620px);
 }
 .md-typeset .gem-upgrade-table col.gem-upgrade-col-skill { width: 40%; }
 .md-typeset .gem-upgrade-table col.gem-upgrade-col-step { width: 15%; }
 .md-typeset .gem-upgrade-table col.gem-upgrade-col-total { width: 15%; }
+/* From 1600px the root font is 22px (24px from 2000px) while the table stays
+   620px wide, so the skill name and its Optional tag need more of it. The
+   figure columns have room to give: the widest figure is about 65px at 24px
+   in an 82px column. */
+@media (min-width: 100em) {
+  .md-typeset .gem-upgrade-table col.gem-upgrade-col-skill { width: 47%; }
+  .md-typeset .gem-upgrade-table col.gem-upgrade-col-step { width: 13.25%; }
+  .md-typeset .gem-upgrade-table col.gem-upgrade-col-total { width: 13.25%; }
+}
 .md-typeset .gem-upgrade-table th,
 .md-typeset .gem-upgrade-table td {
   padding-inline: 0.45rem;
