@@ -272,10 +272,9 @@ Recovery
      or a balance pass. Full schema is in javascripts/dps-chart.js's
      "EASY EDIT GUIDE" comment. -->
 
-<p class="dps-showcase-caption">Full Lv 10 gems in Trixion</p>
-
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
+<p class="dps-showcase-caption">Shares recorded in Trixion with full Lv 10 gems</p>
 <div class="dps-chart" data-show-icons data-values="19.1,18.1,14.3,11.1,11.1,10,8.1,6.5,0.8,0.5" data-ids="deathlyslash,surge,soulabsorber,deathsentence,voidstrike,earthcleaver,twinshadows,turningslash,bleed,maelstrom"></div>
 </div>
 </div>

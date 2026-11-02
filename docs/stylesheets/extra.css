@@ -9135,7 +9135,11 @@ h3 { color: var(--dbc-teal); }
   border: 1px solid rgba(var(--dbc-purple-rgb), 0.28);
   background-color: rgba(var(--dbc-purple-rgb), 0.045);
   border-radius: var(--dbc-r-lg);
-  padding: 1.4em 1.6em 1.5em;
+  /* rem, not em: the caption header below bleeds out to the frame's edges
+     with negative margins equal to this padding, and the caption has its own
+     font size, so the two have to be written in the same unit. The frame's
+     font is 0.8rem, so these are the old 1.4em / 1.6em / 1.5em exactly. */
+  padding: 1.12rem 1.28rem 1.2rem;
 }
 .md-typeset .dps-showcase-frame p {
   margin: 0;
@@ -9286,15 +9290,29 @@ h3 { color: var(--dbc-teal); }
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
-/* Caption sits below the whole row (not per-frame) since it's describing
-   the shared conditions the numbers were pulled under, not one specific
-   chart - stays put even once a second frame joins it. */
-.md-typeset .dps-showcase-caption {
-  flex-basis: 100%;
-  text-align: center;
-  font-size: var(--dbc-fs-table);
+/* The recording conditions ("Ancient cores, full Lv 10 gems in Trixion") are
+   the first child of each frame, set as the card's header: a tinted band that
+   runs to the frame's edges with a hairline under it, in the small tracked
+   caps and lavender of the table headers below it. contain: inline-size keeps
+   the caption out of the frame's width (the frame is as wide as the chart);
+   a long caption wraps inside the band instead of widening the frame past the
+   chart, which on a phone would overflow the page. The negative margins are
+   the frame's padding (see that rule). */
+.md-typeset .dps-showcase-frame .dps-showcase-caption {
+  contain: inline-size;
+  margin: -1.12rem -1.28rem 1.12rem;
+  padding: 0.65rem 1.28rem;
+  border-bottom: 1px solid rgba(var(--dbc-purple-rgb), 0.2);
+  border-radius: calc(var(--dbc-r-lg) - 1px) calc(var(--dbc-r-lg) - 1px) 0 0;
+  background-color: rgba(var(--dbc-purple-rgb), 0.07);
   color: var(--dbc-lavender);
-  margin: 0.2em 0 0;
+  font-size: var(--dbc-fs-cap);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  text-align: left;
+  text-transform: uppercase;
+  text-wrap: balance;
 }
 
 /* ---------- Damage gem upgrade table (gem-upgrade-table.js) ---------- */
@@ -12258,6 +12276,12 @@ html.image-lightbox-open {
     background: transparent !important;
     border: 1px solid #bbbbbb !important;
     box-shadow: none !important;
+  }
+  /* The DPS Spread header band loses its tint like the card around it. */
+  .dps-showcase-frame .dps-showcase-caption {
+    background: transparent !important;
+    border-bottom-color: #bbbbbb !important;
+    color: #111111 !important;
   }
 
   /* NOTE: a collapsed <details> prints collapsed, same as it looks on

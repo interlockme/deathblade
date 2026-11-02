@@ -341,10 +341,9 @@ Recovery
      or a balance pass. Full schema is in javascripts/dps-chart.js's
      "EASY EDIT GUIDE" comment. -->
 
-<p class="dps-showcase-caption">Ancient cores, full Lv 10 gems in Trixion</p>
-
 <div class="dps-showcase" markdown>
 <div class="dps-showcase-frame" markdown>
+<p class="dps-showcase-caption">Shares recorded in Trixion with full Ancient Ark Grid cores and Lv 10 gems</p>
 <div class="dps-chart" data-show-icons data-values="20.9,20.7,20.2,9.5,8.5,8,6.9,5.5" data-ids="deathlyslash,fatalwave,surge,twinshadows,soulabsorber,turningslash,blitzrush,voidstrike"></div>
 </div>
 </div>
