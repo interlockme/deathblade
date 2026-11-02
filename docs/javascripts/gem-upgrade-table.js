@@ -284,9 +284,12 @@
     return icon;
   }
 
+  // The last three words are joined with non-breaking spaces so the panel can
+  // never leave "more." (or "gains more.") alone on its last line, whatever
+  // the root font or panel width.
   var HEADER_TIP =
     "Each figure includes an estimate of the Base Attack Power the gem adds, with your other gems at the level the step starts from, " +
-    "a 9/7 Ability Stone and an Ancient +25 Vambrace. Weaker gear gains more.";
+    "a 9/7 Ability Stone, an Ancient +25 Vambrace and a support's buffs. Weaker gear\u00a0gains\u00a0more.";
   var COOLDOWN_TIP =
     "Only the Base Attack Power each cooldown gem adds. The cooldown reduction itself is not counted, so the real gain is higher.";
 
