@@ -9399,11 +9399,11 @@ h3 { color: var(--dbc-teal); }
   text-overflow: ellipsis;
 }
 /* The calculator's own Optional tag, sitting beside the name instead of
-   pushed to the row end. */
+   pushed to the row end. Here it carries a tooltip (the swap figure), so it
+   keeps the base cursor: help. */
 .md-typeset .gem-upgrade-skill-in .ap-gear-optional-badge {
   margin-left: 0;
   padding-inline: 0.4rem;
-  cursor: default;
 }
 .md-typeset .gem-upgrade-val {
   white-space: nowrap;

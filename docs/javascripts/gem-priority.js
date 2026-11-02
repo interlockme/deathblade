@@ -154,6 +154,10 @@
 
   function buildAlt(alt) {
     var row = el("div", "gem-alt");
+    // data-id lets gem-upgrade-table.js find which gem an optional alt swaps
+    // out. Not read by gem-dps-tooltip.js, which only selects plain rows and
+    // expandable <summary>s.
+    row.setAttribute("data-id", alt.id);
     row.appendChild(buildIcon(alt.id, "gem-alt-icon"));
     row.appendChild(el("strong", null, displayName(alt)));
     if (alt.note) {

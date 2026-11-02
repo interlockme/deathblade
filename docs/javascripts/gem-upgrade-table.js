@@ -22,6 +22,22 @@
 //     and their gain is computed from the chart share as the no-gem share.
 //     Optional rows are left out of the Total.
 //
+//     The Optional tag has a tooltip with the DPS difference, at Lv 10, of
+//     taking that gem over the one it replaces. The replaced gem is the
+//     gem-priority.js row the skill is an alt of (a "dmg" or a "cd" row, in
+//     this page or tab); no such row and the tooltip says the swap is against
+//     a gem that adds no damage here. Nothing to author: list the skill in
+//     data-optional-gems and make it an alt of the gem it replaces.
+//
+//   How the swap figure is computed (swapGain). Base AP is the same for any
+//   gem at the same level, so only the damage differs. Taking the optional
+//   gem adds d10 * s0 (its no-gem share, times the Lv 10 bonus). Over a
+//   damage gem whose skill is in the chart it also loses that skill's gem,
+//   d10 * its no-gem share, so the figure is d10 * (s0 - s0 of the replaced
+//   skill) and can be negative. Over a cooldown gem the cooldown reduction
+//   it gives up is not valued, as everywhere else in this table, and the
+//   tooltip does not mention it.
+//
 // HOW THE GAINS ARE COMPUTED
 //   Skill part. A damage gem multiplies its skill's damage by (1 + d), with
 //   d = 32, 36, 40 and 44% at Lv 7, 8, 9 and 10. The chart is recorded with
@@ -179,6 +195,54 @@
     return ids;
   }
 
+  // The gem-priority.js row the skill is an alt of, in this chart's page or
+  // tab: { id, col, name }, or null when it is not an alt anywhere.
+  function replacedGem(chart, id) {
+    var scope = chart.closest(".tabbed-block") || document;
+    var alts = scope.querySelectorAll(".gem-col .gem-item-alts .gem-alt");
+    for (var i = 0; i < alts.length; i++) {
+      if (alts[i].getAttribute("data-id") !== id) continue;
+      var details = alts[i].closest("details.gem-item-expandable");
+      var summary = details && details.querySelector(":scope > summary");
+      var col = alts[i].closest(".gem-col");
+      if (!summary || !col) continue;
+      var nameEl = summary.querySelector(".gem-item-name");
+      return {
+        id: summary.getAttribute("data-id"),
+        col: col.classList.contains("gem-col-cd") ? "cd" : "dmg",
+        name: nameEl ? nameEl.textContent : summary.getAttribute("data-id")
+      };
+    }
+    return null;
+  }
+
+  // DPS fraction gained at Lv 10 by taking an optional damage gem over the one
+  // it replaces (see HOW THE SWAP FIGURE IS COMPUTED at the top).
+  function swapGain(optRow, replaced, rows) {
+    var d10 = GEM_SKILL_DMG[10];
+    var lost = 0;
+    if (replaced && replaced.col === "dmg") {
+      rows.forEach(function (r) {
+        if (!r.optional && r.id === replaced.id) lost = r.share / 100 / (1 + d10);
+      });
+    }
+    return d10 * (optRow.share / 100 - lost);
+  }
+
+  function fmtSigned(fraction) {
+    var pct = (Math.abs(fraction) * 100).toFixed(2) + "%";
+    return (fraction < 0 ? "\u2212" : "+") + pct;
+  }
+
+  function swapTipText(chart, optRow, rows) {
+    var replaced = replacedGem(chart, optRow.id);
+    var figure = fmtSigned(swapGain(optRow, replaced, rows));
+    if (replaced) {
+      return "At Lv 10, " + figure + " DPS over the " + replaced.name + " " + (replaced.col === "cd" ? "cooldown" : "damage") + " gem.";
+    }
+    return "At Lv 10, " + figure + " DPS over a gem that adds no damage here.";
+  }
+
   function collectRows(chart) {
     var data = window.SiteUtils.parseChartData(chart);
     if (!data || !data.ids) return [];
@@ -191,23 +255,32 @@
       if (!optional && !gemIds[id]) return;
       rows.push({ id: id, label: data.labels[i], share: data.values[i], optional: optional });
     });
+    rows.forEach(function (r) {
+      if (r.optional) r.swapTip = swapTipText(chart, r, rows);
+    });
     return rows;
   }
 
-  // The small circled "i" the calculator uses, wired to the site's tooltip
-  // panel (skill-tooltip.js) instead of a native title.
-  function infoIcon(text) {
-    var icon = el("span", "ap-brace-info-icon");
-    icon.setAttribute("role", "img");
-    icon.setAttribute("aria-label", text);
+  // Wires `node` to the site's tooltip panel (skill-tooltip.js) with `text`, or
+  // falls back to a native title when that script is not there.
+  function attachTip(node, text) {
     if (window.SkillTooltip && window.SkillTooltip.wireCustom) {
       var tip = el("div", "skill-tip md-typeset");
       tip.setAttribute("role", "tooltip");
       tip.appendChild(el("p", "skill-tip-note", text));
-      window.SkillTooltip.wireCustom(icon, tip);
+      window.SkillTooltip.wireCustom(node, tip);
     } else {
-      icon.setAttribute("title", text);
+      node.setAttribute("title", text);
     }
+  }
+
+  // The small circled "i" the calculator uses, wired to the site's tooltip
+  // panel instead of a native title.
+  function infoIcon(text) {
+    var icon = el("span", "ap-brace-info-icon");
+    icon.setAttribute("role", "img");
+    icon.setAttribute("aria-label", text);
+    attachTip(icon, text);
     return icon;
   }
 
@@ -229,7 +302,11 @@
       inner.appendChild(icon);
     }
     inner.appendChild(el("span", "gem-upgrade-name", row.label));
-    if (row.optional) inner.appendChild(el("span", "ap-gear-optional-badge", "Optional"));
+    if (row.optional) {
+      var badge = el("span", "ap-gear-optional-badge", "Optional");
+      if (row.swapTip) attachTip(badge, row.swapTip);
+      inner.appendChild(badge);
+    }
     if (row.tip) inner.appendChild(infoIcon(row.tip));
     td.appendChild(inner);
     return td;
@@ -313,7 +390,7 @@
     if (!frame) return;
     var rows = collectRows(chart);
     var cooldownCount = columnIds(chart, "cd").length;
-    var key = rows.map(function (r) { return r.id + ":" + r.share + ":" + r.optional; }).join("|") + "#" + cooldownCount;
+    var key = rows.map(function (r) { return r.id + ":" + r.share + ":" + r.optional + ":" + (r.swapTip || ""); }).join("|") + "#" + cooldownCount;
     var existing = frame.querySelector(":scope > .gem-upgrade-scroll");
     if (!rows.length) {
       if (existing) existing.remove();
