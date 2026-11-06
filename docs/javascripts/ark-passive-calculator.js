@@ -4319,7 +4319,7 @@
     return withBest.mult / withoutBest.mult;
   }
 
-  function adrenalineContributionGain(inputs, engrInputs) {
+  function adrenalineContributionGain(inputs, engrInputs, withKbw) {
     // "full" reuses `inputs` for everything EXCEPT adrenaline/adrenalineStone,
     // which are overridden with this section's own isolated Node level (see
     // readEngravingInputs) and isolated Stone slot (engravingStoneLevel) -
@@ -4332,10 +4332,23 @@
     // shared.critDmgTotal, and KBW folds a flat add into that) would still
     // silently track the live Ark Passive section's KBW state (see
     // engravingIsolatedGridInputs' own comment for that failure mode).
+    //
+    // Keen Blunt Weapon is a candidate engraving, not a core one like
+    // Adrenaline, so by default (withKbw falsy) the value is read with KBW
+    // and its stone removed: its flat Crit Dmg add makes every point of
+    // Crit Rate worth more, which would inflate Adrenaline's grid ratio
+    // with an engraving the build may not run. withKbw true keeps the
+    // isolated KBW Node level and stone, which is the figure the row's
+    // tooltip shows for a build that does run KBW. The AP half does not
+    // read KBW, so only gridRatio differs between the two.
     const full = Object.assign({}, inputs, {
       adrenaline: engrInputs.adrenalineLevel,
       adrenalineStone: engravingStoneLevel("adrenaline", engrInputs),
     });
+    if (!withKbw) {
+      full.kbw = "Not Used";
+      full.kbwStone = "0 Lv.";
+    }
     const gridRatio = adrenalineGridRatio(full);
 
     let apRatio = 1;
@@ -4965,7 +4978,10 @@
       { label: "Ambush Master", gain: ambushMasterGain(engrInputs, inputs) },
       {
         label: "Adrenaline",
-        gain: adrenalineContributionGain(isolatedInputs, engrInputs),
+        // Valued without Keen Blunt Weapon (a candidate engraving, not a
+        // core one); the note carries the value with the isolated KBW
+        // Node level and stone for a build that does run it.
+        gain: adrenalineContributionGain(isolatedInputs, engrInputs, false),
         // Same inline "i" icon (native `title`, see renderComparisonRows'
         // own identical .ap-brace-info-icon use above) rather than a
         // permanent note line - just a quick pointer that this row's AP
@@ -4976,8 +4992,11 @@
         // note below explains - both rows share the identical methodology
         // (kbwRealizedGainPct/adrenalineGridRatio's own with-vs-without
         // grid search), so one shared note text keeps them consistent
-        // instead of drifting into two slightly different wordings.
-        note: "Recomputes the best setup with vs without, so the winning keystone/split can flip. Follows Adrenaline Uptime % setting from the Ark Passive section above.",
+        // instead of drifting into two slightly different wordings. The
+        // last sentence is the with-KBW figure, built from the same
+        // function so the two values cannot drift apart.
+        note: "Recomputes the best setup with vs without, so the winning keystone/split can flip. Follows Adrenaline Uptime % setting from the Ark Passive section above. Valued without Keen Blunt Weapon. With it: "
+          + formatPctBare(adrenalineContributionGain(isolatedInputs, engrInputs, true)) + ".",
       },
       { label: "Raid Captain", gain: raidCaptainGain(engrInputs, inputs) },
       {
