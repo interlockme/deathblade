@@ -320,7 +320,45 @@
         var statsArr = JSON.parse(jsonish(raid.slice(statsStart, statsEnd)));
         LAST_CRIT_STAT_DEBUG.statsArr = statsArr;
         var critEntry = statsArr.find(function (s) { return s.type === 15; });
-        if (critEntry) result.critStat = critEntry.value;
+        if (critEntry) {
+          result.critStat = critEntry.value;
+          // The raid snapshot can carry the Chaos Dungeon snapshot's stats table while its Ark
+          // Passive is its own (same rule as bible-decode.js staleStatsCritStat): when the Crit
+          // and Swiftness totals equal the Chaos Dungeon snapshot's exactly, the Crit total is
+          // moved by the difference in the Ark Passive Crit node level (50 stat per level).
+          var swiftEntry = statsArr.find(function (s) { return s.type === 18; });
+          var chaosObj = null;
+          for (var ci = 0; ci < loadoutObjs.length; ci++) {
+            if (loadoutObjs[ci].indexOf('classification:"most_recent_chaos_dungeon"') !== -1) { chaosObj = loadoutObjs[ci]; break; }
+          }
+          var chaosStats = null;
+          if (chaosObj && swiftEntry) {
+            var chItemsIdx = chaosObj.indexOf("items:[");
+            var chFrom = 0;
+            if (chItemsIdx !== -1) {
+              var chItemsEnd = findBalanced(chaosObj, chItemsIdx + "items:".length, "[", "]");
+              if (chItemsEnd !== -1) chFrom = chItemsEnd - 1;
+            }
+            var chStatsIdx = chaosObj.indexOf("],stats:[", chFrom);
+            if (chStatsIdx !== -1) {
+              var chStatsStart = chStatsIdx + 2 + "stats:".length;
+              var chStatsEnd = findBalanced(chaosObj, chStatsStart, "[", "]");
+              chaosStats = JSON.parse(jsonish(chaosObj.slice(chStatsStart, chStatsEnd)));
+            }
+          }
+          if (chaosStats) {
+            var chCrit = chaosStats.find(function (s) { return s.type === 15; });
+            var chSwift = chaosStats.find(function (s) { return s.type === 18; });
+            if (chCrit && chSwift && chCrit.value === critEntry.value && chSwift.value === swiftEntry.value) {
+              var critLevel = function (o) {
+                var ap = /arkPassive:\{evolution:\[(.*?)\]/.exec(o);
+                var lv = ap && /\{id:1010100,level:(\d+)\}/.exec(ap[1]);
+                return lv ? +lv[1] : 0;
+              };
+              result.critStat = critEntry.value + (critLevel(raid) - critLevel(chaosObj)) * 50;
+            }
+          }
+        }
       } catch (e) { /* leave critStat unset */ }
     }
 

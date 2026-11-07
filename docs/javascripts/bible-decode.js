@@ -452,12 +452,13 @@
   }
 
 
-  // Bible's estimated raid loadout (raid_merged) can carry the stats table of another snapshot
-  // (the Chaos Dungeon one) while its Ark Passive is the raid one, so its Crit total misses the
-  // Ark Passive Crit node when the Chaos Dungeon runs Swiftness there instead (50 stat per node
-  // level). The donor is the snapshot whose Crit and Swiftness totals match the estimated ones
-  // exactly; the total is then moved by the difference in that node's level. No donor, or a donor
-  // with the same node level, leaves the total as it is.
+  // A loadout the importer reads (Bible's estimated raid loadout, raid_merged, or the raid
+  // snapshot itself) can carry the stats table of another snapshot (the Chaos Dungeon one) while
+  // its Ark Passive is its own, so its Crit total misses the Ark Passive Crit node when the Chaos
+  // Dungeon runs Swiftness there instead (50 stat per node level). The donor is the other snapshot
+  // whose Crit and Swiftness totals match this loadout's exactly; the total is then moved by the
+  // difference in that node's level. No donor, or a donor with the same node level, leaves the
+  // total as it is.
   function statValue(stats, type) {
     for (var i = 0; i < (stats || []).length; i++) if (stats[i] && stats[i].type === type) return stats[i].value;
     return undefined;
@@ -470,7 +471,7 @@
     return 0;
   }
 
-  function estimatedCritStat(byClass, obj, stats) {
+  function staleStatsCritStat(byClass, obj, stats) {
     var crit = statValue(stats, 15);
     if (typeof crit !== "number") return crit;
     var swift = statValue(stats, 18);
@@ -528,7 +529,7 @@
     if (hydration.mainStat == null || hydration.weaponPower == null) return fail("no weapon power or main stat in the loadout");
     var crit = (stats || []).filter(function (s) { return s.type === 15; })[0];
     if (crit) {
-      try { hydration.critStat = picked.kind === "estimated" ? estimatedCritStat(byClass, obj, stats) : crit.value; }
+      try { hydration.critStat = staleStatsCritStat(byClass, obj, stats); }
       catch (e) { hydration.critStat = crit.value; }
     }
     var mainPct = mainStatPercent(stats);

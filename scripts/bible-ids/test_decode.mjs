@@ -66,6 +66,14 @@ const EXPECTED = {
   "vambrace-epic-10|ap-gear-ability-stone-base-ap": "visible-text layout this parser does not read",
   "vambrace-epic-10|ap-gear-ap-astrogem-lv": "visible-text layout this parser does not read",
   "vambrace-epic-10|ap-gear-weapon-core": "visible-text layout this parser does not read",
+  // The saved page shows the Chaos Dungeon tab, so the text path reads that tab (Adrenaline not
+  // used, Keen Blunt Weapon, no gems, Crit 158). The decoder reads the raid snapshot: Adrenaline,
+  // gems, no Keen Blunt Weapon. The raid snapshot's own stats table is the Chaos Dungeon one
+  // (Crit 158, Swiftness 577) while its Ark Passive has Crit at node level 10 and no Swiftness
+  // node, so the decoder moves the Crit total by the node difference (658).
+  "raid-stale-chaos-stats|ap-adrenaline": "text path reads the Chaos Dungeon tab, decoder the raid snapshot",
+  "raid-stale-chaos-stats|ap-gear-gem-base-ap": "text path reads the Chaos Dungeon tab, decoder the raid snapshot",
+  "raid-stale-chaos-stats|ap-kbw": "text path reads the Chaos Dungeon tab, decoder the raid snapshot",
 };
 
 // Main Stat % exists only in the decoded data (stats 7-9, see bible-decode.js), never in the
@@ -80,6 +88,16 @@ const MAIN_STAT_PCT = {
   "relic-chaos-sun-moon": "5",
   "bracelet-stat-lines": "5",
   "vambrace-epic-10": "9",
+  "raid-stale-chaos-stats": "9",
+};
+
+// Crit stat pinned on the decoded route where a loadout's own stats table is another snapshot's
+// (Chaos Dungeon: Crit 158, Swiftness 577) while its Ark Passive has the Crit node at level 10
+// (+500): the decoder and the text path both correct the total to 658. Two routes that agree
+// raise no difference above, so the value itself is checked on both.
+const DECODED_CRIT = {
+  "estimated-chaos-stats": "658",
+  "raid-stale-chaos-stats": "658",
 };
 
 // The class comes from the page data (classId), checked before anything else is decoded: the five
@@ -94,6 +112,7 @@ const CLASS_ID = {
   "relic-chaos-sun-moon": "blade",
   "bracelet-stat-lines": "blade",
   "vambrace-epic-10": "blade",
+  "raid-stale-chaos-stats": "blade",
   "other-class-support-t4": "yinyangshi",
   "other-class-t3-gear": "force_master",
 };
@@ -140,6 +159,12 @@ for (const name of names) {
       console.log("  " + (ok ? "expected " : "DIFF     ") + k + ": text=" + JSON.stringify(a.data[k]) + " decoded=" + JSON.stringify(b.data[k]));
     }
   }
+  if (name in DECODED_CRIT) {
+    const gotDecoded = b.data["ap-crit-stat"], gotText = a.data["ap-crit-stat"];
+    const ok = gotDecoded === DECODED_CRIT[name] && gotText === DECODED_CRIT[name];
+    if (!ok) unexpected++;
+    console.log("  " + (ok ? "pinned   " : "DIFF     ") + "ap-crit-stat decoded=" + JSON.stringify(gotDecoded) + " text=" + JSON.stringify(gotText) + " want=" + JSON.stringify(DECODED_CRIT[name]));
+  }
   const wa = JSON.stringify(a.warnings), wb = JSON.stringify(b.warnings);
   if (wa !== wb) console.log("  warnings text=" + wa + "\n           decoded=" + wb);
   const swapped = swapGrades(html);
@@ -180,10 +205,12 @@ for (const name of names) {
   check("stat 114 of 0 on a +10 Vambrace is left at None", shape(D(html.replace(stat, "{type:114,value:0}"))), none("+10 should add 2030 Basic Atk. Power but the page's stats say 0"));
   check("an item id outside 134xxxxxx is left at None", shape(D(html.replace(item, item.replace("134301406", "135301406")))), none("unknown item id 135301406"));
   check("a stat 114 with no Vambrace item is left at None", shape(D(html.replace(item, '{id:657830001,slot:"trinity_core",data:{type:"orb"}}'))), none("the page's stats show Basic Atk. Power 2030 but list no Vambrace"));
+  const VAMBRACE_FIXTURES = { "raid-stale-chaos-stats": { grade: "legendary", level: 15, warnings: [] } };
   for (const name of names) {
     if (name === "vambrace-epic-10") continue;
     const d = D(read(name));
-    if (d.ok) check(name + " (no Vambrace)", shape(d), { grade: "none", level: 0, warnings: [] });
+    if (d.ok && name in VAMBRACE_FIXTURES) check(name + " (real Vambrace)", shape(d), VAMBRACE_FIXTURES[name]);
+    else if (d.ok) check(name + " (no Vambrace)", shape(d), { grade: "none", level: 0, warnings: [] });
   }
   // Payload level: the decoded data carries grade and level, and the visible-text route reads
   // them from the "Vambrace +N" line (lower grade and a warning at 10, 15 and 20).
